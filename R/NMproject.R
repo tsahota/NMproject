@@ -63,15 +63,13 @@ NULL
 set_nm_opts <- function(){
   ## Internal function: will set all global variables
   ## put as much AZ specific code in here.
-  if(is.null(getOption("nmproject.src"))) options(nmproject.src = file.path(getOption("home"),"NMproject"))  ## can be hard coded later
-  ## eventually nmproject.src can be a name, then CRAN can be used.
-  ## maybe split into nmproject.src and nmproject.install.name - for now they are the same
+  if(is.null(getOption("code_library_path"))) options(code_library_path=c(getOption("code_library_path"),system.file("inst/extdata/CodeLibrary/",package="NMproject")))
   if(is.null(getOption("psn.commands"))) options(psn.commands=c("execute","vpc","bootstrap","sse"))
   if(is.null(getOption("system_cmd"))) options(system_cmd=function(cmd,...) {
     if(.Platform$OS.type == "windows") shell(cmd,...) else
       system(cmd,...)
   })
-  options(git.ignore.files=c("psn-*","hostfile*","submitscript*"))
+  #options(git.ignore.files=c("psn-*","hostfile*","submitscript*"))
   if(is.null(getOption("path.nm_tran"))) options(path.nm_tran = "/opt/az/icondevsolutions/nonmem/standard.7.3.0/tr/NMTRAN.exe")
   if(is.null(getOption("system_nm"))) options(system_nm=function(cmd,...) {
     if(.Platform$OS.type == "windows") shell(cmd,...) else
@@ -85,41 +83,48 @@ set_nm_opts <- function(){
 set_nm_opts()
 
 #' system/shell command wrapper
+#'
+#' @param cmd character. command to send to shell
+#' @param dir character. directory to run command in
+#' @param ... other arguments passed to system command
 #' @export
 system_cmd <- function(cmd,dir=".",...){
   if(!dir %in% ".") if(file.exists(dir)) {currentwd <- getwd(); setwd(dir) ; on.exit(setwd(currentwd))} else
-    warning(paste0("Directory \"",dir,"\" doesn't exist.  Running in current working directory"))
+    stop(paste0("Directory \"",dir,"\" doesn't exist."))
   getOption("system_cmd")(cmd,...)
 }
 
 #' system command for NONMEM execution
+#'
+#' @param cmd character. command to send to shell
+#' @param dir character. directory to run command in
+#' @param ... other arguments passed to system command
 #' @export
 system_nm <- function(cmd,dir=getOption("models.dir"),...){
   if(is.null(dir)) dir <- "."
   if(file.exists(dir)) {currentwd <- getwd(); setwd(dir) ; on.exit(setwd(currentwd))} else
-    warning(paste0("Directory \"",dir,"\" doesn't exist.  Running in current working directory"))
+    stop(paste0("Directory \"",dir,"\" doesn't exist."))
   getOption("system_nm")(cmd,...)
 }
 
 #' Copy NONMEM control stream
+#'
+#' @param from character. File to copy from
+#' @param to character. File to copy to
+#' @param overwrite logical. Should to file be overwritten? Default = FALSE.
 #' @export
-copy_control <- function(from,to,update=FALSE,overwrite=FALSE){
+copy_control <- function(from,to,overwrite=FALSE){
   ## if from = NONMEM control in current directory, it will copy and update $TABLE numbers
   ## if from = control file code_library(), it will copy it.
   ## First it will look for "from" in current directory, then it will look in code_library()
   to <- from_models(to)
-  if(file.exists(to) & !update & !overwrite) stop("file already exists. Rerun with overwrite = TRUE")
+  if(file.exists(to) & !overwrite) stop("file already exists. Rerun with overwrite = TRUE")
 
   from <- locate_file(from,c(getOption("models.dir"),
                              file.path(getOption("code_library_paths"),"NONMEM")))
 
   run.id <- gsub(from_models("run([^\\.]+)\\.mod"),"\\1",to)
   if(from_models(paste0("run",run.id,".mod"))!=to) stop("file.name doesn't match runXX.mod convention")
-  if(update){ ## if TRUE, then just use psn's "update" command.
-    system_nm(paste0("update ",basename(from)," --out=",to))
-    setup_file(to)
-    return()
-  }
   s <- readLines(from)
   ## Modify the file here.
   run.id.from <- gsub("run(.*)\\.mod","\\1",basename(from))
