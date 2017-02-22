@@ -1,0 +1,16 @@
+Package: NMproject
+Type: Package
+Title: NONMEM interface in TidyProject
+Version: 0.1.0
+Authors@R: person("Tarj", "Sahota", email =
+    "tarjinder.sahota@astrazeneca.com", role = c("aut", "cre"))
+Maintainer: Tarj Sahota <tarjinder.sahota@astrazeneca.com>
+Description: A light interfact between R and NONMEM for script based model
+    development in
+License: GPL-3 | file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+    TidyProject
+RoxygenNote: 5.0.1
+Suggests: testthat
