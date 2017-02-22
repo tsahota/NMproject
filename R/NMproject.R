@@ -4,26 +4,6 @@
 #'
 #' @section Strategy:
 #'
-#' \itemize{
-#'  \item Code management
-#'  \itemize{
-#'   \item{Project structure: Defines standardised directory structure for NONMEM projects}
-#'   \item{Code: Automates and enforces standards on control comments
-#'   \itemize{
-#'    \item Beginning of code: Description, author, date,...
-#'    \item $THETA/$OMEGA/$SIGMA: Parameter names, units, transformations)}
-#'   }
-#'   \item{Long term reproducibility: Local (project level) installation of packages}
-#'   \item{Code sharing/reuse: editable model library + search functionality}
-#'  }
-#'  \item NONMEM Interface
-#'  \itemize{
-#'   \item{Script based model development}
-#'   \item{Shiny run monitor}
-#'   \item{Shiny table of runs}
-#'  }
-#' }
-#'
 #' Assume access to NONMEM
 #'
 #' Assume access to PsN (or PsN wrapper) via command line - new NONMEM methodology will is being developed there
@@ -47,7 +27,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' new_project("~/AZDXXXX/PKAE1")  ## creates new_project
+#' new_project("~/AZDXXXX/PKAE1")          ## creates new_project
 #' library(NMproject,lib="ProjectLibrary") ## from project load local NMproject package
 #' update_project_package()                ## update local NMproject package
 #' code_library()                          ## display summary of code_library
