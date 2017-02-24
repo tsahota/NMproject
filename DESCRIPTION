@@ -10,7 +10,7 @@ Description: A light interfact between R and NONMEM for script based model
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports:
+Depends:
     TidyProject
 RoxygenNote: 5.0.1
 Suggests: testthat
