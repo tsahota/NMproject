@@ -4,7 +4,16 @@
 \alias{copy_control}
 \title{Copy NONMEM control stream}
 \usage{
-copy_control(from, to, update = FALSE, overwrite = FALSE)
+copy_control(from, to, overwrite = FALSE, alt_paths)
+}
+\arguments{
+\item{from}{character. File to copy from}
+
+\item{to}{character. File to copy to}
+
+\item{overwrite}{logical. Should to file be overwritten? Default = FALSE.}
+
+\item{alt_paths}{character vector. paths to other candidate files to search}
 }
 \description{
 Copy NONMEM control stream
