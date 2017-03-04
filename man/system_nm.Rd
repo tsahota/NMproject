@@ -6,6 +6,13 @@
 \usage{
 system_nm(cmd, dir = getOption("models.dir"), ...)
 }
+\arguments{
+\item{cmd}{character. command to send to shell}
+
+\item{dir}{character. directory to run command in}
+
+\item{...}{other arguments passed to system command}
+}
 \description{
 system command for NONMEM execution
 }
