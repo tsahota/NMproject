@@ -84,14 +84,6 @@ set_nm_opts <- function(){
   if(is.null(getOption("available_nm_types"))) options(available_nm_types = c("SIZES","PROB","INPUT","DATA","SUB","MODEL","PK","DES","PRED","ERROR",
                                                                               "THETA","OMEGA","SIGMA","EST","SIM","COV","TABLE"))
 }
-set_nm_opts()
-
-#' Attach local package library to code_library_paths
-#'
-#' @export
-attach_code_library <- function(){
-  options(code_library_path=unique(c(getOption("code_library_path"),system.file("extdata/CodeLibrary",package="NMproject"))))
-}
 
 #' system/shell command wrapper
 #'

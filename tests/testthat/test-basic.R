@@ -52,3 +52,29 @@ test_that("Project has basic functionality",{
 
 })
 
+
+test_that("set up",{
+
+  currentwd <- getwd()
+  make_project(proj_name)
+  on.exit({
+    setwd(currentwd)
+    cleanup(proj_name)
+  })
+
+  setwd(proj_name)
+
+  set_nm_opts()
+  expect_true(getOption("model.file.stub")=="run")
+
+  tmp <- system_cmd("ls",intern=TRUE)
+  expect_true(length(tmp)>0 & "character" %in% class(tmp))
+  tmp <- system_nm("ls",intern=TRUE)
+  expect_true(length(tmp)>0 & "character" %in% class(tmp))
+
+  old.opt <- getOption("path.nm_tran")
+  options(path.nm_tran=NULL)
+  expect_error(nm_tran("run1.mod"))
+  options(path.nm_tran=old.opt)
+
+})
