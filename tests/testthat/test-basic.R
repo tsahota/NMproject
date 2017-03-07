@@ -32,8 +32,6 @@ test_that("Project has basic functionality",{
   info <- info_scripts(code_library(viewer=FALSE,silent=TRUE),viewer = FALSE)
   expect_true("data.frame" %in% class(info))
 
-  #unlink(file.path(getOption("models.dir"),"run1.mod"))
-  #unlink(file.path(getOption("models.dir"),"run2.mod"))
   copy_control("NONMEM/ADVAN2.mod","run1.mod")
 
   expect_true("run1.mod" %in% dir(getOption("models.dir")))
