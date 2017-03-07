@@ -4,7 +4,6 @@ sudo: required
 
 r_github_packages:
   - jimhester/covr
-  - tsahota/TidyProject
 
 after_success:
   - Rscript -e 'covr::coveralls()'
