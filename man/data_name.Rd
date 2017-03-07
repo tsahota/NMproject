@@ -7,7 +7,7 @@
 data_name(x)
 }
 \arguments{
-\item{x}{argument to be passed to method.}
+\item{x}{a;rgument to be passed to method.}
 }
 \description{
 Generic function

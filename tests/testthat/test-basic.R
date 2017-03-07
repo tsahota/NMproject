@@ -20,6 +20,37 @@ test_that("Project has basic functionality",{
 
   setwd(proj_name)
 
+  expect_true(length(getOption("code_library_path"))>0)
 
+  clib <- code_library(viewer=FALSE,silent=TRUE)
+  expect_true("character" %in% class(clib))
+
+  expect_true(any(grepl("ADVAN2.mod",clib)))
+
+  preview("NONMEM/ADVAN2.mod")
+
+  info <- info_scripts(code_library(viewer=FALSE,silent=TRUE),viewer = FALSE)
+  expect_true("data.frame" %in% class(info))
+
+  #unlink(file.path(getOption("models.dir"),"run1.mod"))
+  #unlink(file.path(getOption("models.dir"),"run2.mod"))
+  copy_control("NONMEM/ADVAN2.mod","run1.mod")
+
+  expect_true("run1.mod" %in% dir(getOption("models.dir")))
+
+  copy_control("run1.mod","run2.mod")
+
+  expect_true("run2.mod" %in% dir(getOption("models.dir")))
+
+  dn <- data_name("Models/run1.mod")
+
+  expect_true(length(dn)==1)
+  expect_true(class(dn)=="character")
+
+  update_dollar_data("Models/run1.mod","new.data.csv")
+
+  dn <- data_name("Models/run1.mod")
+  expect_true(dn=="new.data.csv")
 
 })
+

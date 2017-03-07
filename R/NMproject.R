@@ -198,15 +198,13 @@ is_nm_file_name <- function(x,error_if_false=FALSE){
 
 #' Run NMTRAN step only
 #'
-#' Generic function
+#' Requires options("path/to/nmtran") to be set up.
+#'
 #' @param x character. file name of NONMEM control stream
+#' @rdname nm_tran
 #' @export
 nm_tran <- function(x) UseMethod("nm_tran")
 
-#' Run NMTRAN step only
-#'
-#' @param x character. name/path of model file
-#' @export
 nm_tran.default <- function(x){
   if(is.null(getOption("path.nm_tran"))) {
     message("Path to nmtran not set. To set add the following command:")
@@ -229,14 +227,11 @@ nm_tran.default <- function(x){
 #' Get NONMEM dataset name from control stream
 #'
 #' Generic function
-#' @param x argument to be passed to method.
+#' @param x a;rgument to be passed to method.
+#' @rdname data_name
 #' @export
 data_name <- function(x) UseMethod("data_name")
 
-#' Get NONMEM dataset name from control stream
-#'
-#' @param x character vector. Name(s) of control stream(s)
-#' @export
 data_name.default <- function(x){
   unlist(lapply(x,function(x){
     if(!file.exists(x)) x <- from_models(x)
