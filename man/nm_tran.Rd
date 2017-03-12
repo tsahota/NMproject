@@ -10,6 +10,6 @@ nm_tran(x)
 \item{x}{character. file name of NONMEM control stream}
 }
 \description{
-Requires options("path/to/nmtran") to be set up.
+Requires options('path/to/nmtran') to be set up.
 }
 
