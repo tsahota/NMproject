@@ -4,9 +4,9 @@ proj_name <- "test_nmproject"
 require(tidyproject)
 
 cleanup <- function(proj_name){
-  if(file.exists(proj_name)) unlink(proj_name,recursive = TRUE)
+  if(file.exists(proj_name)) unlink(proj_name,recursive = TRUE,force = TRUE)
   base_proj_name <- paste0(proj_name,".git")
-  if(file.exists(base_proj_name)) unlink(base_proj_name,recursive = TRUE)
+  if(file.exists(base_proj_name)) unlink(base_proj_name,recursive = TRUE,force = TRUE)
 }
 
 test_that("Project has basic functionality",{
