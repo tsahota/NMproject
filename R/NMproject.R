@@ -207,7 +207,7 @@ nm_tran.default <- function(x){
     stop("nmtran failed")
   }
   tempdir0 <- basename(tempdir()) ## make temporary directory in current directory
-  dir.create(tempdir0) ; on.exit(unlink(tempdir0,recursive=TRUE))
+  dir.create(tempdir0) ; on.exit(unlink(tempdir0,recursive=TRUE,force = TRUE))
   file.copy(x,tempdir0) ## copy_control file
   data_path <- file.path(dirname(x),data_name(x))
   file.copy(data_path,tempdir0) ## copy dataset
