@@ -27,9 +27,9 @@ Execution in numbered directories: \code{execute run55.mod -dir=55}
 
 \section{Options}{
 
-\code{scripts.dir} = names of the "scripts" directory in the project
+\code{scripts.dir} = names of the 'scripts' directory in the project
 
-\code{models.dir} = names of the "models" directory in the project
+\code{models.dir} = names of the 'models' directory in the project
 
 \code{git.exists} = \code{TRUE} if git is installed (only works on unix currently)
 
@@ -37,20 +37,20 @@ Execution in numbered directories: \code{execute run55.mod -dir=55}
 }
 \examples{
 \dontrun{
-new_project("~/AZDXXXX/PKAE1")          ## creates new_project
-library(NMproject,lib="ProjectLibrary") ## from project load local NMproject package
+new_project('~/AZDXXXX/PKAE1')          ## creates new_project
+library(NMproject,lib='ProjectLibrary') ## from project load local NMproject package
 update_project_package()                ## update local NMproject package
 code_library()                          ## display summary of code_library
-copy_script("nm.log.R")                 ## copy_script from code_library to project
-preview("nm.log.R")                     ## preview file in code_library
+copy_script('nm.log.R')                 ## copy_script from code_library to project
+preview('nm.log.R')                     ## preview file in code_library
 
-copy_control("ADVAN2.mod","run1.mod")   ## copy template from code_library
-copy_control("run1.mod","run2.mod")     ## create run2.mod from run1.mod
-new_script("test.R")                    ## Creates empty test.R
-copy_script("output.data.R")            ## copies from code_library
-copy_script("../pathto/script.R")       ## copies from other location
+copy_control('ADVAN2.mod','run1.mod')   ## copy template from code_library
+copy_control('run1.mod','run2.mod')     ## create run2.mod from run1.mod
+new_script('test.R')                    ## Creates empty test.R
+copy_script('output.data.R')            ## copies from code_library
+copy_script('../pathto/script.R')       ## copies from other location
 
-m1 <- nm("qpsn -m -c auto -t 1440 -- execute run1.mod -dir=1") ## create object
+m1 <- nm('qpsn -m -c auto -t 1440 -- execute run1.mod -dir=1') ## create object
 nm_tran(m1)              ## run nm_tran step only
 run(m1)                  ## run model
 lst(m1)                  ## View lst file (may hit Rstudio's size limit)
@@ -60,7 +60,7 @@ run_record(m1)           ## get table of parameters
 run_record(m1,m2)        ## get table of parameters (multiple runs)
 summary(m1)              ## run psns sumo command
 
-nm_load("nm.log.R")      ## Bring all runs in nm.log.R into memory
+nm_load('nm.log.R')      ## Bring all runs in nm.log.R into memory
 
 squ()                    ## see queued runs
 }
