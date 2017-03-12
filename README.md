@@ -3,7 +3,7 @@
 [![Travis-CI Build Status](https://travis-ci.org/tsahota/NMproject.svg?branch=master)](https://travis-ci.org/tsahota/NMproject)
 [![Coverage Status](https://coveralls.io/repos/github/tsahota/NMproject/badge.svg?branch=master)](https://coveralls.io/github/tsahota/NMproject?branch=master)
 
-Script based NONMEM execution on TidyProjects
+Script based NONMEM execution on tidyprojects
  
 ## Installation
 
@@ -26,8 +26,8 @@ options(path.nm_tran = "path/to/nonmem/installation/tr/NMTRAN.exe")
 ### Instructions
 
 * NMprojects are directories where you can work on pharmacometric analysis.
-* First, set up a TidyProject with the `make_project("/path/to/project/dir"")`.
-   * See tutorial at https://github.com/tsahota/TidyProject to get started with TidyProject
+* First, set up a tidyproject with the `make_project("/path/to/project/dir"")`.
+   * See tutorial at https://github.com/tsahota/tidyproject to get started with tidyproject
 * Open the NMproject with the File -> Open Project menu items. NOTE: always use Rstudio to open an NMproject, never just setwd() to the directory.
 
 * To ensure code you write which depends on the NMproject package will never break due to updates, install the package NMproject into the *project library*.  Do this by simply installing again:
@@ -37,7 +37,7 @@ devtools::install_github("tsahota/NMproject")
 library(NMproject)
 ```
 
-The global installation of NMproject can now change over time, but code depending on NMproject in this TidyProject will never break.
+The global installation of NMproject can now change over time, but code depending on NMproject in this tidyproject will never break.
 
 Have a look at built in code library, type:
 

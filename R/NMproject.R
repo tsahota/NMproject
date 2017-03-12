@@ -126,13 +126,13 @@ copy_control <- function(from,to,overwrite=FALSE,alt_paths){
   if(file.exists(to) & !overwrite) stop("file already exists. Rerun with overwrite = TRUE")
 
   use_code_library <- missing(alt_paths)
-  from_path <- TidyProject::locate_file(from,search_path = NULL)
-  if(length(from_path)==0) from_path <- TidyProject::locate_file(from,getOption("models.dir"))
+  from_path <- tidyproject::locate_file(from,search_path = NULL)
+  if(length(from_path)==0) from_path <- tidyproject::locate_file(from,getOption("models.dir"))
   using_code_library <- length(from_path)==0
 
   if(length(from_path)==0){ ## if file is not found directory or in scripts.dir
     if(use_code_library) alt_paths <- getOption("code_library_path")
-    from_path <- TidyProject::locate_file(from,search_path = alt_paths,recursive = TRUE)
+    from_path <- tidyproject::locate_file(from,search_path = alt_paths,recursive = TRUE)
     if(length(from_path)==0) stop(paste(from,"not found"))
     if(length(from_path)>1 & use_code_library)
       stop("Matched more than one file with that name in code library.\n Try:\n  1) specifying full path OR\n  2) ensuring getOption(\"code_library_path\") points to non-overlapping directories")
@@ -157,7 +157,7 @@ copy_control <- function(from,to,overwrite=FALSE,alt_paths){
       ctl <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",from_path),ctl)
   ctl <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*",paste("\\1",Sys.info()["user"]),ctl)
   writeLines(ctl,to)
-  TidyProject::setup_file(to)
+  tidyproject::setup_file(to)
 }
 
 #' Get run id from file name or path
