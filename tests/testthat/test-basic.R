@@ -1,7 +1,7 @@
 context("basic NM project setup")
 
 proj_name <- "test_nmproject"
-require(TidyProject)
+require(tidyproject)
 
 cleanup <- function(proj_name){
   if(file.exists(proj_name)) unlink(proj_name,recursive = TRUE)
