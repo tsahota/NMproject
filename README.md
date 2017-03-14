@@ -58,7 +58,7 @@ Copy it into your "Models" directory
 copy_control("NONMEM/ADVAN2.mod","run1.mod")
 ```
 
-NOTE: default behaviour is to enforce the "runXX.mod" naming convention for control streams.  e.g. "run1.mod", "run1vpc.mod", "run2.mod".
+NOTE: default behaviour is to enforce the `runXX.mod` naming convention for control streams.  e.g. `run1.mod`, `run1vpc.mod`, `run2.mod`.
 
 Set up a run log with:
 
@@ -79,7 +79,7 @@ To run NONMEM
 system_nm("execute run1.mod -dir=1")
 ```
 
-NOTE: the -dir option must match the run id in the control stream name.  e.g. if the control stream is "run23vpc.mod" the -dir must be "23vpc"
+NOTE: the `-dir` option must match the run id in the control stream name.  e.g. if the control stream is `run23vpc.mod` the `-dir` must be `23vpc`
 
 
 ### FAQ
