@@ -29,7 +29,7 @@ options(path.nm_tran = "path/to/nonmem/installation/tr/NMTRAN.exe")
 * NMprojects are directories where you can work on pharmacometric analysis.
 * First, set up a tidyproject with the `make_project("/path/to/project/dir"")`.
    * See tutorial at https://github.com/tsahota/tidyproject to get started with tidyproject
-* Open the NMproject with the File -> Open Project menu items. NOTE: always use Rstudio to open an NMproject, never just setwd() to the directory.
+* Open the NMproject with the File -> Open Project menu items. NOTE: always use Rstudio to open an NMproject, never just `setwd()` to the directory.
 
 * To ensure code you write which depends on the NMproject package will never break due to updates, install the package NMproject into the *project library*.  Do this by simply installing again:
 
