@@ -15,7 +15,7 @@ devtools::install_github("tsahota/NMproject")
 
 ## Quick setup
 
-Define options specific to your installation in your user '~/.Rprofile' (or '$R_HOME/etc/Rprofile.site' if you want this to apply for all users).
+Define options specific to your installation in your user `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site` if you want this to apply for all users).
 
 e.g.
 
