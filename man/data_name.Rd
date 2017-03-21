@@ -7,9 +7,9 @@
 data_name(x)
 }
 \arguments{
-\item{x}{a;rgument to be passed to method.}
+\item{x}{argument to be passed to method.}
 }
 \description{
-Generic function
+Get NONMEM dataset name from control stream
 }
 

@@ -65,7 +65,7 @@ test_that("set up",{
   setwd(proj_name)
 
   set_nm_opts()
-  expect_true(getOption("model.file.stub")=="run")
+  expect_true(getOption("model_file_stub")=="run")
 
   tmp <- system_cmd("ls",intern=TRUE)
   expect_true(length(tmp)>0 & "character" %in% class(tmp))
