@@ -68,7 +68,11 @@ set_nm_opts <- function(){
   if(is.null(getOption("code_library_path"))) options(code_library_path=c(system.file("extdata/CodeLibrary",package="NMproject")))
   ## if not null, leave alone
 
-  if(is.null(getOption("psn.commands"))) options(psn.commands=c("execute","vpc","bootstrap","sse"))
+  if(is.null(getOption("psn.commands")))
+    options(psn.commands=
+              c("boot_scm","bootstrap","cdd","crossval","execute","extended_grid","frem","gls",
+                "lasso","llp","mcmp","mimp","nca","npc","pvar","randtest","rawresults","runrecord",
+                "scm","se_of_eta","sir","sse","sumo","update","update_inits","vpc","xv_scm"))
 
   if(is.null(getOption("system_cmd"))) options(system_cmd=function(cmd,...) {
     if(.Platform$OS.type == "windows") shell(cmd,...) else system(cmd,...)
@@ -79,8 +83,8 @@ set_nm_opts <- function(){
 
   #options(git.ignore.files=c("psn-*","hostfile*","submitscript*"))
 
-  if(is.null(getOption("model.file.stub"))) options(model.file.stub="run")
-  if(is.null(getOption("model.file.extn"))) options(model.file.extn="mod")
+  if(is.null(getOption("model_file_stub"))) options(model_file_stub="run")
+  if(is.null(getOption("model_file_extn"))) options(model_file_extn="mod")
   if(is.null(getOption("available_nm_types"))) options(available_nm_types = c("SIZES","PROB","INPUT","DATA","SUB","MODEL","PK","DES","PRED","ERROR",
                                                                               "THETA","OMEGA","SIGMA","EST","SIM","COV","TABLE"))
 }
@@ -164,7 +168,7 @@ copy_control <- function(from,to,overwrite=FALSE,alt_paths){
 #'
 #' @param x character vector. name of file or path to get run id from
 run_id <- function(x){
-  file.regex <- paste0("^.*",getOption("model.file.stub"),"(.*)\\.",getOption("model.file.extn"),"$")
+  file.regex <- paste0("^.*",getOption("model_file_stub"),"(.*)\\.",getOption("model_file_extn"),"$")
   gsub(file.regex,"\\1",x)
 }
 
@@ -181,10 +185,10 @@ from_models <- function(x) {
 #' @param x character vector. file name or path
 #' @param error_if_false logical. Default=FALSE. If true, will make an error if test fails
 is_nm_file_name <- function(x,error_if_false=FALSE){
-  file.regex <- paste0("^.*",getOption("model.file.stub"),"(.*)\\.",getOption("model.file.extn"),"$")
+  file.regex <- paste0("^.*",getOption("model_file_stub"),"(.*)\\.",getOption("model_file_extn"),"$")
   out <- grepl(file.regex,x)
   if(error_if_false & !out)
-    stop(paste0("file.name doesn't match ",getOption("model.file.stub"),"XX.",getOption("model.file.extn")," convention")) else
+    stop(paste0("file.name doesn't match ",getOption("model_file_stub"),"XX.",getOption("model_file_extn")," convention")) else
       return(out)
 }
 
@@ -218,12 +222,11 @@ nm_tran.default <- function(x){
 
 #' Get NONMEM dataset name from control stream
 #'
-#' Generic function
-#' @param x a;rgument to be passed to method.
-#' @rdname data_name
+#' @param x argument to be passed to method.
 #' @export
 data_name <- function(x) UseMethod("data_name")
 
+#' @export
 data_name.default <- function(x){
   unlist(lapply(x,function(x){
     if(!file.exists(x)) x <- from_models(x)
