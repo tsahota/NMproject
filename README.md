@@ -15,7 +15,7 @@ devtools::install_github("tsahota/NMproject")
 
 ## Quick setup
 
-Define options specific to your installation in your user "~/.Rprofile" (or "R_HOME/etc/Rprofile.site" if you want this to apply for all users).
+Define options specific to your installation in your user `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site` if you want this to apply for all users).
 
 e.g.
 
@@ -29,7 +29,7 @@ options(path.nm_tran = "path/to/nonmem/installation/tr/NMTRAN.exe")
 * NMprojects are directories where you can work on pharmacometric analysis.
 * First, set up a tidyproject with the `make_project("/path/to/project/dir"")`.
    * See tutorial at https://github.com/tsahota/tidyproject to get started with tidyproject
-* Open the NMproject with the File -> Open Project menu items. NOTE: always use Rstudio to open an NMproject, never just setwd() to the directory.
+* Open the NMproject with the File -> Open Project menu items. NOTE: always use Rstudio to open an NMproject, never just `setwd()` to the directory.
 
 * To ensure code you write which depends on the NMproject package will never break due to updates, install the package NMproject into the *project library*.  Do this by simply installing again:
 
@@ -58,7 +58,7 @@ Copy it into your "Models" directory
 copy_control("NONMEM/ADVAN2.mod","run1.mod")
 ```
 
-NOTE: default behaviour is to enforce the "runXX.mod" naming convention for control streams.  e.g. "run1.mod", "run1vpc.mod", "run2.mod".
+NOTE: default behaviour is to enforce the `runXX.mod` naming convention for control streams.  e.g. `run1.mod`, `run1vpc.mod`, `run2.mod`.
 
 Set up a run log with:
 
@@ -79,7 +79,7 @@ To run NONMEM
 system_nm("execute run1.mod -dir=1")
 ```
 
-NOTE: the -dir option must match the run id in the control stream name.  e.g. if the control stream is "run23vpc.mod" the -dir must be "23vpc"
+NOTE: the `-dir` option must match the run id in the control stream name.  e.g. if the control stream is `run23vpc.mod` the `-dir` must be `23vpc`
 
 
 ### FAQ
