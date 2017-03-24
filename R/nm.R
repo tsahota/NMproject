@@ -70,13 +70,14 @@ nm <- function(cmd,psn_command,
       stop("couldn't infer psn command type.\nRerun with psn_command argument")
     if(length(matched_psn_commands)>1)
       stop("couldn't infer unique psn command type.\nRerun with psn_command argument")
+    message(paste("inferring run type :",matched_psn_commands))
     r$type <- matched_psn_commands
-    message(paste("inferring run type :",r$type))
   }
 
   if(is.null(r$ctl)){
     subcmd <- gsub(paste0("^.*(",r$type,".*)$"),"\\1",cmd)
     matched_ctl <- gsub2(paste0("^.*(",getOption("model_file_stub"),"\\S+)\\s*.*$"),"\\1",cmd)
+    message(paste("inferring ctl file :",matched_ctl))
     r$ctl <- matched_ctl
   }
 
@@ -87,7 +88,7 @@ nm <- function(cmd,psn_command,
       stop("couldn't infer run directory type.\nRerun with run_dir argument")
     if(length(matched_run_dir)>1)
       stop("couldn't infer unique run directory type.\nRerun with run_dir argument")
-    message(paste("inferring run directory :",r$run_dir))
+    message(paste("inferring run directory :",matched_run_dir))
     r$run_dir <- matched_run_dir
   }
 
@@ -117,7 +118,7 @@ nm <- function(cmd,psn_command,
 print.nm <- function(x,...) str(x)
 
 ctl_name <- function(run_id)
-  paste0(getOption("model_file_stub"),run_id,getOption("model_file_extn"))
+  paste0(getOption("model_file_stub"),run_id,".",getOption("model_file_extn"))
 
 gsub2 <- function(pattern,replacement,x,...){
   match <- grepl(pattern,x,...)
@@ -129,20 +130,6 @@ get_run_id <- function(ctl_name){
   match <- paste0("^.*",getOption("model_file_stub"),"(.*)\\.",getOption("model_file_extn"),".*$")
   gsub2(match,"\\1",ctl_name)
 }
-
-
-
-# data_name0 <- function(ctl){
-#   s <- ctl
-#   if(length(ctl)==1) {
-#     if(file.exists(ctl)) s <- readLines(ctl) else stop("can't process argument")
-#   }
-#   data.row <- grep("^ *\\$DATA",s)
-#   if(length(data.row)<1) stop("can't identify data row")
-#   if(length(data.row)>1) stop("multiple data rows found")
-#   s <- paste(s[data.row:length(s)],collapse = " ")
-#   gsub("^ *\\$DATA\\s*([^ ]+).*$","\\1",s)
-# }
 
 #' Load nm object into memory from script
 #'
@@ -167,14 +154,19 @@ run <- function(...,overwrite=FALSE){
   rl <- list(...)
   lapply(rl,function(r){
     ## if directory exists, and if it's definately a directory stop
-    if(file.exists(r$dir) & !overwrite)if(file.info(r$dir)$isdir %in% TRUE) stop("run already exists. To rerun select overwrite=TRUE")
-    if(!is.null(get("kill_run"))){
-      get("kill_run")(r)
+    if(file.exists(r$run_dir) & !overwrite)if(file.info(r$run_dir)$isdir %in% TRUE) stop("run already exists. To rerun select overwrite=TRUE")
+    if(!is.null(getOption("kill_run"))){
+      getOption("kill_run")(r)
     }
     clean_run(r$run_id)
     system_nm(r$cmd)
   })
   invisible()
+}
+
+#' @export
+nm_tran.nm <- function(x){
+  nm_tran.default(from_models(x$ctl))
 }
 
 #' clean_run files
