@@ -201,6 +201,7 @@ is_nm_file_name <- function(x,error_if_false=FALSE){
 #' @export
 nm_tran <- function(x) UseMethod("nm_tran")
 
+#' @export
 nm_tran.default <- function(x){
   if(is.null(getOption("path.nm_tran"))) {
     message("Path to nmtran not set. To set add the following command:")
