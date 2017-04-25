@@ -13,4 +13,8 @@ Remotes: tsahota/tidyproject
 Imports:
     tidyproject
 RoxygenNote: 5.0.1
-Suggests: testthat
+Suggests:
+    testthat,
+    ggplot2,
+    tidyr
+

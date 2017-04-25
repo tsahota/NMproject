@@ -66,6 +66,7 @@ nm <- function(cmd,psn_command,
   if(is.null(r$type)){
     matched_psn_commands <- unlist(sapply(getOption("psn.commands"),
                                           function(i) gsub2(paste0("^.*(",i,")\\b\\s.+$"),"\\1",cmd)))
+    matched_psn_commands <- as.character(matched_psn_commands)
     if(length(matched_psn_commands)==0)
       stop("couldn't infer psn command type.\nRerun with psn_command argument")
     if(length(matched_psn_commands)>1)
@@ -108,13 +109,14 @@ nm <- function(cmd,psn_command,
     r$data_name <- data_name(file.path(tidyproject::models_dir(),r$ctl))
     if(r$extn %in% "mod") r$lst <- gsub("^(.*\\.).*$","\\1lst",r$ctl) else
       r$lst <- paste0(r$ctl,".lst")
-    r$psn.lst <- file.path(r$run_dir,"psn.lst")
-    r$psn.ext <- file.path(r$run_dir,"psn.ext")
+    r$psn.lst <- file.path(r$run_dir,"NM_run1","psn.lst")
+    r$psn.ext <- file.path(r$run_dir,"NM_run1","psn.ext")
   }
   ## TODO develop classes nmboot, nmvpc,....
   return(r)
 }
 
+#' @export
 print.nm <- function(x,...) str(x)
 
 ctl_name <- function(run_id)
@@ -200,3 +202,4 @@ out_files0 <- function(ctrl.file){ ## will get vector of $TABLE file names from 
   out.files <- c(table.files,out.files)
   out.files
 }
+
