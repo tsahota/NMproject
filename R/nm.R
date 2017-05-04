@@ -18,20 +18,25 @@ get_psn_cmd <- function(type,cmd){
 #' @param ctl_name character. Name of control file (optional)
 #' @param run_id character or numeric. Run identifier (optional)
 #' @param run_dir character or numeric. Run directory (optional)
+#' @param run_in character. Directory to execute. Default = getOption("models.dir")
 #' @return object of class nm
 #' @export
 nm <- function(cmd,psn_command,
                shell_script_name,shell_script_extn="sh",
-               ctl_name,run_id,run_dir){
+               ctl_name,run_id,run_dir,
+               run_in=getOption("models.dir")){
   tidyproject::check_if_tidyproject()
   r <- list()
   class(r) <- "nm"
+
+  if(is.null(run_in)) run_in <- "."
+  r$run_in <- run_in
   r$cmd <- cmd
 
   if(!missing(shell_script_name)){
-    if(!file.exists(from_models(shell_script_name)))
-      stop("cannot find shell script in ",getOption("models.dir")," directory")
-    ss_contents <- readLines(from_models(shell_script_name))
+    if(!file.exists(file.path(r$run_in,shell_script_name)))
+      stop("cannot find shell script in ",r$run_in," directory")
+    ss_contents <- readLines(file.path(r$run_in,shell_script_name))
     message("reading shell script: ",shell_script_name)
     if(length(ss_contents)==0) stop(shell_script_name," is empty")
     cmd <- c(cmd,ss_contents)
@@ -40,9 +45,9 @@ nm <- function(cmd,psn_command,
     ss_file_name_detected <- grepl(match_string,cmd)
     if(ss_file_name_detected){
       shell_script_name <- gsub(match_string,"\\1",cmd)
-      if(file.exists(from_models(shell_script_name))){
+      if(file.exists(file.path(r$run_in,shell_script_name))){
         message("reading shell script: ",shell_script_name)
-        ss_contents <- readLines(from_models(shell_script_name))
+        ss_contents <- readLines(file.path(r$run_in,shell_script_name))
         if(length(ss_contents)==0) stop(shell_script_name," is empty")
         cmd <- c(cmd,ss_contents)
       }
@@ -58,9 +63,9 @@ nm <- function(cmd,psn_command,
 
   if(!missing(psn_command)) r$type <- psn_command
   if(!missing(ctl_name)) {
-    if(any(!file.exists(from_models(ctl_name))))
+    if(any(!file.exists(file.path(r$run_in,ctl_name))))
       stop(paste(ctl_name,collapse = ",")," do(es) not exist")
-    r$ctl <- ctl_name
+    r$ctl <- file.path(r$run_in,ctl_name)
   }
 
   if(is.null(r$type)){
@@ -79,7 +84,7 @@ nm <- function(cmd,psn_command,
     subcmd <- gsub(paste0("^.*(",r$type,".*)$"),"\\1",cmd)
     matched_ctl <- gsub2(paste0("^.*(",getOption("model_file_stub"),"\\S+)\\s*.*$"),"\\1",cmd)
     message(paste("inferring ctl file :",matched_ctl))
-    r$ctl <- matched_ctl
+    r$ctl <- file.path(r$run_in,matched_ctl)
   }
 
   if(missing(run_dir)){
@@ -90,7 +95,7 @@ nm <- function(cmd,psn_command,
     if(length(matched_run_dir)>1)
       stop("couldn't infer unique run directory type.\nRerun with run_dir argument")
     message(paste("inferring run directory :",matched_run_dir))
-    r$run_dir <- matched_run_dir
+    r$run_dir <- file.path(r$run_in,matched_run_dir)
   }
 
   if(missing(run_id)){
@@ -100,19 +105,18 @@ nm <- function(cmd,psn_command,
     r$run_id <- matched_run_id
   }
 
-  if(!file.exists(from_models(r$ctl))) stop(paste("cannot find model file:",r$ctl))
+  if(!file.exists(r$ctl)) stop(paste("cannot find model file:",r$ctl))
   r$extn <- tools::file_ext(r$ctl)
   ## class for execute runs
   class(r) <- c(paste0("nm",r$type),class(r))
 
   if(r$type %in% "execute"){
-    r$data_name <- data_name(file.path(tidyproject::models_dir(),r$ctl))
+    r$data_name <- data_name(r$ctl)
     if(r$extn %in% "mod") r$lst <- gsub("^(.*\\.).*$","\\1lst",r$ctl) else
       r$lst <- paste0(r$ctl,".lst")
     r$psn.lst <- file.path(r$run_dir,"NM_run1","psn.lst")
     r$psn.ext <- file.path(r$run_dir,"NM_run1","psn.ext")
   }
-  ## TODO develop classes nmboot, nmvpc,....
   return(r)
 }
 
@@ -160,28 +164,26 @@ run <- function(...,overwrite=FALSE){
     if(!is.null(getOption("kill_run"))){
       getOption("kill_run")(r)
     }
-    clean_run(r$run_id)
-    system_nm(r$cmd)
+    clean_run(r)
+    system_nm(cmd = r$cmd,dir = r$run_in)
   })
   invisible()
 }
 
 #' @export
 nm_tran.nm <- function(x){
-  nm_tran.default(from_models(x$ctl))
+  nm_tran.default(x$ctl)
 }
 
 #' clean_run files
 #'
-#' @param run_id character or numeric. run identifier
+#' @param r character or numeric. run identifier
 #' @export
-clean_run <- function(run_id){
+clean_run <- function(r){
   ## assumes ctrl file is run[run_id].mod and -dir=[run_id] was used
-  unlink(out_files0(from_models(ctl_name(run_id))))
-  unlink(from_models(run_id),recursive=TRUE) ## delete run directory
+  unlink(out_files0(r$ctl))
+  unlink(r$run_dir,recursive=TRUE) ## delete run directory
 }
-
-from_models <- function(x) file.path(getOption("models.dir"),x) ## change a path to be in models dir
 
 out_files0 <- function(ctrl.file){ ## will get vector of $TABLE file names from control file.
   if(!file.exists(ctrl.file)) stop(paste(ctrl.file, "doesn't exist"))

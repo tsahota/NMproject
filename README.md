@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/tsahota/NMproject/badge.svg?branch=master)](https://coveralls.io/github/tsahota/NMproject?branch=master)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/tsahota/NMproject?branch=master&svg=true)](https://ci.appveyor.com/project/tsahota/NMproject)
 
-Script based NONMEM execution on tidyprojects
+Script based NONMEM execution on tidyprojects.  NMproject was previously an AstraZeneca project.  It is currently being reimplemented here as a community version to be compatible with a variety of architectures (standalone NONMEM and a variety of grid submission systems)
  
 ## Installation
 

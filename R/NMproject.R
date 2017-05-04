@@ -175,9 +175,10 @@ run_id <- function(x){
 
 #' path of directory from models dir
 #'
-#' @param x character vector. relative path from models.dir
-from_models <- function(x) {
-  file.path(getOption("models.dir"),x)
+#' @param x character vector. Relative path from models.dir
+#' @param models_dir character. Models directory
+from_models <- function(x, models_dir=getOption("models.dir")) {
+  file.path(models_dir,x)
 }
 
 #' test if NONMEM file name conforms to convention

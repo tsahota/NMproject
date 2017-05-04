@@ -105,15 +105,13 @@ plot_iter0 <- function(ext.file,p_info=NULL,skip=0,yvar="OBJ"){
 
 plot_iter <- function(nm_obj,trans=TRUE,...){
 
-  if(!trans) return(plot_iter0(ext.file = from_models(nm_obj$psn.ext),...))
+  if(!trans) return(plot_iter0(ext.file = nm_obj$psn.ext,...))
 
-  ctl.file <- from_models(nm_obj$ctl)
-  ctl <- readLines(ctl.file)
+  ctl <- readLines(nm_obj$ctl)
   ctl <- ctl_nm2r(ctl)
   p <- theta_nm2r(ctl$THETA)
 
-  plot_iter0(ext.file = from_models(nm_obj$psn.ext),
-             p_info=p,...)
+  plot_iter0(ext.file = nm_obj$psn.ext,p_info=p,...)
 
 }
 
