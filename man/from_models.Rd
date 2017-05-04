@@ -4,10 +4,12 @@
 \alias{from_models}
 \title{path of directory from models dir}
 \usage{
-from_models(x)
+from_models(x, models_dir = getOption("models.dir"))
 }
 \arguments{
-\item{x}{character vector. relative path from models.dir}
+\item{x}{character vector. Relative path from models.dir}
+
+\item{models_dir}{character. Models directory}
 }
 \description{
 path of directory from models dir

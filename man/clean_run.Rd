@@ -4,10 +4,10 @@
 \alias{clean_run}
 \title{clean_run files}
 \usage{
-clean_run(run_id)
+clean_run(r)
 }
 \arguments{
-\item{run_id}{character or numeric. run identifier}
+\item{r}{character or numeric. run identifier}
 }
 \description{
 clean_run files
