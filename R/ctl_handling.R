@@ -172,3 +172,13 @@ theta_r2nm <- function(x){
 }
 
 
+#' Get parameter information
+#'
+#' @param ctl_name character. Path to control file
+#' @export
+param_info <- function(ctl_name){
+  ctl <- readLines(ctl_name)
+  ctl <- ctl_nm2r(ctl)
+  theta_nm2r(ctl$THETA)
+}
+
