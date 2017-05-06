@@ -116,6 +116,8 @@ nm <- function(cmd,psn_command,
       r$lst <- paste0(r$ctl,".lst")
     r$psn.lst <- file.path(r$run_dir,"NM_run1","psn.lst")
     r$psn.ext <- file.path(r$run_dir,"NM_run1","psn.ext")
+    r$psn.mod <- file.path(r$run_dir,"NM_run1","psn.mod")
+    r$param_info <- param_info(r$ctl)
   }
   return(r)
 }

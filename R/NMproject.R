@@ -198,7 +198,6 @@ is_nm_file_name <- function(x,error_if_false=FALSE){
 #' Requires options("path/to/nmtran") to be set up.
 #'
 #' @param x character. file name of NONMEM control stream
-#' @rdname nm_tran
 #' @export
 nm_tran <- function(x) UseMethod("nm_tran")
 
