@@ -4,7 +4,12 @@
 \alias{run_record0}
 \title{Run record}
 \usage{
-run_record0(..., coef.func = coef_ext0)
+run_record0(..., coef.func = c(coef_ext0, coef.nm))
+}
+\arguments{
+\item{...}{objects of class nmexecute}
+
+\item{coef.func}{function to generate coefficients}
 }
 \description{
 Run record

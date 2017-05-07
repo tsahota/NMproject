@@ -1,4 +1,4 @@
-ext2coef <- function(extout){
+ext2coef <- function(extout,file_name){
   ## raw function to generate parameter table from ext.file.
   d <- extout
 
@@ -8,10 +8,11 @@ ext2coef <- function(extout){
   d <- d[,c(names(d)[grepl("THETA|SIGMA|OMEGA",names(d))],
             c("OBJ","EST.NAME","EST.NO","EVALUATION","TYPE"))]
 
-  d <- tidyr::gather(d,Parameter,value,THETA1:OBJ)
-  d <- tidyr::spread(d,TYPE,value)
-  d <- dplyr::arrange(d,desc(EST.NO))
-  d$file <- ext.file
+  d <- tidyr::gather_(d,"Parameter","value",
+                      names(d)[match("THETA1",names(d)):match("OBJ",names(d))])
+  d <- tidyr::spread_(d,"TYPE","value")
+  d <- d[order(d$EST.NO,decreasing = TRUE),]
+  d$file <- file_name
 
   is.diag.omega <- grepl("OMEGA.([0-9]+\\.)\\1",d$Parameter)
   is.omega <- grepl("OMEGA.([0-9]+\\.)+",d$Parameter)
@@ -38,27 +39,26 @@ ext2coef <- function(extout){
   d$Type[grepl("SIGMA",par.char)] <- "SIGMA"
   d$Type[grepl("OBJ",par.char)] <- "OBJ"
   d$Type <- factor(d$Type,levels=c("THETA","OMEGAVAR","OMEGACOV","SIGMA","OBJ"))
-  d <- dplyr::arrange(d,Type)
+  d <- d[order(d$Type),]
   d$Unit <- NA
   d$SEUnit <- NA
   d
 }
 
-#' Gets parameters values
-#'
-#' Produces data.frame of parameter values
-#' @param ext.file string of ext file
-#' @param p_info parameter info object
-#' @return a \code{data.frame} of parameter values
-#' @export coef_ext0
-
 coef_ext0 <- function(ext.file){
   ## raw function to generate parameter table from ext.file.
   extout <- read_ext0(ext.file = ext.file)
-  ext2coef(extout)
+  ext2coef(extout,file_name=ext.file)
 }
 
+#' Gets parameters values
+#'
+#' Produces data.frame of parameter values
+#' @param object object of class nmexecute
+#' @param ... trans argument (default = TRUE). logical.  Should parameters be transformed
+#' @return a \code{data.frame} of parameter values
 #' @export
+
 coef.nm <- function(object,...){
 
   trans_arg <- list(...)$trans
@@ -77,7 +77,11 @@ coef.nm <- function(object,...){
   ## TODO: read parameter names from $OMEGA
   ## either $OMEGA in same way as $THETA (but without units in comments)
   ## or $OMEGA BLOCK
-  d <- merge(dplyr::select(d,-Unit),dplyr::select(p,Name,Parameter,Unit,trans),all.x = TRUE,by="Parameter")
+
+  d0 <- d[,names(d)[!names(d) %in% "Unit"]]
+  d1 <- p[,c("Name","Parameter","Unit","trans")]
+
+  d <- merge(d0,d1,all.x = TRUE,by="Parameter")
   d$Name[is.na(d$Name)] <- as.character(d$Parameter)[is.na(d$Name)]
   d$Name <- factor(d$Name,levels=d$Name)
   d$transUnit <- d$Unit
@@ -94,11 +98,12 @@ coef.nm <- function(object,...){
   d$transSEUnit[d$trans %in% c("LOG","LOGODDS")] <- "%"
   ## LOGIT
   if("LOGIT" %in% d$trans){
-    delt <- plyr::ldply(which(d$trans %in% "LOGIT"),function(i){
+    delt <- lapply(which(d$trans %in% "LOGIT"),function(i){
       par <- c(logit=d$FINAL[i])
       separ <- c(logit=d$SE[i])
       car::deltaMethod(par,"1/(1+exp(-logit))",vcov.=separ^2)
     })
+    delt <- do.call(rbind,delt)
     d$FINAL.TRANS[d$trans %in% "LOGIT"] <- 100*delt$Estimate
     d$SE.TRANS[d$trans %in% "LOGIT"] <- 100*delt$SE
     d$transUnit[d$trans %in% "LOGIT"] <- "%"
@@ -124,7 +129,7 @@ coef.nm <- function(object,...){
     ## know SE(COV[X,Y]) and SE[SDX^2] and SE[SDY^2]
     ## Need covariance matrix between these though - from .cov file.
     ## SQRT(VAR(COV[X,Y]/(SD[X]*SD[Y])))
-    cov.file <- from_models(file.path(run.dir,sub.dir,"psn.cov"))
+    cov.file <- object$psn.cov
     dc <- read.table(cov.file,skip=1,header = TRUE)
     for(i in seq_along(which(d$trans %in% "COV"))){
       ## loop through each COV variable and generate absolute SE
@@ -164,19 +169,23 @@ coef.nm <- function(object,...){
 
 #' Run record
 #'
+#' @param ... objects of class nmexecute
+#' @param coef.func function to generate coefficients
 #' @export run_record0
-run_record0 <- function(..., coef.func = coef_ext0){
+run_record0 <- function(..., coef.func = c(coef_ext0,coef.nm)){
+  coef.func <- match.arg(coef.func)
   d <- lapply(list(...),coef.func)
   d <- do.call(rbind,d)
   d$Unit[is.na(d$Unit)] <- ""
   d$SEUnit[is.na(d$SEUnit)] <- ""
   if("trans" %in% d$trans) d$trans[is.na(d$trans)] <- ""   ## optional item
-  d <- dplyr::select(d,-EVALUATION, -EST.NO,-EST.NAME)
+  d <- d[,names(d)[!names(d) %in% c("EVALUATION", "EST.NO","EST.NAME")]]
   d$Estimate <- NA
   d$Estimate[d$Parameter!="OBJ"] <- paste0(signif(d$FINAL[d$Parameter!="OBJ"],3)," (",signif(d$SE[d$Parameter!="OBJ"],3),d$SEUnit[d$Parameter!="OBJ"],")")
   d$Estimate[d$Parameter=="OBJ"] <- round(d$FINAL[d$Parameter=="OBJ"],3)
-  d <- tidyr::spread(dplyr::select(d,-SE,-FINAL),file,Estimate)
-  d <- dplyr::arrange(d,Type,Parameter)
+  d <- d[,names(d)[!names(d) %in% c("SE","FINAL")]]
+  d <- tidyr::spread_(d,"file","Estimate")
+  d <- d[order(d$Type,d$Parameter),]
   d$SEUnit <- NULL
   d
 }

@@ -28,14 +28,12 @@ test_that("nm function works",{
   expect_true(is.character(m1$run_id))
   expect_true(is.character(m1$run_dir))
   expect_true(identical(as.numeric(m1$run_id),1))
-  expect_true(identical(as.numeric(m1$run_dir),1))
 
   m2 <- nm("qsubmissionscript -opt1 -opt2 -- execute run1.mod -dir=1")
   expect_true(m2$type=="execute")
   expect_true(is.character(m2$run_id))
   expect_true(is.character(m2$run_dir))
   expect_true(identical(as.numeric(m2$run_id),1))
-  expect_true(identical(as.numeric(m2$run_dir),1))
 
   write(c("## Description: klm",
           "execute run1.mod -dir=1"),
@@ -46,14 +44,12 @@ test_that("nm function works",{
   expect_true(is.character(m3$run_id))
   expect_true(is.character(m3$run_dir))
   expect_true(identical(as.numeric(m3$run_id),1))
-  expect_true(identical(as.numeric(m3$run_dir),1))
 
   m4 <- nm("qsubmissionscript -opt1 -opt2 shell=run1.sh")
   expect_true(m4$type=="execute")
   expect_true(is.character(m4$run_id))
   expect_true(is.character(m4$run_dir))
   expect_true(identical(as.numeric(m4$run_id),1))
-  expect_true(identical(as.numeric(m4$run_dir),1))
 
   expect_error(nm("qsubmissionscript -opt1 -opt2 run2.sh"))
 
@@ -62,7 +58,5 @@ test_that("nm function works",{
   expect_true(is.character(m5$run_id))
   expect_true(is.character(m5$run_dir))
   expect_true(identical(as.numeric(m5$run_id),1))
-  expect_true(identical(as.numeric(m5$run_dir),1))
-
 
 })

@@ -1,7 +1,14 @@
-plot_iter0 <- function(ext.file,p_info=NULL,skip=0,yvar="OBJ"){
+#' Plot iterations vs parameters/OBJ
+#'
+#' @param r object of class nmexecute
+#' @param trans logical. should parameter transformations be performed
+#' @param skip numeric (default 0). how many iterations to skip when plotting
+#' @param yvar character (default = "OBJ"). Name of variable/parameter to display
+#' @export
+plot_iter <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
 
-  d <- read_ext(ext.file = ext.file,p_info = p_info)
-  print(paste("last.modified",file.info(ext.file)$mtime))
+  d <- read_ext(r=r,trans=trans)
+  print(paste("last.modified",file.info(r$psn.ext)$mtime))
 
   d <- d[d$TYPE %in% c("ITER","BURN"), ]
   d$EST.NAME2 <- paste("$EST",d$EST.NO,":",d$EST.NAME,sep=" ")
@@ -49,21 +56,4 @@ plot_iter0 <- function(ext.file,p_info=NULL,skip=0,yvar="OBJ"){
   p <- p + ggplot2::theme_bw()
   p
 }
-
-#' Plot iterations vs parameters/OBJ
-#'
-#' @param x object of class nm.execute
-#' @export
-
-plot_iter <- function(nm_obj,trans=TRUE,...){
-
-  if(!trans) return(plot_iter0(ext.file = nm_obj$psn.ext,...))
-
-  plot_iter0(ext.file = nm_obj$psn.ext,
-             p_info=param_info(nm_obj$ctl),
-             ...)
-
-}
-
-
 
