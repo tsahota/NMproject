@@ -4,10 +4,16 @@
 \alias{plot_iter}
 \title{Plot iterations vs parameters/OBJ}
 \usage{
-plot_iter(nm_obj, trans = TRUE, ...)
+plot_iter(r, trans = TRUE, skip = 0, yvar = "OBJ")
 }
 \arguments{
-\item{x}{object of class nm.execute}
+\item{r}{object of class nmexecute}
+
+\item{trans}{logical. should parameter transformations be performed}
+
+\item{skip}{numeric (default 0). how many iterations to skip when plotting}
+
+\item{yvar}{character (default = "OBJ"). Name of variable/parameter to display}
 }
 \description{
 Plot iterations vs parameters/OBJ

@@ -104,13 +104,13 @@ theta_nm2r <- function(x){
     if(substr(x,1,1)!="~"){
       x <- strsplit(x,"[ ,]")[[1]]
       x <- x[!x %in% c("","FIX")]
-      x <- as.numeric(x)
+      x <- suppressWarnings(as.numeric(x))
       x <- data.frame(lower=NA,init=x,upper=NA)
     } else {
       x <- gsub("~","",x)
       x <- strsplit(x,"[ ,]")[[1]]
       x <- x[!x %in% c("","FIX")]
-      x <- as.numeric(x)
+      x <- suppressWarnings(as.numeric(x))
       #x <- as.data.frame(t(x))
       if(length(x)==1) x <- data.frame(lower=NA,init=x,upper=NA) else
         if(length(x)==2) x <- data.frame(lower=x[1],init=x[2],upper=NA) else
@@ -141,7 +141,6 @@ theta_nm2r <- function(x){
   x
 }
 
-#' remove trailing spaces
 rem_trailing_spaces <- function(x){
   x <- gsub("\\s(?!\\S)","",x,perl = TRUE)
   x <- gsub("^\\s*","",x,perl = TRUE)

@@ -6,7 +6,6 @@
 #' @export
 status <- function(x) UseMethod("status",x)
 
-#' get type of run
 run_type <- function(run.dir){  ## internal function: get type of run from directory
   if(!file.exists(file.path(run.dir,"command.txt"))) {
     warning("can't find command.txt, assuming run is type \"execute\"")
@@ -60,7 +59,7 @@ status_execute <- function(run_dir,sub.dir="NM_run1"){
   r
 }
 
-status_scm <- function(x){
+status_scm <- function(run_dir){
 
   r <- data.frame(RUN=as.integer(basename(run_dir)),TYPE=run_type(run_dir),TEST=c(
     "dir created",
@@ -92,5 +91,5 @@ status_scm <- function(x){
 }
 
 #' @export
-status.nmexecute <- function(r) status_execute(r$run_dir)
+status.nmexecute <- function(x) status_execute(x$run_dir)
 
