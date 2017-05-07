@@ -98,15 +98,15 @@ coef.nm <- function(object,...){
   d$transSEUnit[d$trans %in% c("LOG","LOGODDS")] <- "%"
   ## LOGIT
   if("LOGIT" %in% d$trans){
-    delt <- lapply(which(d$trans %in% "LOGIT"),function(i){
-      par <- c(logit=d$FINAL[i])
-      separ <- c(logit=d$SE[i])
-      car::deltaMethod(par,"1/(1+exp(-logit))",vcov.=separ^2)
-    })
-    delt <- do.call(rbind,delt)
-    d$FINAL.TRANS[d$trans %in% "LOGIT"] <- 100*delt$Estimate
-    d$SE.TRANS[d$trans %in% "LOGIT"] <- 100*delt$SE
+    d$FINAL.TRANS[d$trans %in% "LOGIT"] <- 100*1/(1+exp(-d$FINAL[d$trans %in% "LOGIT"]))
     d$transUnit[d$trans %in% "LOGIT"] <- "%"
+    # delt <- lapply(which(d$trans %in% "LOGIT"),function(i){
+    #   par <- c(logit=d$FINAL[i])
+    #   separ <- c(logit=d$SE[i])
+    #   car::deltaMethod(par,"1/(1+exp(-logit))",vcov.=separ^2)
+    # })
+    # delt <- do.call(rbind,delt)
+    # d$SE.TRANS[d$trans %in% "LOGIT"] <- 100*delt$SE
   }
   ## OMEGA
   d$trans[grepl("OMEGA.([0-9]+\\.)\\1",d$Parameter)] <- "OM"   ## temp code - make an identifyer for OMEGA.X.X
