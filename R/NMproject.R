@@ -255,3 +255,18 @@ update_dollar_data <- function(ctl_name,new_data_name){
   writeLines(ctl,ctl_name)
 }
 
+
+#' Starts run monitor
+#'
+#' @param x run object
+#' @export
+monitor <- function(x) UseMethod("monitor")
+
+#' @export
+monitor.nm <- function(x) monitor.default(x$run.id)
+
+#' @export
+monitor.default <- function(x){
+  shiny_dir <- system.file("extdata/RunMonitor",package="NMproject")
+  shiny::runApp(shiny_dir,launch.browser = TRUE)
+}
