@@ -16,5 +16,6 @@ RoxygenNote: 5.0.1
 Suggests:
     testthat,
     ggplot2,
-    tidyr
+    tidyr,
+    shiny
 

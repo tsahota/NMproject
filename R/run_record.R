@@ -130,7 +130,7 @@ coef.nm <- function(object,...){
     ## Need covariance matrix between these though - from .cov file.
     ## SQRT(VAR(COV[X,Y]/(SD[X]*SD[Y])))
     cov.file <- object$psn.cov
-    dc <- read.table(cov.file,skip=1,header = TRUE)
+    dc <- utils::read.table(cov.file,skip=1,header = TRUE)
     for(i in seq_along(which(d$trans %in% "COV"))){
       ## loop through each COV variable and generate absolute SE
       names.c <- c(omx[i],omy[i],as.character(d$Parameter[d$trans %in% "COV"][i]))
@@ -146,8 +146,8 @@ coef.nm <- function(object,...){
       names(pmean) <- d$Name[match(names.c,d$Parameter)]
 
       formula.i <- paste0(names.c[3],"/(sqrt(",names.c[1],")*sqrt(",names.c[2],"))")
-      tmp <- car::deltaMethod(pmean,formula.i,vcov.=vcov)
-      d$SE.TRANS[d$trans %in% "COV"][i] <- tmp$SE
+      #tmp <- car::deltaMethod(pmean,formula.i,vcov.=vcov)
+      #d$SE.TRANS[d$trans %in% "COV"][i] <- tmp$SE
     }
 
   }

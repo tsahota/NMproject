@@ -12,7 +12,7 @@ read_ext0 <- function(ext.file){
     d <- s[(cut.points[i]+1):(cut.points[i+1]-1)]
     tmp <- file()
     writeLines(d,tmp)
-    d <- read.table(tmp,header=TRUE)
+    d <- utils::read.table(tmp,header=TRUE)
     d$EST.NO <- i
     d$EST.NAME <- headings[i]
     names(d)[names(d)%in%"SAEMOBJ"] <- "OBJ"
@@ -41,7 +41,7 @@ read_ext <- function(r,trans=FALSE){
     if(pi$trans %in% c("LOG","LOGODDS")){
       d[,pi$Name][d$ITERATION>=0] <- exp(d[,pi$Name][d$ITERATION>=0])
     } else if (pi$trans %in% "LOGIT") {
-      d[,pi$Name][d$ITERATION>=0] <- plogis(d[,pi$Name][d$ITERATION>=0])
+      d[,pi$Name][d$ITERATION>=0] <- stats::plogis(d[,pi$Name][d$ITERATION>=0])
     }
   }
   d

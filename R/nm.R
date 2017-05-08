@@ -124,7 +124,7 @@ nm <- function(cmd,psn_command,
 }
 
 #' @export
-print.nm <- function(x,...) str(x)
+print.nm <- function(x,...) utils::str(x)
 
 ctl_name <- function(run_id)
   paste0(getOption("model_file_stub"),run_id,".",getOption("model_file_extn"))
