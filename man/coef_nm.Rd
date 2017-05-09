@@ -9,7 +9,9 @@ coef_nm(object, trans, ...)
 \arguments{
 \item{object}{object of class nmexecute}
 
-\item{...}{trans argument (default = TRUE). logical.  Should parameters be transformed}
+\item{trans}{logical. Default = TRUE. Should parameters be transformed}
+
+\item{...}{additional arguments to carry to coef}
 }
 \value{
 a \code{data.frame} of parameter values

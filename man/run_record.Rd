@@ -9,7 +9,8 @@ run_record(..., trans = TRUE)
 \arguments{
 \item{...}{objects of class nmexecute}
 
-\item{coef.func}{function to generate coefficients}
+\item{trans}{logical (default=TRUE).
+If possible TRUE means transformation will be attempted}
 }
 \description{
 Run record
