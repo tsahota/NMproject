@@ -126,23 +126,32 @@ nm <- function(cmd,psn_command,
   overlapped_output_entries <-
     match_info$entry[match_info$overlap_outputs &
                        !(match_info$entry %in% matched_entry)]
-  
+
   if(length(overlapped_output_entries)>0)
     stop("Outputs overlap with entries: ",
-         paste(overlapped_output_entries,collapse=","))
+         paste(overlapped_output_entries,collapse=","),
+         "\nView runs with: show_runs()",
+         "\nDelete old runs with: delete_run(entry)")
 
   if(length(matched_entry)==0) {
     nmdb_add_entry(r)
   } else if(length(matched_entry)==1) {
-    query <- paste('DELETE FROM runs WHERE entry ==',matched_entry)
-    my_db <- DBI::dbConnect(RSQLite::SQLite(), ".runs.sqlite3")
-    DBI::dbExecute(my_db, query)
-    DBI::dbDisconnect(my_db)
+    delete_run(matched_entry)
     message("Overwriting database entry: ",matched_entry)
     nmdb_add_entry(r,matched_entry,silent=TRUE)
   } else stop("Matched more than one database entry. Debug")
 
   return(r)
+}
+
+#' delete run from database
+#' @param entry numeric. entry name to delete
+#' @export
+delete_run <- function(entry){
+  query <- paste('DELETE FROM runs WHERE entry ==',entry)
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), ".runs.sqlite3")
+  DBI::dbExecute(my_db, query)
+  DBI::dbDisconnect(my_db)
 }
 
 nmdb_match_info <- function(r){
@@ -255,7 +264,11 @@ nmdb_get <- function(readable=FALSE){
   })
 }
 
-nmdb_display <- function(...) nmdb_get(readable = TRUE,...)
+#' Show table of runs in database
+#'
+#' @param ... arguments to pass to nmdb_get
+#' @export
+show_runs <- function(...) nmdb_get(readable = TRUE,...)
 
 #' Extract nm object from data.base
 #' @param entry numeric. Database ID of nm object
