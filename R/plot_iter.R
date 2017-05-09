@@ -8,7 +8,7 @@
 plot_iter <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
 
   d <- read_ext(r=r,trans=trans)
-  print(paste("last.modified",file.info(r$psn.ext)$mtime))
+  print(paste("last.modified",file.info(r$output$psn.ext)$mtime))
 
   d <- d[d$TYPE %in% c("ITER","BURN"), ]
   d$EST.NAME2 <- paste("$EST",d$EST.NO,":",d$EST.NAME,sep=" ")

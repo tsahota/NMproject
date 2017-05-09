@@ -30,10 +30,10 @@ read_ext0 <- function(ext.file){
 }
 
 read_ext <- function(r,trans=FALSE){
-  d <- read_ext0(r$psn.ext)
+  d <- read_ext0(r$output$psn.ext)
   if(!trans) return(d)
 
-  p_info <- param_info(r$psn.mod)
+  p_info <- param_info(r$output$psn.mod)
   ## combine d with p
   for(i in seq_len(nrow(p_info))){
     pi <- p_info[i,]
