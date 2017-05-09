@@ -110,7 +110,8 @@ nm <- function(cmd,psn_command,
   class(r) <- c(paste0("nm",r$type),class(r))
 
   r$input <- input_files(run_type = r$type,ctl_name = r$ctl)
-  r$output <- output_files(run_type = r$type,
+  r$output <- output_files(run_in = r$run_in,
+                           run_type = r$type,
                            run_dir = r$run_dir,
                            ctl_name = r$ctl)
 
@@ -382,7 +383,7 @@ input_files <- function(run_type,ctl_name){
   return(r)
 }
 
-output_files <- function(run_type,run_dir,ctl_name){
+output_files <- function(run_in,run_type,run_dir,ctl_name){
   r <- list()
   if(run_type %in% "execute"){
     extn <- tools::file_ext(ctl_name)
@@ -394,7 +395,7 @@ output_files <- function(run_type,run_dir,ctl_name){
     r$psn.cov <- file.path(run_dir,"NM_run1","psn.cov")
     r$psn.cor <- file.path(run_dir,"NM_run1","psn.cor")
     r$psn.xml <- file.path(run_dir,"NM_run1","psn.xml")
-    r$ctl_out_files <- file.path(run_dir,ctl_out_files(ctl_name))
+    r$ctl_out_files <- file.path(run_in,ctl_out_files(ctl_name))
   }
   return(r)
 }

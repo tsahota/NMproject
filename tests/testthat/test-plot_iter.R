@@ -52,6 +52,12 @@ test_that("db & plot_iter works",{
 
   expect_error(nm("qpsn -m -c auto -t 3000 -- execute run3.mod -dir=4"))
 
+  copy_control("run2.mod","run5.mod")
+  ctl <- readLines("Models/run5.mod")
+  ctl <- gsub("sdtab5","sdtab2",ctl) ## create an output conflict
+  write(ctl,"Models/run5.mod")
+  expect_error(nm("qpsn -m -c auto -t 3000 -- execute run5.mod -dir=5"))
+
   p <- plot_iter(m2,trans = FALSE)
   expect_true(inherits(p,"ggplot"))
 
