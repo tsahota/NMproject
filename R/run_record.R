@@ -68,7 +68,7 @@ coef.nm <- function(object,...){
     trans <- trans_arg
   }
 
-  d <- coef_ext0(object$psn.ext)
+  d <- coef_ext0(object$output$psn.ext)
   if(!trans) return(d)
 
   p <- object$param_info
@@ -129,7 +129,7 @@ coef.nm <- function(object,...){
     ## know SE(COV[X,Y]) and SE[SDX^2] and SE[SDY^2]
     ## Need covariance matrix between these though - from .cov file.
     ## SQRT(VAR(COV[X,Y]/(SD[X]*SD[Y])))
-    cov.file <- object$psn.cov
+    cov.file <- object$output$psn.cov
     dc <- utils::read.table(cov.file,skip=1,header = TRUE)
     for(i in seq_along(which(d$trans %in% "COV"))){
       ## loop through each COV variable and generate absolute SE
@@ -199,7 +199,7 @@ run_record0 <- function(..., coef.func = c(coef_ext0,coef.nm)){
 #     run_record.tmp <- function(...) run_record0(...,coef.func=coef_nm)
 #   } else {
 #     a <- lapply(a,function(i){ ## convert class "nmexecute" objects into run.id
-#       if("nmexecute" %in% class(i)) return(from_models(i$psn.ext)) else return(i)
+#       if("nmexecute" %in% class(i)) return(from_models(i$output$psn.ext)) else return(i)
 #     })
 #     run_record.tmp <- function(...) run_record0(...,coef.func=coef_ext0)
 #   }

@@ -2,14 +2,17 @@
 % Please edit documentation in R/nm.R
 \name{run}
 \alias{run}
-\title{Load nm object into memory from script}
+\title{Run NONMEM}
 \usage{
-run(..., overwrite = FALSE)
+run(..., overwrite = FALSE, delete_dir = c(NA, TRUE, FALSE))
 }
 \arguments{
 \item{...}{objects of class nm}
 
 \item{overwrite}{logical. Should run directory be overwritten (default=FALSE)}
+
+\item{delete_dir}{logical. NA (default - directory will be deleted if no dependencies exists)
+TRUE or FALSE. Should run_dir be deleted.}
 }
 \description{
 Run NONMEM

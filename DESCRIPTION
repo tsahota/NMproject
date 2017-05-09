@@ -17,5 +17,7 @@ Suggests:
     testthat,
     ggplot2,
     tidyr,
-    shiny
+    shiny,
+    DBI,
+    RSQLite
 
