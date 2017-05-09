@@ -55,24 +55,25 @@ coef_ext0 <- function(ext.file){
 #'
 #' Produces data.frame of parameter values
 #' @param object object of class nmexecute
-#' @param ... trans argument (default = TRUE). logical.  Should parameters be transformed
+#' @param trans logical. Default = TRUE. Should parameters be transformed
+#' @param ... additional arguments to carry to coef
 #' @return a \code{data.frame} of parameter values
 #' @export
 
 coef_nm <- function(object,trans,...){
   d <- coef_ext0(object$output$psn.ext)
   if(!trans) return(d)
-  
+
   p <- object$param_info
-  
+
   p$Parameter <- paste0("THETA",p$N)
   ## TODO: read parameter names from $OMEGA
   ## either $OMEGA in same way as $THETA (but without units in comments)
   ## or $OMEGA BLOCK
-  
+
   d0 <- d[,names(d)[!names(d) %in% "Unit"]]
   d1 <- p[,c("Name","Parameter","Unit","trans")]
-  
+
   d <- merge(d0,d1,all.x = TRUE,by="Parameter")
   d$Name[is.na(d$Name)] <- as.character(d$Parameter)[is.na(d$Name)]
   d$Name <- factor(d$Name,levels=d$Name)
@@ -128,22 +129,22 @@ coef_nm <- function(object,trans,...){
       names.c <- c(omx[i],omy[i],as.character(d$Parameter[d$trans %in% "COV"][i]))
       names.c <- d$Parameter[d$Parameter %in% names.c] ## reorder
       names.c2 <- gsub("\\.([0-9]+)\\.([0-9]+)\\.","(\\1,\\2)",names.c)
-      
+
       ## same order as names.c - important
       vcov <- dc[match(names.c2,dc$NAME),as.character(names.c)]
       rownames(vcov) <- names(vcov)
       vcov <- as.matrix(vcov)
-      
+
       pmean <- d$FINAL[match(names.c,d$Parameter)]  ## may as well recompute FINALs
       names(pmean) <- d$Name[match(names.c,d$Parameter)]
-      
+
       formula.i <- paste0(names.c[3],"/(sqrt(",names.c[1],")*sqrt(",names.c[2],"))")
       #tmp <- car::deltaMethod(pmean,formula.i,vcov.=vcov)
       #d$SE.TRANS[d$trans %in% "COV"][i] <- tmp$SE
     }
-    
+
   }
-  
+
   ## get names back to what they should be
   d$FINAL <- d$FINAL.TRANS
   d$FINAL.TRANS <- NULL
@@ -156,7 +157,7 @@ coef_nm <- function(object,trans,...){
   d$Parameter <- d$Name
   d$Name <- NULL
   d
-  
+
 }
 
 
@@ -193,13 +194,14 @@ run_record0 <- function(..., coef.func = coef_ext0){
 #' Run record
 #'
 #' @param ... objects of class nmexecute
-#' @param coef.func function to generate coefficients
-#' @export run_record0
+#' @param trans logical (default=TRUE).
+#'  If possible TRUE means transformation will be attempted
+#' @export
 
 run_record <- function(...,trans=TRUE){
   a <- list(...)
   classes <- sapply(a,function(a) inherits(a,"nm"))
-  
+
   if(any(classes)){
     coef.func <- coef_nm
     formals(coef.func)$trans <- trans
@@ -208,6 +210,6 @@ run_record <- function(...,trans=TRUE){
   }
   run_record.tmp <- function(...) run_record0(...,coef.func=coef.func)
   do.call(run_record.tmp,a)
-  
+
 }
 
