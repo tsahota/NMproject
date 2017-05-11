@@ -1,6 +1,6 @@
 library(shiny)
 
-shinyUI(fluidPage(
-  titlePanel("Run Table"),   # Application title
+fluidPage(
+  titlePanel("Run database"),   # Application title
   tableOutput("run_table")
-))
+)

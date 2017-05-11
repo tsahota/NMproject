@@ -1,6 +1,6 @@
 library(shiny)
 
-shinyServer(function(input, output, session) {
+function(input, output, session) {
   session$onSessionEnded(function() stopApp())
   #autoInvalidate <- reactiveTimer(20000, session)
   output$run_table <- shiny::renderTable({
@@ -8,5 +8,5 @@ shinyServer(function(input, output, session) {
   #  autoInvalidate()
     run_table()
   })
-})
+}
 
