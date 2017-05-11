@@ -273,6 +273,6 @@ shiny_run_monitor <- function(x){
 shiny_run_table <- function(){
   shiny_dir <- system.file("extdata/RunTable",package="NMproject")
   assign(".currentwd",value = getwd(),envir = as.environment("package:NMproject"))
-  #browser()
   shiny::runApp(shiny_dir,launch.browser = TRUE)
 }
+
