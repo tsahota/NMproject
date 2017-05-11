@@ -117,6 +117,8 @@ nm <- function(cmd,psn_command,
 
   if(r$type %in% "execute") r$param_info <- param_info(r$ctl)
 
+  r$description <- tidyproject::get_script_field(r$ctl,"Description")
+
   ####
 
   match_info <- nmdb_match_info(r)
@@ -204,6 +206,7 @@ nmdb_make_db_row <- function(r){
              type=r$type,
              run_in=r$run_in,
              run_dir=r$run_dir,
+             description=r$description,
              ctl = r$ctl,
              cmd = r$cmd,
              output_files=paste(unlist(r$output),collapse=","),
@@ -214,9 +217,11 @@ nmdb_printable_db <- function(d){
   d$object <- NULL
   d$output_files <- NULL
   d$input_files <- lapply(strsplit(d$input_files,","),function(char_vec){
-    paste(basename(char_vec),collapse=",")
+    paste(basename(char_vec),collapse=" ")
   })
   d$ctl <- NULL
+  for(i in names(d)) d[,i] <- as.character(d[,i]) ## convert everything to characters
+  names(d) <- gsub("_"," ",names(d))
   d
 }
 
