@@ -15,13 +15,12 @@ devtools::install_github("tsahota/NMproject")
 
 ## Quick setup
 
-Define options specific to your installation in your user `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site` if you want this to apply for all users).
+Define options specific to your installation in your user `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site` if you want this to apply for all users). See FAQ for specific options.
 
-e.g.
+To avoid having to start a code library from scratch, download: https://github.com/tsahota/PMXcodelibrary to a directory and add the following command to your `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site`)
 
 ```r
-options(path.nm_tran = "path/to/nonmem/installation/tr/NMTRAN.exe")
-
+options(code_library_path = "/path/to/PMXcodelibrary/")
 ```
 
 ### Instructions
@@ -31,16 +30,14 @@ options(path.nm_tran = "path/to/nonmem/installation/tr/NMTRAN.exe")
    * See tutorial at https://github.com/tsahota/tidyproject to get started with tidyproject
 * Open the NMproject with the File -> Open Project menu items. NOTE: always use Rstudio to open an NMproject, never just `setwd()` to the directory.
 
-* To ensure code you write which depends on the NMproject package will never break due to updates, install the package NMproject into the *project library*.  Do this by simply installing again:
+* Install the package NMproject into the *project library* by simply installing again from with the NMproject:
 
 ```r
 devtools::install_github("tsahota/NMproject")
 library(NMproject)
 ```
 
-The global installation of NMproject can now change over time, but code depending on NMproject in this tidyproject will never break.
-
-Have a look at built in code library, type:
+View the built in code library:
 
 ```r
 code_library()
@@ -66,27 +63,44 @@ Set up a run log with:
 copy_script("R/nm.log.R")
 ```
 
-If you have set up the `path.nm_tran` option, try running
+To create NONMEM (this will not run NONMEM yet)
 
 ```r
-nm_tran("Models/run1.mod")
-
+mod1 <- nm("execute run1.mod -dir=1")
 ```
 
-To run NONMEM
+NOTE: the `-dir` option must be specified
+
+If you have set up the `path.nm_tran` option (see FAQ below), you can do an NMTRAN check
 
 ```r
-system_nm("execute run1.mod -dir=1")
+nm_tran(mod1)
 ```
 
-NOTE: the `-dir` option must match the run id in the control stream name.  e.g. if the control stream is `run23vpc.mod` the `-dir` must be `23vpc`
+To run `mod1`:
+
+```r
+run(mod1)
+```
+
+To view all runs in database:
+
+```r
+shiny_run_table()
+```
+
+To monitor a single run:
+
+```r
+shiny_run_monitor(mod1)
+```
 
 
 ### FAQ
 
-How do I set up NMproject to run jobs on a cluster via ssh.
+### + How do I set up NMproject to run jobs on a cluster via ssh?
 
-*Answer:* Set up the system_nm option to ssh to the server and run the command, e.g.
+Create a system_nm option in your `~.Rprofile` to ssh to the server and run the command, e.g.
 
 ```r
 
@@ -96,6 +110,14 @@ options(system_nm=function(cmd,...) {
 
 ```
 
-How do I set up NMproject to run jobs on a cluster via ssh.
+### + How do can run an NMTRAN check on my control stream without the full NONMEM job?
+
+Create a path.nm_tran option in your `~.Rprofile` with the location of nmtran, e.g.
+
+```r
+options(path.nm_tran = "path/to/nonmem/installation/tr/NMTRAN.exe")
+
+```
+
 
 
