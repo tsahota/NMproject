@@ -276,3 +276,25 @@ shiny_run_table <- function(){
   shiny::runApp(shiny_dir,launch.browser = TRUE)
 }
 
+#' Check tidyproject for best practice compliance
+#'
+#' @param proj_name character. default = current working directory. path to directory.
+#' @param silent logical. default = FALSE. suppress messages or not
+#' @param check_rstudio logical (default = FALSE). Check rstudio studio project directory
+#' @export
+
+check_session <- function(proj_name = getwd(), silent = FALSE, check_rstudio = TRUE) {
+  dtidy <- tidyproject::check_session(proj_name = proj_name,
+                                      silent = silent,
+                                      check_rstudio = check_rstudio)
+
+  d <- tidyproject::do_test(
+    "NM run database present" = {
+      file.exists(".runs.sqlite3")
+    },
+    silent = silent)
+
+  d <- rbind(dtidy,d)
+  invisible(d)
+}
+
