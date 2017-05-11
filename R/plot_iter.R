@@ -46,6 +46,7 @@ plot_iter <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
 
   d <- tidyr::gather_(data = d,key = "variable",value = "value",
                       gather_cols = par.names)
+  d$variable <- factor(d$variable,levels=unique(d$variable))
 
   p <- ggplot2::ggplot(d,ggplot2::aes_string(x="ITERATION",y="value"))
   p <- p + ggplot2::geom_line(ggplot2::aes_string(colour="TYPE"))
