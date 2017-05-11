@@ -213,3 +213,49 @@ run_record <- function(...,trans=TRUE){
 
 }
 
+run_summary <- function(r){
+  res <- list()
+  existing_files <- file.exists(unlist(r$output))
+  res$outputs_present <- sum(existing_files)/length(existing_files)
+  res$last_update <- max(file.mtime(unlist(r$output)))
+  res$lst_exists <- NA
+  res$stop_time_reached <- NA
+  res$ofv <- NA
+  if(r$type %in% "execute"){
+    res$lst_exists <- file.exists(r$output$psn.lst)
+    res$stop_time_reached <- FALSE
+    if(res$lst_exists) {
+      lst_file <- readLines(r$output$psn.lst)
+      last_lst_file <- lst_file[max(1,length(lst_file)-10):length(lst_file)]
+      res$stop_time_reached <- any(grepl("Stop Time",last_lst_file))
+      objv_lines <- which(grepl("#OBJV",lst_file))
+      objv_lines <- max(objv_lines)
+      lst_file[objv_lines]
+      objv <- as.numeric(gsub("[#OBJV:* ]","",lst_file[objv_lines]))
+      if(length(objv)!=1) stop("Couldn't get ofv. Debug")
+      res$ofv <- objv
+    }
+  }
+  as.data.frame(res)
+}
+
+#' Generate table of runs
+
+#' @export
+run_table <- function(){
+  d <- nmdb_get()
+  res <- lapply(d$object,unserialize,refhook=NULL)
+  res <- lapply(res,run_summary)
+  res <- do.call(rbind,res)
+  res <- cbind(data.frame(entry=d$entry),res)
+  d <- merge(d,res)
+  nmdb_printable_db(d)
+}
+
+squash_df <- function(d){
+  for (i in 1:length(d)){
+    d[,i] <- as.character(d[,i])
+    d[,i] <- gsub("(.{15}\\S*) ","\\1\n",d[,i])
+  }
+  d
+}
