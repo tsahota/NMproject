@@ -229,11 +229,15 @@ run_summary <- function(r){
       last_lst_file <- lst_file[max(1,length(lst_file)-10):length(lst_file)]
       res$stop_time_reached <- any(grepl("Stop Time",last_lst_file))
       objv_lines <- which(grepl("#OBJV",lst_file))
-      objv_lines <- max(objv_lines)
-      lst_file[objv_lines]
-      objv <- as.numeric(gsub("[#OBJV:* ]","",lst_file[objv_lines]))
-      if(length(objv)!=1) stop("Couldn't get ofv. Debug")
-      res$ofv <- objv
+      if(length(objv_lines)==0) {
+        res$ofv <- NA
+      } else {
+        objv_lines <- max(objv_lines)
+        lst_file[objv_lines]
+        objv <- as.numeric(gsub("[#OBJV:* ]","",lst_file[objv_lines]))
+        if(length(objv)!=1) stop("Couldn't get ofv. Debug")
+        res$ofv <- objv
+      }
     }
   }
   as.data.frame(res)

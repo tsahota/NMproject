@@ -2,5 +2,7 @@ library(shiny)
 
 fluidPage(
   titlePanel("Run database"),   # Application title
-  tableOutput("run_table")
+  actionButton("refresh_button","refresh"),
+  br(),br(),
+  dataTableOutput("run_table")
 )
