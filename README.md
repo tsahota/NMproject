@@ -4,24 +4,42 @@
 [![Coverage Status](https://coveralls.io/repos/github/tsahota/NMproject/badge.svg?branch=master)](https://coveralls.io/github/tsahota/NMproject?branch=master)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/tsahota/NMproject?branch=master&svg=true)](https://ci.appveyor.com/project/tsahota/NMproject)
 
-Script based NONMEM execution on tidyprojects.  NMproject was previously an AstraZeneca project.  It is currently being reimplemented here as a community version to be compatible with a variety of architectures (standalone NONMEM and a variety of grid submission systems)
+Script based NONMEM execution on tidyprojects with shiny interface
+
+* Tidy code:
+  * Standardised, version controlled, directory structure for all NONMEM users.
+  * Enforcement of basic NONMEM control stream coding conventions around parameter naming for human and machine readability
+* PMX Code library:
+  * Keep NONMEM template scripts to speed creation of NONMEM runs and facilitate adherence to best practices.
+  * "Attach" community-wide, organisation-wide, or individual code repositories.
+  * Search the code library using keywords, tags, or raw text search.
+* Script based model development:
+  * Code your model development process using end-to-end R scripts.
+  * Private project R libraries for long term reproducibility and consistent running of R scripts between users.
+  * Behind the scenes database for run information storage.  Ensures runs do not overwrite previous outputs.
+* Shiny interface:
+  * Table of runs
+  * Real time run tracking
+  * Run comparison (not yet implemented)
+
+History: NMproject was previously an AstraZeneca project.  It is being reimplemented here as a community version to be compatible with a variety of architectures (standalone NONMEM and a variety of grid submission systems)
  
 ## Installation
+
+NONMEM, PsN, and Rstudio are required to be installed prior to these steps. 
 
 ```R
 install.packages("devtools")
 devtools::install_github("tsahota/NMproject")
 ```
 
-## Quick setup
-
-Define options specific to your installation in your user `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site` if you want this to apply for all users). See FAQ for specific options.
-
-To avoid having to start a code library from scratch, download: https://github.com/tsahota/PMXcodelibrary to a directory and add the following command to your `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site`)
+To download the PMXcodelibrary, download: https://github.com/tsahota/PMXcodelibrary to a directory and add the following command to your `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site`) configuration file:
 
 ```r
 options(code_library_path = "/path/to/PMXcodelibrary/")
 ```
+
+If you are running NONMEM and R on a desktop/laptop this should suffice.  For more complicated set ups additional configuration may be required see FAQ (below) for details.
 
 ### Instructions
 
@@ -30,14 +48,14 @@ options(code_library_path = "/path/to/PMXcodelibrary/")
    * See tutorial at https://github.com/tsahota/tidyproject to get started with tidyproject
 * Open the NMproject with the File -> Open Project menu items. NOTE: always use Rstudio to open an NMproject, never just `setwd()` to the directory.
 
-* Install the package NMproject into the *project library* by simply installing again from with the NMproject:
+* Since NMproject is not guaranteed to be backwards compatible, install the NMproject package again into the *project library*:
 
 ```r
 devtools::install_github("tsahota/NMproject")
 library(NMproject)
 ```
 
-View the built in code library:
+View the code library:
 
 ```r
 code_library()
@@ -63,15 +81,15 @@ Set up a run log with:
 copy_script("R/nm.log.R")
 ```
 
-To create NONMEM (this will not run NONMEM yet)
+To create NONMEM object (this will not run NONMEM yet), add the following to your script.
 
 ```r
 mod1 <- nm("execute run1.mod -dir=1")
 ```
 
-NOTE: the `-dir` option must be specified
+NOTE: the `-dir` option must always be specified when using NMproject
 
-If you have set up the `path.nm_tran` option (see FAQ below), you can do an NMTRAN check
+The `mod1` object here will contain information about the run.  If you have set up the `path.nm_tran` option configured (see FAQ below), you can do a quick test that your control stream and dataset pass NMTRAN checks:
 
 ```r
 nm_tran(mod1)
@@ -83,41 +101,56 @@ To run `mod1`:
 run(mod1)
 ```
 
-To view all runs in database:
+To view all runs and track progress:
 
 ```r
-shiny_run_table()
+shiny_nm()
 ```
-
-To monitor a single run:
-
-```r
-shiny_run_monitor(mod1)
-```
-
 
 ### FAQ
 
-### + How do I set up NMproject to run jobs on a cluster via ssh?
+### + How can I quickly test to see if my control stream & dataset pass NMTRAN checks without running the NONMEM job?
 
-Create a system_nm option in your `~.Rprofile` to ssh to the server and run the command, e.g.
+This is especially useful to do on a cluster submission system where a job may take a long time to start and come back with an error.  However it is good practice on non-server setups too.
 
-```r
-
-options(system_nm=function(cmd,...) {
-        system(paste0("ssh -q clustername \"cd $(pwd); ",cmd,"\""),...)
-})
-
-```
-
-### + How do can run an NMTRAN check on my control stream without the full NONMEM job?
-
-Create a path.nm_tran option in your `~.Rprofile` with the location of nmtran, e.g.
+Add the following line to your `~.Rprofile` with the location of your nmtran.exe file:.
 
 ```r
 options(path.nm_tran = "path/to/nonmem/installation/tr/NMTRAN.exe")
-
 ```
 
+### + We already have directory of R/NONMEM scripts/templates, can we still use these?
 
+Yes. Append your directory location to the `code_library_path` option.  To do this add the following command to your `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site`) configuration file:
 
+```r
+options(code_library_path = c("/path/to/PMXcodelibrary/",""))
+```
+
+### + How can I contribute to the PMX code library?
+
+Create/log in to github.  Fork the repository `tsahota/PMXcodelibrary`. Make your change.  Create a pull request detailing your change.  I will then review and accept the change into the main repository.
+
+### + My Rstudio Server is on a different server to my NONMEM cluster.  How can I set up NMproject to work with this?
+
+You need to ensure your account has passwordless ssh set up.  Then you need to create a system_nm() option in your `~/.Rprofile` configuration file that should ssh to the NONMEM server and run the desired command, e.g.
+
+```r
+options(system_nm=function(cmd,...) {
+        system(paste0("ssh -q clustername \"cd $(pwd); ",cmd,"\""),...)
+})
+```
+
+### + I'm working on a windows laptop but want to use my NONMEM cluster for NONMEM jobs.  How can I set up NMproject to work with this?
+
+On windows, this can be achieved with plink and by working in a mapped drive, although you may experience latency problems.  Modify the `system_nm()` option to use plink to ssh to the server and submit a command.  Ideally, your organisation should have an Rstudio Server instance running on the NONMEM server (or connected to the NONMEM server via a low latency connection - see above question for set up in that situation).
+
+### + My organisation has a different control file convention to the runXX.mod convention.  Can I change this?
+
+Yes, you need to modify the `model_file_sub` and `model_file_extn` options.  To do this add the following to your `~/.Rprofile` configuration file.
+
+```r
+options(model_file_stub="run")
+options(model_file_extn="mod")
+
+```
