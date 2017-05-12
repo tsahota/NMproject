@@ -12,35 +12,45 @@ function(input, output, session) {
   new_table <- eventReactive(input$refresh_db,gen_run_table(),ignoreNULL = FALSE)
   output$run_table <- DT::renderDataTable({
     new_table()
-  },selection = "single", server = FALSE,
-  options = list(paging=FALSE,
-                 searching=FALSE,
-                 filtering=FALSE,
-                 ordering=FALSE))
+  },selection = "single", server = FALSE, rownames = FALSE,
+  options = list(paging=TRUE,
+                 searching=TRUE,
+                 filtering=TRUE,
+                 ordering=TRUE))
 
-  object <- eventReactive(
-    list(input$run_table_rows_selected,
-         input$refresh_status,
-         input$refresh_plot),{
+  object <- eventReactive(input$run_table_rows_selected,{
     orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
     row <- input$run_table_rows_selected
-    print("refreshing object from db")
-    nmdb_extract(new_table()$entry[row])
+    extract_nm(new_table()$entry[row])
   })
 
   observeEvent(input$run_table_rows_selected, {
-    updateTabsetPanel(session, "mainPanel", selected = "run monitor")
+    updateNavbarPage(session, "mainPanel", selected = "run monitor")
   })
 
   ## run monitor
-  output$status <- renderTable({
+
+  status_ob <- eventReactive(
+    list(input$refresh_status,
+         input$run_table_rows_selected),{
     orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
     status(object())
   })
 
-  output$distPlot <- renderPlot({
+  output$status <- renderTable({
+    status_ob()
+  })
+
+  plot_iter_ob <- eventReactive(
+    list(input$refresh_plot,
+         input$run_table_rows_selected),{
     orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-    plot_iter(object(),trans = input$trans, skip = input$skip)
+    if(file.exists(object()$output$psn.ext))
+      plot_iter(object(),trans = input$trans, skip = input$skip)
+  })
+
+  output$distPlot <- renderPlot({
+    plot_iter_ob()
   })
 }
 

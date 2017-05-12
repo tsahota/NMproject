@@ -220,7 +220,9 @@ nmdb_printable_db <- function(d){
     paste(basename(char_vec),collapse=" ")
   })
   d$ctl <- NULL
-  d$outputs_present <- signif(d$outputs_present,2)
+  ## include if statements for columns no in the db
+  if("outputs_present" %in% names(d))
+    d$outputs_present <- signif(d$outputs_present,2)
   for(i in names(d)) d[,i] <- as.character(d[,i]) ## convert everything to characters
   names(d) <- gsub("_"," ",names(d))
   d
@@ -281,7 +283,7 @@ show_runs <- function(...) nmdb_get(readable = TRUE,...)
 #' @param entry numeric. Database ID of nm object
 #' @export
 
-nmdb_extract <- function(entry){
+extract_nm <- function(entry){
   my_db <- DBI::dbConnect(RSQLite::SQLite(), ".runs.sqlite3")
   tryCatch({
     d <- DBI::dbGetQuery(my_db, 'SELECT * FROM runs')
