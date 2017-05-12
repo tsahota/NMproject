@@ -3,13 +3,13 @@ library(shiny)
 fluidPage(
   tabsetPanel(id="mainPanel",
     tabPanel("run database",
-             actionButton("refresh_button","refresh"),
+             actionButton("refresh_db","refresh"),
              br(),br(),
              DT::dataTableOutput("run_table")),
     tabPanel("run monitor",   # Application title
              hr(),
              h3("status"),
-             actionButton("refresh_button","update table"),
+             actionButton("refresh_status","update table"),
              br(),br(),
              tableOutput("status"),
              hr(),
