@@ -16,7 +16,7 @@ Script based NONMEM execution on tidyprojects with shiny interface
 * Script based model development:
   * Code your model development process using end-to-end R scripts.
   * Private project R libraries for long term reproducibility and consistent running of R scripts between users.
-  * Behind the scenes database for run informaiton storage.  Ensures runs do not overwrite previous outputs.
+  * Behind the scenes database for run information storage.  Ensures runs do not overwrite previous outputs.
 * Shiny interface:
   * Table of runs
   * Real time run tracking
@@ -99,18 +99,11 @@ To run `mod1`:
 run(mod1)
 ```
 
-To view all runs in database:
+To view all runs and track progress:
 
 ```r
-shiny_run_table()
+shiny_nm()
 ```
-
-To monitor a single run:
-
-```r
-shiny_run_monitor(mod1)
-```
-
 
 ### FAQ
 
