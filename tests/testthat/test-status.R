@@ -33,9 +33,23 @@ test_that("status",{
   m2 <- nm("qpsn -m -c auto -t 3000 -- execute run2.mod -dir=2")
 
   st <- status(m2)
-
   expect_true(inherits(st,"data.frame"))
   expect_true(any(st$RESULT))
+
+  run_type <- run_type(m2$run_dir)
+  expect_true(run_type == "execute")
+
+  sum0 <- run_summary(m2)
+  expect_true(inherits(sum0,"data.frame"))
+
+  rt <- run_table()
+  expect_true(inherits(rt,"data.frame"))
+
+  d <- check_session()
+  expect_true(inherits(d,"data.frame"))
+
+  r <- extract_nm(1)
+  expect_true(inherits(r,"nmexecute"))
 
   res <- run_record0(m2,coef.func = coef.nm)
   expect_true(inherits(res,"data.frame"))
