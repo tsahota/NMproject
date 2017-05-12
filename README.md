@@ -81,7 +81,7 @@ Set up a run log with:
 copy_script("R/nm.log.R")
 ```
 
-To create NONMEM (this will not run NONMEM yet)
+To create NONMEM object (this will not run NONMEM yet), add the following to your script.
 
 ```r
 mod1 <- nm("execute run1.mod -dir=1")
@@ -89,7 +89,7 @@ mod1 <- nm("execute run1.mod -dir=1")
 
 NOTE: the `-dir` option must always be specified when using NMproject
 
-If you have set up the `path.nm_tran` option configured (see FAQ below), you can do a quick test that your control stream and dataset pass NMTRAN checks:
+The `mod1` object here will contain information about the run.  If you have set up the `path.nm_tran` option configured (see FAQ below), you can do a quick test that your control stream and dataset pass NMTRAN checks:
 
 ```r
 nm_tran(mod1)
@@ -154,5 +154,3 @@ options(model_file_stub="run")
 options(model_file_extn="mod")
 
 ```
-
-
