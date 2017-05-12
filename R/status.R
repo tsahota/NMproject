@@ -17,9 +17,9 @@ run_type <- function(run.dir){  ## internal function: get type of run from direc
 }
 
 
-status_execute <- function(run_dir,sub.dir="NM_run1"){
+status_execute <- function(ctl_name,run_in,run_dir,sub.dir="NM_run1"){
 
-  r <- data.frame(RUN=as.integer(basename(run_dir)),TYPE=run_type(run_dir),TEST=c(
+  r <- data.frame(RUN=ctl_name,DIR=run_in,TYPE="execute",TEST=c(
     "dir created",
     "*.ext file exists",
     "*.ext file written to",
@@ -59,9 +59,9 @@ status_execute <- function(run_dir,sub.dir="NM_run1"){
   r
 }
 
-status_scm <- function(run_dir){
+status_scm <- function(ctl_name,run_in,run_dir){
 
-  r <- data.frame(RUN=as.integer(basename(run_dir)),TYPE=run_type(run_dir),TEST=c(
+  r <- data.frame(RUN=ctl_name,DIR=run_in,TYPE="scm",TEST=c(
     "dir created",
     "data_preprocessing_dir created",
     "base_modelfit_dir1 created",
@@ -90,6 +90,31 @@ status_scm <- function(run_dir){
   r
 }
 
-#' @export
-status.nmexecute <- function(x) status_execute(x$run_dir)
+status_unknown <- function(ctl_name,run_in,run_dir){
 
+  r <- data.frame(RUN=ctl_name,DIR=run_in,TYPE=run_type(run_dir),TEST=c(
+    "dir created"
+    ),
+  RESULT=NA,COMMENT=NA)
+
+  r$RESULT[r$TEST %in% "dir created"] <- file.exists(run_dir)
+  r$COMMENT[r$TEST %in% "dir created"] <- NA
+
+  r
+}
+
+
+#' @export
+status.nmexecute <- function(x) status_execute(ctl_name=basename(x$ctl),
+                                               run_in = x$run_in,
+                                               run_dir=x$run_dir)
+
+#' @export
+status.nmscm <- function(x) status_scm(ctl_name=basename(x$ctl),
+                                       run_in = x$run_in,
+                                       run_dir=x$run_dir)
+
+#' @export
+status.nm <- function(x) status_unknown(ctl_name=basename(x$ctl),
+                                        run_in = x$run_in,
+                                        run_dir=x$run_dir)
