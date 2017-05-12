@@ -26,6 +26,8 @@ History: NMproject was previously an AstraZeneca project.  It is being reimpleme
  
 ## Installation
 
+NONMEM, PsN, and Rstudio are required to be installed prior to these steps. 
+
 ```R
 install.packages("devtools")
 devtools::install_github("tsahota/NMproject")
@@ -37,7 +39,7 @@ To download the PMXcodelibrary, download: https://github.com/tsahota/PMXcodelibr
 options(code_library_path = "/path/to/PMXcodelibrary/")
 ```
 
-For set up on your specific infrastructure see FAQ for specific options.
+If you are running NONMEM and R on a desktop/laptop this should suffice.  For more complicated set ups additional configuration may be required see FAQ (below) for details.
 
 ### Instructions
 
@@ -46,14 +48,14 @@ For set up on your specific infrastructure see FAQ for specific options.
    * See tutorial at https://github.com/tsahota/tidyproject to get started with tidyproject
 * Open the NMproject with the File -> Open Project menu items. NOTE: always use Rstudio to open an NMproject, never just `setwd()` to the directory.
 
-* Install the package NMproject into the *project library* by simply installing again from with the NMproject:
+* Since NMproject is not guaranteed to be backwards compatible, install the NMproject package again into the *project library*:
 
 ```r
 devtools::install_github("tsahota/NMproject")
 library(NMproject)
 ```
 
-View the built in code library:
+View the code library:
 
 ```r
 code_library()
@@ -117,22 +119,17 @@ Add the following line to your `~.Rprofile` with the location of your nmtran.exe
 options(path.nm_tran = "path/to/nonmem/installation/tr/NMTRAN.exe")
 ```
 
-### + How do use your existing PMX code library?
-
-Download: https://github.com/tsahota/PMXcodelibrary to a directory on your system. Then add the location to the `code_library_path` option.  To do this add the following command to your `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site`) configuration file:
-
-```r
-options(code_library_path = "/path/to/PMXcodelibrary/")
-
-```
-### + My organistion (or I) already have directory of R/NONMEM scripts/templates, can I add this?
+### + We already have directory of R/NONMEM scripts/templates, can we still use these?
 
 Yes. Append your directory location to the `code_library_path` option.  To do this add the following command to your `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site`) configuration file:
 
 ```r
 options(code_library_path = c("/path/to/PMXcodelibrary/",""))
-
 ```
+
+### + How can I contribute to the PMX code library?
+
+Create/log in to github.  Fork the repository `tsahota/PMXcodelibrary`. Make your change.  Create a pull request detailing your change.  I will then review and accept the change into the main repository.
 
 ### + My Rstudio Server is on a different server to my NONMEM cluster.  How can I set up NMproject to work with this?
 
