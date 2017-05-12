@@ -1,10 +1,17 @@
 library(shiny)
 
 fluidPage(
-  titlePanel("Run Monitor"),   # Application title
+  titlePanel("run monitor"),   # Application title
+  hr(),
   h3("status"),
+  actionButton("refresh_button","update table"),
+  br(),br(),
   tableOutput("status"),
+  hr(),
   h3("trace"),
-  checkboxInput("trans","Transform parameters",TRUE),
+  numericInput("skip","skip",value=0,min=0,max=1000,step=1),
+  checkboxInput("trans","transform parameters",TRUE),
+  actionButton("refresh_plot","update plot"),
+  br(),br(),
   plotOutput("distPlot")
 )

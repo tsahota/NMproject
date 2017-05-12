@@ -220,6 +220,7 @@ nmdb_printable_db <- function(d){
     paste(basename(char_vec),collapse=" ")
   })
   d$ctl <- NULL
+  d$outputs_present <- signif(d$outputs_present,2)
   for(i in names(d)) d[,i] <- as.character(d[,i]) ## convert everything to characters
   names(d) <- gsub("_"," ",names(d))
   d
@@ -326,9 +327,9 @@ run <- function(...,overwrite=FALSE,delete_dir=c(NA,TRUE,FALSE)){
     ## if directory exists, and if it's definately a directory stop
     if(file.exists(r$run_dir) & !overwrite)if(file.info(r$run_dir)$isdir %in% TRUE) stop("run already exists. To rerun select overwrite=TRUE")
     if(!is.null(getOption("kill_run"))){
-      getOption("kill_run")(r,delete_dir=match.arg(delete_dir))
+      getOption("kill_run")(r)
     }
-    clean_run(r)
+    clean_run(r,delete_dir=delete_dir[1])
     system_nm(cmd = r$cmd,dir = r$run_in)
   })
   invisible()
@@ -347,7 +348,7 @@ nm_tran.nm <- function(x){
 clean_run <- function(r,delete_dir=c(NA,TRUE,FALSE)){
   ## assumes ctrl file is run[run_id].mod and -dir=[run_id] was used
   unlink(ctl_out_files(r$ctl))
-  delete_dir <- match.arg(delete_dir)
+  delete_dir <- delete_dir[1]
   if(is.na(delete_dir)){
     match_info <- nmdb_match_info(r)
     matched_entry <- match_info$entry[match_info$dependent_run_dir]

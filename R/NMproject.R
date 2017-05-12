@@ -276,6 +276,15 @@ shiny_run_table <- function(){
   shiny::runApp(shiny_dir,launch.browser = TRUE)
 }
 
+#' @export
+shiny_nm <- function(x){
+  shiny_dir <- system.file("extdata/shiny",package="NMproject")
+  assign(".currentwd",value = getwd(),envir = as.environment("package:NMproject"))
+  assign(".object",value = x,envir = as.environment("package:NMproject"))
+  shiny::runApp(shiny_dir,launch.browser = TRUE)
+}
+
+
 #' Check tidyproject for best practice compliance
 #'
 #' @param proj_name character. default = current working directory. path to directory.
