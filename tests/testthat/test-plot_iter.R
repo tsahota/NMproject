@@ -32,6 +32,11 @@ test_that("db & plot_iter works",{
 
   m2 <- nm("qpsn -m -c auto -t 3000 -- execute run2.mod -dir=2")
 
+  thetasR <- param_info(m2$ctl)
+  expect_true(inherits(thetasR,"data.frame"))
+  thetasNM <- theta_r2nm(thetasR)
+  expect_true(inherits(thetasNM,"nm.theta"))
+
   copy_control("run2.mod","run3.mod")
   copy_control("run2.mod","run4.mod")
 
