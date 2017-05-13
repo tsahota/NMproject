@@ -278,7 +278,7 @@ check_session <- function(proj_name = getwd(), silent = FALSE, check_rstudio = T
 
   d <- tidyproject::do_test(
     "NM run database present" = {
-      file.exists(".runs.sqlite3")
+      file.exists("runs.sqlite")
     },
     silent = silent)
 
