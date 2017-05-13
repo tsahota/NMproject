@@ -35,7 +35,7 @@ function(input, output, session) {
     })
   })
 
-  output$test <- renderPrint({names(input)})
+  #output$test <- renderPrint({names(input)})
 
   observeEvent(input$go_to_monitor, {
     updateNavbarPage(session, "mainPanel", selected = "monitor")
@@ -43,6 +43,19 @@ function(input, output, session) {
 
   observeEvent(input$go_to_results, {
     updateNavbarPage(session, "mainPanel", selected = "results")
+  })
+
+  observeEvent(
+    list(input$back_to_database,
+         input$back_to_database2), {
+    updateNavbarPage(session, "mainPanel", selected = "database")
+  })
+
+  observe({
+    #if(length(input$run_table_rows_selected)==0){
+    #  hide(selector = "#navbar li a[data-value=tab2]")
+    #}
+    #toggle(condition = input$foo, selector = "#navbar li a[data-value=tab2]")
   })
 
   ## run monitor
@@ -77,7 +90,7 @@ function(input, output, session) {
     do.call(run_record,objects())
   })
 
-  output$run_record <- renderTable({
+  output$run_record <- renderDataTable({
     run_record_ob()
   })
 
