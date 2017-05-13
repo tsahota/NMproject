@@ -6,8 +6,9 @@ fluidPage(
              actionButton("refresh_db","refresh"),
              br(),br(),
              DT::dataTableOutput("run_table"),
-             actionButton("go_to_monitor","monitor"),
-             actionButton("go_to_results","results")),
+             textOutput("selected_runs"),
+             actionButton("go_to_monitor","View in run monitor"), br(),
+             actionButton("go_to_results","View in run results")),
     tabPanel("run monitor",   # Application title
              hr(),
              h3("status"),

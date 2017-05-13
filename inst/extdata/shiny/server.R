@@ -19,24 +19,22 @@ function(input, output, session) {
                  ordering=TRUE))
 
   object <- eventReactive(input$go_to_monitor,{
-    if(length(input$run_table_rows_selected)==1){
-      orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-      row <- input$run_table_rows_selected
-      extract_nm(new_table()$entry[row])
-    } else object()
+    orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
+    row <- input$run_table_rows_selected
+    extract_nm(new_table()$entry[row])
+  })
+
+  observe({
+    output$selected_runs <- renderText({
+      pretext <- "Select run(s):"
+      if(length(input$run_table_rows_selected)==0) entries <- "None" else
+        entries <- isolate(new_table()$entry[input$run_table_rows_selected])
+      paste(pretext,paste(entries,collapse = ","))
+    })
   })
 
   observeEvent(input$go_to_monitor, {
-    if(length(input$run_table_rows_selected)==0) showModal(modalDialog(
-      title = "Important message",
-      "Select a run first"
-    ))
-    if(length(input$run_table_rows_selected)>0) showModal(modalDialog(
-      title = "Important message",
-      "Select only one run"
-    ))
-    if(length(input$run_table_rows_selected)==1)
-      updateNavbarPage(session, "mainPanel", selected = "run monitor")
+    updateNavbarPage(session, "mainPanel", selected = "run monitor")
   })
 
   observeEvent(input$go_to_results, {
@@ -47,7 +45,7 @@ function(input, output, session) {
 
   status_ob <- eventReactive(
     list(input$refresh_status,
-         input$run_table_rows_selected),{
+         input$go_to_monitor),{
     orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
     status(object())
   })
@@ -58,7 +56,7 @@ function(input, output, session) {
 
   plot_iter_ob <- eventReactive(
     list(input$refresh_plot,
-         input$run_table_rows_selected),{
+         input$go_to_monitor),{
     orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
     if(file.exists(object()$output$psn.ext))
       plot_iter(object(),trans = input$trans, skip = input$skip)
