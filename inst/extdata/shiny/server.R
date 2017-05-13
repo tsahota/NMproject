@@ -18,9 +18,7 @@ function(input, output, session) {
                  filtering=TRUE,
                  ordering=TRUE))
 
-  objects <- eventReactive(
-    list(input$go_to_monitor,
-         input$go_to_results),{
+  objects <- eventReactive(input$run_table_rows_selected,{
     orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
     row <- input$run_table_rows_selected
     lapply(new_table()$entry[row],extract_nm)
@@ -35,22 +33,6 @@ function(input, output, session) {
     })
   })
 
-  #output$test <- renderPrint({names(input)})
-
-  observeEvent(input$go_to_monitor, {
-    updateNavbarPage(session, "mainPanel", selected = "monitor")
-  })
-
-  observeEvent(input$go_to_results, {
-    updateNavbarPage(session, "mainPanel", selected = "results")
-  })
-
-  observeEvent(
-    list(input$back_to_database,
-         input$back_to_database2), {
-    updateNavbarPage(session, "mainPanel", selected = "database")
-  })
-
   observe({
     #if(length(input$run_table_rows_selected)==0){
     #  hide(selector = "#navbar li a[data-value=tab2]")
@@ -62,7 +44,7 @@ function(input, output, session) {
 
   status_ob <- eventReactive(
     list(input$refresh_status,
-         input$go_to_monitor),{
+         input$run_table_rows_selected),{
     orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
     object <- objects()[[1]]
     status(object)
@@ -74,7 +56,7 @@ function(input, output, session) {
 
   plot_iter_ob <- eventReactive(
     list(input$refresh_plot,
-         input$go_to_monitor),{
+         input$run_table_rows_selected),{
     orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
     object <- objects()[[1]]
     if(file.exists(object$output$psn.ext))
@@ -85,7 +67,7 @@ function(input, output, session) {
     plot_iter_ob()
   })
 
-  run_record_ob <- eventReactive(input$go_to_results,{
+  run_record_ob <- eventReactive(input$run_table_rows_selected,{
     orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
     do.call(run_record,objects())
   })
