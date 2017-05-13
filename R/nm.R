@@ -141,14 +141,14 @@ nm <- function(cmd,psn_command,
 #' @export
 delete_run <- function(entry){
   query <- paste('DELETE FROM runs WHERE entry ==',entry)
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), ".runs.sqlite3")
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
   DBI::dbExecute(my_db, query)
   DBI::dbDisconnect(my_db)
 }
 
 nmdb_match_info <- function(r){
   match_rows <- c("type","run_dir")
-  if(!file.exists(".runs.sqlite3"))
+  if(!file.exists("runs.sqlite"))
     return(data.frame(entry=numeric(),
                       match_type=logical(),
                       match_run_in=logical(),
@@ -156,7 +156,7 @@ nmdb_match_info <- function(r){
                       match_ctl = logical(),
                       overlap_outputs=logical()))
 
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), ".runs.sqlite3")
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
   tryCatch({
     d <- DBI::dbGetQuery(my_db, 'SELECT * FROM runs')
     DBI::dbDisconnect(my_db)
@@ -218,9 +218,9 @@ nmdb_printable_db <- function(d){
 }
 
 nmdb_add_entry <- function(r,entry=NULL,silent=FALSE){
-  new_db_flag <- !file.exists(".runs.sqlite3")
+  new_db_flag <- !file.exists("runs.sqlite")
   dnew <- nmdb_make_db_row(r)
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), ".runs.sqlite3")
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
   tryCatch({
     if(new_db_flag) {
       dempty <- dnew[c(),]
@@ -242,13 +242,13 @@ nmdb_add_entry <- function(r,entry=NULL,silent=FALSE){
   },
   error=function(e){
     if(DBI::dbIsValid(my_db)) DBI::dbDisconnect(my_db)
-    if(new_db_flag) unlink(".runs.sqlite3",force = TRUE)
+    if(new_db_flag) unlink("runs.sqlite",force = TRUE)
     stop(e)
   })
 }
 
 nmdb_get <- function(readable=FALSE){
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), ".runs.sqlite3")
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
   tryCatch({
     d <- DBI::dbGetQuery(my_db, 'SELECT * FROM runs')
     if(readable) d <- nmdb_printable_db(d)
@@ -273,7 +273,7 @@ show_runs <- function(...) nmdb_get(readable = TRUE,...)
 #' @export
 
 extract_nm <- function(entry){
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), ".runs.sqlite3")
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
   tryCatch({
     d <- DBI::dbGetQuery(my_db, 'SELECT * FROM runs')
     DBI::dbDisconnect(my_db)
