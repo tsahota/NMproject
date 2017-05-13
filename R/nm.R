@@ -285,7 +285,7 @@ extract_nm <- function(entry){
   },
   error=function(e){
     if(DBI::dbIsValid(my_db)) DBI::dbDisconnect(my_db)
-    e
+    stop(e)
   })
 }
 
