@@ -1,14 +1,3 @@
-get_psn_type <- function(cmd,types=getOption("psn.commands")){
-  run_type <- sapply(types,function(run_type){
-    any(grepl(paste0("^[^#]*\\b",run_type,"\\b.+$"),cmd))
-  })
-  types[run_type]
-}
-
-get_psn_cmd <- function(type,cmd){
-  gsub(paste0("^.*(",type,".*)$"),"\\1",cmd)
-}
-
 #' Make nm object
 #'
 #' @param cmd character. system command to launch NONMEM (PsN)
@@ -302,9 +291,6 @@ extract_nm <- function(entry){
 
 #' @export
 print.nm <- function(x,...) utils::str(x)
-
-ctl_name <- function(run_id)
-  paste0(getOption("model_file_stub"),run_id,".",getOption("model_file_extn"))
 
 gsub2 <- function(pattern,replacement,x,...){
   match <- grepl(pattern,x,...)
