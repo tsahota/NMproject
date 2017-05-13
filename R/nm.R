@@ -192,14 +192,14 @@ nmdb_match_info <- function(r){
 nmdb_make_db_row <- function(r){
   if(r$type %in% "execute") r$input$data <- NULL
   data.frame(object=I(list(serialize(r,NULL))),
+             input_files=paste(unlist(r$input),collapse=","),
+             output_files=paste(unlist(r$output),collapse=","),
+             description=r$description,
              type=r$type,
              run_in=r$run_in,
              run_dir=r$run_dir,
-             description=r$description,
              ctl = r$ctl,
-             cmd = r$cmd,
-             output_files=paste(unlist(r$output),collapse=","),
-             input_files=paste(unlist(r$input),collapse=","))
+             cmd = r$cmd)
 }
 
 nmdb_printable_db <- function(d){
