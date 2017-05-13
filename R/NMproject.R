@@ -255,27 +255,6 @@ update_dollar_data <- function(ctl_name,new_data_name){
   writeLines(ctl,ctl_name)
 }
 
-
-#' Starts run monitor
-#'
-#' @param x run object
-#' @export
-shiny_run_monitor <- function(x){
-  shiny_dir <- system.file("extdata/RunMonitor",package="NMproject")
-  assign(".currentwd",value = getwd(),envir = as.environment("package:NMproject"))
-  assign(".object",value = x,envir = as.environment("package:NMproject"))
-  shiny::runApp(shiny_dir,launch.browser = TRUE)
-}
-
-#' Starts run table
-#'
-#' @export
-shiny_run_table <- function(){
-  shiny_dir <- system.file("extdata/RunTable",package="NMproject")
-  assign(".currentwd",value = getwd(),envir = as.environment("package:NMproject"))
-  shiny::runApp(shiny_dir,launch.browser = TRUE)
-}
-
 #' Shiny view of NMproject
 #' @export
 shiny_nm <- function(){

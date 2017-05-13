@@ -256,10 +256,3 @@ run_table <- function(){
   nmdb_printable_db(d)
 }
 
-squash_df <- function(d){
-  for (i in 1:length(d)){
-    d[,i] <- as.character(d[,i])
-    d[,i] <- gsub("(.{15}\\S*) ","\\1\n",d[,i])
-  }
-  d
-}
