@@ -8,7 +8,8 @@ fluidPage(
              DT::dataTableOutput("run_table"),
              textOutput("selected_runs"),
              actionButton("go_to_monitor","View in run monitor"), br(),
-             actionButton("go_to_results","View in run results")),
+             actionButton("go_to_results","View in run results"),#),
+             h5(verbatimTextOutput("test"))),
     tabPanel("monitor",   # Application title
              hr(),
              h3("status"),

@@ -6,7 +6,7 @@ gen_run_table <- function(){
 }
 
 function(input, output, session) {
-  session$onSessionEnded(function() stopApp())
+  session$onSessionEnded(stopApp)
 
   ## run table
   new_table <- eventReactive(input$refresh_db,gen_run_table(),ignoreNULL = FALSE)
@@ -34,6 +34,8 @@ function(input, output, session) {
       paste(pretext,paste(entries,collapse = ","))
     })
   })
+
+  output$test <- renderPrint({names(input)})
 
   observeEvent(input$go_to_monitor, {
     updateNavbarPage(session, "mainPanel", selected = "monitor")
@@ -76,7 +78,6 @@ function(input, output, session) {
   })
 
   output$run_record <- renderTable({
-    data.frame(A=1,B=1)
     run_record_ob()
   })
 
