@@ -12,20 +12,35 @@ function(input, output, session) {
   new_table <- eventReactive(input$refresh_db,gen_run_table(),ignoreNULL = FALSE)
   output$run_table <- DT::renderDataTable({
     new_table()
-  },selection = "single", server = FALSE, rownames = FALSE,
+  }, server = FALSE, rownames = FALSE,
   options = list(paging=TRUE,
                  searching=TRUE,
                  filtering=TRUE,
                  ordering=TRUE))
 
-  object <- eventReactive(input$run_table_rows_selected,{
-    orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-    row <- input$run_table_rows_selected
-    extract_nm(new_table()$entry[row])
+  object <- eventReactive(input$go_to_monitor,{
+    if(length(input$run_table_rows_selected)==1){
+      orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
+      row <- input$run_table_rows_selected
+      extract_nm(new_table()$entry[row])
+    } else object()
   })
 
-  observeEvent(input$run_table_rows_selected, {
-    updateNavbarPage(session, "mainPanel", selected = "run monitor")
+  observeEvent(input$go_to_monitor, {
+    if(length(input$run_table_rows_selected)==0) showModal(modalDialog(
+      title = "Important message",
+      "Select a run first"
+    ))
+    if(length(input$run_table_rows_selected)>0) showModal(modalDialog(
+      title = "Important message",
+      "Select only one run"
+    ))
+    if(length(input$run_table_rows_selected)==1)
+      updateNavbarPage(session, "mainPanel", selected = "run monitor")
+  })
+
+  observeEvent(input$go_to_results, {
+    updateNavbarPage(session, "mainPanel", selected = "run results")
   })
 
   ## run monitor
