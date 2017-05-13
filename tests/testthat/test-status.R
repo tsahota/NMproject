@@ -36,6 +36,16 @@ test_that("status",{
   expect_true(inherits(st,"data.frame"))
   expect_true(any(st$RESULT))
 
+  st_bad <- status_scm(ctl_name = m2$ctl,
+                       run_in = m2$run_in,
+                       run_dir = m2$run_dir)
+  expect_true(inherits(st_bad,"data.frame"))
+
+  st_bad <- status_unknown(ctl_name = m2$ctl,
+                           run_in = m2$run_in,
+                           run_dir = m2$run_dir)
+  expect_true(inherits(st_bad,"data.frame"))
+
   run_type <- run_type(m2$run_dir)
   expect_true(run_type == "execute")
 
@@ -50,6 +60,7 @@ test_that("status",{
 
   r <- extract_nm(1)
   expect_true(inherits(r,"nmexecute"))
+
 
   res <- run_record0(m2,coef.func = coef.nm)
   expect_true(inherits(res,"data.frame"))
