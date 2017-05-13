@@ -18,10 +18,12 @@ function(input, output, session) {
                  filtering=TRUE,
                  ordering=TRUE))
 
-  object <- eventReactive(input$go_to_monitor,{
+  objects <- eventReactive(
+    list(input$go_to_monitor,
+         input$go_to_results),{
     orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
     row <- input$run_table_rows_selected
-    extract_nm(new_table()$entry[row])
+    lapply(new_table()$entry[row],extract_nm)
   })
 
   observe({
@@ -34,11 +36,11 @@ function(input, output, session) {
   })
 
   observeEvent(input$go_to_monitor, {
-    updateNavbarPage(session, "mainPanel", selected = "run monitor")
+    updateNavbarPage(session, "mainPanel", selected = "monitor")
   })
 
   observeEvent(input$go_to_results, {
-    updateNavbarPage(session, "mainPanel", selected = "run results")
+    updateNavbarPage(session, "mainPanel", selected = "results")
   })
 
   ## run monitor
@@ -47,7 +49,8 @@ function(input, output, session) {
     list(input$refresh_status,
          input$go_to_monitor),{
     orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-    status(object())
+    object <- objects()[[1]]
+    status(object)
   })
 
   output$status <- renderTable({
@@ -58,12 +61,24 @@ function(input, output, session) {
     list(input$refresh_plot,
          input$go_to_monitor),{
     orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-    if(file.exists(object()$output$psn.ext))
-      plot_iter(object(),trans = input$trans, skip = input$skip)
+    object <- objects()[[1]]
+    if(file.exists(object$output$psn.ext))
+      plot_iter(object,trans = input$trans, skip = input$skip)
   })
 
   output$distPlot <- renderPlot({
     plot_iter_ob()
   })
+
+  run_record_ob <- eventReactive(input$go_to_results,{
+    orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
+    do.call(run_record,objects())
+  })
+
+  output$run_record <- renderTable({
+    data.frame(A=1,B=1)
+    run_record_ob()
+  })
+
 }
 

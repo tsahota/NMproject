@@ -2,14 +2,14 @@ library(shiny)
 
 fluidPage(
   navbarPage("NMproject",id="mainPanel",
-    tabPanel("run database",
+    tabPanel("database",
              actionButton("refresh_db","refresh"),
              br(),br(),
              DT::dataTableOutput("run_table"),
              textOutput("selected_runs"),
              actionButton("go_to_monitor","View in run monitor"), br(),
              actionButton("go_to_results","View in run results")),
-    tabPanel("run monitor",   # Application title
+    tabPanel("monitor",   # Application title
              hr(),
              h3("status"),
              actionButton("refresh_status","refresh"),
@@ -22,6 +22,7 @@ fluidPage(
              actionButton("refresh_plot","refresh"),
              br(),br(),
              plotOutput("distPlot")),
-    tabPanel("run results")
+    tabPanel("results",
+             tableOutput("run_record"))
   )
 )
