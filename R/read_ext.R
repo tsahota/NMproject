@@ -1,6 +1,6 @@
 read_ext0 <- function(ext.file){
   ## Raw function to read in and format an ext.file.
-  s <- scan(ext.file,what="character",sep="\n")
+  s <- scan(ext.file,what="character",sep="\n",quiet = TRUE)
   tab.rows <- grep("TABLE",s)
   cut.points <- c(tab.rows,length(s)+1)
 
