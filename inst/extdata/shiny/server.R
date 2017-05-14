@@ -6,6 +6,7 @@ gen_run_table <- function(){
   run_table()
 }
 
+
 function(input, output, session) {
   session$onSessionEnded(stopApp)
 
@@ -25,6 +26,15 @@ function(input, output, session) {
     lapply(new_table()$entry[row],extract_nm)
   })
 
+  output$runs_selected_info <- renderTable({
+    if(length(input$run_table_rows_selected)==0) return(data.frame(entry=numeric(),type=character(),ct=character()))
+    new_table()[input$run_table_rows_selected,c("entry","type","ctl")]
+  })
+  output$runs_selected_info2 <- renderTable({
+    if(length(input$run_table_rows_selected)==0) return(data.frame(entry=numeric(),type=character(),ct=character()))
+    new_table()[input$run_table_rows_selected,c("entry","type","ctl")]
+  })
+
   observe({
     output$selected_runs <- renderText({
       pretext <- "Select run(s):"
@@ -42,7 +52,24 @@ function(input, output, session) {
     updateNavbarPage(session, "mainPanel", selected = "results")
   })
 
+  observeEvent(input$back_to_db, {
+    updateNavbarPage(session, "mainPanel", selected = "database")
+  })
+
+  observeEvent(input$back_to_db2, {
+    updateNavbarPage(session, "mainPanel", selected = "database")
+  })
+
   ## run monitor
+
+  output$monitor_select_warning <- renderText({
+    if(length(input$run_table_rows_selected)>1) return("Warning: will only monitor first")
+    if(length(input$run_table_rows_selected)==0) return("Warning: no runs selected")
+  })
+
+  output$results_select_warning <- renderText({
+    if(length(input$run_table_rows_selected)==0) return("Warning: no runs selected")
+  })
 
   status_ob <- eventReactive(
     list(input$refresh_status,
@@ -50,7 +77,8 @@ function(input, output, session) {
          plot_iter_ob),{
            orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
            object <- objects()[[1]]
-           status(object)
+           st <- status(object)
+           st[,c("TEST","RESULT","COMMENT")]
          })
 
   output$status <- renderTable({

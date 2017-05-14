@@ -345,6 +345,7 @@ clean_run <- function(r,delete_dir=c(NA,TRUE,FALSE)){
       stop("Dependent run(s) found: ",paste(matched_entry,collapse=","),
            "\nRerun with delete_dir=TRUE or delete_dir=FALSE or remove dependent run")
     }
+    unlink(r$run_dir,recursive=TRUE)
   }
   if(TRUE %in% delete_dir) unlink(r$run_dir,recursive=TRUE) ## delete run directory
 }
