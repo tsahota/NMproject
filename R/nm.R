@@ -192,23 +192,24 @@ nmdb_match_info <- function(r){
 nmdb_make_db_row <- function(r){
   if(r$type %in% "execute") r$input$data <- NULL
   data.frame(object=I(list(serialize(r,NULL))),
-             input_files=paste(unlist(r$input),collapse=","),
-             output_files=paste(unlist(r$output),collapse=","),
+             ctl = r$ctl,
              description=r$description,
              type=r$type,
+             input_files=paste(unlist(r$input),collapse=","),
+             output_files=paste(unlist(r$output),collapse=","),
              run_in=r$run_in,
              run_dir=r$run_dir,
-             ctl = r$ctl,
              cmd = r$cmd)
 }
 
 nmdb_printable_db <- function(d){
   d$object <- NULL
   d$output_files <- NULL
+  d$input_files[!d$input_files %in% d$ctl]
   d$input_files <- lapply(strsplit(d$input_files,","),function(char_vec){
     paste(basename(char_vec),collapse=" ")
   })
-  d$ctl <- NULL
+  d$run_in <- NULL
   ## include if statements for columns no in the db
   if("outputs_present" %in% names(d))
     d$outputs_present <- signif(d$outputs_present,2)

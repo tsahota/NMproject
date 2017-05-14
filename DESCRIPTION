@@ -11,13 +11,14 @@ Encoding: UTF-8
 LazyData: true
 Remotes: tsahota/tidyproject
 Imports:
-    tidyproject
+    tidyproject,
+    DBI,
+    RSQLite
 RoxygenNote: 5.0.1
 Suggests:
     testthat,
     ggplot2,
     tidyr,
     shiny,
-    DBI,
-    RSQLite
+    DT
 
