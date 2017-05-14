@@ -107,33 +107,33 @@ To view all runs and track progress:
 shiny_nm()
 ```
 
-### FAQ
+## FAQ
 
 ### + How can I quickly test to see if my control stream & dataset pass NMTRAN checks without running the NONMEM job?
 
 This is especially useful to do on a cluster submission system where a job may take a long time to start and come back with an error.  However it is good practice on non-server setups too.
 
-Add the following line to your `~.Rprofile` with the location of your nmtran.exe file:.
+Add the following line to your `~/.Rprofile` with the location of your nmtran.exe file:.
 
 ```r
 options(path.nm_tran = "path/to/nonmem/installation/tr/NMTRAN.exe")
 ```
+You can now use `nm_tran(mod1)`
 
-### + We already have directory of R/NONMEM scripts/templates, can we still use these?
+### + We already have directory of R/NONMEM scripts/templates, how can we also use these?
 
-Yes. Append your directory location to the `code_library_path` option.  To do this add the following command to your `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site`) configuration file:
+Append your directory location to the `code_library_path` option.  To do this add the following command to your `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site`) configuration file:
 
 ```r
-options(code_library_path = c("/path/to/PMXcodelibrary/",""))
+options(code_library_path = c("/path/to/PMXcodelibrary/","path/to/existing/repository"))
 ```
 
 ### + How can I contribute to the PMX code library?
 
-Create/log in to github.  Fork the repository `tsahota/PMXcodelibrary`. Make your change.  Create a pull request detailing your change.  I will then review and accept the change into the main repository.
-
+Create/log in to github.  Fork the repository `tsahota/PMXcodelibrary`. Make your change.  Create a pull request detailing your change.  
 ### + My Rstudio Server is on a different server to my NONMEM cluster.  How can I set up NMproject to work with this?
 
-You need to ensure your account has passwordless ssh set up.  Then you need to create a system_nm() option in your `~/.Rprofile` configuration file that should ssh to the NONMEM server and run the desired command, e.g.
+You need to ensure your account has passwordless ssh set up.  Then you need to create a `system_nm()` option in your `~/.Rprofile` configuration file that should ssh to the NONMEM server and run the desired command, e.g.
 
 ```r
 options(system_nm=function(cmd,...) {
