@@ -6,26 +6,39 @@ gen_run_table <- function(){
 }
 
 function(input, output, session) {
-  session$onSessionEnded(function() stopApp())
+  session$onSessionEnded(stopApp)
 
   ## run table
   new_table <- eventReactive(input$refresh_db,gen_run_table(),ignoreNULL = FALSE)
   output$run_table <- DT::renderDataTable({
     new_table()
-  },selection = "single", server = FALSE, rownames = FALSE,
+  }, server = FALSE, rownames = FALSE,
   options = list(paging=TRUE,
                  searching=TRUE,
                  filtering=TRUE,
                  ordering=TRUE))
 
-  object <- eventReactive(input$run_table_rows_selected,{
+  objects <- eventReactive(input$run_table_rows_selected,{
     orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
     row <- input$run_table_rows_selected
-    extract_nm(new_table()$entry[row])
+    lapply(new_table()$entry[row],extract_nm)
   })
 
-  observeEvent(input$run_table_rows_selected, {
-    updateNavbarPage(session, "mainPanel", selected = "run monitor")
+  observe({
+    output$selected_runs <- renderText({
+      pretext <- "Select run(s):"
+      if(length(input$run_table_rows_selected)==0) entries <- "None" else
+        entries <- isolate(new_table()$entry[input$run_table_rows_selected])
+      paste(pretext,paste(entries,collapse = ","))
+    })
+  })
+
+  observeEvent(input$go_to_monitor, {
+    updateNavbarPage(session, "mainPanel", selected = "monitor")
+  })
+
+  observeEvent(input$go_to_results, {
+    updateNavbarPage(session, "mainPanel", selected = "results")
   })
 
   ## run monitor
@@ -33,9 +46,10 @@ function(input, output, session) {
   status_ob <- eventReactive(
     list(input$refresh_status,
          input$run_table_rows_selected),{
-    orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-    status(object())
-  })
+           orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
+           object <- objects()[[1]]
+           status(object)
+         })
 
   output$status <- renderTable({
     status_ob()
@@ -44,13 +58,27 @@ function(input, output, session) {
   plot_iter_ob <- eventReactive(
     list(input$refresh_plot,
          input$run_table_rows_selected),{
-    orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-    if(file.exists(object()$output$psn.ext))
-      plot_iter(object(),trans = input$trans, skip = input$skip)
-  })
+           orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
+           object <- objects()[[1]]
+           if(file.exists(object$output$psn.ext))
+             plot_iter(object,trans = input$trans, skip = input$skip)
+         })
 
   output$distPlot <- renderPlot({
     plot_iter_ob()
   })
+
+  ## run record
+  run_record_ob <- eventReactive(
+    list(input$refresh_run_record,
+         input$run_table_rows_selected),{
+           orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
+           do.call(run_record,objects())
+         })
+
+  output$run_record <- DT::renderDataTable({
+    run_record_ob()
+  })
+
 }
 
