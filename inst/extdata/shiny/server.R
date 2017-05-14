@@ -33,11 +33,12 @@ function(input, output, session) {
     })
   })
 
-  observe({
-    #if(length(input$run_table_rows_selected)==0){
-    #  hide(selector = "#navbar li a[data-value=tab2]")
-    #}
-    #toggle(condition = input$foo, selector = "#navbar li a[data-value=tab2]")
+  observeEvent(input$go_to_monitor, {
+    updateNavbarPage(session, "mainPanel", selected = "monitor")
+  })
+
+  observeEvent(input$go_to_results, {
+    updateNavbarPage(session, "mainPanel", selected = "results")
   })
 
   ## run monitor
@@ -45,10 +46,10 @@ function(input, output, session) {
   status_ob <- eventReactive(
     list(input$refresh_status,
          input$run_table_rows_selected),{
-    orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-    object <- objects()[[1]]
-    status(object)
-  })
+           orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
+           object <- objects()[[1]]
+           status(object)
+         })
 
   output$status <- renderTable({
     status_ob()
@@ -57,22 +58,25 @@ function(input, output, session) {
   plot_iter_ob <- eventReactive(
     list(input$refresh_plot,
          input$run_table_rows_selected),{
-    orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-    object <- objects()[[1]]
-    if(file.exists(object$output$psn.ext))
-      plot_iter(object,trans = input$trans, skip = input$skip)
-  })
+           orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
+           object <- objects()[[1]]
+           if(file.exists(object$output$psn.ext))
+             plot_iter(object,trans = input$trans, skip = input$skip)
+         })
 
   output$distPlot <- renderPlot({
     plot_iter_ob()
   })
 
-  run_record_ob <- eventReactive(input$run_table_rows_selected,{
-    orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-    do.call(run_record,objects())
-  })
+  ## run record
+  run_record_ob <- eventReactive(
+    list(input$refresh_run_record,
+         input$run_table_rows_selected),{
+           orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
+           do.call(run_record,objects())
+         })
 
-  output$run_record <- renderDataTable({
+  output$run_record <- DT::renderDataTable({
     run_record_ob()
   })
 
