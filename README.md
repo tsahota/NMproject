@@ -147,10 +147,10 @@ On windows, this can be achieved with plink and by working in a mapped drive, al
 
 ### + My organisation has a different control file convention to the runXX.mod convention.  Can I change this?
 
-Yes, you need to modify the `model_file_sub` and `model_file_extn` options.  To do this add the following to your `~/.Rprofile` configuration file.
+Yes, you need to modify the `model_file_sub` and `model_file_extn` options.  To do this add the following to your `~/.Rprofile` configuration file. E.g. to change the convention to nm.XX.con
 
 ```r
-options(model_file_stub="run")
-options(model_file_extn="mod")
+options(model_file_stub="nm.")
+options(model_file_extn="con")
 
 ```
