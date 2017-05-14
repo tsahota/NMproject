@@ -11,7 +11,7 @@ Encoding: UTF-8
 LazyData: true
 Remotes: tsahota/tidyproject
 Imports:
-    tidyproject,
+    tidyproject (>= 0.2.0),
     DBI,
     RSQLite
 RoxygenNote: 5.0.1
@@ -20,5 +20,6 @@ Suggests:
     ggplot2,
     tidyr,
     shiny,
-    DT
+    DT,
+    plotly (>= 3.4.1)
 

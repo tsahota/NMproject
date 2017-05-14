@@ -2,32 +2,32 @@ library(shiny)
 
 mycss <- "
 #plot-container {
-  position: relative;
+position: relative;
 }
 #loading-spinner {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  z-index: -1;
-  margin-top: -33px;  /* half of the spinner's height */
-  margin-left: -33px; /* half of the spinner's width */
+position: absolute;
+left: 50%;
+top: 50%;
+z-index: -1;
+margin-top: -33px;  /* half of the spinner's height */
+margin-left: -33px; /* half of the spinner's width */
 }
 #plot.recalculating {
-  z-index: -2;
+z-index: -2;
 }
 #table-container {
-  position: relative;
+position: relative;
 }
 #loading-spinner2 {
-  position: absolute;
-  left: 10%;
-  top: 50%;
-  z-index: -1;
-  margin-top: -33px;  /* half of the spinner's height */
-  margin-left: -33px; /* half of the spinner's width */
+position: absolute;
+left: 10%;
+top: 50%;
+z-index: -1;
+margin-top: -33px;  /* half of the spinner's height */
+margin-left: -33px; /* half of the spinner's width */
 }
 #table.recalculating {
-  z-index: -2;
+z-index: -2;
 }
 "
 
@@ -65,7 +65,8 @@ fluidPage(
                               div(id = "plot-container",
                                   tags$img(src = "spinner.gif",
                                            id = "loading-spinner"),
-                                  plotOutput("distPlot")
+                                  plotlyOutput("distPlot")
+                                  #plotOutput("distPlot")
                               )),
                      tabPanel(title = "results",
                               value = "results",

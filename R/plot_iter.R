@@ -1,11 +1,11 @@
-#' Plot iterations vs parameters/OBJ
+#' Get data for iterations vs parameters/OBJ plots
 #'
 #' @param r object of class nmexecute
 #' @param trans logical. should parameter transformations be performed
 #' @param skip numeric (default 0). how many iterations to skip when plotting
 #' @param yvar character (default = "OBJ"). Name of variable/parameter to display
 #' @export
-plot_iter <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
+plot_iter_data <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
 
   d <- read_ext(r=r,trans=trans)
 
@@ -47,13 +47,43 @@ plot_iter <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
                       gather_cols = par.names)
   d$variable <- factor(d$variable,levels=unique(d$variable))
 
+  d
+}
+
+#' Plot iterations vs parameters/OBJ (ggplot2)
+#'
+#' @param d data.frame. output from plot_iter_data
+#' @export
+
+plot_iter_ggplot <- function(d){
   p <- ggplot2::ggplot(d,ggplot2::aes_string(x="ITERATION",y="value"))
-  p <- p + ggplot2::geom_line(ggplot2::aes_string(colour="TYPE"))
-  p <- p + ggplot2::geom_point(ggplot2::aes_string(colour="TYPE"))
+  if(length(unique(d$TYPE))==1){
+    p <- p + ggplot2::geom_line()
+  } else {
+    p <- p + ggplot2::geom_line(ggplot2::aes_string(colour="TYPE")) 
+  }
   p <- p + ggplot2::facet_wrap(~variable,scale="free")
   p <- p + ggplot2::theme(legend.position="none")
   p <- p + ggplot2::ggtitle(unique(d$EST.NAME))
   p <- p + ggplot2::theme_bw()
   p
 }
+
+#' Plot iterations vs parameters/OBJ
+#'
+#' @param r object of class nmexecute
+#' @param trans logical. should parameter transformations be performed
+#' @param skip numeric (default 0). how many iterations to skip when plotting
+#' @param yvar character (default = "OBJ"). Name of variable/parameter to display
+#' @export
+plot_iter <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
+  d <- plot_iter_data(r=r,trans=trans,skip=skip,yvar=yvar)
+  plot_iter_ggplot(d)
+}
+  
+
+#plot_iter_rplots <- function(d){
+#  p <- rPlot(value ~ ITERATION | variable, data= d, type = "point")
+#  p
+#}
 
