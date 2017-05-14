@@ -1,4 +1,5 @@
 library(shiny)
+library(plotly)
 
 gen_run_table <- function(){
   orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
@@ -45,7 +46,8 @@ function(input, output, session) {
 
   status_ob <- eventReactive(
     list(input$refresh_status,
-         input$run_table_rows_selected),{
+         input$run_table_rows_selected,
+         plot_iter_ob),{
            orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
            object <- objects()[[1]]
            status(object)
@@ -60,11 +62,14 @@ function(input, output, session) {
          input$run_table_rows_selected),{
            orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
            object <- objects()[[1]]
-           if(file.exists(object$output$psn.ext))
-             plot_iter(object,trans = input$trans, skip = input$skip)
+           if(file.exists(object$output$psn.ext)){
+             ggplotly(plot_iter(object,trans = input$trans, skip = input$skip))
+             #plot_iter(object,trans = input$trans, skip = input$skip)
+           }
          })
 
-  output$distPlot <- renderPlot({
+  #output$distPlot <- renderPlot({
+  output$distPlot <- renderPlotly({
     plot_iter_ob()
   })
 
@@ -78,7 +83,10 @@ function(input, output, session) {
 
   output$run_record <- DT::renderDataTable({
     run_record_ob()
-  })
+  },rownames = FALSE,options = list(paging=FALSE,
+                                    searching=FALSE,
+                                    filtering=FALSE,
+                                    ordering=TRUE))
 
 }
 
