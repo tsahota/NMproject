@@ -55,7 +55,7 @@ test_that("status",{
   rt <- run_table()
   expect_true(inherits(rt,"data.frame"))
 
-  d <- check_session()
+  d <- check_session(check_rstudio = FALSE)
   expect_true(inherits(d,"data.frame"))
 
   r <- extract_nm(1)
@@ -68,5 +68,9 @@ test_that("status",{
   res <- run_record(m2)
   expect_true(inherits(res,"data.frame"))
   expect_true(nrow(res)>1)
+
+  expect_true(file.exists(m2$run_dir))
+  clean_run(m2)
+  expect_true(!file.exists(m2$run_dir))
 
 })

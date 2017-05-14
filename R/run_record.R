@@ -61,7 +61,9 @@ coef_ext0 <- function(ext.file){
 #' @export
 
 coef_nm <- function(object,trans,...){
+
   d <- coef_ext0(object$output$psn.ext)
+  d$file <- object$ctl
   if(!trans) return(d)
 
   p <- object$param_info
@@ -159,7 +161,6 @@ coef_nm <- function(object,trans,...){
   d
 
 }
-
 
 #' @export
 coef.nm <- function(object,...){

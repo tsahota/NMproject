@@ -110,11 +110,7 @@ status.nmexecute <- function(x) status_execute(ctl_name=basename(x$ctl),
                                                run_dir=x$run_dir)
 
 #' @export
-status.nmscm <- function(x) status_scm(ctl_name=basename(x$ctl),
-                                       run_in = x$run_in,
-                                       run_dir=x$run_dir)
+status.nmscm <- function(x) status_scm(ctl_name=basename(x$ctl),run_in = x$run_in,run_dir=x$run_dir)
 
 #' @export
-status.nm <- function(x) status_unknown(ctl_name=basename(x$ctl),
-                                        run_in = x$run_in,
-                                        run_dir=x$run_dir)
+status.nm <- function(x) status_unknown(ctl_name=basename(x$ctl),run_in = x$run_in,run_dir=x$run_dir)
