@@ -1,6 +1,8 @@
 library(shiny)
 library(plotly)
 
+.currentwd <- get(".currentwd", envir = NMproject:::.sso_env)
+
 navbarPageWithText <- function(..., text) {
   navbar <- navbarPage(...)
   textEl <- tags$p(class = "navbar-text", text)

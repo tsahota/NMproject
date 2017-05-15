@@ -1,6 +1,8 @@
 library(shiny)
 library(plotly)
 
+.currentwd <- get(".currentwd", envir = NMproject:::.sso_env)
+
 gen_run_table <- function(){
   orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
   run_table()

@@ -259,7 +259,9 @@ update_dollar_data <- function(ctl_name,new_data_name){
 #' @export
 shiny_nm <- function(){
   shiny_dir <- system.file("extdata/shiny",package="NMproject")
-  assign(".currentwd",value = getwd(),envir = as.environment("package:NMproject"))
+  .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env
+  on.exit(.sso_env$.currentwd <- NULL, add = TRUE)
+#  assign(".currentwd",value = getwd(),envir = asNamespace("NMproject"))
   shiny::runApp(shiny_dir,launch.browser = TRUE)
 }
 
