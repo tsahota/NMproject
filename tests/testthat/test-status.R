@@ -33,6 +33,7 @@ test_that("status",{
   m2 <- nm("qpsn -m -c auto -t 3000 -- execute run2.mod -dir=2")
 
   expect_error(run(m2)) ## already run
+  expect_output(print(m2),"List of") ## does object print using str
 
   st <- status(m2)
   expect_true(inherits(st,"data.frame"))

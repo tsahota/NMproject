@@ -111,41 +111,41 @@ coef_nm <- function(object,trans,...){
   d$transSEUnit[d$trans %in% "OM"] <- "%"
   ## COV
   d$trans[grepl("OMEGA.([0-9]+\\.)+",d$Parameter) & !d$trans %in% "OM"] <- "COV" ## temp code
-  if("COV" %in% d$trans){
-    omx <- gsub("^OMEGA\\.([0-9]+)\\.([0-9]+)\\.","\\1",d$Parameter[d$trans %in% "COV"])
-    omy <- gsub("^OMEGA\\.([0-9]+)\\.([0-9]+)\\.","\\2",d$Parameter[d$trans %in% "COV"])
-    omx <- paste0("OMEGA.",omx,".",omx,".")
-    omy <- paste0("OMEGA.",omy,".",omy,".")
-    sdx <- sqrt(d$FINAL[match(omx,d$Parameter)])
-    sdy <- sqrt(d$FINAL[match(omy,d$Parameter)])
-    d$FINAL.TRANS[d$trans %in% "COV"] <- d$FINAL[d$trans %in% "COV"]/(sdx*sdy)
-    d$transUnit[d$trans %in% "COV"] <- "CORR.COEF"
-    ## COV[X,Y]/(SD[X]*SD[Y])
-    ## know SE(COV[X,Y]) and SE[SDX^2] and SE[SDY^2]
-    ## Need covariance matrix between these though - from .cov file.
-    ## SQRT(VAR(COV[X,Y]/(SD[X]*SD[Y])))
-    cov.file <- object$output$psn.cov
-    dc <- utils::read.table(cov.file,skip=1,header = TRUE)
-    for(i in seq_along(which(d$trans %in% "COV"))){
-      ## loop through each COV variable and generate absolute SE
-      names.c <- c(omx[i],omy[i],as.character(d$Parameter[d$trans %in% "COV"][i]))
-      names.c <- d$Parameter[d$Parameter %in% names.c] ## reorder
-      names.c2 <- gsub("\\.([0-9]+)\\.([0-9]+)\\.","(\\1,\\2)",names.c)
-
-      ## same order as names.c - important
-      vcov <- dc[match(names.c2,dc$NAME),as.character(names.c)]
-      rownames(vcov) <- names(vcov)
-      vcov <- as.matrix(vcov)
-
-      pmean <- d$FINAL[match(names.c,d$Parameter)]  ## may as well recompute FINALs
-      names(pmean) <- d$Name[match(names.c,d$Parameter)]
-
-      formula.i <- paste0(names.c[3],"/(sqrt(",names.c[1],")*sqrt(",names.c[2],"))")
-      #tmp <- car::deltaMethod(pmean,formula.i,vcov.=vcov)
-      #d$SE.TRANS[d$trans %in% "COV"][i] <- tmp$SE
-    }
-
-  }
+  # if("COV" %in% d$trans){
+  #   omx <- gsub("^OMEGA\\.([0-9]+)\\.([0-9]+)\\.","\\1",d$Parameter[d$trans %in% "COV"])
+  #   omy <- gsub("^OMEGA\\.([0-9]+)\\.([0-9]+)\\.","\\2",d$Parameter[d$trans %in% "COV"])
+  #   omx <- paste0("OMEGA.",omx,".",omx,".")
+  #   omy <- paste0("OMEGA.",omy,".",omy,".")
+  #   sdx <- sqrt(d$FINAL[match(omx,d$Parameter)])
+  #   sdy <- sqrt(d$FINAL[match(omy,d$Parameter)])
+  #   d$FINAL.TRANS[d$trans %in% "COV"] <- d$FINAL[d$trans %in% "COV"]/(sdx*sdy)
+  #   d$transUnit[d$trans %in% "COV"] <- "CORR.COEF"
+  #   ## COV[X,Y]/(SD[X]*SD[Y])
+  #   ## know SE(COV[X,Y]) and SE[SDX^2] and SE[SDY^2]
+  #   ## Need covariance matrix between these though - from .cov file.
+  #   ## SQRT(VAR(COV[X,Y]/(SD[X]*SD[Y])))
+  #   cov.file <- object$output$psn.cov
+  #   dc <- utils::read.table(cov.file,skip=1,header = TRUE)
+  #   for(i in seq_along(which(d$trans %in% "COV"))){
+  #     ## loop through each COV variable and generate absolute SE
+  #     names.c <- c(omx[i],omy[i],as.character(d$Parameter[d$trans %in% "COV"][i]))
+  #     names.c <- d$Parameter[d$Parameter %in% names.c] ## reorder
+  #     names.c2 <- gsub("\\.([0-9]+)\\.([0-9]+)\\.","(\\1,\\2)",names.c)
+  #
+  #     ## same order as names.c - important
+  #     vcov <- dc[match(names.c2,dc$NAME),as.character(names.c)]
+  #     rownames(vcov) <- names(vcov)
+  #     vcov <- as.matrix(vcov)
+  #
+  #     pmean <- d$FINAL[match(names.c,d$Parameter)]  ## may as well recompute FINALs
+  #     names(pmean) <- d$Name[match(names.c,d$Parameter)]
+  #
+  #     formula.i <- paste0(names.c[3],"/(sqrt(",names.c[1],")*sqrt(",names.c[2],"))")
+  #     #tmp <- car::deltaMethod(pmean,formula.i,vcov.=vcov)
+  #     #d$SE.TRANS[d$trans %in% "COV"][i] <- tmp$SE
+  #   }
+  #
+  # }
 
   ## get names back to what they should be
   d$FINAL <- d$FINAL.TRANS
