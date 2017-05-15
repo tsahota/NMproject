@@ -27,11 +27,11 @@ function(input, output, session) {
   })
 
   output$runs_selected_info <- renderTable({
-    if(length(input$run_table_rows_selected)==0) return(data.frame(entry=numeric(),type=character(),ct=character()))
+    if(length(input$run_table_rows_selected)==0) return(data.frame())
     new_table()[input$run_table_rows_selected,c("entry","type","ctl")]
   })
   output$runs_selected_info2 <- renderTable({
-    if(length(input$run_table_rows_selected)==0) return(data.frame(entry=numeric(),type=character(),ct=character()))
+    if(length(input$run_table_rows_selected)==0) return(data.frame())
     new_table()[input$run_table_rows_selected,c("entry","type","ctl")]
   })
 

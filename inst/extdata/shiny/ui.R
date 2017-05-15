@@ -1,4 +1,5 @@
 library(shiny)
+library(plotly)
 
 navbarPageWithText <- function(..., text) {
   navbar <- navbarPage(...)

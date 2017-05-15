@@ -315,9 +315,7 @@ run <- function(...,overwrite=FALSE,delete_dir=c(NA,TRUE,FALSE)){
   lapply(rl,function(r){
     ## if directory exists, and if it's definately a directory stop
     if(file.exists(r$run_dir) & !overwrite)if(file.info(r$run_dir)$isdir %in% TRUE) stop("run already exists. To rerun select overwrite=TRUE")
-    if(!is.null(getOption("kill_run"))){
-      getOption("kill_run")(r)
-    }
+    if(!is.null(getOption("kill_run"))) getOption("kill_run")(r)
     clean_run(r,delete_dir=delete_dir[1])
     system_nm(cmd = r$cmd,dir = r$run_in)
   })
