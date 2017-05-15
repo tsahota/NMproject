@@ -32,6 +32,8 @@ test_that("status",{
 
   m2 <- nm("qpsn -m -c auto -t 3000 -- execute run2.mod -dir=2")
 
+  expect_error(run(m2)) ## already run
+
   st <- status(m2)
   expect_true(inherits(st,"data.frame"))
   expect_true(any(st$RESULT))
