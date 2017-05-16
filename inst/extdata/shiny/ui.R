@@ -20,7 +20,7 @@ fluidPage(
                                        actionButton("refresh_db","refresh"),
                                        p(em("Click rows to select run(s)"))),
                                 column(6,actionButton("go_to_monitor","View selected run in monitor tab"),
-                                       actionButton("go_to_results","View selected run(s) in monitor tab"))),
+                                       actionButton("go_to_results","View selected run(s) in results tab"))),
                               fluidRow(DT::dataTableOutput("run_table"))),
                      tabPanel(title = "monitor",
                               value = "monitor",
