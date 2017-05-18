@@ -3,3 +3,4 @@
 }
 
 .sso_env <- new.env(parent=emptyenv())
+.sso_env$wait <- FALSE

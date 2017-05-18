@@ -45,11 +45,6 @@ nm <- function(cmd,psn_command,
   ## cmd is now set
   cmd <- paste(cmd,collapse = " ")
 
-  ## infer things that havne't been specified.
-  ## Need to know:
-  ##  run type (psn_command)
-  ##  run_dir (-dir or run_dir), ctl - everything else will follow
-
   if(!missing(psn_command)) r$type <- psn_command
   if(!missing(ctl_name)) {
     if(any(!file.exists(file.path(r$run_in,ctl_name))))
@@ -123,12 +118,12 @@ nm <- function(cmd,psn_command,
     stop("Outputs overlap with entries: ",
          paste(overlapped_output_entries,collapse=","),
          "\nView runs with: show_runs()",
-         "\nDelete old runs with: delete_run(entry)")
+         "\nDelete old runs with: delete_nm(entry)")
 
   if(length(matched_entry)==0) {
     nmdb_add_entry(r)
   } else if(length(matched_entry)==1) {
-    delete_run(matched_entry)
+    delete_nm(matched_entry)
     message("Overwriting database entry: ",matched_entry)
     nmdb_add_entry(r,matched_entry,silent=TRUE)
   } else stop("Matched more than one database entry. Debug")
@@ -139,7 +134,7 @@ nm <- function(cmd,psn_command,
 #' delete run from database
 #' @param entry numeric. entry name to delete
 #' @export
-delete_run <- function(entry){
+delete_nm <- function(entry){
   query <- paste('DELETE FROM runs WHERE entry ==',entry)
   my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
   DBI::dbExecute(my_db, query)
@@ -293,6 +288,14 @@ extract_nm <- function(entry){
 #' @export
 print.nm <- function(x,...) utils::str(x)
 
+#' Edit control file
+#'
+#' @param r object of class nm
+#' @export
+ctl <- function(r) {
+  file.edit(r$ctl)
+}
+
 gsub2 <- function(pattern,replacement,x,...){
   match <- grepl(pattern,x,...)
   if(!match) return(character())
@@ -309,8 +312,10 @@ get_run_id <- function(ctl_name){
 #' @param overwrite logical. Should run directory be overwritten (default=FALSE)
 #' @param delete_dir logical. NA (default - directory will be deleted if no dependencies exists)
 #' TRUE or FALSE. Should run_dir be deleted.
+#' @param wait logical (default=FALSE). Should R wait for run to finish.
+#' Default can be changed with  wait_by_default() function
 #' @export
-run <- function(...,overwrite=FALSE,delete_dir=c(NA,TRUE,FALSE)){
+run <- function(...,overwrite=FALSE,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait){
   rl <- list(...)
   lapply(rl,function(r){
     ## if directory exists, and if it's definately a directory stop
@@ -319,7 +324,57 @@ run <- function(...,overwrite=FALSE,delete_dir=c(NA,TRUE,FALSE)){
     clean_run(r,delete_dir=delete_dir[1])
     system_nm(cmd = r$cmd,dir = r$run_in)
   })
+  if(wait) {
+
+  }
   invisible()
+}
+
+#' wait for a run to finish
+#'
+#' @param ... objects of class nm
+#' @param timeout numeric. Maximum time (seconds) to wait
+#' @export
+wait_for_finished <- function(...,timeout=NULL){
+  rl <- list(...)
+  message("waiting for: ",paste(sapply(rl,function(i)i$ctl),collapse = " "))
+  message("Finished: ",appendLF = TRUE)
+  lapply(rl,function(r){
+    if(r$type == "execute"){
+      wait_for(file.exists(r$output$lst),timeout = timeout)
+      wait_for({
+        lst <- readLines(r$output$lst)
+        lst <- lst[max(1,(length(lst)-5)):length(lst)]
+        any(grepl("Stop Time:",lst))
+      },timeout = timeout)
+    }
+    message(r$ctl," ")
+  })
+  invisible()
+}
+
+#' Should run() wait for job to finish
+#'
+#' @param x logical. TRUE means run() will wait, FALSE = asynchronous execution
+#' @export
+
+wait_default <- function(x) .sso_env$wait <- x
+
+
+#' Wait for statement to be true
+#'
+#' @param x expression to evaluate
+#' @param timeout numeric. Maximum time (seconds) to wait
+#' @export
+wait_for <- function(x,timeout=NULL){
+  x <- substitute(x)
+  start.time <- Sys.time()
+  diff.time <- 0
+  while (!eval(x,envir = parent.frame())){
+    diff.time <- difftime(Sys.time(),start.time,units="secs")
+    if(!is.null(timeout))if(diff.time > timeout) stop(paste("timed out waiting for\n",x,sep=""))
+    Sys.sleep(1)
+  }
 }
 
 #' @export

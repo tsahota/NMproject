@@ -35,6 +35,12 @@ test_that("status",{
   expect_error(run(m2)) ## already run
   expect_output(print(m2),"List of") ## does object print using str
 
+  expect_false(.sso_env$wait)
+  wait_default(TRUE)
+  expect_true(.sso_env$wait)
+
+  expect_error(wait_for_finished(m2,timeout = 2),NA)
+
   st <- status(m2)
   expect_true(inherits(st,"data.frame"))
   expect_true(any(st$RESULT))

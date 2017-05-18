@@ -4,7 +4,8 @@
 \alias{run}
 \title{Run NONMEM}
 \usage{
-run(..., overwrite = FALSE, delete_dir = c(NA, TRUE, FALSE))
+run(..., overwrite = FALSE, delete_dir = c(NA, TRUE, FALSE),
+  wait = .sso_env$wait)
 }
 \arguments{
 \item{...}{objects of class nm}
@@ -13,6 +14,9 @@ run(..., overwrite = FALSE, delete_dir = c(NA, TRUE, FALSE))
 
 \item{delete_dir}{logical. NA (default - directory will be deleted if no dependencies exists)
 TRUE or FALSE. Should run_dir be deleted.}
+
+\item{wait}{logical (default=FALSE). Should R wait for run to finish.
+Default can be changed with  wait_by_default() function}
 }
 \description{
 Run NONMEM
