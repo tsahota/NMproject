@@ -73,7 +73,7 @@ nm <- function(cmd,psn_command,
 
   if(missing(run_dir)){
     matched_run_dir <-
-      gsub2(paste0("^.*-dir[a-z]*=\\s*(.*)\\b.*$"),"\\1",cmd)
+      gsub2(paste0("^.*-dir[a-z]*=\\s*(\\S*)\\s*.*$"),"\\1",cmd)
     if(length(matched_run_dir)==0)
       stop("couldn't infer run directory type.\nRerun with run_dir argument")
     if(length(matched_run_dir)>1)
