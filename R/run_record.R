@@ -216,9 +216,12 @@ run_record <- function(...,trans=TRUE){
 
 run_summary <- function(r){
   res <- list()
-  existing_files <- file.exists(unlist(r$output))
+  outputs <- unlist(r$output)
+  if(!is.null(outputs)) existing_files <- file.exists(outputs) else
+    existing_files <- NA
   res$outputs_present <- sum(existing_files)/length(existing_files)
-  res$last_update <- max(file.mtime(unlist(r$output)))
+  if(!is.null(outputs)) res$last_update <- max(file.mtime(outputs)) else
+    res$last_update <- NA
   res$lst_exists <- NA
   res$stop_time_reached <- NA
   res$ofv <- NA
