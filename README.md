@@ -156,3 +156,17 @@ options(model_file_stub="nm.")
 options(model_file_extn="con")
 
 ```
+
+### + How do I submitt a command directly to the NONMEM server?
+
+```r
+system_nm("command_to_run",dir="path/to/dir")
+```
+
+### + After having closed my session how to I recreate an nm object
+
+If the run is visible in `show_runs` under the entry X:
+
+```r
+mod1 <- extract_nm(X)
+```
