@@ -403,21 +403,21 @@ clean_run <- function(r,delete_dir=c(NA,TRUE,FALSE)){
   if(TRUE %in% delete_dir) unlink(r$run_dir,recursive=TRUE) ## delete run directory
 }
 
-ctl_out_files <- function(ctrl.file){ ## will get vector of $TABLE file names from control file.
-  if(!file.exists(ctrl.file)) stop(paste(ctrl.file, "doesn't exist"))
-  dir0 <- dir(dirname(ctrl.file))
+ctl_out_files <- function(ctl_file){ ## will get vector of $TABLE file names from control file.
+  if(!file.exists(ctl_file)) stop(paste(ctl_file, "doesn't exist"))
+  dir0 <- dir(dirname(ctl_file))
 
-  s0 <- readLines(ctrl.file)
+  s0 <- readLines(ctl_file)
   s <- grep("FILE *= *[A-Za-z0-9_\\-\\.]+",s0,value=TRUE)
   table.files <- gsub(".*FILE *= *([A-Za-z0-9_\\-\\.]+) *.*$","\\1",s)
   table.files <- dir0[dir0%in%table.files]
 
-  stub <- basename(ctrl.file)
+  stub <- basename(ctl_file)
   stub <- gsub("(.+)\\.\\w+$","\\1",stub)
 
   out.files <- dir0[grepl(paste(stub,"\\.",sep=""),dir0)]
   out.files <- out.files[!grepl("scm",out.files)]
-  out.files <- out.files[!out.files%in%basename(ctrl.file)]
+  out.files <- out.files[!out.files%in%basename(ctl_file)]
 
   out.files <- c(table.files,out.files)
   out.files
