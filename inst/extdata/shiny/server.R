@@ -92,8 +92,14 @@ function(input, output, session) {
          input$run_table_rows_selected),{
            orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
            object <- objects()[[1]]
+           if(!file.exists(object$output$psn.ext)) return(plotly_empty())
            if(file.exists(object$output$psn.ext)){
-             ggplotly(plot_iter(object,trans = input$trans, skip = input$skip))
+             tryCatch({
+               gg <- plot_iter(object,trans = input$trans, skip = input$skip)
+             }, error = function(e){
+               return(plotly_empty())
+             })
+             ggplotly(gg)
              #plot_iter(object,trans = input$trans, skip = input$skip)
            }
          })
