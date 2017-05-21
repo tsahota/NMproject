@@ -142,7 +142,6 @@ delete_nm <- function(entry){
 }
 
 nmdb_match_info <- function(r){
-  match_rows <- c("type","run_dir")
   if(!file.exists("runs.sqlite"))
     return(data.frame(entry=numeric(),
                       match_type=logical(),
@@ -167,7 +166,7 @@ nmdb_match_info <- function(r){
     ans$match_run_in <- d$run_in %in% r$run_in
     ans$match_ctl <- d$ctl %in% r$ctl
 
-    dependent_run_dir <- sapply(d$run_dir,function(i)grepl(paste0("^",i),r$run_dir))
+    dependent_run_dir <- sapply(d$run_dir,function(i)grepl(paste0("^",i,"$"),r$run_dir))
     ans$dependent_run_dir <- dependent_run_dir & !ans$match_run_dir
 
     overlap_outputs <- sapply(strsplit(d$output_files,","),function(out_filesi){
@@ -389,7 +388,7 @@ nm_tran.nm <- function(x){
 #' @export
 clean_run <- function(r,delete_dir=c(NA,TRUE,FALSE)){
   ## assumes ctrl file is run[run_id].mod and -dir=[run_id] was used
-  unlink(ctl_out_files(r$ctl))
+  unlink(r$output$ctl_out_files)
   delete_dir <- delete_dir[1]
   if(is.na(delete_dir)){
     match_info <- nmdb_match_info(r)
