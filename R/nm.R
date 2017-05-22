@@ -207,7 +207,7 @@ nmdb_printable_db <- function(d){
   ## include if statements for columns no in the db
   if("outputs_present" %in% names(d))
     d$outputs_present <- signif(d$outputs_present,2)
-  for(i in names(d)) d[,i] <- as.character(d[,i]) ## convert everything to characters
+  for(i in names(d)[!names(d) %in% "entry"]) d[,i] <- as.character(d[,i]) ## convert everything to characters
   names(d) <- gsub("_"," ",names(d))
   d
 }
@@ -314,42 +314,84 @@ get_run_id <- function(ctl_name){
 #' @param wait logical (default=FALSE). Should R wait for run to finish.
 #' Default can be changed with  wait_by_default() function
 #' @export
-run <- function(...,overwrite=FALSE,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait){
+run <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait){
   rl <- list(...)
   lapply(rl,function(r){
     ## if directory exists, and if it's definately a directory stop
     if(file.exists(r$run_dir) & !overwrite)if(file.info(r$run_dir)$isdir %in% TRUE) stop("run already exists. To rerun select overwrite=TRUE")
     if(!is.null(getOption("kill_run"))) getOption("kill_run")(r)
     clean_run(r,delete_dir=delete_dir[1])
-    system_nm(cmd = r$cmd,dir = r$run_in)
+    system_nm(cmd = r$cmd, dir = r$run_in, wait = FALSE)
   })
-  if(wait) {
-
-  }
+  if(wait) wait_for_finished(...)
   invisible()
 }
 
 #' wait for a run to finish
 #'
 #' @param ... objects of class nm
-#' @param timeout numeric. Maximum time (seconds) to wait
 #' @export
-wait_for_finished <- function(...,timeout=NULL){
+wait_for_finished <- function(...){
   rl <- list(...)
-  message("waiting for: ",paste(sapply(rl,function(i)i$ctl),collapse = " "))
-  message("Finished: ",appendLF = TRUE)
-  lapply(rl,function(r){
-    if(r$type == "execute"){
-      wait_for(file.exists(r$output$lst),timeout = timeout)
-      wait_for({
-        lst <- readLines(r$output$lst)
-        lst <- lst[max(1,(length(lst)-5)):length(lst)]
-        any(grepl("Stop Time:",lst))
-      },timeout = timeout)
+  message("Waiting for jobs:\n",paste(sapply(rl,function(i)paste0(" ",i$type,":",i$ctl)),collapse = "\n"))
+
+  i <- 0
+  while(length(rl)>0){
+    j <- (i %% length(rl))+1
+    r <- rl[[j]]
+    ######################################
+    ## apply finishing test(s) here
+
+    finished <- nm_steps_finished(r)
+    last_update <- last_modified(r$run_dir)
+
+    if(finished){ ## check again in 5 seconds
+      Sys.sleep(5)
+      finished2 <- nm_steps_finished(r)
+      last_update2 <- last_modified(r$run_dir)
+      ## if it is still finished and last_update is still the same then finish
+      finished <- finished2 & identical(last_update,last_update2)
     }
-    message(r$ctl," ")
-  })
+
+    ######################################
+    if(finished){
+      rl[[j]] <- NULL
+      message(paste0("Finished: ",r$type,":",r$ctl))
+    }
+    i <- i + 1
+    Sys.sleep(1)
+  }
   invisible()
+}
+
+nm_steps_finished <- function(r){
+  execution_dirs <- dirname(dir(r$run_dir,
+                                pattern = "psn\\.mod$",
+                                recursive = TRUE,
+                                full.names = TRUE))
+  execution_dirs <- unique(execution_dirs)
+  lst_names <- file.path(execution_dirs,"psn.lst")
+
+  if(length(execution_dirs) > 0){
+    ## check these all exist
+    finished <- sapply(lst_names,function(lst_name){
+      if(!file.exists(lst_name)) return(FALSE)
+      lst <- try(readLines(lst_name),silent = TRUE)
+      if(inherits(lst,"try-error")) return(FALSE)
+      lst <- lst[max(1,(length(lst)-5)):length(lst)]
+      any(grepl("Stop Time:",lst))
+    })
+    finished <- all(finished)
+  } else finished <- FALSE ## if no execution_dirs
+  return(finished)
+}
+
+last_modified <- function(directory){
+  d <- file.info(dir(directory,recursive = TRUE,full.names = TRUE))
+  d <- data.frame(file=rownames(d),mtime=d$mtime)
+  if(nrow(d)==0) return(NA)
+  d <- d[d$mtime %in% max(d$mtime), ]
+  unique(d$mtime)
 }
 
 #' Should run() wait for job to finish
@@ -359,13 +401,20 @@ wait_for_finished <- function(...,timeout=NULL){
 
 wait_default <- function(x) .sso_env$wait <- x
 
+#' Should run() overwrite previously run jobs
+#'
+#' @param x logical. TRUE means run() will overwrite previous runs by default,
+#' @export
+
+run_overwrite_default <- function(x) .sso_env$run_overwrite <- x
 
 #' Wait for statement to be true
 #'
 #' @param x expression to evaluate
 #' @param timeout numeric. Maximum time (seconds) to wait
+#' @param interval numeric. Number of seconds (default=1s) to wait till rechecking
 #' @export
-wait_for <- function(x,timeout=NULL){
+wait_for <- function(x,timeout=NULL,interval=1){
   x <- substitute(x)
   start.time <- Sys.time()
   diff.time <- 0
@@ -424,8 +473,8 @@ ctl_out_files <- function(ctl_file){ ## will get vector of $TABLE file names fro
 
 input_files <- function(run_type,ctl_name){
   r <- list()
+  r$ctl <- ctl_name
   if(run_type %in% "execute"){
-    r$ctl <- ctl_name
     r$data_name <- data_name(ctl_name)
   }
   return(r)
@@ -444,6 +493,7 @@ output_files <- function(run_in,run_type,run_dir,ctl_name){
     r$psn.cor <- file.path(run_dir,"NM_run1","psn.cor")
     r$psn.xml <- file.path(run_dir,"NM_run1","psn.xml")
     r$ctl_out_files <- file.path(run_in,ctl_out_files(ctl_name))
+
   }
   return(r)
 }

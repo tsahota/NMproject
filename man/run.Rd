@@ -4,8 +4,8 @@
 \alias{run}
 \title{Run NONMEM}
 \usage{
-run(..., overwrite = FALSE, delete_dir = c(NA, TRUE, FALSE),
-  wait = .sso_env$wait)
+run(..., overwrite = .sso_env$run_overwrite, delete_dir = c(NA, TRUE,
+  FALSE), wait = .sso_env$wait)
 }
 \arguments{
 \item{...}{objects of class nm}

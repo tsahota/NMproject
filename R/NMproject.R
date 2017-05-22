@@ -288,3 +288,16 @@ check_session <- function(proj_name = getwd(), silent = FALSE, check_rstudio = T
   invisible(d)
 }
 
+#' Download code repositor from github
+#'
+#' @param local_path character. Path to install repository
+#' @param giturl character. URL to github repository
+#' @param config_file character. Name of config file (e.g. "~/.Rprofile")
+#' @export
+get_PMX_code_library <- function(local_path,
+                                 giturl="https://github.com/tsahota/PMXcodelibrary",
+                                 config_file){
+  tidyproject::get_github_code_library(local_path=local_path,
+                                       giturl=giturl,
+                                       config_file=config_file)
+}
