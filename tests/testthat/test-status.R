@@ -39,7 +39,7 @@ test_that("status",{
   wait_default(TRUE)
   expect_true(.sso_env$wait)
 
-  expect_error(wait_for_finished(m2,timeout = 2),NA)
+  expect_error(wait_for_finished(m2),NA)
 
   st <- status(m2)
   expect_true(inherits(st,"data.frame"))
@@ -81,5 +81,10 @@ test_that("status",{
   expect_true(file.exists(m2$run_dir))
   clean_run(m2)
   expect_true(!file.exists(m2$run_dir))
+
+  get_PMX_code_library("testCodeLibrary",
+                       config_file="test_config.R")
+
+  expect_true(length(readLines("test_config.R"))>0)
 
 })

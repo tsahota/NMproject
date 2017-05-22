@@ -4,12 +4,14 @@
 \alias{wait_for}
 \title{Wait for statement to be true}
 \usage{
-wait_for(x, timeout = NULL)
+wait_for(x, timeout = NULL, interval = 1)
 }
 \arguments{
 \item{x}{expression to evaluate}
 
 \item{timeout}{numeric. Maximum time (seconds) to wait}
+
+\item{interval}{numeric. Number of seconds (default=1s) to wait till rechecking}
 }
 \description{
 Wait for statement to be true

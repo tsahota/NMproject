@@ -4,12 +4,10 @@
 \alias{wait_for_finished}
 \title{wait for a run to finish}
 \usage{
-wait_for_finished(..., timeout = NULL)
+wait_for_finished(...)
 }
 \arguments{
 \item{...}{objects of class nm}
-
-\item{timeout}{numeric. Maximum time (seconds) to wait}
 }
 \description{
 wait for a run to finish
