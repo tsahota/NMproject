@@ -172,3 +172,17 @@ If the run is visible in `show_runs` under the entry X:
 ```r
 mod1 <- extract_nm(X)
 ```
+### + I want to repeat my model development script, how do I do this?
+
+You need to make `run()` submit NONMEM jobs synchronously.  To do this:
+
+```r
+wait_default(TRUE)
+```
+
+The `run()` function will now wait for each run to finish before moving onto the next R command.  To return to interactive mode (asynchronous NONMEM execution) run:
+
+```r
+wait_default(FALSE)
+```
+
