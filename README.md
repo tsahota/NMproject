@@ -44,7 +44,7 @@ get_PMX_code_library("/path/to/desired/location", config_file="~/.Rprofile")
 
 If you are running NONMEM and R on a desktop/laptop this should suffice.  For more complicated set ups additional configuration may be required see FAQ (below) for details.
 
-### Instructions
+## Instructions
 
 * NMprojects are directories where you can work on pharmacometric analysis.
 * First, set up a tidyproject with the `make_project("/path/to/project/dir"")`.
