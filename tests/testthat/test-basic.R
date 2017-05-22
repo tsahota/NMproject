@@ -20,6 +20,7 @@ test_that("Project has basic functionality",{
 
   setwd(proj_name)
 
+  options(code_library_path=c(system.file("extdata/CodeLibrary",package="NMproject")))
   expect_true(length(getOption("code_library_path"))>0)
 
   clib <- code_library(viewer=FALSE,silent=TRUE)

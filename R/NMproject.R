@@ -65,7 +65,7 @@ set_nm_opts <- function(){
   ## put as much AZ specific code in here.
   ## add internal code library to code library
 
-  if(is.null(getOption("code_library_path"))) options(code_library_path=c(system.file("extdata/CodeLibrary",package="NMproject")))
+  #if(is.null(getOption("code_library_path"))) options(code_library_path=c(system.file("extdata/CodeLibrary",package="NMproject")))
   ## if not null, leave alone
 
   if(is.null(getOption("psn.commands")))
