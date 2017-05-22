@@ -35,10 +35,11 @@ install.packages("devtools")
 devtools::install_github("tsahota/NMproject")
 ```
 
-To download the PMXcodelibrary, download: https://github.com/tsahota/PMXcodelibrary to a directory and add the following command to your `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site`) configuration file:
+To download and configure the PMXcodelibrary, run:
 
 ```r
-options(code_library_path = "/path/to/PMXcodelibrary/")
+library(NMproject)
+get_PMX_code_library("/path/to/desired/location", config_file="~/.Rprofile")
 ```
 
 If you are running NONMEM and R on a desktop/laptop this should suffice.  For more complicated set ups additional configuration may be required see FAQ (below) for details.
@@ -170,3 +171,17 @@ If the run is visible in `show_runs` under the entry X:
 ```r
 mod1 <- extract_nm(X)
 ```
+### + I want to repeat my model development script, how do I do this?
+
+You need to make `run()` submit NONMEM jobs synchronously.  To do this:
+
+```r
+wait_default(TRUE)
+```
+
+The `run()` function will now wait for each run to finish before moving onto the next R command.  To return to interactive mode (asynchronous NONMEM execution) run:
+
+```r
+wait_default(FALSE)
+```
+
