@@ -38,7 +38,6 @@ devtools::install_github("tsahota/NMproject")
 To download and configure the PMXcodelibrary, run:
 
 ```r
-library(tidyrproject)
 library(NMproject)
 get_PMX_code_library("/path/to/desired/location", config_file="~/.Rprofile")
 ```
