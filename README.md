@@ -35,10 +35,12 @@ install.packages("devtools")
 devtools::install_github("tsahota/NMproject")
 ```
 
-To download the PMXcodelibrary, download: https://github.com/tsahota/PMXcodelibrary to a directory and add the following command to your `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site`) configuration file:
+To download and configure the PMXcodelibrary, run:
 
 ```r
-options(code_library_path = "/path/to/PMXcodelibrary/")
+library(tidyrproject)
+library(NMproject)
+get_PMX_code_library("/path/to/desired/location", config_file="~/.Rprofile")
 ```
 
 If you are running NONMEM and R on a desktop/laptop this should suffice.  For more complicated set ups additional configuration may be required see FAQ (below) for details.
