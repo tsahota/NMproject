@@ -21,8 +21,8 @@ Script based NONMEM execution on tidyprojects with shiny interface
   * Table of runs
   * Real time run tracking
   * Run comparison
-
-<img src=https://github.com/tsahota/NMproject/blob/master/images/db.png width=24.6% /><img src=https://github.com/tsahota/NMproject/blob/master/images/monitor.png width=24.5% /><img src=https://github.com/tsahota/NMproject/blob/master/images/results.png width=24.5% />
+  
+<img src=https://cloud.githubusercontent.com/assets/18026277/26378627/40cd453a-400d-11e7-8547-cb508647f986.png width=24.6% /><img src=https://cloud.githubusercontent.com/assets/18026277/26378716/af0a755e-400d-11e7-98da-2855d84908fd.png width=24.5% /><img src=https://cloud.githubusercontent.com/assets/18026277/26378737/c75222d8-400d-11e7-8e5c-b5b800fe0b60.png width=24.5% />
 
 History: NMproject was previously an AstraZeneca project.  It is being reimplemented here as a community version to be compatible with a variety of architectures (standalone NONMEM and a variety of grid submission systems)
  
