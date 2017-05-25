@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/tsahota/NMproject/badge.svg?branch=master)](https://coveralls.io/github/tsahota/NMproject?branch=master)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/tsahota/NMproject?branch=master&svg=true)](https://ci.appveyor.com/project/tsahota/NMproject)
 
-Script based NONMEM execution on tidyprojects with shiny interface
+Script based NONMEM execution on tidyprojects with shiny interface.
 
 * Tidy code:
   * Standardised, version controlled, directory structure for all NONMEM users.
