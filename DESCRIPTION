@@ -14,13 +14,12 @@ Imports:
     tidyproject (>= 0.2.0),
     DBI,
     RSQLite
-RoxygenNote: 5.0.1
-Suggests:
-    testthat,
-    ggplot2,
-    tidyr,
     shiny,
     DT,
     plotly (>= 3.4.1),
-    git2r
-
+    git2r,
+    ggplot2,
+    tidyr
+RoxygenNote: 5.0.1
+Suggests:
+    testthat
