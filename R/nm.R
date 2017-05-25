@@ -379,7 +379,9 @@ nm_steps_finished <- function(r){
       lst <- try(readLines(lst_name),silent = TRUE)
       if(inherits(lst,"try-error")) return(FALSE)
       lst <- lst[max(1,(length(lst)-5)):length(lst)]
-      any(grepl("Stop Time:",lst))
+      stopped <- any(grepl("Stop Time:",lst))
+      psn_error <- file.exists(file.path(basename(lst_name),"psn_nonmem_error_messages.txt"))
+      return(stopped | psn_error)
     })
     finished <- all(finished)
   } else finished <- FALSE ## if no execution_dirs
