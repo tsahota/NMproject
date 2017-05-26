@@ -17,9 +17,9 @@ Imports:
     shiny,
     DT,
     plotly (>= 3.4.1),
-    git2r,
     ggplot2,
     tidyr
 RoxygenNote: 5.0.1
 Suggests:
-    testthat
+    testthat,
+    git2r
