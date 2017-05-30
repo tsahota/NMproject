@@ -1,6 +1,6 @@
 is_dollar_line <- function(l) grepl("^\\s*;*\\s*\\$",l)
 is_nm_comment_line <- function(l) grepl("^\\s*;",l)
-rem_dollars <- function(s) gsub("\\$\\S*","",s)
+rem_dollars <- function(s) gsub("\\s*\\$\\S*\\s*","",s)
 rem_comment <- function(s,char=";") gsub(paste0("^([^",char,"]*)",char,"*.*$"),"\\1",s)
 get_comment <- function(s,char=";") gsub(paste0("^[^",char,"]*",char,"*(.*)$"),"\\1",s)
 
