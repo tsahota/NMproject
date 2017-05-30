@@ -91,7 +91,7 @@ ctl_r2nm <- function(x) unlist(x,use.names = FALSE)
 #' @export
 theta_nm2r <- function(x){
   x <- rem_dollars(x)
-  x <- x[!x %in% ""]
+  x <- x[!grepl("^\\s*$",x)]
   x <- gsub("\\t"," ",x)
   x0 <- x
   x <- rem_comment(x,";")
