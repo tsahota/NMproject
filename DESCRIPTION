@@ -5,7 +5,7 @@ Version: 0.1.0
 Authors@R: person("Tarj", "Sahota", email =
     "tarjinder.sahota@astrazeneca.com", role = c("aut", "cre"))
 Maintainer: Tarj Sahota <tarjinder.sahota@astrazeneca.com>
-Description: A light interfact between R and NONMEM for script based model.
+Description: A light interface between R and NONMEM for script based model.
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true

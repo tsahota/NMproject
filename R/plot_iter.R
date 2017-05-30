@@ -7,6 +7,10 @@
 #' @export
 plot_iter_data <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
 
+  if(!requireNamespace("tidyr", quietly = TRUE))
+    stop("tidyr needed for this function to work. Please install it.",
+         call. = FALSE)
+
   d <- read_ext(r=r,trans=trans)
 
   d <- d[d$TYPE %in% c("ITER","BURN"), ]
@@ -45,6 +49,7 @@ plot_iter_data <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
 
   d <- tidyr::gather_(data = d,key = "variable",value = "value",
                       gather_cols = par.names)
+
   d$variable <- factor(d$variable,levels=unique(d$variable))
 
   d
@@ -60,7 +65,7 @@ plot_iter_ggplot <- function(d){
   if(length(unique(d$TYPE))==1){
     p <- p + ggplot2::geom_line()
   } else {
-    p <- p + ggplot2::geom_line(ggplot2::aes_string(colour="TYPE")) 
+    p <- p + ggplot2::geom_line(ggplot2::aes_string(colour="TYPE"))
   }
   p <- p + ggplot2::facet_wrap(~variable,scale="free")
   p <- p + ggplot2::theme(legend.position="none")
@@ -80,7 +85,7 @@ plot_iter <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
   d <- plot_iter_data(r=r,trans=trans,skip=skip,yvar=yvar)
   plot_iter_ggplot(d)
 }
-  
+
 
 #plot_iter_rplots <- function(d){
 #  p <- rPlot(value ~ ITERATION | variable, data= d, type = "point")

@@ -1,5 +1,10 @@
 ext2coef <- function(extout,file_name){
   ## raw function to generate parameter table from ext.file.
+
+  if(!requireNamespace("tidyr", quietly = TRUE))
+    stop("tidyr needed for this function to work. Please install it.",
+         call. = FALSE)
+
   d <- extout
 
   d <- d[d$TYPE %in% c("FINAL","SE"),]
