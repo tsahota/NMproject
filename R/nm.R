@@ -380,7 +380,7 @@ nm_steps_finished <- function(r){
       if(inherits(lst,"try-error")) return(FALSE)
       lst <- lst[max(1,(length(lst)-5)):length(lst)]
       stopped <- any(grepl("Stop Time:",lst))
-      psn_error <- file.exists(file.path(basename(lst_name),"psn_nonmem_error_messages.txt"))
+      psn_error <- file.exists(file.path(dirname(lst_name),"psn_nonmem_error_messages.txt"))
       return(stopped | psn_error)
     })
     finished <- all(finished)
