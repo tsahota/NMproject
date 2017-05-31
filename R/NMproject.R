@@ -161,6 +161,8 @@ copy_control <- function(from,to,overwrite=FALSE,alt_paths){
       ctl <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",from_path),ctl)
   ctl <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*",paste("\\1",Sys.info()["user"]),ctl)
   writeLines(ctl,to)
+  if(!requireNamespace("git2r", quietly = TRUE))
+    warning("git2r is recommended for this function. Please install it.")
   tidyproject::setup_file(to)
 }
 
@@ -258,10 +260,12 @@ update_dollar_data <- function(ctl_name,new_data_name){
 #' Shiny view of NMproject
 #' @export
 shiny_nm <- function(){
+  if(!requireNamespace("DT", quietly = TRUE))
+    stop("DT needed for this function to work. Please install it.",
+         call. = FALSE)
   shiny_dir <- system.file("extdata/shiny",package="NMproject")
   .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env
   on.exit(.sso_env$.currentwd <- NULL, add = TRUE)
-#  assign(".currentwd",value = getwd(),envir = asNamespace("NMproject"))
   shiny::runApp(shiny_dir,launch.browser = TRUE)
 }
 

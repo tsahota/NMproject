@@ -125,8 +125,8 @@ theta_nm2r <- function(x){
   class(x) <- c(class(x),"r.theta")
   comments <- get_comment(x0,";")
 
-  if(length(comments)!=max(x$N)) {  ##TODO: put a check on total number of thetas
-    #warning("no comments on $THETA found, setting comments to be empty")
+  if(length(comments) > max(x$N)) {
+    warning("More comments than THETAs found. Something wrong")
     comments <- rep("",max(x$N))
   }
 
