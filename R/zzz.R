@@ -6,7 +6,9 @@
   set_nm_opts()
 }
 
-.sso_env <- new.env(parent=emptyenv())
-.sso_env$wait <- FALSE
-.sso_env$run_overwrite <- FALSE
+if(!exists(".sso_env")){
+  .sso_env <- new.env(parent=emptyenv())
+  .sso_env$wait <- FALSE
+  .sso_env$run_overwrite <- FALSE
+}
 
