@@ -429,7 +429,7 @@ nm_steps_finished <- function(r){
 
 last_modified <- function(r){
   directory <- r$run_dir
-  d <- file.info(dir(directory,recursive = TRUE,full.names = TRUE))
+  d <- file.info(directory)
   if(nrow(d)==0) return("")
   d <- data.frame(file=rownames(d),mtime=d$mtime)
   if(nrow(d)==0) return(NA)
