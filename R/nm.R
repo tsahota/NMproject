@@ -24,10 +24,10 @@ nm <- function(cmd,psn_command,
 
   if(!missing(shell_script_name)){
     if(!file.exists(file.path(r$run_in,shell_script_name)))
-      stop("cannot find shell script in ",r$run_in," directory")
+      stop("cannot find shell script in ",r$run_in," directory",call. = FALSE)
     ss_contents <- readLines(file.path(r$run_in,shell_script_name))
     message("reading shell script: ",shell_script_name)
-    if(length(ss_contents)==0) stop(shell_script_name," is empty")
+    if(length(ss_contents)==0) stop(shell_script_name," is empty",call. = FALSE)
     cmd <- c(cmd,ss_contents)
   } else {
     match_string <- paste0("^.*\\b(.+\\.",shell_script_extn,")\\b.*")
@@ -37,7 +37,7 @@ nm <- function(cmd,psn_command,
       if(file.exists(file.path(r$run_in,shell_script_name))){
         message("reading shell script: ",shell_script_name)
         ss_contents <- readLines(file.path(r$run_in,shell_script_name))
-        if(length(ss_contents)==0) stop(shell_script_name," is empty")
+        if(length(ss_contents)==0) stop(shell_script_name," is empty",call. = FALSE)
         cmd <- c(cmd,ss_contents)
       }
     }
@@ -48,7 +48,7 @@ nm <- function(cmd,psn_command,
   if(!missing(psn_command)) r$type <- psn_command
   if(!missing(ctl_name)) {
     if(any(!file.exists(file.path(r$run_in,ctl_name))))
-      stop(paste(ctl_name,collapse = ",")," do(es) not exist")
+      stop(paste(ctl_name,collapse = ",")," do(es) not exist",call. = FALSE)
     r$ctl <- file.path(r$run_in,ctl_name)
   }
 
@@ -57,9 +57,9 @@ nm <- function(cmd,psn_command,
                                           function(i) gsub2(paste0("^.*(",i,")\\b\\s.+$"),"\\1",cmd)))
     matched_psn_commands <- as.character(matched_psn_commands)
     if(length(matched_psn_commands)==0)
-      stop("couldn't infer psn command type.\nRerun with psn_command argument")
+      stop("couldn't infer psn command type.\nRerun with psn_command argument",call. = FALSE)
     if(length(matched_psn_commands)>1)
-      stop("couldn't infer unique psn command type.\nRerun with psn_command argument")
+      stop("couldn't infer unique psn command type.\nRerun with psn_command argument",call. = FALSE)
     message(paste("inferring run type :",matched_psn_commands))
     r$type <- matched_psn_commands
   }
@@ -75,9 +75,9 @@ nm <- function(cmd,psn_command,
     matched_run_dir <-
       gsub2(paste0("^.*-dir[a-z]*=\\s*(\\S*)\\s*.*$"),"\\1",cmd)
     if(length(matched_run_dir)==0)
-      stop("couldn't infer run directory type.\nRerun with run_dir argument")
+      stop("couldn't infer run directory type.\nRerun with run_dir argument",call. = FALSE)
     if(length(matched_run_dir)>1)
-      stop("couldn't infer unique run directory type.\nRerun with run_dir argument")
+      stop("couldn't infer unique run directory type.\nRerun with run_dir argument",call. = FALSE)
     message(paste("inferring run directory :",matched_run_dir))
     r$run_dir <- file.path(r$run_in,matched_run_dir)
   } else r$run_dir <- run_dir
@@ -85,11 +85,11 @@ nm <- function(cmd,psn_command,
   if(missing(run_id)){
     matched_run_id <- get_run_id(r$ctl[1])
     if(length(matched_run_id)==0)
-      stop("couldn't infer run id type.\nRerun with run_id argument")
+      stop("couldn't infer run id type.\nRerun with run_id argument",call. = FALSE)
     r$run_id <- matched_run_id
   } else r$run_id <- run_id
 
-  if(!file.exists(r$ctl)) stop(paste("cannot find model file:",r$ctl))
+  if(!file.exists(r$ctl)) stop(paste("cannot find model file:",r$ctl),call. = FALSE)
   ## class for execute runs
   class(r) <- c(paste0("nm",r$type),class(r))
 
@@ -118,7 +118,7 @@ nm <- function(cmd,psn_command,
     stop("Outputs overlap with entries: ",
          paste(overlapped_output_entries,collapse=","),
          "\nView runs with: show_runs()",
-         "\nDelete old runs with: delete_nm(entry)")
+         "\nDelete old runs with: delete_nm(entry)",call. = FALSE)
 
   if(length(matched_entry)==0) {
     nmdb_add_entry(r)
@@ -127,8 +127,16 @@ nm <- function(cmd,psn_command,
     message("Overwriting database entry: ",matched_entry)
     nmdb_add_entry(r,matched_entry,silent=TRUE)
   } else stop("Matched more than one database entry. Debug")
-
+  union_write(".gitignore",getOption("nmproj_gitignore"))
   return(r)
+}
+
+union_write <- function (path, new_lines){
+  if (file.exists(path))
+    lines <- readLines(path, warn = FALSE) else
+      lines <- character()
+    all <- union(lines, new_lines)
+    writeLines(all, path)
 }
 
 #' delete run from database
@@ -199,6 +207,8 @@ nmdb_make_db_row <- function(r){
 nmdb_printable_db <- function(d){
   d$object <- NULL
   d$output_files <- NULL
+  d$lst_exists <- NULL
+  d$stop_time_reached <- NULL
   d$input_files[!d$input_files %in% d$ctl]
   d$input_files <- lapply(strsplit(d$input_files,","),function(char_vec){
     paste(basename(char_vec),collapse=" ")
@@ -273,8 +283,8 @@ extract_nm <- function(entry){
     d <- DBI::dbGetQuery(my_db, 'SELECT * FROM runs')
     DBI::dbDisconnect(my_db)
     d <- d[d$entry==entry, ]
-    if(nrow(d)>1) stop("More than one entry found")
-    if(nrow(d)==0) stop("No entry found")
+    if(nrow(d)>1) stop("More than one entry found",call. = FALSE)
+    if(nrow(d)==0) stop("No entry found",call. = FALSE)
     r <- unserialize(d$object[[1]])
     return(r)
   },
@@ -302,7 +312,7 @@ gsub2 <- function(pattern,replacement,x,...){
 }
 
 get_run_id <- function(ctl_name){
-  match <- paste0("^.*",getOption("model_file_stub"),"(.*)\\.",getOption("model_file_extn"),".*$")
+  match <- paste0("^.*",getOption("model_file_stub"),"(.*)\\..*$")
   gsub2(match,"\\1",ctl_name)
 }
 
@@ -318,7 +328,7 @@ run <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE)
   rl <- list(...)
   lapply(rl,function(r){
     ## if directory exists, and if it's definately a directory stop
-    if(file.exists(r$run_dir) & !overwrite)if(file.info(r$run_dir)$isdir %in% TRUE) stop("run already exists. To rerun select overwrite=TRUE")
+    if(file.exists(r$run_dir) & !overwrite)if(file.info(r$run_dir)$isdir %in% TRUE) stop("run already exists. To rerun select overwrite=TRUE\n  or use the switch overwrite_default(TRUE)",call.=FALSE)
     if(!is.null(getOption("kill_run"))) getOption("kill_run")(r)
     clean_run(r,delete_dir=delete_dir[1])
     system_nm(cmd = r$cmd, dir = r$run_in, wait = FALSE)
@@ -343,12 +353,12 @@ wait_for_finished <- function(...){
     ## apply finishing test(s) here
 
     finished <- nm_steps_finished(r)
-    last_update <- last_modified(r$run_dir)
+    last_update <- last_modified(r)
 
     if(finished){ ## check again in 5 seconds
       Sys.sleep(5)
       finished2 <- nm_steps_finished(r)
-      last_update2 <- last_modified(r$run_dir)
+      last_update2 <- last_modified(r)
       ## if it is still finished and last_update is still the same then finish
       finished <- finished2 & identical(last_update,last_update2)
     }
@@ -362,6 +372,35 @@ wait_for_finished <- function(...){
     Sys.sleep(1)
   }
   invisible()
+}
+
+run_status <- function(r){
+  execution_dirs <- dirname(dir(r$run_dir,
+                                pattern = "psn\\.mod$",
+                                recursive = TRUE,
+                                full.names = TRUE))
+  execution_dirs <- unique(execution_dirs)
+  lst_names <- file.path(execution_dirs,"psn.lst")
+
+  if(length(execution_dirs) > 0){
+    ## check these all exist
+    status <- sapply(lst_names,function(lst_name){
+      if(!file.exists(lst_name)) return(FALSE)
+      lst <- try(readLines(lst_name),silent = TRUE)
+      if(inherits(lst,"try-error")) return(FALSE)
+      lst <- lst[max(1,(length(lst)-5)):length(lst)]
+      stopped <- any(grepl("Stop Time:",lst))
+      psn_error <- file.exists(file.path(dirname(lst_name),"psn_nonmem_error_messages.txt"))
+      if(psn_error) return("error")
+      if(stopped) return("finished")
+      return("running")
+    })
+    running <- length(which(status %in% "running"))
+    finished <- length(which(status %in% "finished"))
+    error <- length(which(status %in% "error"))
+    status <- paste0("run:",running," fin:",finished," err:",error)
+  } else     status <- paste0("run:",0," fin:",0," err:",0)
+  return(status)
 }
 
 nm_steps_finished <- function(r){
@@ -388,8 +427,10 @@ nm_steps_finished <- function(r){
   return(finished)
 }
 
-last_modified <- function(directory){
+last_modified <- function(r){
+  directory <- r$run_dir
   d <- file.info(dir(directory,recursive = TRUE,full.names = TRUE))
+  if(nrow(d)==0) return("")
   d <- data.frame(file=rownames(d),mtime=d$mtime)
   if(nrow(d)==0) return(NA)
   d <- d[d$mtime %in% max(d$mtime), ]
@@ -408,7 +449,7 @@ wait_default <- function(x) .sso_env$wait <- x
 #' @param x logical. TRUE means run() will overwrite previous runs by default,
 #' @export
 
-run_overwrite_default <- function(x) .sso_env$run_overwrite <- x
+overwrite_default <- function(x) .sso_env$run_overwrite <- x
 
 #' Wait for statement to be true
 #'
@@ -495,7 +536,6 @@ output_files <- function(run_in,run_type,run_dir,ctl_name){
     r$psn.cor <- file.path(run_dir,"NM_run1","psn.cor")
     r$psn.xml <- file.path(run_dir,"NM_run1","psn.xml")
     r$ctl_out_files <- file.path(run_in,ctl_out_files(ctl_name))
-
   }
   return(r)
 }
