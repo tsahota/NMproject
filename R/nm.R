@@ -432,9 +432,9 @@ last_modified <- function(r){
   d <- file.info(directory)
   if(nrow(d)==0) return("")
   d <- data.frame(file=rownames(d),mtime=d$mtime)
-  if(nrow(d)==0) return(NA)
+  if(nrow(d)==0) return(as.character(NA))
   d <- d[d$mtime %in% max(d$mtime), ]
-  unique(d$mtime)
+  as.character(unique(d$mtime))
 }
 
 #' Should run() wait for job to finish
