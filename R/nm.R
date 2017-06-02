@@ -540,4 +540,44 @@ output_files <- function(run_in,run_type,run_dir,ctl_name){
   return(r)
 }
 
+#' write csv for NONMEM control files
+#' @param ... arguments for write.csv
+#' @param na character. Default changed to ".".
+#' @param row.names logical. Default changed to FALSE.
+#' @param quote logical. Fefault changed to FALSE
+#' @export
+
+write.csv.nm <- function(...,na=".",
+                         row.names=FALSE,
+                         quote=FALSE){
+  write.csv(...,na=na,row.names=row.names,quote=quote)
+}
+
+#' Setup demo files
+#'
+#' @param file_stub character. Default = "run1". Stub to some file names
+#' @param overwrite logical. Default changed to FALSE.
+#' @param demo_name character. Name of demo. Default = "theopp-demo"
+#' @export
+
+setup_nm_demo <- function(file_stub = paste0(getOption("model_file_stub"),1),
+                          overwrite=FALSE,
+                          demo_name="theopp"){
+  tidyproject::check_if_tidyproject()
+  examples_dir <- system.file("extdata","examples",demo_name,package = "NMproject")
+
+  files_to_copy <- dir(examples_dir,all.files = TRUE,recursive = TRUE)
+  dest_names <- files_to_copy
+  dest_names <- gsub("^Models/",paste0(getOption("models.dir"),"/"),dest_names)
+  dest_names <- gsub("^Scripts/",paste0(getOption("scripts.dir"),"/"),dest_names)
+  dest_names <- gsub("run1\\.",paste0(file_stub,"."),dest_names)
+
+  already_there <- file.exists(dest_names)
+  if(any(already_there) & !overwrite)
+    stop("File(s) already exist:\n",paste(paste0("  ",dest_names[already_there]),collapse="\n"),"\nRename or rerun with overwrite=TRUE",call. = FALSE)
+
+  for(i in seq_along(files_to_copy))
+    copy_file(file.path(examples_dir,files_to_copy[i]),
+              dest_names[i],version_control=TRUE,overwrite = TRUE)
+}
 
