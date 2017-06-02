@@ -1,7 +1,7 @@
 Package: NMproject
 Type: Package
 Title: NONMEM interface in tidyproject
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: person("Tarj", "Sahota", email =
     "tarjinder.sahota@astrazeneca.com", role = c("aut", "cre"))
 Maintainer: Tarj Sahota <tarjinder.sahota@astrazeneca.com>
@@ -11,7 +11,7 @@ Encoding: UTF-8
 LazyData: true
 Remotes: tsahota/tidyproject
 Imports:
-    tidyproject (>= 0.2.0),
+    tidyproject (>= 0.3.0),
     DBI,
     RSQLite,
     shiny,

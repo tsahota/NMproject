@@ -51,6 +51,10 @@ test_that("Project has basic functionality",{
   dn <- data_name("Models/run1.mod")
   expect_true(dn=="new.data.csv")
 
+  setup_nm_demo(overwrite = TRUE)
+  expect_true(file.exists("DerivedData/THEOPP.csv"))
+  expect_true(file.exists(file.path(getOption("scripts.dir"),"theopp-demo.R")))
+
 })
 
 
