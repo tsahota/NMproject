@@ -178,6 +178,7 @@ run_id <- function(x){
 #'
 #' @param x character vector. Relative path from models.dir
 #' @param models_dir character. Models directory
+#' @export
 from_models <- function(x, models_dir=getOption("models.dir")) {
   file.path(models_dir,x)
 }
