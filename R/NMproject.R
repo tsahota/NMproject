@@ -81,12 +81,11 @@ set_nm_opts <- function(){
     if(.Platform$OS.type == "windows") shell(cmd,...) else system(cmd,...)
   })
 
-  #options(git.ignore.files=c("psn-*","hostfile*","submitscript*"))
-
   if(is.null(getOption("model_file_stub"))) options(model_file_stub="run")
   if(is.null(getOption("model_file_extn"))) options(model_file_extn="mod")
-  if(is.null(getOption("available_nm_types"))) options(available_nm_types = c("SIZES","PROB","INPUT","DATA","SUB","MODEL","PK","DES","PRED","ERROR",
-                                                                              "THETA","OMEGA","SIGMA","EST","SIM","COV","TABLE"))
+  if(is.null(getOption("available_nm_types")))
+    options(available_nm_types = c("SIZES","PROB","INPUT","DATA","SUB","MODEL","PK","DES","PRED","ERROR",
+                                   "THETA","OMEGA","SIGMA","EST","SIM","COV","TABLE"))
 }
 
 #' system/shell command wrapper
