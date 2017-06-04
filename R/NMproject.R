@@ -107,7 +107,7 @@ system_cmd <- function(cmd,dir=".",...){
 #' @param ... other arguments passed to system command
 #' @export
 system_nm <- function(cmd,dir=getOption("models.dir"),...){
-  if(is.null(dir)) dir <- "."
+  if(is.null(dir) | !file.exists(dir)) dir <- "."
   if(file.exists(dir)) {currentwd <- getwd(); setwd(dir) ; on.exit(setwd(currentwd))} else
     stop(paste0("Directory \"",dir,"\" doesn't exist."))
   getOption("system_nm")(cmd,...)

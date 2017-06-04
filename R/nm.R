@@ -325,6 +325,7 @@ get_run_id <- function(ctl_name){
 #' Default can be changed with  wait_by_default() function
 #' @export
 run <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait){
+  tidyproject::check_if_tidyproject()
   rl <- list(...)
   lapply(rl,function(r){
     ## if directory exists, and if it's definately a directory stop
@@ -471,6 +472,7 @@ wait_for <- function(x,timeout=NULL,interval=1){
 
 #' @export
 nm_tran.nm <- function(x){
+  tidyproject::check_if_tidyproject()
   nm_tran.default(x$ctl)
 }
 
@@ -481,6 +483,7 @@ nm_tran.nm <- function(x){
 #' @export
 clean_run <- function(r,delete_dir=c(NA,TRUE,FALSE)){
   ## assumes ctrl file is run[run_id].mod and -dir=[run_id] was used
+  tidyproject::check_if_tidyproject()
   unlink(r$output$ctl_out_files)
   delete_dir <- delete_dir[1]
   if(is.na(delete_dir)){
