@@ -33,7 +33,7 @@ Execution in numbered directories: \code{execute run55.mod -dir=55}
 
 \code{git.exists} = \code{TRUE} if git is installed (only works on unix currently)
 
-\code{path.nm_tran} = path to nm_tran file
+\code{nmtran_exe_path} = path to nm_tran file
 }
 \examples{
 \dontrun{

@@ -92,7 +92,7 @@ mod1 <- nm("execute run1.mod -dir=1")
 
 NOTE: the `-dir` option must always be specified when using NMproject
 
-The `mod1` object here will contain information about the run.  If you have set up the `path.nm_tran` option configured (see FAQ below), you can do a quick test that your control stream and dataset pass NMTRAN checks:
+The `mod1` object here will contain information about the run.  If you have set up the `nmtran_exe_path` option configured (see FAQ below), you can do a quick test that your control stream and dataset pass NMTRAN checks:
 
 ```r
 nm_tran(mod1)
@@ -119,7 +119,7 @@ This is especially useful to do on a cluster submission system where a job may t
 Add the following line to your `~/.Rprofile` with the location of your nmtran.exe file:.
 
 ```r
-options(path.nm_tran = "path/to/nonmem/installation/tr/NMTRAN.exe")
+options(nmtran_exe_path = "path/to/nonmem/installation/tr/NMTRAN.exe")
 ```
 You can now use `nm_tran(mod1)`
 
