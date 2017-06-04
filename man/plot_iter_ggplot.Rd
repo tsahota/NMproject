@@ -12,4 +12,3 @@ plot_iter_ggplot(d)
 \description{
 Plot iterations vs parameters/OBJ (ggplot2)
 }
-

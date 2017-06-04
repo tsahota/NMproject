@@ -18,4 +18,3 @@ copy_control(from, to, overwrite = FALSE, alt_paths)
 \description{
 Copy NONMEM control stream
 }
-

@@ -9,4 +9,3 @@ shiny_nm()
 \description{
 Shiny view of NMproject
 }
-

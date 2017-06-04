@@ -35,6 +35,7 @@ Execution in numbered directories: \code{execute run55.mod -dir=55}
 
 \code{nmtran_exe_path} = path to nm_tran file
 }
+
 \examples{
 \dontrun{
 new_project("~/AZDXXXX/PKAE1")          ## creates new_project
@@ -65,4 +66,3 @@ nm_load("nm.log.R")      ## Bring all runs in nm.log.R into memory
 squ()                    ## see queued runs
 }
 }
-

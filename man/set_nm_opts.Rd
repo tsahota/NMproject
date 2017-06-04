@@ -9,4 +9,3 @@ set_nm_opts()
 \description{
 Set NMproject options
 }
-

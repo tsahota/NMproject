@@ -16,4 +16,3 @@ system_cmd(cmd, dir = ".", ...)
 \description{
 system/shell command wrapper
 }
-

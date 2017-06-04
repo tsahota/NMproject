@@ -14,4 +14,3 @@ is_nm_file_name(x, error_if_false = FALSE)
 \description{
 test if NONMEM file name conforms to convention
 }
-

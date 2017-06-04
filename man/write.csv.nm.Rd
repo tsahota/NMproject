@@ -18,4 +18,3 @@ write.csv.nm(..., na = ".", row.names = FALSE, quote = FALSE)
 \description{
 write csv for NONMEM control files
 }
-

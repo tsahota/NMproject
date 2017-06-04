@@ -14,4 +14,3 @@ update_dollar_data(ctl_name, new_data_name)
 \description{
 Generic function
 }
-

@@ -12,4 +12,3 @@ plot_iter_plotly(d)
 \description{
 Plot iterations vs parameters/OBJ (plotly)
 }
-

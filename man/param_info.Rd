@@ -12,4 +12,3 @@ param_info(ctl_name)
 \description{
 Get parameter information
 }
-

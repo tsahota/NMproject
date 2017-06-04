@@ -12,4 +12,3 @@ run_id(x)
 \description{
 Get run id from file name or path
 }
-

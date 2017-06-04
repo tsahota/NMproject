@@ -17,4 +17,3 @@ setup_nm_demo(file_stub = paste0(getOption("model_file_stub"), 1),
 \description{
 Setup demo files
 }
-

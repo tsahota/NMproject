@@ -12,4 +12,3 @@ show_runs(...)
 \description{
 Show table of runs in database
 }
-
