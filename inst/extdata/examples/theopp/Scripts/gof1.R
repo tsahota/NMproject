@@ -14,7 +14,7 @@ gof1 <- function(run.no,model.dir=getOption("models.dir")){
   ##   $TABLE ID TIME IPRED IWRES IRES CWRES NPDE
   ##   FILE=sdtab[run.no] NOPRINT ONEHEADER FORMAT=tF13.4
   
-  library(xpose4,lib.loc = "/home/kbtr119/R/x86_64-unknown-linux-gnu-library/3.1/")
+  library(xpose4)
   
   xpdb <- xpose.data(run.no,directory=paste0(model.dir,"/"))
   

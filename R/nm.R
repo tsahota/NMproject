@@ -302,7 +302,7 @@ print.nm <- function(x,...) utils::str(x)
 #' @param r object of class nm
 #' @export
 ctl <- function(r) {
-  file.edit(r$ctl)
+  utils::file.edit(r$ctl)
 }
 
 gsub2 <- function(pattern,replacement,x,...){
@@ -554,7 +554,7 @@ output_files <- function(run_in,run_type,run_dir,ctl_name){
 write.csv.nm <- function(...,na=".",
                          row.names=FALSE,
                          quote=FALSE){
-  write.csv(...,na=na,row.names=row.names,quote=quote)
+  utils::write.csv(...,na=na,row.names=row.names,quote=quote)
 }
 
 #' Setup demo files
