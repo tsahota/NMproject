@@ -22,7 +22,7 @@
 #'
 #' \code{git.exists} = \code{TRUE} if git is installed (only works on unix currently)
 #'
-#' \code{path.nm_tran} = path to nm_tran file
+#' \code{nmtran_exe_path} = path to nm_tran file
 #'
 #'
 #' @examples
@@ -205,9 +205,9 @@ nm_tran <- function(x) UseMethod("nm_tran")
 
 #' @export
 nm_tran.default <- function(x){
-  if(is.null(getOption("path.nm_tran"))) {
+  if(is.null(getOption("nmtran_exe_path"))) {
     message("Path to nmtran not set. To set add the following command:")
-    message("  options(path.nm_tran=\"path/to/nmtran\")")
+    message("  options(nmtran_exe_path=\"path/to/nmtran\")")
     message("     1. (for this session only) in the console")
     message("     2. (for this user) to ~/.Rprofile")
     message(paste0("     3. (for all users) to ",file.path(R.home(component = "home"), "etc", "Rprofile.site")))
@@ -220,7 +220,7 @@ nm_tran.default <- function(x){
   file.copy(data_path,tempdir0) ## copy dataset
   dataset.name <- basename(data_path)
   update_dollar_data(file.path(tempdir0,basename(x)),dataset.name)
-  system_nm(paste(getOption("path.nm_tran"),"<",basename(x)),dir=tempdir0) ## run nmtran in tempdir0
+  system_nm(paste(getOption("nmtran_exe_path"),"<",basename(x)),dir=tempdir0) ## run nmtran in tempdir0
 }
 
 #' Get NONMEM dataset name from control stream

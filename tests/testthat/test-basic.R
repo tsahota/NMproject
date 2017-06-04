@@ -77,9 +77,9 @@ test_that("set up",{
   tmp <- system_nm("ls",intern=TRUE)
   expect_true(length(tmp)>0 & "character" %in% class(tmp))
 
-  old.opt <- getOption("path.nm_tran")
-  options(path.nm_tran=NULL)
+  old.opt <- getOption("nmtran_exe_path")
+  options(nmtran_exe_path=NULL)
   expect_error(nm_tran("run1.mod"))
-  options(path.nm_tran=old.opt)
+  options(nmtran_exe_path=old.opt)
 
 })
