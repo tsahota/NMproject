@@ -78,9 +78,17 @@ set_nm_opts <- function(){
     if(.Platform$OS.type == "windows") shell(cmd,...) else system(cmd,...)
   })
   if(is.null(getOption("system_nm"))) options(system_nm=function(cmd,...) {
-    if(.Platform$OS.type == "windows") shell(cmd,...) else system(cmd,...)
+    if(.Platform$OS.type == "windows"){
+      args <- list(...)
+      if(!"wait" %in% names(args)) wait <- FALSE else wait <- args$wait
+      if(wait==FALSE){
+        shell(paste("START CMD /C \"\"",cmd),...)        
+      } else {
+        shell(cmd,...)        
+      }
+    } else system(cmd,...)
   })
-
+  
   if(is.null(getOption("model_file_stub"))) options(model_file_stub="run")
   if(is.null(getOption("model_file_extn"))) options(model_file_extn="mod")
   if(is.null(getOption("available_nm_types")))
@@ -220,7 +228,7 @@ nm_tran.default <- function(x){
   file.copy(data_path,tempdir0) ## copy dataset
   dataset.name <- basename(data_path)
   update_dollar_data(file.path(tempdir0,basename(x)),dataset.name)
-  system_nm(paste(getOption("nmtran_exe_path"),"<",basename(x)),dir=tempdir0) ## run nmtran in tempdir0
+  system_nm(paste(getOption("nmtran_exe_path"),"<",basename(x)),dir=tempdir0,wait=TRUE) ## run nmtran in tempdir0
 }
 
 #' Get NONMEM dataset name from control stream
