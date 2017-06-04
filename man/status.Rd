@@ -12,4 +12,3 @@ status(x)
 \description{
 Get status of NONMEM job
 }
-

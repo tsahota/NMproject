@@ -15,4 +15,3 @@ object abstracting $THETA contents
 \description{
 Convert $THETA to R abstraction layer
 }
-

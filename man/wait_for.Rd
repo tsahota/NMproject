@@ -16,4 +16,3 @@ wait_for(x, timeout = NULL, interval = 1)
 \description{
 Wait for statement to be true
 }
-

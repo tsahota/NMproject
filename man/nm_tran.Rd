@@ -12,4 +12,3 @@ nm_tran(x)
 \description{
 Requires options("path/to/nmtran") to be set up.
 }
-

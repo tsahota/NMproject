@@ -18,4 +18,3 @@ plot_iter_data(r, trans = TRUE, skip = 0, yvar = "OBJ")
 \description{
 Get data for iterations vs parameters/OBJ plots
 }
-

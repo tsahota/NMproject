@@ -14,4 +14,3 @@ from_models(x, models_dir = getOption("models.dir"))
 \description{
 path of directory from models dir
 }
-

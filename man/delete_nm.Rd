@@ -12,4 +12,3 @@ delete_nm(entry)
 \description{
 delete run from database
 }
-

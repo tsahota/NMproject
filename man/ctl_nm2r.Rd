@@ -15,4 +15,3 @@ object of class r.ctl
 \description{
 Convert controls stream to first abstraction layer
 }
-

@@ -12,4 +12,3 @@ extract_nm(entry)
 \description{
 Extract nm object from data.base
 }
-

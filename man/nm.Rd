@@ -30,4 +30,3 @@ object of class nm
 \description{
 Make nm object
 }
-

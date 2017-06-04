@@ -15,4 +15,3 @@ character vector with control stream contents
 \description{
 Convert first abstraction layer to control stream
 }
-

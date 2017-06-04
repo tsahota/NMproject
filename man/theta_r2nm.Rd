@@ -15,4 +15,3 @@ character vector with $THETA information
 \description{
 Convert R abstraction layer to $THETA
 }
-

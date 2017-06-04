@@ -16,4 +16,3 @@ system_nm(cmd, dir = getOption("models.dir"), ...)
 \description{
 system command for NONMEM execution
 }
-

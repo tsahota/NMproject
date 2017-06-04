@@ -14,4 +14,3 @@ clean_run(r, delete_dir = c(NA, TRUE, FALSE))
 \description{
 clean_run files
 }
-

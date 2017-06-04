@@ -12,4 +12,3 @@ ctl(r)
 \description{
 Edit control file
 }
-

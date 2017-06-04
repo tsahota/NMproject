@@ -16,4 +16,3 @@ check_session(proj_name = getwd(), silent = FALSE, check_rstudio = TRUE)
 \description{
 Check tidyproject for best practice compliance
 }
-
