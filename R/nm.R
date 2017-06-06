@@ -358,13 +358,13 @@ wait_for_finished <- function(...){
     last_update <- last_modified(r)
 
     if(finished){ ## check again in 5 seconds
-      Sys.sleep(5)
+      if(r$type != "execute") Sys.sleep(5) else Sys.sleep(1)
       finished2 <- nm_steps_finished(r)
       last_update2 <- last_modified(r)
       ## if it is still finished and last_update is still the same then finish
       finished <- finished2 & identical(last_update,last_update2)
     }
-
+    
     ######################################
     if(finished){
       rl[[j]] <- NULL
