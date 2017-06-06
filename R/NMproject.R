@@ -79,10 +79,16 @@ set_nm_opts <- function(){
   })
   if(is.null(getOption("system_nm"))) options(system_nm=function(cmd,...) {
     if(.Platform$OS.type == "windows"){
+      local_env_vars <- Sys.getenv()
+      stdout_unit_vars <- local_env_vars[grepl("STDOUT_UNIT|STDERR_UNIT",names(local_env_vars))]
+      for(i in seq_along(stdout_unit_vars)){
+        Sys.unsetenv(names(stdout_unit_vars)[i])
+      }
+      on.exit(do.call(Sys.setenv,as.list(stdout_unit_vars)))
       args <- list(...)
       if(!"wait" %in% names(args)) wait <- FALSE else wait <- args$wait
       if(wait==FALSE){
-        shell(paste("START CMD /C \"\"",cmd),...)        
+        shell(paste("START CMD /C",cmd),...)        
       } else {
         shell(cmd,...)        
       }
