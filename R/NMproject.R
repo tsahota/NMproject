@@ -85,10 +85,8 @@ set_nm_opts <- function(){
         Sys.unsetenv(names(stdout_unit_vars)[i])
       }
       on.exit({
-        print(as.list(Sys.getenv()))
-        print("deleted vars")
-        print(as.list(stdout_unit_vars))
-        do.call(Sys.setenv,as.list(stdout_unit_vars))
+        if(length(stdout_unit_vars)>0)
+          do.call(Sys.setenv,as.list(stdout_unit_vars))
       })
       args <- list(...)
       if(!"wait" %in% names(args)) wait <- FALSE else wait <- args$wait
