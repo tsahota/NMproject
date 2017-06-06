@@ -16,10 +16,12 @@ fluidPage(
                      tabPanel(title = "database",
                               value = "database",
                               fluidRow(
-                                column(6,"R command: ",tags$code("run_table()"),
+                                column(4,"R command: ",tags$code("run_table()"),
                                        actionButton("refresh_db","refresh"),
                                        p(em("Click rows to select run(s)"))),
-                                column(6,actionButton("go_to_monitor","View selected run in monitor tab"),
+                                column(8,
+                                       actionButton("run_job","Run asynchronously"),
+                                       actionButton("go_to_monitor","View selected run in monitor tab"),
                                        actionButton("go_to_results","View selected run(s) in results tab"))),
                               fluidRow(DT::dataTableOutput("run_table"))),
                      tabPanel(title = "monitor",
@@ -33,12 +35,11 @@ fluidPage(
                                        numericInput("skip","skip",value=0,min=0,max=1000,step=1),
                                        checkboxInput("trans","transform parameters",TRUE),
                                        actionButton("refresh_plot","refresh")),
-                                column(6,wellPanel("R command: ",tags$code("status([nm object])"),
-                                                   actionButton("refresh_status","refresh"),
-                                                   br(),br(),
-                                                   tableOutput("status")))),
-                              fluidRow(
-                                plotlyOutput("distPlot"))
+                                column(9,wellPanel("R command: ",tags$code("status([nm object])"),
+                                                   actionButton("refresh_status","refresh"),br(),
+                                                   tags$code(verbatimTextOutput("status")),br(),
+                                                   tags$code(htmlOutput("tail_lst"))))),
+                              plotlyOutput("distPlot",width = "auto")
                               #plotOutput("distPlot")
                      ),
                      tabPanel(title = "results",
