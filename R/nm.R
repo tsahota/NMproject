@@ -376,36 +376,42 @@ wait_for_finished <- function(...){
   invisible()
 }
 
-run_status <- function(r){
-  execution_dirs <- dirname(dir(r$run_dir,
-                                pattern = "psn\\.mod$",
-                                recursive = TRUE,
-                                full.names = TRUE))
-  execution_dirs <- unique(execution_dirs)
-  lst_names <- file.path(execution_dirs,"psn.lst")
-
-  if(length(execution_dirs) > 0){
-    ## check these all exist
-    status <- sapply(lst_names,function(lst_name){
-      if(!file.exists(lst_name)) return(FALSE)
-      lst <- try(readLines(lst_name),silent = TRUE)
-      if(inherits(lst,"try-error")) return(FALSE)
-      lst <- lst[max(1,(length(lst)-5)):length(lst)]
-      stopped <- any(grepl("Stop Time:",lst))
-      psn_error <- file.exists(file.path(dirname(lst_name),"psn_nonmem_error_messages.txt"))
-      if(psn_error) return("error")
-      if(stopped) return("finished")
-      return("running")
-    })
-    running <- length(which(status %in% "running"))
-    finished <- length(which(status %in% "finished"))
-    error <- length(which(status %in% "error"))
-    status <- paste0("run:",running," fin:",finished," err:",error)
-  } else     status <- paste0("run:",0," fin:",0," err:",0)
+run_status <- function(r){ # for db
+  status <- "not run"
+  if(file.exists(r$run_dir)) {
+    status <- "dir created" 
+    execution_dirs <- dirname(dir(r$run_dir,
+                                  pattern = "psn\\.mod$",
+                                  recursive = TRUE,
+                                  full.names = TRUE))
+    execution_dirs <- unique(execution_dirs)
+    lst_names <- file.path(execution_dirs,"psn.lst")
+    
+    if(length(execution_dirs) > 0){
+      status <- "running"
+      ## check these all exist
+      statusi <- sapply(lst_names,function(lst_name){
+        if(!file.exists(lst_name)) return("running")
+        lst <- try(readLines(lst_name),silent = TRUE)
+        if(inherits(lst,"try-error")) return("running")
+        lst <- lst[max(1,(length(lst)-5)):length(lst)]
+        stopped <- any(grepl("Stop Time:",lst))
+        psn_error <- file.exists(file.path(dirname(lst_name),"psn_nonmem_error_messages.txt"))
+        if(psn_error) return("error")
+        if(stopped) return("finished")
+        return("running")
+      })
+      running <- length(which(statusi %in% "running"))
+      finished <- length(which(statusi %in% "finished"))
+      error <- length(which(statusi %in% "error"))
+      status <- paste0("running:",running," finished:",finished," errors:",error)
+    } 
+  }  
   return(status)
 }
 
-nm_steps_finished <- function(r){
+
+nm_steps_finished <- function(r){ # for waiting
   execution_dirs <- dirname(dir(r$run_dir,
                                 pattern = "psn\\.mod$",
                                 recursive = TRUE,
