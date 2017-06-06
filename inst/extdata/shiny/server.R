@@ -3,6 +3,8 @@ library(plotly)
 
 .currentwd <- get(".currentwd", envir = NMproject:::.sso_env)
 
+options(warn =-1)
+
 gen_run_table <- function(){
   orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
   run_table()
@@ -11,7 +13,6 @@ gen_run_table <- function(){
 
 function(input, output, session) {
   session$onSessionEnded(stopApp)
-
   ## run table
   new_table <- eventReactive(input$refresh_db,gen_run_table(),ignoreNULL = FALSE)
   output$run_table <- DT::renderDataTable({
@@ -47,10 +48,20 @@ function(input, output, session) {
   })
 
   observeEvent(input$go_to_monitor, {
+    if(length(input$run_table_rows_selected)==0)
+      return(showModal(modalDialog(
+        title = "Error",
+        "Select a run first"
+      )))
     updateNavbarPage(session, "mainPanel", selected = "monitor")
   })
 
   observeEvent(input$go_to_results, {
+    if(length(input$run_table_rows_selected)==0)
+      return(showModal(modalDialog(
+        title = "Error",
+        "Select run(s) first"
+      )))
     updateNavbarPage(session, "mainPanel", selected = "results")
   })
 
@@ -60,6 +71,21 @@ function(input, output, session) {
 
   observeEvent(input$back_to_db2, {
     updateNavbarPage(session, "mainPanel", selected = "database")
+  })
+  
+  observeEvent(input$run_job, {
+    if(length(input$run_table_rows_selected)==0)
+      return(showModal(modalDialog(
+        title = "Error",
+        "Select run(s) first"
+      )))
+    orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
+    res <- try(do.call(run,c(objects(),overwrite=TRUE)),silent = TRUE)
+    if(inherits(res,"try-error"))
+      showModal(modalDialog(
+        title = "Error from run()",
+        res
+      ))
   })
 
   ## run monitor
@@ -79,12 +105,43 @@ function(input, output, session) {
          plot_iter_ob),{
            orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
            object <- objects()[[1]]
-           st <- status(object)
-           st[,c("TEST","RESULT","COMMENT")]
+           status(object)
          })
 
-  output$status <- renderTable({
+  output$status <- renderText({
     status_ob()
+  })
+  
+  # tail_ob <- eventReactive(
+  #   list(input$refresh_status,
+  #        input$run_table_rows_selected,
+  #        plot_iter_ob),{
+  #          orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
+  #          object <- objects()[[1]]
+  #          tail_lst(object)
+  #        })
+  
+  tail_ob <- reactivePoll(1000, session,
+                          # This function returns the time that log_file was last modified
+                          checkFunc = function(){
+                            if(length(input$run_table_rows_selected)==0)
+                              return("")
+                            orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
+                            object <- isolate(objects())[[1]]
+                            tail_lst(object)
+                          },
+                          # This function returns the content of log_file
+                          valueFunc = function() {
+                            orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
+                            object <- isolate(objects())[[1]]
+                            tail_lst(object)
+                          }
+  )
+  
+  output$tail_lst <- renderUI({
+    tail_ob <- tail_ob()
+    tail_ob <- do.call(paste,c(as.list(tail_ob),sep='<br/>'))
+    HTML(tail_ob)
   })
 
   plot_iter_ob <- eventReactive(
@@ -92,6 +149,7 @@ function(input, output, session) {
          input$run_table_rows_selected),{
            orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
            object <- objects()[[1]]
+           if(is.null(object$output$psn.ext)) return(plotly_empty())
            if(!file.exists(object$output$psn.ext)) return(plotly_empty())
            if(file.exists(object$output$psn.ext)){
              tryCatch({
@@ -99,8 +157,12 @@ function(input, output, session) {
              }, error = function(e){
                return(plotly_empty())
              })
-             ggplotly(gg)
-             #plot_iter(object,trans = input$trans, skip = input$skip)
+             l <- ggplotly(gg)
+             l$x$layout$width <- NULL
+             l$x$layout$height <- NULL
+             l$width <- NULL
+             l$height <- NULL
+             l
            }
          })
 
@@ -114,7 +176,10 @@ function(input, output, session) {
     list(input$refresh_run_record,
          input$run_table_rows_selected),{
            orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-           do.call(run_record,objects())
+           tryCatch(do.call(run_record,objects()),
+                    error=function(e){
+                      data.frame()
+                    })
          })
 
   output$run_record <- DT::renderDataTable({
