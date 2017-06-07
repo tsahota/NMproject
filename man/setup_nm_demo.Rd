@@ -5,7 +5,7 @@
 \title{Setup demo files}
 \usage{
 setup_nm_demo(file_stub = paste0(getOption("model_file_stub"), 1),
-  overwrite = FALSE, demo_name = "theopp")
+  overwrite = FALSE, demo_name = "theopp", exclude = NULL)
 }
 \arguments{
 \item{file_stub}{character. Default = "run1". Stub to some file names}
@@ -13,6 +13,8 @@ setup_nm_demo(file_stub = paste0(getOption("model_file_stub"), 1),
 \item{overwrite}{logical. Default changed to FALSE.}
 
 \item{demo_name}{character. Name of demo. Default = "theopp-demo"}
+
+\item{exclude}{character. Name of extension to exclude from copying}
 }
 \description{
 Setup demo files

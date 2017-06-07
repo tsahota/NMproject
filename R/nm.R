@@ -459,6 +459,22 @@ wait_default <- function(x) .sso_env$wait <- x
 
 overwrite_default <- function(x) .sso_env$run_overwrite <- x
 
+#' Should run() work in non interactive mode
+#'
+#' @export
+non_interactive_mode <- function() {
+  overwrite_default(TRUE)
+  wait_default(TRUE)
+}
+
+#' Should run() work in interactive mode
+#'
+#' @export
+interactive_mode <- function() {
+  overwrite_default(FALSE)
+  wait_default(FALSE)
+}
+
 #' Wait for statement to be true
 #'
 #' @param x expression to evaluate
@@ -568,11 +584,13 @@ write.csv.nm <- function(...,na=".",
 #' @param file_stub character. Default = "run1". Stub to some file names
 #' @param overwrite logical. Default changed to FALSE.
 #' @param demo_name character. Name of demo. Default = "theopp-demo"
+#' @param exclude character. Name of extension to exclude from copying
 #' @export
 
 setup_nm_demo <- function(file_stub = paste0(getOption("model_file_stub"),1),
                           overwrite=FALSE,
-                          demo_name="theopp"){
+                          demo_name="theopp",
+                          exclude=NULL){
   tidyproject::check_if_tidyproject()
   examples_dir <- system.file("extdata","examples",demo_name,package = "NMproject")
 
@@ -586,8 +604,13 @@ setup_nm_demo <- function(file_stub = paste0(getOption("model_file_stub"),1),
   if(any(already_there) & !overwrite)
     stop("File(s) already exist:\n",paste(paste0("  ",dest_names[already_there]),collapse="\n"),"\nRename or rerun with overwrite=TRUE",call. = FALSE)
 
-  for(i in seq_along(files_to_copy))
-    copy_file(file.path(examples_dir,files_to_copy[i]),
-              dest_names[i],version_control=TRUE,overwrite = TRUE)
+  for(i in seq_along(files_to_copy)){
+    if(is.null(exclude)) do_copy <- TRUE else {
+      if(grepl(paste0("\\.",exclude,"$"),files_to_copy[i]))
+        do_copy <- FALSE else do_copy <- TRUE
+    }
+    if(do_copy) copy_file(file.path(examples_dir,files_to_copy[i]),
+                          dest_names[i],version_control=TRUE,overwrite = TRUE)
+  }
 }
 
