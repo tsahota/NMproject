@@ -51,14 +51,11 @@ If you are running NONMEM and R on a desktop/laptop this should suffice.  For mo
    * See tutorial at https://github.com/tsahota/tidyproject to get started with tidyproject
 * Open the NMproject with the File -> Open Project menu items. NOTE: always use Rstudio to open an NMproject, never just `setwd()` to the directory.
 
-* Since NMproject is not guaranteed to be backwards compatible, install the NMproject package again into the *project library*:
+View the code library:
 
 ```r
-devtools::install_github("tsahota/NMproject")
 library(NMproject)
 ```
-
-View the code library:
 
 ```r
 code_library()
@@ -108,6 +105,12 @@ To view all runs and track progress:
 
 ```r
 shiny_nm()
+```
+
+To step through the theophylline example
+
+```r
+setup_nm_demo(demo_name = "theopp")
 ```
 
 ## FAQ
@@ -176,12 +179,12 @@ mod1 <- extract_nm(X)
 You need to make `run()` submit NONMEM jobs synchronously.  To do this:
 
 ```r
-wait_default(TRUE)
+non_interactive_mode()
 ```
 
 The `run()` function will now wait for each run to finish before moving onto the next R command.  To return to interactive mode (asynchronous NONMEM execution) run:
 
 ```r
-wait_default(FALSE)
+interactive_mode()
 ```
 
