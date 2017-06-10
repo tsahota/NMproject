@@ -77,32 +77,34 @@ set_nm_opts <- function(){
   if(is.null(getOption("system_cmd"))) options(system_cmd=function(cmd,...) {
     if(.Platform$OS.type == "windows") shell(cmd,...) else system(cmd,...)
   })
-  if(is.null(getOption("system_nm"))) options(system_nm=function(cmd,...) {
-    if(.Platform$OS.type == "windows"){
-      local_env_vars <- Sys.getenv()
-      stdout_unit_vars <- local_env_vars[grepl("STDOUT_UNIT|STDERR_UNIT",names(local_env_vars))]
-      for(i in seq_along(stdout_unit_vars)){
-        Sys.unsetenv(names(stdout_unit_vars)[i])
-      }
-      on.exit({
-        if(length(stdout_unit_vars)>0)
-          do.call(Sys.setenv,as.list(stdout_unit_vars))
-      })
-      args <- list(...)
-      if(!"wait" %in% names(args)) wait <- FALSE else wait <- args$wait
-      if(wait==FALSE){
-        shell(paste("START CMD /C",cmd),...)        
-      } else {
-        shell(cmd,...)        
-      }
-    } else system(cmd,...)
-  })
-  
+  if(is.null(getOption("system_nm"))) options(system_nm=system_nm_default)
+
   if(is.null(getOption("model_file_stub"))) options(model_file_stub="run")
   if(is.null(getOption("model_file_extn"))) options(model_file_extn="mod")
   if(is.null(getOption("available_nm_types")))
     options(available_nm_types = c("SIZES","PROB","INPUT","DATA","SUB","MODEL","PK","DES","PRED","ERROR",
                                    "THETA","OMEGA","SIGMA","EST","SIM","COV","TABLE"))
+}
+
+system_nm_default <- function(cmd,...) {
+  if(.Platform$OS.type == "windows"){
+    local_env_vars <- Sys.getenv()
+    stdout_unit_vars <- local_env_vars[grepl("STDOUT_UNIT|STDERR_UNIT",names(local_env_vars))]
+    for(i in seq_along(stdout_unit_vars)){
+      Sys.unsetenv(names(stdout_unit_vars)[i])
+    }
+    on.exit({
+      if(length(stdout_unit_vars)>0)
+        do.call(Sys.setenv,as.list(stdout_unit_vars))
+    })
+    args <- list(...)
+    if(!"wait" %in% names(args)) wait <- FALSE else wait <- args$wait
+    if(wait==FALSE){
+      shell(paste("START CMD /C",cmd),...)
+    } else {
+      shell(cmd,...)
+    }
+  } else system(cmd,...)
 }
 
 #' system/shell command wrapper
@@ -307,6 +309,16 @@ check_session <- function(proj_name = getwd(), silent = FALSE, check_rstudio = T
 
   d <- rbind(dtidy,d)
   invisible(d)
+}
+
+#' Create new R script
+#' @param name character indicating name of script to create
+#' @param overwrite logical. Whether to overwrite existing file (default = FALSE)
+#' @param open_file logical. Whether function should open script (default = TRUE)
+#' @param libs character. What libraries to add.
+#' @export
+new_script <- function(name, overwrite = FALSE, open_file = TRUE, libs=c("NMproject")) {
+  tidyproject::new_script(name=name,overwrite = overwrite,open_file = open_file,libs = libs)
 }
 
 #' Download code repositor from github
