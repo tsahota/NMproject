@@ -364,7 +364,7 @@ wait_for_finished <- function(...){
       ## if it is still finished and last_update is still the same then finish
       finished <- finished2 & identical(last_update,last_update2)
     }
-    
+
     ######################################
     if(finished){
       rl[[j]] <- NULL
@@ -379,14 +379,14 @@ wait_for_finished <- function(...){
 run_status <- function(r){ # for db
   status <- "not run"
   if(file.exists(r$run_dir)) {
-    status <- "dir created" 
+    status <- "dir created"
     execution_dirs <- dirname(dir(r$run_dir,
                                   pattern = "psn\\.mod$",
                                   recursive = TRUE,
                                   full.names = TRUE))
     execution_dirs <- unique(execution_dirs)
     lst_names <- file.path(execution_dirs,"psn.lst")
-    
+
     if(length(execution_dirs) > 0){
       status <- "running"
       ## check these all exist
@@ -405,8 +405,8 @@ run_status <- function(r){ # for db
       finished <- length(which(statusi %in% "finished"))
       error <- length(which(statusi %in% "error"))
       status <- paste0("running:",running," finished:",finished," errors:",error)
-    } 
-  }  
+    }
+  }
   return(status)
 }
 
@@ -473,23 +473,6 @@ non_interactive_mode <- function() {
 interactive_mode <- function() {
   overwrite_default(FALSE)
   wait_default(FALSE)
-}
-
-#' Wait for statement to be true
-#'
-#' @param x expression to evaluate
-#' @param timeout numeric. Maximum time (seconds) to wait
-#' @param interval numeric. Number of seconds (default=1s) to wait till rechecking
-#' @export
-wait_for <- function(x,timeout=NULL,interval=1){
-  x <- substitute(x)
-  start.time <- Sys.time()
-  diff.time <- 0
-  while (!eval(x,envir = parent.frame())){
-    diff.time <- difftime(Sys.time(),start.time,units="secs")
-    if(!is.null(timeout))if(diff.time > timeout) stop(paste("timed out waiting for\n",x,sep=""))
-    Sys.sleep(1)
-  }
 }
 
 #' @export

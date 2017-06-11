@@ -86,6 +86,13 @@ set_nm_opts <- function(){
                                    "THETA","OMEGA","SIGMA","EST","SIM","COV","TABLE"))
 }
 
+#' default system_nm
+#'
+#' Not to be used directly
+#' @param cmd character. system call
+#' @param ... additional args to be passed to system
+#' @export
+
 system_nm_default <- function(cmd,...) {
   if(.Platform$OS.type == "windows"){
     local_env_vars <- Sys.getenv()
