@@ -1,5 +1,6 @@
 library(shiny)
 library(plotly)
+library(dygraphs)
 
 .currentwd <- get(".currentwd", envir = NMproject:::.sso_env)
 
@@ -112,15 +113,6 @@ function(input, output, session) {
     status_ob()
   })
   
-  # tail_ob <- eventReactive(
-  #   list(input$refresh_status,
-  #        input$run_table_rows_selected,
-  #        plot_iter_ob),{
-  #          orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-  #          object <- objects()[[1]]
-  #          tail_lst(object)
-  #        })
-  
   tail_ob <- reactivePoll(1000, session,
                           # This function returns the time that log_file was last modified
                           checkFunc = function(){
@@ -144,32 +136,71 @@ function(input, output, session) {
     HTML(tail_ob)
   })
 
+  # plot_iter_ob <- eventReactive(
+  #   list(input$refresh_plot,
+  #        input$run_table_rows_selected),{
+  #          orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
+  #          object <- objects()[[1]]
+  #          if(is.null(object$output$psn.ext)) return(plotly_empty())
+  #          if(!file.exists(object$output$psn.ext)) return(plotly_empty())
+  #          if(file.exists(object$output$psn.ext)){
+  #            tryCatch({
+  #              gg <- plot_iter(object,trans = input$trans, skip = input$skip)
+  #            }, error = function(e){
+  #              return(plotly_empty())
+  #            })
+  #            l <- ggplotly(gg)
+  #            l$x$layout$width <- NULL
+  #            l$x$layout$height <- NULL
+  #            l$width <- NULL
+  #            l$height <- NULL
+  #            l
+  #          }
+  #        }
+  #   )
+  
   plot_iter_ob <- eventReactive(
     list(input$refresh_plot,
          input$run_table_rows_selected),{
            orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
            object <- objects()[[1]]
-           if(is.null(object$output$psn.ext)) return(plotly_empty())
-           if(!file.exists(object$output$psn.ext)) return(plotly_empty())
-           if(file.exists(object$output$psn.ext)){
-             tryCatch({
-               gg <- plot_iter(object,trans = input$trans, skip = input$skip)
-             }, error = function(e){
-               return(plotly_empty())
-             })
-             l <- ggplotly(gg)
-             l$x$layout$width <- NULL
-             l$x$layout$height <- NULL
-             l$width <- NULL
-             l$height <- NULL
-             l
+          # browser()
+           d <- plot_iter_data(object,trans = input$trans, skip = 0)
+           p <- list()
+           for(i in seq_along(unique(d$variable))){
+             var_name <- unique(d$variable)[i]
+             dt <- d[d$variable %in% var_name,c("ITERATION","value")]
+             p[[i]] <- dygraph(dt,main=var_name,xlab="Iteration",group = "hi") %>%
+               dyOptions(drawPoints = TRUE, pointSize = 2) %>%
+               dyRangeSelector()
            }
-         })
+           p
+         }
+  )
+  
+  output$distPlot <- renderUI({
+    plot_output_list <- lapply(seq_along(plot_iter_ob()), function(i){
+      plotname <- paste("plot", i, sep="")
+      dygraphOutput(plotname)
+    })
+    do.call(tagList, plot_output_list)
+  })
 
   #output$distPlot <- renderPlot({
-  output$distPlot <- renderPlotly({
-    plot_iter_ob()
-  })
+  #output$distPlot <- renderPlotly({
+  #  plot_iter_ob()
+  #})
+  observe(
+    for (i in 1:100) {
+      local({
+        my_i <- i
+        plotname <- paste("plot", my_i, sep="")
+        output[[plotname]] <- renderDygraph({
+          plot_iter_ob()[[my_i]]
+        })
+      })
+    }
+  )
 
   ## run record
   run_record_ob <- eventReactive(

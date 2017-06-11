@@ -1,5 +1,6 @@
 library(shiny)
 library(plotly)
+library(dygraphs)
 
 .currentwd <- get(".currentwd", envir = NMproject:::.sso_env)
 
@@ -39,8 +40,9 @@ fluidPage(
                                                    actionButton("refresh_status","refresh"),br(),
                                                    tags$code(verbatimTextOutput("status")),br(),
                                                    tags$code(htmlOutput("tail_lst"))))),
-                              plotlyOutput("distPlot",width = "auto")
+                              #plotlyOutput("distPlot",width = "auto")
                               #plotOutput("distPlot")
+                              uiOutput("distPlot")
                      ),
                      tabPanel(title = "results",
                               value = "results",
