@@ -113,7 +113,14 @@ nm <- function(cmd,psn_command,
   overlapped_output_entries <-
     match_info$entry[match_info$overlap_outputs &
                        !(match_info$entry %in% matched_entry)]
-
+  
+  overlapped_run_dir_entries <- 
+    match_info$entry[match_info$match_run_dir & match_info$match_run_in &
+                       !(match_info$entry %in% matched_entry)]
+  
+  overlapped_output_entries <- unique(c(overlapped_output_entries,
+                                        overlapped_run_dir_entries))
+  
   if(length(overlapped_output_entries)>0)
     stop("Outputs overlap with entries: ",
          paste(overlapped_output_entries,collapse=","),
