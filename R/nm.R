@@ -309,7 +309,9 @@ print.nm <- function(x,...) utils::str(x)
 #' @param r object of class nm
 #' @export
 ctl <- function(r) {
-  utils::file.edit(r$ctl)
+  if(.Platform$OS.type=="windows")
+    file.show(r$ctl) else
+      utils::file.edit(r$ctl)
 }
 
 gsub2 <- function(pattern,replacement,x,...){
