@@ -170,6 +170,8 @@ function(input, output, session) {
          input$run_table_rows_selected),{
            orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
            object <- objects()[[1]]
+           if(is.null(object$output$psn.ext)) return(dygraph(data.frame(x=0,y=0)))
+           if(!file.exists(object$output$psn.ext)) return(dygraph(data.frame(x=0,y=0)))
            d <- plot_iter_data(object,trans = input$trans, skip = 0)
            p <- list()
            for(i in seq_along(unique(d$variable))){
