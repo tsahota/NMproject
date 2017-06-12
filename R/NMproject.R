@@ -179,7 +179,7 @@ copy_control <- function(from,to,overwrite=FALSE,alt_paths){
     run_id_from <- run_id(from_path) else
       run_id_from <- basename(from_path)
 
-  ctl <- gsub(paste0("(FILE\\s*=\\s*.*)",run_id_from,"\\b"),paste0("\\1",run_id),ctl)
+  ctl <- gsub(paste0("(FILE\\s*=\\s*\\S*)",run_id_from,"\\b"),paste0("\\1",run_id),ctl)
 
   if(is_project_file)
     ctl <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",run_id_from),ctl) else
