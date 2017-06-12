@@ -15,11 +15,12 @@ Imports:
     DBI,
     RSQLite,
     shiny,
-    plotly (>= 3.4.1),
-    ggplot2,
-    tidyr
+    tidyr,
+    dygraphs,
+    DT
 RoxygenNote: 6.0.1
 Suggests:
     testthat,
-    DT,
-    git2r
+    git2r,
+    plotly (>= 3.4.1),
+    ggplot2,

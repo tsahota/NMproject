@@ -1,5 +1,4 @@
 library(shiny)
-library(plotly)
 library(dygraphs)
 
 .currentwd <- get(".currentwd", envir = NMproject:::.sso_env)
@@ -11,6 +10,36 @@ gen_run_table <- function(){
   run_table()
 }
 
+get_plot_bootstrapjs_div <- function(plot_object_list) {
+  #### local_function
+  get_col_div <- function(plot_object_list, index, css_class = 'col-xs-12 col-sm-4')  {
+    col_div <- div(class = css_class)
+    
+    if(length(plot_object_list) >= index) {
+      plotname <- paste("plot", index, sep="")
+      plot_output_object <- dygraphOutput(plotname)
+      col_div <- tagAppendChild(col_div, plot_output_object)
+    }
+    return(col_div)
+  }
+  #
+  get_plot_div <- function(plot_object_list) {
+    result_div <- div(class = 'container-fluid')
+    
+    suppressWarnings(for(i in seq(1,length(plot_object_list),3)) {
+      row_div <- div(class = 'row')
+      row_div <- tagAppendChild(row_div, get_col_div(plot_object_list, i))
+      row_div <- tagAppendChild(row_div, get_col_div(plot_object_list, i+1))
+      row_div <- tagAppendChild(row_div, get_col_div(plot_object_list, i+2))    
+      result_div <- tagAppendChild(result_div, row_div)
+    })
+    return(result_div)
+  }
+  ####
+  plot_output_list_div <- get_plot_div(plot_object_list)
+  
+  return(plot_output_list_div)
+}
 
 function(input, output, session) {
   session$onSessionEnded(stopApp)
@@ -135,36 +164,12 @@ function(input, output, session) {
     tail_ob <- do.call(paste,c(as.list(tail_ob),sep='<br/>'))
     HTML(tail_ob)
   })
-
-  # plot_iter_ob <- eventReactive(
-  #   list(input$refresh_plot,
-  #        input$run_table_rows_selected),{
-  #          orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-  #          object <- objects()[[1]]
-  #          if(is.null(object$output$psn.ext)) return(plotly_empty())
-  #          if(!file.exists(object$output$psn.ext)) return(plotly_empty())
-  #          if(file.exists(object$output$psn.ext)){
-  #            tryCatch({
-  #              gg <- plot_iter(object,trans = input$trans, skip = input$skip)
-  #            }, error = function(e){
-  #              return(plotly_empty())
-  #            })
-  #            l <- ggplotly(gg)
-  #            l$x$layout$width <- NULL
-  #            l$x$layout$height <- NULL
-  #            l$width <- NULL
-  #            l$height <- NULL
-  #            l
-  #          }
-  #        }
-  #   )
   
   plot_iter_ob <- eventReactive(
     list(input$refresh_plot,
          input$run_table_rows_selected),{
            orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
            object <- objects()[[1]]
-          # browser()
            d <- plot_iter_data(object,trans = input$trans, skip = 0)
            p <- list()
            for(i in seq_along(unique(d$variable))){
@@ -179,19 +184,16 @@ function(input, output, session) {
   )
   
   output$distPlot <- renderUI({
-    plot_output_list <- lapply(seq_along(plot_iter_ob()), function(i){
-      plotname <- paste("plot", i, sep="")
-      dygraphOutput(plotname)
-    })
-    do.call(tagList, plot_output_list)
+    get_plot_bootstrapjs_div(plot_iter_ob())
+    #plot_output_list <- lapply(seq_along(plot_iter_ob()), function(i){
+    #  plotname <- paste("plot", i, sep="")
+    #  dygraphOutput(plotname)
+    #})
+    #do.call(tagList, plot_output_list)
   })
 
-  #output$distPlot <- renderPlot({
-  #output$distPlot <- renderPlotly({
-  #  plot_iter_ob()
-  #})
   observe(
-    for (i in 1:100) {
+    for (i in 1:50) {
       local({
         my_i <- i
         plotname <- paste("plot", my_i, sep="")

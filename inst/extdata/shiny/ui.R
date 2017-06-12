@@ -1,5 +1,4 @@
 library(shiny)
-library(plotly)
 library(dygraphs)
 
 .currentwd <- get(".currentwd", envir = NMproject:::.sso_env)
@@ -33,7 +32,6 @@ fluidPage(
                                                    tableOutput("runs_selected_info"),
                                                    actionButton("back_to_db","Select different run")),
                                        "R command: ",tags$code("plot_iter([nm object])"),
-                                       numericInput("skip","skip",value=0,min=0,max=1000,step=1),
                                        checkboxInput("trans","transform parameters",TRUE),
                                        actionButton("refresh_plot","refresh")),
                                 column(9,wellPanel("R command: ",tags$code("status([nm object])"),
