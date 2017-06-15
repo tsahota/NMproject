@@ -113,14 +113,14 @@ nm <- function(cmd,psn_command,
   overlapped_output_entries <-
     match_info$entry[match_info$overlap_outputs &
                        !(match_info$entry %in% matched_entry)]
-  
-  overlapped_run_dir_entries <- 
+
+  overlapped_run_dir_entries <-
     match_info$entry[match_info$match_run_dir & match_info$match_run_in &
                        !(match_info$entry %in% matched_entry)]
-  
+
   overlapped_output_entries <- unique(c(overlapped_output_entries,
                                         overlapped_run_dir_entries))
-  
+
   if(length(overlapped_output_entries)>0)
     stop("Outputs overlap with entries: ",
          paste(overlapped_output_entries,collapse=","),
@@ -136,6 +136,16 @@ nm <- function(cmd,psn_command,
   } else stop("Matched more than one database entry. Debug")
   union_write(".gitignore",getOption("nmproj_gitignore"))
   return(r)
+}
+
+nmdb_match_entry <- function(r){
+
+  match_info <- nmdb_match_info(r)
+  matched_entry <- match_info$entry[match_info$match_type &
+                                      match_info$match_run_in &
+                                      match_info$match_ctl]
+  if(length(matched_entry)>1) stop("Can't identify unique database entry. Something wrong. Debug")
+  matched_entry
 }
 
 union_write <- function (path, new_lines){
@@ -198,17 +208,23 @@ nmdb_match_info <- function(r){
   })
 }
 
-nmdb_make_db_row <- function(r){
+nmdb_make_db_row <- function(r,add_cols=list()){
   if(r$type %in% "execute") r$input$data <- NULL
-  data.frame(object=I(list(serialize(r,NULL))),
-             ctl = r$ctl,
-             description=r$description,
-             type=r$type,
-             input_files=paste(unlist(r$input),collapse=","),
-             output_files=paste(unlist(r$output),collapse=","),
-             run_in=r$run_in,
-             run_dir=r$run_dir,
-             cmd = r$cmd)
+  d <- data.frame(object=I(list(serialize(r,NULL))),
+                  ctl = r$ctl,
+                  description=r$description,
+                  type=r$type,
+                  input_files=paste(unlist(r$input),collapse=","),
+                  output_files=paste(unlist(r$output),collapse=","),
+                  run_in=r$run_in,
+                  run_dir=r$run_dir,
+                  cmd = r$cmd)
+  if(file.exists(r$run_dir))
+    d$run_status <- "dir exists" else
+      d$run_status <- "not run"
+  if(length(add_cols)>0)
+    merge(d[,names(d)[!names(d) %in% names(add_cols)]],as.data.frame(add_cols)) else
+      d
 }
 
 nmdb_printable_db <- function(d){
@@ -216,6 +232,7 @@ nmdb_printable_db <- function(d){
   d$output_files <- NULL
   d$lst_exists <- NULL
   d$stop_time_reached <- NULL
+  d$run_status <- NULL
   d$input_files[!d$input_files %in% d$ctl]
   d$input_files <- lapply(strsplit(d$input_files,","),function(char_vec){
     paste(basename(char_vec),collapse=" ")
@@ -229,9 +246,9 @@ nmdb_printable_db <- function(d){
   d
 }
 
-nmdb_add_entry <- function(r,entry=NULL,silent=FALSE){
+nmdb_add_entry <- function(r,entry=NULL,silent=FALSE,...){
   new_db_flag <- !file.exists("runs.sqlite")
-  dnew <- nmdb_make_db_row(r)
+  dnew <- nmdb_make_db_row(r,...)
   my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
   tryCatch({
     if(new_db_flag) {
@@ -332,8 +349,10 @@ get_run_id <- function(ctl_name){
 #' TRUE or FALSE. Should run_dir be deleted.
 #' @param wait logical (default=FALSE). Should R wait for run to finish.
 #' Default can be changed with  wait_by_default() function
+#' @param update_db logical (default=FALSE). Should run_status be updated
 #' @export
-run <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait){
+run <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait,
+                update_db=TRUE){
   tidyproject::check_if_tidyproject()
   rl <- list(...)
   lapply(rl,function(r){
@@ -343,6 +362,11 @@ run <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE)
     clean_run(r,delete_dir=delete_dir[1])
     system_nm(cmd = r$cmd, dir = r$run_in, wait = FALSE, ignore.stdout = TRUE, ignore.stderr = TRUE)
     message(paste0("Running: ",r$type,":",r$ctl))
+    if(update_db){
+      matched_entry <- nmdb_match_entry(r)
+      delete_nm(matched_entry)
+      nmdb_add_entry(r,matched_entry,silent=TRUE,add_cols=list(run_status="submitted"))
+    }
   })
   if(wait) wait_for_finished(...)
   invisible()
@@ -386,7 +410,8 @@ wait_for_finished <- function(...){
 }
 
 run_status <- function(r){ # for db
-  status <- "not run"
+  db <- nmdb_get()
+  status <- db$run_status[db$entry %in% nmdb_match_entry(r)]
   if(file.exists(r$run_dir)) {
     status <- "dir created"
     execution_dirs <- dirname(dir(r$run_dir,

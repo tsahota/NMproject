@@ -5,7 +5,7 @@
 \title{Run NONMEM}
 \usage{
 run(..., overwrite = .sso_env$run_overwrite, delete_dir = c(NA, TRUE,
-  FALSE), wait = .sso_env$wait)
+  FALSE), wait = .sso_env$wait, update_db = TRUE)
 }
 \arguments{
 \item{...}{objects of class nm}
@@ -17,6 +17,8 @@ TRUE or FALSE. Should run_dir be deleted.}
 
 \item{wait}{logical (default=FALSE). Should R wait for run to finish.
 Default can be changed with  wait_by_default() function}
+
+\item{update_db}{logical (default=FALSE). Should run_status be updated}
 }
 \description{
 Run NONMEM

@@ -289,6 +289,11 @@ shiny_nm <- function(){
   if(!requireNamespace("DT", quietly = TRUE))
     stop("DT needed for this function to work. Please install it.",
          call. = FALSE)
+  if(!requireNamespace("dygraphs", quietly = TRUE))
+    stop("dygraphs needed for this function to work. Please install it.",
+         call. = FALSE)
+  dygraphs::dygraph
+  DT::datatable
   shiny_dir <- system.file("extdata/shiny",package="NMproject")
   .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env
   on.exit(.sso_env$.currentwd <- NULL, add = TRUE)
