@@ -61,6 +61,9 @@ plot_iter_data <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
 #' @export
 
 plot_iter_ggplot <- function(d){
+  if(!requireNamespace("ggplot2", quietly = TRUE))
+    stop("ggplot2 needed for this function to work. Please install it.",
+         call. = FALSE)
   p <- ggplot2::ggplot(d,ggplot2::aes_string(x="ITERATION",y="value"))
   if(length(unique(d$TYPE))==1){
     p <- p + ggplot2::geom_line()
@@ -72,18 +75,6 @@ plot_iter_ggplot <- function(d){
   p <- p + ggplot2::ggtitle(unique(d$EST.NAME))
   p <- p + ggplot2::theme_bw()
   p
-}
-
-#' Plot iterations vs parameters/OBJ (plotly)
-#'
-#' @param d data.frame. output from plot_iter_data
-#' @export
-
-plot_iter_plotly <- function(d){
-  if(!requireNamespace("plotly", quietly = TRUE))
-    stop("plotly needed for this function to work. Please install it.",
-         call. = FALSE)
-  plotly::ggplotly(plot_iter_ggplot(d))
 }
 
 #' Plot iterations vs parameters/OBJ

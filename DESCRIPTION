@@ -22,5 +22,5 @@ RoxygenNote: 6.0.1
 Suggests:
     testthat,
     git2r,
-    plotly (>= 3.4.1),
-    ggplot2,
+    ggplot2
+    

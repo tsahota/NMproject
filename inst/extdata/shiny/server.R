@@ -14,7 +14,7 @@ get_plot_bootstrapjs_div <- function(plot_object_list) {
   #### local_function
   get_col_div <- function(plot_object_list, index, css_class = 'col-xs-12 col-sm-4')  {
     col_div <- div(class = css_class)
-    
+
     if(length(plot_object_list) >= index) {
       plotname <- paste("plot", index, sep="")
       plot_output_object <- dygraphOutput(plotname)
@@ -25,19 +25,19 @@ get_plot_bootstrapjs_div <- function(plot_object_list) {
   #
   get_plot_div <- function(plot_object_list) {
     result_div <- div(class = 'container-fluid')
-    
+
     suppressWarnings(for(i in seq(1,length(plot_object_list),3)) {
       row_div <- div(class = 'row')
       row_div <- tagAppendChild(row_div, get_col_div(plot_object_list, i))
       row_div <- tagAppendChild(row_div, get_col_div(plot_object_list, i+1))
-      row_div <- tagAppendChild(row_div, get_col_div(plot_object_list, i+2))    
+      row_div <- tagAppendChild(row_div, get_col_div(plot_object_list, i+2))
       result_div <- tagAppendChild(result_div, row_div)
     })
     return(result_div)
   }
   ####
   plot_output_list_div <- get_plot_div(plot_object_list)
-  
+
   return(plot_output_list_div)
 }
 
@@ -102,7 +102,7 @@ function(input, output, session) {
   observeEvent(input$back_to_db2, {
     updateNavbarPage(session, "mainPanel", selected = "database")
   })
-  
+
   observeEvent(input$run_job, {
     if(length(input$run_table_rows_selected)==0)
       return(showModal(modalDialog(
@@ -116,6 +116,13 @@ function(input, output, session) {
         title = "Error from run()",
         res
       ))
+    withProgress(message = 'running', value = 0, {
+      n <- 10
+      for (i in 1:n) {
+        incProgress(1/n)
+        Sys.sleep(0.1)
+      }
+    })
   })
 
   ## run monitor
@@ -141,7 +148,7 @@ function(input, output, session) {
   output$status <- renderText({
     status_ob()
   })
-  
+
   tail_ob <- reactivePoll(1000, session,
                           # This function returns the time that log_file was last modified
                           checkFunc = function(){
@@ -158,13 +165,13 @@ function(input, output, session) {
                             tail_lst(object)
                           }
   )
-  
+
   output$tail_lst <- renderUI({
     tail_ob <- tail_ob()
     tail_ob <- do.call(paste,c(as.list(tail_ob),sep='<br/>'))
     HTML(tail_ob)
   })
-  
+
   plot_iter_ob <- eventReactive(
     list(input$refresh_plot,
          input$run_table_rows_selected),{
@@ -184,7 +191,7 @@ function(input, output, session) {
            p
          }
   )
-  
+
   output$distPlot <- renderUI({
     get_plot_bootstrapjs_div(plot_iter_ob())
     #plot_output_list <- lapply(seq_along(plot_iter_ob()), function(i){
