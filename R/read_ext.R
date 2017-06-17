@@ -39,9 +39,9 @@ read_ext <- function(r,trans=FALSE){
     pi <- p_info[i,]
     names(d)[names(d) %in% pi$Parameter] <- pi$Name
     if(pi$trans %in% c("LOG","LOGODDS")){
-      d[,pi$Name][d$ITERATION>=0] <- exp(d[,pi$Name][d$ITERATION>=0])
+      d[,pi$Name][d$ITERATION>-1000000000] <- exp(d[,pi$Name][d$ITERATION>-1000000000])
     } else if (pi$trans %in% "LOGIT") {
-      d[,pi$Name][d$ITERATION>=0] <- stats::plogis(d[,pi$Name][d$ITERATION>=0])
+      d[,pi$Name][d$ITERATION>-1000000000] <- stats::plogis(d[,pi$Name][d$ITERATION>-1000000000])
     }
   }
   d
