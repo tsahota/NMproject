@@ -15,7 +15,7 @@ Imports:
     DBI,
     RSQLite,
     shiny,
-    tidyr,
+    reshape2,
     dygraphs,
     DT
 RoxygenNote: 6.0.1

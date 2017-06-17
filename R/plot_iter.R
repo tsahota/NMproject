@@ -7,8 +7,8 @@
 #' @export
 plot_iter_data <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
 
-  if(!requireNamespace("tidyr", quietly = TRUE))
-    stop("tidyr needed for this function to work. Please install it.",
+  if(!requireNamespace("reshape2", quietly = TRUE))
+    stop("reshape2 needed for this function to work. Please install it.",
          call. = FALSE)
 
   d <- read_ext(r=r,trans=trans)
@@ -46,13 +46,11 @@ plot_iter_data <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
   d <- do.call(rbind,d)
 
   par.names <- c("OBJ",names(d)[names(d) %in% par.names])
-
-  d <- tidyr::gather_(data = d,key = "variable",value = "value",
-                      gather_cols = par.names)
-
-  d$variable <- factor(d$variable,levels=unique(d$variable))
-
-  d
+  
+  dl <- reshape2::melt(data = d,
+                       measure.vars = par.names)
+  
+  dl
 }
 
 #' Plot iterations vs parameters/OBJ (ggplot2)
