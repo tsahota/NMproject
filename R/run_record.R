@@ -236,8 +236,6 @@ run_summary <- function(r){
     existing_files <- NA
   res$outputs_present <- sum(existing_files)/length(existing_files)
   res$last_update <- last_modified(r)
-#  if(!is.null(outputs)) res$last_update <- max(file.mtime(outputs)) else
-#    res$last_update <- NA
   res$status <- run_status(r)
   res$lst_exists <- NA
   res$stop_time_reached <- NA

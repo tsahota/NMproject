@@ -138,9 +138,9 @@ nm <- function(cmd,psn_command,
   return(r)
 }
 
-nmdb_match_entry <- function(r){
+nmdb_match_entry <- function(r,db=NULL){
 
-  match_info <- nmdb_match_info(r)
+  match_info <- nmdb_match_info(r,db=db)
   matched_entry <- match_info$entry[match_info$match_type &
                                       match_info$match_run_in &
                                       match_info$match_ctl]
@@ -166,7 +166,20 @@ delete_nm <- function(entry){
   DBI::dbDisconnect(my_db)
 }
 
-nmdb_match_info <- function(r){
+#' update field from run database
+#' @param entry numeric. entry name to delete
+#' @param ... named field changes
+#' @export
+update_nm <- function(entry,...){
+  args <- list(...)
+  repl <- paste(paste(names(args),"=",args),collapse = ", ")
+  query <- paste("UPDATE runs SET",repl,"WHERE entry ==",entry)
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
+  DBI::dbExecute(my_db, query)
+  DBI::dbDisconnect(my_db)
+}
+
+nmdb_match_info <- function(r,db=NULL){
   if(!file.exists("runs.sqlite"))
     return(data.frame(entry=numeric(),
                       match_type=logical(),
@@ -174,38 +187,29 @@ nmdb_match_info <- function(r){
                       match_run_dir=logical(),
                       match_ctl = logical(),
                       overlap_outputs=logical()))
-
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
-  tryCatch({
-    d <- DBI::dbGetQuery(my_db, 'SELECT * FROM runs')
-    DBI::dbDisconnect(my_db)
-    dproposal <- nmdb_make_db_row(r)
-
-    ## objectives
-    ## if a run is of the same type, run_dir, and outputfiles,
-    ans <- list()
-
-    ans$entry <- d$entry
-    ans$match_type <- d$type %in% r$type
-    ans$match_run_dir <- d$run_dir %in% r$run_dir
-    ans$match_run_in <- d$run_in %in% r$run_in
-    ans$match_ctl <- d$ctl %in% r$ctl
-
-    dependent_run_dir <- sapply(d$run_dir,function(i)grepl(paste0("^",i,"$"),r$run_dir))
-    ans$dependent_run_dir <- dependent_run_dir & !ans$match_run_dir
-
-    overlap_outputs <- sapply(strsplit(d$output_files,","),function(out_filesi){
-      length(intersect(out_filesi,unlist(r$output)))>0
-    })
-    ans$overlap_outputs <- overlap_outputs
-
-    ans <- as.data.frame(ans)
-    return(ans)
-  },
-  error=function(e) {
-    if(DBI::dbIsValid(my_db)) DBI::dbDisconnect(my_db)
-    stop(e)
+  
+  if(is.null(db)) d <- nmdb_get() else d <- db
+  
+  dproposal <- nmdb_make_db_row(r)
+  
+  ans <- list()
+  ans$entry <- d$entry
+  ans$match_type <- d$type %in% r$type
+  ans$match_run_dir <- d$run_dir %in% r$run_dir
+  ans$match_run_in <- d$run_in %in% r$run_in
+  ans$match_ctl <- d$ctl %in% r$ctl
+  
+  dependent_run_dir <- sapply(d$run_dir,function(i)grepl(paste0("^",i,"$"),r$run_dir))
+  ans$dependent_run_dir <- dependent_run_dir & !ans$match_run_dir
+  
+  overlap_outputs <- sapply(strsplit(d$output_files,","),function(out_filesi){
+    length(intersect(out_filesi,unlist(r$output)))>0
   })
+  ans$overlap_outputs <- overlap_outputs
+  
+  ans <- as.data.frame(ans)
+  return(ans)
+  
 }
 
 nmdb_make_db_row <- function(r,add_cols=list()){
@@ -222,9 +226,13 @@ nmdb_make_db_row <- function(r,add_cols=list()){
   if(file.exists(r$run_dir))
     d$run_status <- "dir exists" else
       d$run_status <- "not run"
-  if(length(add_cols)>0)
-    merge(d[,names(d)[!names(d) %in% names(add_cols)]],as.data.frame(add_cols)) else
-      d
+  d$sub_run_status_raw <- I(list(serialize(character(),NULL)))
+  name_order <- names(d)
+  if(length(add_cols)>0){
+    d <- merge(d[,names(d)[!names(d) %in% names(add_cols)]],as.data.frame(add_cols))
+    d <- d[,name_order]
+  }
+  d
 }
 
 nmdb_printable_db <- function(d){
@@ -233,6 +241,7 @@ nmdb_printable_db <- function(d){
   d$lst_exists <- NULL
   d$stop_time_reached <- NULL
   d$run_status <- NULL
+  d$sub_run_status_raw <- NULL
   d$input_files[!d$input_files %in% d$ctl]
   d$input_files <- lapply(strsplit(d$input_files,","),function(char_vec){
     paste(basename(char_vec),collapse=" ")
@@ -418,8 +427,12 @@ wait_for_finished <- function(...){
 
 run_status <- function(r){ # for db
   db <- nmdb_get()
-  status <- db$run_status[db$entry %in% nmdb_match_entry(r)]
-  if(file.exists(r$run_dir)) {
+  matched_entry <- nmdb_match_entry(r,db = db)
+  status <- db$run_status[db$entry %in% matched_entry]
+  statusi <- unserialize(db$sub_run_status_raw[db$entry %in% matched_entry][[1]])
+  browser()
+  
+  if(file.exists(r$run_dir)){
     status <- "dir created"
     execution_dirs <- dirname(dir(r$run_dir,
                                   pattern = "psn\\.mod$",
@@ -442,6 +455,7 @@ run_status <- function(r){ # for db
         if(stopped) return("finished")
         return("running")
       })
+      
       running <- length(which(statusi %in% "running"))
       finished <- length(which(statusi %in% "finished"))
       error <- length(which(statusi %in% "error"))
