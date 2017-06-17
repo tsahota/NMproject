@@ -1,8 +1,8 @@
 ext2coef <- function(extout,file_name){
   ## raw function to generate parameter table from ext.file.
-
-  if(!requireNamespace("tidyr", quietly = TRUE))
-    stop("tidyr needed for this function to work. Please install it.",
+  
+  if(!requireNamespace("reshape2", quietly = TRUE))
+    stop("reshape2 needed for this function to work. Please install it.",
          call. = FALSE)
 
   d <- extout
@@ -13,9 +13,14 @@ ext2coef <- function(extout,file_name){
   d <- d[,c(names(d)[grepl("THETA|SIGMA|OMEGA",names(d))],
             c("OBJ","EST.NAME","EST.NO","EVALUATION","TYPE"))]
 
-  d <- tidyr::gather_(d,"Parameter","value",
-                      names(d)[match("THETA1",names(d)):match("OBJ",names(d))])
-  d <- tidyr::spread_(d,"TYPE","value")
+  par.names <- names(d)[match("THETA1",names(d)):match("OBJ",names(d))]
+  
+  d <- reshape2::melt(data = d, variable.name = "Parameter",
+                      measure.vars = par.names)
+  d <- reshape2::dcast(data = d, 
+                       stats::as.formula(paste(paste(names(d)[!names(d) %in% c("TYPE","value")],collapse=" + "),
+                                        "~ TYPE")))
+  
   d <- d[order(d$EST.NO,decreasing = TRUE),]
   d$file <- file_name
 
@@ -191,7 +196,10 @@ run_record0 <- function(..., coef.func = coef_ext0){
   d$Estimate[d$Parameter!="OBJ"] <- paste0(signif(d$FINAL[d$Parameter!="OBJ"],3)," (",signif(d$SE[d$Parameter!="OBJ"],3),d$SEUnit[d$Parameter!="OBJ"],")")
   d$Estimate[d$Parameter=="OBJ"] <- round(d$FINAL[d$Parameter=="OBJ"],3)
   d <- d[,names(d)[!names(d) %in% c("SE","FINAL")]]
-  d <- tidyr::spread_(d,"file","Estimate")
+  d <- reshape2::dcast(data = d, 
+                       stats::as.formula(paste(paste(names(d)[!names(d) %in% c("file","Estimate")],collapse=" + "),
+                                        "~ file")))
+  
   d <- d[order(d$Type,d$Parameter),]
   d$SEUnit <- NULL
   d
