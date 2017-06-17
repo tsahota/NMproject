@@ -19,7 +19,8 @@ ext2coef <- function(extout,file_name){
                       measure.vars = par.names)
   d <- reshape2::dcast(data = d, 
                        stats::as.formula(paste(paste(names(d)[!names(d) %in% c("TYPE","value")],collapse=" + "),
-                                        "~ TYPE")))
+                                        "~ TYPE")),
+                       value.var = "value")
   
   d <- d[order(d$EST.NO,decreasing = TRUE),]
   d$file <- file_name
@@ -198,7 +199,8 @@ run_record0 <- function(..., coef.func = coef_ext0){
   d <- d[,names(d)[!names(d) %in% c("SE","FINAL")]]
   d <- reshape2::dcast(data = d, 
                        stats::as.formula(paste(paste(names(d)[!names(d) %in% c("file","Estimate")],collapse=" + "),
-                                        "~ file")))
+                                        "~ file")),
+                       value.var = "Estimate")
   
   d <- d[order(d$Type,d$Parameter),]
   d$SEUnit <- NULL
