@@ -342,6 +342,7 @@ get_run_id <- function(ctl_name){
   gsub2(match,"\\1",ctl_name)
 }
 
+
 #' Run NONMEM
 #' @param ... objects of class nm
 #' @param overwrite logical. Should run directory be overwritten (default=FALSE)
@@ -352,6 +353,12 @@ get_run_id <- function(ctl_name){
 #' @param update_db logical (default=FALSE). Should run_status be updated
 #' @export
 run <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait,
+                   update_db=TRUE){
+  UseMethod("run")
+}
+
+#' @export
+run.nm <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait,
                 update_db=TRUE){
   tidyproject::check_if_tidyproject()
   rl <- list(...)
