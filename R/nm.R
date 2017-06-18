@@ -166,17 +166,42 @@ delete_nm <- function(entry){
   DBI::dbDisconnect(my_db)
 }
 
-#' update field from run database
-#' @param entry numeric. entry name to delete
-#' @param ... named field changes
-#' @export
-update_nm <- function(entry,...){
+update_object_field <- function(entry,...){
   args <- list(...)
-  repl <- paste(paste(names(args),"=",args),collapse = ", ")
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
+  d <- DBI::dbGetQuery(my_db, 'SELECT * FROM runs')
+  
+  for(i in seq_along(args)){
+    arg_name <- names(args)[i]
+    arg_val <- args[[i]]
+    d[d$entry %in% entry,][[arg_name]] <- I(list(serialize(arg_val,NULL)))
+  }
+  
+  DBI::dbWriteTable(my_db, "runs", d,overwrite=TRUE)
+  DBI::dbDisconnect(my_db)
+}
+
+get_object_field <- function(entry,field){
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
+  d <- DBI::dbGetQuery(my_db, paste('SELECT * FROM runs WHERE entry ==',entry))
+  DBI::dbDisconnect(my_db)
+  unserialize(d[d$entry %in% entry,][[field]][[1]])
+}
+
+update_char_field <- function(entry,...){
+  args <- list(...)
+  repl <- paste(paste0(names(args)," = '",args,"'"),collapse = ", ")
   query <- paste("UPDATE runs SET",repl,"WHERE entry ==",entry)
   my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
   DBI::dbExecute(my_db, query)
   DBI::dbDisconnect(my_db)
+}
+
+get_char_field <- function(entry,field){
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
+  d <- DBI::dbGetQuery(my_db, paste('SELECT * FROM runs WHERE entry ==',entry))
+  DBI::dbDisconnect(my_db)
+  d[d$entry %in% entry,][[field]]
 }
 
 nmdb_match_info <- function(r,db=NULL){
@@ -226,7 +251,9 @@ nmdb_make_db_row <- function(r,add_cols=list()){
   if(file.exists(r$run_dir))
     d$run_status <- "dir exists" else
       d$run_status <- "not run"
-  d$sub_run_status_raw <- I(list(serialize(character(),NULL)))
+  d$sub_run_mtimes <- I(list(serialize(as.POSIXct(NA),NULL)))
+  d$sub_run_status <- I(list(serialize(character(),NULL)))
+  d$run_dir_mtime <- I(list(serialize(as.POSIXct(NA),NULL)))
   name_order <- names(d)
   if(length(add_cols)>0){
     d <- merge(d[,names(d)[!names(d) %in% names(add_cols)]],as.data.frame(add_cols))
@@ -241,7 +268,9 @@ nmdb_printable_db <- function(d){
   d$lst_exists <- NULL
   d$stop_time_reached <- NULL
   d$run_status <- NULL
-  d$sub_run_status_raw <- NULL
+  d$sub_run_mtimes <- NULL
+  d$sub_run_status <- NULL
+  d$run_dir_mtime <- NULL
   d$input_files[!d$input_files %in% d$ctl]
   d$input_files <- lapply(strsplit(d$input_files,","),function(char_vec){
     paste(basename(char_vec),collapse=" ")
@@ -312,19 +341,12 @@ show_runs <- function(...) nmdb_get(readable = TRUE,...)
 
 extract_nm <- function(entry){
   my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
-  tryCatch({
-    d <- DBI::dbGetQuery(my_db, 'SELECT * FROM runs')
-    DBI::dbDisconnect(my_db)
-    d <- d[d$entry==entry, ]
-    if(nrow(d)>1) stop("More than one entry found",call. = FALSE)
-    if(nrow(d)==0) stop("No entry found",call. = FALSE)
-    r <- unserialize(d$object[[1]])
-    return(r)
-  },
-  error=function(e){
-    if(DBI::dbIsValid(my_db)) DBI::dbDisconnect(my_db)
-    stop(e)
-  })
+  d <- DBI::dbGetQuery(my_db, paste('SELECT * FROM runs WHERE entry ==',entry))
+  DBI::dbDisconnect(my_db)
+  if(nrow(d)>1) stop("More than one entry found",call. = FALSE)
+  if(nrow(d)==0) stop("No entry found",call. = FALSE)
+  r <- unserialize(d$object[[1]])
+  return(r)
 }
 
 #' @export
@@ -380,8 +402,7 @@ run.nm <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FAL
     message(paste0("Running: ",r$type,":",r$ctl))
     if(update_db){
       matched_entry <- nmdb_match_entry(r)
-      delete_nm(matched_entry)
-      nmdb_add_entry(r,matched_entry,silent=TRUE,add_cols=list(run_status="submitted"))
+      update_char_field(matched_entry,run_status="submitted")
     }
   })
   if(wait) wait_for_finished(...)
@@ -426,42 +447,106 @@ wait_for_finished <- function(...){
 }
 
 run_status <- function(r){ # for db
+  ## logic:
+  ## if file.mtime(r$run_dir) ==  same use status_prev
+  ## if file.mtime(r$run_dir) !=  same
+  ##    and if lst_names %in% prev & existing_lsts %in% prev
+  ##       check new lsts add them to db
+  ##    else
+  ##       check all directories
+  
   db <- nmdb_get()
   matched_entry <- nmdb_match_entry(r,db = db)
-  status <- db$run_status[db$entry %in% matched_entry]
-  statusi <- unserialize(db$sub_run_status_raw[db$entry %in% matched_entry][[1]])
-  browser()
   
-  if(file.exists(r$run_dir)){
-    status <- "dir created"
-    execution_dirs <- dirname(dir(r$run_dir,
-                                  pattern = "psn\\.mod$",
-                                  recursive = TRUE,
-                                  full.names = TRUE))
-    execution_dirs <- unique(execution_dirs)
-    lst_names <- file.path(execution_dirs,"psn.lst")
+  run_dir_time_prev <- get_object_field(matched_entry,"run_dir_mtime")
+  #run_dir_time_prev <- unserialize(db$run_dir_mtime[db$entry %in% matched_entry][[1]])
+  status_prev <- db$run_status[db$entry %in% matched_entry]
+  
+  if(!file.exists(r$run_dir)) return(status_prev)
+  
+  run_dir_time <- file.mtime(r$run_dir)
+  
+  if(identical(run_dir_time,run_dir_time_prev))
+    return(status_prev)
+  
+  #####
+  ## assume directory exists and there is something new
+  ## get sub run info
+  
+  execution_dirs <- dirname(dir(r$run_dir,
+                                pattern = "psn\\.mod$",
+                                recursive = TRUE,
+                                full.names = TRUE))
+  execution_dirs <- unique(execution_dirs)
+  
+  update_object_field(matched_entry,run_dir_mtime=file.mtime(r$run_dir))
+  if(length(execution_dirs) == 0) return("dir exists")
+  
+  lst_names <- file.path(execution_dirs,"psn.lst")
+  lst_mtimes <- file.mtime(lst_names)
+  names(lst_mtimes) <- lst_names
+  lst_mtimes <- sort(lst_mtimes)
+  lst_names <- names(lst_mtimes)
+  
+  sub_run_mtime_prev <- get_object_field(matched_entry,"sub_run_mtimes")
+  #sub_run_mtime_prev <- unserialize(db$sub_run_mtimes[db$entry %in% matched_entry][[1]])
+  sub_run_mtime_prev <- sort(sub_run_mtime_prev)
+  sub_run_name_order <- names(sub_run_mtime_prev)
+  
+  sub_run_status_prev <- get_object_field(matched_entry,"sub_run_status")
+  #sub_run_status_prev <- unserialize(db$sub_run_status[db$entry %in% matched_entry][[1]])
+  sub_run_status_prev <- sub_run_status_prev[sub_run_name_order]
 
-    if(length(execution_dirs) > 0){
-      status <- "running"
-      ## check these all exist
-      statusi <- sapply(lst_names,function(lst_name){
-        if(!file.exists(lst_name)) return("running")
+  ## go through lst_mtimes, and check if there needs to be an update
+  recheck_lst <- sapply(seq_along(lst_mtimes),function(i){
+    if(!lst_names[i] %in% names(sub_run_mtime_prev)) return(TRUE)
+    if(lst_mtimes[i]!=sub_run_mtime_prev[lst_names[i]]) return(TRUE)
+    return(FALSE)
+  })
+  names(recheck_lst) <- lst_names
+  
+  if(!any(recheck_lst)) return(status_prev)
+  
+  ## can assume some lst_mtimes need checking
+  
+  lst_status <- rep(NA,length=length(recheck_lst))
+  names(lst_status) <- lst_names
+  
+  for(i in seq_along(lst_mtimes)){
+    lst_name <- lst_names[i]
+    if(!recheck_lst[i]) lst_status[i] <- sub_run_mtime_prev[lst_name] else
+    {
+      print(paste("checking",lst_name))
+      ## can assume lst_name needs checking now
+      psn_error <- file.exists(file.path(dirname(lst_name),"psn_nonmem_error_messages.txt"))
+      lst_mtimes[i] <- file.mtime(lst_name)
+      if(psn_error){
+        lst_status[i] <- "error"
+      } else { ## no psn error, read lst
         lst <- try(readLines(lst_name),silent = TRUE)
-        if(inherits(lst,"try-error")) return("running")
-        lst <- lst[max(1,(length(lst)-5)):length(lst)]
-        stopped <- any(grepl("Stop Time:",lst))
-        psn_error <- file.exists(file.path(dirname(lst_name),"psn_nonmem_error_messages.txt"))
-        if(psn_error) return("error")
-        if(stopped) return("finished")
-        return("running")
-      })
-      
-      running <- length(which(statusi %in% "running"))
-      finished <- length(which(statusi %in% "finished"))
-      error <- length(which(statusi %in% "error"))
-      status <- paste0("running:",running," finished:",finished," errors:",error)
+        if(inherits(lst,"try-error")) {
+          lst_status[i] <- "running"
+        } else { ## no error reading, see if stop time
+          lst <- lst[max(1,(length(lst)-5)):length(lst)]
+          stopped <- any(grepl("Stop Time:",lst))          
+          if(stopped) lst_status[i] <- "finished" else lst_status[i] <- "running"
+        }
+      }
     }
   }
+  
+  ## lst_status & lst_mtimes are up to date.
+  update_object_field(matched_entry,
+                        sub_run_mtimes=lst_mtimes,
+                        sub_run_status=lst_status,
+                        run_dir_mtime=file.mtime(r$run_dir))
+  
+  running <- length(which(lst_status %in% "running"))
+  finished <- length(which(lst_status %in% "finished"))
+  error <- length(which(lst_status %in% "error"))
+  status <- paste0("running:",running," finished:",finished," errors:",error)
+  update_char_field(matched_entry,run_status=status)
+  
   return(status)
 }
 
