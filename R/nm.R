@@ -516,7 +516,7 @@ run_status <- function(r){
     lst_name <- lst_names[i]
     if(!recheck_lst[i]) lst_status[i] <- sub_run_status_prev[lst_name] else
     {
-      print(paste("checking",lst_name))
+      #print(paste("checking",lst_name))
       ## can assume lst_name needs checking now
       psn_error <- file.exists(file.path(dirname(lst_name),"psn_nonmem_error_messages.txt"))
       lst_mtimes[i] <- file.mtime(lst_name)
