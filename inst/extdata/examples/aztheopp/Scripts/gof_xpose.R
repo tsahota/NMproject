@@ -4,9 +4,10 @@
 ## Key words: function, template
 ## E.g. for sdtab37, run with gof1(37)
 
-gof1 <- function(run.no,model.dir=getOption("models.dir")){
+gof_xpose <- function(r){
   
-  if(is.null(model.dir)) model.dir <- "."
+  run.no <- r$run_id
+  directory <- r$run_in
   
   ## assumes existance of "plots" directory in main working directory (plots.dir)
   
@@ -16,12 +17,12 @@ gof1 <- function(run.no,model.dir=getOption("models.dir")){
   
   library(xpose4)
   
-  xpdb <- xpose.data(run.no,directory=paste0(model.dir,"/"))
+  xpdb <- xpose.data(run.no,directory=paste0(directory,"/"))
   
   ### Make any changes to xpdb, e.g. to change the independent variable
   ## change.xvardef(xpdb,var="idv") <- "TRLD"
   
-  pdf(file.path("Results",paste("gof1.run.",run.no,".xpose.basic.pdf",sep="")))
+  pdf(file.path("Results",paste("gof.xpose.run.",run.no,".xpose.basic.pdf",sep="")))
   
   ## Delete/Modify the following as needed
   print(dv.vs.pred(xpdb,smooth=NULL,type="p",main=NULL, logy=F,logx=F,
