@@ -5,24 +5,24 @@
 ########################################
 ## load packages and source functions here
 
-library(NMproject)
-source("Scripts/gof1.R")
+library(NMprojectAZ)
+source("Scripts/gof_xpose.R")
 
 ########################################
 ## main script here
 
 ## Initial model
 m1 <- nm("qpsn -c auto -t 3000 -- execute run1.mod -dir=1")
-#nm_tran(m1) ## will run NMTRAN check on control stream
+## NOTE: run NMTRAN only with nm_tran(m1)
 run(m1)
-#shiny_nm() ## will open GUI
-gof1(m1$run_id)
+## NOTE: track run with shiny_nm()
+gof_xpose(m1)
 
 ## Same model for demo purposes
-#copy_control("run1.mod","run2.mod") ## create control file from existing
+## NOTE: create new control with copy_control("run1.mod","run2.mod")
 m2 <- nm("qpsn -c auto -t 3000 -- execute run2.mod -dir=2")
 run(m2)
-gof1(m2$run_id)
+gof_xpose(m2)
 
 ## Bootstrap
 m1boot <- nm("qpsn -c auto -t 3000 -- bootstrap run1.mod -samples=10 -dir=1boot")
