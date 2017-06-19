@@ -236,7 +236,7 @@ run_summary <- function(r){
     existing_files <- NA
   res$outputs_present <- sum(existing_files)/length(existing_files)
   res$last_update <- last_modified(r)
-  res$status <- run_status(r)
+  res$status <- run_status(r)$status
   res$lst_exists <- NA
   res$stop_time_reached <- NA
   res$ofv <- NA

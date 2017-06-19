@@ -4,12 +4,14 @@
 \alias{clean_run}
 \title{clean_run files}
 \usage{
-clean_run(r, delete_dir = c(NA, TRUE, FALSE))
+clean_run(r, delete_dir = c(NA, TRUE, FALSE), update_db = TRUE)
 }
 \arguments{
-\item{r}{character or numeric. run identifier}
+\item{r}{object class nm}
 
 \item{delete_dir}{logical. NA (default), TRUE or FALSE. Should run_dir be deleted.}
+
+\item{update_db}{logical (default=TRUE). Should run_status be updated}
 }
 \description{
 clean_run files

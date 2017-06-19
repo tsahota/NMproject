@@ -253,9 +253,9 @@ nmdb_make_db_row <- function(r,add_cols=list()){
   if(file.exists(r$run_dir))
     d$run_status <- "dir exists" else
       d$run_status <- "not run"
-  d$sub_run_mtimes <- I(list(serialize(as.POSIXct(NA),NULL)))
-  d$sub_run_status <- I(list(serialize(character(),NULL)))
-  d$run_dir_mtime <- I(list(serialize(as.POSIXct(NA),NULL)))
+  status_ob <- list()
+  status_ob$status <- d$run_status
+  d$run_status_ob <- I(list(serialize(status_ob,NULL)))
   name_order <- names(d)
   if(length(add_cols)>0){
     d <- merge(d[,names(d)[!names(d) %in% names(add_cols)]],as.data.frame(add_cols))
@@ -270,9 +270,7 @@ nmdb_printable_db <- function(d){
   d$lst_exists <- NULL
   d$stop_time_reached <- NULL
   d$run_status <- NULL
-  d$sub_run_mtimes <- NULL
-  d$sub_run_status <- NULL
-  d$run_dir_mtime <- NULL
+  d$run_status_ob <- NULL
   d$input_files[!d$input_files %in% d$ctl]
   d$input_files <- lapply(strsplit(d$input_files,","),function(char_vec){
     paste(basename(char_vec),collapse=" ")
@@ -385,18 +383,22 @@ get_run_id <- function(ctl_name){
 #' TRUE or FALSE. Should run_dir be deleted.
 #' @param wait logical (default=FALSE). Should R wait for run to finish.
 #' Default can be changed with  wait_by_default() function
-#' @param update_db logical (default=FALSE). Should run_status be updated
+#' @param update_db logical (default=TRUE). Should run_status be updated
 #' @param ignore.stdout logical (default=TRUE). Parameter passed to system()
 #' @param ignore.stderr logical (default=TRUE). Parameter passed to system()
+#' @param initial_timeout numeric. time in seconds.
+#' time period to give up on a run if directory hasn't been created.
 #' @export
 run <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait,
-                update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE){
+                update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
+                initial_timeout=NA){
   UseMethod("run")
 }
 
 #' @export
 run.nm <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait,
-                   update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE){
+                   update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
+                   initial_timeout=NA){
   tidyproject::check_if_tidyproject()
   rl <- list(...)
   lapply(rl,function(r){
@@ -409,10 +411,12 @@ run.nm <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FAL
     message(paste0("Running: ",r$type,":",r$ctl))
     if(update_db){
       matched_entry <- nmdb_match_entry(r)
-      update_char_field(matched_entry,run_status="submitted")
+      status_ob <- list(status="submitted",run_at=Sys.time())
+      update_object_field(matched_entry,run_status_ob=status_ob)
+      update_char_field(matched_entry,run_status=status_ob$status)
     }
   })
-  if(wait) wait_for_finished(...)
+  if(wait) wait_for_finished(...,initial_timeout=initial_timeout)
   invisible()
 }
 
@@ -426,8 +430,10 @@ run_nm <- function(...){
 #' wait for a run to finish
 #'
 #' @param ... objects of class nm
+#' @param initial_timeout numeric. time in seconds.
+#' time period to give up on a run if directory hasn't been created.
 #' @export
-wait_for_finished <- function(...){
+wait_for_finished <- function(...,initial_timeout=NA){
   rl <- list(...)
   message("Waiting for jobs:\n",paste(sapply(rl,function(i)paste0(" ",i$type,":",i$ctl)),collapse = "\n"))
   
@@ -435,18 +441,19 @@ wait_for_finished <- function(...){
   while(length(rl)>0){
     j <- (i %% length(rl))+1
     r <- rl[[j]]
+    status_ob <- run_status(r,initial_timeout=initial_timeout)
+    
     ######################################
     ## apply finishing test(s) here
     
-    finished <- nm_steps_finished(r)
-    last_update <- last_modified(r)
+    finished <- is_status_finished(status_ob)
     
     if(finished){ ## check again in 5 seconds
       if(r$type != "execute") Sys.sleep(5) else Sys.sleep(1)
-      finished2 <- nm_steps_finished(r)
-      last_update2 <- last_modified(r)
-      ## if it is still finished and last_update is still the same then finish
-      finished <- finished2 & identical(last_update,last_update2)
+      
+      status_ob_new <- run_status(r,initial_timeout=initial_timeout)
+      
+      finished <- identical(status_ob,status_ob_new)
     }
     
     ######################################
@@ -460,7 +467,15 @@ wait_for_finished <- function(...){
   invisible()
 }
 
-run_status <- function(r){
+#' run status
+#' 
+#' @param r object class nm
+#' @param db data.frame. Output of nmdb_get() (optional)
+#' @param entry numeric. db entry number(optional)
+#' @param initial_timeout numeric (default = NA).
+#' Time to wait for directory creation before concluding error
+#' @export
+run_status <- function(r,db,entry,initial_timeout=NA){
   ## logic:
   ## if file.mtime(r$run_dir) ==  same use status_prev
   ## if file.mtime(r$run_dir) !=  same
@@ -469,16 +484,38 @@ run_status <- function(r){
   ##    else
   ##       check all directories
   
-  db <- nmdb_get()
-  matched_entry <- nmdb_match_entry(r,db = db)
+  if(missing(db)) db <- nmdb_get()
+  if(missing(entry)) matched_entry <- nmdb_match_entry(r,db = db) else
+    matched_entry <- entry
+  status_ob_prev <- get_object_field(matched_entry,"run_status_ob")
+  status_ob <- list()
   
-  run_dir_time_prev <- get_object_field(matched_entry,"run_dir_mtime")
-  #run_dir_time_prev <- unserialize(db$run_dir_mtime[db$entry %in% matched_entry][[1]])
-  status_prev <- db$run_status[db$entry %in% matched_entry]
-  
-  if(!file.exists(r$run_dir)) return(status_prev)
-  
-  run_dir_time <- file.mtime(r$run_dir)
+  if(!file.exists(r$run_dir)) {
+    if(status_ob_prev$status %in% c("not run","error")) {
+      return(status_ob_prev)
+    }
+    if(status_ob_prev$status %in% c("submitted")) {
+      test_timeout <- FALSE
+      if(!is.na(initial_timeout)){
+        timediff <- difftime(Sys.time(),status_ob_prev$run_at,units = "secs")
+        if(timediff > initial_timeout)
+          test_timeout <- TRUE
+      }
+      if(test_timeout) {
+        status_ob <- status_ob_prev
+        status_ob$status <- "error"
+        update_object_field(matched_entry,run_status_ob=status_ob)
+        update_char_field(matched_entry,run_status=status_ob$status)
+        return(status_ob)
+      } else {
+        return(status_ob_prev)
+      } 
+    }
+    status_ob$status <- "not run"
+    update_object_field(matched_entry,run_status_ob=status_ob)
+    update_char_field(matched_entry,run_status=status_ob$status)
+    return(status_ob)
+  }
   
   #####
   ## assume directory exists and there is something new
@@ -490,7 +527,16 @@ run_status <- function(r){
                                 full.names = TRUE))
   execution_dirs <- unique(execution_dirs)
   
-  if(length(execution_dirs) == 0) return("dir exists")
+  if(length(execution_dirs) == 0) {
+    if(status_ob_prev$status %in% c("dir exists")) {
+      return(status_ob_prev)
+    } else {
+      status_ob$status <- "dir exists"
+      update_object_field(matched_entry,run_status_ob=status_ob)
+      update_char_field(matched_entry,run_status=status_ob$status)
+      return(status_ob)
+    }
+  }
   
   lst_names <- file.path(execution_dirs,"psn.lst")
   lst_mtimes <- file.mtime(lst_names)
@@ -498,27 +544,32 @@ run_status <- function(r){
   lst_mtimes <- sort(lst_mtimes)
   lst_names <- names(lst_mtimes)
   
-  sub_run_mtime_prev <- get_object_field(matched_entry,"sub_run_mtimes")
-  #sub_run_mtime_prev <- unserialize(db$sub_run_mtimes[db$entry %in% matched_entry][[1]])
-  sub_run_mtime_prev <- sort(sub_run_mtime_prev)
-  sub_run_name_order <- names(sub_run_mtime_prev)
+  if("sub_run_mtimes" %in% names(status_ob_prev)){
+    sub_run_mtimes_prev <- status_ob_prev$sub_run_mtimes    
+  } else sub_run_mtimes_prev <- character()
+  sub_run_mtimes_prev <- sort(sub_run_mtimes_prev)
+  sub_run_name_order <- names(sub_run_mtimes_prev)
   
-  sub_run_status_prev <- get_object_field(matched_entry,"sub_run_status")
-  #sub_run_status_prev <- unserialize(db$sub_run_status[db$entry %in% matched_entry][[1]])
+  if("sub_run_status" %in% names(status_ob_prev)){
+    sub_run_status_prev <- status_ob_prev$sub_run_status    
+  } else sub_run_status_prev <- character()
+  sub_run_status_prev <- status_ob_prev$sub_run_status
   sub_run_status_prev <- sub_run_status_prev[sub_run_name_order]
   
   ## go through lst_mtimes, and check if there needs to be an update
-  name_checked_before <- lst_names %in% names(sub_run_mtime_prev)
-  #mtime_updated <- !lst_mtimes %in% sub_run_mtime_prev[]
+  name_checked_before <- lst_names %in% names(sub_run_mtimes_prev)
+  #mtime_updated <- !lst_mtimes %in% sub_run_mtimes_prev[]
   
   recheck_lst <- sapply(seq_along(lst_mtimes),function(i){
-    if(!lst_names[i] %in% names(sub_run_mtime_prev)) return(TRUE)
-    if(lst_mtimes[i]!=sub_run_mtime_prev[lst_names[i]]) return(TRUE)
+    if(!lst_names[i] %in% names(sub_run_mtimes_prev)) return(TRUE)
+    if(lst_mtimes[i]!=sub_run_mtimes_prev[lst_names[i]]) return(TRUE)
     return(FALSE)
   })
   names(recheck_lst) <- lst_names
   
-  if(!any(recheck_lst)) return(status_prev)
+  if(!any(recheck_lst)) {
+    return(status_ob_prev)
+  }
   
   ## can assume some lst_mtimes need checking
   lst_status <- rep(NA,length=length(recheck_lst))
@@ -548,24 +599,37 @@ run_status <- function(r){
   }
   
   ## lst_status & lst_mtimes are up to date.
-  update_object_field(matched_entry,
-                      sub_run_mtimes=lst_mtimes,
-                      sub_run_status=lst_status,
-                      run_dir_mtime=file.mtime(r$run_dir))
-  
   running <- length(which(lst_status %in% "running"))
   finished <- length(which(lst_status %in% "finished"))
   error <- length(which(lst_status %in% "error"))
   status <- paste0("running:",running," finished:",finished," errors:",error)
-  update_char_field(matched_entry,run_status=status)
   
-  return(status)
+  status_ob$status <- status
+  status_ob$sub_run_mtimes <- lst_mtimes
+  status_ob$sub_run_status <- lst_status
+  status_ob$run_dir_mtime <- file.mtime(r$run_dir)
+  update_object_field(matched_entry,run_status_ob=status_ob)
+  update_char_field(matched_entry,run_status=status_ob$status)
+  return(status_ob)
 }
 
 #' tests if job is finished
 #'
-#' @param r object of class nm
+#' @param status_ob output from run_status
 #' @export
+is_status_finished <- function(status_ob){
+  
+  finished <- FALSE
+  if(status_ob$status %in% c("error","finished")) {
+    finished <- TRUE
+  }
+  if("sub_run_status" %in% names(status_ob)) {
+    sub_finished <- status_ob$sub_run_status %in% c("finished","error")
+    finished <- length(sub_finished)>0 & all(sub_finished)
+  }
+  finished
+}
+
 nm_steps_finished <- function(r){ # for waiting
   execution_dirs <- dirname(dir(r$run_dir,
                                 pattern = "psn\\.mod$",
@@ -638,10 +702,11 @@ nm_tran.nm <- function(x){
 
 #' clean_run files
 #'
-#' @param r character or numeric. run identifier
+#' @param r object class nm
 #' @param delete_dir logical. NA (default), TRUE or FALSE. Should run_dir be deleted.
+#' @param update_db logical (default=TRUE). Should run_status be updated
 #' @export
-clean_run <- function(r,delete_dir=c(NA,TRUE,FALSE)){
+clean_run <- function(r,delete_dir=c(NA,TRUE,FALSE),update_db=TRUE){
   ## assumes ctrl file is run[run_id].mod and -dir=[run_id] was used
   tidyproject::check_if_tidyproject()
   unlink(r$output$ctl_out_files)
@@ -653,9 +718,16 @@ clean_run <- function(r,delete_dir=c(NA,TRUE,FALSE)){
       stop("Dependent run(s) found: ",paste(matched_entry,collapse=","),
            "\nRerun with delete_dir=TRUE or delete_dir=FALSE or remove dependent run")
     }
-    unlink(r$run_dir,recursive=TRUE)
+    unlink(r$run_dir,recursive=TRUE,force = TRUE)
   }
-  if(TRUE %in% delete_dir) unlink(r$run_dir,recursive=TRUE) ## delete run directory
+  if(TRUE %in% delete_dir) unlink(r$run_dir,recursive=TRUE,force = TRUE) ## delete run directory
+  if(update_db){
+    matched_entry <- nmdb_match_entry(r)
+    status_ob <- list(status="not run")
+    update_object_field(matched_entry,run_status_ob=status_ob)
+    update_char_field(matched_entry,run_status=status_ob$status)
+  }
+  invisible()
 }
 
 ctl_out_files <- function(ctl_file){ ## will get vector of $TABLE file names from control file.
