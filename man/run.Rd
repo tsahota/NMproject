@@ -5,7 +5,8 @@
 \title{Run NONMEM}
 \usage{
 run(..., overwrite = .sso_env$run_overwrite, delete_dir = c(NA, TRUE,
-  FALSE), wait = .sso_env$wait, update_db = TRUE)
+  FALSE), wait = .sso_env$wait, update_db = TRUE, ignore.stdout = TRUE,
+  ignore.stderr = TRUE)
 }
 \arguments{
 \item{...}{objects of class nm}
@@ -19,6 +20,10 @@ TRUE or FALSE. Should run_dir be deleted.}
 Default can be changed with  wait_by_default() function}
 
 \item{update_db}{logical (default=FALSE). Should run_status be updated}
+
+\item{ignore.stdout}{logical (default=TRUE). Parameter passed to system()}
+
+\item{ignore.stderr}{logical (default=TRUE). Parameter passed to system()}
 }
 \description{
 Run NONMEM

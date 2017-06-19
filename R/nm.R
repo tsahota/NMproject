@@ -386,15 +386,17 @@ get_run_id <- function(ctl_name){
 #' @param wait logical (default=FALSE). Should R wait for run to finish.
 #' Default can be changed with  wait_by_default() function
 #' @param update_db logical (default=FALSE). Should run_status be updated
+#' @param ignore.stdout logical (default=TRUE). Parameter passed to system()
+#' @param ignore.stderr logical (default=TRUE). Parameter passed to system()
 #' @export
 run <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait,
-                update_db=TRUE){
+                update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE){
   UseMethod("run")
 }
 
 #' @export
 run.nm <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait,
-                   update_db=TRUE){
+                   update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE){
   tidyproject::check_if_tidyproject()
   rl <- list(...)
   lapply(rl,function(r){
@@ -402,7 +404,8 @@ run.nm <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FAL
     if(file.exists(r$run_dir) & !overwrite)if(file.info(r$run_dir)$isdir %in% TRUE) stop("run already exists. To rerun select overwrite=TRUE\n  or use the switch overwrite_default(TRUE)",call.=FALSE)
     if(!is.null(getOption("kill_run"))) getOption("kill_run")(r)
     clean_run(r,delete_dir=delete_dir[1])
-    system_nm(cmd = r$cmd, dir = r$run_in, wait = FALSE, ignore.stdout = TRUE, ignore.stderr = TRUE)
+    system_nm(cmd = r$cmd, dir = r$run_in, wait = FALSE,
+              ignore.stdout = ignore.stdout, ignore.stderr = ignore.stderr)
     message(paste0("Running: ",r$type,":",r$ctl))
     if(update_db){
       matched_entry <- nmdb_match_entry(r)
@@ -659,7 +662,7 @@ ctl_out_files <- function(ctl_file){ ## will get vector of $TABLE file names fro
   if(!file.exists(ctl_file)) stop(paste(ctl_file, "doesn't exist"))
   dir0 <- dir(dirname(ctl_file))
   
-  s0 <- readLines(ctl_file)
+  s0 <- rem_comment(readLines(ctl_file))
   s <- grep("FILE *= *[A-Za-z0-9_\\-\\.]+",s0,value=TRUE)
   table.files <- gsub(".*FILE *= *([A-Za-z0-9_\\-\\.]+) *.*$","\\1",s)
   #table.files <- dir0[dir0%in%table.files]
