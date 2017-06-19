@@ -42,20 +42,7 @@ test_that("status",{
   expect_error(wait_for_finished(m2),NA)
 
   st <- status(m2)
-  expect_true(inherits(st,"character"))
-
-  # st_bad <- status_scm(ctl_name = m2$ctl,
-  #                      run_in = m2$run_in,
-  #                      run_dir = m2$run_dir)
-  # expect_true(inherits(st_bad,"data.frame"))
-  # 
-  # st_bad <- status_unknown(ctl_name = m2$ctl,
-  #                          run_in = m2$run_in,
-  #                          run_dir = m2$run_dir)
-  # expect_true(inherits(st_bad,"data.frame"))
-
-  # run_type <- run_type(m2$run_dir)
-  # expect_true(run_type == "execute")
+  expect_true(inherits(st,"list"))
 
   sum0 <- run_summary(m2)
   expect_true(inherits(sum0,"data.frame"))

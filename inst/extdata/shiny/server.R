@@ -14,7 +14,7 @@ get_plot_bootstrapjs_div <- function(plot_object_list) {
   #### local_function
   get_col_div <- function(plot_object_list, index, css_class = 'col-xs-12 col-sm-4')  {
     col_div <- div(class = css_class)
-
+    
     if(length(plot_object_list) >= index) {
       plotname <- paste("plot", index, sep="")
       plot_output_object <- dygraphOutput(plotname)
@@ -25,7 +25,7 @@ get_plot_bootstrapjs_div <- function(plot_object_list) {
   #
   get_plot_div <- function(plot_object_list) {
     result_div <- div(class = 'container-fluid')
-
+    
     suppressWarnings(for(i in seq(1,length(plot_object_list),3)) {
       row_div <- div(class = 'row')
       row_div <- tagAppendChild(row_div, get_col_div(plot_object_list, i))
@@ -37,7 +37,7 @@ get_plot_bootstrapjs_div <- function(plot_object_list) {
   }
   ####
   plot_output_list_div <- get_plot_div(plot_object_list)
-
+  
   return(plot_output_list_div)
 }
 
@@ -52,13 +52,13 @@ function(input, output, session) {
                  searching=TRUE,
                  filtering=TRUE,
                  ordering=TRUE))
-
+  
   objects <- eventReactive(input$run_table_rows_selected,{
     orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
     row <- input$run_table_rows_selected
     lapply(new_table()$entry[row],extract_nm)
   })
-
+  
   output$runs_selected_info <- renderTable({
     if(length(input$run_table_rows_selected)==0) return(data.frame())
     new_table()[input$run_table_rows_selected,c("entry","type","ctl")]
@@ -67,7 +67,7 @@ function(input, output, session) {
     if(length(input$run_table_rows_selected)==0) return(data.frame())
     new_table()[input$run_table_rows_selected,c("entry","type","ctl")]
   })
-
+  
   observe({
     output$selected_runs <- renderText({
       pretext <- "Select run(s):"
@@ -76,7 +76,7 @@ function(input, output, session) {
       paste(pretext,paste(entries,collapse = ","))
     })
   })
-
+  
   observeEvent(input$go_to_monitor, {
     if(length(input$run_table_rows_selected)==0)
       return(showModal(modalDialog(
@@ -85,7 +85,7 @@ function(input, output, session) {
       )))
     updateNavbarPage(session, "mainPanel", selected = "monitor")
   })
-
+  
   observeEvent(input$go_to_results, {
     if(length(input$run_table_rows_selected)==0)
       return(showModal(modalDialog(
@@ -94,15 +94,15 @@ function(input, output, session) {
       )))
     updateNavbarPage(session, "mainPanel", selected = "results")
   })
-
+  
   observeEvent(input$back_to_db, {
     updateNavbarPage(session, "mainPanel", selected = "database")
   })
-
+  
   observeEvent(input$back_to_db2, {
     updateNavbarPage(session, "mainPanel", selected = "database")
   })
-
+  
   observeEvent(input$run_job, {
     if(length(input$run_table_rows_selected)==0)
       return(showModal(modalDialog(
@@ -124,18 +124,18 @@ function(input, output, session) {
       }
     })
   })
-
+  
   ## run monitor
-
+  
   output$monitor_select_warning <- renderText({
     if(length(input$run_table_rows_selected)>1) return("Warning: will only monitor first")
     if(length(input$run_table_rows_selected)==0) return("Warning: no runs selected")
   })
-
+  
   output$results_select_warning <- renderText({
     if(length(input$run_table_rows_selected)==0) return("Warning: no runs selected")
   })
-
+  
   status_ob <- eventReactive(
     list(input$refresh_status,
          input$run_table_rows_selected,
@@ -144,11 +144,11 @@ function(input, output, session) {
            object <- objects()[[1]]
            status(object)
          })
-
+  
   output$status <- renderText({
     status_ob()
   })
-
+  
   tail_ob <- reactivePoll(1000, session,
                           # This function returns the time that log_file was last modified
                           checkFunc = function(){
@@ -165,13 +165,13 @@ function(input, output, session) {
                             tail_lst(object)
                           }
   )
-
+  
   output$tail_lst <- renderUI({
     tail_ob <- tail_ob()
     tail_ob <- do.call(paste,c(as.list(tail_ob),sep='<br/>'))
     HTML(tail_ob)
   })
-
+  
   plot_iter_ob <- eventReactive(
     list(input$refresh_plot,
          input$run_table_rows_selected),{
@@ -191,7 +191,7 @@ function(input, output, session) {
            p
          }
   )
-
+  
   output$distPlot <- renderUI({
     get_plot_bootstrapjs_div(plot_iter_ob())
     #plot_output_list <- lapply(seq_along(plot_iter_ob()), function(i){
@@ -200,7 +200,7 @@ function(input, output, session) {
     #})
     #do.call(tagList, plot_output_list)
   })
-
+  
   observe(
     for (i in 1:50) {
       local({
@@ -212,7 +212,7 @@ function(input, output, session) {
       })
     }
   )
-
+  
   ## run record
   run_record_ob <- eventReactive(
     list(input$refresh_run_record,
@@ -223,13 +223,13 @@ function(input, output, session) {
                       data.frame()
                     })
          })
-
+  
   output$run_record <- DT::renderDataTable({
     run_record_ob()
   },rownames = FALSE,options = list(paging=FALSE,
                                     searching=FALSE,
                                     filtering=FALSE,
                                     ordering=TRUE))
-
+  
 }
 
