@@ -9,6 +9,7 @@ read_ext0 <- function(ext.file){
   headings <- gsub(": Goal.*","",headings)
 
   dlist <- lapply(seq_along(tab.rows),function(i){
+    if((cut.points[i] + 1)>(cut.points[i + 1] - 1)) return(data.frame())
     d <- s[(cut.points[i]+1):(cut.points[i+1]-1)]
     tmp <- file()
     writeLines(d,tmp)
