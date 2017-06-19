@@ -110,7 +110,7 @@ function(input, output, session) {
         "Select run(s) first"
       )))
     orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-    res <- try(do.call(run,c(objects(),overwrite=TRUE,wait=FALSE)),silent = TRUE)
+    res <- try(do.call(run_nm,c(objects(),overwrite=TRUE,wait=FALSE)),silent = TRUE)
     if(inherits(res,"try-error"))
       showModal(modalDialog(
         title = "Error from run()",
