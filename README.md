@@ -205,15 +205,15 @@ The `run()` function will now wait for each run to finish before moving onto the
 interactive_mode()
 ```
 
-### + How I get queue PsN jobs runs
+### + How can I queue multiple PsN jobs, forcing some to wait, and some not to.
 
-Assuming you have the nm objects defined, You can get a limited queing ability by doing something like:
+Assuming you have the nm objects defined, you can get a limited queing ability by doing something like:
 
 ```r
 run(mod1,wait=TRUE) ; run(mod1vpc,mod1sse)
 ```
 
-This will run mod1, wait for it to finish and then execute mod1vpc and mod1see at the same time.  You will not be able to use the R console while mod1 is running however since it will be waiting.  This means you will not be able to code without launching a new R session.  To get around this consider the `future` package:
+This will run mod1, wait for it to finish and then execute mod1vpc and mod1see at the same time.  You will not be able to use the R console while mod1 is running however since it will be waiting for mod1 to finish.  To get around this consider the `future` package to have a separate R process control the execution:
 
 ```r
 library(future)
@@ -233,6 +233,6 @@ Yes, NMproject doesn't change PsN's default directory structure, so you can go b
 
 ### + My client doesn't have NMproject, how can send the project to them.
 
-NMproject doesn't change PsN's default directory structure, so they will find model files and outputs in the locations they expect.  All R scripts not involving NMproject, e.g. exploratory plot generation, output processing,... will still work for the client as long as their version of R (and packages) is compatible.  It is recommended to run Renvironment_info() as a last step before sending the analysis directory.
+NMproject doesn't change PsN's default directory structure, and all R scripts not involving NMproject, e.g. exploratory plot generation, output processing,... will still work for the client as long as their version of R (and packages) is compatible.  It is recommended to run Renvironment_info() as a last step before sending the analysis directory so they can see the package versions you used.
 
-The main R script you'll have involving NMproject will be the model development script.  Keeping a well commented model development script, will serve as a helpful, human readable record of your model development steps.  Your client also has the option of installing NMproject, so they can reproduce your analysis steps.
+The main R script that involves NMproject will probably be your model development script.  Keeping a well commented model development script will serve as a helpful, human readable record of your model development steps to clients even if they don't use NMproject.  Your client also has the option of installing NMproject, so they can reproduce your analysis steps.
