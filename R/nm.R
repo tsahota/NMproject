@@ -685,8 +685,7 @@ output_files <- function(run_in,run_type,run_dir,ctl_name){
   r <- list()
   if(run_type %in% "execute"){
     extn <- tools::file_ext(ctl_name)
-    if(extn %in% "mod") r$lst <- gsub("^(.*\\.).*$","\\1lst",ctl_name) else
-      r$lst <- paste0(ctl_name,".lst")
+    r$lst <- gsub("^(.*\\.).*$","\\1lst",ctl_name)
     r$psn.mod <- file.path(run_dir,"NM_run1","psn.mod")
     r$psn.lst <- file.path(run_dir,"NM_run1","psn.lst")
     r$psn.ext <- file.path(run_dir,"NM_run1","psn.ext")
