@@ -559,7 +559,10 @@ run_status <- function(r){
   return(status)
 }
 
-
+#' tests if job is finished
+#'
+#' @param r object of class nm
+#' @export
 nm_steps_finished <- function(r){ # for waiting
   execution_dirs <- dirname(dir(r$run_dir,
                                 pattern = "psn\\.mod$",
