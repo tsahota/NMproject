@@ -84,12 +84,12 @@ nm <- function(cmd,psn_command,
   
   if(missing(run_id)){
     matched_run_id <- get_run_id(r$ctl[1])
-    if(length(matched_run_id)==0)
-      stop("couldn't infer run id type.\nRerun with run_id argument",call. = FALSE)
     r$run_id <- matched_run_id
   } else r$run_id <- run_id
   
-  if(!file.exists(r$ctl)) stop(paste("cannot find model file:",r$ctl),call. = FALSE)
+  if(length(r$ctl)==0) stop("cannot infer model file.\nRerun with ctl_name argument",call. = FALSE)
+  if(!file.exists(r$ctl)) stop("cannot find model file",call. = FALSE)
+  
   ## class for execute runs
   class(r) <- c(paste0("nm",r$type),class(r))
   
@@ -372,7 +372,9 @@ gsub2 <- function(pattern,replacement,x,...){
 
 get_run_id <- function(ctl_name){
   match <- paste0("^.*",getOption("model_file_stub"),"(.*)\\..*$")
-  gsub2(match,"\\1",ctl_name)
+  ans <- gsub2(match,"\\1",ctl_name)
+  if(length(ans)==0) ans <- NA
+  ans
 }
 
 
