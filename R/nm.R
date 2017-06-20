@@ -255,6 +255,7 @@ nmdb_make_db_row <- function(r,add_cols=list()){
       d$run_status <- "not run"
   status_ob <- list()
   status_ob$status <- d$run_status
+  if(d$run_status %in% "dir exists") status_ob$seen_at <- Sys.time()
   d$run_status_ob <- I(list(serialize(status_ob,NULL)))
   name_order <- names(d)
   if(length(add_cols)>0){
@@ -528,14 +529,31 @@ run_status <- function(r,db,entry,initial_timeout=NA){
   execution_dirs <- unique(execution_dirs)
   
   if(length(execution_dirs) == 0) {
-    if(status_ob_prev$status %in% c("dir exists")) {
+    if(status_ob_prev$status %in% c("error")) {
       return(status_ob_prev)
-    } else {
-      status_ob$status <- "dir exists"
-      update_object_field(matched_entry,run_status_ob=status_ob)
-      update_char_field(matched_entry,run_status=status_ob$status)
-      return(status_ob)
     }
+    if(status_ob_prev$status %in% c("dir exists")) {
+      test_timeout <- FALSE
+      if(!is.na(initial_timeout)){
+        timediff <- difftime(Sys.time(),status_ob_prev$seen_at,units = "secs")
+        if(timediff > initial_timeout)
+          test_timeout <- TRUE
+      }
+      if(test_timeout) {
+        status_ob <- status_ob_prev
+        status_ob$status <- "error"
+        update_object_field(matched_entry,run_status_ob=status_ob)
+        update_char_field(matched_entry,run_status=status_ob$status)
+        return(status_ob)
+      } else {
+        return(status_ob_prev)
+      } 
+    }
+    status_ob$status <- "dir exists"
+    status_ob$seen_at <- Sys.time()
+    update_object_field(matched_entry,run_status_ob=status_ob)
+    update_char_field(matched_entry,run_status=status_ob$status)
+    return(status_ob)
   }
   
   lst_names <- file.path(execution_dirs,"psn.lst")

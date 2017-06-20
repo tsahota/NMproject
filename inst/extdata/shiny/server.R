@@ -142,7 +142,7 @@ function(input, output, session) {
          plot_iter_ob),{
            orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
            object <- objects()[[1]]
-           status(object)
+           status(object)$status
          })
   
   output$status <- renderText({
