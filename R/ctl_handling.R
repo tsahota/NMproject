@@ -17,14 +17,14 @@ setup_dollar <- function(x,type){
 #' @return object of class r.ctl
 #' @export
 ctl_nm2r <- function(ls){
-
+  
   ls0 <- ls
   dol <- grep("^\\s*\\$",ls)
   dol <- which(is_dollar_line(ls))
   dol[1] <- 1
-
+  
   ## get type info for each dol
-
+  
   dol.type <- function(ls){
     sc <- paste(ls,collapse = " ")
     type <- gsub("^[^\\$]*\\$([\\S]+).*$","\\1",sc, perl = TRUE)
@@ -32,7 +32,7 @@ ctl_nm2r <- function(ls){
     if(length(type)==0) type <- NA
     type
   }
-
+  
   ls2 <- list()
   start <- dol[1]
   finish <- dol[2]-1
@@ -60,12 +60,12 @@ ctl_nm2r <- function(ls){
     ls2[[i]] <- tmp
   }
   ls <- ls2
-
+  
   x <- sapply(ls,function(s)class(s))
-
+  
   ## find consecutive statements and combine them
   ## can use a for loop
-
+  
   for(i in rev(seq_along(x))){
     if(i==1) break
     if(x[i]==x[i-1]) {
@@ -93,6 +93,7 @@ theta_nm2r <- function(x){
   x <- rem_dollars(x)
   x <- x[!grepl("^\\s*$",x)]
   x <- gsub("\\t"," ",x)
+  x <- x[!grepl("^\\s*;.*",x)]
   x0 <- x
   x <- rem_comment(x,";")
   x <- paste(x,collapse = " ")
@@ -100,7 +101,7 @@ theta_nm2r <- function(x){
   x <- gsub("\\(","\\(~",x)
   x <- strsplit(x,"\\(|\\)")[[1]]
   x <- x[!grepl("^\\s*$",x)]
-
+  
   x <- lapply(x,function(x){
     if(substr(x,1,1)!="~"){
       x <- strsplit(x,"[ ,]")[[1]]
@@ -124,12 +125,12 @@ theta_nm2r <- function(x){
   x$N <- 1:nrow(x)
   class(x) <- c(class(x),"r.theta")
   comments <- get_comment(x0,";")
-
+  
   if(length(comments) > max(x$N)) {
     warning("More comments than THETAs found. Something wrong")
     comments <- rep("",max(x$N))
   }
-
+  
   tmp <- strsplit(comments,";")
   x$Name <- sapply(tmp,"[",1)
   x$Name <- rem_trailing_spaces(x$Name)
@@ -179,6 +180,7 @@ theta_r2nm <- function(x){
 param_info <- function(ctl_name){
   ctl <- readLines(ctl_name)
   ctl <- ctl_nm2r(ctl)
-  theta_nm2r(ctl$THETA)
+  if("THETA" %in% names(ctl)) return(theta_nm2r(ctl$THETA)) else
+    return(data.frame())
 }
 
