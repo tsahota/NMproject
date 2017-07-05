@@ -133,17 +133,48 @@ gof_xpose(mod1)
 
 ## FAQ
 
-### + How can I quickly test to see if my control stream & dataset pass NMTRAN checks without running the NONMEM job?
+### + I want to repeat my model development script, how do I do this?
 
-This is especially useful to do on a cluster submission system where a job may take a long time to start and come back with an error.  However it is good practice on non-server setups too.
+You need to make `run()` submit NONMEM jobs synchronously.  To do this:
+
+```r
+non_interactive_mode()
+```
+
+The `run()` function will now wait for each run to finish before moving onto the next R command.  To return to interactive mode (asynchronous NONMEM execution) run:
+
+```r
+interactive_mode()
+```
+
+### + How can I queue multiple PsN jobs, forcing some to wait, and some not to.
+
+Assuming you have the `nm` objects defined, you can queing jobs, by forcing some to wait, e.g.:
+
+```r
+run(mod1,wait=TRUE) ; run(mod1vpc,mod1sse)
+```
+
+This will run mod1, wait for it to finish and then execute mod1vpc and mod1see at the same time.  You will not be able to use the R console while mod1 is running however since it will be waiting for mod1 to finish.  To get around this consider the `future` package to have a separate R process control the execution:
+
+```r
+library(future)
+plan("multisession")
+future({run(mod1,wait=TRUE) ; run(mod1vpc,mod1sse)})
+```
+
+### + After having closed my session how to I recreate an nm object
+
+Just re-run the `nm()` statements again. The objects will be recreated.  Alternatively, if you know the database entry number use `extract_nm()`
+
+### + How can I run NMTRAN checks, i.e. quickly test to see if my control stream & dataset contain errors?
 
 Add the following line to your `~/.Rprofile` with the location of your nmtran.exe file:.
 
 ```r
 options(nmtran_exe_path = "path/to/nonmem/installation/tr/NMTRAN.exe")
 ```
-You can now use `nm_tran(mod1)`
-
+You can now use `nm_tran(mod1)`.  This is especially useful to do on a cluster submission system where a job may take a long time to start and come back with an error.
 
 ### + We already have directory of R/NONMEM scripts/templates, how can we also use these?
 
@@ -155,11 +186,11 @@ options(code_library_path = c("/path/to/PMXcodelibrary/","path/to/existing/repos
 
 ### + How can I contribute to the PMX code library?
 
-Create/log in to github.  Fork the repository `tsahota/PMXcodelibrary`. Make your change.  Create a pull request detailing your change.  
+Log in to github (create an account if necessary).  Fork the repository `tsahota/PMXcodelibrary`. Make your change.  Create a pull request detailing your change.
 
-### + My Rstudio Server is on a different server to my NONMEM cluster.  How can I set up NMproject to work with this?
+### + My Rstudio Server is on a different linux server to my NONMEM cluster.  How can I set up NMproject to work with this?
 
-You need to ensure your account has passwordless ssh set up.  Then you need to create a `system_nm()` option in your `~/.Rprofile` configuration file that should ssh to the NONMEM server and run the desired command, e.g.
+You need to ensure your account has passwordless ssh set up.  Then create a `system_nm()` option in your `~/.Rprofile` configuration file which appends an ssh statement to the system call e.g. the following will set you up to connect to the host `clustername`:
 
 ```r
 options(system_nm=function(cmd,...) {
@@ -169,7 +200,7 @@ options(system_nm=function(cmd,...) {
 
 ### + I'm working on a windows laptop but want to use my NONMEM cluster for NONMEM jobs.  How can I set up NMproject to work with this?
 
-This option is not recommended as you would have to have your R working set to a networked drive.  It is possible though by modifying the `system_nm()` option, as in the above FAQ question, to use plink to ssh to the server, change to the relevant working directory and submit a command.  This has not been tested however, and results are likely to be disappointing.
+This is not recommended as it requires R working directory being set to a networked drive.  This is very slow.  If you really want to though consider modifying the `system_nm()` option, as in the above FAQ question, to use `plink` to ssh to the server, change to the relevant working directory and submit a command.  This has not been tested however and results are likely to be disappointing.
 
 ### + My organisation has a different control file convention to the runXX.mod convention.  Can I change this?
 
@@ -187,38 +218,10 @@ options(model_file_extn="con")
 system_nm("command_to_run",dir="path/to/dir")
 ```
 
-### + After having closed my session how to I recreate an nm object
-
-Run the nm() statements again in the R console.  The objects will be recreated.
-
-### + I want to repeat my model development script, how do I do this?
-
-You need to make `run()` submit NONMEM jobs synchronously.  To do this:
+### + How do I submit a command directly to the NONMEM server?
 
 ```r
-non_interactive_mode()
-```
-
-The `run()` function will now wait for each run to finish before moving onto the next R command.  To return to interactive mode (asynchronous NONMEM execution) run:
-
-```r
-interactive_mode()
-```
-
-### + How can I queue multiple PsN jobs, forcing some to wait, and some not to.
-
-Assuming you have the nm objects defined, you can get a limited queing ability by doing something like:
-
-```r
-run(mod1,wait=TRUE) ; run(mod1vpc,mod1sse)
-```
-
-This will run mod1, wait for it to finish and then execute mod1vpc and mod1see at the same time.  You will not be able to use the R console while mod1 is running however since it will be waiting for mod1 to finish.  To get around this consider the `future` package to have a separate R process control the execution:
-
-```r
-library(future)
-plan("multisession")
-future({run(mod1,wait=TRUE) ; run(mod1vpc,mod1sse)})
+system_nm("command_to_run",dir="path/to/dir")
 ```
 
 ### + There is functionality in PsN's runrecord, sumo or Pirana that I would like but is not currently available in NMproject.
@@ -229,10 +232,10 @@ If it's something you think really should be part of NMproject, open a github "i
 
 ### + I don't want to use NMproject on my analysis project any more, can I go back to submitting runs on the command line
 
-Yes, NMproject doesn't change PsN's default directory structure, so you can go back to running PsN via command line.  If there a bug or a a feature you think really should be part of NMproject, consider opening a github "issue" and asking.
+Yes, NMproject doesn't change PsN's default directory structure, so you can go back to running PsN via command line.  If there a bug or a feature you think really should be part of NMproject, consider opening a github "issue" and asking.
 
-### + My client doesn't have NMproject, how can send the project to them.
+### + I work for a CRO. My client doesn't have NMproject, how can send the project to them.
 
-NMproject doesn't change PsN's default directory structure, and all R scripts not involving NMproject, e.g. exploratory plot generation, output processing,... will still work for the client as long as their version of R (and packages) is compatible.  It is recommended to run Renvironment_info() as a last step before sending the analysis directory so they can see the package versions you used.
+NMproject doesn't change PsN's default directory structure, and everything will work for them as long as their version of R (and package versions) are compatible.  It is recommended to run Renvironment_info() as a last step before sending the analysis directory so they can see the package versions you used.
 
-The main R script that involves NMproject will probably be your model development script.  Keeping a well commented model development script will serve as a helpful, human readable record of your model development steps to clients even if they don't use NMproject.  Your client also has the option of installing NMproject, so they can reproduce your analysis steps.
+Obviously they will not be able to run code that is dependent on NMproject unless they install it.  But your model development script can still serve as a helpful, human readable process description of your model development steps.
