@@ -176,6 +176,10 @@ options(nmtran_exe_path = "path/to/nonmem/installation/tr/NMTRAN.exe")
 ```
 You can now use `nm_tran(mod1)`.  This is especially useful to do on a cluster submission system where a job may take a long time to start and come back with an error.
 
+### + I see the PMX code library has been updated, how can I update my local version of it?
+
+The PMX code library is version controlled with `git`.  Ensure you have git installed, navigate to the local PMX code library repository and type `git pull`.  Git will complain if you have made changes to your local directory since downloading it.  If you have, you need to `commit` those changes before using `git pull`.  See git help for more information on how to do this.  Consider splitting your code library into multiple repositories for easier management (e.g. one public, one for your organisation, one for you)
+
 ### + We already have directory of R/NONMEM scripts/templates, how can we also use these?
 
 Append your directory location to the `code_library_path` option.  To do this add the following command to your `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site`) configuration file:
