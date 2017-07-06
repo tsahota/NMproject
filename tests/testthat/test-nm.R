@@ -1,7 +1,7 @@
+require(tidyproject)
 context("nm function works")
 
 proj_name <- "test_nmproject"
-require(tidyproject)
 
 cleanup <- function(proj_name){
   if(file.exists(proj_name)) unlink(proj_name,recursive = TRUE,force = TRUE)
@@ -60,3 +60,4 @@ test_that("nm function works",{
   expect_true(identical(as.numeric(m5$run_id),1))
 
 })
+
