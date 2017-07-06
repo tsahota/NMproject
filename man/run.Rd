@@ -6,7 +6,7 @@
 \usage{
 run(..., overwrite = .sso_env$run_overwrite, delete_dir = c(NA, TRUE,
   FALSE), wait = .sso_env$wait, update_db = TRUE, ignore.stdout = TRUE,
-  ignore.stderr = TRUE, initial_timeout = NA)
+  ignore.stderr = TRUE, initial_timeout = NA, quiet = TRUE)
 }
 \arguments{
 \item{...}{objects of class nm}
@@ -27,6 +27,8 @@ Default can be changed with  wait_by_default() function}
 
 \item{initial_timeout}{numeric. time in seconds.
 time period to give up on a run if directory hasn't been created.}
+
+\item{quiet}{logical (default=FALSE). should system_nm output be piped to screen}
 }
 \description{
 Run NONMEM

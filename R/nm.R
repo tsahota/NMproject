@@ -17,11 +17,11 @@ nm <- function(cmd,psn_command,
   tidyproject::check_if_tidyproject()
   r <- list()
   class(r) <- "nm"
-  
+
   if(is.null(run_in)) run_in <- "."
   r$run_in <- run_in
   r$cmd <- cmd
-  
+
   if(!missing(shell_script_name)){
     if(!file.exists(file.path(r$run_in,shell_script_name)))
       stop("cannot find shell script in ",r$run_in," directory",call. = FALSE)
@@ -44,14 +44,14 @@ nm <- function(cmd,psn_command,
   }
   ## cmd is now set
   cmd <- paste(cmd,collapse = " ")
-  
+
   if(!missing(psn_command)) r$type <- psn_command
   if(!missing(ctl_name)) {
     if(any(!file.exists(file.path(r$run_in,ctl_name))))
       stop(paste(ctl_name,collapse = ",")," do(es) not exist",call. = FALSE)
     r$ctl <- file.path(r$run_in,ctl_name)
   }
-  
+
   if(is.null(r$type)){
     matched_psn_commands <- unlist(sapply(getOption("psn.commands"),
                                           function(i) gsub2(paste0("^.*(",i,")\\b\\s.+$"),"\\1",cmd)))
@@ -63,14 +63,14 @@ nm <- function(cmd,psn_command,
     message(paste("inferring run type :",matched_psn_commands))
     r$type <- matched_psn_commands
   }
-  
+
   if(is.null(r$ctl)){
     subcmd <- gsub(paste0("^.*(",r$type,".*)$"),"\\1",cmd)
     matched_ctl <- gsub2(paste0("^.*(",getOption("model_file_stub"),"\\S+)\\s*.*$"),"\\1",cmd)
     message(paste("inferring ctl file :",matched_ctl))
     r$ctl <- file.path(r$run_in,matched_ctl)
   }
-  
+
   if(missing(run_dir)){
     matched_run_dir <-
       gsub2(paste0("^.*-dir[a-z]*=\\s*(\\S*)\\s*.*$"),"\\1",cmd)
@@ -81,52 +81,52 @@ nm <- function(cmd,psn_command,
     message(paste("inferring run directory :",matched_run_dir))
     r$run_dir <- file.path(r$run_in,matched_run_dir)
   } else r$run_dir <- run_dir
-  
+
   if(missing(run_id)){
     matched_run_id <- get_run_id(r$ctl[1])
     r$run_id <- matched_run_id
   } else r$run_id <- run_id
-  
+
   if(length(r$ctl)==0) stop("cannot infer model file.\nRerun with ctl_name argument",call. = FALSE)
   if(!file.exists(r$ctl)) stop("cannot find model file",call. = FALSE)
-  
+
   ## class for execute runs
   class(r) <- c(paste0("nm",r$type),class(r))
-  
+
   r$input <- input_files(run_type = r$type,ctl_name = r$ctl)
   r$output <- output_files(run_in = r$run_in,
                            run_type = r$type,
                            run_dir = r$run_dir,
                            ctl_name = r$ctl)
-  
+
   if(r$type %in% "execute") r$param_info <- param_info(r$ctl)
-  
+
   r$description <- tidyproject::get_script_field(r$ctl,"Description")
-  
+
   ####
-  
+
   match_info <- nmdb_match_info(r)
   matched_entry <- match_info$entry[match_info$match_type &
                                       match_info$match_run_in &
                                       match_info$match_ctl]
-  
+
   overlapped_output_entries <-
     match_info$entry[match_info$overlap_outputs &
                        !(match_info$entry %in% matched_entry)]
-  
+
   overlapped_run_dir_entries <-
     match_info$entry[match_info$match_run_dir & match_info$match_run_in &
                        !(match_info$entry %in% matched_entry)]
-  
+
   overlapped_output_entries <- unique(c(overlapped_output_entries,
                                         overlapped_run_dir_entries))
-  
+
   if(length(overlapped_output_entries)>0)
     stop("Outputs overlap with entries: ",
          paste(overlapped_output_entries,collapse=","),
          "\nView runs with: show_runs()",
          "\nDelete old runs with: delete_nm(entry)",call. = FALSE)
-  
+
   if(length(matched_entry)==0) {
     nmdb_add_entry(r)
   } else if(length(matched_entry)==1) {
@@ -141,7 +141,7 @@ nm <- function(cmd,psn_command,
 }
 
 nmdb_match_entry <- function(r,db=NULL){
-  
+
   match_info <- nmdb_match_info(r,db=db)
   matched_entry <- match_info$entry[match_info$match_type &
                                       match_info$match_run_in &
@@ -172,13 +172,13 @@ update_object_field <- function(entry,...){
   args <- list(...)
   my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
   d <- DBI::dbGetQuery(my_db, 'SELECT * FROM runs')
-  
+
   for(i in seq_along(args)){
     arg_name <- names(args)[i]
     arg_val <- args[[i]]
     d[d$entry %in% entry,][[arg_name]] <- I(list(serialize(arg_val,NULL)))
   }
-  
+
   DBI::dbWriteTable(my_db, "runs", d,overwrite=TRUE)
   DBI::dbDisconnect(my_db)
 }
@@ -214,29 +214,29 @@ nmdb_match_info <- function(r,db=NULL){
                       match_run_dir=logical(),
                       match_ctl = logical(),
                       overlap_outputs=logical()))
-  
+
   if(is.null(db)) d <- nmdb_get() else d <- db
-  
+
   dproposal <- nmdb_make_db_row(r)
-  
+
   ans <- list()
   ans$entry <- d$entry
   ans$match_type <- d$type %in% r$type
   ans$match_run_dir <- d$run_dir %in% r$run_dir
   ans$match_run_in <- d$run_in %in% r$run_in
   ans$match_ctl <- d$ctl %in% r$ctl
-  
+
   dependent_run_dir <- sapply(d$run_dir,function(i)grepl(paste0("^",i,"$"),r$run_dir))
   ans$dependent_run_dir <- dependent_run_dir & !ans$match_run_dir
-  
+
   overlap_outputs <- sapply(strsplit(d$output_files,","),function(out_filesi){
     length(intersect(out_filesi,unlist(r$output)))>0
   })
   ans$overlap_outputs <- overlap_outputs
-  
+
   ans <- as.data.frame(ans)
   return(ans)
-  
+
 }
 
 nmdb_make_db_row <- function(r,add_cols=list()){
@@ -296,13 +296,13 @@ nmdb_add_entry <- function(r,entry=NULL,silent=FALSE,...){
       DBI::dbWriteTable(my_db, "runs", dempty)
     }
     d <- DBI::dbGetQuery(my_db, 'SELECT * FROM runs')
-    
+
     if(nrow(d)==0) new_entry <- 1 else
       if(!is.null(entry)) new_entry <- entry else
         new_entry <- max(d$entry) + 1
-    
+
     dnew <- cbind(data.frame(entry=new_entry),dnew)
-    
+
     if(!silent) message("Creating database entry: ",new_entry)
     DBI::dbWriteTable(my_db, "runs", dnew, append=TRUE)
     DBI::dbDisconnect(my_db)
@@ -389,25 +389,33 @@ get_run_id <- function(ctl_name){
 #' @param ignore.stderr logical (default=TRUE). Parameter passed to system()
 #' @param initial_timeout numeric. time in seconds.
 #' time period to give up on a run if directory hasn't been created.
+#' @param quiet logical (default=FALSE). should system_nm output be piped to screen
 #' @export
 run <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait,
                 update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
-                initial_timeout=NA){
+                initial_timeout=NA, quiet = TRUE){
   UseMethod("run")
 }
 
 #' @export
 run.nm <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait,
                    update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
-                   initial_timeout=NA){
+                   initial_timeout=NA, quiet = TRUE){
   tidyproject::check_if_tidyproject()
+  #if(!quiet & !wait) stop("quiet=FALSE requires wait=TRUE")
   rl <- list(...)
   lapply(rl,function(r){
     ## if directory exists, and if it's definately a directory stop
     if(file.exists(r$run_dir) & !overwrite)if(file.info(r$run_dir)$isdir %in% TRUE) stop("run already exists. To rerun select overwrite=TRUE\n  or use the switch overwrite_default(TRUE)",call.=FALSE)
     if(!is.null(getOption("kill_run"))) getOption("kill_run")(r)
     clean_run(r,delete_dir=delete_dir[1])
-    system_nm(cmd = r$cmd, dir = r$run_in, wait = FALSE,
+    wait_arg <- FALSE
+    if(!quiet) {
+      #if(.Platform$OS.type == "windows") wait_arg <- TRUE
+      ignore.stdout = FALSE
+      ignore.stderr = FALSE
+    }
+    system_nm(cmd = r$cmd, dir = r$run_in, wait = wait_arg,
               ignore.stdout = ignore.stdout, ignore.stderr = ignore.stderr)
     message(paste0("Running: ",r$type,":",r$ctl))
     if(update_db){
@@ -437,26 +445,26 @@ run_nm <- function(...){
 wait_for_finished <- function(...,initial_timeout=NA){
   rl <- list(...)
   message("Waiting for jobs:\n",paste(sapply(rl,function(i)paste0(" ",i$type,":",i$ctl)),collapse = "\n"))
-  
+
   i <- 0
   while(length(rl)>0){
     j <- (i %% length(rl))+1
     r <- rl[[j]]
     status_ob <- run_status(r,initial_timeout=initial_timeout)
-    
+
     ######################################
     ## apply finishing test(s) here
-    
+
     finished <- is_status_finished(status_ob)
-    
+
     if(finished){ ## check again in 5 seconds
       if(r$type != "execute") Sys.sleep(5) else Sys.sleep(1)
-      
+
       status_ob_new <- run_status(r,initial_timeout=initial_timeout)
-      
+
       finished <- identical(status_ob,status_ob_new)
     }
-    
+
     ######################################
     if(finished){
       rl[[j]] <- NULL
@@ -469,7 +477,7 @@ wait_for_finished <- function(...,initial_timeout=NA){
 }
 
 #' run status
-#' 
+#'
 #' @param r object class nm
 #' @param db data.frame. Output of nmdb_get() (optional)
 #' @param entry numeric. db entry number(optional)
@@ -484,13 +492,13 @@ run_status <- function(r,db,entry,initial_timeout=NA){
   ##       check new lsts add them to db
   ##    else
   ##       check all directories
-  
+
   if(missing(db)) db <- nmdb_get()
   if(missing(entry)) matched_entry <- nmdb_match_entry(r,db = db) else
     matched_entry <- entry
   status_ob_prev <- get_object_field(matched_entry,"run_status_ob")
   status_ob <- list()
-  
+
   if(!file.exists(r$run_dir)) {
     if(status_ob_prev$status %in% c("not run","error")) {
       return(status_ob_prev)
@@ -510,24 +518,24 @@ run_status <- function(r,db,entry,initial_timeout=NA){
         return(status_ob)
       } else {
         return(status_ob_prev)
-      } 
+      }
     }
     status_ob$status <- "not run"
     update_object_field(matched_entry,run_status_ob=status_ob)
     update_char_field(matched_entry,run_status=status_ob$status)
     return(status_ob)
   }
-  
+
   #####
   ## assume directory exists and there is something new
   ## get sub run info
-  
+
   execution_dirs <- dirname(dir(r$run_dir,
                                 pattern = "psn\\.mod$",
                                 recursive = TRUE,
                                 full.names = TRUE))
   execution_dirs <- unique(execution_dirs)
-  
+
   if(length(execution_dirs) == 0) {
     if(status_ob_prev$status %in% c("error")) {
       return(status_ob_prev)
@@ -547,7 +555,7 @@ run_status <- function(r,db,entry,initial_timeout=NA){
         return(status_ob)
       } else {
         return(status_ob_prev)
-      } 
+      }
     }
     status_ob$status <- "dir exists"
     status_ob$seen_at <- Sys.time()
@@ -555,44 +563,44 @@ run_status <- function(r,db,entry,initial_timeout=NA){
     update_char_field(matched_entry,run_status=status_ob$status)
     return(status_ob)
   }
-  
+
   lst_names <- file.path(execution_dirs,"psn.lst")
   lst_mtimes <- file.mtime(lst_names)
   names(lst_mtimes) <- lst_names
   lst_mtimes <- sort(lst_mtimes)
   lst_names <- names(lst_mtimes)
-  
+
   if("sub_run_mtimes" %in% names(status_ob_prev)){
-    sub_run_mtimes_prev <- status_ob_prev$sub_run_mtimes    
+    sub_run_mtimes_prev <- status_ob_prev$sub_run_mtimes
   } else sub_run_mtimes_prev <- character()
   sub_run_mtimes_prev <- sort(sub_run_mtimes_prev)
   sub_run_name_order <- names(sub_run_mtimes_prev)
-  
+
   if("sub_run_status" %in% names(status_ob_prev)){
-    sub_run_status_prev <- status_ob_prev$sub_run_status    
+    sub_run_status_prev <- status_ob_prev$sub_run_status
   } else sub_run_status_prev <- character()
   sub_run_status_prev <- status_ob_prev$sub_run_status
   sub_run_status_prev <- sub_run_status_prev[sub_run_name_order]
-  
+
   ## go through lst_mtimes, and check if there needs to be an update
   name_checked_before <- lst_names %in% names(sub_run_mtimes_prev)
   #mtime_updated <- !lst_mtimes %in% sub_run_mtimes_prev[]
-  
+
   recheck_lst <- sapply(seq_along(lst_mtimes),function(i){
     if(!lst_names[i] %in% names(sub_run_mtimes_prev)) return(TRUE)
     if(lst_mtimes[i]!=sub_run_mtimes_prev[lst_names[i]]) return(TRUE)
     return(FALSE)
   })
   names(recheck_lst) <- lst_names
-  
+
   if(!any(recheck_lst)) {
     return(status_ob_prev)
   }
-  
+
   ## can assume some lst_mtimes need checking
   lst_status <- rep(NA,length=length(recheck_lst))
   names(lst_status) <- lst_names
-  
+
   for(i in seq_along(lst_mtimes)){
     lst_name <- lst_names[i]
     if(!recheck_lst[i]) lst_status[i] <- sub_run_status_prev[lst_name] else
@@ -609,19 +617,19 @@ run_status <- function(r,db,entry,initial_timeout=NA){
           lst_status[i] <- "running"
         } else { ## no error reading, see if stop time
           lst <- lst[max(1,(length(lst)-5)):length(lst)]
-          stopped <- any(grepl("Stop Time:",lst))          
+          stopped <- any(grepl("Stop Time:",lst))
           if(stopped) lst_status[i] <- "finished" else lst_status[i] <- "running"
         }
       }
     }
   }
-  
+
   ## lst_status & lst_mtimes are up to date.
   running <- length(which(lst_status %in% "running"))
   finished <- length(which(lst_status %in% "finished"))
   error <- length(which(lst_status %in% "error"))
   status <- paste0("running:",running," finished:",finished," errors:",error)
-  
+
   status_ob$status <- status
   status_ob$sub_run_mtimes <- lst_mtimes
   status_ob$sub_run_status <- lst_status
@@ -636,7 +644,7 @@ run_status <- function(r,db,entry,initial_timeout=NA){
 #' @param status_ob output from run_status
 #' @export
 is_status_finished <- function(status_ob){
-  
+
   finished <- FALSE
   if(status_ob$status %in% c("error","finished")) {
     finished <- TRUE
@@ -655,7 +663,7 @@ nm_steps_finished <- function(r){ # for waiting
                                 full.names = TRUE))
   execution_dirs <- unique(execution_dirs)
   lst_names <- file.path(execution_dirs,"psn.lst")
-  
+
   if(length(execution_dirs) > 0){
     ## check these all exist
     finished <- sapply(lst_names,function(lst_name){
@@ -751,19 +759,19 @@ clean_run <- function(r,delete_dir=c(NA,TRUE,FALSE),update_db=TRUE){
 ctl_out_files <- function(ctl_file){ ## will get vector of $TABLE file names from control file.
   if(!file.exists(ctl_file)) stop(paste(ctl_file, "doesn't exist"))
   dir0 <- dir(dirname(ctl_file))
-  
+
   s0 <- rem_comment(readLines(ctl_file))
   s <- grep("FILE *= *[A-Za-z0-9_\\-\\.]+",s0,value=TRUE)
   table.files <- gsub(".*FILE *= *([A-Za-z0-9_\\-\\.]+) *.*$","\\1",s)
   #table.files <- dir0[dir0%in%table.files]
-  
+
   stub <- basename(ctl_file)
   stub <- gsub("(.+)\\.\\w+$","\\1",stub)
-  
+
   out.files <- dir0[grepl(paste(stub,"\\.",sep=""),dir0)]
   out.files <- out.files[!grepl("scm",out.files)]
   out.files <- out.files[!out.files%in%basename(ctl_file)]
-  
+
   out.files <- c(table.files,out.files)
   out.files
 }
@@ -820,17 +828,17 @@ setup_nm_demo <- function(file_stub = paste0(getOption("model_file_stub"),1),
                           exclude=NULL){
   tidyproject::check_if_tidyproject()
   examples_dir <- system.file("extdata","examples",demo_name,package = "NMproject")
-  
+
   files_to_copy <- dir(examples_dir,all.files = TRUE,recursive = TRUE)
   dest_names <- files_to_copy
   dest_names <- gsub("^Models/",paste0(getOption("models.dir"),"/"),dest_names)
   dest_names <- gsub("^Scripts/",paste0(getOption("scripts.dir"),"/"),dest_names)
   dest_names <- gsub("run1\\.",paste0(file_stub,"."),dest_names)
-  
+
   already_there <- file.exists(dest_names)
   if(any(already_there) & !overwrite)
     stop("File(s) already exist:\n",paste(paste0("  ",dest_names[already_there]),collapse="\n"),"\nRename or rerun with overwrite=TRUE",call. = FALSE)
-  
+
   for(i in seq_along(files_to_copy)){
     if(is.null(exclude)) do_copy <- TRUE else {
       if(grepl(paste0("\\.",exclude,"$"),files_to_copy[i]))
