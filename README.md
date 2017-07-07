@@ -34,8 +34,8 @@ History: NMproject was previously an AstraZeneca project.  It is being reimpleme
 NONMEM, PsN, and Rstudio are required to be installed prior to these steps. 
 
 ```R
-install.packages("devtools")
-devtools::install_github("tsahota/NMproject")
+if(!require("devtools")) install.packages("devtools")
+install_github("tsahota/NMproject")
 ```
 ### Configuration
 
