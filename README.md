@@ -37,12 +37,19 @@ NONMEM, PsN, and Rstudio are required to be installed prior to these steps.
 install.packages("devtools")
 devtools::install_github("tsahota/NMproject")
 ```
-
+### Configuration
 To download and configure the PMXcodelibrary, run:
 
 ```r
 library(NMproject)
 get_PMX_code_library("/path/to/desired/location", config_file="~/.Rprofile")
+```
+This will have updated your `~/.Rprofile`.
+
+NMproject also needs to know the path to your nmtran.exe file.  Do this by inserting the following line into your `~/.Rprofile` (adjusting the NONMEM installation path as necessary):
+
+```r
+options(nmtran_exe_path = "C:/nm741/tr/NMTRAN.exe")
 ```
 
 If you are running NONMEM and R on a desktop/laptop this should suffice.  For more complicated set ups additional configuration may be required see FAQ (below) for details.
@@ -110,6 +117,8 @@ The `mod1` object here will contain information about the run.  If you have set 
 nm_tran(mod1)
 ```
 
+This is especially useful to do on a cluster submission system where a job may take a long time to start and come back with an error.
+
 To run `mod1`:
 
 ```r
@@ -166,15 +175,6 @@ future({run(mod1,wait=TRUE) ; run(mod1vpc,mod1sse)})
 ### + After having closed my session how to I recreate an nm object
 
 Just re-run the `nm()` statements again. The objects will be recreated.  Alternatively, if you know the database entry number use `extract_nm()`
-
-### + How can I run NMTRAN checks, i.e. quickly test to see if my control stream & dataset contain errors?
-
-Add the following line to your `~/.Rprofile` with the location of your nmtran.exe file:.
-
-```r
-options(nmtran_exe_path = "path/to/nonmem/installation/tr/NMTRAN.exe")
-```
-You can now use `nm_tran(mod1)`.  This is especially useful to do on a cluster submission system where a job may take a long time to start and come back with an error.
 
 ### + I see the PMX code library has been updated, how can I update my local version of it?
 
