@@ -37,18 +37,29 @@ NONMEM, PsN, and Rstudio are required to be installed prior to these steps.
 if(!require("devtools")) install.packages("devtools")
 install_github("tsahota/NMproject")
 ```
+Load the package with 
+
+```R
+library(NMproject)
+```
+
 ### Configuration
 
-NMproject also needs to know the path to your nmtran.exe file.  Do this by inserting the following line into your `~/.Rprofile` (adjusting the NONMEM installation path as necessary):
+NMproject also needs to know the path to your nmtran.exe file.  Do this by opening your `~/.Rprofile` - this can be done through R by:
+
+```r
+file.edit("~/.Rprofile")
+```
+
+and inserting the following option statement (adjusting the NONMEM installation path as necessary):
 
 ```r
 options(nmtran_exe_path = "C:/nm741/tr/NMTRAN.exe")
 ```
 
-To download and configure the PMXcodelibrary, run:
+To download and configure the PMXcodelibrary, go to the R console and run:
 
 ```r
-library(NMproject)
 get_PMX_code_library("/path/to/desired/location", config_file="~/.Rprofile")
 ```
 This will have updated your `~/.Rprofile`.
