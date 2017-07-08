@@ -35,7 +35,7 @@ NONMEM, PsN, and Rstudio are required to be installed prior to these steps.
 
 ```R
 if(!require("devtools")) install.packages("devtools")
-install_github("tsahota/NMproject")
+devtools::install_github("tsahota/NMproject")
 ```
 Load the package with 
 
