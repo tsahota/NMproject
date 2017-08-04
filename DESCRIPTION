@@ -1,7 +1,7 @@
 Package: NMproject
 Type: Package
 Title: NONMEM interface in tidyproject
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: person("Tarj", "Sahota", email =
     "tarjinder.sahota@astrazeneca.com", role = c("aut", "cre"))
 Maintainer: Tarj Sahota <tarjinder.sahota@astrazeneca.com>
