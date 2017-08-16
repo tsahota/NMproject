@@ -761,9 +761,9 @@ ctl_out_files <- function(ctl_file){ ## will get vector of $TABLE file names fro
   dir0 <- dir(dirname(ctl_file))
 
   s0 <- rem_comment(readLines(ctl_file))
-  s <- grep("FILE *= *[A-Za-z0-9_\\-\\.]+",s0,value=TRUE)
-  table.files <- gsub(".*FILE *= *([A-Za-z0-9_\\-\\.]+) *.*$","\\1",s)
-  #table.files <- dir0[dir0%in%table.files]
+  s <- grep("FILE\\s*=\\s*(\\S+)",s0,value=TRUE)
+  table.files <- gsub(".*FILE\\s*=\\s*(\\S+)\\s*.*$","\\1", s)
+
 
   stub <- basename(ctl_file)
   stub <- gsub("(.+)\\.\\w+$","\\1",stub)
