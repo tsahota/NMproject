@@ -363,6 +363,17 @@ ctl <- function(r) {
       utils::file.edit(r$ctl)
 }
 
+#' Show lst file
+#'
+#' @param r object of class nm
+#' @export
+lst <- function(r) {
+  if(.Platform$OS.type=="windows")
+    file.show(r$output$psn.lst) else
+      if(exists("file.show")) file.show(r$output$psn.lst) else
+        utils::file.edit(r$output$psn.lst)
+}
+
 gsub2 <- function(pattern,replacement,x,...){
   match <- grepl(pattern,x,...)
   if(!match) return(character())
