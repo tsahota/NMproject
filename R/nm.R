@@ -326,7 +326,7 @@ nmdb_get <- function(readable=FALSE){
   },
   error=function(e) {
     if(DBI::dbIsValid(my_db)) DBI::dbDisconnect(my_db)
-    stop(e)
+    stop(paste(e,"\nruns.sqlite may be corrupted.\nConsider deleting and rebuilding"),call. = FALSE)
   })
 }
 
