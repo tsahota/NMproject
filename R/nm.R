@@ -404,14 +404,14 @@ get_run_id <- function(ctl_name){
 #' @export
 run <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait,
                 update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
-                initial_timeout=NA, quiet = TRUE){
+                initial_timeout=NA, quiet = .sso_env$quiet){
   UseMethod("run")
 }
 
 #' @export
 run.nm <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait,
                    update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
-                   initial_timeout=NA, quiet = TRUE){
+                   initial_timeout=NA, quiet = .sso_env$quiet){
   tidyproject::check_if_tidyproject()
   #if(!quiet & !wait) stop("quiet=FALSE requires wait=TRUE")
   rl <- list(...)
