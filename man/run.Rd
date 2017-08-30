@@ -6,7 +6,8 @@
 \usage{
 run(..., overwrite = .sso_env$run_overwrite, delete_dir = c(NA, TRUE,
   FALSE), wait = .sso_env$wait, update_db = TRUE, ignore.stdout = TRUE,
-  ignore.stderr = TRUE, initial_timeout = NA, quiet = .sso_env$quiet)
+  ignore.stderr = TRUE, initial_timeout = NA,
+  quiet = getOption("quiet_run"))
 }
 \arguments{
 \item{...}{objects of class nm}
