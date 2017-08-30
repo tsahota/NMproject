@@ -1,30 +1,30 @@
 ext2coef <- function(extout,file_name){
   ## raw function to generate parameter table from ext.file.
-  
+
   if(!requireNamespace("reshape2", quietly = TRUE))
     stop("reshape2 needed for this function to work. Please install it.",
          call. = FALSE)
-  
+
   d <- extout
-  
+
   d <- d[d$TYPE %in% c("FINAL","SE"),]
   d <- d[d$EST.NO %in% max(d$EST.NO), ]
-  
+
   d <- d[,c(names(d)[grepl("THETA|SIGMA|OMEGA",names(d))],
             c("OBJ","EST.NAME","EST.NO","EVALUATION","TYPE"))]
-  
+
   par.names <- names(d)[match("THETA1",names(d)):match("OBJ",names(d))]
-  
+
   d <- reshape2::melt(data = d, variable.name = "Parameter",
                       measure.vars = par.names)
-  d <- reshape2::dcast(data = d, 
+  d <- reshape2::dcast(data = d,
                        stats::as.formula(paste(paste(names(d)[!names(d) %in% c("TYPE","value")],collapse=" + "),
                                                "~ TYPE")),
                        value.var = "value")
-  
+
   d <- d[order(d$EST.NO,decreasing = TRUE),]
   d$file <- file_name
-  
+
   is.diag.omega <- grepl("OMEGA.([0-9]+\\.)\\1",d$Parameter)
   is.omega <- grepl("OMEGA.([0-9]+\\.)+",d$Parameter)
   is.off.diag.omega <- is.omega & !is.diag.omega
@@ -33,14 +33,14 @@ ext2coef <- function(extout,file_name){
   is.omega <- grepl("OMEGA.([0-9]+\\.)+",d$Parameter) ## redefine
   is.off.diag.omega <- is.omega & !is.diag.omega  ## redefine
   ## sort so that THETAs first, then diagonal OMEGAs, then off diag, then SIGMA, then OBJ
-  
+
   par.char <- as.character(d$Parameter)
   par.order <- c(sort(par.char[grepl("THETA",par.char)]),
                  sort(par.char[is.diag.omega]),
                  sort(par.char[is.off.diag.omega]),
                  sort(par.char[grepl("SIGMA",par.char)]),
                  "OBJ")
-  
+
   if(!identical(sort(par.order),sort(as.character(d$Parameter)))) stop("Bug in code. Debug.")
   d$Parameter <- factor(d$Parameter,levels=par.order)
   d$Type <- NA
@@ -53,6 +53,12 @@ ext2coef <- function(extout,file_name){
   d <- d[order(d$Type),]
   d$Unit <- NA
   d$SEUnit <- NA
+  if(!"SE" %in% names(d)) {
+    namesd <- names(d)
+    d$SE <- NA
+    final_pos <- grep("FINAL",namesd)
+    d <- d[,c(namesd[1:final_pos],"SE",namesd[(final_pos+1):length(namesd)])]
+  }
   d
 }
 
@@ -72,21 +78,21 @@ coef_ext0 <- function(ext.file){
 #' @export
 
 coef_nm <- function(object,trans,...){
-  
+
   d <- coef_ext0(object$output$psn.ext)
   d$file <- object$ctl
   if(!trans) return(d)
-  
+
   p <- object$param_info
-  
+
   p$Parameter <- paste0("THETA",p$N)
   ## TODO: read parameter names from $OMEGA
   ## either $OMEGA in same way as $THETA (but without units in comments)
   ## or $OMEGA BLOCK
-  
+
   d0 <- d[,names(d)[!names(d) %in% "Unit"]]
   d1 <- p[,c("Name","Parameter","Unit","trans")]
-  
+
   d <- merge(d0,d1,all.x = TRUE,by="Parameter")
   d$Name[is.na(d$Name)] <- as.character(d$Parameter)[is.na(d$Name)]
   d$Name <- factor(d$Name,levels=d$Name)
@@ -157,7 +163,7 @@ coef_nm <- function(object,trans,...){
   #   }
   #
   # }
-  
+
   ## get names back to what they should be
   d$FINAL <- d$FINAL.TRANS
   d$FINAL.TRANS <- NULL
@@ -170,12 +176,12 @@ coef_nm <- function(object,trans,...){
   d$Parameter <- d$Name
   d$Name <- NULL
   d
-  
+
 }
 
 #' @export
 coef.nm <- function(object,...){
-  
+
   trans_arg <- list(...)$trans
   if(is.null(trans_arg)) {
     trans <- TRUE
@@ -197,11 +203,11 @@ run_record0 <- function(..., coef.func = coef_ext0){
   d$Estimate[d$Parameter!="OBJ"] <- paste0(signif(d$FINAL[d$Parameter!="OBJ"],3)," (",signif(d$SE[d$Parameter!="OBJ"],3),d$SEUnit[d$Parameter!="OBJ"],")")
   d$Estimate[d$Parameter=="OBJ"] <- round(d$FINAL[d$Parameter=="OBJ"],3)
   d <- d[,names(d)[!names(d) %in% c("SE","FINAL")]]
-  d <- reshape2::dcast(data = d, 
+  d <- reshape2::dcast(data = d,
                        stats::as.formula(paste(paste(names(d)[!names(d) %in% c("file","Estimate")],collapse=" + "),
                                                "~ file")),
                        value.var = "Estimate")
-  
+
   d <- d[order(d$Type,d$Parameter),]
   d$SEUnit <- NULL
   d
@@ -217,7 +223,7 @@ run_record0 <- function(..., coef.func = coef_ext0){
 run_record <- function(...,trans=TRUE){
   a <- list(...)
   classes <- sapply(a,function(a) inherits(a,"nm"))
-  
+
   if(any(classes)){
     coef.func <- coef_nm
     formals(coef.func)$trans <- trans
@@ -226,7 +232,7 @@ run_record <- function(...,trans=TRUE){
   }
   run_record.tmp <- function(...) run_record0(...,coef.func=coef.func)
   do.call(run_record.tmp,a)
-  
+
 }
 
 run_summary <- function(r){
