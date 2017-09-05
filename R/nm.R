@@ -355,12 +355,29 @@ print.nm <- function(x,...) utils::str(x)
 
 #' Edit control file
 #'
-#' @param r object of class nm
+#' @param r object of class nm, a file name, or a run_id
 #' @export
 ctl <- function(r) {
+  if(inherits(r,"nm")) ctl_name <- r$ctl
+  if(inherits(r,"numeric") | inherits(r,"character")) {
+    r <- as.character(r)
+    rtemp <- normalizePath(r,mustWork = FALSE)
+    if(file.exists2(rtemp)) ctl_name <- rtemp else {
+      rtemp <- from_models(normalizePath(r,mustWork = FALSE))
+      if(file.exists2(rtemp)) ctl_name <- rtemp else {
+        rtemp <- from_models(paste0(getOption("model_file_stub"),r,".",getOption("model_file_extn")))
+        if(file.exists2(rtemp)) ctl_name <- rtemp
+      }
+    }
+  }
   if(.Platform$OS.type=="windows")
-    file.show(r$ctl) else
-      get("file.edit")(r$ctl)
+    file.show(ctl_name) else
+      get("file.edit")(ctl_name)
+}
+
+file.exists2 <- function(x){ ## only true is file exists and is not a directory
+  if(!file.exists(x)) return(FALSE)
+  !file.info(x)$isdir
 }
 
 #' Show lst file
