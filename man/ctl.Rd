@@ -7,7 +7,7 @@
 ctl(r)
 }
 \arguments{
-\item{r}{object of class nm}
+\item{r}{object of class nm, a file name, or a run_id}
 }
 \description{
 Edit control file
