@@ -17,6 +17,7 @@ ext2coef <- function(extout,file_name){
 
   d <- reshape2::melt(data = d, variable.name = "Parameter",
                       measure.vars = par.names)
+  if(!"Parameter" %in% names(d)) stop("melt has failed - could be due to reshape being loaded. reshape can interfere with reshape2")
   d <- reshape2::dcast(data = d,
                        stats::as.formula(paste(paste(names(d)[!names(d) %in% c("TYPE","value")],collapse=" + "),
                                                "~ TYPE")),
