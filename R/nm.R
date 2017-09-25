@@ -109,7 +109,6 @@ nm <- function(cmd,psn_command,
   matched_entry <- match_info$entry[match_info$match_type &
                                       match_info$match_run_in &
                                       match_info$match_ctl]
-
   overlapped_output_entries <-
     match_info$entry[match_info$overlap_outputs &
                        !(match_info$entry %in% matched_entry)]
@@ -121,11 +120,13 @@ nm <- function(cmd,psn_command,
   overlapped_output_entries <- unique(c(overlapped_output_entries,
                                         overlapped_run_dir_entries))
 
-  if(length(overlapped_output_entries)>0)
+  if(length(overlapped_output_entries)>0){
+    print(str(r$output))
     stop("Outputs overlap with entries: ",
          paste(overlapped_output_entries,collapse=","),
          "\nView runs with: show_runs()",
-         "\nDelete old runs with: delete_nm(entry)",call. = FALSE)
+         "\nDelete old runs with: delete_nm(entry)",call. = FALSE)    
+  }
 
   if(length(matched_entry)==0) {
     nmdb_add_entry(r)
@@ -899,6 +900,7 @@ nm_output <- function(r,read_fun=read.csv,...){
 
   ctl_content <- readLines(r$ctl)
   dol_data <- ctl_nm2r(ctl_content)$DATA
+  dol_data <- dol_data[!dol_data %in% ""]
 
   # dol_data <- "dsfslfdkj IGNORE=@ IGNORE=HI.GT.3"
   # dol_data <- "dsfslfdkj IGNORE=@ IGNORE=(HI.GT.3)"
