@@ -397,9 +397,12 @@ gsub2 <- function(pattern,replacement,x,...){
   gsub(pattern,replacement,x,...)
 }
 
+get_stub_name <- function(file_name) gsub("(.*)\\..*","\\1",file_name)
+
 get_run_id <- function(ctl_name){
-  match <- paste0("^.*",getOption("model_file_stub"),"(.*)\\..*$")
-  ans <- gsub2(match,"\\1",ctl_name)
+  stub_name <- get_stub_name(ctl_name)
+  match <- paste0("^.*",getOption("model_file_stub"),"(.*).*$")
+  ans <- gsub2(match,"\\1",stub_name)
   if(length(ans)==0) ans <- NA
   ans
 }
@@ -817,7 +820,7 @@ output_files <- function(run_in,run_type,run_dir,ctl_name){
   r <- list()
   if(run_type %in% "execute"){
     extn <- tools::file_ext(ctl_name)
-    r$lst <- gsub("^(.*\\.).*$","\\1lst",ctl_name)
+    r$lst <- paste0(get_stub_name(ctl_name),".lst")
     r$psn.mod <- file.path(run_dir,"NM_run1","psn.mod")
     r$psn.lst <- file.path(run_dir,"NM_run1","psn.lst")
     r$psn.ext <- file.path(run_dir,"NM_run1","psn.ext")
