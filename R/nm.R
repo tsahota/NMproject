@@ -125,7 +125,7 @@ nm <- function(cmd,psn_command,
     stop("Outputs overlap with entries: ",
          paste(overlapped_output_entries,collapse=","),
          "\nView runs with: show_runs()",
-         "\nDelete old runs with: delete_nm(entry)",call. = FALSE)    
+         "\nDelete old runs with: delete_nm(entry)",call. = FALSE)
   }
 
   if(length(matched_entry)==0) {
@@ -422,17 +422,18 @@ get_run_id <- function(ctl_name){
 #' @param initial_timeout numeric. time in seconds.
 #' time period to give up on a run if directory hasn't been created.
 #' @param quiet logical (default=FALSE). should system_nm output be piped to screen
+#' @param intern logical. intern arg to be passed to system
 #' @export
 run <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait,
                 update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
-                initial_timeout=NA, quiet = getOption("quiet_run")){
+                initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern")){
   UseMethod("run")
 }
 
 #' @export
 run.nm <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait,
                    update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
-                   initial_timeout=NA, quiet = getOption("quiet_run")){
+                   initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern")){
   tidyproject::check_if_tidyproject()
   #if(!quiet & !wait) stop("quiet=FALSE requires wait=TRUE")
   rl <- list(...)
@@ -447,9 +448,11 @@ run.nm <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FAL
       ignore.stdout = FALSE
       ignore.stderr = FALSE
     }
-    system_nm(cmd = r$cmd, dir = r$run_in, wait = wait_arg,
-              ignore.stdout = ignore.stdout, ignore.stderr = ignore.stderr)
     message(paste0("Running: ",r$type,":",r$ctl))
+    stdout0 <- system_nm(cmd = r$cmd, dir = r$run_in, wait = wait_arg,
+                         ignore.stdout = ignore.stdout, ignore.stderr = ignore.stderr, intern=intern)
+    if(intern) message(paste(stdout0,collapse = "/n"))
+
     if(update_db){
       matched_entry <- nmdb_match_entry(r)
       status_ob <- list(status="submitted",run_at=Sys.time())

@@ -79,6 +79,7 @@ set_nm_opts <- function(){
   })
   if(is.null(getOption("system_nm"))) options(system_nm=system_nm_default)
   if(is.null(getOption("quiet_run"))) options(quiet_run=TRUE)
+  if(is.null(getOption("intern"))) options(intern=FALSE)
 
   if(is.null(getOption("model_file_stub"))) options(model_file_stub="run")
   if(is.null(getOption("model_file_extn"))) options(model_file_extn="mod")
