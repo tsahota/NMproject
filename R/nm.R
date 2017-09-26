@@ -66,7 +66,7 @@ nm <- function(cmd,psn_command,
 
   if(is.null(r$ctl)){
     subcmd <- gsub(paste0("^.*(",r$type,".*)$"),"\\1",cmd)
-    matched_ctl <- gsub2(paste0("^.*(",getOption("model_file_stub"),"\\S+)\\s*.*$"),"\\1",cmd)
+    matched_ctl <- gsub2(paste0("^.*(",getOption("model_file_stub"),"\\S+",getOption("model_file_extn"),")\\s*.*$"),"\\1",subcmd)
     message(paste("inferring ctl file :",matched_ctl))
     r$ctl <- file.path(r$run_in,matched_ctl)
   }
