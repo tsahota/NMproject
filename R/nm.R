@@ -121,7 +121,7 @@ nm <- function(cmd,psn_command,
                                         overlapped_run_dir_entries))
 
   if(length(overlapped_output_entries)>0){
-    print(str(r$output))
+    print(utils::str(r$output))
     stop("Outputs overlap with entries: ",
          paste(overlapped_output_entries,collapse=","),
          "\nView runs with: show_runs()",
@@ -893,7 +893,7 @@ setup_nm_demo <- function(file_stub = paste0(getOption("model_file_stub"),1),
 #' @param ... additional arguments to pass on to read_fun
 #' @export
 
-nm_output <- function(r,read_fun=read.csv,...){
+nm_output <- function(r,read_fun=utils::read.csv,...){
 
   if(!requireNamespace("xpose4")) stop("require xpose4 to be installed")
   xpdb <- xpose4::xpose.data(r$run_id,directory=paste0(r$run_in,"/"))
