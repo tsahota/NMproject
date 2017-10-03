@@ -4,7 +4,7 @@
 \alias{nm_output}
 \title{Get NONMEM output tables}
 \usage{
-nm_output(r, read_fun = read.csv, ...)
+nm_output(r, read_fun = utils::read.csv, ...)
 }
 \arguments{
 \item{r}{data.frame.  object of class nm_execute}
