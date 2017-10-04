@@ -4,7 +4,10 @@
 \alias{interactive_mode}
 \title{Should run() work in interactive mode}
 \usage{
-interactive_mode()
+interactive_mode(value)
+}
+\arguments{
+\item{value}{logical. TRUE = use interactive mode. FALSE = use non-interactive mode}
 }
 \description{
 Should run() work in interactive mode

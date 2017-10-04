@@ -7,5 +7,5 @@
 non_interactive_mode()
 }
 \description{
-Should run() work in non interactive mode
+Depreciated
 }

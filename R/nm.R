@@ -741,18 +741,26 @@ overwrite_default <- function(x) .sso_env$run_overwrite <- x
 
 #' Should run() work in non interactive mode
 #'
+#' Depreciated
+#'
 #' @export
 non_interactive_mode <- function() {
-  overwrite_default(TRUE)
-  wait_default(TRUE)
+  .Deprecated("interactive_mode")
 }
 
 #' Should run() work in interactive mode
 #'
+#' @param value logical. TRUE = use interactive mode. FALSE = use non-interactive mode
 #' @export
-interactive_mode <- function() {
-  overwrite_default(FALSE)
-  wait_default(FALSE)
+interactive_mode <- function(value) {
+  if(missing(value)) stop("expecting TRUE/FALSE argument")
+  if(value){
+    overwrite_default(FALSE)
+    wait_default(FALSE)
+  } else {
+    overwrite_default(TRUE)
+    wait_default(TRUE)
+  }
 }
 
 #' @export
