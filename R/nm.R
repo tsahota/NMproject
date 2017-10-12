@@ -228,7 +228,7 @@ nmdb_match_info <- function(r,db=NULL){
   ans$match_ctl <- d$ctl %in% r$ctl
 
   dependent_run_dir <- sapply(d$run_dir,function(i)grepl(paste0("^",i,"$"),r$run_dir))
-  ans$dependent_run_dir <- dependent_run_dir & !ans$match_run_dir
+  ans$dependent_run_dir <- as.logical(dependent_run_dir) & !ans$match_run_dir
 
   overlap_outputs <- sapply(strsplit(d$output_files,","),function(out_filesi){
     length(intersect(out_filesi,unlist(r$output)))>0
