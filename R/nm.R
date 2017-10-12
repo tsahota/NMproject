@@ -233,7 +233,7 @@ nmdb_match_info <- function(r,db=NULL){
   overlap_outputs <- sapply(strsplit(d$output_files,","),function(out_filesi){
     length(intersect(out_filesi,unlist(r$output)))>0
   })
-  ans$overlap_outputs <- overlap_outputs
+  ans$overlap_outputs <- as.logical(overlap_outputs)
 
   ans <- as.data.frame(ans)
   return(ans)
