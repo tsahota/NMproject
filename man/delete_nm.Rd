@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm.R
 \name{delete_nm}
 \alias{delete_nm}
-\title{delete run from database}
+\title{Delete run from database}
 \usage{
 delete_nm(entry)
 }
@@ -10,5 +10,5 @@ delete_nm(entry)
 \item{entry}{numeric. entry name to delete}
 }
 \description{
-delete run from database
+Delete run from database
 }
