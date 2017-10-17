@@ -4,12 +4,14 @@
 \alias{nm_output}
 \title{Get NONMEM output tables}
 \usage{
-nm_output(r, read_fun = utils::read.csv, ...)
+nm_output(r, read_fun = utils::read.csv, dorig, ...)
 }
 \arguments{
 \item{r}{data.frame.  object of class nm_execute}
 
 \item{read_fun}{function (default = read.csv). Function to read in original NONMEM data}
+
+\item{dorig}{data.frame. optional NONMEM input dataset. if missing, will read in using read_fun}
 
 \item{...}{additional arguments to pass on to read_fun}
 }
