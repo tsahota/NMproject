@@ -1,4 +1,4 @@
-#' Make nm object
+#' Make object of class nm
 #'
 #' @param cmd character. system command to launch NONMEM (PsN)
 #' @param psn_command character. Name of PsN command (optional)
@@ -677,7 +677,6 @@ run_status <- function(r,db,entry,initial_timeout=NA){
 #' tests if job is finished
 #'
 #' @param status_ob output from run_status
-#' @export
 is_status_finished <- function(status_ob){
 
   finished <- FALSE
@@ -689,6 +688,17 @@ is_status_finished <- function(status_ob){
     finished <- length(sub_finished)>0 & all(sub_finished)
   }
   finished
+}
+
+#' tests if job is finished
+#'
+#' @param r object class nm
+#' @param initial_timeout numeric. time in seconds.
+#' time period to give up on a run if directory hasn't been created.
+#' @export
+is_finished <- function(r,initial_timeout=NA){
+  status_ob <- run_status(r,initial_timeout=initial_timeout)
+  is_status_finished(status_ob)
 }
 
 nm_steps_finished <- function(r){ # for waiting
@@ -898,25 +908,23 @@ setup_nm_demo <- function(file_stub = paste0(getOption("model_file_stub"),1),
 #'
 #' @param r data.frame.  object of class nm_execute
 #' @param read_fun function (default = read.csv). Function to read in original NONMEM data
+#' @param dorig data.frame. optional NONMEM input dataset. if missing, will read in using read_fun
 #' @param ... additional arguments to pass on to read_fun
 #' @export
-
-nm_output <- function(r,read_fun=utils::read.csv,...){
+nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
 
   if(!requireNamespace("xpose4")) stop("require xpose4 to be installed")
   xpdb <- xpose4::xpose.data(r$run_id,directory=paste0(r$run_in,"/"))
+  d <- xpdb@Data
 
-  if(!"na" %in% names(list)) dorig <- read_fun(from_models(r$input$data_name),na=".",...) else
-    dorig <- read_fun(from_models(r$input$data_name),...)
+  if(missing(dorig)){
+    if(!"na" %in% names(list)) dorig <- read_fun(from_models(r$input$data_name),na=".",...) else
+      dorig <- read_fun(from_models(r$input$data_name),...)
+  }
 
   ctl_content <- readLines(r$ctl)
   dol_data <- ctl_nm2r(ctl_content)$DATA
   dol_data <- dol_data[!dol_data %in% ""]
-
-  # dol_data <- "dsfslfdkj IGNORE=@ IGNORE=HI.GT.3"
-  # dol_data <- "dsfslfdkj IGNORE=@ IGNORE=(HI.GT.3)"
-  # dol_data <- "dsfslfdkj IGNORE=@ IGNORE=(HI.GT.3,sdfkj.LE.4)"
-  # dol_data <- "dsfslfdkj IGNORE=@ ACCEPT=(HI.GT.3,sdfkj.LE.4)"
 
   ignore_present <- grepl(".+IGNORE\\s*=\\s*\\S\\S",dol_data)
   accept_present <- grepl(".+ACCEPT\\s*=\\s*\\S\\S",dol_data)
@@ -925,7 +933,6 @@ nm_output <- function(r,read_fun=utils::read.csv,...){
   if(ignore_present & accept_present) stop("cannot identify ignore columns")
   if(ignore_present) type <- "IGNORE"
   if(accept_present) type <- "ACCEPT"
-
 
   filter_statements <- gsub(paste0(".*",type,"\\s*=\\s*\\(*(\\S[^\\)]+)\\)*.*"),"\\1",dol_data)
   filter_statements <- strsplit(filter_statements,",")[[1]]
@@ -944,15 +951,13 @@ nm_output <- function(r,read_fun=utils::read.csv,...){
   if("IGNORE" %in% type) dORD <- which(!with(dorig,eval(expre)))
   if("ACCEPT" %in% type) dORD <- which(with(dorig,eval(expre)))
 
-  if(length(dORD) != nrow(xpdb@Data)) stop("something wrong with IGNORE/ACCEPT. debug")
+  if(length(dORD) != nrow(d)) stop("something wrong with IGNORE/ACCEPT. debug")
 
-  if("PRKEY" %in% names(xpdb@Data)) stop("name conflict with PRKEY in xpose table. aborting...")
+  if("PRKEY" %in% names(d)) stop("name conflict with PRKEY in xpose table. aborting...")
   if("PRKEY" %in% names(dorig)) stop("name conflict with PRKEY in original data. aborting...")
 
-  xpdb@Data$PRKEY <- dORD
+  d$PRKEY <- dORD
   dorig$PRKEY <- 1:nrow(dorig)
-
-  d <- xpose4::Data(xpdb)
 
   d <- merge(dorig[,c(setdiff(names(dorig),names(d)),"PRKEY")],d)
 

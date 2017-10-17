@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm.R
 \name{nm}
 \alias{nm}
-\title{Make nm object}
+\title{Make object of class nm}
 \usage{
 nm(cmd, psn_command, shell_script_name, shell_script_extn = "sh", ctl_name,
   run_id, run_dir, run_in = getOption("models.dir"))
@@ -28,5 +28,5 @@ nm(cmd, psn_command, shell_script_name, shell_script_extn = "sh", ctl_name,
 object of class nm
 }
 \description{
-Make nm object
+Make object of class nm
 }
