@@ -159,7 +159,7 @@ union_write <- function (path, new_lines){
     writeLines(all, path)
 }
 
-#' delete run from database
+#' Delete run from database
 #' @param entry numeric. entry name to delete
 #' @export
 delete_nm <- function(entry){
