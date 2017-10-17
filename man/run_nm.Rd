@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm.R
 \name{run_nm}
 \alias{run_nm}
-\title{Access run.nm method}
+\title{Run run.nm method}
 \usage{
 run_nm(...)
 }
@@ -10,5 +10,5 @@ run_nm(...)
 \item{...}{objects of class nm and other args}
 }
 \description{
-Access run.nm method
+Run run.nm method
 }

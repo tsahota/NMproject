@@ -464,7 +464,7 @@ run.nm <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FAL
   invisible()
 }
 
-#' Access run.nm method
+#' Run run.nm method
 #' @param ... objects of class nm and other args
 #' @export
 run_nm <- function(...){
