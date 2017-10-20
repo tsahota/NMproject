@@ -113,26 +113,31 @@ nm <- function(cmd,psn_command,
     match_info$entry[match_info$overlap_outputs &
                        !(match_info$entry %in% matched_entry)]
 
+  overlapped_output_files <-
+    match_info$overlap_outputs_char[match_info$overlap_outputs &
+                                      !(match_info$entry %in% matched_entry)]
+
   overlapped_run_dir_entries <-
     match_info$entry[match_info$match_run_dir & match_info$match_run_in &
                        !(match_info$entry %in% matched_entry)]
 
-  overlapped_output_entries <- unique(c(overlapped_output_entries,
-                                        overlapped_run_dir_entries))
+  if(length(overlapped_run_dir_entries)>0)
+    stop("\nThis run has the same run_dir as entry: ",overlapped_run_dir_entries,
+         "\nFix command and try again",call. = FALSE)
 
   if(length(overlapped_output_entries)>0){
-    print(utils::str(r$output))
-    stop("Outputs overlap with entries: ",
-         paste(overlapped_output_entries,collapse=","),
-         "\nView runs with: show_runs()",
-         "\nDelete old runs with: delete_nm(entry)",call. = FALSE)
+    stop("\nThe following outputs would overwrite those from entry ",overlapped_output_entries,
+         ":\n    ",overlapped_output_files,
+         "\nFix control stream and try again",
+         "\n--View runs with: show_runs()",
+         "\n--Delete old runs with: delete_nm(entry)",call. = FALSE)
   }
 
   if(length(matched_entry)==0) {
     nmdb_add_entry(r)
   } else if(length(matched_entry)==1) {
     delete_nm(matched_entry)
-    message("Overwriting database entry: ",matched_entry)
+    message("Rewriting database entry: ",matched_entry)
     nmdb_add_entry(r,matched_entry,silent=TRUE)
   } else stop("Matched more than one database entry. Debug")
   union_write(".gitignore",getOption("nmproj_gitignore"))
@@ -214,11 +219,12 @@ nmdb_match_info <- function(r,db=NULL){
                       match_run_in=logical(),
                       match_run_dir=logical(),
                       match_ctl = logical(),
-                      overlap_outputs=logical()))
+                      overlap_outputs=logical(),
+                      overlap_outputs_char=character()))
 
   if(is.null(db)) d <- nmdb_get() else d <- db
 
-  dproposal <- nmdb_make_db_row(r)
+  #dproposal <- nmdb_make_db_row(r)
 
   ans <- list()
   ans$entry <- d$entry
@@ -233,7 +239,13 @@ nmdb_match_info <- function(r,db=NULL){
   overlap_outputs <- sapply(strsplit(d$output_files,","),function(out_filesi){
     length(intersect(out_filesi,unlist(r$output)))>0
   })
+
+  overlap_outputs_char <- sapply(strsplit(d$output_files,","),function(out_filesi){
+    paste(intersect(out_filesi,unlist(r$output)),collapse = ", ")
+  })
+
   ans$overlap_outputs <- as.logical(overlap_outputs)
+  ans$overlap_outputs_char <- overlap_outputs_char
 
   ans <- as.data.frame(ans)
   return(ans)
