@@ -56,6 +56,7 @@ and inserting the following option statement (adjusting the NONMEM installation 
 ```r
 options(nmtran_exe_path = "C:/nm741/tr/NMTRAN.exe")
 ```
+There are many other options one can customise depending on your infrastructure and preferences.
 
 To download and configure the PMXcodelibrary, go to the R console and run:
 
@@ -70,7 +71,7 @@ If you are running NONMEM and R on a desktop/laptop this should suffice.  For mo
 
 * NMprojects are directories where you can work on pharmacometric analysis.
 * First, set up a tidyproject with the `make_project("/path/to/project/dir"")`.
-   * See tutorial at https://github.com/tsahota/tidyproject to get started with tidyproject
+   * See tutorial at https://github.com/tsahota/tidyproject for more information
 * Open the NMproject with the File -> Open Project menu items. NOTE: always use Rstudio to open an NMproject, never just `setwd()` to the directory.  From here you can either do the demo, or read through the "Basic commands" section below.
 
 ### Demo
@@ -86,10 +87,6 @@ open `Scripts/theopp-demo.R` and step through the commands one by one.
 ### Basic commands
 
 View the code library:
-
-```r
-library(NMproject)
-```
 
 ```r
 code_library()
@@ -109,13 +106,13 @@ copy_control("NONMEM/ADVAN2.mod","run1.mod")
 
 NOTE: default behaviour is to enforce the `runXX.mod` naming convention for control streams.  e.g. `run1.mod`, `run1vpc.mod`, `run2.mod`.
 
-Set up a run log with:
+Get started with a model development by using the following template from the PMX code library:
 
 ```r
 copy_script("R/nm.log.R")
 ```
 
-To create NONMEM object (this will not run NONMEM yet), add the following to your script.
+The following command will create an object of class `nm` with information about the run. This will not run the command yet.
 
 ```r
 mod1 <- nm("execute run1.mod -dir=1")
@@ -123,15 +120,15 @@ mod1 <- nm("execute run1.mod -dir=1")
 
 NOTE: the `-dir` option must always be specified when using NMproject
 
-The `mod1` object here will contain information about the run.  If you have set up the `nmtran_exe_path` option configured (see FAQ below), you can do a quick test that your control stream and dataset pass NMTRAN checks:
+If you have set up the `nmtran_exe_path` option configured (see FAQ below), you can run a quick test that your control stream and dataset pass NMTRAN checks without running NONMEM via:
 
 ```r
 nm_tran(mod1)
 ```
 
-This is especially useful to do on a cluster submission system where a job may take a long time to start and come back with an error.
+This is especially useful to do on a cluster submission system where a job may take a while to come back with an error message.
 
-To run `mod1`:
+To run `mod1` use:
 
 ```r
 run(mod1)
@@ -156,16 +153,16 @@ gof_xpose(mod1)
 
 ### + I want to repeat my model development script, how do I do this?
 
-You need to make `run()` submit NONMEM jobs synchronously.  To do this:
+You need to make the `run()` function submit NONMEM jobs synchronously.  To do this:
 
 ```r
-non_interactive_mode()
+interactive_mode(FALSE)
 ```
 
 The `run()` function will now wait for each run to finish before moving onto the next R command.  To return to interactive mode (asynchronous NONMEM execution) run:
 
 ```r
-interactive_mode()
+interactive_mode(TRUE)
 ```
 
 ### + How can I queue multiple PsN jobs, forcing some to wait, and some not to.
@@ -186,7 +183,7 @@ future({run(mod1,wait=TRUE) ; run(mod1vpc,mod1sse)})
 
 ### + After having closed my session how to I recreate an nm object
 
-Just re-run the `nm()` statements again. The objects will be recreated.  Alternatively, if you know the database entry number use `extract_nm()`
+Just re-run the `nm()` statements again. The objects will be recreated.  Alternatively, if you know the database entry number you can use `extract_nm()`
 
 ### + I see the PMX code library has been updated, how can I update my local version of it?
 
