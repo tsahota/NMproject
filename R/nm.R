@@ -577,10 +577,26 @@ run_status <- function(r,db,entry,initial_timeout=NA){
   ## assume directory exists and there is something new
   ## get sub run info
 
-  execution_dirs <- dirname(dir(r$run_dir,
-                                pattern = "psn\\.mod$",
-                                recursive = TRUE,
-                                full.names = TRUE))
+  get_sub_dirs <- function(path){
+    ## only checks 1 level deep - good enough for boostrap/sse
+    contents <- dir(path,full.names = TRUE)
+    contents[file.info(contents)$isdir]
+  }
+
+  if(r$type %in% c("execute")){
+    execution_dirs <- get_sub_dirs(r$run_dir)
+  } else if(r$type %in% c("bootstrap","sse","vpc")){
+    ## assume relevant directories end in _dir[0-9]+
+    first_level <- get_sub_dirs(r$run_dir)
+    first_level <- first_level[grepl("_dir[0-9]+",first_level)]
+    execution_dirs <- sapply(first_level,get_sub_dirs)
+  } else { ## warning: this is slow, but will work for all psn run types
+    execution_dirs <- dirname(dir(r$run_dir,
+                                  pattern = "psn\\.mod$",
+                                  recursive = TRUE,
+                                  full.names = TRUE))
+  }
+  
   execution_dirs <- unique(execution_dirs)
 
   if(length(execution_dirs) == 0) {
