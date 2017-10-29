@@ -1,13 +1,14 @@
 read_ext0 <- function(ext.file){
   ## Raw function to read in and format an ext.file.
+  if(!file.exists(ext.file)) stop("ext file for run does not exist yet",call. = FALSE)
   s <- scan(ext.file,what="character",sep="\n",quiet = TRUE)
   tab.rows <- grep("TABLE",s)
   cut.points <- c(tab.rows,length(s)+1)
-  
+
   headings <- s[tab.rows]
   headings <- gsub("^TABLE NO.\\s+[0-9]+:\\s","",headings)
   headings <- gsub(": Goal.*","",headings)
-  
+
   dlist <- lapply(seq_along(tab.rows),function(i){
     if((cut.points[i] + 1)>(cut.points[i + 1] - 1)) return(data.frame())
     d <- s[(cut.points[i]+1):(cut.points[i+1]-1)]
@@ -35,7 +36,7 @@ read_ext0 <- function(ext.file){
 read_ext <- function(r,trans=FALSE){
   d <- read_ext0(r$output$psn.ext)
   if(!trans) return(d)
-  
+
   p_info <- param_info(r$output$psn.mod)
   ## combine d with p
   for(i in seq_len(nrow(p_info))){
