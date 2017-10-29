@@ -7,8 +7,13 @@ ext2coef <- function(extout,file_name){
 
   d <- extout
 
-  d <- d[d$TYPE %in% c("FINAL","SE"),]
-  d <- d[d$EST.NO %in% max(d$EST.NO), ]
+  has_final_est <- "FINAL" %in% d$TYPE
+  if(has_final_est){
+    d <- d[d$TYPE %in% c("FINAL","SE"),]
+    d <- d[d$EST.NO %in% max(d$EST.NO), ]
+  } else {
+    d <- tail(d,1)
+  }
 
   d <- d[,c(names(d)[grepl("THETA|SIGMA|OMEGA",names(d))],
             c("OBJ","EST.NAME","EST.NO","EVALUATION","TYPE"))]
@@ -23,13 +28,15 @@ ext2coef <- function(extout,file_name){
                                                "~ TYPE")),
                        value.var = "value")
 
+  if(!has_final_est) names(d)[names(d) %in% "ITER"] <- "FINAL"
+
   d <- d[order(d$EST.NO,decreasing = TRUE),]
   d$file <- file_name
 
   is.diag.omega <- grepl("OMEGA.([0-9]+\\.)\\1",d$Parameter)
   is.omega <- grepl("OMEGA.([0-9]+\\.)+",d$Parameter)
   is.off.diag.omega <- is.omega & !is.diag.omega
-  d <- d[!(is.off.diag.omega & d$FINAL %in% 0), ] ## get rid of off diag 0s
+  d <- d[!(is.off.diag.omega), ] ## get rid of off diag 0s
   is.diag.omega <- grepl("OMEGA.([0-9]+\\.)\\1",d$Parameter) ## redefine
   is.omega <- grepl("OMEGA.([0-9]+\\.)+",d$Parameter) ## redefine
   is.off.diag.omega <- is.omega & !is.diag.omega  ## redefine
@@ -41,7 +48,6 @@ ext2coef <- function(extout,file_name){
                  sort(par.char[is.off.diag.omega]),
                  sort(par.char[grepl("SIGMA",par.char)]),
                  "OBJ")
-
   if(!identical(sort(par.order),sort(as.character(d$Parameter)))) stop("Bug in code. Debug.")
   d$Parameter <- factor(d$Parameter,levels=par.order)
   d$Type <- NA
@@ -60,6 +66,7 @@ ext2coef <- function(extout,file_name){
     final_pos <- grep("FINAL",namesd)
     d <- d[,c(namesd[1:final_pos],"SE",namesd[(final_pos+1):length(namesd)])]
   }
+  d$is_final <- has_final_est
   d
 }
 
@@ -82,6 +89,8 @@ coef_nm <- function(object,trans,...){
 
   d <- coef_ext0(object$output$psn.ext)
   d$file <- object$ctl
+  if(!unique(d$is_final)) d$file <- paste0(d$file,"*")
+  d$is_final <- NULL
   if(!trans) return(d)
 
   p <- object$param_info
