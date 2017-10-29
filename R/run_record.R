@@ -263,7 +263,7 @@ run_summary <- function(r){
       lst_file <- readLines(r$output$psn.lst)
       last_lst_file <- lst_file[max(1,length(lst_file)-10):length(lst_file)]
       res$stop_time_reached <- any(grepl("Stop Time",last_lst_file))
-      objv_lines <- which(grepl("#OBJV",lst_file))
+      objv_lines <- suppressWarnings(which(grepl("#OBJV",lst_file)))
       if(length(objv_lines)==0) {
         res$ofv <- NA
       } else {
