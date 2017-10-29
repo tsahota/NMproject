@@ -2,15 +2,14 @@ library(shiny)
 library(shinydashboard)
 # Define UI for application that draws a histogram
 shinyUI( dashboardPage(skin = "blue",
-                       dashboardHeader(title = "Population analysis",titleWidth = 450),
-                       dashboardSidebar(width = 250,
+                       dashboardHeader(title = "NMproject",titleWidth = 450),
+                       dashboardSidebar(width = 150,
                                         sidebarMenu( id = "tabs",
                                       menuItem("Database", tabName = "SideB3", icon = icon("server")),
                                       menuItem("Monitor", tabName = "SideB4", icon = icon("television")),
                                       menuItem("Result table", tabName = "SideB5", icon = icon("tasks")),
-                                    
-                                      tags$hr(),
-                                      div(tags$img(src = "logo.png", width = "50%", height = "50%"), style = "text-align: center;")
+
+                                      tags$hr()
                          )
                        ),
                        dashboardBody(
@@ -18,7 +17,7 @@ shinyUI( dashboardPage(skin = "blue",
                            tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
                          ),
                          tabItems(
-                           
+
                            #List with models and text editor
                            tabItem(tabName = "SideB3", h2("Database"), #fluidRow()
                                    tabPanel(title = "database",
@@ -46,12 +45,12 @@ shinyUI( dashboardPage(skin = "blue",
                                                 actionButton("refresh_status","refresh"),br(),
                                                 tags$code(verbatimTextOutput("status")),br(),
                                                 tags$code(htmlOutput("tail_lst"))))),
-                             
+
                              uiOutput("distPlot")
-                             
+
                            ),
                            #tables with fitting results
-                           tabItem(tabName = "SideB5", h2("Result table"), 
+                           tabItem(tabName = "SideB5", h2("Result table"),
                                    fluidRow(
                                      column(3,wellPanel("Run(s) selected:",
                                                         tags$code(textOutput("results_select_warning")),
