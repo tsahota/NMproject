@@ -287,7 +287,7 @@ run_table <- function(){
   res <- lapply(res,run_summary)
   res <- do.call(rbind,res)
   res <- cbind(data.frame(entry=d$entry),res)
-  d <- merge(d,res)
+  d <- plyr::join(d,res)
   nmdb_printable_db(d)
 }
 

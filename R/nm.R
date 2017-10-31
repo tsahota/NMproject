@@ -102,6 +102,8 @@ nm <- function(cmd,psn_command,
   if(r$type %in% "execute") r$param_info <- param_info(r$ctl)
 
   r$description <- tidyproject::get_script_field(r$ctl,"Description")
+  r$parent <- tidyproject::get_script_field(r$ctl,"Based on")
+  r$node <- 0
 
   ####
 
@@ -256,6 +258,8 @@ nmdb_make_db_row <- function(r,add_cols=list()){
   if(r$type %in% "execute") r$input$data <- NULL
   d <- data.frame(object=I(list(serialize(r,NULL))),
                   ctl = r$ctl,
+                  parent = r$parent,
+                  node = r$node,
                   description=r$description,
                   type=r$type,
                   input_files=paste(unlist(r$input),collapse=","),
@@ -334,7 +338,18 @@ nmdb_get <- function(readable=FALSE){
     d <- DBI::dbGetQuery(my_db, 'SELECT * FROM runs')
     if(readable) d <- nmdb_printable_db(d)
     DBI::dbDisconnect(my_db)
-    d <- d[order(d$entry),]
+  
+    d$order_list <- c(1:nrow(d))
+    
+    for (i in 1:nrow(d)){
+      if(d$parent[i] %in% d$ctl) {
+        d$order_list[i] <- subset(d,ctl == d$parent[i])$order_list
+        d$node[i]<-subset(d,ctl == d$parent[i])$node + 1
+      }
+    }
+    d <- d[order(d$order_list),]
+    d <- d[,-which(names(d) %in% c("order_list"))] 
+   
     return(d)
   },
   error=function(e) {
