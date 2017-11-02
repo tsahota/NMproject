@@ -320,7 +320,7 @@ nmdb_add_entry <- function(r,entry=NULL,silent=FALSE,...){
     if(!silent) message("Creating database entry: ",new_entry)
     DBI::dbWriteTable(my_db, "runs", dnew, append=TRUE)
     DBI::dbDisconnect(my_db)
-    invisible()
+    invisible(new_entry)
   },
   error=function(e){
     if(DBI::dbIsValid(my_db)) DBI::dbDisconnect(my_db)
