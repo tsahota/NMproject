@@ -93,7 +93,9 @@ nm <- function(cmd,psn_command,
   ## class for execute runs
   class(r) <- c(paste0("nm",r$type),class(r))
 
-  r$input <- input_files(run_type = r$type,ctl_name = r$ctl)
+  r$input <- input_files(run_in = r$run_in,
+                         run_type = r$type,
+                         ctl_name = r$ctl)
   r$output <- output_files(run_in = r$run_in,
                            run_type = r$type,
                            run_dir = r$run_dir,
@@ -285,9 +287,8 @@ nmdb_printable_db <- function(d){
   d$stop_time_reached <- NULL
   d$run_status <- NULL
   d$run_status_ob <- NULL
-  d$input_files[!d$input_files %in% d$ctl]
   d$input_files <- lapply(strsplit(d$input_files,","),function(char_vec){
-    paste(basename(char_vec),collapse=" ")
+    paste(unique(basename(char_vec)),collapse=" ")
   })
   d$run_in <- NULL
   ## include if statements for columns no in the db
@@ -596,7 +597,7 @@ run_status <- function(r,db,entry,initial_timeout=NA){
                                   recursive = TRUE,
                                   full.names = TRUE))
   }
-  
+
   execution_dirs <- unique(execution_dirs)
 
   if(length(execution_dirs) == 0) {
@@ -857,11 +858,12 @@ ctl_out_files <- function(ctl_file){ ## will get vector of $TABLE file names fro
   out.files
 }
 
-input_files <- function(run_type,ctl_name){
+input_files <- function(run_in,run_type,ctl_name){
   r <- list()
   r$ctl <- ctl_name
   if(run_type %in% "execute"){
     r$data_name <- data_name(ctl_name)
+    r$data_loc <- file.path(run_in,r$data_name)
   }
   return(r)
 }
@@ -946,8 +948,9 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
   d <- xpdb@Data
 
   if(missing(dorig)){
-    if(!"na" %in% names(list)) dorig <- read_fun(from_models(r$input$data_name),na=".",...) else
-      dorig <- read_fun(from_models(r$input$data_name),...)
+    data_loc <- file.path(r$run_in,r$input$data_name)
+    if(!"na" %in% names(list)) dorig <- read_fun(data_loc,na=".",...) else
+      dorig <- read_fun(data_loc,...)
   }
 
   ctl_content <- readLines(r$ctl)
