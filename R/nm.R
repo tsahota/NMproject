@@ -964,25 +964,30 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
   if(ignore_present & accept_present) stop("cannot identify ignore columns")
   if(ignore_present) type <- "IGNORE"
   if(accept_present) type <- "ACCEPT"
+  no_filter <- is.na(type)
 
-  filter_statements <- gsub(paste0(".*",type,"\\s*=\\s*\\(*(\\S[^\\)]+)\\)*.*"),"\\1",dol_data)
-  filter_statements <- strsplit(filter_statements,",")[[1]]
-  filter_statements <- gsub("\\.EQ\\.","==",filter_statements)
-  filter_statements <- gsub("\\.NE\\.","!=",filter_statements)
-  filter_statements <- gsub("\\.EQN\\.","==",filter_statements)
-  filter_statements <- gsub("\\.NEN\\.","!=",filter_statements)
-  filter_statements <- gsub("\\./E\\.","!=",filter_statements)
-  filter_statements <- gsub("\\.GT\\.",">",filter_statements)
-  filter_statements <- gsub("\\.LT\\.","<",filter_statements)
-  filter_statements <- gsub("\\.GE\\.",">=",filter_statements)
-  filter_statements <- gsub("\\.LE\\.","<=",filter_statements)
-  filter_statements <- paste(filter_statements, collapse= " & ")
+  if(!no_filter){
+    filter_statements <- paste0(".*",type,"\\s*=\\s*\\(*(\\S[^\\)]+)\\)*.*")
+    filter_statements <- gsub(filter_statements,"\\1",dol_data)
+    filter_statements <- strsplit(filter_statements,",")[[1]]
+    filter_statements <- gsub("\\.EQ\\.","==",filter_statements)
+    filter_statements <- gsub("\\.NE\\.","!=",filter_statements)
+    filter_statements <- gsub("\\.EQN\\.","==",filter_statements)
+    filter_statements <- gsub("\\.NEN\\.","!=",filter_statements)
+    filter_statements <- gsub("\\./E\\.","!=",filter_statements)
+    filter_statements <- gsub("\\.GT\\.",">",filter_statements)
+    filter_statements <- gsub("\\.LT\\.","<",filter_statements)
+    filter_statements <- gsub("\\.GE\\.",">=",filter_statements)
+    filter_statements <- gsub("\\.LE\\.","<=",filter_statements)
+    filter_statements <- paste(filter_statements, collapse= " & ")
 
-  expre <- parse(text=filter_statements)
-  if("IGNORE" %in% type) dORD <- which(!with(dorig,eval(expre)))
-  if("ACCEPT" %in% type) dORD <- which(with(dorig,eval(expre)))
-
-  if(length(dORD) != nrow(d)) stop("something wrong with IGNORE/ACCEPT. debug")
+    expre <- parse(text=filter_statements)
+    if("IGNORE" %in% type) dORD <- which(!with(dorig,eval(expre)))
+    if("ACCEPT" %in% type) dORD <- which(with(dorig,eval(expre)))
+    if(length(dORD) != nrow(d)) stop("something wrong with IGNORE/ACCEPT. debug")
+  } else {
+    dORD <- seq_len(nrow(dorig))
+  }
 
   if("PRKEY" %in% names(d)) stop("name conflict with PRKEY in xpose table. aborting...")
   if("PRKEY" %in% names(dorig)) stop("name conflict with PRKEY in original data. aborting...")
@@ -991,9 +996,12 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
   dorig$PRKEY <- 1:nrow(dorig)
 
   d$INNONMEM <- TRUE
+  
+  dorig <- dorig[,c(setdiff(names(dorig),names(d)),"PRKEY")]
 
-  d <- merge(dorig[,c(setdiff(names(dorig),names(d)),"PRKEY")],d,all.x=TRUE)
+  d2 <- merge(dorig,d,all.x = TRUE)
+  if(nrow(d2) != nrow(dorig)) stop("merge went wrong. debug")
 
-  return(d)
+  return(d2)
 }
 
