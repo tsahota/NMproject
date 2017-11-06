@@ -957,8 +957,8 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
   dol_data <- ctl_nm2r(ctl_content)$DATA
   dol_data <- dol_data[!dol_data %in% ""]
 
-  ignore_present <- grepl(".+IGNORE\\s*=\\s*\\S\\S",dol_data)
-  accept_present <- grepl(".+ACCEPT\\s*=\\s*\\S\\S",dol_data)
+  ignore_present <- any(grepl(".+IGNORE\\s*=\\s*\\S\\S",dol_data))
+  accept_present <- any(grepl(".+ACCEPT\\s*=\\s*\\S\\S",dol_data))
 
   type <- NA
   if(ignore_present & accept_present) stop("cannot identify ignore columns")
@@ -996,7 +996,7 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
   dorig$PRKEY <- 1:nrow(dorig)
 
   d$INNONMEM <- TRUE
-  
+
   dorig <- dorig[,c(setdiff(names(dorig),names(d)),"PRKEY")]
 
   d2 <- merge(dorig,d,all.x = TRUE)
