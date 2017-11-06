@@ -86,6 +86,17 @@ set_nm_opts <- function(){
   if(is.null(getOption("available_nm_types")))
     options(available_nm_types = c("SIZES","PROB","INPUT","DATA","SUB","MODEL","PK","DES","PRED","ERROR",
                                    "THETA","OMEGA","SIGMA","EST","SIM","COV","TABLE"))
+  if(is.null(getOption("nmproj_gitignore"))) options(nmproj_gitignore=c("Models/*tab*",
+                                                                        "Models/*.phi",
+                                                                        "Models/*.ext",
+                                                                        "Models/*.cov",
+                                                                        "Models/*.coi",
+                                                                        "Models/*.cov",
+                                                                        "Models/*.cor",
+                                                                        "Models/*.lst",
+                                                                        "Models/*/",
+                                                                        "Models/parafile*",
+                                                                        "Results"))
 }
 
 #' default system_nm
