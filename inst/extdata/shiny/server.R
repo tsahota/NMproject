@@ -2,12 +2,13 @@ library(shiny)
 library(dygraphs)
 
 .currentwd <- get(".currentwd", envir = NMproject:::.sso_env)
+.db_name <- get(".db_name", envir = NMproject:::.sso_env)
 
 options(warn =-1)
 
 gen_run_table <- function(){
   orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-  run_table()
+  run_table(.db_name)
 }
 
 get_plot_bootstrapjs_div <- function(plot_object_list) {
@@ -56,7 +57,7 @@ function(input, output, session) {
   objects <- eventReactive(input$run_table_rows_selected,{
     orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
     row <- input$run_table_rows_selected
-    lapply(new_table()$entry[row],extract_nm)
+    lapply(new_table()$entry[row],function(...)extract_nm(...,.db_name))
   })
 
   output$runs_selected_info <- renderTable({

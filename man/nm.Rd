@@ -5,7 +5,8 @@
 \title{Make object of class nm}
 \usage{
 nm(cmd, psn_command, shell_script_name, shell_script_extn = "sh", ctl_name,
-  run_id, run_dir, run_in = getOption("models.dir"))
+  run_id, run_dir, run_in = getOption("models.dir"),
+  db_name = "runs.sqlite")
 }
 \arguments{
 \item{cmd}{character. system command to launch NONMEM (PsN)}
@@ -23,6 +24,8 @@ nm(cmd, psn_command, shell_script_name, shell_script_extn = "sh", ctl_name,
 \item{run_dir}{character or numeric. Run directory (optional)}
 
 \item{run_in}{character. Directory to execute. Default = getOption("models.dir")}
+
+\item{db_name}{character. Name of db}
 }
 \value{
 object of class nm

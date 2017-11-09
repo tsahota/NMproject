@@ -4,9 +4,11 @@
 \alias{delete_nm}
 \title{Delete run from database}
 \usage{
-delete_nm(entry)
+delete_nm(db_name = "runs.sqlite", entry)
 }
 \arguments{
+\item{db_name}{character. Name of db}
+
 \item{entry}{numeric. entry name to delete}
 }
 \description{

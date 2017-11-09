@@ -4,10 +4,12 @@
 \alias{extract_nm}
 \title{Extract nm object from data.base}
 \usage{
-extract_nm(entry)
+extract_nm(entry, db_name = "runs.sqlite")
 }
 \arguments{
 \item{entry}{numeric. Database ID of nm object}
+
+\item{db_name}{character. Name of db}
 }
 \description{
 Extract nm object from data.base

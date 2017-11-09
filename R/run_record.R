@@ -279,10 +279,10 @@ run_summary <- function(r){
 }
 
 #' Generate table of runs
-
+#' @param db_name character. Name of db
 #' @export
-run_table <- function(){
-  d <- nmdb_get()
+run_table <- function(db_name = "runs.sqlite"){
+  d <- nmdb_get(db_name)
   res <- lapply(d$object,unserialize,refhook=NULL)
   res <- lapply(res,run_summary)
   res <- do.call(rbind,res)
