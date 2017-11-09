@@ -450,14 +450,14 @@ get_run_id <- function(ctl_name){
 #' @param quiet logical (default=FALSE). should system_nm output be piped to screen
 #' @param intern logical. intern arg to be passed to system
 #' @export
-run <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait,
+run <- function(...,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
                 update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
                 initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern")){
   UseMethod("run")
 }
 
 #' @export
-run.nm <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FALSE),wait=.sso_env$wait,
+run.nm <- function(...,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
                    update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
                    initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern")){
   tidyproject::check_if_tidyproject()

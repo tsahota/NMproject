@@ -101,6 +101,10 @@ set_nm_opts <- function(){
 
   if(is.null(getOption("nmproj_gitignore"))) options(nmproj_gitignore=c(models.ignore,
                                                                         "Results"))
+
+  if(is.null(getOption("run_overwrite"))) options(run_overwrite=FALSE)
+  if(is.null(getOption("wait"))) options(wait=FALSE)
+
 }
 
 #' default system_nm
