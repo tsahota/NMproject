@@ -4,9 +4,9 @@
 \alias{run}
 \title{Run NONMEM}
 \usage{
-run(..., overwrite = .sso_env$run_overwrite, delete_dir = c(NA, TRUE,
-  FALSE), wait = .sso_env$wait, update_db = TRUE, ignore.stdout = TRUE,
-  ignore.stderr = TRUE, initial_timeout = NA,
+run(..., overwrite = getOption("run_overwrite"), delete_dir = c(NA, TRUE,
+  FALSE), wait = getOption("wait"), update_db = TRUE,
+  ignore.stdout = TRUE, ignore.stderr = TRUE, initial_timeout = NA,
   quiet = getOption("quiet_run"), intern = getOption("intern"))
 }
 \arguments{
