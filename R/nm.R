@@ -220,6 +220,18 @@ get_char_field <- function(db_name="runs.sqlite",entry,field){
   d[d$entry %in% entry,][[field]]
 }
 
+#' Get job information (if it exists)
+#'
+#' Requires 'get_job_info' to be defined as an option - function that takes stdout console output
+#' from a job and returns a character
+#'
+#' @param r object class nm
+#' @export
+job_info <- function(r){
+  matched_entry <- nmdb_match_entry(r)
+  get_char_field(r$db_name,matched_entry,"job_info")
+}
+
 nmdb_match_info <- function(r,db=NULL){
   if(!file.exists(get_db_name(r)))
     return(data.frame(entry=numeric(),
@@ -271,7 +283,7 @@ nmdb_make_db_row <- function(r,add_cols=list()){
                   run_in=r$run_in,
                   run_dir=r$run_dir,
                   cmd = r$cmd,
-                  job_id = as.character(NA))
+                  job_info = as.character(NA))
   if(file.exists(r$run_dir))
     d$run_status <- "dir exists" else
       d$run_status <- "not run"
@@ -477,13 +489,18 @@ run.nm <- function(...,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE
     message(paste0("Running: ",r$type,":",r$ctl))
     stdout0 <- system_nm(cmd = r$cmd, dir = r$run_in, wait = wait_arg,
                          ignore.stdout = ignore.stdout, ignore.stderr = ignore.stderr, intern=intern)
-    if(intern) cat(stdout0,sep = "\n")
+    if(intern) {
+      cat(stdout0,sep = "\n")
+      job_info <- getOption("get_job_info")(stdout0)
+      if(is.null(job_info)) job_info <- NA
+    } else job_info <- NA
 
     if(update_db){
       matched_entry <- nmdb_match_entry(r)
-      status_ob <- list(status="submitted",run_at=Sys.time())
+      status_ob <- list(status="submitted",run_at=Sys.time(),job_info=job_info)
       update_object_field(get_db_name(r),matched_entry,run_status_ob=status_ob)
       update_char_field(get_db_name(r),matched_entry,run_status=status_ob$status)
+      update_char_field(get_db_name(r),matched_entry,job_info=job_info)
     }
   })
   if(wait) wait_for_finished(...,initial_timeout=initial_timeout)
