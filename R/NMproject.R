@@ -301,8 +301,9 @@ update_dollar_data <- function(ctl_name,new_data_name){
 }
 
 #' Shiny view of NMproject
+#' @param db_name character. Name of db
 #' @export
-shiny_nm <- function(){
+shiny_nm <- function(db_name="runs.sqlite"){
   if(!requireNamespace("DT", quietly = TRUE))
     stop("DT needed for this function to work. Please install it.",
          call. = FALSE)
@@ -313,7 +314,11 @@ shiny_nm <- function(){
   DT::datatable
   shiny_dir <- system.file("extdata/shiny",package="NMproject")
   .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env
-  on.exit(.sso_env$.currentwd <- NULL, add = TRUE)
+  .sso_env$.db_name <- db_name  # see zzz.R for .sso_env
+  on.exit({
+    .sso_env$.currentwd <- NULL
+    .sso_env$.db_name <- NULL
+  }, add = TRUE)
   shiny::runApp(shiny_dir,launch.browser = TRUE)
 }
 

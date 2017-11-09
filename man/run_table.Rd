@@ -4,7 +4,10 @@
 \alias{run_table}
 \title{Generate table of runs}
 \usage{
-run_table()
+run_table(db_name = "runs.sqlite")
+}
+\arguments{
+\item{db_name}{character. Name of db}
 }
 \description{
 Generate table of runs

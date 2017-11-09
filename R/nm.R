@@ -8,16 +8,19 @@
 #' @param run_id character or numeric. Run identifier (optional)
 #' @param run_dir character or numeric. Run directory (optional)
 #' @param run_in character. Directory to execute. Default = getOption("models.dir")
+#' @param db_name character. Name of db
 #' @return object of class nm
 #' @export
 nm <- function(cmd,psn_command,
                shell_script_name,shell_script_extn="sh",
                ctl_name,run_id,run_dir,
-               run_in=getOption("models.dir")){
+               run_in=getOption("models.dir"),
+               db_name = "runs.sqlite"){
   tidyproject::check_if_tidyproject()
   r <- list()
   class(r) <- "nm"
 
+  r$db_name <- db_name
   if(is.null(run_in)) run_in <- "."
   r$run_in <- run_in
   r$cmd <- cmd
@@ -138,7 +141,7 @@ nm <- function(cmd,psn_command,
   if(length(matched_entry)==0) {
     nmdb_add_entry(r)
   } else if(length(matched_entry)==1) {
-    delete_nm(matched_entry)
+    delete_nm(db_name,matched_entry)
     message("Rewriting database entry: ",matched_entry)
     nmdb_add_entry(r,matched_entry,silent=TRUE)
   } else stop("Matched more than one database entry. Debug")
@@ -167,18 +170,21 @@ union_write <- function (path, new_lines){
 }
 
 #' Delete run from database
+#'
+#' @param db_name character. Name of db
 #' @param entry numeric. entry name to delete
+#'
 #' @export
-delete_nm <- function(entry){
+delete_nm <- function(db_name = "runs.sqlite",entry){
   query <- paste('DELETE FROM runs WHERE entry ==',entry)
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), db_name)
   DBI::dbExecute(my_db, query)
   DBI::dbDisconnect(my_db)
 }
 
-update_object_field <- function(entry,...){
+update_object_field <- function(db_name = "runs.sqlite",entry,...){
   args <- list(...)
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), db_name)
   d <- DBI::dbGetQuery(my_db, 'SELECT * FROM runs')
 
   for(i in seq_along(args)){
@@ -191,18 +197,18 @@ update_object_field <- function(entry,...){
   DBI::dbDisconnect(my_db)
 }
 
-get_object_field <- function(entry,field){
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
+get_object_field <- function(db_name = "runs.sqlite",entry,field){
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), db_name)
   d <- DBI::dbGetQuery(my_db, paste('SELECT * FROM runs WHERE entry ==',entry))
   DBI::dbDisconnect(my_db)
   unserialize(d[d$entry %in% entry,][[field]][[1]])
 }
 
-update_char_field <- function(entry,...){
+update_char_field <- function(db_name="runs.sqlite",entry,...){
   args <- list(...)
   repl <- paste(paste0(names(args)," = '",args,"'"),collapse = ", ")
   query <- paste("UPDATE runs SET",repl,"WHERE entry ==",entry)
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), db_name)
   DBI::dbExecute(my_db, query)
   DBI::dbDisconnect(my_db)
 }
@@ -215,7 +221,7 @@ get_char_field <- function(entry,field){
 }
 
 nmdb_match_info <- function(r,db=NULL){
-  if(!file.exists("runs.sqlite"))
+  if(!file.exists(get_db_name(r)))
     return(data.frame(entry=numeric(),
                       match_type=logical(),
                       match_run_in=logical(),
@@ -224,7 +230,7 @@ nmdb_match_info <- function(r,db=NULL){
                       overlap_outputs=logical(),
                       overlap_outputs_char=character()))
 
-  if(is.null(db)) d <- nmdb_get() else d <- db
+  if(is.null(db)) d <- nmdb_get(get_db_name(r)) else d <- db
 
   #dproposal <- nmdb_make_db_row(r)
 
@@ -264,7 +270,8 @@ nmdb_make_db_row <- function(r,add_cols=list()){
                   output_files=paste(unlist(r$output),collapse=","),
                   run_in=r$run_in,
                   run_dir=r$run_dir,
-                  cmd = r$cmd)
+                  cmd = r$cmd,
+                  job_id = as.character(NA))
   if(file.exists(r$run_dir))
     d$run_status <- "dir exists" else
       d$run_status <- "not run"
@@ -300,9 +307,9 @@ nmdb_printable_db <- function(d){
 }
 
 nmdb_add_entry <- function(r,entry=NULL,silent=FALSE,...){
-  new_db_flag <- !file.exists("runs.sqlite")
+  new_db_flag <- !file.exists(get_db_name(r))
   dnew <- nmdb_make_db_row(r,...)
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), get_db_name(r))
   tryCatch({
     if(new_db_flag) {
       dempty <- dnew[c(),]
@@ -324,13 +331,13 @@ nmdb_add_entry <- function(r,entry=NULL,silent=FALSE,...){
   },
   error=function(e){
     if(DBI::dbIsValid(my_db)) DBI::dbDisconnect(my_db)
-    if(new_db_flag) unlink("runs.sqlite",force = TRUE)
+    if(new_db_flag) unlink(get_db_name(r),force = TRUE)
     stop(e)
   })
 }
 
-nmdb_get <- function(readable=FALSE){
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
+nmdb_get <- function(db_name="runs.sqlite",readable=FALSE){
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), db_name)
   tryCatch({
     d <- DBI::dbGetQuery(my_db, 'SELECT * FROM runs')
     if(readable) d <- nmdb_printable_db(d)
@@ -340,22 +347,28 @@ nmdb_get <- function(readable=FALSE){
   },
   error=function(e) {
     if(DBI::dbIsValid(my_db)) DBI::dbDisconnect(my_db)
-    stop(paste(e,"\nruns.sqlite may be corrupted.\nConsider deleting and rebuilding"),call. = FALSE)
+    stop(paste0(e,"\n",db_name," may be corrupted.\nConsider deleting and rebuilding"),call. = FALSE)
   })
+}
+
+get_db_name <- function(r){
+  if(is.null(r$db_name)) return("runs.sqlite") else return(r$db_name)
 }
 
 #' Show table of runs in database
 #'
+#' @param db_name character. Name of db
 #' @param ... arguments to pass to nmdb_get
 #' @export
-show_runs <- function(...) nmdb_get(readable = TRUE,...)
+show_runs <- function(db_name="runs.sqlite",...) nmdb_get(db_name=db_name,readable = TRUE,...)
 
 #' Extract nm object from data.base
 #' @param entry numeric. Database ID of nm object
+#' @param db_name character. Name of db
 #' @export
 
-extract_nm <- function(entry){
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
+extract_nm <- function(entry,db_name="runs.sqlite"){
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), db_name)
   d <- DBI::dbGetQuery(my_db, paste('SELECT * FROM runs WHERE entry ==',entry))
   DBI::dbDisconnect(my_db)
   if(nrow(d)>1) stop("More than one entry found",call. = FALSE)
@@ -464,13 +477,13 @@ run.nm <- function(...,overwrite=.sso_env$run_overwrite,delete_dir=c(NA,TRUE,FAL
     message(paste0("Running: ",r$type,":",r$ctl))
     stdout0 <- system_nm(cmd = r$cmd, dir = r$run_in, wait = wait_arg,
                          ignore.stdout = ignore.stdout, ignore.stderr = ignore.stderr, intern=intern)
-    if(intern) message(paste(stdout0,collapse = "/n"))
+    if(intern) cat(stdout0,sep = "\n")
 
     if(update_db){
       matched_entry <- nmdb_match_entry(r)
       status_ob <- list(status="submitted",run_at=Sys.time())
-      update_object_field(matched_entry,run_status_ob=status_ob)
-      update_char_field(matched_entry,run_status=status_ob$status)
+      update_object_field(get_db_name(r),matched_entry,run_status_ob=status_ob)
+      update_char_field(get_db_name(r),matched_entry,run_status=status_ob$status)
     }
   })
   if(wait) wait_for_finished(...,initial_timeout=initial_timeout)
@@ -541,10 +554,10 @@ run_status <- function(r,db,entry,initial_timeout=NA){
   ##    else
   ##       check all directories
 
-  if(missing(db)) db <- nmdb_get()
+  if(missing(db)) db <- nmdb_get(get_db_name(r))
   if(missing(entry)) matched_entry <- nmdb_match_entry(r,db = db) else
     matched_entry <- entry
-  status_ob_prev <- get_object_field(matched_entry,"run_status_ob")
+  status_ob_prev <- get_object_field(get_db_name(r),matched_entry,"run_status_ob")
   status_ob <- list()
 
   if(!file.exists(r$run_dir)) {
@@ -561,16 +574,16 @@ run_status <- function(r,db,entry,initial_timeout=NA){
       if(test_timeout) {
         status_ob <- status_ob_prev
         status_ob$status <- "error"
-        update_object_field(matched_entry,run_status_ob=status_ob)
-        update_char_field(matched_entry,run_status=status_ob$status)
+        update_object_field(get_db_name(r),matched_entry,run_status_ob=status_ob)
+        update_char_field(get_db_name(r),matched_entry,run_status=status_ob$status)
         return(status_ob)
       } else {
         return(status_ob_prev)
       }
     }
     status_ob$status <- "not run"
-    update_object_field(matched_entry,run_status_ob=status_ob)
-    update_char_field(matched_entry,run_status=status_ob$status)
+    update_object_field(get_db_name(r),matched_entry,run_status_ob=status_ob)
+    update_char_field(get_db_name(r),matched_entry,run_status=status_ob$status)
     return(status_ob)
   }
 
@@ -614,8 +627,8 @@ run_status <- function(r,db,entry,initial_timeout=NA){
       if(test_timeout) {
         status_ob <- status_ob_prev
         status_ob$status <- "error"
-        update_object_field(matched_entry,run_status_ob=status_ob)
-        update_char_field(matched_entry,run_status=status_ob$status)
+        update_object_field(get_db_name(r),matched_entry,run_status_ob=status_ob)
+        update_char_field(get_db_name(r),matched_entry,run_status=status_ob$status)
         return(status_ob)
       } else {
         return(status_ob_prev)
@@ -623,8 +636,8 @@ run_status <- function(r,db,entry,initial_timeout=NA){
     }
     status_ob$status <- "dir exists"
     status_ob$seen_at <- Sys.time()
-    update_object_field(matched_entry,run_status_ob=status_ob)
-    update_char_field(matched_entry,run_status=status_ob$status)
+    update_object_field(get_db_name(r),matched_entry,run_status_ob=status_ob)
+    update_char_field(get_db_name(r),matched_entry,run_status=status_ob$status)
     return(status_ob)
   }
 
@@ -698,8 +711,8 @@ run_status <- function(r,db,entry,initial_timeout=NA){
   status_ob$sub_run_mtimes <- lst_mtimes
   status_ob$sub_run_status <- lst_status
   status_ob$run_dir_mtime <- file.mtime(r$run_dir)
-  update_object_field(matched_entry,run_status_ob=status_ob)
-  update_char_field(matched_entry,run_status=status_ob$status)
+  update_object_field(get_db_name(r),matched_entry,run_status_ob=status_ob)
+  update_char_field(get_db_name(r),matched_entry,run_status=status_ob$status)
   return(status_ob)
 }
 
@@ -769,14 +782,14 @@ last_modified <- function(r){
 #' @param x logical. TRUE means run() will wait, FALSE = asynchronous execution
 #' @export
 
-wait_default <- function(x) .sso_env$wait <- x
+wait_default <- function(x) options("wait"=x)
 
 #' Should run() overwrite previously run jobs
 #'
 #' @param x logical. TRUE means run() will overwrite previous runs by default,
 #' @export
 
-overwrite_default <- function(x) .sso_env$run_overwrite <- x
+overwrite_default <- function(x) options("run_overwrite"=x)
 
 #' Should run() work in non interactive mode
 #'
@@ -832,8 +845,8 @@ clean_run <- function(r,delete_dir=c(NA,TRUE,FALSE),update_db=TRUE){
   if(update_db){
     matched_entry <- nmdb_match_entry(r)
     status_ob <- list(status="not run")
-    update_object_field(matched_entry,run_status_ob=status_ob)
-    update_char_field(matched_entry,run_status=status_ob$status)
+    update_object_field(get_db_name(r),matched_entry,run_status_ob=status_ob)
+    update_char_field(get_db_name(r),matched_entry,run_status=status_ob$status)
   }
   invisible()
 }

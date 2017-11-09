@@ -4,7 +4,10 @@
 \alias{shiny_nm}
 \title{Shiny view of NMproject}
 \usage{
-shiny_nm()
+shiny_nm(db_name = "runs.sqlite")
+}
+\arguments{
+\item{db_name}{character. Name of db}
 }
 \description{
 Shiny view of NMproject

@@ -4,9 +4,11 @@
 \alias{show_runs}
 \title{Show table of runs in database}
 \usage{
-show_runs(...)
+show_runs(db_name = "runs.sqlite", ...)
 }
 \arguments{
+\item{db_name}{character. Name of db}
+
 \item{...}{arguments to pass to nmdb_get}
 }
 \description{
