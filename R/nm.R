@@ -213,8 +213,8 @@ update_char_field <- function(db_name="runs.sqlite",entry,...){
   DBI::dbDisconnect(my_db)
 }
 
-get_char_field <- function(entry,field){
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), "runs.sqlite")
+get_char_field <- function(db_name="runs.sqlite",entry,field){
+  my_db <- DBI::dbConnect(RSQLite::SQLite(), db_name)
   d <- DBI::dbGetQuery(my_db, paste('SELECT * FROM runs WHERE entry ==',entry))
   DBI::dbDisconnect(my_db)
   d[d$entry %in% entry,][[field]]
