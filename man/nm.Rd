@@ -25,7 +25,7 @@ nm(cmd, psn_command, shell_script_name, shell_script_extn = "sh", ctl_name,
 
 \item{run_in}{character. Directory to execute. Default = getOption("models.dir")}
 
-\item{db_name}{character. Name of db}
+\item{db_name}{character. Name of db. NULL = don't put in database}
 }
 \value{
 object of class nm
