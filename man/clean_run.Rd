@@ -4,7 +4,8 @@
 \alias{clean_run}
 \title{clean_run files}
 \usage{
-clean_run(r, delete_dir = c(NA, TRUE, FALSE), update_db = TRUE)
+clean_run(r, delete_dir = c(NA, TRUE, FALSE),
+  update_db = !is.null(r$db_name))
 }
 \arguments{
 \item{r}{object class nm}
