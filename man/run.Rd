@@ -33,6 +33,10 @@ time period to give up on a run if directory hasn't been created.}
 
 \item{intern}{logical. intern arg to be passed to system}
 }
+\value{
+If only one object of class nm was specified, silently returns object.
+Otherwise returns nothing.
+}
 \description{
 Run NONMEM
 }
