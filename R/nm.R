@@ -9,13 +9,15 @@
 #' @param run_dir character or numeric. Run directory (optional)
 #' @param run_in character. Directory to execute. Default = getOption("models.dir")
 #' @param db_name character. Name of db. NULL = don't put in database
+#' @param scm_config_name character. Name of scm config file (optional)
 #' @return object of class nm
 #' @export
 nm <- function(cmd,psn_command,
                shell_script_name,shell_script_extn="sh",
                ctl_name,run_id,run_dir,
                run_in=getOption("models.dir"),
-               db_name = "runs.sqlite"){
+               db_name = "runs.sqlite",
+               scm_config_name){
   tidyproject::check_if_tidyproject()
   r <- list()
   class(r) <- "nm"
@@ -70,6 +72,19 @@ nm <- function(cmd,psn_command,
   if(is.null(r$ctl)){
     subcmd <- gsub(paste0("^.*(\\s|^)(",r$type,".+)$"),"\\2",cmd)
     matched_ctl <- gsub2(paste0("^.*(",getOption("model_file_stub"),"\\S+",getOption("model_file_extn"),")\\s*.*$"),"\\1",subcmd)
+    if(length(matched_ctl)==0) {
+      if(r$type %in% "scm") {
+        if(missing(scm_config_name)){
+          config_file <- gsub2(".*-config\\S*=(\\S*)\\s*.*$","\\1",cmd)
+          if(length(config_file)==0) stop("cannot infer scm file")
+          message("inferring scm config file : ",config_file)
+        } else config_file <- scm_config_name
+        scm_config_contents <- readLines(file.path(run_in,config_file))
+        scm_config_contents <- scm_config_contents[grepl("\\s*model=(.*)",scm_config_contents)]
+        matched_ctl <- gsub("\\s*model=(.*)","\\1",scm_config_contents)
+      }
+    }
+    if(length(matched_ctl)==0) stop("cannot infer model file.\nRerun with ctl_name argument",call. = FALSE)
     message(paste("inferring ctl file :",matched_ctl))
     r$ctl <- file.path(r$run_in,matched_ctl)
   }
@@ -484,6 +499,10 @@ get_run_id <- function(ctl_name){
 #' time period to give up on a run if directory hasn't been created.
 #' @param quiet logical (default=FALSE). should system_nm output be piped to screen
 #' @param intern logical. intern arg to be passed to system
+#'
+#' @return If only one object of class nm was specified, silently returns object.
+#' Otherwise returns nothing.
+#'
 #' @export
 run <- function(...,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
                 update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
@@ -498,7 +517,7 @@ run.nm <- function(...,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE
   tidyproject::check_if_tidyproject()
   #if(!quiet & !wait) stop("quiet=FALSE requires wait=TRUE")
   rl <- list(...)
-  lapply(rl,function(r){
+  rl <- lapply(rl,function(r){
     if(is.null(r$db_name)) update_db <- FALSE
     ## if directory exists, and if it's definately a directory stop
     if(file.exists(r$run_dir) & !overwrite)if(file.info(r$run_dir)$isdir %in% TRUE) stop("run already exists. To rerun select overwrite=TRUE\n  or use the switch overwrite_default(TRUE)",call.=FALSE)
@@ -526,9 +545,10 @@ run.nm <- function(...,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE
       update_char_field(r$db_name,matched_entry,run_status=status_ob$status)
       update_char_field(r$db_name,matched_entry,job_info=job_info)
     }
+    r$job_info <- job_info
   })
   if(wait) wait_for_finished(...,initial_timeout=initial_timeout)
-  invisible()
+  if(length(rl)==1) return(invisible(rl[[1]])) else return(invisible())
 }
 
 #' Run run.nm method
