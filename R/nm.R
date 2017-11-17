@@ -128,9 +128,17 @@ nm <- function(cmd,psn_command,
   if(!is.null(db_name)){
 
     match_info <- nmdb_match_info(r)
-    matched_entry <- match_info$entry[match_info$match_type &
-                                        match_info$match_run_in &
-                                        match_info$match_ctl]
+    if(r$type %in% "execute") {
+      matched_entry <- match_info$entry[match_info$match_type &
+                                          match_info$match_run_in &
+                                          match_info$match_ctl]
+    } else {
+      matched_entry <- match_info$entry[match_info$match_type &
+                                          match_info$match_run_in &
+                                          match_info$match_ctl &
+                                          match_info$match_run_dir]
+    }
+
     overlapped_output_entries <-
       match_info$entry[match_info$overlap_outputs &
                          !(match_info$entry %in% matched_entry)]
@@ -173,11 +181,17 @@ nm <- function(cmd,psn_command,
 }
 
 nmdb_match_entry <- function(r,db=NULL){
-
   match_info <- nmdb_match_info(r,db=db)
-  matched_entry <- match_info$entry[match_info$match_type &
-                                      match_info$match_run_in &
-                                      match_info$match_ctl]
+  if(r$type %in% "execute") {
+    matched_entry <- match_info$entry[match_info$match_type &
+                                        match_info$match_run_in &
+                                        match_info$match_ctl]
+  } else {
+    matched_entry <- match_info$entry[match_info$match_type &
+                                        match_info$match_run_in &
+                                        match_info$match_ctl &
+                                        match_info$match_run_dir]
+  }
   if(length(matched_entry)>1) stop("Can't identify unique database entry. Something wrong. Debug")
   matched_entry
 }
