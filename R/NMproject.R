@@ -194,7 +194,7 @@ copy_control <- function(from,to,overwrite=FALSE,alt_paths){
 
   is_nm_file_name(to,error_if_false = TRUE)
   run_id <- run_id(to)
-  ctl <- readLines(from_path)
+  ctl <- readLines(from_path,warn = FALSE)
   ## Modify the file here.
   if(is_nm_file_name(from_path))
     run_id_from <- run_id(from_path) else
@@ -282,7 +282,7 @@ data_name.default <- function(x){
     if(!file.exists(x)) x <- from_models(x)
     if(!file.exists(x)) stop("can't find control stream")
     x <- normalizePath(x)
-    ctl <- readLines(x)
+    ctl <- readLines(x,warn = FALSE)
     data.row <- grep("^ *\\$DATA",ctl)
     if(length(data.row)<1) stop("can't identify data row")
     if(length(data.row)>1) stop("multiple data rows found")
@@ -299,7 +299,7 @@ data_name.default <- function(x){
 #' @param new_data_name character. Name of new dataset
 #' @export
 update_dollar_data <- function(ctl_name,new_data_name){
-  ctl <- readLines(ctl_name)
+  ctl <- readLines(ctl_name,warn = FALSE)
   ctl <- gsub("^(\\s*\\$DATA\\s*)[^ ]+(.*)$",paste0("\\1",new_data_name,"\\2"),ctl)
   writeLines(ctl,ctl_name)
 }
