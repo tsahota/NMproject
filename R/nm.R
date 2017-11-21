@@ -942,7 +942,7 @@ ctl_out_files <- function(ctl_file){ ## will get vector of $TABLE file names fro
   if(!file.exists(ctl_file)) stop(paste(ctl_file, "doesn't exist"))
   dir0 <- dir(dirname(ctl_file))
 
-  s0 <- rem_comment(readLines(ctl_file))
+  s0 <- rem_comment(readLines(ctl_file,warn = FALSE))
   s <- grep("FILE\\s*=\\s*(\\S+)",s0,value=TRUE)
   table.files <- gsub(".*FILE\\s*=\\s*(\\S+)\\s*.*$","\\1", s)
 
@@ -1053,7 +1053,7 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
       dorig <- read_fun(data_loc,...)
   }
 
-  ctl_content <- readLines(r$ctl)
+  ctl_content <- readLines(r$ctl,warn = FALSE)
   dol_data <- ctl_nm2r(ctl_content)$DATA
   dol_data <- dol_data[!dol_data %in% ""]
 
