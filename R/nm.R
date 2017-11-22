@@ -1100,6 +1100,8 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
   dorig <- dorig[,c(setdiff(names(dorig),names(d)),"PRKEY")]
 
   d2 <- merge(dorig,d,all.x = TRUE)
+
+  d2$INNONMEM <- d2$INNONMEM %in% TRUE
   if(nrow(d2) != nrow(dorig)) stop("merge went wrong. debug")
 
   return(d2)
