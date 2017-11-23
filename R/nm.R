@@ -391,8 +391,17 @@ nmdb_add_entry <- function(r,entry=NULL,silent=FALSE,...){
   },
   error=function(e){
     if(DBI::dbIsValid(my_db)) DBI::dbDisconnect(my_db)
-    if(new_db_flag) unlink(r$db_name,force = TRUE)
-    stop(e)
+    if(new_db_flag) {
+      unlink(r$db_name,force = TRUE)
+      error_msg <- e
+    } else {
+      error_msg <- paste0(e,"\n",r$db_name," may be corrupted.
+This may be due to a backwards incompatible change in NMproject.
+Consider rebuilding. Instructions to rebuild:
+1. Delete the file: ",normalizePath(r$db_name,mustWork = FALSE),"
+2. Rebuild database by running nm() statements again")
+    }
+    stop(error_msg)
   })
 }
 
@@ -409,8 +418,9 @@ nmdb_get <- function(db_name="runs.sqlite",readable=FALSE){
     if(DBI::dbIsValid(my_db)) DBI::dbDisconnect(my_db)
     stop(paste0(e,"\n",db_name," may be corrupted.
 This may be due to a backwards incompatible change in NMproject.
-Consider deleting and rebuilding ",normalizePath(db_name,mustWork = FALSE),"
-Rebuild by running nm() statements again"),call. = FALSE)
+Consider rebuilding. Instructions to rebuild:
+1. Delete the file: ",normalizePath(db_name,mustWork = FALSE),"
+2. Rebuild database by running nm() statements again"),call. = FALSE)
   })
 }
 
