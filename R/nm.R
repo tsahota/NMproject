@@ -807,9 +807,10 @@ run_status <- function(r,db,entry,initial_timeout=NA){
 is_status_finished <- function(status_ob){
 
   finished <- FALSE
-  if(status_ob$status %in% c("error","finished")) {
-    finished <- TRUE
-  }
+  #if("status" %in% names(status_ob))
+  #  if(status_ob$status %in% c("error","finished")) {
+  #    finished <- TRUE
+  #  }
   if("sub_run_status" %in% names(status_ob)) {
     sub_finished <- status_ob$sub_run_status %in% c("finished","error")
     finished <- length(sub_finished)>0 & all(sub_finished)
