@@ -1080,7 +1080,7 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
   if(!no_filter){
     filter_statements <- paste0(".*",type,"\\s*=\\s*\\(*(\\S[^\\)]+)\\)*.*")
     filter_statements <- gsub(filter_statements,"\\1",dol_data)
-    filter_statements <- strsplit(filter_statements,",")[[1]]
+    filter_statements <- unlist(strsplit(filter_statements,","))
     filter_statements <- gsub("\\.EQ\\.","==",filter_statements)
     filter_statements <- gsub("\\.NE\\.","!=",filter_statements)
     filter_statements <- gsub("\\.EQN\\.","==",filter_statements)
@@ -1090,7 +1090,7 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
     filter_statements <- gsub("\\.LT\\.","<",filter_statements)
     filter_statements <- gsub("\\.GE\\.",">=",filter_statements)
     filter_statements <- gsub("\\.LE\\.","<=",filter_statements)
-    filter_statements <- paste(filter_statements, collapse= " & ")
+    filter_statements <- paste(filter_statements, collapse= " | ")
 
     expre <- parse(text=filter_statements)
     if("IGNORE" %in% type) dORD <- which(!with(dorig,eval(expre)))
