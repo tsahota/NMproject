@@ -187,7 +187,7 @@ function(input, output, session) {
              var_name <- unique(d$variable)[i]
              dt <- d[d$variable %in% var_name,c("ITERATION","value")]
              p[[i]] <- dygraph(dt,main=var_name,xlab="Iteration",group = "hi") %>%
-               dyOptions(drawPoints = TRUE, pointSize = 2) %>%
+               dyOptions(drawPoints = TRUE, pointSize = 2, sigFigs=3) %>%
                dyRangeSelector()
            }
            p
