@@ -71,7 +71,7 @@ set_nm_opts <- function(){
   if(is.null(getOption("psn.commands")))
     options(psn.commands=
               c("boot_scm","bootstrap","cdd","crossval","execute","extended_grid","frem","gls",
-                "lasso","llp","mcmp","mimp","nca","npc","pvar","randtest","rawresults","runrecord",
+                "lasso","llp","mcmp","mimp","nca","npc","parallel_retries","pvar","randtest","rawresults","runrecord",
                 "scm","se_of_eta","sir","sse","sumo","update","update_inits","vpc","xv_scm"))
 
   if(is.null(getOption("system_cmd"))) options(system_cmd=function(cmd,...) {
