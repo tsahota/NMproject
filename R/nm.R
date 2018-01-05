@@ -61,10 +61,12 @@ nm <- function(cmd,psn_command,
     matched_psn_commands <- unlist(sapply(getOption("psn.commands"),
                                           function(i) gsub2(paste0("^.*(",i,")\\b\\s.+$"),"\\1",cmd)))
     matched_psn_commands <- as.character(matched_psn_commands)
+    error_msg <- "\nRerun with psn_command argument\n e.g. for a bootstrap you can do:
+nm(\"bootstrap run1.mod -threads=4\",psn_command=\"bootstrap\")"
     if(length(matched_psn_commands)==0)
-      stop("couldn't infer psn command type.\nRerun with psn_command argument",call. = FALSE)
+      stop(paste0("couldn't infer psn command type.",error_msg),call. = FALSE)
     if(length(matched_psn_commands)>1)
-      stop("couldn't infer unique psn command type.\nRerun with psn_command argument",call. = FALSE)
+      stop(paste0("couldn't infer unique psn command type.",error_msg),call. = FALSE)
     message(paste("inferring run type :",matched_psn_commands))
     r$type <- matched_psn_commands
   }
