@@ -132,7 +132,7 @@ coef_nm <- function(object,trans,...){
   }
   ## OMEGA
   d$trans[grepl("OMEGA.([0-9]+\\.)\\1",d$Parameter)] <- "OM"   ## temp code - make an identifyer for OMEGA.X.X
-  d$SE.TRANS[d$trans %in% "OM"] <- 100*d$SE[d$trans %in% "OM"]/d$FINAL[d$trans %in% "OM"]
+  d$SE.TRANS[d$trans %in% "OM"] <- 100*(d$SE[d$trans %in% "OM"]/d$FINAL[d$trans %in% "OM"])/2
   d$FINAL.TRANS[d$trans %in% "OM"] <- 100*sqrt(exp(d$FINAL[d$trans %in% "OM"])-1)
   d$transUnit[d$trans %in% "OM"] <- "CV%"
   d$transSEUnit[d$trans %in% "OM"] <- "%"
