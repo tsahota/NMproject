@@ -175,9 +175,8 @@ run(mod1,wait=TRUE) ; run(mod1vpc,mod1sse)
 This will run mod1, wait for it to finish and then execute mod1vpc and mod1see at the same time.  You will not be able to use the R console while mod1 is running however since it will be waiting for mod1 to finish.  To get around this consider the `future` package to have a separate R process control the execution:
 
 ```r
-library(future)
-plan("multisession")
-future({run(mod1,wait=TRUE) ; run(mod1vpc,mod1sse)})
+future::plan("multisession")
+future::future({run(mod1,wait=TRUE) ; run(mod1vpc,mod1sse)})
 ```
 
 ### + After having closed my session how to I recreate an nm object
