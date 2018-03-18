@@ -1110,7 +1110,8 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
 
   d$INNONMEM <- TRUE
 
-  dorig <- dorig[,c(setdiff(names(dorig),names(d)),"PRKEY")]
+  d <- d[,c(setdiff(names(d),names(dorig)),"PRKEY")]
+  #dorig <- dorig[,c(setdiff(names(dorig),names(d)),"PRKEY")]
 
   d2 <- merge(dorig,d,all.x = TRUE)
 
