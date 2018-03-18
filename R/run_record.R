@@ -36,7 +36,7 @@ ext2coef <- function(extout,file_name){
   is.diag.omega <- grepl("OMEGA.([0-9]+\\.)\\1",d$Parameter)
   is.omega <- grepl("OMEGA.([0-9]+\\.)+",d$Parameter)
   is.off.diag.omega <- is.omega & !is.diag.omega
-  d <- d[!(is.off.diag.omega), ] ## get rid of off diag 0s
+  d <- d[!(is.off.diag.omega & d$FINAL == 0), ] ## get rid of off diag 0s
   is.diag.omega <- grepl("OMEGA.([0-9]+\\.)\\1",d$Parameter) ## redefine
   is.omega <- grepl("OMEGA.([0-9]+\\.)+",d$Parameter) ## redefine
   is.off.diag.omega <- is.omega & !is.diag.omega  ## redefine
