@@ -168,9 +168,19 @@ nm(\"bootstrap run1.mod -threads=4\",psn_command=\"bootstrap\")"
     if(length(matched_entry)==0) {
       nmdb_add_entry(r)
     } else if(length(matched_entry)==1) {
+      ## database fields to preserve
+      status_ob <- get_object_field(r$db_name,matched_entry,"run_status_ob")
+      #status_ob$status <- get_char_field(r$db_name,matched_entry,"run_status") ## done by previous line
+      job_info <- get_char_field(r$db_name,matched_entry,"job_info")
+      
       delete_nm(db_name,matched_entry)
       message("Rewriting database entry: ",matched_entry)
       nmdb_add_entry(r,matched_entry,silent=TRUE)
+      
+      update_object_field(r$db_name,matched_entry,run_status_ob=status_ob)
+      update_char_field(r$db_name,matched_entry,run_status=status_ob$status)
+      update_char_field(r$db_name,matched_entry,job_info=job_info)
+      
     } else stop("Matched more than one database entry. Debug")
 
     ## last step: update run_status in db
@@ -318,7 +328,8 @@ nmdb_match_info <- function(r,db=NULL){
 
 nmdb_make_db_row <- function(r,add_cols=list()){
   if(r$type %in% "execute") r$input$data <- NULL
-  d <- data.frame(object=I(list(serialize(r,NULL))),
+  d <- data.frame(entry=as.numeric(NA),
+                  object=I(list(serialize(r,NULL))),
                   ctl = r$ctl,
                   description=r$description,
                   type=r$type,
@@ -372,7 +383,7 @@ nmdb_add_entry <- function(r,entry=NULL,silent=FALSE,...){
   tryCatch({
     if(new_db_flag) {
       dempty <- dnew[c(),]
-      dempty <- cbind(data.frame(entry=numeric()),dempty)
+      #dempty <- cbind(data.frame(entry=numeric()),dempty)
       DBI::dbWriteTable(my_db, "runs", dempty)
     }
     d <- DBI::dbGetQuery(my_db, 'SELECT * FROM runs')
@@ -381,7 +392,8 @@ nmdb_add_entry <- function(r,entry=NULL,silent=FALSE,...){
       if(!is.null(entry)) new_entry <- entry else
         new_entry <- max(d$entry) + 1
 
-    dnew <- cbind(data.frame(entry=new_entry),dnew)
+    #dnew <- cbind(data.frame(entry=new_entry),dnew)
+    dnew$entry <- new_entry
 
     if(!silent) message("Creating database entry: ",new_entry)
     #res <- DBI::dbSendQuery(my_db, "PRAGMA busy_timeout=5000;")
