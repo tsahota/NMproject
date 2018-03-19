@@ -1,6 +1,7 @@
 #' Make object of class nm
 #'
 #' @param cmd character. system command to launch NONMEM (PsN)
+#' @param parent_nm object of class nm. Parent object to create (optional)
 #' @param psn_command character. Name of PsN command (optional)
 #' @param shell_script_name character. Name of shell script for grid submission (optional)
 #' @param shell_script_extn character. File extension shell script for grid submission (optional)
@@ -12,13 +13,16 @@
 #' @param scm_config_name character. Name of scm config file (optional)
 #' @return object of class nm
 #' @export
-nm <- function(cmd,psn_command,
+nm <- function(cmd,parent_nm,
+               psn_command,
                shell_script_name,shell_script_extn="sh",
                ctl_name,run_id,run_dir,
                run_in=getOption("models.dir"),
                db_name = "runs.sqlite",
                scm_config_name){
   tidyproject::check_if_tidyproject()
+  if(!missing(parent_nm)) if(!identical(parent.frame(),.GlobalEnv)) stop("parent_ob can only be used if this function is called from the global environment")
+
   r <- list()
   class(r) <- "nm"
 
@@ -108,7 +112,20 @@ nm(\"bootstrap run1.mod -threads=4\",psn_command=\"bootstrap\")"
   } else r$run_id <- run_id
 
   if(length(r$ctl)==0) stop("cannot infer model file.\nRerun with ctl_name argument",call. = FALSE)
-  if(!file.exists(r$ctl)) stop("cannot find model file",call. = FALSE)
+  if(!file.exists(r$ctl)) {
+    if(missing(parent_nm)) stop("cannot find model file",call. = FALSE)
+    ## assume parent_nm exists
+    if(!identical(normalizePath(run_in),normalizePath(getOption("models.dir"))))
+      stop("the functionality to create the control stream does not yet exist when the run is not in Models dir",call. = FALSE)
+    message("creating control stream from parent...")
+    copy_control(parent_nm$ctl,basename(r$ctl))
+  }
+
+  if(!missing(parent_nm)) {
+    r$parent_nm_entry <- nmdb_match_entry(parent_nm)
+  } else {
+    r$parent_nm_entry <- NA
+  }
 
   ## class for execute runs
   class(r) <- c(paste0("nm",r$type),class(r))
@@ -172,15 +189,15 @@ nm(\"bootstrap run1.mod -threads=4\",psn_command=\"bootstrap\")"
       status_ob <- get_object_field(r$db_name,matched_entry,"run_status_ob")
       #status_ob$status <- get_char_field(r$db_name,matched_entry,"run_status") ## done by previous line
       job_info <- get_char_field(r$db_name,matched_entry,"job_info")
-      
+
       delete_nm(db_name,matched_entry)
       message("Rewriting database entry: ",matched_entry)
       nmdb_add_entry(r,matched_entry,silent=TRUE)
-      
+
       update_object_field(r$db_name,matched_entry,run_status_ob=status_ob)
       update_char_field(r$db_name,matched_entry,run_status=status_ob$status)
       update_char_field(r$db_name,matched_entry,job_info=job_info)
-      
+
     } else stop("Matched more than one database entry. Debug")
 
     ## last step: update run_status in db

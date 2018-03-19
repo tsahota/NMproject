@@ -372,3 +372,31 @@ get_PMX_code_library <- function(local_path,
                                        giturl=giturl,
                                        config_file=config_file)
 }
+
+#' Get Omega matrix from run
+#'
+#' @param r object of class nm
+#' @export
+omega_matrix <- function(r){
+  dc <- coef(r,trans=FALSE)
+  dc <- filter(dc,Type %in% c("OMEGAVAR","OMEGACOV"))
+  dc <- select(dc,Parameter,FINAL)
+  dc$ROW <- gsub("OMEGA\\.([0-9]+)\\..*","\\1",dc$Parameter) %>% as.numeric
+  dc$COL <- gsub("OMEGA\\.[0-9]+\\.([0-9]+).*","\\1",dc$Parameter) %>% as.numeric
+  dc <- arrange(dc,ROW,COL)
+  max_size <- max(c(dc$ROW,dc$COL))
+  dc <- ungroup(dc) %>% select(FINAL,ROW,COL)
+  dc_mirror <- dc %>% mutate(COLOLD = COL, ROWOLD = ROW,
+                             COL = ROWOLD, ROW = COLOLD) %>%
+    select(ROW,COL,FINAL)
+  dc <- rbind(dc,dc_mirror) %>% unique
+
+  d_all <- expand.grid(ROW=1:max_size,COL=1:max_size)
+  d_all <- merge(dc,d_all,all=TRUE)
+  d_all$FINAL[is.na(d_all$FINAL)] <- 0
+  d_all <- arrange(d_all,ROW,COL)
+
+  matrix(d_all$FINAL,nrow=max_size)
+}
+
+
