@@ -379,22 +379,28 @@ get_PMX_code_library <- function(local_path,
 #' @export
 omega_matrix <- function(r){
   dc <- coef(r,trans=FALSE)
-  dc <- filter(dc,Type %in% c("OMEGAVAR","OMEGACOV"))
-  dc <- select(dc,Parameter,FINAL)
-  dc$ROW <- gsub("OMEGA\\.([0-9]+)\\..*","\\1",dc$Parameter) %>% as.numeric
-  dc$COL <- gsub("OMEGA\\.[0-9]+\\.([0-9]+).*","\\1",dc$Parameter) %>% as.numeric
-  dc <- arrange(dc,ROW,COL)
+  dc <- dc[dc$Type %in% c("OMEGAVAR","OMEGACOV"),]
+  dc <- dc[,c("Parameter","FINAL")]
+  dc$ROW <- as.numeric(gsub("OMEGA\\.([0-9]+)\\..*","\\1",dc$Parameter))
+  dc$COL <- as.numeric(gsub("OMEGA\\.[0-9]+\\.([0-9]+).*","\\1",dc$Parameter))
+  dc <- dc[order(dc$ROW,dc$COL),]
   max_size <- max(c(dc$ROW,dc$COL))
-  dc <- ungroup(dc) %>% select(FINAL,ROW,COL)
-  dc_mirror <- dc %>% mutate(COLOLD = COL, ROWOLD = ROW,
-                             COL = ROWOLD, ROW = COLOLD) %>%
-    select(ROW,COL,FINAL)
-  dc <- rbind(dc,dc_mirror) %>% unique
+  dc <- dc[,c("FINAL","ROW","COL")]
+  dc_mirror <- dc
+  dc_mirror$COLOLD <- dc_mirror$COL
+  dc_mirror$ROWOLD <- dc_mirror$ROW
+  dc_mirror$COL <- dc_mirror$ROWOLD
+  dc_mirror$ROW <- dc_mirror$COLOLD
+  dc_mirror$COLOLD <- NULL
+  dc_mirror$ROWOLD <- NULL
+
+  dc <- rbind(dc,dc_mirror)
+  dc <- unique(dc)
 
   d_all <- expand.grid(ROW=1:max_size,COL=1:max_size)
   d_all <- merge(dc,d_all,all=TRUE)
   d_all$FINAL[is.na(d_all$FINAL)] <- 0
-  d_all <- arrange(d_all,ROW,COL)
+  d_all <- d_all[order(d_all$ROW,d_all$COL), ]
 
   matrix(d_all$FINAL,nrow=max_size)
 }
