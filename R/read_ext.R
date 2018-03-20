@@ -26,6 +26,8 @@ read_ext0 <- function(ext.file){
     d$TYPE[d$ITERATION>-1000000000 & d$ITERATION<0] <- "BURN"
     d$TYPE[d$ITERATION==-1000000000] <- "FINAL"
     d$TYPE[d$ITERATION==-1000000001] <- "SE"
+    d$TYPE[d$ITERATION==-1000000002] <- "EIGEN"
+    d$TYPE[d$ITERATION==-1000000003] <- "CONDNUM"
     d$EVALUATION <- grepl("Evaluation",d$EST.NAME)
     close(tmp)
     d

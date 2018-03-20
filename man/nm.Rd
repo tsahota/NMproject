@@ -4,14 +4,17 @@
 \alias{nm}
 \title{Make object of class nm}
 \usage{
-nm(cmd, parent_nm, psn_command, shell_script_name, shell_script_extn = "sh",
-  ctl_name, run_id, run_dir, run_in = getOption("models.dir"),
-  db_name = "runs.sqlite", scm_config_name)
+nm(cmd, parent, description = "", psn_command, shell_script_name,
+  shell_script_extn = "sh", ctl_name, run_id, run_dir,
+  run_in = getOption("models.dir"), db_name = "runs.sqlite",
+  scm_config_name)
 }
 \arguments{
 \item{cmd}{character. system command to launch NONMEM (PsN)}
 
-\item{parent_nm}{object of class nm. Parent object to create (optional)}
+\item{parent}{object of class nm. Parent object to create (optional)}
+
+\item{description}{character. Description of model (optional)}
 
 \item{psn_command}{character. Name of PsN command (optional)}
 

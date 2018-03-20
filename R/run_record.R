@@ -9,6 +9,7 @@ ext2coef <- function(extout,file_name){
 
   has_final_est <- "FINAL" %in% d$TYPE
   if(has_final_est){
+    cond_num <- d$THETA1[d$TYPE %in% "CONDNUM" & d$EST.NO %in% max(d$EST.NO)]
     d <- d[d$TYPE %in% c("FINAL","SE"),]
     d <- d[d$EST.NO %in% max(d$EST.NO), ]
   } else {
@@ -18,15 +19,28 @@ ext2coef <- function(extout,file_name){
   d <- d[,c(names(d)[grepl("THETA|SIGMA|OMEGA",names(d))],
             c("OBJ","EST.NAME","EST.NO","EVALUATION","TYPE"))]
 
+
   par.names <- names(d)[match("THETA1",names(d)):match("OBJ",names(d))]
 
   d <- reshape2::melt(data = d, variable.name = "Parameter",
                       measure.vars = par.names)
   if(!"Parameter" %in% names(d)) stop("melt has failed - could be due to reshape being loaded. reshape can interfere with reshape2")
+
+
   d <- reshape2::dcast(data = d,
                        stats::as.formula(paste(paste(names(d)[!names(d) %in% c("TYPE","value")],collapse=" + "),
                                                "~ TYPE")),
                        value.var = "value")
+
+  ## messy hard coding - consider refactoring if need more than just eigenvalues
+  if(has_final_est){
+    dlast <- d[nrow(d),]
+    dlast$Parameter <- "CONDNUM"
+    dlast$FINAL <- cond_num
+    dlast$SE <- 0
+
+    d <- rbind(d,dlast)
+  }
 
   if(!has_final_est) names(d)[names(d) %in% "ITER"] <- "FINAL"
 
@@ -47,7 +61,8 @@ ext2coef <- function(extout,file_name){
                  sort(par.char[is.diag.omega]),
                  sort(par.char[is.off.diag.omega]),
                  sort(par.char[grepl("SIGMA",par.char)]),
-                 "OBJ")
+                 "OBJ",
+                 sort(par.char[grepl("CONDNUM",par.char)]))
   if(!identical(sort(par.order),sort(as.character(d$Parameter)))) stop("Bug in code. Debug.")
   d$Parameter <- factor(d$Parameter,levels=par.order)
   d$Type <- NA
@@ -56,7 +71,12 @@ ext2coef <- function(extout,file_name){
   d$Type[is.off.diag.omega] <- "OMEGACOV"
   d$Type[grepl("SIGMA",par.char)] <- "SIGMA"
   d$Type[grepl("OBJ",par.char)] <- "OBJ"
-  d$Type <- factor(d$Type,levels=c("THETA","OMEGAVAR","OMEGACOV","SIGMA","OBJ"))
+  if(has_final_est){
+    d$Type[grepl("CONDNUM",par.char)] <- "CONDNUM"
+    d$Type <- factor(d$Type,levels=c("THETA","OMEGAVAR","OMEGACOV","SIGMA","OBJ","CONDNUM"))
+  } else {
+    d$Type <- factor(d$Type,levels=c("THETA","OMEGAVAR","OMEGACOV","SIGMA","OBJ"))
+  }
   d <- d[order(d$Type),]
   d$Unit <- NA
   d$SEUnit <- NA
@@ -96,9 +116,6 @@ coef_nm <- function(object,trans,...){
   p <- object$param_info
 
   p$Parameter <- paste0("THETA",p$N)
-  ## TODO: read parameter names from $OMEGA
-  ## either $OMEGA in same way as $THETA (but without units in comments)
-  ## or $OMEGA BLOCK
 
   d0 <- d[,names(d)[!names(d) %in% "Unit"]]
   d1 <- p[,c("Name","Parameter","Unit","trans")]
