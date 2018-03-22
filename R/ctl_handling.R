@@ -185,3 +185,96 @@ param_info <- function(ctl_name){
     return(data.frame())
 }
 
+update_parameters0 <- function(ctl,coef_from,type = c("THETA","OMEGA","SIGMA")){
+  type <- match.arg(type)
+
+  ctl_lines <- ctl
+  params <- ctl_lines[[type]]
+
+  contents <- rem_comment(params)
+  comments <- get_comment(params)
+  comments[!grepl("^\\s*$",comments)] <- paste0(";",comments[!grepl("^\\s*$",comments)])
+
+  final_params <- coef_from
+  final_params <- final_params[,c("Parameter", "FINAL")]
+  final_params <- final_params[grepl(type,final_params$Parameter),]
+
+  if(type %in% c("OMEGA","SIGMA")){
+    final_params$ROW <- as.numeric(gsub(paste0(type,"\\.([0-9]+)\\..*"),"\\1",final_params$Parameter))
+    final_params$COL <- as.numeric(gsub(paste0(type,"\\.[0-9]+\\.([0-9]+).*"),"\\1",final_params$Parameter))
+    final_params <- final_params[order(final_params$ROW, final_params$COL), ]
+  }
+
+  if(type %in% c("THETA")){
+    final_params$ROW <- as.numeric(gsub(paste0(type,"([0-9]+)"),"\\1",final_params$Parameter))
+    final_params <- final_params[order(final_params$ROW), ]
+  }
+
+  contents1 <- paste0(paste0(contents,collapse = "\n"),"\n")
+  contents1 <- gsub(",\\s*",",",contents1)
+  contents1 <- gsub("([-\\.0-9])[ \\t]+([-\\.0-9])","\\1&\\2",contents1)
+
+  contents1 <- strsplit(contents1,"(?<=\\n)",perl = TRUE)[[1]]
+  contents1 <- gsub("\\n","_",contents1)
+
+  contents1 <- unlist(strsplit(contents1,"(?<=&)",perl = TRUE))
+
+  matched_replacements <- grepl("^(\\s*&?\\s*_?\\s*)-?\\.?[0-9]+\\.?[0-9]*(\\s*(FIX)?&?\\s*_?\\s*)$",contents1) |
+    grepl(".*SAME.*",contents1) |
+    grepl("(^\\s*&?\\s*_?\\s*\\(.*,).*(\\)\\s*(FIX)?&?\\s*_?\\s*)$",contents1) |
+    grepl("(^\\s*&?\\s*_?\\s*\\(.*,).*(,.*\\)\\s*(FIX)?&?\\s*_?\\s*)$",contents1)
+
+  if(length(which(matched_replacements)) > nrow(final_params)) stop("something wrong. debug")
+  if(length(which(matched_replacements)) != nrow(final_params)) warning("different numbers of parameters in outputs. Are you using $PRIOR?")
+
+  for (j in seq_along(which(matched_replacements))){
+    i <- which(matched_replacements)[j]
+    contents1[i] <- gsub("^(\\s*&?\\s*_?\\s*)-?\\.?[0-9]+\\.?[0-9]*(\\s*(FIX)?&?\\s*_?\\s*)$",
+                         paste0("\\1",signif(final_params$FINAL[j],5),"\\2"),contents1[i])
+    contents1[i] <- gsub("(^\\s*&?\\s*_?\\s*\\(.*,).*(\\)\\s*(FIX)?&?\\s*_?\\s*)$",
+                         paste0("\\1",signif(final_params$FINAL[j],5),"\\2"),contents1[i])
+    contents1[i] <- gsub("(^\\s*&?\\s*_?\\s*\\(.*,).*(,.*\\)\\s*(FIX)?&?\\s*_?\\s*)$",
+                         paste0("\\1",signif(final_params$FINAL[j],5),"\\2"),contents1[i])
+  }
+
+  contents1 <- paste0(contents1,collapse = " ")
+  contents1 <- strsplit(contents1,"_")[[1]]
+  contents1 <- gsub("&"," ",contents1)
+
+  new_params <- paste(contents1,comments)
+  class(new_params) <- paste0("nm.",tolower(type))
+
+  ctl_lines[[type]] <- new_params
+
+  ctl_lines
+}
+
+#' update parameters from a control stream
+#'
+#' @param ctl_lines character vector. ctl file read into R
+#' @param from class nm. object from which to extract results
+#' @export
+
+update_parameters <- function(ctl_lines, from){
+  ctl_lines <- ctl_nm2r(ctl_lines)
+  coef_from <- coef(from, trans=FALSE)
+  ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "THETA")
+  ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "OMEGA")
+  ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "SIGMA")
+  ctl_r2nm(ctl_lines)
+}
+
+#' change to estimation control stream to sim
+#'
+#' @param ctl_lines character vector. ctl file read into R
+#' @export
+
+change_to_sim <- function(ctl_lines){
+  ctl_lines <- ctl_nm2r(ctl_lines)
+  ctl_lines$EST <- paste0(";",ctl_lines$EST)
+  ctl_lines$COV <- paste0(";",ctl_lines$COV)
+  ctl_lines$SIM <- gsub("^\\s*;(.*)","\\1",ctl_lines$SIM)
+  ctl_r2nm(ctl_lines)
+}
+
+
