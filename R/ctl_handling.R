@@ -279,11 +279,21 @@ update_parameters <- function(ctl_lines, from){
 #' @param ctl_lines character vector. ctl file read into R
 #' @export
 
-change_to_sim <- function(ctl_lines){
+change_to_sim <- function(ctl_lines,subpr=1,seed=1){
   ctl_lines <- ctl_nm2r(ctl_lines)
   ctl_lines$EST <- paste0(";",ctl_lines$EST)
   ctl_lines$COV <- paste0(";",ctl_lines$COV)
-  ctl_lines$SIM <- gsub("^\\s*;(.*)","\\1",ctl_lines$SIM)
+  if("SIM" %in% names(ctl_lines)){
+    ctl_lines$SIM <- gsub("^\\s*;+(.*)","\\1",ctl_lines$SIM)
+    ctl_lines$SIM <- gsub("(SUBPR[^=]\\s*=\\s*)[0-9]+",paste0("\\1",subpr),ctl_lines$SIM)
+    ctl_lines$SIM <- gsub("(\\$SIM[^\\s]*\\s*\\()[0-9]+(\\))",paste0("\\1",seed,"\\2"),ctl_lines$SIM)
+  } else {
+    ## insert before $TABLE, after $ERROR/$PRED
+    pred_error_pos <- which(grepl("ERROR|PRED",names(ctl_lines)))
+    if(pred_error_pos > 1) stop("multiple $ERROR/$PREDs detected - is this right?")
+    ctl_lines <- append(ctl_lines,list(SIM=NA),pred_error_pos)
+    ctl_lines$SIM <- paste0("$SIM (",seed,") ONLYSIM SUBPR=",subpr)
+  }
   ctl_r2nm(ctl_lines)
 }
 
