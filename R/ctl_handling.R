@@ -211,15 +211,25 @@ update_parameters0 <- function(ctl,coef_from,type = c("THETA","OMEGA","SIGMA")){
   }
 
   contents1 <- paste0(paste0(contents,collapse = "\n"),"\n")
+  contents1 <- gsub("\\$THETA","$THETA&",contents1)
+  contents1 <- gsub("(\\$OMEGA BLOCK\\s*\\([0-9]+\\))","\\1&",contents1)
+  contents1 <- gsub("(\\$OMEGA)( [^B])","\\1&\\2",contents1)
+  contents1 <- gsub("(\\$SIGMA BLOCK\\s*\\([0-9]+\\))","\\1&",contents1)
+  contents1 <- gsub("(\\$SIGMA)( [^B])","\\1&\\2",contents1)
+
   contents1 <- gsub(",\\s*",",",contents1)
-  contents1 <- gsub("([-\\.0-9])[ \\t]+([-\\.0-9])","\\1&\\2",contents1)
+  contents2 <- gsub("([-\\.0-9])[ \\t]+([-\\.0-9])","\\1&\\2",contents1)
+  while(!identical(contents2,contents1)){
+    contents1 <- contents2
+    contents2 <- gsub("([-\\.0-9])[ \\t]+([-\\.0-9])","\\1&\\2",contents1)
+  }
 
   contents1 <- strsplit(contents1,"(?<=\\n)",perl = TRUE)[[1]]
   contents1 <- gsub("\\n","_",contents1)
 
   contents1 <- unlist(strsplit(contents1,"(?<=&)",perl = TRUE))
 
-  matched_replacements <- grepl("^(\\s*&?\\s*_?\\s*)-?\\.?[0-9]+\\.?[0-9]*(\\s*(FIX)?&?\\s*_?\\s*)$",contents1) |
+  matched_replacements <- grepl("^(\\s*&?\\s*_?\\s*)-?\\.?[0-9]+\\.?[0-9]*E*-*\\+*[0-9]*(\\s*(FIX)?&?\\s*_?\\s*)$",contents1) |
     grepl(".*SAME.*",contents1) |
     grepl("(^\\s*&?\\s*_?\\s*\\(.*,).*(\\)\\s*(FIX)?&?\\s*_?\\s*)$",contents1) |
     grepl("(^\\s*&?\\s*_?\\s*\\(.*,).*(,.*\\)\\s*(FIX)?&?\\s*_?\\s*)$",contents1)
@@ -229,7 +239,7 @@ update_parameters0 <- function(ctl,coef_from,type = c("THETA","OMEGA","SIGMA")){
 
   for (j in seq_along(which(matched_replacements))){
     i <- which(matched_replacements)[j]
-    contents1[i] <- gsub("^(\\s*&?\\s*_?\\s*)-?\\.?[0-9]+\\.?[0-9]*(\\s*(FIX)?&?\\s*_?\\s*)$",
+    contents1[i] <- gsub("^(\\s*&?\\s*_?\\s*)-?\\.?[0-9]+\\.?[0-9]*E*-*\\+*[0-9]*(\\s*(FIX)?&?\\s*_?\\s*)$",
                          paste0("\\1",signif(final_params$FINAL[j],5),"\\2"),contents1[i])
     contents1[i] <- gsub("(^\\s*&?\\s*_?\\s*\\(.*,).*(\\)\\s*(FIX)?&?\\s*_?\\s*)$",
                          paste0("\\1",signif(final_params$FINAL[j],5),"\\2"),contents1[i])
