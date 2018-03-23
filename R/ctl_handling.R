@@ -287,7 +287,7 @@ change_to_sim <- function(ctl_lines,subpr=1,seed=1){
   ctl_lines$COV <- paste0(";",ctl_lines$COV)
   if("SIM" %in% names(ctl_lines)){
     ctl_lines$SIM <- gsub("^\\s*;+(.*)","\\1",ctl_lines$SIM)
-    ctl_lines$SIM <- gsub("(SUBPR[^=]\\s*=\\s*)[0-9]+",paste0("\\1",subpr),ctl_lines$SIM)
+    ctl_lines$SIM <- gsub("(SUBPR[^=]*\\s*=\\s*)[0-9]+",paste0("\\1",subpr),ctl_lines$SIM)
     ctl_lines$SIM <- gsub("(\\$SIM[^\\s]*\\s*\\()[0-9]+(\\))",paste0("\\1",seed,"\\2"),ctl_lines$SIM)
   } else {
     ## insert before $TABLE, after $ERROR/$PRED
