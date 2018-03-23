@@ -277,6 +277,8 @@ update_parameters <- function(ctl_lines, from){
 #' change to estimation control stream to sim
 #'
 #' @param ctl_lines character vector. ctl file read into R
+#' @param subpr numeric. Number of subproblems
+#' @param seed numeric
 #' @export
 
 change_to_sim <- function(ctl_lines,subpr=1,seed=1){
@@ -293,6 +295,22 @@ change_to_sim <- function(ctl_lines,subpr=1,seed=1){
     if(pred_error_pos > 1) stop("multiple $ERROR/$PREDs detected - is this right?")
     ctl_lines <- append(ctl_lines,list(SIM=NA),pred_error_pos)
     ctl_lines$SIM <- paste0("$SIM (",seed,") ONLYSIM SUBPR=",subpr)
+  }
+
+  e <- ctl_lines$ERROR
+  fflag1_pos <- grep("F_FLAG\\s*=\\s*1",e)
+  if(length(fflag1_pos) > 0) {
+    message("attempting to remove F_FLAG code... check this")
+    y_line <- grep("^\\s*Y\\s*=.*(EPS|ETA).*$",e)
+    if_pos <- grep("^\\s*IF.*\\sTHEN",e)
+    endif_pos <- grep("^\\s*ENDIF",e)
+    if_statements <- lapply(seq_along(if_pos),function(i)if_pos[i]:endif_pos[i])
+    
+    y_if_pos <- which(sapply(if_statements,function(i) y_line %in% i))
+    
+    if_statements[[y_if_pos]]
+    e[setdiff(if_statements[[y_if_pos]], y_line)] <- paste(";",e[setdiff(if_statements[[y_if_pos]], y_line)])
+    ctl_lines$ERROR <- e
   }
   ctl_r2nm(ctl_lines)
 }

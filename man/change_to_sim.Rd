@@ -4,10 +4,14 @@
 \alias{change_to_sim}
 \title{change to estimation control stream to sim}
 \usage{
-change_to_sim(ctl_lines)
+change_to_sim(ctl_lines, subpr = 1, seed = 1)
 }
 \arguments{
 \item{ctl_lines}{character vector. ctl file read into R}
+
+\item{subpr}{numeric. Number of subproblems}
+
+\item{seed}{numeric}
 }
 \description{
 change to estimation control stream to sim
