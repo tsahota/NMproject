@@ -1130,15 +1130,22 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
     expre <- parse(text=filter_statements)
     if("IGNORE" %in% type) dORD <- which(!with(dorig,eval(expre)))
     if("ACCEPT" %in% type) dORD <- which(with(dorig,eval(expre)))
-    if(length(dORD) != nrow(d)) stop("something wrong with IGNORE/ACCEPT. debug")
+    if(nrow(d) %% length(dORD) != 0) stop("something wrong with IGNORE/ACCEPT. debug")
   } else {
     dORD <- seq_len(nrow(dorig))
   }
+  
+  nreps <- nrow(d) / length(dORD)
 
   if("PRKEY" %in% names(d)) stop("name conflict with PRKEY in xpose table. aborting...")
   if("PRKEY" %in% names(dorig)) stop("name conflict with PRKEY in original data. aborting...")
 
   d$PRKEY <- dORD
+  if(nreps > 1){
+    if("SIM" %in% names(d)) stop("name conflict with SIM in xpose table. aborting...")
+    if("SIM" %in% names(dorig)) stop("name conflict with SIM in original data. aborting...")
+    d$SIM <- rep(1:nreps,each=length(dORD))
+  }
   dorig$PRKEY <- 1:nrow(dorig)
 
   d$INNONMEM <- TRUE
@@ -1149,8 +1156,14 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
   d2 <- merge(dorig,d,all.x = TRUE)
 
   d2$INNONMEM <- d2$INNONMEM %in% TRUE
-  if(nrow(d2) != nrow(dorig)) stop("merge went wrong. debug")
+  if(nreps > 1) d2$SIM[is.na(d2$SIM)] <- 0
+  
+  ## row number check
+  if(nrow(d2) != nrow(d)*(nreps-1)/nreps + nrow(dorig)) stop("merge went wrong. debug")
 
+  message("Adding column: PRKEY")
+  if(nreps > 1) message("Adding column: SIM")
+  
   return(d2)
 }
 
