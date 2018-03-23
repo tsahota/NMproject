@@ -1134,7 +1134,7 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
   } else {
     dORD <- seq_len(nrow(dorig))
   }
-  
+
   nreps <- nrow(d) / length(dORD)
 
   if("PRKEY" %in% names(d)) stop("name conflict with PRKEY in xpose table. aborting...")
@@ -1150,20 +1150,20 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
 
   d$INNONMEM <- TRUE
 
-  d <- d[,c(setdiff(names(d),names(dorig)),"PRKEY")]
+  d <- d[,c(setdiff(names(d),c(names(dorig),"DV")),"PRKEY")]
   #dorig <- dorig[,c(setdiff(names(dorig),names(d)),"PRKEY")]
 
   d2 <- merge(dorig,d,all.x = TRUE)
 
   d2$INNONMEM <- d2$INNONMEM %in% TRUE
   if(nreps > 1) d2$SIM[is.na(d2$SIM)] <- 0
-  
+
   ## row number check
   if(nrow(d2) != nrow(d)*(nreps-1)/nreps + nrow(dorig)) stop("merge went wrong. debug")
 
   message("Adding column: PRKEY")
   if(nreps > 1) message("Adding column: SIM")
-  
+
   return(d2)
 }
 
