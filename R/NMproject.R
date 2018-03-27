@@ -166,13 +166,14 @@ system_nm <- function(cmd,dir=getOption("models.dir"),...){
 #' @param to character. File to copy to
 #' @param overwrite logical. Should to file be overwritten? Default = FALSE.
 #' @param alt_paths character vector. paths to other candidate files to search
+#' @param from_base logical (default = FALSE). Should "to" be taken to be relative to base.
 #'
 #' @export
-copy_control <- function(from,to,overwrite=FALSE,alt_paths){
+copy_control <- function(from,to,overwrite=FALSE,alt_paths,from_base=FALSE){
   ## if from = NONMEM control in current directory, it will copy and update $TABLE numbers
   ## if from = control file code_library(), it will copy it.
   ## First it will look for "from" in current directory, then it will look in code_library()
-  to <- from_models(to)
+  if(!from_base) to <- from_models(to)
   if(file.exists(to) & !overwrite) stop("file already exists. Rerun with overwrite = TRUE")
 
   use_code_library <- missing(alt_paths)
