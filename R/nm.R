@@ -1150,8 +1150,12 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
 
   d$INNONMEM <- TRUE
 
-  d <- d[,c(setdiff(names(d),c(names(dorig),"DV")),"PRKEY")]
-  #dorig <- dorig[,c(setdiff(names(dorig),names(d)),"PRKEY")]
+  ## want a DV_OUT columsn 
+  if("DV_OUT" %in% names(d)) warning("name conflict with DV_OUT in xpose table. replacing...")
+  d$DV_OUT <- d$DV
+  d$DV <- NULL
+  d <- d[,c(setdiff(names(d),names(dorig)[!names(dorig) %in% c("PRKEY")]))]
+  dorig <- dorig[,names(dorig)[!names(dorig) %in% c("DV")]]
 
   d2 <- merge(dorig,d,all.x = TRUE)
 
