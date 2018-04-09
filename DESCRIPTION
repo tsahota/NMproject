@@ -12,7 +12,7 @@ LazyData: true
 Remotes: tsahota/tidyproject
 Imports:
     tidyproject (>= 0.3.0),
-    DBI,
+    DBI (>= 0.8),
     RSQLite,
     shiny,
     reshape2,
