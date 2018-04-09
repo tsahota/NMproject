@@ -253,14 +253,17 @@ nm_tran <- function(x) UseMethod("nm_tran")
 
 #' @export
 nm_tran.default <- function(x){
-  if(is.null(getOption("nmtran_exe_path"))) {
-    message("Path to nmtran not set. To set add the following command:")
+
+  if(is.null(getOption("nmtran_exe_path"))){
+    message("Path to nmtran not set properly. To set add the following command:")
     message("  options(nmtran_exe_path=\"path/to/nmtran\")")
     message("     1. (for this session only) in the console")
     message("     2. (for this user) to ~/.Rprofile")
     message(paste0("     3. (for all users) to ",file.path(R.home(component = "home"), "etc", "Rprofile.site")))
-    stop("nmtran failed")
+    stop("nm_tran failed")
   }
+  nm_tran_command <- getOption("nmtran_exe_path")
+  
   tempdir0 <- basename(tempdir()) ## make temporary directory in current directory
   dir.create(tempdir0) ; on.exit(unlink(tempdir0,recursive=TRUE,force = TRUE))
   file.copy(x,tempdir0) ## copy_control file
@@ -268,7 +271,7 @@ nm_tran.default <- function(x){
   file.copy(data_path,tempdir0) ## copy dataset
   dataset.name <- basename(data_path)
   update_dollar_data(file.path(tempdir0,basename(x)),dataset.name)
-  system_nm(paste(getOption("nmtran_exe_path"),"<",basename(x)),dir=tempdir0,wait=TRUE) ## run nmtran in tempdir0
+  system_nm(paste(nm_tran_command,"<",basename(x)),dir=tempdir0,wait=TRUE) ## run nmtran in tempdir0
 }
 
 #' Get NONMEM dataset name from control stream
