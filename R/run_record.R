@@ -13,6 +13,7 @@ ext2coef <- function(extout,file_name){
     d <- d[d$TYPE %in% c("FINAL","SE"),]
     d <- d[d$EST.NO %in% max(d$EST.NO), ]
   } else {
+    cond_num <- numeric()
     d <- tail(d,1)
   }
 
@@ -33,7 +34,7 @@ ext2coef <- function(extout,file_name){
                        value.var = "value")
 
   ## messy hard coding - consider refactoring if need more than just eigenvalues
-  if(has_final_est){
+  if(has_final_est & length(cond_num) > 0){
     dlast <- d[nrow(d),]
     dlast$Parameter <- "CONDNUM"
     dlast$FINAL <- cond_num
