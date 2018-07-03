@@ -123,6 +123,7 @@ nm(\"bootstrap run1.mod -threads=4\",psn_command=\"bootstrap\")"
       stop("the functionality to create the control stream does not yet exist when the run is not in Models dir",call. = FALSE)
     message("creating control stream from parent...")
     copy_control(parent$ctl,basename(r$ctl))
+    if(!getOption("wait")) get("file.edit")(r$ctl)
   }
 
   if(!missing(parent)) {
