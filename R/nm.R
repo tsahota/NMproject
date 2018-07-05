@@ -1115,6 +1115,7 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
 
   if(!no_filter){
     filter_statements <- paste0(".*",type,"\\s*=\\s*\\(*(\\S[^\\)]+)\\)*.*")
+    dol_data <- dol_data[grepl(filter_statements, dol_data)]
     filter_statements <- gsub(filter_statements,"\\1",dol_data)
     filter_statements <- unlist(strsplit(filter_statements,","))
     filter_statements <- gsub("\\.EQ\\.","==",filter_statements)
