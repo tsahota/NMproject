@@ -1103,6 +1103,7 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
   ctl_content <- readLines(r$ctl,warn = FALSE)
   dol_data <- ctl_nm2r(ctl_content)$DATA
   dol_data <- dol_data[!dol_data %in% ""]
+  dol_data <- rem_comment(dol_data)
 
   ignore_present <- any(grepl(".+IGNORE\\s*=\\s*\\S\\S",dol_data))
   accept_present <- any(grepl(".+ACCEPT\\s*=\\s*\\S\\S",dol_data))
