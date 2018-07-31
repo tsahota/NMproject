@@ -4,10 +4,10 @@
 \alias{ctl_nm2r}
 \title{Convert controls stream to first abstraction layer}
 \usage{
-ctl_nm2r(ls)
+ctl_nm2r(ctl)
 }
 \arguments{
-\item{ls}{character vector with NONMEM control stream contents}
+\item{ctl}{character vector with NONMEM control stream contents}
 }
 \value{
 object of class r.ctl
