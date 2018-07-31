@@ -202,11 +202,11 @@ copy_control <- function(from,to,overwrite=FALSE,alt_paths,from_base=FALSE){
       run_id_from <- basename(from_path)
 
   ctl <- gsub(paste0("(FILE\\s*=\\s*\\S*)",run_id_from,"\\b"),paste0("\\1",run_id),ctl)
-
   if(is_project_file)
     ctl <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",run_id_from),ctl) else
       ctl <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",from_path),ctl)
   ctl <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*",paste("\\1",Sys.info()["user"]),ctl)
+
   writeLines(ctl,to)
   if(!requireNamespace("git2r", quietly = TRUE))
     warning("git2r is recommended for this function. Please install it.")
@@ -263,7 +263,7 @@ nm_tran.default <- function(x){
     stop("nm_tran failed")
   }
   nm_tran_command <- getOption("nmtran_exe_path")
-  
+
   tempdir0 <- basename(tempdir()) ## make temporary directory in current directory
   dir.create(tempdir0) ; on.exit(unlink(tempdir0,recursive=TRUE,force = TRUE))
   file.copy(x,tempdir0) ## copy_control file
@@ -409,4 +409,13 @@ omega_matrix <- function(r){
   matrix(d_all$FINAL,nrow=max_size)
 }
 
+#' Document manual step
+#'
+#' @param comment character. Description of change
+#' @return error with comment name
+#' @export
+manual_step <- function(comment){
+  ## TODO record this information somewhere
+  stop(paste0("manual step: ",comment), call. = FALSE)
+}
 
