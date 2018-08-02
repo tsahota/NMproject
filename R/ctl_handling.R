@@ -519,8 +519,10 @@ param_cov_text <- function(param,cov,state,data,theta_n_start,continuous = TRUE,
 
   if(any(grepl("median", par_cov_text))){
     ## get data
-    data_temp <- data %>% group_by(ID) %>% summarise_at(cov,median, na.rm = TRUE)
-    value <- signif(median(data_temp[[cov]], na.rm = TRUE), 3)
+    data_temp <- tapply(data[[cov]], data$ID, median, na.rm = TRUE)
+    #data_temp <- data %>% group_by(ID) %>% summarise_at(cov,median, na.rm = TRUE)
+    #value <- signif(median(data_temp[[cov]], na.rm = TRUE), 3)
+    value <- signif(median(data_temp, na.rm = TRUE), 3)
     par_cov_text <- gsub("median", value , par_cov_text)
   }
 
