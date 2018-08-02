@@ -419,3 +419,46 @@ manual_step <- function(comment){
   stop(paste0("manual step: ",comment), call. = FALSE)
 }
 
+#' Write derived data file.
+#'
+#' @param d data.frame. Data frame to be saved
+#' @param name name of file (without extension)
+#' @param ...  additional arguments to be passed dto write.csv
+#' @export
+
+write_derived_data <- function(d, name, ...){
+  if(grepl("\\.", name)) stop("name should be extensionless")
+
+  RData_name <- file.path("DerivedData",paste0(name,".RData"))
+  csv_name <- file.path("DerivedData",paste0(name,".csv"))
+
+  save(d, file = RData_name)
+  write.csv.nm(d, file = csv_name, ...)
+
+  message("written: ")
+  message(RData_name)
+  message(csv_name)
+}
+
+#' Read derived data
+#'
+#' @param name name of file (without extension)
+#' @param ...  additional arguments to be passed dto write.csv
+#' @export
+
+read_derived_data <- function(name, ...){
+
+  ## TODO: expand to other types of argument
+
+  if(grepl("\\.", name)) stop("name should be extensionless")
+
+  RData_name <- file.path("DerivedData",paste0(name,".RData"))
+  csv_name <- file.path("DerivedData",paste0(name,".csv"))
+
+  if(file.exists(RData_name)){
+    message("loading: ", RData_name)
+    load(file = RData_name)
+    return(get("d"))
+  } else stop("RData file not found, check name or read csv manually")
+
+}
