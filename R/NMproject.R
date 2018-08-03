@@ -432,6 +432,9 @@ write_derived_data <- function(d, name, ...){
   RData_name <- file.path("DerivedData",paste0(name,".RData"))
   csv_name <- file.path("DerivedData",paste0(name,".csv"))
 
+  d <- as.data.frame(d)
+  if(!inherits(d, "data.frame")) stop("d needs to be a data.frame or coercible into one")
+
   save(d, file = RData_name)
   write.csv.nm(d, file = csv_name, ...)
 
