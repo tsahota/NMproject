@@ -567,10 +567,28 @@ update_table_numbers <- function(ctl, run_id){
   ctl
 }
 
+#' make new control file based on previous
+#'
+#' @param r object of class nmexecute, ctl_list, ctl_character or character
+#' @param run_id character or numeric. new run_id
+#' @export
+
 new_ctl <- function(r, run_id){
   ctl <- update_table_numbers(r, run_id)
   ctl[[1]] <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",r$run_id),ctl[[1]])
   ctl[[1]] <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*",paste("\\1",Sys.info()["user"]),ctl[[1]])
   ctl
+}
+
+#' make new control file based on previous
+#'
+#' @param ctl object of class nmexecute, ctl_list, ctl_character or character
+#' @param new_seed character or numeric. new seed
+#' @return object of class ctl_character
+#' @export
+
+change_seed <- function(ctl,new_seed){
+  ctl <- ctl_character(ctl)
+  gsub("(^\\$SIM\\S*\\s+\\()[0-9]+(\\).*$)",paste0("\\1",new_seed,"\\2"),ctl)
 }
 
