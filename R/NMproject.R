@@ -289,7 +289,10 @@ data_name.default <- function(x){
     ctl <- readLines(x,warn = FALSE)
     data.row <- grep("^ *\\$DATA",ctl)
     if(length(data.row)<1) stop("can't identify data row")
-    if(length(data.row)>1) stop("multiple data rows found")
+    if(length(data.row)>1) {
+      warning("multiple data rows found. Using first")
+      data.row <- data.row[1]
+    }
     ctl <- paste(ctl[data.row:length(ctl)],collapse = " ")
     data_name <- gsub("^ *\\$DATA\\s*([^ ]+).*$","\\1",ctl)
     data_name
