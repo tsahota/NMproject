@@ -299,6 +299,17 @@ data_name.default <- function(x){
   }))
 }
 
+
+#' get data name
+#'
+#' @param ctl object of class coercible into ctl_list
+#' @export
+get_data_name <- function(ctl){
+  ctl <- ctl_list(ctl)
+  data_name <- gsub("^ *\\$DATA\\s*([^ ]+).*$","\\1",ctl$DATA)[1]
+  return(data_name)
+}
+
 #' update dollar data (name of dataset) in NONMEM control stream
 #'
 #' Generic function
@@ -310,6 +321,22 @@ update_dollar_data <- function(ctl_name,new_data_name){
   ctl <- gsub("^(\\s*\\$DATA\\s*)[^ ]+(.*)$",paste0("\\1",new_data_name,"\\2"),ctl)
   writeLines(ctl,ctl_name)
 }
+
+#' update dollar inpute in NONMEM control stream
+#'
+#' Generic function
+#' @param ctl object coercible into ctl_lst
+#' @param ... arguments to be passed to dollar_data
+#' @export
+
+update_dollar_input <- function(ctl, ...){
+  ctl <- ctl_list(ctl)
+  d <- get_data(ctl)
+  replace_with <- suppressMessages(dollar_data(d, ...))
+  ctl$INPUT <- c("$INPUT", replace_with, "")
+  ctl
+}
+
 
 #' Shiny view of NMproject
 #' @param db_name character. Name of db

@@ -68,9 +68,9 @@ ctl_list <- function(r){
     return(r)
   }
   if(inherits(r, "character")){
-      ctl <- ctl_character(r)
-      ctl <- ctl_nm2r(ctl)
-      return(ctl)
+    ctl <- ctl_character(r)
+    ctl <- ctl_nm2r(ctl)
+    return(ctl)
   }
   if(inherits(r, "ctl_character")) {
     ctl <- ctl_nm2r(r)
@@ -553,6 +553,8 @@ write_ctl <- function(ctl, run_id, dir = getOption("models.dir")){
   if(!any(c("ctl_list", "ctl_character", "character") %in% class(ctl)))
     stop("ctl needs to be class character, ctl_character, or ctl_list")
 
+  if(inherits(run_id, "nmexecute")) run_id <- run_id$run_id
+
   ctl_name <- paste0(getOption("model_file_stub"), run_id, "." ,getOption("model_file_extn"))
   ctl_name <- from_models(ctl_name, models_dir = dir)
 
@@ -591,4 +593,22 @@ change_seed <- function(ctl,new_seed){
   ctl <- ctl_character(ctl)
   gsub("(^\\$SIM\\S*\\s+\\()[0-9]+(\\).*$)",paste0("\\1",new_seed,"\\2"),ctl)
 }
+
+#' get data set
+#'
+#' @param r object coercible into ctl_character
+#' @param ... additional arguments for read.csv
+#' @export
+get_data <- function(r, ...){
+  ## doesn't rely on data base or r object contents
+  file_name <- from_models(get_data_name(ctl_character(r)))
+
+  if(normalizePath(dirname(file_name), mustWork = FALSE) == normalizePath("DerivedData")){
+    d <- read_derived_data(basename(get_stub_name(file_name)))
+  } else {
+    d <- read.csv(file_name, na = ".", ...)
+  }
+  d
+}
+
 
