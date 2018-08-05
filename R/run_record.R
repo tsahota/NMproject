@@ -14,7 +14,7 @@ ext2coef <- function(extout,file_name){
     d <- d[d$EST.NO %in% max(d$EST.NO), ]
   } else {
     cond_num <- numeric()
-    d <- tail(d,1)
+    d <- utils::tail(d,1)
   }
 
   d <- d[,c(names(d)[grepl("THETA|SIGMA|OMEGA",names(d))],

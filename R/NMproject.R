@@ -412,7 +412,7 @@ get_PMX_code_library <- function(local_path,
 #' @param r object of class nm
 #' @export
 omega_matrix <- function(r){
-  dc <- coef(r,trans=FALSE)
+  dc <- coef.nm(r,trans=FALSE)
   dc <- dc[dc$Type %in% c("OMEGAVAR","OMEGACOV"),]
   dc <- dc[,c("Parameter","FINAL")]
   dc$ROW <- as.numeric(gsub("OMEGA\\.([0-9]+)\\..*","\\1",dc$Parameter))
