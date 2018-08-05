@@ -342,7 +342,7 @@ update_parameters0 <- function(ctl,coef_from,type = c("THETA","OMEGA","SIGMA")){
 
 update_parameters <- function(ctl_lines, from){
   ctl_lines <- ctl_list(ctl_lines)
-  coef_from <- coef(from, trans=FALSE)
+  coef_from <- coef.nm(from, trans=FALSE)
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "THETA")
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "OMEGA")
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "SIGMA")
@@ -519,10 +519,10 @@ param_cov_text <- function(param,cov,state,data,theta_n_start,continuous = TRUE,
 
   if(any(grepl("median", par_cov_text))){
     ## get data
-    data_temp <- tapply(data[[cov]], data$ID, median, na.rm = TRUE)
+    data_temp <- tapply(data[[cov]], data$ID, stats::median, na.rm = TRUE)
     #data_temp <- data %>% group_by(ID) %>% summarise_at(cov,median, na.rm = TRUE)
     #value <- signif(median(data_temp[[cov]], na.rm = TRUE), 3)
-    value <- signif(median(data_temp, na.rm = TRUE), 3)
+    value <- signif(stats::median(data_temp, na.rm = TRUE), 3)
     par_cov_text <- gsub("median", value , par_cov_text)
   }
 
@@ -606,7 +606,7 @@ get_data <- function(r, ...){
   if(normalizePath(dirname(file_name), mustWork = FALSE) == normalizePath("DerivedData")){
     d <- read_derived_data(basename(get_stub_name(file_name)))
   } else {
-    d <- read.csv(file_name, na = ".", ...)
+    d <- utils::read.csv(file_name, na = ".", ...)
   }
   d
 }
