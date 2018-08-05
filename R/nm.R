@@ -521,7 +521,7 @@ file.exists2 <- function(x){ ## only true is file exists and is not a directory
 #'
 #' @param r object of class nm
 #' @export
-lst <- function(r) {
+out <- function(r) {
   if(.Platform$OS.type=="windows")
     file.show(r$output$psn.lst) else
       if(exists("file.show")) file.show(r$output$psn.lst) else
