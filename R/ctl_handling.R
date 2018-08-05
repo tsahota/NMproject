@@ -336,12 +336,13 @@ update_parameters0 <- function(ctl,coef_from,type = c("THETA","OMEGA","SIGMA")){
 
 #' update parameters from a control stream
 #'
-#' @param ctl_lines character vector. ctl file read into R
+#' @param ctl object coercible into ctl_list
 #' @param from class nm. object from which to extract results
 #' @export
 
-update_parameters <- function(ctl_lines, from){
-  ctl_lines <- ctl_list(ctl_lines)
+update_parameters <- function(ctl, from){
+  if(missing(from) & inherits(ctl, "nmexecute")) from <- ctl
+  ctl_lines <- ctl_list(ctl)
   coef_from <- coef.nm(from, trans=FALSE)
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "THETA")
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "OMEGA")
