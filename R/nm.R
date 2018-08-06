@@ -1084,21 +1084,29 @@ setup_nm_demo <- function(file_stub = paste0(getOption("model_file_stub"),1),
 #' This combines $TABLE output with the input data, allowing text columns to be retained for plotting/summaries.
 #'
 #' @param r data.frame.  object of class nm_execute
-#' @param read_fun function (default = read.csv). Function to read in original NONMEM data
-#' @param dorig data.frame. optional NONMEM input dataset. if missing, will read in using read_fun
-#' @param ... additional arguments to pass on to read_fun
+#' @param dorig data.frame. optional NONMEM input dataset.
+#' @param ... additional arguments to pass on to read.csv
 #' @export
-nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
-
-  if(!requireNamespace("xpose4")) stop("require xpose4 to be installed")
-  xpdb <- xpose4::xpose.data(r$run_id,directory=paste0(r$run_in,"/"))
-  d <- xpdb@Data
-
-  if(missing(dorig)){
-    data_loc <- file.path(r$run_in,r$input$data_name)
-    if(!"na" %in% names(list)) dorig <- read_fun(data_loc,na=".",...) else
-      dorig <- read_fun(data_loc,...)
+nm_output <- function(r,dorig,...){
+  
+  if(requireNamespace("xpose4")) {
+    xpdb <- xpose4::xpose.data(r$run_id,directory=paste0(r$run_in,"/"))
+    d <- xpdb@Data
   }
+  
+  if(nrow(d) == 0){
+    ctl_out_files <- r$output$ctl_out_files
+    ctl_out_files <- ctl_out_files[grepl("tab", ctl_out_files)]
+    
+    d <- lapply(ctl_out_files, function(out_file){
+      d <- utils::read.table(out_file, skip = 1, header = TRUE)
+    })
+    
+    d <- do.call(cbind,d)
+    d <- d[,!duplicated(names(d))]
+  }
+
+  if(missing(dorig)) dorig <- get_data(r,...)
 
   ctl_content <- readLines(r$ctl,warn = FALSE)
   dol_data <- ctl_nm2r(ctl_content)$DATA

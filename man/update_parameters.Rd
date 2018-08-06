@@ -4,10 +4,10 @@
 \alias{update_parameters}
 \title{update parameters from a control stream}
 \usage{
-update_parameters(ctl_lines, from)
+update_parameters(ctl, from)
 }
 \arguments{
-\item{ctl_lines}{character vector. ctl file read into R}
+\item{ctl}{object coercible into ctl_list}
 
 \item{from}{class nm. object from which to extract results}
 }
