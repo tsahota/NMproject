@@ -12,5 +12,6 @@ load_top_level_models(script_name)
 \description{
 Will rerun all '<- nm()' definitions
 Only remakes top level definitions.
-Programmatic use of nm() (e.g. in a for loop) will generally not work. Sorry!
+Programmatic use of nm() (e.g. in a for loop or using paste with other objects) will generally not work.
+Sorry!
 }

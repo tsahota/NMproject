@@ -518,7 +518,8 @@ load_models <- function (x){
 #'
 #' Will rerun all '<- nm()' definitions
 #' Only remakes top level definitions.
-#' Programmatic use of nm() (e.g. in a for loop) will generally not work. Sorry!
+#' Programmatic use of nm() (e.g. in a for loop or using paste with other objects) will generally not work.
+#' Sorry!
 #' 
 #' @param script_name path to script file
 #' @export
