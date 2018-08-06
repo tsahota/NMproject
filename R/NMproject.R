@@ -495,3 +495,37 @@ read_derived_data <- function(name, ...){
   } else stop("RData file not found, check name or read csv manually")
 
 }
+
+
+load_models <- function (x){
+  if (is.name(x) || is.atomic(x)) {
+    return(NULL)
+  }
+  else if (is.call(x)) {
+    if (is.name(x[[1]])) {
+      if (identical(x[[1]], quote(`<-`)) &&
+          identical(x[[3]][[1]], quote(nm))){
+        message("\nrunning: ", deparse(x))
+        return(eval(x, envir = .GlobalEnv))
+      } else {
+        return(NULL)
+      }
+    }
+  }
+}
+
+#' load all model objects defined in a script
+#'
+#' Will rerun all '<- nm()' definitions
+#' Only remakes top level definitions.
+#' Programmatic use of nm() (e.g. in a for loop) will generally not work. Sorry!
+#' 
+#' @param script_name path to script file
+#' @export
+
+load_top_level_models <- function(script_name){
+  text <- parse(script_name)
+  unlist(lapply(text, load_models))
+  invisible()
+}
+
