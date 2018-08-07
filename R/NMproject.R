@@ -445,8 +445,33 @@ omega_matrix <- function(r){
 #' @return error with comment name
 #' @export
 manual_step <- function(comment){
-  ## TODO record this information somewhere
-  stop(paste0("manual step: ",comment), call. = FALSE)
+  opt <- options()
+  on.exit(options(opt))
+  options(show.error.messages=FALSE) 
+  message(paste0("manual step: ",comment))
+  stop()
+}
+
+#' Document manual steps for traceability
+#'
+#' This function will stop execution to prevent accidental partial execution 
+#' 
+#' @param code_section code section. A potential mix of R code and manual_step() statements 
+#' @return error with comment name
+#' @examples 
+#' \dontrun{
+#' manual({
+#'   m16 %>% update_parameters(m16) %>% write_ctl("17")
+#'   manual_step("reparameterised CL -> K")
+#' })
+#' }
+#' @export
+manual <- function(code_section){
+  opt <- options()
+  on.exit(options(opt))
+  options(show.error.messages=FALSE) 
+  message("Manual code section - stopping execution.\nTo redo, run any code line by line and redo manual steps in description")
+  stop()
 }
 
 #' Write derived data file.
