@@ -467,10 +467,12 @@ manual_step <- function(comment){
 #' }
 #' @export
 manual <- function(code_section){
+  code_section <- deparse(substitute(code_section))
+  if(!any(grepl("manual_step", code_section))) stop("code_section should contain one or more uses of manual_step().  See ?manual for example")
   opt <- options()
   on.exit(options(opt))
   options(show.error.messages=FALSE) 
-  message("Manual code section - stopping execution.\nTo redo, run any code line by line and redo manual steps in description")
+  message("---Manual code section - stopping execution to prevent partial overwriting---\nTo redo this segment, run any code lines line by line and redo manual_step()s manually")
   stop()
 }
 
