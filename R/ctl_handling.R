@@ -439,6 +439,8 @@ add_cov <- function(ctl, param, cov, state, continuous = TRUE, data, time_varyin
                 ctl$PK[-1])
 
     tv_definition_row <- which(grepl(paste0("^\\s*",tvparam,"\\s*="), rem_comment(ctl$PK)))
+    dont_count <- which(grepl(paste0("^\\s*",tvparam,"\\s*=.*",tvparam), rem_comment(ctl$PK)))
+    tv_definition_row <- setdiff(tv_definition_row, dont_count)
     if(length(tv_definition_row) > 1) stop("can't find unique TV parameter definition in $PK")
     if(length(tv_definition_row) == 0) stop("can't find TV parameter definition in $PK")
 
