@@ -547,15 +547,13 @@ load_top_level_models <- function(script_name){
 
 code_snapshot <- function(message = "created automatic snapshot", session = TRUE, db_name = "runs.sqlite", ...){
   current_runs <- show_runs(db_name = db_name)
-
-  ## 'all' doesn't seem to work in git2r::commit, so add the 
-  git2r::add(git2r::repository("."),
-             c(file.path(getOption("scripts.dir"),"*"),
-               current_runs$ctl,
-               file.path("SourceData","*"),
-               db_name))  
   
-  git2r::commit(git2r::repository("."), message = message, all = TRUE, session = session, ...)
-  message("Committed ctl files, scripts, and source data")
+  files_to_stage <- c(file.path(getOption("scripts.dir"),"*"),
+                      current_runs$ctl,
+                      file.path("SourceData","*"),
+                      db_name)
+  
+  tidyproject::code_snapshot_files(message = message, session = session, files_to_stage = files_to_stage, ...)
+  
 }
 
