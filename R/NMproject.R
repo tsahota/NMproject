@@ -74,9 +74,6 @@ set_nm_opts <- function(){
                 "lasso","llp","mcmp","mimp","nca","npc","parallel_retries","pvar","randtest","rawresults","runrecord",
                 "scm","se_of_eta","sir","sse","sumo","update","update_inits","vpc","xv_scm"))
 
-  if(is.null(getOption("system_cmd"))) options(system_cmd=function(cmd,...) {
-    if(.Platform$OS.type == "windows") shell(cmd,...) else system(cmd,...)
-  })
   if(is.null(getOption("system_nm"))) options(system_nm=system_nm_default)
   if(is.null(getOption("quiet_run"))) options(quiet_run=TRUE)
   if(is.null(getOption("intern"))) options(intern=FALSE)
@@ -135,17 +132,6 @@ system_nm_default <- function(cmd,...) {
   } else system(cmd,...)
 }
 
-#' system/shell command wrapper
-#'
-#' @param cmd character. command to send to shell
-#' @param dir character. directory to run command in
-#' @param ... other arguments passed to system command
-#' @export
-system_cmd <- function(cmd,dir=".",...){
-  if(!dir %in% ".") if(file.exists(dir)) {currentwd <- getwd(); setwd(dir) ; on.exit(setwd(currentwd))} else
-    stop(paste0("Directory \"",dir,"\" doesn't exist."))
-  getOption("system_cmd")(cmd,...)
-}
 
 #' system command for NONMEM execution
 #'
@@ -445,19 +431,17 @@ omega_matrix <- function(r){
 #' @return error with comment name
 #' @export
 manual_step <- function(comment){
-  opt <- options()
-  on.exit(options(opt))
-  options(show.error.messages=FALSE) 
-  message(paste0("manual step: ",comment))
-  stop()
+  stop("This is a manual analysis step.
+It should only reside in a manual() code segment.
+You should not be trying to execute this directly. See ?manual for help.")
 }
 
 #' Document manual steps for traceability
 #'
-#' This function will stop execution to prevent accidental partial execution 
+#' This function will not execute to prevent accidental partial execution 
 #' 
 #' @param code_section code section. A potential mix of R code and manual_step() statements 
-#' @return error with comment name
+#' @return message to user
 #' @examples 
 #' \dontrun{
 #' manual({
@@ -469,11 +453,7 @@ manual_step <- function(comment){
 manual <- function(code_section){
   code_section <- deparse(substitute(code_section))
   if(!any(grepl("manual_step", code_section))) stop("code_section should contain one or more uses of manual_step().  See ?manual for example")
-  opt <- options()
-  on.exit(options(opt))
-  options(show.error.messages=FALSE) 
-  message("---Manual code section - stopping execution to prevent partial overwriting---\nTo redo this segment, run any code lines line by line and redo manual_step()s manually")
-  stop()
+  message("  ------------- MANUAL CODE SEGMENT -------------\n  skipping execution to prevent partial overwriting")
 }
 
 #' Write derived data file.
@@ -555,5 +535,27 @@ load_top_level_models <- function(script_name){
   text <- parse(script_name)
   unlist(lapply(text, load_models))
   invisible()
+}
+
+#' Git commit of ctl files, SourceData and Scripts
+#'
+#' @param message character. Description to be added to commit
+#' @param session logical. Should sessionInfo be included in commit message
+#' @param db_name character. Name of database
+#' @param ... additional arguments for git2r::commit
+#' @export
+
+code_snapshot <- function(message = "created automatic snapshot", session = TRUE, db_name = "runs.sqlite", ...){
+  current_runs <- show_runs(db_name = db_name)
+
+  ## 'all' doesn't seem to work in git2r::commit, so add the 
+  git2r::add(git2r::repository("."),
+             c(file.path(getOption("scripts.dir"),"*"),
+               current_runs$ctl,
+               file.path("SourceData","*"),
+               db_name))  
+  
+  git2r::commit(git2r::repository("."), message = message, all = TRUE, session = session, ...)
+  message("Committed ctl files, scripts, and source data")
 }
 

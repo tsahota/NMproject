@@ -10,10 +10,10 @@ manual(code_section)
 \item{code_section}{code section. A potential mix of R code and manual_step() statements}
 }
 \value{
-error with comment name
+message to user
 }
 \description{
-This function will stop execution to prevent accidental partial execution
+This function will not execute to prevent accidental partial execution
 }
 \examples{
 \dontrun{

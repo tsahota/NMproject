@@ -938,6 +938,7 @@ non_interactive_mode <- function() {
 #' @export
 interactive_mode <- function(value) {
   if(missing(value)) stop("expecting TRUE/FALSE argument")
+  if(!is.logical(value)) stop("expecting TRUE/FALSE argument")
   if(value){
     overwrite_default(FALSE)
     wait_default(FALSE)

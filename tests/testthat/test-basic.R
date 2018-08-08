@@ -72,8 +72,6 @@ test_that("set up",{
   set_nm_opts()
   expect_true(getOption("model_file_stub")=="run")
 
-  tmp <- system_cmd("echo test",intern=TRUE, wait=TRUE)
-  expect_true(length(tmp)>0 & "character" %in% class(tmp))
   tmp <- system_nm("echo test",intern=TRUE, wait=TRUE)
   expect_true(length(tmp)>0 & "character" %in% class(tmp))
 
