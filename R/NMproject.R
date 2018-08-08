@@ -561,7 +561,7 @@ commit_file <- function(file_name){
 #' @param ... additional arguments for git2r::commit
 #' @export
 
-code_snapshot <- function(message = "created automatic snapshot", session = TRUE, db_name = "runs.sqlite", ...){
+snapshot <- function(message = "created automatic snapshot", session = TRUE, db_name = "runs.sqlite", ...){
   current_runs <- show_runs(db_name = db_name)
   
   files_to_stage <- c(file.path(getOption("scripts.dir"),"*"),
