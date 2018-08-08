@@ -4,7 +4,8 @@
 \alias{add_cov}
 \title{change to estimation control stream to sim}
 \usage{
-add_cov(ctl, param, cov, state, continuous = TRUE, data, custom_state_text)
+add_cov(ctl, param, cov, state, continuous = TRUE, data,
+  time_varying = FALSE, custom_state_text)
 }
 \arguments{
 \item{ctl}{object coercible to ctl_list}
@@ -18,6 +19,8 @@ add_cov(ctl, param, cov, state, continuous = TRUE, data, custom_state_text)
 \item{continuous}{logical (default = TRUE). is covariate continuous?}
 
 \item{data}{data.frame. dataset for problem with covariate and ID columns}
+
+\item{time_varying}{logical (default = FALSE). is the covariate time varying}
 
 \item{custom_state_text}{optional character. custom state variable to be passed to param_cov_text}
 }

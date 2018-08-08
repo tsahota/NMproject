@@ -399,30 +399,37 @@ change_to_sim <- function(ctl_lines,subpr=1,seed=1){
 #' @param state numeric. Number of state
 #' @param continuous logical (default = TRUE). is covariate continuous?
 #' @param data data.frame. dataset for problem with covariate and ID columns
+#' @param time_varying logical (default = FALSE). is the covariate time varying
 #' @param custom_state_text optional character. custom state variable to be passed to param_cov_text
 #' @export
 
-add_cov <- function(ctl, param, cov, state, continuous = TRUE, data, custom_state_text){
+add_cov <- function(ctl, param, cov, state, continuous = TRUE, data, time_varying = FALSE, custom_state_text){
 
   ctl <- ctl_list(ctl)
 
   PK_section <- rem_comment(ctl$PK)
+  
+  if(time_varying){
+    tvparam <- param
+  } else {
+    tvparam <- paste0("TV",param)
+  }
 
-  existing_param_rel <- any(grepl(paste0(param,"COV"), PK_section))
-  existing_param_cov_rel <- any(grepl(paste0(param,cov), PK_section))
+  existing_param_rel <- any(grepl(paste0("\\b",tvparam,"COV"), PK_section))
+  existing_param_cov_rel <- any(grepl(paste0("\\b",tvparam,cov), PK_section))
   if(existing_param_cov_rel) stop("covariate relation already exists, cannot add")
 
   param_info <- param_info(ctl)
   theta_n_start <- max(param_info$N) + 1
 
-  relation_start_txt <- paste0(";;; ",param,"-RELATION START")
-  relation_end_txt <- paste0(";;; ",param,"-RELATION END")
+  relation_start_txt <- paste0(";;; ",tvparam,"-RELATION START")
+  relation_end_txt <- paste0(";;; ",tvparam,"-RELATION END")
 
-  definition_start_txt <- paste0(";;; ",param,cov,"-DEFINITION START")
-  definition_end_txt <- paste0(";;; ",param,cov,"-DEFINITION END")
+  definition_start_txt <- paste0(";;; ",tvparam,cov,"-DEFINITION START")
+  definition_end_txt <- paste0(";;; ",tvparam,cov,"-DEFINITION END")
 
   if(!existing_param_rel){
-    par_relation_text <- paste0(param,"COV=",param,cov)
+    par_relation_text <- paste0(tvparam,"COV=",tvparam,cov)
 
     ## insert at beginning
     ctl$PK <- c(ctl$PK[1],"",
@@ -431,30 +438,30 @@ add_cov <- function(ctl, param, cov, state, continuous = TRUE, data, custom_stat
                 relation_end_txt,
                 ctl$PK[-1])
 
-    tv_definition_row <- which(grepl(paste0("TV",param,"\\s*="), rem_comment(ctl$PK)))
+    tv_definition_row <- which(grepl(paste0("^\\s*",tvparam,"\\s*="), rem_comment(ctl$PK)))
     if(length(tv_definition_row) > 1) stop("can't find unique TV parameter definition in $PK")
     if(length(tv_definition_row) == 0) stop("can't find TV parameter definition in $PK")
 
     ctl$PK <- c(ctl$PK[1:tv_definition_row],"",
-                paste0("TV",param," = ", param,"COV*TV",param),
+                paste0(tvparam," = ", tvparam,"COV*",tvparam),
                 ctl$PK[(tv_definition_row+1):length(ctl$PK)])
 
   }
 
   if(existing_param_rel){
-    ctl$PK <- gsub(paste0(param,"COV="),
-                   paste0(param,"COV=",param,cov,"*"),ctl$PK)
+    ctl$PK <- gsub(paste0(tvparam,"COV="),
+                   paste0(tvparam,"COV=",tvparam,cov,"*"),ctl$PK)
   }
 
   ## use state to get the relationship in there.
   if(!missing(custom_state_text)) {
-    param_cov_text <- param_cov_text(param=param,cov=cov,state = state,
+    param_cov_text <- param_cov_text(param=tvparam,cov=cov,state = state,
                                      data = data,
                                      theta_n_start = theta_n_start,
                                      continuous = continuous,
-                                     custom_state_text)
+                                     custom_state_text = custom_state_text)
   } else {
-    param_cov_text <- param_cov_text(param=param,cov=cov,state = state,
+    param_cov_text <- param_cov_text(param=tvparam,cov=cov,state = state,
                                      data = data,
                                      theta_n_start = theta_n_start,
                                      continuous = continuous)
@@ -473,9 +480,9 @@ add_cov <- function(ctl, param, cov, state, continuous = TRUE, data, custom_stat
   n_add_thetas <- attr(param_cov_text, "n")
   if(n_add_thetas > 0){
     if(n_add_thetas == 1) {
-      theta_lines <- paste0("$THETA  (-1,0.0001,5) ; ",param, cov, state)
+      theta_lines <- paste0("$THETA  (-1,0.0001,5) ; ",tvparam, cov, state)
     } else {
-      theta_lines <- paste0("$THETA  (-1,0.0001,5) ; ",param, cov, state,"_",seq_len(n_add_thetas))
+      theta_lines <- paste0("$THETA  (-1,0.0001,5) ; ",tvparam, cov, state,"_",seq_len(n_add_thetas))
     }
     ctl$THETA <- c(ctl$THETA,theta_lines)
   }
