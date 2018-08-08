@@ -537,6 +537,22 @@ load_top_level_models <- function(script_name){
   invisible()
 }
 
+#' commit individual file(s)
+#' 
+#' Has side effect that staged changed will be updated to working tree
+#'
+#' @param file_name character vector. File(s) to be committed
+#' @export
+#' @examples 
+#' \dontrun{
+#' commit_file("Scripts/script1.R")
+#' commit_file(18)  # will commit Models/run18.mod - if it exists
+#' }
+commit_file <- function(file_name){
+  file_name <- search_ctl_name(file_name)
+  tidyproject::commit_file(file_name)
+}
+
 #' Git commit of ctl files, SourceData and Scripts
 #'
 #' @param message character. Description to be added to commit
