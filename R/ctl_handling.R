@@ -551,15 +551,18 @@ param_cov_text <- function(param,cov,state,data,theta_n_start,continuous = TRUE,
 
 write_ctl <- function(ctl, run_id, dir = getOption("models.dir")){
 
-  if(!any(c("ctl_list", "ctl_character", "character") %in% class(ctl)))
-    stop("ctl needs to be class character, ctl_character, or ctl_list")
+  if(!any(c("ctl_list", "ctl_character", "character", "nmexecute") %in% class(ctl)))
+    stop("ctl needs to be class nmexecute, character, ctl_character, or ctl_list")
 
   if(inherits(run_id, "nmexecute")) run_id <- run_id$run_id
 
+  if(inherits(ctl, "nmexecute")) ctl <- ctl %>% new_ctl(run_id)
+  ctl <- ctl_character(ctl)
+  
   ctl_name <- paste0(getOption("model_file_stub"), run_id, "." ,getOption("model_file_extn"))
   ctl_name <- from_models(ctl_name, models_dir = dir)
-
-  writeLines(ctl_character(ctl), ctl_name)
+  
+  writeLines(ctl, ctl_name)
   tidyproject::setup_file(ctl_name)
 
 }
