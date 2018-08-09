@@ -577,6 +577,8 @@ run.nm <- function(...,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE
   tidyproject::check_if_tidyproject()
   #if(!quiet & !wait) stop("quiet=FALSE requires wait=TRUE")
   rl <- list(...)
+  #rl <- rl[sapply(rl, inherits, what = "nm")]
+  rl <- rl[!sapply(rl, is.null)] ## remove nulls
   rl <- lapply(rl,function(r){
     if(is.null(r$db_name)) update_db <- FALSE
     ## if directory exists, and if it's definately a directory stop
@@ -626,6 +628,8 @@ run_nm <- function(...){
 #' @export
 wait_for_finished <- function(...,initial_timeout=NA){
   rl <- list(...)
+  #rl <- rl[sapply(rl, inherits, what = "nm")]
+  rl <- rl[!sapply(rl, is.null)] ## remove nulls
   message("Waiting for jobs:\n",paste(sapply(rl,function(i)paste0(" ",i$type,":",i$ctl)),collapse = "\n"))
 
   i <- 0
