@@ -496,16 +496,15 @@ ctl <- function(r) {
       get("file.edit")(ctl_name)
 }
 
-search_ctl_name <- function(r){
+search_ctl_name <- function(r, models_dir=getOption("models.dir")){
   if(inherits(r,"nm")) ctl_name <- r$ctl
   if(inherits(r,"numeric") | inherits(r,"character")) {
     r <- as.character(r)
     rtemp <- normalizePath(r,mustWork = FALSE)
     if(file.exists2(rtemp)) ctl_name <- rtemp else {
-      rtemp <- from_models(normalizePath(r,mustWork = FALSE))
+      rtemp <- from_models(normalizePath(r,mustWork = FALSE), models_dir = models_dir)
       if(file.exists2(rtemp)) ctl_name <- rtemp else {
-        rtemp <- from_models(paste0(getOption("model_file_stub"),r,".",getOption("model_file_extn")))
-        if(file.exists2(rtemp)) ctl_name <- rtemp
+        ctl_name <- from_models(paste0(getOption("model_file_stub"),r,".",getOption("model_file_extn")), models_dir = models_dir)
       }
     }
   }
