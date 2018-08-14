@@ -46,7 +46,7 @@ test_that("Project has basic functionality",{
   expect_true(length(dn)==1)
   expect_true(class(dn)=="character")
 
-  update_dollar_data("Models/run1.mod","new.data.csv")
+  update_dollar_data("Models/run1.mod","new.data.csv") %>% write_ctl("1")
 
   dn <- data_name("Models/run1.mod")
   expect_true(dn=="new.data.csv")
