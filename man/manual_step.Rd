@@ -4,10 +4,12 @@
 \alias{manual_step}
 \title{Document manual step}
 \usage{
-manual_step(comment)
+manual_step(comment, open)
 }
 \arguments{
 \item{comment}{character. Description of change}
+
+\item{open}{object coercible into ctl file name}
 }
 \value{
 error with comment name

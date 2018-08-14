@@ -7,7 +7,7 @@
 update_dollar_data(ctl_name, new_data_name)
 }
 \arguments{
-\item{ctl_name}{character. Name of control stream}
+\item{ctl_name}{object coercible to ctl_character}
 
 \item{new_data_name}{character. Name of new dataset}
 }
