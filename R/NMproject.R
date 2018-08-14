@@ -299,13 +299,13 @@ get_data_name <- function(ctl){
 #' update dollar data (name of dataset) in NONMEM control stream
 #'
 #' Generic function
-#' @param ctl_name character. Name of control stream
+#' @param ctl_name object coercible to ctl_character
 #' @param new_data_name character. Name of new dataset
 #' @export
 update_dollar_data <- function(ctl_name,new_data_name){
-  ctl <- readLines(ctl_name,warn = FALSE)
+  ctl <- ctl_character(ctl_name)
   ctl <- gsub("^(\\s*\\$DATA\\s*)[^ ]+(.*)$",paste0("\\1",new_data_name,"\\2"),ctl)
-  writeLines(ctl,ctl_name)
+  ctl
 }
 
 #' update dollar inpute in NONMEM control stream
@@ -317,7 +317,7 @@ update_dollar_data <- function(ctl_name,new_data_name){
 
 update_dollar_input <- function(ctl, ...){
   ctl <- ctl_list(ctl)
-  d <- get_data(ctl)
+  d <- suppressMessages(get_data(ctl))
   replace_with <- suppressMessages(dollar_data(d, ...))
   ctl$INPUT <- c("$INPUT", replace_with, "")
   ctl
@@ -428,13 +428,17 @@ omega_matrix <- function(r){
 #' Document manual step
 #'
 #' @param comment character. Description of change
+#' @param open object coercible into ctl file name
 #' @return error with comment name
 #' @export
-manual_step <- function(comment){
-  stop("This is a manual analysis step.
-It should only reside in a manual() code segment.
-You should not be trying to execute this directly. See ?manual for help.")
+manual_step <- function(comment, open){
+  if(!missing(open)){
+    ctl(open)
+    message("opened for manual edit: ", search_ctl_name(open))
+  }
+  message("perform manual edit: ", comment)
 }
+
 
 #' Document manual steps for traceability
 #'
