@@ -32,7 +32,7 @@ test_that("db & plot_iter works",{
 
   m2 <- nm("qpsn -m -c auto -t 3000 -- execute run2.mod -dir=2")
 
-  ctl <- readLines(m2$ctl)
+  ctl <- ctl_character(m2)
   expect_true(inherits(ctl_character(ctl_list(m2)),"ctl_character"))
   expect_true(inherits(ctl_character(ctl_list(m2$ctl)),"ctl_character"))
   expect_true(inherits(ctl_character(ctl_list(ctl)),"ctl_character"))
