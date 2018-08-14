@@ -32,26 +32,33 @@ setup_dollar <- function(x,type){
 #' @return object of class ctl_character
 #' @export
 ctl_character <- function(r){
+  if(inherits(r, "ctl_character")) return(r)
   if(inherits(r, "nmexecute")) {
     ctl <- readLines(r$ctl)
-    class(ctl) <- c("ctl_character")
+    class(ctl) <- c("ctl_character", "character")
+    attr(ctl, "file_name") <- r$ctl
     return(ctl)
   }
   if(inherits(r, "ctl_list")) {
-    return(ctl_r2nm(r))
+    file_name <- attributes(r)$file_name
+    ctl <- ctl_r2nm(r)
+    attr(ctl, "file_name") <- file_name
+    return(ctl)
   }
   if(inherits(r, "character")){
     if(length(r) == 1){
-      ctl <- readLines(r)
-      class(ctl) <- c("ctl_character")
+      ctl_name <- search_ctl_name(r)
+      ctl <- readLines(ctl_name)
+      class(ctl) <- c("ctl_character", "character")
+      attr(ctl, "file_name") <- ctl_name
       return(ctl)
     } else {
-      class(r) <- c("ctl_character")
-      return(r)
+      #class(r) <- c("ctl_character", "character")
+      #return(r)
+      stop("cannot coerce to ctl_character")
     }
   }
-  if(inherits(r, "ctl_character")) return(r)
-  stop("class has to be one of nmexecute, character, ctl_list, ctl_character")
+  stop("cannot coerce to ctl_character")
 }
 
 #' Constructor/converter to ctl_list
@@ -59,24 +66,31 @@ ctl_character <- function(r){
 #' @return object of class ctl_list
 #' @export
 ctl_list <- function(r){
+  if(inherits(r, "ctl_character")) {
+    ctl <- ctl_nm2r(r)
+    attr(ctl, "file_name") <- attributes(r)$file_name
+    return(ctl)
+  }
   if(inherits(r, "nmexecute")) {
     ctl <- ctl_character(r)
+    file_name <- attributes(ctl)$file_name
     ctl <- ctl_nm2r(ctl)
+    attr(ctl, "file_name") <- file_name
     return(ctl)
   }
   if(inherits(r, "ctl_list")) {
     return(r)
   }
   if(inherits(r, "character")){
-    ctl <- ctl_character(r)
-    ctl <- ctl_nm2r(ctl)
-    return(ctl)
+    if(length(r) == 1){
+      ctl <- ctl_character(r)
+      file_name <- attributes(ctl)$file_name
+      ctl <- ctl_nm2r(ctl)
+      attr(ctl, "file_name") <- file_name
+      return(ctl) 
+    } else stop("cannot coerce to ctl_list")
   }
-  if(inherits(r, "ctl_character")) {
-    ctl <- ctl_nm2r(r)
-    return(ctl)
-  }
-  stop("class has to be one of nmexecute, character, ctl_list, ctl_character")
+  stop("cannot coerce to ctl_list")
 }
 
 
@@ -562,38 +576,66 @@ write_ctl <- function(ctl, run_id, dir = getOption("models.dir")){
 
   if(!any(c("ctl_list", "ctl_character", "character", "nmexecute") %in% class(ctl)))
     stop("ctl needs to be class nmexecute, character, ctl_character, or ctl_list")
+  
+  if(missing(run_id)) run_id <- get_run_id(attributes(ctl)$file_name)
 
   if(inherits(run_id, "nmexecute")) run_id <- run_id$run_id
 
-  if(inherits(ctl, "nmexecute")) ctl <- ctl %>% new_ctl(run_id)
   ctl <- ctl_character(ctl)
   
-  ctl_name <- paste0(getOption("model_file_stub"), run_id, "." ,getOption("model_file_extn"))
-  ctl_name <- from_models(ctl_name, models_dir = dir)
+  ctl_name <- search_ctl_name(run_id, models_dir = dir)
+  
+  attr(ctl, "file_name") <- ctl_name
   
   writeLines(ctl, ctl_name)
   tidyproject::setup_file(ctl_name)
+  message("written: ", ctl_name)
+  invisible(ctl)
 
 }
 
 update_table_numbers <- function(ctl, run_id){
   ctl <- ctl_list(ctl)
+  if(missing(run_id)) run_id <- get_run_id(attributes(ctl)$file_name)
   ctl$TABLE <- gsub(paste0("(FILE\\s*=\\s*\\S*tab)\\S*\\b"),paste0("\\1",run_id),ctl$TABLE)
   ctl
 }
 
 #' make new control file based on previous
 #'
-#' @param r object of class nmexecute, ctl_list, ctl_character or character
+#' @param r object coercible into ctl_list
 #' @param run_id character or numeric. new run_id
+#' @param based_on optional character new run_id
 #' @export
 
-new_ctl <- function(r, run_id){
-  ctl <- update_table_numbers(r, run_id)
-  ctl[[1]] <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",r$run_id),ctl[[1]])
+new_ctl <- function(r, run_id, based_on){
+  ctl <- ctl_list(r)
+  if(missing(based_on)){
+    if(inherits(r, "nm")){
+      based_on <- r$run_id
+    } else {
+      ## get "tab" lines
+      temp <- ctl$TABLE[grepl("FILE\\s*=\\s*\\S*tab",ctl$TABLE)]
+      if(length(temp) == 0) stop("specify based_on argument")
+      ## get unique
+      temp <- unique(gsub(".*FILE\\s*=\\s*\\S*tab(\\S*)\\b.*","\\1",temp))
+      if(length(temp) != 1) stop("specify based_on argument")
+      if(nchar(temp) == 0) stop("specify based_on argument")
+      based_on <- temp
+    }
+  }
+  
+  if(file.exists(run_id)) file_name <- run_id else
+    file_name <- from_models(paste0(getOption("model_file_stub"),run_id,".",getOption("model_file_extn")))
+  
+  attr(ctl, "file_name") <- file_name
+    
+  ctl <- update_table_numbers(ctl, run_id)
+  ctl[[1]] <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",based_on),ctl[[1]])
   ctl[[1]] <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*",paste("\\1",Sys.info()["user"]),ctl[[1]])
   ctl
 }
+
 
 #' make new control file based on previous
 #'
