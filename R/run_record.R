@@ -14,7 +14,7 @@ ext2coef <- function(extout,file_name){
     d <- d[d$EST.NO %in% max(d$EST.NO), ]
   } else {
     cond_num <- numeric()
-    d <- tail(d,1)
+    d <- utils::tail(d,1)
   }
 
   d <- d[,c(names(d)[grepl("THETA|SIGMA|OMEGA",names(d))],
@@ -52,9 +52,19 @@ ext2coef <- function(extout,file_name){
   is.omega <- grepl("OMEGA.([0-9]+\\.)+",d$Parameter)
   is.off.diag.omega <- is.omega & !is.diag.omega
   d <- d[!(is.off.diag.omega & d$FINAL == 0), ] ## get rid of off diag 0s
+  is.diag.sigma <- grepl("SIGMA.([0-9]+\\.)\\1",d$Parameter)
+  is.sigma <- grepl("SIGMA.([0-9]+\\.)+",d$Parameter)
+  is.off.diag.sigma <- is.sigma & !is.diag.sigma
+  d <- d[!(is.off.diag.sigma & d$FINAL == 0), ] ## get rid of off diag 0s
+
+
   is.diag.omega <- grepl("OMEGA.([0-9]+\\.)\\1",d$Parameter) ## redefine
   is.omega <- grepl("OMEGA.([0-9]+\\.)+",d$Parameter) ## redefine
   is.off.diag.omega <- is.omega & !is.diag.omega  ## redefine
+  is.diag.sigma <- grepl("SIGMA.([0-9]+\\.)\\1",d$Parameter) ## redefine
+  is.sigma <- grepl("SIGMA.([0-9]+\\.)+",d$Parameter) ## redefine
+  is.off.diag.sigma <- is.sigma & !is.diag.sigma ## redefine
+
   ## sort so that THETAs first, then diagonal OMEGAs, then off diag, then SIGMA, then OBJ
 
   par.char <- as.character(d$Parameter)

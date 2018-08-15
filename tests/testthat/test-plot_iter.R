@@ -33,8 +33,10 @@ test_that("db & plot_iter works",{
   m2 <- nm("qpsn -m -c auto -t 3000 -- execute run2.mod -dir=2")
 
   ctl <- readLines(m2$ctl)
-  expect_true(inherits(ctl_r2nm(ctl_nm2r(ctl)),"character"))
-  thetasR <- param_info(m2$ctl)
+  expect_true(inherits(ctl_character(ctl_list(m2)),"ctl_character"))
+  expect_true(inherits(ctl_character(ctl_list(m2$ctl)),"ctl_character"))
+  expect_true(inherits(ctl_character(ctl_list(ctl)),"ctl_character"))
+  thetasR <- param_info(m2)
   expect_true(inherits(thetasR,"data.frame"))
   thetasNM <- theta_r2nm(thetasR)
   expect_true(inherits(thetasNM,"nm.theta"))

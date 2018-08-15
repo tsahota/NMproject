@@ -202,11 +202,11 @@ copy_control <- function(from,to,overwrite=FALSE,alt_paths,from_base=FALSE){
       run_id_from <- basename(from_path)
 
   ctl <- gsub(paste0("(FILE\\s*=\\s*\\S*)",run_id_from,"\\b"),paste0("\\1",run_id),ctl)
-
   if(is_project_file)
     ctl <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",run_id_from),ctl) else
       ctl <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",from_path),ctl)
   ctl <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*",paste("\\1",Sys.info()["user"]),ctl)
+
   writeLines(ctl,to)
   if(!requireNamespace("git2r", quietly = TRUE))
     warning("git2r is recommended for this function. Please install it.")
@@ -263,7 +263,7 @@ nm_tran.default <- function(x){
     stop("nm_tran failed")
   }
   nm_tran_command <- getOption("nmtran_exe_path")
-  
+
   tempdir0 <- basename(tempdir()) ## make temporary directory in current directory
   dir.create(tempdir0) ; on.exit(unlink(tempdir0,recursive=TRUE,force = TRUE))
   file.copy(x,tempdir0) ## copy_control file
@@ -289,11 +289,25 @@ data_name.default <- function(x){
     ctl <- readLines(x,warn = FALSE)
     data.row <- grep("^ *\\$DATA",ctl)
     if(length(data.row)<1) stop("can't identify data row")
-    if(length(data.row)>1) stop("multiple data rows found")
+    if(length(data.row)>1) {
+      warning("multiple data rows found. Using first")
+      data.row <- data.row[1]
+    }
     ctl <- paste(ctl[data.row:length(ctl)],collapse = " ")
     data_name <- gsub("^ *\\$DATA\\s*([^ ]+).*$","\\1",ctl)
     data_name
   }))
+}
+
+
+#' get data name
+#'
+#' @param ctl object of class coercible into ctl_list
+#' @export
+get_data_name <- function(ctl){
+  ctl <- ctl_list(ctl)
+  data_name <- gsub("^ *\\$DATA\\s*([^ ]+).*$","\\1",ctl$DATA)[1]
+  return(data_name)
 }
 
 #' update dollar data (name of dataset) in NONMEM control stream
@@ -307,6 +321,22 @@ update_dollar_data <- function(ctl_name,new_data_name){
   ctl <- gsub("^(\\s*\\$DATA\\s*)[^ ]+(.*)$",paste0("\\1",new_data_name,"\\2"),ctl)
   writeLines(ctl,ctl_name)
 }
+
+#' update dollar inpute in NONMEM control stream
+#'
+#' Generic function
+#' @param ctl object coercible into ctl_lst
+#' @param ... arguments to be passed to dollar_data
+#' @export
+
+update_dollar_input <- function(ctl, ...){
+  ctl <- ctl_list(ctl)
+  d <- get_data(ctl)
+  replace_with <- suppressMessages(dollar_data(d, ...))
+  ctl$INPUT <- c("$INPUT", replace_with, "")
+  ctl
+}
+
 
 #' Shiny view of NMproject
 #' @param db_name character. Name of db
@@ -382,7 +412,7 @@ get_PMX_code_library <- function(local_path,
 #' @param r object of class nm
 #' @export
 omega_matrix <- function(r){
-  dc <- coef(r,trans=FALSE)
+  dc <- coef.nm(r,trans=FALSE)
   dc <- dc[dc$Type %in% c("OMEGAVAR","OMEGACOV"),]
   dc <- dc[,c("Parameter","FINAL")]
   dc$ROW <- as.numeric(gsub("OMEGA\\.([0-9]+)\\..*","\\1",dc$Parameter))
@@ -409,4 +439,59 @@ omega_matrix <- function(r){
   matrix(d_all$FINAL,nrow=max_size)
 }
 
+#' Document manual step
+#'
+#' @param comment character. Description of change
+#' @return error with comment name
+#' @export
+manual_step <- function(comment){
+  ## TODO record this information somewhere
+  stop(paste0("manual step: ",comment), call. = FALSE)
+}
 
+#' Write derived data file.
+#'
+#' @param d data.frame. Data frame to be saved
+#' @param name name of file (without extension)
+#' @param ...  additional arguments to be passed dto write.csv
+#' @export
+
+write_derived_data <- function(d, name, ...){
+  if(grepl("\\.", name)) stop("name should be extensionless")
+
+  RData_name <- file.path("DerivedData",paste0(name,".RData"))
+  csv_name <- file.path("DerivedData",paste0(name,".csv"))
+
+  d <- as.data.frame(d)
+  if(!inherits(d, "data.frame")) stop("d needs to be a data.frame or coercible into one")
+
+  save(d, file = RData_name)
+  write.csv.nm(d, file = csv_name, ...)
+
+  message("written: ")
+  message(RData_name)
+  message(csv_name)
+}
+
+#' Read derived data
+#'
+#' @param name name of file (without extension)
+#' @param ...  additional arguments to be passed dto write.csv
+#' @export
+
+read_derived_data <- function(name, ...){
+
+  ## TODO: expand to other types of argument
+
+  if(grepl("\\.", name)) stop("name should be extensionless")
+
+  RData_name <- file.path("DerivedData",paste0(name,".RData"))
+  csv_name <- file.path("DerivedData",paste0(name,".csv"))
+
+  if(file.exists(RData_name)){
+    message("loading: ", RData_name)
+    load(file = RData_name)
+    return(get("d"))
+  } else stop("RData file not found, check name or read csv manually")
+
+}

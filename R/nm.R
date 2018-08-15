@@ -521,7 +521,7 @@ file.exists2 <- function(x){ ## only true is file exists and is not a directory
 #'
 #' @param r object of class nm
 #' @export
-lst <- function(r) {
+out <- function(r) {
   if(.Platform$OS.type=="windows")
     file.show(r$output$psn.lst) else
       if(exists("file.show")) file.show(r$output$psn.lst) else
@@ -1103,6 +1103,7 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
   ctl_content <- readLines(r$ctl,warn = FALSE)
   dol_data <- ctl_nm2r(ctl_content)$DATA
   dol_data <- dol_data[!dol_data %in% ""]
+  dol_data <- rem_comment(dol_data)
 
   ignore_present <- any(grepl(".+IGNORE\\s*=\\s*\\S\\S",dol_data))
   accept_present <- any(grepl(".+ACCEPT\\s*=\\s*\\S\\S",dol_data))
@@ -1115,6 +1116,7 @@ nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
 
   if(!no_filter){
     filter_statements <- paste0(".*",type,"\\s*=\\s*\\(*(\\S[^\\)]+)\\)*.*")
+    dol_data <- dol_data[grepl(filter_statements, dol_data)]
     filter_statements <- gsub(filter_statements,"\\1",dol_data)
     filter_statements <- unlist(strsplit(filter_statements,","))
     filter_statements <- gsub("\\.EQ\\.","==",filter_statements)

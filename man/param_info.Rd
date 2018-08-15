@@ -4,10 +4,10 @@
 \alias{param_info}
 \title{Get parameter information}
 \usage{
-param_info(ctl_name)
+param_info(ctl)
 }
 \arguments{
-\item{ctl_name}{character. Path to control file}
+\item{ctl}{character. Path to control file}
 }
 \description{
 Get parameter information
