@@ -32,26 +32,33 @@ setup_dollar <- function(x,type){
 #' @return object of class ctl_character
 #' @export
 ctl_character <- function(r){
+  if(inherits(r, "ctl_character")) return(r)
   if(inherits(r, "nmexecute")) {
     ctl <- readLines(r$ctl)
-    class(ctl) <- c("ctl_character")
+    class(ctl) <- c("ctl_character", "character")
+    attr(ctl, "file_name") <- r$ctl
     return(ctl)
   }
   if(inherits(r, "ctl_list")) {
-    return(ctl_r2nm(r))
+    file_name <- attributes(r)$file_name
+    ctl <- ctl_r2nm(r)
+    attr(ctl, "file_name") <- file_name
+    return(ctl)
   }
   if(inherits(r, "character")){
     if(length(r) == 1){
-      ctl <- readLines(r)
-      class(ctl) <- c("ctl_character")
+      ctl_name <- search_ctl_name(r)
+      ctl <- readLines(ctl_name)
+      class(ctl) <- c("ctl_character", "character")
+      attr(ctl, "file_name") <- ctl_name
       return(ctl)
     } else {
-      class(r) <- c("ctl_character")
-      return(r)
+      #class(r) <- c("ctl_character", "character")
+      #return(r)
+      stop("cannot coerce to ctl_character")
     }
   }
-  if(inherits(r, "ctl_character")) return(r)
-  stop("class has to be one of nmexecute, character, ctl_list, ctl_character")
+  stop("cannot coerce to ctl_character")
 }
 
 #' Constructor/converter to ctl_list
@@ -59,24 +66,31 @@ ctl_character <- function(r){
 #' @return object of class ctl_list
 #' @export
 ctl_list <- function(r){
+  if(inherits(r, "ctl_character")) {
+    ctl <- ctl_nm2r(r)
+    attr(ctl, "file_name") <- attributes(r)$file_name
+    return(ctl)
+  }
   if(inherits(r, "nmexecute")) {
     ctl <- ctl_character(r)
+    file_name <- attributes(ctl)$file_name
     ctl <- ctl_nm2r(ctl)
+    attr(ctl, "file_name") <- file_name
     return(ctl)
   }
   if(inherits(r, "ctl_list")) {
     return(r)
   }
   if(inherits(r, "character")){
-    ctl <- ctl_character(r)
-    ctl <- ctl_nm2r(ctl)
-    return(ctl)
+    if(length(r) == 1){
+      ctl <- ctl_character(r)
+      file_name <- attributes(ctl)$file_name
+      ctl <- ctl_nm2r(ctl)
+      attr(ctl, "file_name") <- file_name
+      return(ctl) 
+    } else stop("cannot coerce to ctl_list")
   }
-  if(inherits(r, "ctl_character")) {
-    ctl <- ctl_nm2r(r)
-    return(ctl)
-  }
-  stop("class has to be one of nmexecute, character, ctl_list, ctl_character")
+  stop("cannot coerce to ctl_list")
 }
 
 
@@ -399,30 +413,37 @@ change_to_sim <- function(ctl_lines,subpr=1,seed=1){
 #' @param state numeric. Number of state
 #' @param continuous logical (default = TRUE). is covariate continuous?
 #' @param data data.frame. dataset for problem with covariate and ID columns
+#' @param time_varying logical (default = FALSE). is the covariate time varying
 #' @param custom_state_text optional character. custom state variable to be passed to param_cov_text
 #' @export
 
-add_cov <- function(ctl, param, cov, state, continuous = TRUE, data, custom_state_text){
+add_cov <- function(ctl, param, cov, state, continuous = TRUE, data, time_varying = FALSE, custom_state_text){
 
   ctl <- ctl_list(ctl)
 
   PK_section <- rem_comment(ctl$PK)
+  
+  if(time_varying){
+    tvparam <- param
+  } else {
+    tvparam <- paste0("TV",param)
+  }
 
-  existing_param_rel <- any(grepl(paste0(param,"COV"), PK_section))
-  existing_param_cov_rel <- any(grepl(paste0(param,cov), PK_section))
+  existing_param_rel <- any(grepl(paste0("\\b",tvparam,"COV"), PK_section))
+  existing_param_cov_rel <- any(grepl(paste0("\\b",tvparam,cov), PK_section))
   if(existing_param_cov_rel) stop("covariate relation already exists, cannot add")
 
   param_info <- param_info(ctl)
   theta_n_start <- max(param_info$N) + 1
 
-  relation_start_txt <- paste0(";;; ",param,"-RELATION START")
-  relation_end_txt <- paste0(";;; ",param,"-RELATION END")
+  relation_start_txt <- paste0(";;; ",tvparam,"-RELATION START")
+  relation_end_txt <- paste0(";;; ",tvparam,"-RELATION END")
 
-  definition_start_txt <- paste0(";;; ",param,cov,"-DEFINITION START")
-  definition_end_txt <- paste0(";;; ",param,cov,"-DEFINITION END")
+  definition_start_txt <- paste0(";;; ",tvparam,cov,"-DEFINITION START")
+  definition_end_txt <- paste0(";;; ",tvparam,cov,"-DEFINITION END")
 
   if(!existing_param_rel){
-    par_relation_text <- paste0(param,"COV=",param,cov)
+    par_relation_text <- paste0(tvparam,"COV=",tvparam,cov)
 
     ## insert at beginning
     ctl$PK <- c(ctl$PK[1],"",
@@ -431,30 +452,32 @@ add_cov <- function(ctl, param, cov, state, continuous = TRUE, data, custom_stat
                 relation_end_txt,
                 ctl$PK[-1])
 
-    tv_definition_row <- which(grepl(paste0("TV",param,"\\s*="), rem_comment(ctl$PK)))
+    tv_definition_row <- which(grepl(paste0("^\\s*",tvparam,"\\s*="), rem_comment(ctl$PK)))
+    dont_count <- which(grepl(paste0("^\\s*",tvparam,"\\s*=.*",tvparam), rem_comment(ctl$PK)))
+    tv_definition_row <- setdiff(tv_definition_row, dont_count)
     if(length(tv_definition_row) > 1) stop("can't find unique TV parameter definition in $PK")
     if(length(tv_definition_row) == 0) stop("can't find TV parameter definition in $PK")
 
     ctl$PK <- c(ctl$PK[1:tv_definition_row],"",
-                paste0("TV",param," = ", param,"COV*TV",param),
+                paste0(tvparam," = ", tvparam,"COV*",tvparam),
                 ctl$PK[(tv_definition_row+1):length(ctl$PK)])
 
   }
 
   if(existing_param_rel){
-    ctl$PK <- gsub(paste0(param,"COV="),
-                   paste0(param,"COV=",param,cov,"*"),ctl$PK)
+    ctl$PK <- gsub(paste0(tvparam,"COV="),
+                   paste0(tvparam,"COV=",tvparam,cov,"*"),ctl$PK)
   }
 
   ## use state to get the relationship in there.
   if(!missing(custom_state_text)) {
-    param_cov_text <- param_cov_text(param=param,cov=cov,state = state,
+    param_cov_text <- param_cov_text(param=tvparam,cov=cov,state = state,
                                      data = data,
                                      theta_n_start = theta_n_start,
                                      continuous = continuous,
-                                     custom_state_text)
+                                     custom_state_text = custom_state_text)
   } else {
-    param_cov_text <- param_cov_text(param=param,cov=cov,state = state,
+    param_cov_text <- param_cov_text(param=tvparam,cov=cov,state = state,
                                      data = data,
                                      theta_n_start = theta_n_start,
                                      continuous = continuous)
@@ -473,9 +496,9 @@ add_cov <- function(ctl, param, cov, state, continuous = TRUE, data, custom_stat
   n_add_thetas <- attr(param_cov_text, "n")
   if(n_add_thetas > 0){
     if(n_add_thetas == 1) {
-      theta_lines <- paste0("$THETA  (-1,0.0001,5) ; ",param, cov, state)
+      theta_lines <- paste0("$THETA  (-1,0.0001,5) ; ",tvparam, cov, state)
     } else {
-      theta_lines <- paste0("$THETA  (-1,0.0001,5) ; ",param, cov, state,"_",seq_len(n_add_thetas))
+      theta_lines <- paste0("$THETA  (-1,0.0001,5) ; ",tvparam, cov, state,"_",seq_len(n_add_thetas))
     }
     ctl$THETA <- c(ctl$THETA,theta_lines)
   }
@@ -551,37 +574,68 @@ param_cov_text <- function(param,cov,state,data,theta_n_start,continuous = TRUE,
 
 write_ctl <- function(ctl, run_id, dir = getOption("models.dir")){
 
-  if(!any(c("ctl_list", "ctl_character", "character") %in% class(ctl)))
-    stop("ctl needs to be class character, ctl_character, or ctl_list")
+  if(!any(c("ctl_list", "ctl_character", "character", "nmexecute") %in% class(ctl)))
+    stop("ctl needs to be class nmexecute, character, ctl_character, or ctl_list")
+  
+  if(missing(run_id)) run_id <- get_run_id(attributes(ctl)$file_name)
 
   if(inherits(run_id, "nmexecute")) run_id <- run_id$run_id
 
-  ctl_name <- paste0(getOption("model_file_stub"), run_id, "." ,getOption("model_file_extn"))
-  ctl_name <- from_models(ctl_name, models_dir = dir)
-
-  writeLines(ctl_character(ctl), ctl_name)
+  ctl <- ctl_character(ctl)
+  
+  ctl_name <- search_ctl_name(run_id, models_dir = dir)
+  
+  attr(ctl, "file_name") <- ctl_name
+  
+  writeLines(ctl, ctl_name)
   tidyproject::setup_file(ctl_name)
+  message("written: ", ctl_name)
+  invisible(ctl)
 
 }
 
 update_table_numbers <- function(ctl, run_id){
   ctl <- ctl_list(ctl)
+  if(missing(run_id)) run_id <- get_run_id(attributes(ctl)$file_name)
   ctl$TABLE <- gsub(paste0("(FILE\\s*=\\s*\\S*tab)\\S*\\b"),paste0("\\1",run_id),ctl$TABLE)
   ctl
 }
 
 #' make new control file based on previous
 #'
-#' @param r object of class nmexecute, ctl_list, ctl_character or character
+#' @param r object coercible into ctl_list
 #' @param run_id character or numeric. new run_id
+#' @param based_on optional character new run_id
 #' @export
 
-new_ctl <- function(r, run_id){
-  ctl <- update_table_numbers(r, run_id)
-  ctl[[1]] <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",r$run_id),ctl[[1]])
+new_ctl <- function(r, run_id, based_on){
+  ctl <- ctl_list(r)
+  if(missing(based_on)){
+    if(inherits(r, "nm")){
+      based_on <- r$run_id
+    } else {
+      ## get "tab" lines
+      temp <- ctl$TABLE[grepl("FILE\\s*=\\s*\\S*tab",ctl$TABLE)]
+      if(length(temp) == 0) stop("specify based_on argument")
+      ## get unique
+      temp <- unique(gsub(".*FILE\\s*=\\s*\\S*tab(\\S*)\\b.*","\\1",temp))
+      if(length(temp) != 1) stop("specify based_on argument")
+      if(nchar(temp) == 0) stop("specify based_on argument")
+      based_on <- temp
+    }
+  }
+  
+  if(file.exists(run_id)) file_name <- run_id else
+    file_name <- from_models(paste0(getOption("model_file_stub"),run_id,".",getOption("model_file_extn")))
+  
+  attr(ctl, "file_name") <- file_name
+    
+  ctl <- update_table_numbers(ctl, run_id)
+  ctl[[1]] <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",based_on),ctl[[1]])
   ctl[[1]] <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*",paste("\\1",Sys.info()["user"]),ctl[[1]])
   ctl
 }
+
 
 #' make new control file based on previous
 #'

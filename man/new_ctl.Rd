@@ -4,12 +4,14 @@
 \alias{new_ctl}
 \title{make new control file based on previous}
 \usage{
-new_ctl(r, run_id)
+new_ctl(r, run_id, based_on)
 }
 \arguments{
-\item{r}{object of class nmexecute, ctl_list, ctl_character or character}
+\item{r}{object coercible into ctl_list}
 
 \item{run_id}{character or numeric. new run_id}
+
+\item{based_on}{optional character new run_id}
 }
 \description{
 make new control file based on previous

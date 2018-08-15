@@ -496,16 +496,15 @@ ctl <- function(r) {
       get("file.edit")(ctl_name)
 }
 
-search_ctl_name <- function(r){
+search_ctl_name <- function(r, models_dir=getOption("models.dir")){
   if(inherits(r,"nm")) ctl_name <- r$ctl
   if(inherits(r,"numeric") | inherits(r,"character")) {
     r <- as.character(r)
     rtemp <- normalizePath(r,mustWork = FALSE)
     if(file.exists2(rtemp)) ctl_name <- rtemp else {
-      rtemp <- from_models(normalizePath(r,mustWork = FALSE))
+      rtemp <- from_models(normalizePath(r,mustWork = FALSE), models_dir = models_dir)
       if(file.exists2(rtemp)) ctl_name <- rtemp else {
-        rtemp <- from_models(paste0(getOption("model_file_stub"),r,".",getOption("model_file_extn")))
-        if(file.exists2(rtemp)) ctl_name <- rtemp
+        ctl_name <- from_models(paste0(getOption("model_file_stub"),r,".",getOption("model_file_extn")), models_dir = models_dir)
       }
     }
   }
@@ -577,6 +576,8 @@ run.nm <- function(...,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE
   tidyproject::check_if_tidyproject()
   #if(!quiet & !wait) stop("quiet=FALSE requires wait=TRUE")
   rl <- list(...)
+  #rl <- rl[sapply(rl, inherits, what = "nm")]
+  rl <- rl[!sapply(rl, is.null)] ## remove nulls
   rl <- lapply(rl,function(r){
     if(is.null(r$db_name)) update_db <- FALSE
     ## if directory exists, and if it's definately a directory stop
@@ -626,6 +627,8 @@ run_nm <- function(...){
 #' @export
 wait_for_finished <- function(...,initial_timeout=NA){
   rl <- list(...)
+  #rl <- rl[sapply(rl, inherits, what = "nm")]
+  rl <- rl[!sapply(rl, is.null)] ## remove nulls
   message("Waiting for jobs:\n",paste(sapply(rl,function(i)paste0(" ",i$type,":",i$ctl)),collapse = "\n"))
 
   i <- 0
@@ -938,6 +941,7 @@ non_interactive_mode <- function() {
 #' @export
 interactive_mode <- function(value) {
   if(missing(value)) stop("expecting TRUE/FALSE argument")
+  if(!is.logical(value)) stop("expecting TRUE/FALSE argument")
   if(value){
     overwrite_default(FALSE)
     wait_default(FALSE)
@@ -1084,21 +1088,29 @@ setup_nm_demo <- function(file_stub = paste0(getOption("model_file_stub"),1),
 #' This combines $TABLE output with the input data, allowing text columns to be retained for plotting/summaries.
 #'
 #' @param r data.frame.  object of class nm_execute
-#' @param read_fun function (default = read.csv). Function to read in original NONMEM data
-#' @param dorig data.frame. optional NONMEM input dataset. if missing, will read in using read_fun
-#' @param ... additional arguments to pass on to read_fun
+#' @param dorig data.frame. optional NONMEM input dataset.
+#' @param ... additional arguments to pass on to read.csv
 #' @export
-nm_output <- function(r,read_fun=utils::read.csv,dorig,...){
-
-  if(!requireNamespace("xpose4")) stop("require xpose4 to be installed")
-  xpdb <- xpose4::xpose.data(r$run_id,directory=paste0(r$run_in,"/"))
-  d <- xpdb@Data
-
-  if(missing(dorig)){
-    data_loc <- file.path(r$run_in,r$input$data_name)
-    if(!"na" %in% names(list)) dorig <- read_fun(data_loc,na=".",...) else
-      dorig <- read_fun(data_loc,...)
+nm_output <- function(r,dorig,...){
+  
+  if(requireNamespace("xpose4")) {
+    xpdb <- xpose4::xpose.data(r$run_id,directory=paste0(r$run_in,"/"))
+    d <- xpdb@Data
   }
+  
+  if(nrow(d) == 0){
+    ctl_out_files <- r$output$ctl_out_files
+    ctl_out_files <- ctl_out_files[grepl("tab", ctl_out_files)]
+    
+    d <- lapply(ctl_out_files, function(out_file){
+      d <- utils::read.table(out_file, skip = 1, header = TRUE)
+    })
+    
+    d <- do.call(cbind,d)
+    d <- d[,!duplicated(names(d))]
+  }
+
+  if(missing(dorig)) dorig <- get_data(r,...)
 
   ctl_content <- readLines(r$ctl,warn = FALSE)
   dol_data <- ctl_nm2r(ctl_content)$DATA

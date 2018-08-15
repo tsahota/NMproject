@@ -74,9 +74,6 @@ set_nm_opts <- function(){
                 "lasso","llp","mcmp","mimp","nca","npc","parallel_retries","pvar","randtest","rawresults","runrecord",
                 "scm","se_of_eta","sir","sse","sumo","update","update_inits","vpc","xv_scm"))
 
-  if(is.null(getOption("system_cmd"))) options(system_cmd=function(cmd,...) {
-    if(.Platform$OS.type == "windows") shell(cmd,...) else system(cmd,...)
-  })
   if(is.null(getOption("system_nm"))) options(system_nm=system_nm_default)
   if(is.null(getOption("quiet_run"))) options(quiet_run=TRUE)
   if(is.null(getOption("intern"))) options(intern=FALSE)
@@ -135,17 +132,6 @@ system_nm_default <- function(cmd,...) {
   } else system(cmd,...)
 }
 
-#' system/shell command wrapper
-#'
-#' @param cmd character. command to send to shell
-#' @param dir character. directory to run command in
-#' @param ... other arguments passed to system command
-#' @export
-system_cmd <- function(cmd,dir=".",...){
-  if(!dir %in% ".") if(file.exists(dir)) {currentwd <- getwd(); setwd(dir) ; on.exit(setwd(currentwd))} else
-    stop(paste0("Directory \"",dir,"\" doesn't exist."))
-  getOption("system_cmd")(cmd,...)
-}
 
 #' system command for NONMEM execution
 #'
@@ -313,13 +299,13 @@ get_data_name <- function(ctl){
 #' update dollar data (name of dataset) in NONMEM control stream
 #'
 #' Generic function
-#' @param ctl_name character. Name of control stream
+#' @param ctl_name object coercible to ctl_character
 #' @param new_data_name character. Name of new dataset
 #' @export
 update_dollar_data <- function(ctl_name,new_data_name){
-  ctl <- readLines(ctl_name,warn = FALSE)
+  ctl <- ctl_character(ctl_name)
   ctl <- gsub("^(\\s*\\$DATA\\s*)[^ ]+(.*)$",paste0("\\1",new_data_name,"\\2"),ctl)
-  writeLines(ctl,ctl_name)
+  ctl
 }
 
 #' update dollar inpute in NONMEM control stream
@@ -331,7 +317,7 @@ update_dollar_data <- function(ctl_name,new_data_name){
 
 update_dollar_input <- function(ctl, ...){
   ctl <- ctl_list(ctl)
-  d <- get_data(ctl)
+  d <- suppressMessages(get_data(ctl))
   replace_with <- suppressMessages(dollar_data(d, ...))
   ctl$INPUT <- c("$INPUT", replace_with, "")
   ctl
@@ -442,11 +428,36 @@ omega_matrix <- function(r){
 #' Document manual step
 #'
 #' @param comment character. Description of change
+#' @param open object coercible into ctl file name
 #' @return error with comment name
 #' @export
-manual_step <- function(comment){
-  ## TODO record this information somewhere
-  stop(paste0("manual step: ",comment), call. = FALSE)
+manual_step <- function(comment, open){
+  if(!missing(open)){
+    ctl(open)
+    message("opened for manual edit: ", search_ctl_name(open))
+  }
+  message("perform manual edit: ", comment)
+}
+
+
+#' Document manual steps for traceability
+#'
+#' This function will not execute to prevent accidental partial execution 
+#' 
+#' @param code_section code section. A potential mix of R code and manual_step() statements 
+#' @return message to user
+#' @examples 
+#' \dontrun{
+#' manual({
+#'   m16 %>% update_parameters(m16) %>% write_ctl("17")
+#'   manual_step("reparameterised CL -> K")
+#' })
+#' }
+#' @export
+manual <- function(code_section){
+  code_section <- deparse(substitute(code_section))
+  if(!any(grepl("manual_step", code_section))) stop("code_section should contain one or more uses of manual_step().  See ?manual for example")
+  message("  ------------- MANUAL CODE SEGMENT -------------\n  skipping execution to prevent partial overwriting")
 }
 
 #' Write derived data file.
@@ -495,3 +506,74 @@ read_derived_data <- function(name, ...){
   } else stop("RData file not found, check name or read csv manually")
 
 }
+
+
+load_models <- function (x){
+  if (is.name(x) || is.atomic(x)) {
+    return(NULL)
+  }
+  else if (is.call(x)) {
+    if (is.name(x[[1]])) {
+      if (identical(x[[1]], quote(`<-`)) &&
+          identical(x[[3]][[1]], quote(nm))){
+        message("\nrunning: ", deparse(x))
+        return(eval(x, envir = .GlobalEnv))
+      } else {
+        return(NULL)
+      }
+    }
+  }
+}
+
+#' load all model objects defined in a script
+#'
+#' Will rerun all '<- nm()' definitions
+#' Only remakes top level definitions.
+#' Programmatic use of nm() (e.g. in a for loop or using paste with other objects) will generally not work.
+#' Sorry!
+#' 
+#' @param script_name path to script file
+#' @export
+
+load_top_level_models <- function(script_name){
+  text <- parse(script_name)
+  unlist(lapply(text, load_models))
+  invisible()
+}
+
+#' commit individual file(s)
+#' 
+#' Has side effect that staged changed will be updated to working tree
+#'
+#' @param file_name character vector. File(s) to be committed
+#' @export
+#' @examples 
+#' \dontrun{
+#' commit_file("Scripts/script1.R")
+#' commit_file(18)  # will commit Models/run18.mod - if it exists
+#' }
+commit_file <- function(file_name){
+  file_name <- search_ctl_name(file_name)
+  tidyproject::commit_file(file_name)
+}
+
+#' Git commit of ctl files, SourceData and Scripts
+#'
+#' @param message character. Description to be added to commit
+#' @param session logical. Should sessionInfo be included in commit message
+#' @param db_name character. Name of database
+#' @param ... additional arguments for git2r::commit
+#' @export
+
+snapshot <- function(message = "created automatic snapshot", session = TRUE, db_name = "runs.sqlite", ...){
+  current_runs <- show_runs(db_name = db_name)
+  
+  files_to_stage <- c(file.path(getOption("scripts.dir"),"*"),
+                      current_runs$ctl,
+                      file.path("SourceData","*"),
+                      db_name)
+  
+  tidyproject::code_snapshot_files(message = message, session = session, files_to_stage = files_to_stage, ...)
+  
+}
+
