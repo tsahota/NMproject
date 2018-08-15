@@ -59,9 +59,3 @@ load_sse <- function(x, parr=F, nodes=1) {
   d <- bind_rows(d)  ## dplyr function
   
 }
-
-d <- load_sse(x = SSE_PD1, parr = F)
-d <- load_sse(x = SSE_PD1, parr = T, nodes = 12)
-d <- load_sse(x = mod33)
-d <- load_sse(x = SSE1)
-
