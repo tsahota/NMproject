@@ -2,13 +2,13 @@
 % Please edit documentation in R/NMproject.R
 \name{run_id}
 \alias{run_id}
-\title{Get run id from file name or path}
+\title{Get run id}
 \usage{
 run_id(x)
 }
 \arguments{
-\item{x}{character vector. name of file or path to get run id from}
+\item{x}{character or nm or ctl_list/ctl_character}
 }
 \description{
-Get run id from file name or path
+Get run id
 }
