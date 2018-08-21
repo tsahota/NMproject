@@ -199,14 +199,21 @@ copy_control <- function(from,to,overwrite=FALSE,alt_paths,from_base=FALSE){
   tidyproject::setup_file(to)
 }
 
-#' Get run id from file name or path
+#' Get run id
 #'
-#' @param x character vector. name of file or path to get run id from
+#' @param x character or nm or ctl_list/ctl_character
 run_id <- function(x){
-  file.regex <- paste0("^.*",getOption("model_file_stub"),"(.*)\\.",getOption("model_file_extn"),"$")
-  gsub(file.regex,"\\1",x)
+  if(inherits(x, "nm")) return(x$run_id)
+  if(inherits(x, "character") & length(x) == 1){
+    file.regex <- paste0("^.*",getOption("model_file_stub"),"(.*)\\.",getOption("model_file_extn"),"$")
+    run_id <- gsub(file.regex,"\\1",x)
+  }
+  if(inherits(x, "ctl_list") | inherits(x, "ctl_character")){
+    file_name <- attr(x, "file_name")
+    run_id <- run_id(file_name)
+  }
+  run_id
 }
-
 
 #' path of directory from models dir
 #'
