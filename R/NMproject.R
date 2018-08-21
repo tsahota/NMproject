@@ -323,6 +323,11 @@ update_dollar_input <- function(ctl, ...){
   ctl
 }
 
+add_pop_param <- function(ctl, param, unit, trans){
+  
+  
+}
+
 
 #' Shiny view of NMproject
 #' @param db_name character. Name of db
@@ -502,9 +507,11 @@ read_derived_data <- function(name, ...){
   if(file.exists(RData_name)){
     message("loading: ", RData_name)
     load(file = RData_name)
-    return(get("d"))
-  } else stop("RData file not found, check name or read csv manually")
-
+  } else {
+    if(!file.exists(csv_name)) stop("looking for ", csv_name, " but it doesn't exist. stopping...")
+    d <- utils::read.csv(csv_name, ...)
+  }
+  return(d)
 }
 
 
