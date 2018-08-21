@@ -4,10 +4,12 @@
 \alias{get_data}
 \title{get data set}
 \usage{
-get_data(r, ...)
+get_data(r, filter = FALSE, ...)
 }
 \arguments{
 \item{r}{object coercible into ctl_character}
+
+\item{filter}{logical (default = FALSE). Should NONMEM ignore filter be applied}
 
 \item{...}{additional arguments for read.csv}
 }

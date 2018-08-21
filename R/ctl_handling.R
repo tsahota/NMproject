@@ -412,12 +412,12 @@ change_to_sim <- function(ctl_lines,subpr=1,seed=1){
 #' @param cov character. Name of covariate
 #' @param state numeric. Number of state
 #' @param continuous logical (default = TRUE). is covariate continuous?
-#' @param data data.frame. dataset for problem with covariate and ID columns
 #' @param time_varying logical (default = FALSE). is the covariate time varying
 #' @param custom_state_text optional character. custom state variable to be passed to param_cov_text
 #' @export
 
-add_cov <- function(ctl, param, cov, state, continuous = TRUE, data, time_varying = FALSE, custom_state_text){
+add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
+                    time_varying = FALSE, custom_state_text){
 
   ctl <- ctl_list(ctl)
 
@@ -470,6 +470,7 @@ add_cov <- function(ctl, param, cov, state, continuous = TRUE, data, time_varyin
   }
 
   ## use state to get the relationship in there.
+  data <- suppressMessages(get_data(ctl, filter = TRUE))
   if(!missing(custom_state_text)) {
     param_cov_text <- param_cov_text(param=tvparam,cov=cov,state = state,
                                      data = data,
@@ -488,9 +489,6 @@ add_cov <- function(ctl, param, cov, state, continuous = TRUE, data, time_varyin
               param_cov_text,
               definition_end_txt,
               ctl$PK[-1])
-
-
-
 
   ## add thetas
   n_add_thetas <- attr(param_cov_text, "n")
@@ -544,8 +542,6 @@ param_cov_text <- function(param,cov,state,data,theta_n_start,continuous = TRUE,
   if(any(grepl("median", par_cov_text))){
     ## get data
     data_temp <- tapply(data[[cov]], data$ID, stats::median, na.rm = TRUE)
-    #data_temp <- data %>% group_by(ID) %>% summarise_at(cov,median, na.rm = TRUE)
-    #value <- signif(median(data_temp[[cov]], na.rm = TRUE), 3)
     value <- signif(stats::median(data_temp, na.rm = TRUE), 3)
     par_cov_text <- gsub("median", value , par_cov_text)
   }
@@ -652,9 +648,10 @@ change_seed <- function(ctl,new_seed){
 #' get data set
 #'
 #' @param r object coercible into ctl_character
+#' @param filter logical (default = FALSE). Should NONMEM ignore filter be applied
 #' @param ... additional arguments for read.csv
 #' @export
-get_data <- function(r, ...){
+get_data <- function(r, filter = FALSE, ...){
   ## doesn't rely on data base or r object contents
   file_name <- from_models(get_data_name(ctl_character(r)))
 
@@ -662,6 +659,11 @@ get_data <- function(r, ...){
     d <- read_derived_data(basename(get_stub_name(file_name)))
   } else {
     d <- utils::read.csv(file_name, na = ".", ...)
+  }
+  
+  if(filter) {
+    data_filter <- parse(text = data_filter_char(r))
+    d <- subset(d, eval(data_filter))
   }
   d
 }
