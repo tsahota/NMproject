@@ -1109,23 +1109,74 @@ nm_output <- function(r,dorig,...){
     d <- do.call(cbind,d)
     d <- d[,!duplicated(names(d))]
   }
-
+  
   if(missing(dorig)) dorig <- get_data(r,...)
+  
+  filter_statements <- data_filter_char(r)
+  #if(length(filter_statements) > 0){
+  expre <- parse(text=filter_statements)
+  dORD <- which(with(dorig,eval(expre)))
+  #if("IGNORE" %in% type) dORD <- which(with(dorig,eval(expre)))
+  #if("ACCEPT" %in% type) dORD <- which(!with(dorig,eval(expre)))
+  if(nrow(d) %% length(dORD) != 0) {
+    stop("something wrong... when R reads in original dataset
+and applies filter ",filter_statements,",
+there's ",length(dORD),"rows, but NONMEM output has ", nrow(d), " rows")
+  }    
+  #} else {
+  #  dORD <- seq_len(nrow(dorig))
+  #}
+  
+  nreps <- nrow(d) / length(dORD)
+  
+  if("PRKEY" %in% names(d)) stop("name conflict with PRKEY in xpose table. aborting...")
+  if("PRKEY" %in% names(dorig)) stop("name conflict with PRKEY in original data. aborting...")
 
-  ctl_content <- readLines(r$ctl,warn = FALSE)
-  dol_data <- ctl_nm2r(ctl_content)$DATA
+  d$PRKEY <- dORD
+  dorig$PRKEY <- 1:nrow(dorig)
+  if(nreps > 1){
+    if("SIM" %in% names(d)) stop("name conflict with SIM in xpose table. aborting...")
+    if("SIM" %in% names(dorig)) stop("name conflict with SIM in original data. aborting...")
+    d$SIM <- rep(1:nreps,each=length(dORD))
+  }
+
+  d$INNONMEM <- TRUE
+
+  ## want a DV_OUT columsn
+  if("DV_OUT" %in% names(d)) warning("name conflict with DV_OUT in xpose table. replacing...")
+  d$DV_OUT <- d$DV
+  d$DV <- NULL
+  d <- d[,c(setdiff(names(d),names(dorig)[!names(dorig) %in% c("PRKEY")]))]
+  #dorig <- dorig[,names(dorig)[!names(dorig) %in% c("DV")]]
+
+  d2 <- merge(dorig, d, all.x = TRUE, by = "PRKEY")
+
+  d2$INNONMEM <- d2$INNONMEM %in% TRUE
+  if(nreps > 1) d2$SIM[is.na(d2$SIM)] <- 0
+
+  ## row number check
+  if(nrow(d2) != nrow(d)*(nreps-1)/nreps + nrow(dorig)) stop("merge went wrong. debug")
+
+  message("Adding column: PRKEY")
+  if(nreps > 1) message("Adding column: SIM")
+
+  return(d2)
+}
+
+data_filter_char <- function(r){
+  dol_data <- ctl_list(r)$DATA
   dol_data <- dol_data[!dol_data %in% ""]
   dol_data <- rem_comment(dol_data)
-
+  
   ignore_present <- any(grepl(".+IGNORE\\s*=\\s*\\S\\S",dol_data))
   accept_present <- any(grepl(".+ACCEPT\\s*=\\s*\\S\\S",dol_data))
-
+  
   type <- NA
   if(ignore_present & accept_present) stop("cannot identify ignore columns")
   if(ignore_present) type <- "IGNORE"
   if(accept_present) type <- "ACCEPT"
   no_filter <- is.na(type)
-
+  
   if(!no_filter){
     filter_statements <- paste0(".*",type,"\\s*=\\s*\\(*(\\S[^\\)]+)\\)*.*")
     dol_data <- dol_data[grepl(filter_statements, dol_data)]
@@ -1141,48 +1192,10 @@ nm_output <- function(r,dorig,...){
     filter_statements <- gsub("\\.GE\\.",">=",filter_statements)
     filter_statements <- gsub("\\.LE\\.","<=",filter_statements)
     filter_statements <- paste(filter_statements, collapse= " | ")
-
-    expre <- parse(text=filter_statements)
-    if("IGNORE" %in% type) dORD <- which(!with(dorig,eval(expre)))
-    if("ACCEPT" %in% type) dORD <- which(with(dorig,eval(expre)))
-    if(nrow(d) %% length(dORD) != 0) stop("something wrong with IGNORE/ACCEPT. debug")
+    if("IGNORE" %in% type) filter_statements <- paste0("!(",filter_statements,")")
   } else {
-    dORD <- seq_len(nrow(dorig))
+    filter_statements <- "TRUE"
   }
-
-  nreps <- nrow(d) / length(dORD)
-
-  if("PRKEY" %in% names(d)) stop("name conflict with PRKEY in xpose table. aborting...")
-  if("PRKEY" %in% names(dorig)) stop("name conflict with PRKEY in original data. aborting...")
-
-  d$PRKEY <- dORD
-  if(nreps > 1){
-    if("SIM" %in% names(d)) stop("name conflict with SIM in xpose table. aborting...")
-    if("SIM" %in% names(dorig)) stop("name conflict with SIM in original data. aborting...")
-    d$SIM <- rep(1:nreps,each=length(dORD))
-  }
-  dorig$PRKEY <- 1:nrow(dorig)
-
-  d$INNONMEM <- TRUE
-
-  ## want a DV_OUT columsn
-  if("DV_OUT" %in% names(d)) warning("name conflict with DV_OUT in xpose table. replacing...")
-  d$DV_OUT <- d$DV
-  d$DV <- NULL
-  d <- d[,c(setdiff(names(d),names(dorig)[!names(dorig) %in% c("PRKEY")]))]
-  #dorig <- dorig[,names(dorig)[!names(dorig) %in% c("DV")]]
-
-  d2 <- merge(dorig,d,all.x = TRUE)
-
-  d2$INNONMEM <- d2$INNONMEM %in% TRUE
-  if(nreps > 1) d2$SIM[is.na(d2$SIM)] <- 0
-
-  ## row number check
-  if(nrow(d2) != nrow(d)*(nreps-1)/nreps + nrow(dorig)) stop("merge went wrong. debug")
-
-  message("Adding column: PRKEY")
-  if(nreps > 1) message("Adding column: SIM")
-
-  return(d2)
+  filter_statements
 }
 
