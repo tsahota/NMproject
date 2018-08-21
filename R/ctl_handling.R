@@ -412,16 +412,26 @@ change_to_sim <- function(ctl_lines,subpr=1,seed=1){
 #' @param cov character. Name of covariate
 #' @param state numeric. Number of state
 #' @param continuous logical (default = TRUE). is covariate continuous?
-#' @param time_varying logical (default = FALSE). is the covariate time varying
+#' @param time_varying optional logical. is the covariate time varying?
 #' @param custom_state_text optional character. custom state variable to be passed to param_cov_text
+#' @param id_var character (default = "ID"). Needed if time_varying is missing.
 #' @export
 
 add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
-                    time_varying = FALSE, custom_state_text){
+                    time_varying, custom_state_text, id_var = "ID"){
 
   ctl <- ctl_list(ctl)
 
   PK_section <- rem_comment(ctl$PK)
+  
+  data <- suppressMessages(get_data(ctl, filter = TRUE))
+  
+  if(any(is.na(data[[cov]]))) warning("missing values in ",cov," detected")
+  
+  if(missing(time_varying)){
+    max_levels <- max(tapply(data[[cov]], data[[id_var]], function(x) length(unique(x))), na.rm = TRUE)
+    if(max_levels > 1) time_varying <- TRUE else time_varying <- FALSE
+  }
   
   if(time_varying){
     tvparam <- param
@@ -470,7 +480,6 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
   }
 
   ## use state to get the relationship in there.
-  data <- suppressMessages(get_data(ctl, filter = TRUE))
   if(!missing(custom_state_text)) {
     param_cov_text <- param_cov_text(param=tvparam,cov=cov,state = state,
                                      data = data,
