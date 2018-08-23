@@ -663,6 +663,7 @@ change_seed <- function(ctl,new_seed){
 get_data <- function(r, filter = FALSE, ...){
   ## doesn't rely on data base or r object contents
   file_name <- from_models(get_data_name(ctl_character(r)))
+  if(!grepl("[a-zA-Z0-9]",basename(file_name))) stop("$DATA doesn't look like it refers to a file. Is this correct?")
 
   if(normalizePath(dirname(file_name), mustWork = FALSE) == normalizePath("DerivedData")){
     d <- read_derived_data(basename(get_stub_name(file_name)))

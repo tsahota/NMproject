@@ -1163,13 +1163,16 @@ there's ",length(dORD),"rows, but NONMEM output has ", nrow(d), " rows")
   return(d2)
 }
 
-data_filter_char <- function(r){
+#' Get ignore statement
+#' @param r object coercible into ctl_list
+#' @export
+data_ignore_char <- function(r){
   dol_data <- ctl_list(r)$DATA
   dol_data <- dol_data[!dol_data %in% ""]
   dol_data <- rem_comment(dol_data)
   
-  ignore_present <- any(grepl(".+IGNORE\\s*=\\s*\\S\\S",dol_data))
-  accept_present <- any(grepl(".+ACCEPT\\s*=\\s*\\S\\S",dol_data))
+  ignore_present <- any(grepl(".*IGNORE\\s*=\\s*\\(",dol_data))
+  accept_present <- any(grepl(".*ACCEPT\\s*=\\s*\\(",dol_data))
   
   type <- NA
   if(ignore_present & accept_present) stop("cannot identify ignore columns")
@@ -1192,10 +1195,97 @@ data_filter_char <- function(r){
     filter_statements <- gsub("\\.GE\\.",">=",filter_statements)
     filter_statements <- gsub("\\.LE\\.","<=",filter_statements)
     filter_statements <- paste(filter_statements, collapse= " | ")
-    if("IGNORE" %in% type) filter_statements <- paste0("!(",filter_statements,")")
+    if("ACCEPT" %in% type) filter_statements <- paste0("!(",filter_statements,")")
   } else {
-    filter_statements <- "TRUE"
+    filter_statements <- "FALSE"
   }
   filter_statements
 }
 
+#' Get filter statement
+#' 
+#' Opposite of data_ignore_char 
+#' 
+#' @param r object coercible into ctl_list
+#' @export
+data_filter_char <- function(r){
+  ignore_char <- data_ignore_char(r)
+  if(ignore_char == "FALSE") return("TRUE")
+  ignored <- !grepl("^!\\((.*)\\)", ignore_char)
+  accepted <- !ignored
+  if(accepted){
+    return(gsub("^!\\((.*)\\)", "\\1", ignore_char) )
+  } else {
+    return(paste0("!(",ignore_char,")"))
+  }
+}
+
+#' replace ignore statement
+#' @param ctl object coercible into ctl_list
+#' @param ignore_char character. replacement statement
+#' @export
+
+update_ignore <- function(ctl, ignore_char){
+
+  ctl <- ctl_list(ctl)
+  
+  ignore_present <- any(grepl(".*IGNORE\\s*=\\s*\\(",ctl$DATA))
+  if(ignore_present){
+    ## remove any row that matches exactly
+    ctl$DATA <- ctl$DATA[!grepl("^(\\s*)IGNORE\\s*=\\s*\\(*\\S[^\\)]+\\)*(\\s*)$",ctl$DATA)]
+    ## remove only IGNORE statement if other things are on the line.
+    ctl$DATA <- gsub("(.*)IGNORE\\s*=\\s*\\(*\\S[^\\)]+\\)*(.*)",
+         "\\1\\2", ctl$DATA)
+  }
+  
+  ignore_char <- gsub("\\s*\\|\\s*", ", ", ignore_char)
+  
+  ignore_char <- gsub("==",".EQ.",ignore_char)
+  ignore_char <- gsub("!=",".NE.",ignore_char)
+  ignore_char <- gsub(">",".GT.",ignore_char)
+  ignore_char <- gsub("<",".LT.",ignore_char)
+  ignore_char <- gsub(">=",".GE.",ignore_char)
+  ignore_char <- gsub("<=",".LE.",ignore_char)
+  
+  ignore_char <- paste0("IGNORE=(",ignore_char,")")
+  
+  last_line <- ctl$DATA[length(ctl$DATA)]
+  
+  if(grepl("^\\s*$", last_line)){
+    ctl$DATA[length(ctl$DATA)] <- ignore_char
+  } else {
+    ctl$DATA <- append(ctl$DATA, ignore_char) 
+  }
+  ctl$DATA <- append(ctl$DATA, "")
+  ctl
+
+}
+
+#' update sizes statement
+#' @param ctl object coercible into ctl_list
+#' @param sizes_char character. replacement statement
+#' @export
+
+update_sizes <- function(ctl, sizes_char){
+  ctl <- ctl_character(ctl)
+  if("SIZES" %in% names(ctl_list(ctl))){
+    stop("can't modifying existing sizes yet")
+  } else {
+    dol_matches <- grep("\\s*\\$", ctl)
+    if(length(dol_matches) == 0) dol_matches <- 1 else {
+      dol_matches <- dol_matches[1]
+    }
+    before <- c()
+    after <- ctl
+    if(dol_matches > 1){
+      before <- ctl[1:(dol_matches-1)]
+      after <- ctl[dol_matches:length(ctl)]
+    }
+    save_attr <- attributes(ctl)
+    ctl <- c(before,
+      paste("$SIZES", sizes_char),
+      after)
+    attributes(ctl) <- save_attr
+  }
+  ctl_list(ctl)
+}
