@@ -440,18 +440,14 @@ omega_matrix <- function(r){
   matrix(d_all$FINAL,nrow=max_size)
 }
 
-#' Document manual step
+#' Document manual edit
 #'
 #' @param comment character. Description of change
-#' @param open object coercible into ctl file name
 #' @return error with comment name
 #' @export
-manual_step <- function(comment, open){
-  if(!missing(open)){
-    ctl(open)
-    message("opened for manual edit: ", search_ctl_name(open))
-  }
+manual_edit <- function(comment){
   message("perform manual edit: ", comment)
+  message("recommended to use commit_file() after you're done")
 }
 
 
@@ -459,19 +455,19 @@ manual_step <- function(comment, open){
 #'
 #' This function will not execute to prevent accidental partial execution 
 #' 
-#' @param code_section code section. A potential mix of R code and manual_step() statements 
+#' @param code_section code section. A potential mix of R code and manual_edit() statements 
 #' @return message to user
 #' @examples 
 #' \dontrun{
 #' manual({
 #'   m16 %>% update_parameters(m16) %>% write_ctl("17")
-#'   manual_step("reparameterised CL -> K")
+#'   manual_edit("reparameterised CL -> K")
 #' })
 #' }
 #' @export
 manual <- function(code_section){
   code_section <- deparse(substitute(code_section))
-  if(!any(grepl("manual_step", code_section))) stop("code_section should contain one or more uses of manual_step().  See ?manual for example")
+  if(!any(grepl("manual_edit", code_section))) stop("code_section should contain one or more uses of manual_edit().  See ?manual for example")
   message("  ------------- MANUAL CODE SEGMENT -------------\n  skipping execution to prevent partial overwriting")
 }
 

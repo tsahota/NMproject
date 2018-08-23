@@ -7,7 +7,7 @@
 manual(code_section)
 }
 \arguments{
-\item{code_section}{code section. A potential mix of R code and manual_step() statements}
+\item{code_section}{code section. A potential mix of R code and manual_edit() statements}
 }
 \value{
 message to user
@@ -19,7 +19,7 @@ This function will not execute to prevent accidental partial execution
 \dontrun{
 manual({
   m16 \%>\% update_parameters(m16) \%>\% write_ctl("17")
-  manual_step("reparameterised CL -> K")
+  manual_edit("reparameterised CL -> K")
 })
 }
 }
