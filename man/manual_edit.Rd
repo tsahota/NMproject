@@ -4,9 +4,11 @@
 \alias{manual_edit}
 \title{Document manual edit}
 \usage{
-manual_edit(comment)
+manual_edit(ctl, comment)
 }
 \arguments{
+\item{ctl}{object coercible into ctl_list}
+
 \item{comment}{character. Description of change}
 }
 \value{
