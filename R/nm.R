@@ -1182,7 +1182,7 @@ data_ignore_char <- function(r){
   no_filter <- is.na(type)
   
   if(!no_filter){
-    filter_statements <- paste0(".*",type,"\\s*=\\s*\\(*(\\S[^\\)]+)\\)*.*")
+    filter_statements <- paste0(".*",type,"\\s*=\\s*\\((\\S[^\\)]+)\\)*.*")
     dol_data <- dol_data[grepl(filter_statements, dol_data)]
     filter_statements <- gsub(filter_statements,"\\1",dol_data)
     filter_statements <- unlist(strsplit(filter_statements,","))
