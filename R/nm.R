@@ -658,7 +658,8 @@ wait_for_finished <- function(...,initial_timeout=NA){
     i <- i + 1
     Sys.sleep(1)
   }
-  invisible()
+  if(length(list(...)) == 1) return(invisible(list(...)[[1]]))
+  invisible(list(...))
 }
 
 #' run status
