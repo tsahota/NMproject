@@ -442,12 +442,17 @@ omega_matrix <- function(r){
 
 #' Document manual edit
 #'
+#' @param ctl object coercible into ctl_list
 #' @param comment character. Description of change
 #' @return error with comment name
 #' @export
-manual_edit <- function(comment){
+manual_edit <- function(ctl, comment){
+  ctl <- ctl_list(ctl)
+  ctl_name <- attr(ctl, "file_name")
+  commit_file(ctl_name)
   message("perform manual edit: ", comment)
-  message("recommended to use commit_file() after you're done")
+  ctl(ctl_name)
+  message("(Recommended) after edit, save and use commit_file(",ctl_name,")")
 }
 
 
