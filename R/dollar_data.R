@@ -6,7 +6,7 @@
 #' @export
 
 dollar_data <- function(d,keep,rename){
-  keep0 <- sapply(d,class) %in% c("integer","numeric")
+  keep0 <- sapply(d,is_a_number)
   if(missing(keep)){
     message("Excluding all non-numeric items")
     keep <- keep0
@@ -56,4 +56,15 @@ dollar_data <- function(d,keep,rename){
   s <- strsplit(gsub("(.{60}\\S*) ","\\1~",s),"~")[[1]]
   lapply(s,message)
   return(invisible(s))
+}
+
+is_a_number <- function(x){
+  if(inherits(x, "integer")) return(TRUE)
+  if(inherits(x, "numeric")) return(TRUE)
+  
+  n_nas <- length(which(is.na(x)))
+  n_numeric_nas <- suppressWarnings(length(which(is.na(as.numeric(x)))))
+  
+  identical(n_nas, n_numeric_nas)
+  
 }
