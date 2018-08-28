@@ -422,7 +422,9 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
 
   ctl <- ctl_list(ctl)
 
-  PK_section <- rem_comment(ctl$PK)
+  if("PK" %in% names(ctl)) dol_PK <- "PK" else dol_PK <- "PRED"
+  
+  PK_section <- rem_comment(ctl[[dol_PK]])
   
   data <- suppressMessages(get_data(ctl, filter = TRUE))
   
@@ -456,27 +458,27 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
     par_relation_text <- paste0(tvparam,"COV=",tvparam,cov)
 
     ## insert at beginning
-    ctl$PK <- c(ctl$PK[1],"",
+    ctl[[dol_PK]] <- c(ctl[[dol_PK]][1],"",
                 relation_start_txt,
                 par_relation_text,
                 relation_end_txt,
-                ctl$PK[-1])
+                ctl[[dol_PK]][-1])
 
-    tv_definition_row <- which(grepl(paste0("^\\s*",tvparam,"\\s*="), rem_comment(ctl$PK)))
-    dont_count <- which(grepl(paste0("^\\s*",tvparam,"\\s*=.*",tvparam), rem_comment(ctl$PK)))
+    tv_definition_row <- which(grepl(paste0("^\\s*",tvparam,"\\s*="), rem_comment(ctl[[dol_PK]])))
+    dont_count <- which(grepl(paste0("^\\s*",tvparam,"\\s*=.*",tvparam), rem_comment(ctl[[dol_PK]])))
     tv_definition_row <- setdiff(tv_definition_row, dont_count)
     if(length(tv_definition_row) > 1) stop("can't find unique TV parameter definition in $PK")
     if(length(tv_definition_row) == 0) stop("can't find TV parameter definition in $PK")
 
-    ctl$PK <- c(ctl$PK[1:tv_definition_row],"",
+    ctl[[dol_PK]] <- c(ctl[[dol_PK]][1:tv_definition_row],"",
                 paste0(tvparam," = ", tvparam,"COV*",tvparam),
-                ctl$PK[(tv_definition_row+1):length(ctl$PK)])
+                ctl[[dol_PK]][(tv_definition_row+1):length(ctl[[dol_PK]])])
 
   }
 
   if(existing_param_rel){
-    ctl$PK <- gsub(paste0(tvparam,"COV="),
-                   paste0(tvparam,"COV=",tvparam,cov,"*"),ctl$PK)
+    ctl[[dol_PK]] <- gsub(paste0(tvparam,"COV="),
+                   paste0(tvparam,"COV=",tvparam,cov,"*"),ctl[[dol_PK]])
   }
 
   ## use state to get the relationship in there.
@@ -493,11 +495,11 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
                                      continuous = continuous)
   }
 
-  ctl$PK <- c(ctl$PK[1],"",
+  ctl[[dol_PK]] <- c(ctl[[dol_PK]][1],"",
               definition_start_txt,
               param_cov_text,
               definition_end_txt,
-              ctl$PK[-1])
+              ctl[[dol_PK]][-1])
 
   ## add thetas
   n_add_thetas <- attr(param_cov_text, "n")

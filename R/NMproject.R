@@ -447,12 +447,13 @@ omega_matrix <- function(r){
 #' @return error with comment name
 #' @export
 manual_edit <- function(ctl, comment){
+  if(missing(comment)) stop("needs two arguments, see ?manual_edit for help")
   ctl <- ctl_list(ctl)
   ctl_name <- attr(ctl, "file_name")
   commit_file(ctl_name)
   message("perform manual edit: ", comment)
   ctl(ctl_name)
-  message("(Recommended) after edit, save and use commit_file(",ctl_name,")")
+  message("(Recommended) after edit, save and use commit_file(\"",ctl_name,"\")")
 }
 
 
@@ -464,18 +465,46 @@ manual_edit <- function(ctl, comment){
 #' @return message to user
 #' @examples 
 #' \dontrun{
-#' manual({
-#'   m16 %>% update_parameters(m16) %>% write_ctl("17")
-#'   manual_edit("reparameterised CL -> K")
+#' build_modfile({
+#'   m16 %>% new_ctl("17") %>%  ## changes sdtab16 to sdtab17 and updated "based on: 16"
+#'   update_parameters(m16) %>% ## update parameter with final estimates from run 16
+#'   write_ctl() %>%            ## save results to file
+#'   manual_edit("reparameterised CL -> K")  ## manual edit. Save afterwards
+#'   commit_file("17")          ## (optional) snapshot file in version control system
 #' })
+#' 
+#' ## or equivalently:
+#' 
+#' build_modfile({
+#'   m16 %>% new_ctl("17") %>%
+#'   update_parameters(m16) %>% 
+#'   write_ctl()
+#'   manual_edit("17", "reparameterised CL -> K")
+#'   commit_file("17")
+#' })
+#' 
 #' }
 #' @export
-manual <- function(code_section){
-  code_section <- deparse(substitute(code_section))
-  if(!any(grepl("manual_edit", code_section))) stop("code_section should contain one or more uses of manual_edit().  See ?manual for example")
-  message("  ------------- MANUAL CODE SEGMENT -------------\n  skipping execution to prevent partial overwriting")
+build_modfile <- function(code_section){
+  code_section <- substitute(code_section)
+  code_section_text <- deparse(code_section)
+
+  if(find_ast_name(code_section, "manual_edit")){
+    message("  ------------- MANUAL CODE SEGMENT -------------
+manual_steps() detected, skipping code segment to prevent partial building of modfile,
+run line by line and follow instructions in manual_step() to build modfile")
+  } else {
+    eval(code_section, envir = parent.frame(n=2))
+  }
+  return(invisible())
 }
 
+find_ast_name <- function(object, find){
+  tests <- sapply(object, function(obj) identical(deparse(obj), find))
+  if(any(tests)) return(TRUE)
+  any(sapply(object[sapply(object, length) > 1], find_ast_name, find = find))
+}
+  
 #' Write derived data file.
 #'
 #' @param d data.frame. Data frame to be saved
