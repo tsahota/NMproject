@@ -681,7 +681,7 @@ change_seed <- function(ctl,new_seed){
 #' @export
 get_data <- function(r, filter = FALSE, ...){
   ## doesn't rely on data base or r object contents
-  file_name <- from_models(get_data_name(ctl_character(r)))
+  file_name <- file.path(r$run_in,get_data_name(ctl_character(r)))
   if(!grepl("[a-zA-Z0-9]",basename(file_name))) stop("$DATA doesn't look like it refers to a file. Is this correct?")
 
   if(normalizePath(dirname(file_name), mustWork = FALSE) == normalizePath("DerivedData")){
