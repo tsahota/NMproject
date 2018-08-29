@@ -576,6 +576,19 @@ param_cov_text <- function(param,cov,state,data,theta_n_start,continuous = TRUE,
 
 }
 
+
+#' get OFV
+#' 
+#' @param r object of class nm
+#' @export
+
+ofv <- function(r){
+  if(is.null(r)) return(NA)
+  dc <- try(coef_nm(r, trans = FALSE), silent = TRUE)
+  if(inherits(dc, "try-error")) return(NA)
+  dc$FINAL[dc$Parameter %in% "OBJ"]
+}
+
 #' write control file
 #'
 #' @param ctl object of class character, ctl_character, or ctl_list
