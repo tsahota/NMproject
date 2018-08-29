@@ -554,7 +554,11 @@ param_cov_text <- function(param,cov,state,data,theta_n_start,continuous = TRUE,
     ## get data
     data_temp <- tapply(data[[cov]], data$ID, stats::median, na.rm = TRUE)
     value <- signif(stats::median(data_temp, na.rm = TRUE), 3)
-    par_cov_text <- gsub("median", value , par_cov_text)
+    if(value>0){
+      par_cov_text <- gsub("median", value , par_cov_text) 
+    } else {
+      par_cov_text <- gsub("-\\s*median", paste0("+ ", -value) , par_cov_text)
+    }
   }
 
   ## renumber thetas
@@ -668,9 +672,9 @@ get_data <- function(r, filter = FALSE, ...){
   if(!grepl("[a-zA-Z0-9]",basename(file_name))) stop("$DATA doesn't look like it refers to a file. Is this correct?")
 
   if(normalizePath(dirname(file_name), mustWork = FALSE) == normalizePath("DerivedData")){
-    d <- read_derived_data(basename(get_stub_name(file_name)))
+    d <- read_derived_data(basename(get_stub_name(file_name)),...)
   } else {
-    d <- utils::read.csv(file_name, na = ".", ...)
+    d <- utils::read.csv(file_name, ...)
   }
   
   if(filter) {
