@@ -61,10 +61,13 @@ dollar_data <- function(d,keep,rename){
 is_a_number <- function(x){
   if(inherits(x, "integer")) return(TRUE)
   if(inherits(x, "numeric")) return(TRUE)
-  
-  n_nas <- length(which(is.na(x)))
-  n_numeric_nas <- suppressWarnings(length(which(is.na(as.numeric(x)))))
-  
-  identical(n_nas, n_numeric_nas)
-  
+  suppressWarnings({
+    if(inherits(x, "factor")) x_numeric <- as.numeric(levels(x))[x] else
+      if(inherits(x, "logical")) x_numeric <- as.numeric(as.character(x)) else
+        if(inherits(x, "character")) x_numeric <- as.numeric(x) else
+          stop("unknown class - needs development")
+  })
+  nas_x_numeric <- length(which(is.na(x_numeric)))
+  nas_x <- length(which(is.na(x)))
+  return(nas_x_numeric == nas_x)
 }

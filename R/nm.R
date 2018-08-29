@@ -1114,11 +1114,17 @@ nm_output <- function(r,dorig,...){
   if(missing(dorig)) dorig <- get_data(r,...)
   
   filter_statements <- data_filter_char(r)
+  if(identical(filter_statements, "TRUE")){
+    dORD <- seq_len(nrow(dorig))
+  } else {
+    expre <- parse(text=filter_statements)
+    dORD <- which(with(dorig,eval(expre)))    
+  }
   #if(length(filter_statements) > 0){
-  expre <- parse(text=filter_statements)
-  dORD <- which(with(dorig,eval(expre)))
+
   #if("IGNORE" %in% type) dORD <- which(with(dorig,eval(expre)))
   #if("ACCEPT" %in% type) dORD <- which(!with(dorig,eval(expre)))
+  
   if(nrow(d) %% length(dORD) != 0) {
     stop("something wrong... when R reads in original dataset
 and applies filter ",filter_statements,",
@@ -1128,6 +1134,9 @@ there's ",length(dORD),"rows, but NONMEM output has ", nrow(d), " rows")
   #  dORD <- seq_len(nrow(dorig))
   #}
   
+  ctl_contents <- ctl_character(r)
+  sim_ctl <- any(grepl("^\\s*\\$SIM",rem_comment(ctl_contents)))
+  
   nreps <- nrow(d) / length(dORD)
   
   if("PRKEY" %in% names(d)) stop("name conflict with PRKEY in xpose table. aborting...")
@@ -1135,10 +1144,11 @@ there's ",length(dORD),"rows, but NONMEM output has ", nrow(d), " rows")
 
   d$PRKEY <- dORD
   dorig$PRKEY <- 1:nrow(dorig)
-  if(nreps > 1){
+  if(sim_ctl){
     if("SIM" %in% names(d)) stop("name conflict with SIM in xpose table. aborting...")
     if("SIM" %in% names(dorig)) stop("name conflict with SIM in original data. aborting...")
     d$SIM <- rep(1:nreps,each=length(dORD))
+    message("Adding column: SIM")
   }
 
   d$INNONMEM <- TRUE
@@ -1159,7 +1169,6 @@ there's ",length(dORD),"rows, but NONMEM output has ", nrow(d), " rows")
   if(nrow(d2) != nrow(d)*(nreps-1)/nreps + nrow(dorig)) stop("merge went wrong. debug")
 
   message("Adding column: PRKEY")
-  if(nreps > 1) message("Adding column: SIM")
 
   return(d2)
 }

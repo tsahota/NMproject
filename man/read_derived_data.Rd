@@ -4,12 +4,14 @@
 \alias{read_derived_data}
 \title{Read derived data}
 \usage{
-read_derived_data(name, ...)
+read_derived_data(name, na = ".", ...)
 }
 \arguments{
 \item{name}{name of file (without extension)}
 
-\item{...}{additional arguments to be passed dto write.csv}
+\item{na}{character to be passed to read.csv}
+
+\item{...}{additional arguments to be passed to read.csv}
 }
 \description{
 Read derived data

@@ -532,12 +532,25 @@ write_derived_data <- function(d, name, ...){
 #' Read derived data
 #'
 #' @param name name of file (without extension)
-#' @param ...  additional arguments to be passed dto write.csv
+#' @param na character to be passed to read.csv
+#' @param ...  additional arguments to be passed to read.csv
 #' @export
 
-read_derived_data <- function(name, ...){
+read_derived_data <- function(name, na = ".", ...){
 
   ## TODO: expand to other types of argument
+  
+  if(file.exists(name)){
+    if(grep("\\.RData", name)) {
+      message("loading: ", name)
+      load(file = name)
+    }
+    if(grep("\\.csv", name)) {
+      message("loading: ", name)
+      d <- utils::read.csv(name, na = na, ...)
+    }
+    return(d)
+  }
 
   if(grepl("\\.", name)) stop("name should be extensionless")
 
@@ -549,7 +562,7 @@ read_derived_data <- function(name, ...){
     load(file = RData_name)
   } else {
     if(!file.exists(csv_name)) stop("looking for ", csv_name, " but it doesn't exist. stopping...")
-    d <- utils::read.csv(csv_name, ...)
+    d <- utils::read.csv(csv_name, na = na, ...)
   }
   return(d)
 }
