@@ -405,7 +405,7 @@ change_to_sim <- function(ctl_lines,subpr=1,seed=1){
   ctl_r2nm(ctl_lines)
 }
 
-#' change to estimation control stream to sim
+#' Add a covariate to a NONMEM model
 #'
 #' @param ctl object coercible to ctl_list
 #' @param param character. Name of parameter
