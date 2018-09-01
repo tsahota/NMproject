@@ -87,7 +87,7 @@ ctl_list <- function(r){
       file_name <- attributes(ctl)$file_name
       ctl <- ctl_nm2r(ctl)
       attr(ctl, "file_name") <- file_name
-      return(ctl) 
+      return(ctl)
     } else stop("cannot coerce to ctl_list")
   }
   stop("cannot coerce to ctl_list")
@@ -364,6 +364,12 @@ update_parameters <- function(ctl, from){
   ctl_lines
 }
 
+gsub_ctl <- function(ctl, ...){
+  ctl <- ctl_character(ctl)
+  ctl <- gsub(..., x = ctl)
+  ctl_list(ctl)
+}
+
 #' change to estimation control stream to sim
 #'
 #' @param ctl_lines character vector. ctl file read into R
@@ -423,18 +429,18 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
   ctl <- ctl_list(ctl)
 
   if("PK" %in% names(ctl)) dol_PK <- "PK" else dol_PK <- "PRED"
-  
+
   PK_section <- rem_comment(ctl[[dol_PK]])
-  
+
   data <- suppressMessages(get_data(ctl, filter = TRUE))
-  
+
   if(any(is.na(data[[cov]]))) warning("missing values in ",cov," detected")
-  
+
   if(missing(time_varying)){
     max_levels <- max(tapply(data[[cov]], data[[id_var]], function(x) length(unique(x))), na.rm = TRUE)
     if(max_levels > 1) time_varying <- TRUE else time_varying <- FALSE
   }
-  
+
   if(time_varying){
     tvparam <- param
   } else {
@@ -516,6 +522,145 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
 
 }
 
+#' Remove a covariate to a NONMEM model
+#'
+#' Only works with covariates added with add_cov
+#'
+#' @param ctl object coercible to ctl_list
+#' @param param character. Name of parameter
+#' @param cov character. Name of covariate
+#' @param state numeric. Number of state
+#' @param continuous logical (default = TRUE). is covariate continuous?
+#' @param time_varying optional logical. is the covariate time varying?
+#' @param custom_state_text optional character. custom state variable to be passed to param_cov_text
+#' @param id_var character (default = "ID"). Needed if time_varying is missing.
+#' @export
+
+remove_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
+                    time_varying, custom_state_text, id_var = "ID"){
+
+  ctl <- ctl_list(ctl)
+
+  if("PK" %in% names(ctl)) dol_PK <- "PK" else dol_PK <- "PRED"
+
+  PK_section <- rem_comment(ctl[[dol_PK]])
+
+  data <- suppressMessages(get_data(ctl, filter = TRUE))
+
+  if(any(is.na(data[[cov]]))) warning("missing values in ",cov," detected")
+
+  if(missing(time_varying)){
+    max_levels <- max(tapply(data[[cov]], data[[id_var]], function(x) length(unique(x))), na.rm = TRUE)
+    if(max_levels > 1) time_varying <- TRUE else time_varying <- FALSE
+  }
+
+  if(time_varying){
+    tvparam <- param
+  } else {
+    tvparam <- paste0("TV",param)
+  }
+
+  existing_param_rel <- which(grepl(paste0("\\b",tvparam,"COV"), PK_section))
+  existing_param_cov_rel <- which(grepl(paste0("\\b",tvparam,cov), PK_section))
+
+  ## remove parm vs specific cov code
+  match_start <- grep(paste0(";;; ",tvparam,cov,"-DEFINITION START"),ctl[[dol_PK]])
+  match_end <- grep(paste0(";;; ",tvparam,cov,"-DEFINITION END"),ctl[[dol_PK]])
+  if(length(match_start) == 0 | length(match_end) == 0)
+    stop("can't find cov definition code - did you add with add_cov()?")
+
+  ctl_matched <- ctl[[dol_PK]][match_start:match_end]
+  theta_match <- gregexpr("THETA\\([0-9]+\\)", ctl_matched)
+
+  thetas <- lapply(seq_along(theta_match), function(i){
+    matchi <- theta_match[[i]]
+    ctl_matchedi <- ctl_matched[i]
+    if(length(matchi) == 1)
+      if(matchi %in% -1)
+        return(NULL)
+    sapply(seq_along(matchi), function(j){
+      matchij <- matchi[j]
+      len <- attr(matchi, "match.length")[j]
+      return(substr(ctl_matchedi, matchij, matchij+len-1))
+    })
+  })
+  thetas <- unlist(thetas)
+  theta_n <- gsub("THETA\\(([0-9]+)\\)","\\1", thetas)
+  theta_n <- sort(as.numeric(theta_n))
+  reduce_thetas <- length(theta_n)
+  if(reduce_thetas > 0){
+    ctl_char <- ctl_character(ctl)
+
+    next_theta <- max(theta_n)+1
+    keep_going <- TRUE
+    while(keep_going){
+      next_text_to_match <- paste0("THETA\\(",next_theta,"\\)")
+      next_text_to_replace <- paste0("THETA\\(",next_theta-reduce_thetas,"\\)")
+      if(!any(grepl(next_text_to_match, ctl_char))){
+        keep_going <- FALSE
+      } else {
+        ctl_char <- gsub(next_text_to_match, next_text_to_replace, ctl_char)
+        next_theta <- next_theta + 1
+      }
+    }
+    ctl <- ctl_list(ctl_char)
+  }
+
+  ctl[[dol_PK]] <- ctl[[dol_PK]][setdiff(seq_along(ctl[[dol_PK]]), match_start:match_end)]
+
+  ## adjust/remove parm vs any cov code
+
+  match_start <- grep(paste0(";;; ",tvparam,"-RELATION START"),ctl[[dol_PK]])
+  match_end <- grep(paste0(";;; ",tvparam,"-RELATION END"),ctl[[dol_PK]])
+  if(length(match_start) == 0 | length(match_end) == 0)
+    stop("can't find cov relation code - did you add with add_cov()?")
+
+  rel_section <- ctl[[dol_PK]][match_start:match_end]
+
+  rel_index_all <- grep(paste0(tvparam,"COV=",tvparam,cov), rel_section)
+  unique_rel_match <- grep(paste0(tvparam,"COV=",tvparam,cov,"$"), rel_section)
+  if(length(unique_rel_match) > 1)
+    stop("can't identify unique cov relation code line- did you add with add_cov()?")
+  if(length(unique_rel_match) == 1){ ## only covariate on this param
+    ctl[[dol_PK]] <- ctl[[dol_PK]][setdiff(seq_along(ctl[[dol_PK]]), match_start:match_end)]
+    match_param_rel <- grep(paste0("\\b",tvparam, "COV\\b"), rem_comment(ctl[[dol_PK]]))
+    if(length(match_param_rel) != 1)
+      stop("can't identify parameter modification line- did you add with add_cov()?")
+    ctl[[dol_PK]] <- ctl[[dol_PK]][setdiff(seq_along(ctl[[dol_PK]]), match_param_rel)]
+  }
+  if(length(unique_rel_match) == 0){ ## (maybe - test this) other covariates
+    if(length(rel_index_all) > 1)
+      stop("can't identify unique cov relation code line- did you add with add_cov()?")
+
+    text_match_at_start <- paste0("^(",tvparam,"COV=)",tvparam,cov,"\\*(.+)")
+    match_at_start <- grep(text_match_at_start,ctl[[dol_PK]])
+
+    text_match_after_start <- paste0("^(",tvparam,"COV=.+)\\*",tvparam,cov,"(.*)")
+    match_after_start <- grep(text_match_after_start,ctl[[dol_PK]])
+
+    if(length(match_at_start) + length(match_after_start) != 1)
+      stop("couldn't identify cov relation in relation code line- did you add with add_cov()?")
+
+    if(length(match_at_start)){
+      ctl[[dol_PK]] <- gsub(text_match_at_start,"\\1\\2",ctl[[dol_PK]])
+    }
+
+    if(length(match_after_start)){
+      ctl[[dol_PK]] <- gsub(text_match_after_start,"\\1\\2",ctl[[dol_PK]])
+    }
+
+  }
+
+  matched_theta <- grep(paste0("\\$THETA\\s.*;.*",tvparam, cov), ctl$THETA)
+  if(length(matched_theta) == 0)
+    stop("can't find $THETA entry to remove- did you add with add_cov()?")
+
+  ctl$THETA <- ctl$THETA[setdiff(seq_along(ctl$THETA), matched_theta)]
+
+  ctl
+}
+
+
 param_cov_text <- function(param,cov,state,data,theta_n_start,continuous = TRUE,
                            state_text = list(
                              "2" = "PARCOV= ( 1 + THETA(1)*(COV - median))",
@@ -555,7 +700,7 @@ param_cov_text <- function(param,cov,state,data,theta_n_start,continuous = TRUE,
     data_temp <- tapply(data[[cov]], data$ID, stats::median, na.rm = TRUE)
     value <- signif(stats::median(data_temp, na.rm = TRUE), 3)
     if(value>0){
-      par_cov_text <- gsub("median", value , par_cov_text) 
+      par_cov_text <- gsub("median", value , par_cov_text)
     } else {
       par_cov_text <- gsub("-\\s*median", paste0("+ ", -value) , par_cov_text)
     }
@@ -578,7 +723,7 @@ param_cov_text <- function(param,cov,state,data,theta_n_start,continuous = TRUE,
 
 
 #' get OFV
-#' 
+#'
 #' @param r object of class nm
 #' @export
 
@@ -600,17 +745,17 @@ write_ctl <- function(ctl, run_id, dir = getOption("models.dir")){
 
   if(!any(c("ctl_list", "ctl_character", "character", "nmexecute") %in% class(ctl)))
     stop("ctl needs to be class nmexecute, character, ctl_character, or ctl_list")
-  
+
   if(missing(run_id)) run_id <- get_run_id(attributes(ctl)$file_name)
 
   if(inherits(run_id, "nmexecute")) run_id <- run_id$run_id
 
   ctl <- ctl_character(ctl)
-  
+
   ctl_name <- search_ctl_name(run_id, models_dir = dir)
-  
+
   attr(ctl, "file_name") <- ctl_name
-  
+
   writeLines(ctl, ctl_name)
   tidyproject::setup_file(ctl_name)
   message("written: ", ctl_name)
@@ -648,12 +793,12 @@ new_ctl <- function(r, run_id, based_on){
       based_on <- temp
     }
   }
-  
+
   if(file.exists(run_id)) file_name <- run_id else
     file_name <- from_models(paste0(getOption("model_file_stub"),run_id,".",getOption("model_file_extn")))
-  
+
   attr(ctl, "file_name") <- file_name
-    
+
   ctl <- update_table_numbers(ctl, run_id)
   ctl[[1]] <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",based_on),ctl[[1]])
   ctl[[1]] <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*",paste("\\1",Sys.info()["user"]),ctl[[1]])
@@ -694,7 +839,7 @@ get_data <- function(r, filter = FALSE, ...){
   } else {
     d <- utils::read.csv(file_name, ...)
   }
-  
+
   if(filter) {
     data_filter <- parse(text = data_filter_char(r))
     d <- subset(d, eval(data_filter))
