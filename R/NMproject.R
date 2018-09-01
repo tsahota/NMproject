@@ -331,11 +331,11 @@ update_dollar_input <- function(ctl, ...){
 }
 
 add_pop_param <- function(ctl, param, unit, trans){
-  
+
   ctl <- ctl_list(ctl)
   browser()
-  
-  
+
+
 }
 
 
@@ -450,7 +450,7 @@ manual_edit <- function(ctl, comment){
   if(missing(comment)) stop("needs two arguments, see ?manual_edit for help")
   ctl <- ctl_list(ctl)
   ctl_name <- attr(ctl, "file_name")
-  commit_file(ctl_name)
+  write_ctl(ctl)
   message("perform manual edit: ", comment)
   ctl(ctl_name)
   message("(Recommended) after edit, save and use commit_file(\"",ctl_name,"\")")
@@ -459,11 +459,11 @@ manual_edit <- function(ctl, comment){
 
 #' Document manual steps for traceability
 #'
-#' This function will not execute to prevent accidental partial execution 
-#' 
-#' @param code_section code section. A potential mix of R code and manual_edit() statements 
+#' This function will not execute to prevent accidental partial execution
+#'
+#' @param code_section code section. A potential mix of R code and manual_edit() statements
 #' @return message to user
-#' @examples 
+#' @examples
 #' \dontrun{
 #' build_modfile({
 #'   m16 %>% new_ctl("17") %>%  ## changes sdtab16 to sdtab17 and updated "based on: 16"
@@ -472,17 +472,17 @@ manual_edit <- function(ctl, comment){
 #'   manual_edit("reparameterised CL -> K")  ## manual edit. Save afterwards
 #'   commit_file("17")          ## (optional) snapshot file in version control system
 #' })
-#' 
+#'
 #' ## or equivalently:
-#' 
+#'
 #' build_modfile({
 #'   m16 %>% new_ctl("17") %>%
-#'   update_parameters(m16) %>% 
+#'   update_parameters(m16) %>%
 #'   write_ctl()
 #'   manual_edit("17", "reparameterised CL -> K")
 #'   commit_file("17")
 #' })
-#' 
+#'
 #' }
 #' @export
 build_modfile <- function(code_section){
@@ -502,9 +502,11 @@ run line by line and follow instructions in manual_step() to build modfile")
 find_ast_name <- function(object, find){
   tests <- sapply(object, function(obj) identical(deparse(obj), find))
   if(any(tests)) return(TRUE)
+  lengths <- sapply(object, length) > 1
+  if(!any(lengths)) return(FALSE)
   any(sapply(object[sapply(object, length) > 1], find_ast_name, find = find))
 }
-  
+
 #' Write derived data file.
 #'
 #' @param d data.frame. Data frame to be saved
@@ -539,7 +541,7 @@ write_derived_data <- function(d, name, ...){
 read_derived_data <- function(name, na = ".", ...){
 
   ## TODO: expand to other types of argument
-  
+
   if(file.exists(name)){
     if(grep("\\.RData", name)) {
       message("loading: ", name)
@@ -598,7 +600,7 @@ load_models <- function (x){
 #' Only remakes top level definitions.
 #' Programmatic use of nm() (e.g. in a for loop or using paste with other objects) will generally not work.
 #' Sorry!
-#' 
+#'
 #' @param script_name path to script file
 #' @export
 
@@ -609,12 +611,12 @@ load_top_level_models <- function(script_name){
 }
 
 #' commit individual file(s)
-#' 
+#'
 #' Has side effect that staged changed will be updated to working tree
 #'
 #' @param file_name character vector. File(s) to be committed
 #' @export
-#' @examples 
+#' @examples
 #' \dontrun{
 #' commit_file("Scripts/script1.R")
 #' commit_file(18)  # will commit Models/run18.mod - if it exists
@@ -634,13 +636,13 @@ commit_file <- function(file_name){
 
 snapshot <- function(message = "created automatic snapshot", session = TRUE, db_name = "runs.sqlite", ...){
   current_runs <- show_runs(db_name = db_name)
-  
+
   files_to_stage <- c(file.path(getOption("scripts.dir"),"*"),
                       current_runs$ctl,
                       file.path("SourceData","*"),
                       db_name)
-  
+
   tidyproject::code_snapshot_files(message = message, session = session, files_to_stage = files_to_stage, ...)
-  
+
 }
 
