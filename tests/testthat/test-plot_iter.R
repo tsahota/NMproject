@@ -20,29 +20,38 @@ test_that("db & plot_iter works",{
   setwd(proj_name)
 
   testloc <- file.path(currentwd,"testfiles")
-
-  file.copy(file.path(testloc,"."),"Models",recursive = TRUE)
-  file.copy("Models/2/NM_run1/catab2","Models/.")
-  file.copy("Models/2/NM_run1/sdtab2","Models/.")
-  file.copy("Models/2/NM_run1/cotab2","Models/.")
-  file.copy("Models/2/NM_run1/patab2","Models/.")
+  
+  file.copy(file.path(testloc,"."),".",recursive = TRUE)
 
   ### end boiler plate
   ############################
 
-  m2 <- nm("qpsn -m -c auto -t 3000 -- execute run2.mod -dir=2")
+  m1 <- nm("qpsn -m -c auto -t 3000 -- execute run1.mod -dir=1")
 
-  ctl <- ctl_character(m2)
-  expect_true(inherits(ctl_character(ctl_list(m2)),"ctl_character"))
-  expect_true(inherits(ctl_character(ctl_list(m2$ctl)),"ctl_character"))
+  ctl <- ctl_character(m1)
+  expect_true(inherits(ctl_character(ctl_list(m1)),"ctl_character"))
+  expect_true(inherits(ctl_character(ctl_list(m1$ctl)),"ctl_character"))
   expect_true(inherits(ctl_character(ctl_list(ctl)),"ctl_character"))
-  thetasR <- param_info(m2)
+  thetasR <- param_info(m1)
   expect_true(inherits(thetasR,"data.frame"))
   thetasNM <- theta_r2nm(thetasR)
   expect_true(inherits(thetasNM,"nm.theta"))
 
-  copy_control("run2.mod","run3.mod")
-  copy_control("run2.mod","run4.mod")
+  ## old way: copy_control 
+  copy_control("run1.mod","run3.mod")
+  expect_true(file.exists("Models/run3.mod"))
+  
+  ## new way
+  build_modfile({
+    ctl <- m1 %>% update_parameters() %>% new_ctl("4") %>% write_ctl %>%
+      add_cov(param = "K", cov = "WT")
+  })
+
+  expect_true(any(grepl("KWT-DEFINITION START", ctl_character(ctl))))
+  
+  ctl_orig <- ctl %>% remove_cov(param = "K", cov = "WT")
+  
+  expect_true(!any(grepl("KWT-DEFINITION START", ctl_character(ctl_orig))))
 
   m3 <- nm("qpsn -m -c auto -t 3000 -- execute run3.mod -dir=3")
   m4 <- nm("qpsn -m -c auto -t 3000 -- execute run4.mod -dir=4")
@@ -55,22 +64,22 @@ test_that("db & plot_iter works",{
 
   expect_true(nrow(show_runs())==3) ## should still be three runs
 
-  file.copy("Models/run4.mod","Models/2/run4.mod")
-  m4 <- nm("qpsn -m -c auto -t 3000 -- execute run4.mod -dir=4",run_in="Models/2")
+  file.copy("Models/run4.mod","Models/1/run4.mod")
+  m4 <- nm("qpsn -m -c auto -t 3000 -- execute run4.mod -dir=4",run_in="Models/1")
   expect_true(nrow(show_runs())==4)
 
   expect_error(nm("qpsn -m -c auto -t 3000 -- execute run3.mod -dir=4"))
 
-  copy_control("run2.mod","run5.mod")
+  copy_control("run1.mod","run5.mod")
   ctl <- readLines("Models/run5.mod")
-  ctl <- gsub("sdtab5","sdtab2",ctl) ## create an output conflict
+  ctl <- gsub("sdtab5","sdtab1",ctl) ## create an output conflict
   write(ctl,"Models/run5.mod")
   expect_error(nm("qpsn -m -c auto -t 3000 -- execute run5.mod -dir=5"))
 
-  p <- plot_iter(m2,trans = FALSE)
+  p <- plot_iter(m1,trans = FALSE)
   expect_true(inherits(p,"ggplot"))
 
-  p <- plot_iter(m2)
+  p <- plot_iter(m1)
   expect_true(inherits(p,"ggplot"))
 
 
