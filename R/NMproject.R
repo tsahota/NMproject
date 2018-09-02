@@ -575,23 +575,16 @@ load_models <- function (x){
     return(NULL)
   }
   else if (is.call(x)) {
-    #if (is.name(x[[1]])) {
-      if (identical(x[[1]], quote(`<-`))){
-        if(is.call(x[[3]])){
-          if(identical(x[[3]][[1]], quote(nm))){
-            message("\nrunning: ", deparse(x))
-            return(eval(x, envir = .GlobalEnv))
-          }
+    if (identical(x[[1]], quote(`<-`))){
+      if(is.call(x[[3]])){
+        if(identical(x[[3]][[1]], quote(nm))){
+          message("\nrunning: ", deparse(x))
+          return(eval(x, envir = .GlobalEnv))
         }
       }
-          #identical(x[[3]][[1]], quote(nm))){
-        #message("\nrunning: ", deparse(x))
-        #return(eval(x, envir = .GlobalEnv))
-      #} else {
-        return(NULL)
-      #}
     }
-  #}
+    return(NULL)
+  }
 }
 
 #' load all model objects defined in a script

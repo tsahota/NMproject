@@ -28,6 +28,7 @@ test_that("db & plot_iter works",{
 
   m1 <- nm("qpsn -m -c auto -t 3000 -- execute run1.mod -dir=1")
 
+  ## test to see if ctl_character and ctl_list
   ctl <- ctl_character(m1)
   expect_true(inherits(ctl_character(ctl_list(m1)),"ctl_character"))
   expect_true(inherits(ctl_character(ctl_list(m1$ctl)),"ctl_character"))
@@ -44,6 +45,7 @@ test_that("db & plot_iter works",{
   ## new way
   build_modfile({
     ctl <- m1 %>% update_parameters() %>% new_ctl("4") %>% write_ctl %>%
+      update_dollar_input() %>%
       add_cov(param = "K", cov = "WT")
   })
 
@@ -75,6 +77,23 @@ test_that("db & plot_iter works",{
   ctl <- gsub("sdtab5","sdtab1",ctl) ## create an output conflict
   write(ctl,"Models/run5.mod")
   expect_error(nm("qpsn -m -c auto -t 3000 -- execute run5.mod -dir=5"))
+  
+  ## dataset procesing
+  
+  d <- get_data(m1)
+  
+  write_derived_data(d, "data")
+  
+  expect_true(file.exists("DerivedData/data.csv"))
+  expect_true(file.exists("DerivedData/data.RData"))
+  
+  d <- "temp"
+  d <- read_derived_data("data")
+  expect_true(inherits(d, "data.frame"))
+  
+  ## post processing
+  
+  expect_true(inherits(omega_matrix(m1), "matrix"))
 
   p <- plot_iter(m1,trans = FALSE)
   expect_true(inherits(p,"ggplot"))
