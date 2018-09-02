@@ -1097,7 +1097,7 @@ nm_output <- function(r,dorig,...){
   if(requireNamespace("xpose4")) {
     xpdb <- xpose4::xpose.data(r$run_id,directory=paste0(r$run_in,"/"))
     d <- xpdb@Data
-  }
+  } else d <- data.frame()
   
   if(nrow(d) == 0){
     ctl_out_files <- r$output$ctl_out_files
