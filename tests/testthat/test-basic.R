@@ -57,10 +57,12 @@ test_that("Project has basic functionality",{
   expect_true(file.exists("DerivedData/THEOPP.csv"))
   expect_true(file.exists(file.path(getOption("scripts.dir"),"theopp-demo.R")))
 
+  opts <- options()
   interactive_mode(TRUE)
   expect_true(!getOption("run_overwrite"))
   interactive_mode(FALSE)
   expect_true(getOption("run_overwrite"))
+  options(opts)
 
 })
 

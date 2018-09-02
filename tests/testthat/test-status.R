@@ -26,7 +26,7 @@ test_that("status",{
 
   m1 <- nm("qpsn -m -c auto -t 3000 -- execute run1.mod -dir=1")
 
-  expect_error(run(m1)) ## already run
+  expect_error(run(m1)) ## already run so this should fail
   expect_output(print(m1),"List of") ## does object print using str
 
   wait_default(FALSE)
