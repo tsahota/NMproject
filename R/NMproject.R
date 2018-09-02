@@ -494,7 +494,7 @@ build_modfile <- function(code_section){
 manual_steps() detected, skipping code segment to prevent partial building of modfile,
 run line by line and follow instructions in manual_step() to build modfile")
   } else {
-    eval(code_section, envir = parent.frame(n=2))
+    eval(code_section, envir = parent.frame(n=1))
   }
   return(invisible())
 }
