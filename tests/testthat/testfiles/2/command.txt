@@ -1,1 +1,0 @@
-/opt/az/psn/psn/4.4.8/bin/execute run2.mod -dir=2 -parafile=parafile-6860054.pnm

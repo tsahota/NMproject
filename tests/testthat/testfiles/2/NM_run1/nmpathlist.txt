@@ -1,5 +1,0 @@
-The pathlist /opt/az/fsf/gcc/5.2/bin:/usr/bin obtained from file /opt/az/icondevsolutions/nonmem/standard.7.3.0/nmloc is placed at the head of PATH
-The gfortran compiler at one of those locations will be used if it exists.
-If this is not what you want, then modify the file /opt/az/icondevsolutions/nonmem/standard.7.3.0/nmloc accordingly.
-The following path was selected for mpi: /opt/az/anlg/mpich2/gcc_1.4.1p1/bin/
-mpi library file to be used is /opt/az/icondevsolutions/nonmem/standard.7.3.0/mpi/mpi_ling/libmpich.a

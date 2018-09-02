@@ -1,0 +1,1 @@
+/opt/scp/software/psn/4.8.1-foss-2017a/bin/execute run1.mod -dir=1 -nmfe_options=-prdefault

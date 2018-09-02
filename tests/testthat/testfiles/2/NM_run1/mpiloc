@@ -1,2 +1,0 @@
- mpibinpath=/opt/az/anlg/mpich2/gcc_1.4.1p1/bin
- mpilib=/opt/az/icondevsolutions/nonmem/standard.7.3.0/mpi/mpi_ling/libmpich.a
