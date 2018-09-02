@@ -29,7 +29,7 @@ build_modfile({
 
 build_modfile({
   m16 \%>\% new_ctl("17") \%>\%
-  update_parameters(m16) \%>\% 
+  update_parameters(m16) \%>\%
   write_ctl()
   manual_edit("17", "reparameterised CL -> K")
   commit_file("17")
