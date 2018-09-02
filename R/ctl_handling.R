@@ -378,7 +378,7 @@ gsub_ctl <- function(ctl, ...){
 #' @export
 
 change_to_sim <- function(ctl_lines,subpr=1,seed=1){
-  ctl_lines <- ctl_nm2r(ctl_lines)
+  ctl_lines <- ctl_list(ctl_lines)
   ctl_lines$EST <- paste0(";",ctl_lines$EST)
   ctl_lines$COV <- paste0(";",ctl_lines$COV)
   if("SIM" %in% names(ctl_lines)){
@@ -388,7 +388,7 @@ change_to_sim <- function(ctl_lines,subpr=1,seed=1){
   } else {
     ## insert before $TABLE, after $ERROR/$PRED
     pred_error_pos <- which(grepl("ERROR|PRED",names(ctl_lines)))
-    if(pred_error_pos > 1) stop("multiple $ERROR/$PREDs detected - is this right?")
+    if(length(pred_error_pos) > 1) stop("multiple $ERROR/$PREDs detected - should only have one or the other?")
     ctl_lines <- append(ctl_lines,list(SIM=NA),pred_error_pos)
     ctl_lines$SIM <- paste0("$SIM (",seed,") ONLYSIM SUBPR=",subpr)
   }
