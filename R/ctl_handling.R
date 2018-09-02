@@ -364,6 +364,12 @@ update_parameters <- function(ctl, from){
   ctl_lines
 }
 
+#' gsub for ctl file
+#' 
+#' @param ctl object coercible into ctl_character
+#' @param ... arguments passed to gsub
+#' @export
+
 gsub_ctl <- function(ctl, ...){
   ctl <- ctl_character(ctl)
   ctl <- gsub(..., x = ctl)
