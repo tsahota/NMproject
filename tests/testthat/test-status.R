@@ -17,7 +17,7 @@ test_that("status",{
     cleanup(proj_name)
   })
 
-  testfilesloc <- normalizePath(file.path(test_path(),"testfiles"))
+  testfilesloc <- file.path(currentwd,"testfiles")
   setwd(proj_name)
   file.copy(file.path(testfilesloc,"."),".",recursive = TRUE)
 
