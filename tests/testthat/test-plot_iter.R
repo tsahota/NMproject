@@ -46,9 +46,7 @@ test_that("db & plot_iter works",{
   copy_control("run1.mod","run3.mod")
   expect_true(file.exists("Models/run3.mod"))
 
-  ## new way
-# <<<<<<< HEAD
-# 
+
   data_name <- get_data_name(m1)
   expect_true(file.exists(from_models(data_name)))
 
@@ -71,8 +69,7 @@ test_that("db & plot_iter works",{
 
   expect_true(!any(grep("THEOFILENAME", as.character(ctl))))
   expect_true(any(grep("THEOPP", as.character(ctl))))
-# 
-# =======
+
 
   build_modfile({
     suppressWarnings({
@@ -82,7 +79,6 @@ test_that("db & plot_iter works",{
     })
   })
 
-#>>>>>>> parent of a83e851... improved tests
   expect_true(any(grepl("KWT-DEFINITION START", ctl_character(ctl))))
 
   suppressWarnings({
@@ -92,13 +88,13 @@ test_that("db & plot_iter works",{
   expect_true(!any(grepl("KWT-DEFINITION START", ctl_character(ctl_orig))))
 
 # <<<<<<< HEAD
-#   ## build simulation control file
-#   build_modfile({
-#     ctl <- m1 %>% change_to_sim %>% change_seed(98765)
-#   })
-# 
-#   expect_true(any(grepl("\\$SIM", rem_comment(ctl_character(ctl)))))
-#   expect_true(any(grepl("98765", rem_comment(ctl_character(ctl)))))
+  ## build simulation control file
+  build_modfile({
+    ctl <- m1 %>% change_to_sim %>% change_seed(98765)
+  })
+
+  expect_true(any(grepl("\\$SIM", rem_comment(ctl_character(ctl)))))
+  expect_true(any(grepl("98765", rem_comment(ctl_character(ctl)))))
 # 
 # =======
 # >>>>>>> parent of a83e851... improved tests
@@ -126,11 +122,11 @@ test_that("db & plot_iter works",{
   expect_error(nm("qpsn -m -c auto -t 3000 -- execute run5.mod -dir=5"))
 # <<<<<<< HEAD
 # 
-#   m1scm <- nm("scm run1.mod -config_file=run1.scm -dir=1scm -nmfe_options='-prdefault'")
-# 
-#   m1scm_again <- nm("scm run1.mod -config_file=run1.scm -dir=1scm -nmfe_options='-prdefault'")
-# 
-#   expect_true(identical(m1scm, m1scm_again))
+  m1scm <- nm("scm run1.mod -config_file=run1.scm -dir=1scm -nmfe_options='-prdefault'")
+
+  m1scm_again <- nm("scm run1.mod -config_file=run1.scm -dir=1scm -nmfe_options='-prdefault'")
+
+  expect_true(identical(m1scm, m1scm_again))
 # 
 # =======
 #   
