@@ -32,18 +32,6 @@ test_that("db & plot_iter works",{
   
   expect_true(is_finished(m1)) ## m1 has been pre-run
   
-  # =======
-  # setwd(proj_name)
-  # 
-  # testloc <- file.path(currentwd,"testfiles")
-  # 
-  # file.copy(file.path(testloc,"."),".",recursive = TRUE)
-  # 
-  # ### end boiler plate
-  # ############################
-  # 
-  # m1 <- nm("qpsn -m -c auto -t 3000 -- execute run1.mod -dir=1")
-
   ## test to see if ctl_character and ctl_list
   ctl <- ctl_character(m1)
   expect_true(inherits(ctl_character(ctl_list(m1)),"ctl_character"))
@@ -61,26 +49,28 @@ test_that("db & plot_iter works",{
   ## new way
 # <<<<<<< HEAD
 # 
-#   data_name <- get_data_name(m1)
-#   expect_true(file.exists(from_models(data_name)))
-# 
-#   build_modfile({
-#     ctl <- m1 %>% update_parameters() %>% new_ctl("4") %>% write_ctl %>%
-#       update_dollar_input(rename = c("WT" = "BWT")) %>%
-#       update_dollar_data(data_name) %>%
-#       update_ignore("TIME>2") %>%
-#       update_sizes("PD = 200") %>%
-#       add_cov(param = "K", cov = "WT")
-#   })
-# 
-#   ctl <- ctl %>% gsub_ctl("THEOPP\\.csv", "THEOFILENAME")
-# 
-#   expect_true(any(grep("THEOFILENAME", as.character(ctl))))
-# 
-#   ctl <- ctl %>% gsub_ctl("THEOFILENAME","THEOPP.csv")
-# 
-#   expect_true(!any(grep("THEOFILENAME", as.character(ctl))))
-#   expect_true(any(grep("THEOPP", as.character(ctl))))
+  data_name <- get_data_name(m1)
+  expect_true(file.exists(from_models(data_name)))
+
+  build_modfile({
+    suppressWarnings({
+      ctl <- m1 %>% update_parameters() %>% new_ctl("4") %>% write_ctl %>%
+        update_dollar_input(rename = c("WT" = "BWT")) %>%
+        update_dollar_data(data_name) %>%
+        update_ignore("TIME>2") %>%
+        update_sizes("PD = 200") %>%
+        add_cov(param = "K", cov = "WT")
+    })
+  })
+
+  ctl <- ctl %>% gsub_ctl("THEOPP\\.csv", "THEOFILENAME")
+
+  expect_true(any(grep("THEOFILENAME", as.character(ctl))))
+
+  ctl <- ctl %>% gsub_ctl("THEOFILENAME","THEOPP.csv")
+
+  expect_true(!any(grep("THEOFILENAME", as.character(ctl))))
+  expect_true(any(grep("THEOPP", as.character(ctl))))
 # 
 # =======
 
