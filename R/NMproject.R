@@ -465,7 +465,7 @@ manual_edit <- function(ctl, comment){
 #' @return message to user
 #' @examples
 #' \dontrun{
-#' build_modfile({
+#' build_run({
 #'   m16 %>% new_ctl("17") %>%  ## changes sdtab16 to sdtab17 and updated "based on: 16"
 #'   update_parameters(m16) %>% ## update parameter with final estimates from run 16
 #'   write_ctl() %>%            ## save results to file
@@ -475,7 +475,7 @@ manual_edit <- function(ctl, comment){
 #'
 #' ## or equivalently:
 #'
-#' build_modfile({
+#' build_run({
 #'   m16 %>% new_ctl("17") %>%
 #'   update_parameters(m16) %>%
 #'   write_ctl()
@@ -485,7 +485,7 @@ manual_edit <- function(ctl, comment){
 #'
 #' }
 #' @export
-build_modfile <- function(code_section){
+build_run <- function(code_section){
   code_section <- substitute(code_section)
   code_section_text <- deparse(code_section)
 

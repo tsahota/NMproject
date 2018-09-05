@@ -50,7 +50,7 @@ test_that("db & plot_iter works",{
   data_name <- get_data_name(m1)
   expect_true(file.exists(from_models(data_name)))
 
-  build_modfile({
+  build_run({
     suppressWarnings({
       ctl <- m1 %>% update_parameters() %>% new_ctl("4") %>% write_ctl %>%
         update_dollar_input(rename = c("WT" = "BWT")) %>%
@@ -71,7 +71,7 @@ test_that("db & plot_iter works",{
   expect_true(any(grep("THEOPP", as.character(ctl))))
 
 
-  build_modfile({
+  build_run({
     suppressWarnings({
       ctl <- m1 %>% update_parameters() %>% new_ctl("4") %>% write_ctl %>%
         update_dollar_input() %>%
@@ -87,17 +87,13 @@ test_that("db & plot_iter works",{
 
   expect_true(!any(grepl("KWT-DEFINITION START", ctl_character(ctl_orig))))
 
-# <<<<<<< HEAD
-  ## build simulation control file
-  build_modfile({
+  build_run({
     ctl <- m1 %>% change_to_sim %>% change_seed(98765)
   })
 
   expect_true(any(grepl("\\$SIM", rem_comment(ctl_character(ctl)))))
   expect_true(any(grepl("98765", rem_comment(ctl_character(ctl)))))
-# 
-# =======
-# >>>>>>> parent of a83e851... improved tests
+
   m3 <- nm("qpsn -m -c auto -t 3000 -- execute run3.mod -dir=3")
   m4 <- nm("qpsn -m -c auto -t 3000 -- execute run4.mod -dir=4")
 
