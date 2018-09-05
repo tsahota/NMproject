@@ -19,6 +19,12 @@ test_that("Project has basic functionality",{
   })
 
   setwd(proj_name)
+  
+  set_nm_opts()
+  
+  cmd_test <- system_nm("echo test", intern = TRUE)
+  
+  expect_true(identical(cmd_test, "test"))
 
   options(code_library_path=c(system.file("extdata/CodeLibrary",package="NMproject")))
   expect_true(length(getOption("code_library_path"))>0)
