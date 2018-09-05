@@ -120,17 +120,13 @@ test_that("db & plot_iter works",{
   ctl <- gsub("sdtab5","sdtab1",ctl) ## create an output conflict
   write(ctl,"Models/run5.mod")
   expect_error(nm("qpsn -m -c auto -t 3000 -- execute run5.mod -dir=5"))
-# <<<<<<< HEAD
-# 
+
   m1scm <- nm("scm run1.mod -config_file=run1.scm -dir=1scm -nmfe_options='-prdefault'")
 
   m1scm_again <- nm("scm run1.mod -config_file=run1.scm -dir=1scm -nmfe_options='-prdefault'")
 
   expect_true(identical(m1scm, m1scm_again))
-# 
-# =======
-#   
-# >>>>>>> parent of a83e851... improved tests
+
   ## dataset procesing
 
   d <- get_data(m1)
@@ -145,19 +141,13 @@ test_that("db & plot_iter works",{
   expect_true(inherits(d, "data.frame"))
 
   ## post processing
-# <<<<<<< HEAD
-# 
-#   out(m1)
-# 
-#   expect_true(inherits(ofv(m1),"numeric"))
-# 
-#   do <- nm_output(m1)
-#   expect_true(inherits(do, "data.frame"))
-#   expect_true("INNONMEM" %in% names(do))
-# 
-# =======
-#   
-# >>>>>>> parent of a83e851... improved tests
+
+  expect_true(inherits(ofv(m1),"numeric"))
+
+  do <- nm_output(m1)
+  expect_true(inherits(do, "data.frame"))
+  expect_true("INNONMEM" %in% names(do))
+
   expect_true(inherits(omega_matrix(m1), "matrix"))
 
   p <- plot_iter(m1,trans = FALSE)
