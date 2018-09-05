@@ -17,33 +17,32 @@ test_that("db & plot_iter works",{
     cleanup(proj_name)
   })
 
-# <<<<<<< HEAD
-#   testfilesloc <- file.path(currentwd,"testfiles")
-#   setwd(proj_name)
-#   file.copy(file.path(testfilesloc,"."),".",recursive = TRUE)
-# 
-#   ## end boiler plate
-#   ############################
-# 
-#   m1 <- nm("qpsn -m -c auto -t 3000 -- execute run1.mod -dir=1")
-# 
-#   m1again <- nm("qpsn -m -c auto -t 3000 -- execute run1.mod -dir=1")
-# 
-#   expect_true(identical(m1, m1again))
-# 
-#   expect_true(is_finished(m1)) ## m1 has been pre-run
-# =======
+  testfilesloc <- file.path(currentwd,"testfiles")
   setwd(proj_name)
-
-  testloc <- file.path(currentwd,"testfiles")
+  file.copy(file.path(testfilesloc,"."),".",recursive = TRUE)
   
-  file.copy(file.path(testloc,"."),".",recursive = TRUE)
-
-  ### end boiler plate
+  ## end boiler plate
   ############################
-
+  
   m1 <- nm("qpsn -m -c auto -t 3000 -- execute run1.mod -dir=1")
-#>>>>>>> parent of a83e851... improved tests
+  
+  m1again <- nm("qpsn -m -c auto -t 3000 -- execute run1.mod -dir=1")
+  
+  expect_true(identical(m1, m1again))
+  
+  expect_true(is_finished(m1)) ## m1 has been pre-run
+  
+  # =======
+  # setwd(proj_name)
+  # 
+  # testloc <- file.path(currentwd,"testfiles")
+  # 
+  # file.copy(file.path(testloc,"."),".",recursive = TRUE)
+  # 
+  # ### end boiler plate
+  # ############################
+  # 
+  # m1 <- nm("qpsn -m -c auto -t 3000 -- execute run1.mod -dir=1")
 
   ## test to see if ctl_character and ctl_list
   ctl <- ctl_character(m1)
