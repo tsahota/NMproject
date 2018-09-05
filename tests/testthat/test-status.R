@@ -17,9 +17,15 @@ test_that("status",{
     cleanup(proj_name)
   })
 
-  testfilesloc <- file.path(currentwd,"testfiles")
+# <<<<<<< HEAD
+#   testfilesloc <- file.path(currentwd,"testfiles")
+# =======
+# >>>>>>> parent of a83e851... improved tests
   setwd(proj_name)
-  file.copy(file.path(testfilesloc,"."),".",recursive = TRUE)
+
+  testloc <- file.path(currentwd,"testfiles")
+
+  file.copy(file.path(testloc,"."),".",recursive = TRUE)
 
   ### end boiler plate
   ############################
