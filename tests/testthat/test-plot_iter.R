@@ -32,6 +32,10 @@ test_that("db & plot_iter works",{
   
   expect_true(is_finished(m1)) ## m1 has been pre-run
   
+  expect_true(inherits(job_info(m1), "character"))
+  
+  expect_true(inherits(tail_lst(m1), "character"))
+  
   ## test to see if ctl_character and ctl_list
   ctl <- ctl_character(m1)
   expect_true(inherits(ctl_character(ctl_list(m1)),"ctl_character"))
