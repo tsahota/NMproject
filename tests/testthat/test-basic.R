@@ -34,8 +34,6 @@ test_that("Project has basic functionality",{
   expect_true("data.frame" %in% class(info))
 
   copy_control("NONMEM/ADVAN2.mod","run1.mod")
-  
-  ctl("1")
 
   expect_true("run1.mod" %in% dir(getOption("models.dir")))
 
@@ -57,12 +55,13 @@ test_that("Project has basic functionality",{
   expect_true(file.exists("DerivedData/THEOPP.csv"))
   expect_true(file.exists(file.path(getOption("scripts.dir"),"theopp-demo.R")))
 
-  opts <- options()
-  interactive_mode(TRUE)
-  expect_true(!getOption("run_overwrite"))
-  interactive_mode(FALSE)
-  expect_true(getOption("run_overwrite"))
-  options(opts)
+
+  # opts <- options()
+  # interactive_mode(TRUE)
+  # expect_true(!getOption("run_overwrite"))
+  # interactive_mode(FALSE)
+  # expect_true(getOption("run_overwrite"))
+  # options(opts)
 
 })
 
