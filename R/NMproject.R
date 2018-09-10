@@ -639,3 +639,58 @@ snapshot <- function(message = "created automatic snapshot", session = TRUE, db_
 
 }
 
+
+#' Posterior predictive check computations
+#' 
+#' Experimental function. Computes statistic on DV and DV_OUT for observed
+#' and simulated datasets prospectively
+#' 
+#' @param d data.frame (normally output of nm_output())
+#' @param stat_fun function to compute statistic.
+#'   First argument = data.frame for dataset
+#'   Function must use DV column
+#' @param sim_col character (default = "SIM"). name of subproblem number column 
+#' @param ... additional arguments to be passed to stat_fun
+#' 
+#' @export
+#' @examples 
+#' \dontrun{
+#' do <- nm_output(m1)
+#' cmax <- function(d){
+#'   d %>% group_by(DOSE) %>% 
+#'   summarise(Cmax = max(DV, na.rm = TRUE))
+#' }
+#' dppc <- process_ppc(d, cmax)
+#' ## then plot dppc$obs and dppc$sim
+#' }
+
+process_ppc <- function(d, stat_fun, sim_col = "SIM", ...){
+  if(!sim_col %in% names(d)) stop("Need sim_col column in dataset")
+  dobs <- stat_fun(d, ...)
+  
+  stat_fun_sim <- stat_fun
+  stat_fun_sim_body <- body(stat_fun_sim)
+  stat_fun_sim_body <- replace_DV_with_DV_OUT(stat_fun_sim_body)
+  body(stat_fun_sim) <- stat_fun_sim_body
+  
+  dsim <- by(d, d[[sim_col]], function(d){
+    stat_fun_sim(d, ...)
+  })
+  list(obs = dobs, sim = dsim)
+}
+
+
+replace_DV_with_DV_OUT <- function(x){
+  if(identical(x, quote(DV))){
+    x <- quote(DV_OUT) 
+  }
+  if(identical(x, quote("DV"))){
+    x <- quote("DV_OUT") 
+  }
+  else if (is.call(x) | is.pairlist(x)) {
+    for(i in seq_along(x)){
+      x[[i]] <- replace_DV_with_DV_OUT(x[[i]])
+    }
+  }
+  return(x)
+}
