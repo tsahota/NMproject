@@ -648,9 +648,9 @@ snapshot <- function(message = "created automatic snapshot", session = TRUE, db_
 #' @param d data.frame (normally output of nm_output())
 #' @param stat_fun function to compute statistic.
 #'   Requirements:
-#'   First argument = data frame upon which to compute statistic
-#'   Function must compute statistic on DV
-#'   Function must return a data frame
+#'   1) First argument = data frame upon which to compute statistic.
+#'   2) Function must compute statistic on DV.
+#'   3) Function must return a data frame.
 #' @param sim_col character (default = "SIM"). name of subproblem number column 
 #' @param ... additional arguments to be passed to stat_fun
 #' 
