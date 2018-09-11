@@ -647,8 +647,10 @@ snapshot <- function(message = "created automatic snapshot", session = TRUE, db_
 #' 
 #' @param d data.frame (normally output of nm_output())
 #' @param stat_fun function to compute statistic.
-#'   First argument = data.frame for dataset
-#'   Function must use DV column
+#'   Requirements:
+#'   First argument = data frame upon which to compute statistic
+#'   Function must compute statistic on DV
+#'   Function must return a data frame
 #' @param sim_col character (default = "SIM"). name of subproblem number column 
 #' @param ... additional arguments to be passed to stat_fun
 #' 
@@ -666,21 +668,27 @@ snapshot <- function(message = "created automatic snapshot", session = TRUE, db_
 
 process_ppc <- function (d, stat_fun, sim_col = "SIM", ...) 
 {
-  if (!sim_col %in% names(d)) 
-    stop("Need sim_col column in dataset")
-  dobs <- stat_fun(d[d$SIM %in% 1, ], ...)
+  if (!sim_col %in% names(d)) stop("Need sim_col column in dataset")
+  if(!1 %in% d[[sim_col]]) stop("sim_col does not contain a 1 in dataset")
+
+  dobs <- stat_fun(d[d[[sim_col]] %in% 1, ], ...)
+  if(!inherits(dobs, "data.frame")) stop("output of stat_fun should be a data.frame")
+  dobs <- as.data.frame(dobs)
   dobs$SIM <- NA
+  
   stat_fun_sim <- stat_fun
   stat_fun_sim_body <- body(stat_fun_sim)
-  stat_fun_sim_body <- NMproject:::replace_DV_with_DV_OUT(stat_fun_sim_body)
+  stat_fun_sim_body <- replace_DV_with_DV_OUT(stat_fun_sim_body)
   body(stat_fun_sim) <- stat_fun_sim_body
+  
   dsim <- by(d, d[[sim_col]], function(d) {
     sim <- unique(d[[sim_col]])
     d <- stat_fun_sim(d, ...)
     d$SIM <- sim
     d
   })
-  if(inherits(dsim[[1]], "data.frame")) dsim <- do.call(rbind, as.data.frame(dsim))
+  dsim <- do.call(rbind, as.data.frame(dsim))
+  
   list(obs = dobs, sim = dsim)
 }
 

@@ -10,8 +10,10 @@ process_ppc(d, stat_fun, sim_col = "SIM", ...)
 \item{d}{data.frame (normally output of nm_output())}
 
 \item{stat_fun}{function to compute statistic.
-First argument = data.frame for dataset
-Function must use DV column}
+Requirements:
+First argument = data frame upon which to compute statistic
+Function must compute statistic on DV
+Function must return a data frame}
 
 \item{sim_col}{character (default = "SIM"). name of subproblem number column}
 
