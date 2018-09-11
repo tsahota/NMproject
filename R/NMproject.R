@@ -664,20 +664,26 @@ snapshot <- function(message = "created automatic snapshot", session = TRUE, db_
 #' ## then plot dppc$obs and dppc$sim
 #' }
 
-process_ppc <- function(d, stat_fun, sim_col = "SIM", ...){
-  if(!sim_col %in% names(d)) stop("Need sim_col column in dataset")
-  dobs <- stat_fun(d, ...)
-  
+process_ppc <- function (d, stat_fun, sim_col = "SIM", ...) 
+{
+  if (!sim_col %in% names(d)) 
+    stop("Need sim_col column in dataset")
+  dobs <- stat_fun(d[d$SIM %in% 1, ], ...)
+  dobs$SIM <- NA
   stat_fun_sim <- stat_fun
   stat_fun_sim_body <- body(stat_fun_sim)
-  stat_fun_sim_body <- replace_DV_with_DV_OUT(stat_fun_sim_body)
+  stat_fun_sim_body <- NMproject:::replace_DV_with_DV_OUT(stat_fun_sim_body)
   body(stat_fun_sim) <- stat_fun_sim_body
-  
-  dsim <- by(d, d[[sim_col]], function(d){
-    stat_fun_sim(d, ...)
+  dsim <- by(d, d[[sim_col]], function(d) {
+    sim <- unique(d[[sim_col]])
+    d <- stat_fun_sim(d, ...)
+    d$SIM <- sim
+    d
   })
+  if(inherits(dsim[[1]], "data.frame")) dsim <- do.call(rbind, as.data.frame(dsim))
   list(obs = dobs, sim = dsim)
 }
+
 
 
 replace_DV_with_DV_OUT <- function(x){
