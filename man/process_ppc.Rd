@@ -11,9 +11,9 @@ process_ppc(d, stat_fun, sim_col = "SIM", ...)
 
 \item{stat_fun}{function to compute statistic.
 Requirements:
-First argument = data frame upon which to compute statistic
-Function must compute statistic on DV
-Function must return a data frame}
+1) First argument = data frame upon which to compute statistic.
+2) Function must compute statistic on DV.
+3) Function must return a data frame.}
 
 \item{sim_col}{character (default = "SIM"). name of subproblem number column}
 
