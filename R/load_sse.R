@@ -1,6 +1,6 @@
 #' Load SSE data
 #'
-#' Function to load simulation data from PsN SSE
+#' Experimental function to load simulation data from PsN SSE
 #' This facilitates extracting data needed for postprocessing of simulations
 #' poptentially helpfor after simulation with uncertainty (e.g. obtained through PsN bootstrap or impance sampling)
 #'
@@ -12,8 +12,6 @@
 load_sse <- function(x, parr=F, nodes=1) {
 # Load SSE data -----------------------------------------------------------
 ## create list of paths for the tables
-  if(!requirenamespace("data.table")) stop("install data.table")
-  if(!requirenamespace("dplyr")) stop("install dplyr")  
   # If you're not using NMprojects, you can skip this part
   dir <- "/m1" # Path to simulated data
   full_dir <- paste(x$run_dir, dir, sep = "")
@@ -36,7 +34,7 @@ load_sse <- function(x, parr=F, nodes=1) {
   
   # Read in dataframes and d0 dataprocessing
   process1 <- function(data_path){
-    d <- data.table::fread(data_path, skip = 1, header = T)
+    d <- utils::read.csv(data_path, skip = 1, header = T)
     # If you are working with large dataframes, you may be required to implement dataprocessing steps, depending on your capacity, check/set memory.limit()
     save(d, file = paste0(data_path,"processed.RData"))
   }
@@ -62,6 +60,6 @@ load_sse <- function(x, parr=F, nodes=1) {
   print("Only data from simulation step will be loaded, you may adapt this function to load data from estimation step, or to do both.")
   
   # rbind dataframes
-  d <- dplyr::bind_rows(d)  ## dplyr function
+  d <- do.call(rbind, d)
   
 }
