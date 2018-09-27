@@ -17,11 +17,11 @@ Imports:
     shiny,
     reshape2,
     dygraphs,
-    DT
+    DT,
+    git2r (>= 0.18.0)
 RoxygenNote: 6.0.1
 Suggests:
     testthat,
-    git2r,
     ggplot2,
     xpose4
     
