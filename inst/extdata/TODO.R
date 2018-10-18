@@ -8,7 +8,7 @@ build_run({
 
 e14$cmd("qpsn -c auto -r 1000 -t 3000 -- execute run_e14.mod -dir=e14")
 
-e14 %>% run_nm
+e14 %>% run_nm  ## will commit and save hashes
 e14 %>% wait_for_finished %>% update_parameters %>% run_nm
 
 ## following uses wait_for_finished if needed
