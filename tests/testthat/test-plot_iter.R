@@ -54,7 +54,7 @@ test_that("db & plot_iter works",{
   data_name <- get_data_name(m1)
   expect_true(file.exists(from_models(data_name)))
 
-  build_run({
+  build_ctl({
     suppressWarnings({
       ctl <- m1 %>% update_parameters() %>% new_ctl("4") %>% write_ctl %>%
         update_dollar_input(rename = c("WT" = "BWT")) %>%
@@ -75,7 +75,7 @@ test_that("db & plot_iter works",{
   expect_true(any(grep("THEOPP", as.character(ctl))))
 
 
-  build_run({
+  build_ctl({
     suppressWarnings({
       ctl <- m1 %>% update_parameters() %>% new_ctl("4") %>% write_ctl %>%
         update_dollar_input() %>%
@@ -91,7 +91,7 @@ test_that("db & plot_iter works",{
 
   expect_true(!any(grepl("KWT-DEFINITION START", ctl_character(ctl_orig))))
 
-  build_run({
+  build_ctl({
     ctl <- m1 %>% change_to_sim %>% change_seed(98765)
   })
 
