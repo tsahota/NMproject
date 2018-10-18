@@ -65,6 +65,15 @@ ctl_character <- function(r){
   stop("cannot coerce to ctl_character")
 }
 
+#' print ctl file from an nm object
+#' 
+#' @param r object of class nm
+#' @export
+print_ctl <- function(r) {
+  print(ctl_character(r))
+  invisible(r)
+}
+
 #' Constructor/converter to ctl_list
 #' @param r either class nmexecute, character, ctl_list, ctl_character
 #' @return object of class ctl_list
@@ -261,6 +270,37 @@ theta_r2nm <- function(x){
   x <- unlist(x)
   x <- paste(x,";",x0$COM)
   setup_dollar(x,"$THETA")
+}
+
+#' Update subroutine
+#' 
+#' @param ctl object coercible to ctl_list
+#' @param ... named replacement argument of class character
+#' @param which_dollar (default = 1) which subroutine if multiple matches
+#' @examples
+#' \dontrun{
+#' m1 %>% update_dollar(THETA=c("1             	; KA ; h-1 ; LOG
+#'                              -2.5            ; K  ; h-1 ; LOG
+#'                              -0.5          	; V  ; L ; LOG")) %>%
+#'        write_ctl()
+#' }
+#' @export
+
+update_dollar <- function(ctl,..., which_dollar = 1){
+  ctl <- ctl_list(ctl)
+  arg <- list(...)
+  if(length(arg) != 1) stop("need argument")
+  
+  dollar_name <- names(arg)
+  replace <- arg[[1]]
+  replace <- strsplit(replace, "\n")[[1]]
+  replace <- trimws(replace)
+  dollar_matches <- which(names(ctl) %in% dollar_name)
+  dollar_match <- dollar_matches[which_dollar]
+  dollar_name <- names(ctl)[dollar_match]
+  
+  ctl[[dollar_name]] <- setup_dollar(replace,paste0("$",dollar_name))
+  ctl
 }
 
 
