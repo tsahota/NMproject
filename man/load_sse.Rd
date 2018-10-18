@@ -14,7 +14,7 @@ load_sse(x, parr = F, nodes = 1)
 \item{nodes}{include description here}
 }
 \description{
-Function to load simulation data from PsN SSE
+Experimental function to load simulation data from PsN SSE
 This facilitates extracting data needed for postprocessing of simulations
 poptentially helpfor after simulation with uncertainty (e.g. obtained through PsN bootstrap or impance sampling)
 }

@@ -7,7 +7,7 @@
 nm_output(r, dorig, ...)
 }
 \arguments{
-\item{r}{data.frame.  object of class nm_execute}
+\item{r}{data.frame.  object of class nmexecute}
 
 \item{dorig}{data.frame. optional NONMEM input dataset.}
 

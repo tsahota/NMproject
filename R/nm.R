@@ -1088,7 +1088,7 @@ setup_nm_demo <- function(file_stub = paste0(getOption("model_file_stub"),1),
 #'
 #' This combines $TABLE output with the input data, allowing text columns to be retained for plotting/summaries.
 #'
-#' @param r data.frame.  object of class nm_execute
+#' @param r data.frame.  object of class nmexecute
 #' @param dorig data.frame. optional NONMEM input dataset.
 #' @param ... additional arguments to pass on to read.csv
 #' @export
@@ -1171,6 +1171,29 @@ there's ",length(dORD),"rows, but NONMEM output has ", nrow(d), " rows")
   message("Adding column: PRKEY")
 
   return(d2)
+}
+
+process_output <- function(r, ...){
+  if(!inherits(r, "nmexecute")) stop("can only currently process outputs for execute runs")
+  do <- nm_output(r, ...)
+  save(do, file = file.path(r$run_dir, "NMout.RData"))
+  invisible(do)
+}
+
+#' Get processed output table
+#' 
+#' @param r object of class nm
+#' @param ... optional additional arguments to pass on to read.csv of orig data
+#' @export
+
+output_table <- function(r, ...){
+  out_path <- file.path(r$run_dir, "NMout.RData")
+  if(!file.exists(out_path)) {
+    do <- process_output(r, ...)
+  } else {
+    load(out_path)
+  }
+  return(do)
 }
 
 #' Get ignore statement
@@ -1256,6 +1279,7 @@ update_ignore <- function(ctl, ignore_char){
   ignore_char <- gsub("<",".LT.",ignore_char)
   ignore_char <- gsub(">=",".GE.",ignore_char)
   ignore_char <- gsub("<=",".LE.",ignore_char)
+  ignore_char <- gsub("\\s+(\\.\\S+\\.)\\s+", "\\1", ignore_char)
   
   ignore_char <- paste0("IGNORE=(",ignore_char,")")
   
