@@ -5,7 +5,11 @@ rem_comment <- function(s,char=";") gsub(paste0("^([^",char,"]*)",char,"*.*$"),"
 get_comment <- function(s,char=";") gsub(paste0("^[^",char,"]*",char,"*(.*)$"),"\\1",s)
 
 setup_dollar <- function(x,type){
-  x[1] <- paste(type,x[1])
+  if(grepl("THETA|OMEGA|SIGMA|PK|PRED|ERROR|DES", type)){
+    x <- c(type, x)
+  } else {
+    x[1] <- paste(type,x[1]) 
+  }
   names(x) <- NULL
   class(x) <- paste0("nm.",tolower(gsub("^\\$","",type)))
   x
