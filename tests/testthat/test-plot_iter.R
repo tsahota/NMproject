@@ -61,6 +61,7 @@ test_that("db & plot_iter works",{
         update_dollar_data(data_name) %>%
         update_ignore("TIME>2") %>%
         update_sizes("PD = 200") %>%
+        update_dollar(SUB = c("ADVANnew")) %>%
         add_cov(param = "K", cov = "WT")
     })
   })
