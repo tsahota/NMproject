@@ -24,15 +24,19 @@ future({ ## asynchronous events
 ##     - require_processed(r) - will process if needed
 
 ## TODO: register_output(r, "Results/file.pdf")
-##     - adds 
+##     - adds file to $output tracker
 
 ## TODO: new convention run_ids start with letter
 
 ## TODO: Better database access
+##       For read, use type, run_id, run_in
 
 ## TODO: Store SHA's to all inputs - check before running.
 ##   then eliminate interactive/non-interactive options
-## TODO: Principle: ctrl + alt + b functions like "make".
+## TODO: Principle: ctrl + alt + b/source works like "make".
+##    Need dependency graphs.
+##    VPCs/outputs are dependent on run results.
+##    Plan behaviour
 
 ## TODO: an easy way to copy-modify this code:
 ##  -- add ons
@@ -51,3 +55,6 @@ e14 <- nm("e14", type = "execute", based_on = "ADVAN13.mod") ## code library
 ## TODO: make functions work on lists of nm objects
 ##   e.g. dsc$ofv <- ofv(dsc$m)
 ##        run_nm(dsc$m, batches = 10)  ## works like run_batch_list
+
+## TODO: import_code()
+##       

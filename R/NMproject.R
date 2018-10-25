@@ -196,6 +196,7 @@ copy_control <- function(from,to,overwrite=FALSE,alt_paths,from_base=FALSE){
   writeLines(ctl,to)
   if(!requireNamespace("git2r", quietly = TRUE))
     warning("git2r is recommended for this function. Please install it.")
+  git2r::repository
   tidyproject::setup_file(to)
 }
 
@@ -263,8 +264,10 @@ nm_tran.default <- function(x){
   data_path <- file.path(dirname(x),data_name(x))
   file.copy(data_path,tempdir0) ## copy dataset
   dataset.name <- basename(data_path)
-  update_dollar_data(file.path(tempdir0,basename(x)),dataset.name) %>% 
-    write_ctl(file.path(tempdir0,basename(x)))
+  suppressMessages({
+    update_dollar_data(file.path(tempdir0,basename(x)),dataset.name) %>% 
+      write_ctl(file.path(tempdir0,basename(x)))
+  })
   system_nm(paste(nm_tran_command,"<",basename(x)),dir=tempdir0,wait=TRUE) ## run nmtran in tempdir0
 }
 
