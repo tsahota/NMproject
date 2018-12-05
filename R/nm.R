@@ -958,6 +958,29 @@ nm_tran.nm <- function(x){
   nm_tran.default(x$ctl)
 }
 
+#' List files to be cleaned up
+#' 
+#' @param r object class nm
+#' @export
+#' @examples 
+#' \dontrun{
+#' mod1 %>% extra_files
+#' mod1 %>% extra_files %>% cleanup
+#' }
+
+extra_files <- function(r){
+  tidyproject::check_if_tidyproject()
+  if(r$type %in% "execute"){
+    table_files <- ctl_table_files(r)
+    files <- file.path(r$run_dir, "NM_run1", table_files)
+  }
+  if(r$type %in% "vpc"){
+    print("TBD")
+    files <- character()
+  }
+  return(files)
+}
+
 #' clean_run files
 #'
 #' @param r object class nm
@@ -990,14 +1013,21 @@ clean_run <- function(r,delete_dir=c(NA,TRUE,FALSE),update_db=!is.null(r$db_name
   invisible()
 }
 
+ctl_table_files <- function(ctl){ 
+  ctl <- ctl_character(ctl)
+  s0 <- rem_comment(ctl)
+  s <- grep("FILE\\s*=\\s*(\\S+)",s0,value=TRUE)
+  table_files <- gsub(".*FILE\\s*=\\s*(\\S+)\\s*.*$","\\1", s)
+  table_files
+}
+
 ctl_out_files <- function(ctl_file){ ## will get vector of $TABLE file names from control file.
   if(!file.exists(ctl_file)) stop(paste(ctl_file, "doesn't exist"))
   dir0 <- dir(dirname(ctl_file))
-
-  s0 <- rem_comment(readLines(ctl_file,warn = FALSE))
-  s <- grep("FILE\\s*=\\s*(\\S+)",s0,value=TRUE)
-  table.files <- gsub(".*FILE\\s*=\\s*(\\S+)\\s*.*$","\\1", s)
-
+  
+  ctl <- readLines(ctl_file,warn = FALSE)
+  
+  table.files <- ctl_table_files(ctl)
 
   stub <- basename(ctl_file)
   stub <- gsub("(.+)\\.\\w+$","\\1",stub)
