@@ -111,7 +111,7 @@ set_nm_opts <- function(){
 #' @param ... additional args to be passed to system
 #' @export
 
-system_nm_default <- function(cmd,...) {
+system_nm_default <- function(cmd, ...) {
   if(.Platform$OS.type == "windows"){
     local_env_vars <- Sys.getenv()
     stdout_unit_vars <- local_env_vars[grepl("STDOUT_UNIT|STDERR_UNIT",names(local_env_vars))]

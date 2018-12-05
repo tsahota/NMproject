@@ -57,9 +57,9 @@ ctl_character <- function(r){
       attr(ctl, "file_name") <- ctl_name
       return(ctl)
     } else {
-      #class(r) <- c("ctl_character", "character")
-      #return(r)
-      stop("cannot coerce to ctl_character")
+      class(r) <- c("ctl_character", "character")
+      return(r)
+      #stop("cannot coerce to ctl_character")
     }
   }
   stop("cannot coerce to ctl_character")
