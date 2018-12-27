@@ -57,4 +57,210 @@ e14 <- nm("e14", type = "execute", based_on = "ADVAN13.mod") ## code library
 ##        run_nm(dsc$m, batches = 10)  ## works like run_batch_list
 
 ## TODO: import_code()
-##       
+##     Scripts  - import_script_file()
+##       "~/script.R" - no change
+##       "../scripts.R" - no change
+##       "script.R" - [code_library]/Scripts/script.R
+##       "script.R" - [code_library]/Scripts/script.R
+##       will add R comment to top
+
+##     Models   - import_model_file()
+##       "~/runTTE.mod" - no change
+##       "../runTTE.mod" - no change
+##       "runTTE.mod" - [code_library]/Models/script.R
+##       "runTTE.mod" - [code_library]/Models/script.R
+
+##     Projects  - import_project
+##       "~/PROJ1" - no change
+##       "../PROJ1" - no change
+##       "PROJ1" - [code_library]/Projects/PROJ1
+##       should this just be a wrapper around import_code? then you get all the stamp
+##       how to handle merge conflicts? answer: rename and copy
+
+## separate functions:
+## import_project()
+## import_code()
+## import_file() - straight foward copy - this is just file.copy
+
+##      find_code("script.R") %>% import_code
+
+###################################################
+## start low level
+
+## Need to know what to do in the event of a clash
+##   stop (current behaviour - safest) with message of import conflicts. Option to overwrite.
+
+## tidyproject::import_r_script(overwrite = FALSE)
+##   ifmissing(finds script in code library/Scripts) and copies into Scripts and stamps with R comment
+## tidyproject::import_file(overwrite = FALSE)
+##   ifmissing(finds file in code library) and copies to relevant subdir
+## NMproject::import_nm_file(overwrite = FALSE)
+##   ifmissing(finds model file in code library/Models), copies into Models and modifies.
+
+## tidyproject::import_code(search_location = code_library_path())
+##  detects what type of file it is:
+##   if it's an r scirpt it uses tidyproject::import_r_script()
+##   if it's unknown, it searchs one level from search_location, into relevant subdir
+
+## NMproject::import_code(search_location = code_library_path())
+##  detects what type of file it is:
+##   if it's a mod file it uses NMproject::import_nm_file()
+##   otherwise it uses tidyproject::import_code()
+
+## tidyproject::import_project(proj_name, search_location = code_library_path())
+##  find unique project path (look in code_library_path/Projects)
+##  list all files.
+##  run tidyproject::import_code
+
+## NMproject::import_project(proj_name, search_location = code_library_path())
+##  find unique project path (look in code_library_path/Projects)
+##  list all files.
+##  run tidyproject::import_code
+
+## the following is better - allows you to pause before importing.
+
+search_code_library("script.R") %>% import
+search_code_library("aztheopp") %>% import
+
+## tidyproject
+
+list.files_maxdepth1 <- function(path, ..., full.names = TRUE){
+  res <- unlist(sapply(path, function(i){
+    base_files <- list.files(i, ..., recursive = FALSE, full.names = TRUE)
+    base_files <- file.info(base_files)
+    base_files <- base_files[!base_files$isdir, ]
+    base_files <- row.names(base_files)
+    
+    base_dirs <- list.dirs(i, ..., recursive = FALSE, full.names = TRUE)
+    base_dirs <- base_dirs[!grepl(".git", base_dirs)]
+    
+    subdir_files <- unlist(sapply(base_dirs, list.files, recursive = FALSE, full.names = TRUE))
+    names(subdir_files) <- NULL
+    c(base_files, subdir_files)    
+  }))
+  names(res) <- NULL
+  normalizePath(res)
+}
+
+list_code_library <- function(search_location = code_library_path()){
+  list.files_maxdepth1(rev(search_location))
+}
+
+search_code_library <- function(file_name, search_location = code_library_path()){
+  
+  cl_object <- list_code_library(search_location = search_location)
+  
+  matched_object <- cl_object[grepl(paste0(".*",.Platform$file.sep,file_name,"$"), cl_object)]
+  
+  if(length(matched_object) == 0)  return(character())
+  if(length(matched_object) > 1)  stop("multiple matches for ", file_name)
+  
+  matched_object
+  
+}
+
+## tidyproject
+import <- function(paths){
+  
+  ## convert folder names to lists of files. 
+  path_info <- file.info(paths)
+  paths <- sapply(paths, function(path){
+    if(!file.info(path)$isdir) return(path)
+    normalizePath(list.files(path, full.names = TRUE, recursive = TRUE))
+  })
+  
+  for(path in paths){
+    ## detect type of path
+    path_type <- "unknown"
+    file_extn <- tools::file_ext(path)
+    if(file_extn %in% c("R", "r")) path_type <- "rscript"
+    
+    ## launch corresponding import sub function.
+    switch(path_type,
+           rscript = import_rscript(path),
+           unknown = import_file(path))
+    
+  }
+  
+}
+
+import_rscript <- function(path){
+  check_if_tidyproject(".")
+  to_path <- file.path(scripts_dir(),basename(path))
+  depends.on <- dependency_tree(path)
+  if (length(depends.on) > 0) 
+    message("Copying dependencies...")
+  for (i in depends.on) {
+    if (file.exists(file.path(scripts_dir(), i))) 
+      message(paste("Dependency", file.path(getOption("scripts.dir"), i), "already exists. Will not overwrite")) else 
+        tidyproject::import(file.path(dirname(path), i), dependencies = FALSE, alt_paths = alt_paths)
+  }
+  suppressWarnings(s0 <- readLines(path))
+  ## modify text at top of 'path'
+  s <- c(paste0("## Copied from ", path, "\n##  (", 
+                Sys.time(), ") by ", Sys.info()["user"]), s0) else s <- s0
+  writeLines(s, to_path)
+  setup_file(to_path)
+}
+
+## new idea.
+## structure the code_library identically to a big tidyproject - yes do this.
+##  DerivedData, Models, ...
+##  dependency_tree will extract all dependencies and they are all imported a la vez
+
+## New for tidyproject
+##  subdirectories
+
+## Scripts/plot_functions/gof.R
+## Scripts/..
+
+## Models: no subdirs, use database searching instead.
+##  User might want subdirs.... how?
+##   R script reverse dependencies would need to be changed
+
+
+
+
+
+
+
+
+
+
+
+
+import_code <- function(file_name,
+                        script_extns = c("R", "r")){
+  
+  ## if a model file, do copy_control
+  
+  ## detect type of code, if it's a script use:
+  tidyproject::import_code(file_name)
+  
+}
+
+
+## tidyproject function
+import_code <- function(file_name,
+                        script_extns = c("R", "r")){
+  
+  ## detect type of file.
+  file_type <- "unknown"
+  
+  file_extn <- tools::file_ext(file_name)
+  if(file_extn %in% c("R", "r")) file_type <- "r script"
+
+  
+  if(!file.exists(file_name)){
+    ## need to search for file in code_library and redefine file_name
+    
+    search_dirs <- file.path(code_library_path(), "Scripts")
+    
+    ## find file_name in 
+    
+  }
+  
+}
+
+
+

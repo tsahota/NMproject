@@ -18,7 +18,8 @@ Imports:
     reshape2,
     dygraphs,
     DT,
-    git2r (>= 0.18.0)
+    git2r (>= 0.18.0),
+    dplyr (>= 0.7.6)
 RoxygenNote: 6.0.1
 Suggests:
     testthat,
