@@ -783,6 +783,7 @@ ofv <- function(r){
   if(inherits(dc, "try-error")) return(NA)
   dc$FINAL[dc$Parameter %in% "OBJ"]
 }
+ofv <- Vectorize_nm(ofv, vectorize.args = "r")
 
 #' write control file
 #'

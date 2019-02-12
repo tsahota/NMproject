@@ -868,6 +868,40 @@ is_status_finished <- function(status_ob){
   finished
 }
 
+Vectorize_nm <- function (FUN, vectorize.args = arg.names, SIMPLIFY = TRUE, USE.NAMES = TRUE) 
+{
+  arg.names <- as.list(formals(FUN))
+  arg.names[["..."]] <- NULL
+  arg.names <- names(arg.names)
+  vectorize.args <- as.character(vectorize.args)
+  if (!length(vectorize.args)) 
+    return(FUN)
+  if (!all(vectorize.args %in% arg.names)) 
+    stop("must specify names of formal arguments for 'vectorize'")
+  collisions <- arg.names %in% c("FUN", "SIMPLIFY", "USE.NAMES", 
+                                 "vectorize.args")
+  if (any(collisions)) 
+    stop(sQuote("FUN"), " may not have argument(s) named ", 
+         paste(sQuote(arg.names[collisions]), collapse = ", "))
+  FUNV <- function() {
+    args <- lapply(as.list(match.call())[-1L], eval, parent.frame())
+    ###############################
+    ## MODIFIED CODE FOR NMPROJECT
+    args <- lapply(args, function(arg){
+      if(inherits(arg, "nm")) return(list(arg)) else return(arg)
+    })
+    ################################
+    names <- if (is.null(names(args))) 
+      character(length(args))
+    else names(args)
+    dovec <- names %in% vectorize.args
+    do.call("mapply", c(FUN = FUN, args[dovec], MoreArgs = list(args[!dovec]), 
+                        SIMPLIFY = SIMPLIFY, USE.NAMES = USE.NAMES))
+  }
+  formals(FUNV) <- formals(FUN)
+  FUNV
+}
+
 #' tests if job is finished
 #'
 #' @param r object class nm
@@ -878,6 +912,10 @@ is_finished <- function(r,initial_timeout=NA){
   status_ob <- run_status(r,initial_timeout=initial_timeout)
   is_status_finished(status_ob)
 }
+is_finished <- Vectorize_nm(is_finished, vectorize.args = "r")
+
+
+
 
 nm_steps_finished <- function(r){ # for waiting
   execution_dirs <- dirname(dir(r$run_dir,

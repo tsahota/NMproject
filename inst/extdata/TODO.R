@@ -38,6 +38,8 @@ future({ ## asynchronous events
 ##    VPCs/outputs are dependent on run results.
 ##    Plan behaviour
 
+## TODO: create a project_library(TRUE/FALSE) flag option
+
 ## TODO: an easy way to copy-modify this code:
 ##  -- add ons
 
