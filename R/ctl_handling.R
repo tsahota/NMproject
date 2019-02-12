@@ -775,6 +775,7 @@ param_cov_text <- function(param,cov,state,data,theta_n_start,continuous = TRUE,
 #' get OFV
 #'
 #' @param r object of class nm
+#' @include nm.R
 #' @export
 
 ofv <- function(r){

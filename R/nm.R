@@ -914,7 +914,18 @@ is_finished <- function(r,initial_timeout=NA){
 }
 is_finished <- Vectorize_nm(is_finished, vectorize.args = "r")
 
+#' Condition number of run
+#' 
+#' @param r object of class nm
+#' @export
 
+cond_num <- function(r){
+  if(is.null(r)) return(NA)
+  dc <- try(coef_nm(r, trans = FALSE), silent = TRUE)
+  if(inherits(dc, "try-error")) return(NA)
+  dc$FINAL[dc$Parameter %in% "CONDNUM"]
+}
+cond_num <- Vectorize_nm(cond_num, vectorize.args = "r")
 
 
 nm_steps_finished <- function(r){ # for waiting
