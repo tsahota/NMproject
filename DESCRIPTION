@@ -25,4 +25,16 @@ Suggests:
     testthat,
     ggplot2,
     xpose4
-    
+Collate: 
+    'NMproject.R'
+    'nm.R'
+    'ctl_handling.R'
+    'dollar_data.R'
+    'insert_addin.R'
+    'load_sse.R'
+    'plot_iter.R'
+    'read.table.nm.R'
+    'read_ext.R'
+    'run_record.R'
+    'status.R'
+    'zzz.R'
