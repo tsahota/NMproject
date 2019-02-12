@@ -19,7 +19,7 @@ Imports:
     dygraphs,
     DT,
     git2r (>= 0.18.0),
-    dplyr (>= 0.7.6)
+    dplyr (>= 0.7.4)
 RoxygenNote: 6.0.1
 Suggests:
     testthat,
