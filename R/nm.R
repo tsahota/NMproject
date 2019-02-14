@@ -214,6 +214,40 @@ nm(\"bootstrap run1.mod -threads=4\",psn_command=\"bootstrap\")"
   return(r)
 }
 
+Vectorize_nm <- function (FUN, vectorize.args = arg.names, SIMPLIFY = TRUE, USE.NAMES = TRUE) 
+{
+  arg.names <- as.list(formals(FUN))
+  arg.names[["..."]] <- NULL
+  arg.names <- names(arg.names)
+  vectorize.args <- as.character(vectorize.args)
+  if (!length(vectorize.args)) 
+    return(FUN)
+  if (!all(vectorize.args %in% arg.names)) 
+    stop("must specify names of formal arguments for 'vectorize'")
+  collisions <- arg.names %in% c("FUN", "SIMPLIFY", "USE.NAMES", 
+                                 "vectorize.args")
+  if (any(collisions)) 
+    stop(sQuote("FUN"), " may not have argument(s) named ", 
+         paste(sQuote(arg.names[collisions]), collapse = ", "))
+  FUNV <- function() {
+    args <- lapply(as.list(match.call())[-1L], eval, parent.frame())
+    ###############################
+    ## MODIFIED CODE FOR NMPROJECT
+    args <- lapply(args, function(arg){
+      if(inherits(arg, "nm")) return(list(arg)) else return(arg)
+    })
+    ################################
+    names <- if (is.null(names(args))) 
+      character(length(args))
+    else names(args)
+    dovec <- names %in% vectorize.args
+    do.call("mapply", c(FUN = FUN, args[dovec], MoreArgs = list(args[!dovec]), 
+                        SIMPLIFY = SIMPLIFY, USE.NAMES = USE.NAMES))
+  }
+  formals(FUNV) <- formals(FUN)
+  FUNV
+}
+
 nmdb_match_entry <- function(r,db=NULL){
   match_info <- nmdb_match_info(r,db=db)
   if(r$type %in% "execute") {
@@ -304,6 +338,7 @@ get_char_field <- function(db_name="runs.sqlite",entry,field){
 #' @export
 job_info <- function(r){
   if(is.null(r$db_name)) return(NA)
+  if("job_info" %in% names(r)) return(r$job_info)
   matched_entry <- nmdb_match_entry(r)
   get_char_field(r$db_name,matched_entry,"job_info")
 }
@@ -545,7 +580,7 @@ get_run_id <- function(ctl_name){
 
 
 #' Run NONMEM
-#' @param ... objects of class nm
+#' @param r objects of class nm/or list of objects class nm
 #' @param overwrite logical. Should run directory be overwritten (default=FALSE)
 #' @param delete_dir logical. NA (default - directory will be deleted if no dependencies exists)
 #' TRUE or FALSE. Should run_dir be deleted.
@@ -563,19 +598,20 @@ get_run_id <- function(ctl_name){
 #' Otherwise returns nothing.
 #'
 #' @export
-run <- function(...,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
+run <- function(r,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
                 update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
                 initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern")){
   UseMethod("run")
 }
 
 #' @export
-run.nm <- function(...,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
+run.nm <- function(r,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
                    update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
                    initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern")){
   tidyproject::check_if_tidyproject()
   #if(!quiet & !wait) stop("quiet=FALSE requires wait=TRUE")
-  rl <- list(...)
+  rl <- r
+  if(inherits(rl, "nm")) rl <- list(rl)
   #rl <- rl[sapply(rl, inherits, what = "nm")]
   rl <- rl[!sapply(rl, is.null)] ## remove nulls
   rl <- lapply(rl,function(r){
@@ -607,9 +643,12 @@ run.nm <- function(...,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE
       update_char_field(r$db_name,matched_entry,job_info=job_info)
     }
     r$job_info <- job_info
+    r
   })
-  if(wait) wait_for_finished(...,initial_timeout=initial_timeout)
-  if(length(rl)==1) return(invisible(rl[[1]])) else return(invisible())
+  if(wait) wait_for_finished(rl,initial_timeout=initial_timeout)
+  #job_infos <- sapply(rl, function(r) r$job_info)
+  #return(invisible(job_infos))
+  if(length(rl)==1) return(invisible(rl[[1]])) else return(invisible(rl))
 }
 
 #' Run run.nm method
@@ -868,39 +907,7 @@ is_status_finished <- function(status_ob){
   finished
 }
 
-Vectorize_nm <- function (FUN, vectorize.args = arg.names, SIMPLIFY = TRUE, USE.NAMES = TRUE) 
-{
-  arg.names <- as.list(formals(FUN))
-  arg.names[["..."]] <- NULL
-  arg.names <- names(arg.names)
-  vectorize.args <- as.character(vectorize.args)
-  if (!length(vectorize.args)) 
-    return(FUN)
-  if (!all(vectorize.args %in% arg.names)) 
-    stop("must specify names of formal arguments for 'vectorize'")
-  collisions <- arg.names %in% c("FUN", "SIMPLIFY", "USE.NAMES", 
-                                 "vectorize.args")
-  if (any(collisions)) 
-    stop(sQuote("FUN"), " may not have argument(s) named ", 
-         paste(sQuote(arg.names[collisions]), collapse = ", "))
-  FUNV <- function() {
-    args <- lapply(as.list(match.call())[-1L], eval, parent.frame())
-    ###############################
-    ## MODIFIED CODE FOR NMPROJECT
-    args <- lapply(args, function(arg){
-      if(inherits(arg, "nm")) return(list(arg)) else return(arg)
-    })
-    ################################
-    names <- if (is.null(names(args))) 
-      character(length(args))
-    else names(args)
-    dovec <- names %in% vectorize.args
-    do.call("mapply", c(FUN = FUN, args[dovec], MoreArgs = list(args[!dovec]), 
-                        SIMPLIFY = SIMPLIFY, USE.NAMES = USE.NAMES))
-  }
-  formals(FUNV) <- formals(FUN)
-  FUNV
-}
+
 
 #' tests if job is finished
 #'
@@ -920,10 +927,13 @@ is_finished <- Vectorize_nm(is_finished, vectorize.args = "r")
 #' @export
 
 cond_num <- function(r){
-  if(is.null(r)) return(NA)
+  if(length(r) == 1){
+    if(is.na(r)) return(as.numeric(NA))
+    if(is.null(r)) return(as.numeric(NA))
+  }
   dc <- try(coef_nm(r, trans = FALSE), silent = TRUE)
-  if(inherits(dc, "try-error")) return(NA)
-  dc$FINAL[dc$Parameter %in% "CONDNUM"]
+  if(inherits(dc, "try-error")) return(as.numeric(NA))
+  as.numeric(dc$FINAL[dc$Parameter %in% "CONDNUM"])
 }
 cond_num <- Vectorize_nm(cond_num, vectorize.args = "r")
 
