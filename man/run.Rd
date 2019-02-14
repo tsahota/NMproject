@@ -4,13 +4,13 @@
 \alias{run}
 \title{Run NONMEM}
 \usage{
-run(..., overwrite = getOption("run_overwrite"), delete_dir = c(NA, TRUE,
+run(r, overwrite = getOption("run_overwrite"), delete_dir = c(NA, TRUE,
   FALSE), wait = getOption("wait"), update_db = TRUE,
   ignore.stdout = TRUE, ignore.stderr = TRUE, initial_timeout = NA,
   quiet = getOption("quiet_run"), intern = getOption("intern"))
 }
 \arguments{
-\item{...}{objects of class nm}
+\item{r}{objects of class nm/or list of objects class nm}
 
 \item{overwrite}{logical. Should run directory be overwritten (default=FALSE)}
 
