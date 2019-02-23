@@ -615,6 +615,7 @@ run.nm <- function(r,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,F
   #rl <- rl[sapply(rl, inherits, what = "nm")]
   rl <- rl[!sapply(rl, is.null)] ## remove nulls
   rl <- lapply(rl,function(r){
+    if(!inherits(r, "nm")) return(NA)
     if(is.null(r$db_name)) update_db <- FALSE
     ## if directory exists, and if it's definately a directory stop
     if(file.exists(r$run_dir) & !overwrite)if(file.info(r$run_dir)$isdir %in% TRUE) stop("run already exists. To rerun select overwrite=TRUE\n  or use the switch overwrite_default(TRUE)",call.=FALSE)
@@ -1412,3 +1413,4 @@ update_sizes <- function(ctl, sizes_char){
   }
   ctl_list(ctl)
 }
+

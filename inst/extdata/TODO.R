@@ -19,6 +19,9 @@ future({ ## asynchronous events
   e14 %>% ind_diag1(type = 12, n = 20)  
 })
 
+## TODO: make snapshot work even if no db is present - this should
+##  be a tidyproject function as opposed to NMproject?
+
 ## TODO: functions to be used in function templates:
 ##     - require_finished(r) - will wait if not finsihed
 ##     - require_processed(r) - will process if needed

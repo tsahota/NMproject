@@ -62,7 +62,7 @@ test_that("db & plot_iter works",{
         update_ignore("TIME>2") %>%
         update_sizes("PD = 200") %>%
         update_dollar(SUB = c("ADVANnew")) %>%
-        add_cov(param = "K", cov = "WT")
+        add_cov(param = "K", cov = "WT", force = TRUE)
     })
   })
 
@@ -80,7 +80,7 @@ test_that("db & plot_iter works",{
     suppressWarnings({
       ctl <- m1 %>% update_parameters() %>% new_ctl("4") %>% write_ctl %>%
         update_dollar_input() %>%
-        add_cov(param = "K", cov = "WT")      
+        add_cov(param = "K", cov = "WT", force = TRUE)      
     })
   })
 

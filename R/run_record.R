@@ -229,6 +229,7 @@ coef.nm <- function(object,...){
   coef_nm(object=object,trans=trans)
 }
 
+
 run_record0 <- function(..., coef.func = coef_ext0){
   coef.func <- coef.func
   d <- lapply(list(...),coef.func)
@@ -319,3 +320,53 @@ run_table <- function(db_name = "runs.sqlite"){
   nmdb_printable_db(d)
 }
 
+AIC.nm <- function(object, ..., k = 2){
+  params <- coef.nm(object)
+  params <- params[grepl("THETA|OMEGA|SIGMA", params$Type), ]
+  
+  n_parameters <- nrow(params)
+  ofv(object) - k*n_parameters
+}
+
+#' Get BIC
+#' @param object nm object or list of nm objects
+#' @param ... additional arguments
+#' @param k integer. default = 2. AIC penalty
+#' @export
+AIC_nm <- function(object, ..., k = 2){
+  if(inherits(object, "nmexecute")) object <- list(object)
+  d <- tibble::tibble(object = object, k = k)
+  sapply(seq_along(object), function(i){
+    ob <- object[[i]]
+    if(!inherits(ob, "nmexecute")) return(NA) else
+      AIC.nm(ob, k = d$k[i])
+  })
+}
+
+nobs_nm <- function(object, ...){
+  d <- get_data(object, filter = TRUE)
+  d <- d %>% dplyr::filter(.data$EVID %in% 0)
+  d <- d %>% dplyr::filter(!.data$MDV %in% 1)
+  nrow(d)
+}
+
+#
+#BIC.nm <- function(object, ...){
+#  AIC.nm(object, ..., k = log(nobs(object)))
+#}
+
+#' Get BIC
+#' 
+#' @param object nm object or list of nm objects
+#' @param ... additional arguments
+#' @export
+BIC_nm <- function(object, ...){
+  if(inherits(object, "nmexecute")) object <- list(object)
+  d <- tibble::tibble(m = object)
+  d$data_name <- sapply(object, function(object)  object$input$data_name)
+  
+  d <- d %>% dplyr::group_by(.data$data_name) %>%
+    dplyr::mutate(lognobs = log(nobs_nm(dplyr::first(.data$m))))
+  
+  AIC_nm(object, ..., k = d$lognobs)
+}
