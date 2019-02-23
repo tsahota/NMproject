@@ -469,14 +469,21 @@ change_to_sim <- function(ctl_lines,subpr=1,seed=1){
 #' @param state numeric. Number of state
 #' @param continuous logical (default = TRUE). is covariate continuous?
 #' @param time_varying optional logical. is the covariate time varying?
-#' @param custom_state_text optional character. custom state variable to be passed to param_cov_text
+#' @param additional_state_text optional character. custom state variable to be passed to param_cov_text
 #' @param id_var character (default = "ID"). Needed if time_varying is missing.
+#' @param force logical (default = FALSE). Force covariate in even if missing values found
+#' @param force_TV_var logical (default = FALSE). Force covariates only on TV notation parameters
 #' @export
 
 add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
-                    time_varying, custom_state_text, id_var = "ID"){
+                    time_varying, additional_state_text, id_var = "ID",
+                    force = FALSE, force_TV_var = FALSE){
 
   ctl <- ctl_list(ctl)
+  param <- as.character(param)
+  cov <- as.character(cov)
+  state <- as.character(state)
+  continuous <- as.logical(continuous)
 
   if("PK" %in% names(ctl)) dol_PK <- "PK" else dol_PK <- "PRED"
 
@@ -484,22 +491,49 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
 
   data <- suppressMessages(get_data(ctl, filter = TRUE))
 
-  if(any(is.na(data[[cov]]))) warning("missing values in ",cov," detected")
+  if(!cov %in% names(data)) {
+    if(force) {
+      warning("can't find ",cov," in data", call. = FALSE)
+    } else {
+      stop("can't find ",cov," in data", call. = FALSE)
+    }
+  }
+  
+  if(any(is.na(data[[cov]]))) {
+    if(force) {
+      warning("missing values in ",cov," detected", call. = FALSE)
+    } else {
+      stop("missing values in ",cov," detected", call. = FALSE)
+    }
+  }
+  
+  if(length(unique(data[[cov]])) > 5 & !continuous)
+    warning(length(unique(data[[cov]])), " unique values for ", cov, " found. are you sure it's categorical?",
+            call. = FALSE)
 
   if(missing(time_varying)){
     max_levels <- max(tapply(data[[cov]], data[[id_var]], function(x) length(unique(x))), na.rm = TRUE)
     if(max_levels > 1) time_varying <- TRUE else time_varying <- FALSE
   }
 
-  if(time_varying){
-    tvparam <- param
-  } else {
+  if(force_TV_var){
     tvparam <- paste0("TV",param)
+  } else {
+    if(time_varying){
+      tvparam <- param
+    } else {
+      ## try TV param if exists
+      if(any(grepl(paste0("\\bTV",param,"\\b"), PK_section)))
+        tvparam <- paste0("TV",param)
+    }    
   }
+
+  if(!any(grepl(paste0("\\bTV",param,"\\b"), PK_section)))
+    stop("cant find parameter in control file", call. = FALSE)
 
   existing_param_rel <- any(grepl(paste0("\\b",tvparam,"COV"), PK_section))
   existing_param_cov_rel <- any(grepl(paste0("\\b",tvparam,cov), PK_section))
-  if(existing_param_cov_rel) stop("covariate relation already exists, cannot add")
+  if(existing_param_cov_rel) stop("covariate relation already exists, cannot add", call. = FALSE)
 
   param_info <- param_info(ctl)
   theta_n_start <- max(param_info$N) + 1
@@ -538,12 +572,12 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
   }
 
   ## use state to get the relationship in there.
-  if(!missing(custom_state_text)) {
+  if(!missing(additional_state_text)) {
     param_cov_text <- param_cov_text(param=tvparam,cov=cov,state = state,
                                      data = data,
                                      theta_n_start = theta_n_start,
                                      continuous = continuous,
-                                     custom_state_text = custom_state_text)
+                                     additional_state_text = additional_state_text)
   } else {
     param_cov_text <- param_cov_text(param=tvparam,cov=cov,state = state,
                                      data = data,
@@ -582,12 +616,12 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
 #' @param state numeric. Number of state
 #' @param continuous logical (default = TRUE). is covariate continuous?
 #' @param time_varying optional logical. is the covariate time varying?
-#' @param custom_state_text optional character. custom state variable to be passed to param_cov_text
+#' @param additional_state_text optional character. custom state variable to be passed to param_cov_text
 #' @param id_var character (default = "ID"). Needed if time_varying is missing.
 #' @export
 
 remove_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
-                    time_varying, custom_state_text, id_var = "ID"){
+                    time_varying, additional_state_text, id_var = "ID"){
 
   ctl <- ctl_list(ctl)
 
@@ -714,37 +748,72 @@ remove_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
 param_cov_text <- function(param,cov,state,data,theta_n_start,continuous = TRUE,
                            state_text = list(
                              "2" = "PARCOV= ( 1 + THETA(1)*(COV - median))",
+                             "linear" = "PARCOV= ( 1 + THETA(1)*(COV - median))",
                              "3" = c("IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))",
                                      "IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))"),
+                             "hockey-stick" = c("IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))",
+                                                "IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))"),
                              "4" = "PARCOV= EXP(THETA(1)*(COV - median))",
-                             "5" = "PARCOV= ((COV/median)**THETA(1))"),
-                           custom_state_text, ...){
+                             "exponential" = "PARCOV= EXP(THETA(1)*(COV - median))",
+                             "5" = "PARCOV= ((COV/median)**THETA(1))",
+                             "power" = "PARCOV= ((COV/median)**THETA(1))",
+                             "power1" = "PARCOV= ((COV/median))",
+                             "power0.75" = "PARCOV= ((COV/median)**0.75)",
+                             "6" = "PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))",
+                             "log-linear" = "PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))"),
+                           additional_state_text, ...){
 
-  if(!missing(custom_state_text)) state_text <- append(state_text, custom_state_text)
-
+  if(!missing(additional_state_text)) {
+    if(is.null(names(additional_state_text))) stop("additional_state_text needs to be a named list")
+    if(any(names(additional_state_text) %in% names(state_text)))
+      stop("additional_state_text entries cannot overwrite base states:\n ",
+           "create new state name")
+    state_text <- append(state_text, additional_state_text)
+  }
+  
   if(!continuous) {
-
+    
+    if(!missing(state_text)) 
+      stop("not currently allowed to modify state_text for categorical covariates.
+consider using the default with state \"linear\" or use additional_state_text")
+    
+    if(!(2 %in% state | "linear" %in% state))
+      stop("categorical covariates can only be used with state 2 (or \"linear\")")
+    
+    ##modify state_text for for categorical
     unique_vals <- table(data[[cov]]) %>% sort(decreasing = TRUE)
     unique_vals <- names(unique_vals)
-
+    
     two_text <- sapply(seq_along(unique_vals), function(i){
       val <- unique_vals[i]
       def_text <- paste0("IF(COV.EQ.",val,") PARCOV = ")
       if(i == 1) def_text <- paste0(def_text, 1) else
         def_text <- paste0(def_text, "( 1 + THETA(",i-1,"))")
     })
-
-    state_text <- list("2" = two_text)
+    
+    state_text$"2" <- two_text
+    state_text$"linear" <- two_text      
   }
-
+  
   dstate_text <- data.frame(state = names(state_text))
   dstate_text$text <- state_text
-
+  
   par_cov_text <- dstate_text$text[dstate_text$state %in% state]
   par_cov_text <- par_cov_text[[1]]
   par_cov_text <- gsub("PAR", param, par_cov_text)
   par_cov_text <- gsub("COV", cov, par_cov_text)
 
+  if(any(grepl("log\\(median\\)", par_cov_text))){
+    ## get data
+    data_temp <- tapply(data[[cov]], data$ID, stats::median, na.rm = TRUE)
+    value <- signif(stats::median(log(data_temp), na.rm = TRUE), 3)
+    if(value>0){
+      par_cov_text <- gsub("log\\(median\\)", value , par_cov_text)
+    } else {
+      par_cov_text <- gsub("-\\s*log\\(median\\)", paste0("+ ", -value) , par_cov_text)
+    }
+  }
+    
   if(any(grepl("median", par_cov_text))){
     ## get data
     data_temp <- tapply(data[[cov]], data$ID, stats::median, na.rm = TRUE)
@@ -755,17 +824,23 @@ param_cov_text <- function(param,cov,state,data,theta_n_start,continuous = TRUE,
       par_cov_text <- gsub("-\\s*median", paste0("+ ", -value) , par_cov_text)
     }
   }
-
+  
   ## renumber thetas
   n <- 1
   n_replace <- theta_n_start
+  par_cov_text <- gsub("THETA\\(([0-9]+)\\)",
+                       "THETA\\(X\\1\\)", 
+                       par_cov_text)
+
   while(TRUE){
-    if(!any(grepl(paste0("THETA\\(",n,"\\)"), par_cov_text))) break
-    par_cov_text <- gsub(paste0("(THETA\\()",n,"(\\))"),paste0("\\1",n_replace,"\\2"),
-                         par_cov_text)
+    if(!any(grepl(paste0("THETA\\(X",n,"\\)"), par_cov_text))) break
+    par_cov_text <- gsub(paste0("(THETA\\()X",n,"(\\))"),
+                              paste0("\\1",n_replace,"\\2"),
+                              par_cov_text)
     n <- n + 1
     n_replace <- n_replace + 1
   }
+  if(n-1 > 30) warning("You're adding ", n-1, " parameters. Are you insane?", call. = FALSE)
   attributes(par_cov_text) <- list(n = n-1)
   par_cov_text
 
