@@ -712,3 +712,63 @@ replace_DV_with_DV_OUT <- function(x){
   }
   return(x)
 }
+
+#' Get NONMEM version info
+#' 
+#' @return returns list with version info for NONMEM, PsN, perl and
+#' fortran compiler (only gfortran currently)
+#' 
+#' @export
+
+NONMEM_version <- function(){
+  
+  ## scrape version info
+  psn_nm_versions <- system_nm("psn --nm_versions", intern = TRUE)
+  psn_nm_version <- psn_nm_versions[grepl("default is", psn_nm_versions)]
+  psn_nm_version <- basename(gsub("^.* (/.*)$","\\1", psn_nm_version))
+  
+  if(length(psn_nm_version) == 0) psn_nm_version <- "not found"
+  
+  nm_compiler_version <- system_nm("gfortran --version", intern = TRUE)[1]
+  if(length(nm_compiler_version) == 0) {
+    nm_compiler_version <- "not found"
+  }
+  
+  psn_version <- system_nm("psn --version", intern = TRUE)
+  if(length(psn_version) == 0) psn_version <- "not found"
+  
+  perl_version <- system_nm("perl --version", intern = TRUE)
+  perl_version <- perl_version[grepl("This is", perl_version)]
+  perl_version <- gsub("^.*\\((v.*)\\).*$","\\1",perl_version)
+  if(length(perl_version) == 0) perl_version <- "not found"
+  
+  c(NONMEM = psn_nm_version,
+    compiler = nm_compiler_version,
+    psn = psn_version,
+    perl = perl_version)
+  
+}
+
+#' Make R session record
+#'
+#' Create a record of the R version and package versions used in a particular NMproject
+#'
+#' @export
+
+
+Renvironment_info <- function() {
+  txt <- tidyproject::Renvironment_info0()
+  
+  NONMEM_version <- NONMEM_version()
+  NONMEM_version <- paste(names(NONMEM_version), NONMEM_version, sep = ": ")
+  
+  txt <- c(txt, 
+           "\nNONMEM version info (see NONMEM_version()):\n",
+           NONMEM_version)
+  
+  writeLines(txt, "Renvironment_info.txt")
+  tidyproject::setup_file("Renvironment_info.txt")
+  message(paste0("Environment info produced: Renvironment_info.txt"))
+  
+}
+
