@@ -545,13 +545,14 @@ write_derived_data <- function(d, name, ...){
 read_derived_data <- function(name, na = ".", ...){
 
   ## TODO: expand to other types of argument
+  if(length(name) != 1) stop("name should have length 1", call. = FALSE)
 
   if(file.exists(name)){
-    if(grep("\\.RData", name)) {
+    if(grepl("\\.RData", name)) {
       message("loading: ", name)
       load(file = name)
     }
-    if(grep("\\.csv", name)) {
+    if(grepl("\\.csv", name)) {
       message("loading: ", name)
       d <- utils::read.csv(name, na = na, ...)
     }
