@@ -757,8 +757,8 @@ NONMEM_version <- function(){
 #' @export
 
 
-Renvironment_info <- function() {
-  txt <- tidyproject::Renvironment_info0()
+environment_info <- function() {
+  txt <- tidyproject::environment_info0()
   
   NONMEM_version <- NONMEM_version()
   NONMEM_version <- paste(names(NONMEM_version), NONMEM_version, sep = ": ")
@@ -767,9 +767,19 @@ Renvironment_info <- function() {
            "\nNONMEM version info (see NONMEM_version()):\n",
            NONMEM_version)
   
-  writeLines(txt, "Renvironment_info.txt")
-  tidyproject::setup_file("Renvironment_info.txt")
-  message(paste0("Environment info produced: Renvironment_info.txt"))
+  uname <- Sys.info()["user"]
+  if(length(uname) == 1){
+    uname <- as.character(uname)
+    uname <- gsub("\\s", "", uname)
+    if(nchar(uname) > 0) uname <- paste0("_", uname)
+  } else uname <- ""
+  
+  
+  log_file_name <- paste0("environment_info",uname,".txt")
+  
+  writeLines(txt, log_file_name)
+  tidyproject::setup_file(log_file_name)
+  message(paste0("Environment info produced: ",log_file_name))
   
 }
 
