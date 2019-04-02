@@ -456,7 +456,7 @@ manual_edit <- function(ctl, comment){
   ctl_name <- attr(ctl, "file_name")
   write_ctl(ctl)
   message("perform manual edit: ", comment)
-  ctl(ctl_name)
+  show_ctl(ctl_name)
   message("(Recommended) after edit, save and use commit_file(\"",ctl_name,"\")")
 }
 
