@@ -520,16 +520,51 @@ extract_nm <- function(entry,db_name="runs.sqlite"){
 #' @export
 print.nm <- function(x,...) utils::str(x)
 
+#' Show lst file
+#'
+#' @param r object of class nm
+#' @export
+out <- function(r) {
+  .Deprecated("show_out")
+}
+
 #' Edit control file
 #'
 #' @param r object of class nm, a file name, or a run_id
 #' @export
 ctl <- function(r) {
-  ctl_name <- search_ctl_name(r)
-  if(.Platform$OS.type=="windows")
-    file.show(ctl_name) else
-      get("file.edit")(ctl_name)
+  .Deprecated("show_ctl")
 }
+
+show_file <- function(file_name){
+  if(.Platform$OS.type=="windows")
+    file.show(file_name) else
+      if(exists("file.show")) file.show(file_name) else
+        utils::file.edit(file_name)
+}
+
+edit_file <- function(file_name){
+  if(.Platform$OS.type=="windows")
+    file.show(file_name) else
+      get("file.edit")(file_name)
+}
+
+#' Edit control file
+#'
+#' @param r object of class nm, a file name, or a run_id
+#' @export
+show_ctl <- function(r) {
+  edit_file(search_ctl_name(r))
+}
+
+#' Show lst file
+#'
+#' @param r object of class nm
+#' @export
+show_out <- function(r) {
+  show_file(r$output$psn.lst)
+}
+
 
 search_ctl_name <- function(r, models_dir=getOption("models.dir")){
   if(inherits(r,"nm")) ctl_name <- r$ctl
@@ -551,16 +586,7 @@ file.exists2 <- function(x){ ## only true is file exists and is not a directory
   !file.info(x)$isdir
 }
 
-#' Show lst file
-#'
-#' @param r object of class nm
-#' @export
-out <- function(r) {
-  if(.Platform$OS.type=="windows")
-    file.show(r$output$psn.lst) else
-      if(exists("file.show")) file.show(r$output$psn.lst) else
-        utils::file.edit(r$output$psn.lst)
-}
+
 
 gsub2 <- function(pattern,replacement,x,...){
   match <- grepl(pattern,x,...)

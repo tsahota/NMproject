@@ -91,7 +91,7 @@ test_that("db & plot_iter works",{
   })
 
   expect_true(!any(grepl("KWT-DEFINITION START", ctl_character(ctl_orig))))
-
+  
   build_ctl({
     ctl <- m1 %>% change_to_sim %>% change_seed(98765)
   })

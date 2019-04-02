@@ -420,6 +420,21 @@ gsub_ctl <- function(ctl, ...){
   ctl_list(ctl)
 }
 
+append_dollar <- function(ctl_lines, after = NULL, ...){
+  ctl_lines <- ctl_list(ctl_lines)
+  if(is.null(after)) append_after <- length(ctl_lines) else
+    append_after <- max(which(grepl(after,names(ctl_lines))))
+  if(length(after)!=1) stop("cannot find determine \"after\"")
+  if(is.na(after)) stop("cannot find determine \"after\"")
+  if(after %in% -Inf) stop("cannot find determine \"after\"")
+  attributes_ctl_lines <- attributes(ctl_lines)
+  attributes_ctl_lines$names <- NULL
+  ctl_lines <- append(ctl_lines, list(...) ,after = append_after)
+  attributes_ctl_lines$names <- names(ctl_lines)
+  attributes(ctl_lines) <- attributes_ctl_lines
+  ctl_lines
+}
+
 #' change to estimation control stream to sim
 #'
 #' @param ctl_lines character vector. ctl file read into R
@@ -437,9 +452,10 @@ change_to_sim <- function(ctl_lines,subpr=1,seed=1){
     ctl_lines$SIM <- gsub("(\\$SIM[^\\s]*\\s*\\()[0-9]+(\\))",paste0("\\1",seed,"\\2"),ctl_lines$SIM)
   } else {
     ## insert before $TABLE, after $ERROR/$PRED
-    pred_error_pos <- which(grepl("ERROR|PRED",names(ctl_lines)))
-    if(length(pred_error_pos) > 1) stop("multiple $ERROR/$PREDs detected - should only have one or the other?")
-    ctl_lines <- append(ctl_lines,list(SIM=NA),pred_error_pos)
+    #pred_error_pos <- which(grepl("ERROR|PRED",names(ctl_lines)))
+    #if(length(pred_error_pos) > 1) stop("multiple $ERROR/$PREDs detected - should only have one or the other?")
+    #ctl_lines <- append(ctl_lines,list(SIM=NA),pred_error_pos)
+    ctl_lines <- append_dollar(ctl_lines, SIM=NA, "ERROR|PRED|SIGMA|OMEGA")
     ctl_lines$SIM <- paste0("$SIM (",seed,") ONLYSIM SUBPR=",subpr)
   }
 
@@ -458,7 +474,7 @@ change_to_sim <- function(ctl_lines,subpr=1,seed=1){
     e[setdiff(if_statements[[y_if_pos]], y_line)] <- paste(";",e[setdiff(if_statements[[y_if_pos]], y_line)])
     ctl_lines$ERROR <- e
   }
-  ctl_r2nm(ctl_lines)
+  ctl_list(ctl_lines)
 }
 
 #' Add a covariate to a NONMEM model
