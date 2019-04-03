@@ -526,6 +526,10 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
   if(length(unique(data[[cov]])) > 5 & !continuous)
     warning(length(unique(data[[cov]])), " unique values for ", cov, " found. are you sure it's categorical?",
             call. = FALSE)
+  
+  if(length(unique(data[[cov]])) <= 1)
+    warning(length(unique(data[[cov]])), " unique values for ", cov, " found. are you sure about this?",
+            call. = FALSE)
 
   if(missing(time_varying)){
     max_levels <- max(tapply(data[[cov]], data[[id_var]], function(x) length(unique(x))), na.rm = TRUE)
@@ -637,8 +641,8 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
 #' @export
 
 remove_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
-                    time_varying, additional_state_text, id_var = "ID"){
-
+                       time_varying, additional_state_text, id_var = "ID"){
+  
   ctl <- ctl_list(ctl)
 
   if("PK" %in% names(ctl)) dol_PK <- "PK" else dol_PK <- "PRED"
