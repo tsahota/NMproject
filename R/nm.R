@@ -640,6 +640,7 @@ run.nm <- function(r,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,F
   if(inherits(rl, "nm")) rl <- list(rl)
   #rl <- rl[sapply(rl, inherits, what = "nm")]
   rl <- rl[!sapply(rl, is.null)] ## remove nulls
+  rl <- rl[!sapply(rl, is.na)] ## remove nas
   rl <- lapply(rl,function(r){
     if(!inherits(r, "nm")) return(NA)
     if(is.null(r$db_name)) update_db <- FALSE
