@@ -6,7 +6,7 @@
 \usage{
 add_cov(ctl, param, cov, state = 2, continuous = TRUE, time_varying,
   additional_state_text, id_var = "ID", force = FALSE,
-  force_TV_var = FALSE)
+  force_TV_var = FALSE, init, lower, upper)
 }
 \arguments{
 \item{ctl}{object coercible to ctl_list}
@@ -28,6 +28,12 @@ add_cov(ctl, param, cov, state = 2, continuous = TRUE, time_varying,
 \item{force}{logical (default = FALSE). Force covariate in even if missing values found}
 
 \item{force_TV_var}{logical (default = FALSE). Force covariates only on TV notation parameters}
+
+\item{init}{optional numeric/character vector.  Initial estimate of additional parameters}
+
+\item{lower}{optional numeric/character vector.  lower bound of additional parameters}
+
+\item{upper}{optional numeric/character vector.  Upper bound of additional parameters}
 }
 \description{
 Add a covariate to a NONMEM model
