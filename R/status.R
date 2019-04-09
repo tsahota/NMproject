@@ -115,6 +115,24 @@ status <- function(x) UseMethod("status",x)
 #' @export
 status.nm <- function(x) run_status(x)
 
+#' @export
+status.default <- function(x) {
+  if(is.na(x)) return(NA)
+  stop("don't know how to handle this")
+}
+
+#' @export
+status.data.frame <- function(x) {
+  if(ncol(x) == 1) {
+    return(status(as.list(x)[[1]]))
+  }
+}
+
+#' @export
+status.list <- function(x) {
+  lapply(x, status)
+}
+
 #' Tail of lst file
 #' 
 #' @param r nm object
