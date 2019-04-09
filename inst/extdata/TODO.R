@@ -211,19 +211,27 @@ rerun(FALSE) ## means run_nm(),nm_tran(),post(),build_ctl() does nothing
 post(m1, gof_xpose)  ## will write to db
 ## runs gof_xpose(m1) and save return obs (characters) to results db
 
-## Do I want to do without db?
-## I could have everything db based, and have multiple dbs.
-## could separate them into a separate folder.
-## would need to solve concurrency and speed issues
+## TODO:
+## Need consistent way of handling nm object and lists of nm objects and data.frames
+##  if class nm - fun(m)
+##  if class list - lapply(m, fun) or sapply(m, fun)
+##  if class data.frame  - fun(m$m)   - this is a list
+##  if is.na(m) - return(NA)
 
-m0 <- nm2("m0")  ## will look for run_m0.mod
-m0$cmd <- "execute run_{run_id}.mod -dir={run_id}"  ## error in run if not present
+## it's pretty complex
+##  option 1: use S3 classes
+##   reasonably simple and general
+##   list is pretty general will this conflict with other packages?
+##    can always rename if it does
 
-m0 <- nm2("m0", cmd = "execute run_{run_id}.mod -dir={run_id}")
+## run_nm
+## status
+## ofv
+## AIC*
+## BIC*
 
-m1 <- nm2("m1", based_on = "m0")  ## inherits type ("ex)
 
-## default assumes m1 is execute
+
 
 
 ## TODO:

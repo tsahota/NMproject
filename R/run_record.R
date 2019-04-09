@@ -124,7 +124,7 @@ coef_nm <- function(object,trans,...){
   d$is_final <- NULL
   if(!trans) return(d)
 
-  p <- object$param_info
+  p <- param_info(object)
 
   p$Parameter <- paste0("THETA",p$N)
 
@@ -274,14 +274,18 @@ run_record <- function(...,trans=TRUE){
 
 }
 
-run_summary <- function(r){
+run_summary <- function(r, db = NULL){
   res <- list()
   outputs <- unlist(r$output)
   if(!is.null(outputs)) existing_files <- file.exists(outputs) else
     existing_files <- NA
   res$outputs_present <- sum(existing_files)/length(existing_files)
   res$last_update <- last_modified(r)
-  res$status <- run_status(r)$status
+  if(missing(db)){
+    res$status <- run_status(r)$status
+  } else {
+    res$status <- run_status(r, db = db)$status 
+  }
   res$lst_exists <- NA
   res$stop_time_reached <- NA
   res$ofv <- NA
@@ -312,8 +316,8 @@ run_summary <- function(r){
 #' @export
 run_table <- function(db_name = "runs.sqlite"){
   d <- nmdb_get(db_name)
-  res <- lapply(d$object,unserialize,refhook=NULL)
-  res <- lapply(res,run_summary)
+  res <- lapply(d$object, unserialize, refhook=NULL)
+  res <- lapply(res, run_summary, db = d)
   res <- do.call(rbind,res)
   res <- cbind(data.frame(entry=d$entry),res)
   d <- merge(d,res)
@@ -344,6 +348,7 @@ AIC_nm <- function(object, ..., k = 2){
 }
 
 nobs_nm <- function(object, ...){
+  if(is.na(object)) return(NA)
   d <- get_data(object, filter = TRUE)
   d <- d %>% dplyr::filter(.data$EVID %in% 0)
   d <- d %>% dplyr::filter(!.data$MDV %in% 1)
@@ -363,7 +368,10 @@ nobs_nm <- function(object, ...){
 BIC_nm <- function(object, ...){
   if(inherits(object, "nmexecute")) object <- list(object)
   d <- tibble::tibble(m = object)
-  d$data_name <- sapply(object, function(object)  object$input$data_name)
+  d$data_name <- sapply(object, function(object) {
+    if(is.na(object)) return(NA)
+    object$input$data_name 
+  })
   
   d <- d %>% dplyr::group_by(.data$data_name) %>%
     dplyr::mutate(lognobs = log(nobs_nm(dplyr::first(.data$m))))

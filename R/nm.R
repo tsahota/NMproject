@@ -143,8 +143,6 @@ nm(\"bootstrap run1.mod -threads=4\",psn_command=\"bootstrap\")"
                            run_dir = r$run_dir,
                            ctl_name = r$ctl)
 
-  if(r$type %in% "execute") r$param_info <- param_info(r$ctl)
-
   r$description <- tidyproject::get_script_field(r$ctl,"Description")
 
   ####
@@ -191,7 +189,7 @@ nm(\"bootstrap run1.mod -threads=4\",psn_command=\"bootstrap\")"
       nmdb_add_entry(r)
     } else if(length(matched_entry)==1) {
       ## database fields to preserve
-      status_ob <- get_object_field(r$db_name,matched_entry,"run_status_ob")
+      status_ob <- get_object_field(db_name = r$db_name, entry = matched_entry, field = "run_status_ob")
       #status_ob$status <- get_char_field(r$db_name,matched_entry,"run_status") ## done by previous line
       job_info <- get_char_field(r$db_name,matched_entry,"job_info")
 
@@ -305,11 +303,16 @@ update_object_field <- function(db_name = "runs.sqlite",entry,...){
   return()
 }
 
-get_object_field <- function(db_name = "runs.sqlite",entry,field){
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), db_name)
-  d <- DBI::dbGetQuery(my_db, paste('SELECT * FROM runs WHERE entry ==',entry))
-  DBI::dbDisconnect(my_db)
-  unserialize(d[d$entry %in% entry,][[field]][[1]])
+get_object_field <- function(db_name = "runs.sqlite",db,entry,field){
+  if(missing(db)){
+    my_db <- DBI::dbConnect(RSQLite::SQLite(), db_name)
+    d <- DBI::dbGetQuery(my_db, paste('SELECT * FROM runs WHERE entry ==',entry))
+    DBI::dbDisconnect(my_db)
+    unserialize(d[d$entry %in% entry,][[field]][[1]]) 
+  } else {
+    d <- db
+    unserialize(d[d$entry %in% entry,][[field]][[1]])
+  }
 }
 
 update_char_field <- function(db_name="runs.sqlite",entry,...){
@@ -625,19 +628,24 @@ get_run_id <- function(ctl_name){
 #'
 #' @export
 run <- function(r,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
-                update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
-                initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern")){
-  UseMethod("run")
-}
-
-#' @export
-run.nm <- function(r,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
                    update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
                    initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern")){
   tidyproject::check_if_tidyproject()
   #if(!quiet & !wait) stop("quiet=FALSE requires wait=TRUE")
   rl <- r
   if(inherits(rl, "nm")) rl <- list(rl)
+  
+  if(inherits(rl, "data.frame")){
+    if(nrow(rl) == 1) {
+      rl <- as.list(rl)[[1]]
+    } else {
+      if("m" %in% names(rl))
+        if(inherits(rl[["m"]], "list"))
+          rl <- rl$m
+      stop("don't know how to handle this type")
+    }
+  }
+  
   #rl <- rl[sapply(rl, inherits, what = "nm")]
   rl <- rl[!sapply(rl, is.null)] ## remove nulls
   rl <- rl[!sapply(rl, is.na)] ## remove nas
@@ -683,7 +691,7 @@ run.nm <- function(r,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,F
 #' @param ... objects of class nm and other args
 #' @export
 run_nm <- function(...){
-  run.nm(...)
+  run(...)
 }
 
 #' wait for a run to finish
@@ -737,7 +745,7 @@ wait_for_finished <- function(...,initial_timeout=NA){
 #' @param initial_timeout numeric (default = NA).
 #' Time to wait for directory creation before concluding error
 #' @export
-run_status <- function(r,db,entry,initial_timeout=NA){
+run_status <- function(r, db, entry, initial_timeout=NA){
   ## logic:
   ## if file.mtime(r$run_dir) ==  same use status_prev
   ## if file.mtime(r$run_dir) !=  same
@@ -745,13 +753,19 @@ run_status <- function(r,db,entry,initial_timeout=NA){
   ##       check new lsts add them to db
   ##    else
   ##       check all directories
+  
+  ## sometimes status_prev needs to be completely up to date.
+  ##  e.g. in wait_for.
+  ##  other times it doesn't matter and will update itself
+  
   status_ob <- list()
   status_ob_prev <- list()
   if(!is.null(r$db_name)) {
-    if(missing(db)) db <- nmdb_get(r$db_name)
+    missing_db <- missing(db)
+    if(missing_db) db <- nmdb_get(r$db_name)
     if(missing(entry)) matched_entry <- nmdb_match_entry(r,db = db) else
       matched_entry <- entry
-    status_ob_prev <- get_object_field(r$db_name,matched_entry,"run_status_ob")
+      status_ob_prev <- get_object_field(db_name = r$db_name, db = db, entry = matched_entry, field = "run_status_ob") 
 
 
     if(!file.exists(r$run_dir)) {
