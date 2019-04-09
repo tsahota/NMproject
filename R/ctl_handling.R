@@ -489,11 +489,15 @@ change_to_sim <- function(ctl_lines,subpr=1,seed=1){
 #' @param id_var character (default = "ID"). Needed if time_varying is missing.
 #' @param force logical (default = FALSE). Force covariate in even if missing values found
 #' @param force_TV_var logical (default = FALSE). Force covariates only on TV notation parameters
+#' @param init optional numeric/character vector.  Initial estimate of additional parameters
+#' @param lower optional numeric/character vector.  lower bound of additional parameters
+#' @param upper optional numeric/character vector.  Upper bound of additional parameters
 #' @export
 
 add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
                     time_varying, additional_state_text, id_var = "ID",
-                    force = FALSE, force_TV_var = FALSE){
+                    force = FALSE, force_TV_var = FALSE, 
+                    init, lower, upper){
 
   ctl <- ctl_list(ctl)
   param <- as.character(param)
@@ -614,10 +618,30 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
   ## add thetas
   n_add_thetas <- attr(param_cov_text, "n")
   if(n_add_thetas > 0){
+    
+    if(missing(init)){
+      init <- rep("0.0001", n_add_thetas)
+      if(state == 3 | state == "power") {
+        init <- rep(0.8, n_add_thetas)
+      }
+    }
+    
+    if(missing(lower)){
+      lower <- rep(-1, n_add_thetas)
+    }
+    
+    if(missing(upper)){
+      upper <- rep(5, n_add_thetas)
+    }
+    
+    
+    if(any(lower > init)) stop("lower bound > initial estimate")
+    if(any(upper < init)) stop("upper bound < initial estimate")
+    
     if(n_add_thetas == 1) {
-      theta_lines <- paste0("$THETA  (-1,0.0001,5) ; ",tvparam, cov, state)
+      theta_lines <- paste0("$THETA  (",lower,",",init,",",upper,") ; ",tvparam, cov, state)
     } else {
-      theta_lines <- paste0("$THETA  (-1,0.0001,5) ; ",tvparam, cov, state,"_",seq_len(n_add_thetas))
+      theta_lines <- paste0("$THETA  (",lower,",",init,",",upper,") ; ",tvparam, cov, state,"_",seq_len(n_add_thetas))
     }
     ctl$THETA <- c(ctl$THETA,theta_lines)
   }
