@@ -4,17 +4,21 @@
 \alias{setup_nm_demo}
 \title{Setup demo files}
 \usage{
-setup_nm_demo(file_stub = paste0(getOption("model_file_stub"), 1),
-  overwrite = FALSE, demo_name = "theopp", exclude = NULL)
+setup_nm_demo(demo_name = "theopp",
+  file_stub = paste0(getOption("model_file_stub"), 1), overwrite = FALSE,
+  exclude = NULL, additional_demo_locations = NULL)
 }
 \arguments{
+\item{demo_name}{character. Name of demo. Default = "theopp"}
+
 \item{file_stub}{character. Default = "run1". Stub to some file names}
 
 \item{overwrite}{logical. Default changed to FALSE.}
 
-\item{demo_name}{character. Name of demo. Default = "theopp-demo"}
-
 \item{exclude}{character. Name of extension to exclude from copying}
+
+\item{additional_demo_locations}{character vector. default = NULL.
+locations for demo directories}
 }
 \description{
 Setup demo files

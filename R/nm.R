@@ -1182,18 +1182,29 @@ write.csv.nm <- function(...,na=".",
 
 #' Setup demo files
 #'
+#' @param demo_name character. Name of demo. Default = "theopp"
 #' @param file_stub character. Default = "run1". Stub to some file names
 #' @param overwrite logical. Default changed to FALSE.
-#' @param demo_name character. Name of demo. Default = "theopp-demo"
 #' @param exclude character. Name of extension to exclude from copying
+#' @param additional_demo_locations character vector. default = NULL.
+#'   locations for demo directories
 #' @export
 
-setup_nm_demo <- function(file_stub = paste0(getOption("model_file_stub"),1),
+setup_nm_demo <- function(demo_name="theopp",
+                          file_stub = paste0(getOption("model_file_stub"),1),
                           overwrite=FALSE,
-                          demo_name="theopp",
-                          exclude=NULL){
+                          exclude=NULL,
+                          additional_demo_locations = NULL){
   tidyproject::check_if_tidyproject()
-  examples_dir <- system.file("extdata","examples",demo_name,package = "NMproject")
+  
+  examples_dir <- character()
+  if(length(additional_demo_locations) > 0) {
+    examples_dir <- normalizePath(additional_demo_locations, mustWork = FALSE)
+    examples_dir <- list.files(examples_dir, full.names = TRUE, recursive = FALSE)
+    examples_dir <- examples_dir[grepl(paste0(.Platform$file.sep, demo_name,"$"), examples_dir)]
+  }
+  examples_dir <- append(examples_dir, system.file("extdata","examples",demo_name,package = "NMproject"))
+  examples_dir <- examples_dir[1]
 
   files_to_copy <- dir(examples_dir,all.files = TRUE,recursive = TRUE)
   dest_names <- files_to_copy
