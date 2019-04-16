@@ -913,25 +913,28 @@ ofv <- Vectorize_nm(ofv, vectorize.args = "r")
 #' @export
 
 write_ctl <- function(ctl, run_id, dir = getOption("models.dir")){
-
+  
   if(!any(c("ctl_list", "ctl_character", "character", "nmexecute") %in% class(ctl)))
     stop("ctl needs to be class nmexecute, character, ctl_character, or ctl_list")
-
-  if(missing(run_id)) run_id <- get_run_id(attributes(ctl)$file_name)
-
-  if(inherits(run_id, "nmexecute")) run_id <- run_id$run_id
-
+  
   ctl <- ctl_character(ctl)
-
-  ctl_name <- search_ctl_name(run_id, models_dir = dir)
-
-  attr(ctl, "file_name") <- ctl_name
-
+  ctl_name <- attr(ctl, "file_name")
+  
+  if(!missing(run_id)){
+    if(inherits(run_id, "nmexecute")) {
+      run_id <- run_id$run_id
+    } else {
+      file_name <- attributes(ctl)$file_name
+    }
+    ctl_name <- model_file_name(run_id, dir = dir)
+    attr(ctl, "file_name") <- ctl_name
+  }
+  
   writeLines(ctl, ctl_name)
   tidyproject::setup_file(ctl_name)
   message("written: ", ctl_name)
   invisible(ctl)
-
+  
 }
 
 update_table_numbers <- function(ctl, run_id){
@@ -974,6 +977,19 @@ new_ctl <- function(r, run_id, based_on){
   ctl[[1]] <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",based_on),ctl[[1]])
   ctl[[1]] <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*",paste("\\1",Sys.info()["user"]),ctl[[1]])
   ctl
+}
+
+#' Generate model file name
+#' 
+#' @param run_id run identifier
+#' @param dir directory to work in
+#' @param mustWork same as normalizePath argument
+#' 
+#' @export
+model_file_name <- function(run_id, dir = getOption("models.dir"), mustWork = FALSE){
+  path <- file.path(dir, 
+                    paste0(getOption("model_file_stub"),run_id,".",getOption("model_file_extn")))
+  normalizePath(path, mustWork = mustWork)
 }
 
 
