@@ -26,7 +26,7 @@ test_that("status",{
 
   m1 <- nm("qpsn -m -c auto -t 3000 -- execute run1.mod -dir=1")
 
-  expect_error(run(m1)) ## already run so this should fail
+  expect_error(run_nm(m1)) ## already run so this should fail
   expect_output(print(m1),"List of") ## does object print using str
 
   wait_default(FALSE)
@@ -34,7 +34,11 @@ test_that("status",{
   wait_default(TRUE)
   expect_true(getOption("wait"))
 
-  expect_error(wait_for_finished(m1),NA)
+  ## performance test
+  start_time <- Sys.time()
+  wait_for_finished(m1)
+  too_long <- difftime(Sys.time(), start_time, units = "secs") > 10
+  expect_true(!too_long)
 
   st <- status(m1)
   expect_true(inherits(st,"list"))

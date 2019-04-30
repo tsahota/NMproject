@@ -214,7 +214,7 @@ post(m1, gof_xpose)  ## will write to db
 ## TODO:
 ## Need consistent way of handling nm object and lists of nm objects and data.frames
 ##  if class nm - fun(m)
-##  if class list - lapply(m, fun) or sapply(m, fun)
+##  if class list - lapply(m, fun) or sapply(m, fun) depending on fun
 ##  if class data.frame  - fun(m$m)   - this is a list
 ##  if is.na(m) - return(NA)
 
@@ -223,6 +223,34 @@ post(m1, gof_xpose)  ## will write to db
 ##   reasonably simple and general
 ##   list is pretty general will this conflict with other packages?
 ##    can always rename if it does
+
+#' Fun title
+#'
+#' fun
+#'
+#' @param x arg
+#' @export
+fun <- function(x) UseMethod("fun")
+
+#' @export
+fun.nm <- function(x) "the meat of the function"
+
+#' @export
+fun.list <- function(x) sapply(x, fun)
+
+#' @export
+fun.data.frame <- function(x) call_fun_on_nm_data_frame(x, fun)
+
+call_fun_on_nm_data_frame <- function(x, fun){
+  is_nm <- sapply(x, is_list_nm)
+  if(length(which(is_nm)) == 1) return(fun(x[is_nm])) else {
+    if(length(which(is_nm)) == 0) stop("can't find column of nm objects")
+    if(length(which(is_nm)) > 1) stop("can't find unique column of nm objects")
+  }
+}
+  
+
+
 
 ## run_nm
 ## status

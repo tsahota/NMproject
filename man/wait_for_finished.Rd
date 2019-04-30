@@ -4,10 +4,10 @@
 \alias{wait_for_finished}
 \title{wait for a run to finish}
 \usage{
-wait_for_finished(..., initial_timeout = NA)
+wait_for_finished(r, initial_timeout = NA)
 }
 \arguments{
-\item{...}{objects of class nm}
+\item{r}{objects of class nm/or list of objects class nm}
 
 \item{initial_timeout}{numeric. time in seconds.
 time period to give up on a run if directory hasn't been created.}
