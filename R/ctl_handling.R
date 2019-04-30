@@ -908,11 +908,11 @@ ofv <- Vectorize_nm(ofv, vectorize.args = "r")
 #' write control file
 #'
 #' @param ctl object of class character, ctl_character, or ctl_list
-#' @param run_id character or numeric. new run_id
+#' @param dest character or numeric. new run_id
 #' @param dir character. Directory to place file. Default = getOption("models.dir")
 #' @export
 
-write_ctl <- function(ctl, run_id, dir = getOption("models.dir")){
+write_ctl <- function(ctl, dest, dir = getOption("models.dir")){
   
   if(!any(c("ctl_list", "ctl_character", "character", "nmexecute") %in% class(ctl)))
     stop("ctl needs to be class nmexecute, character, ctl_character, or ctl_list")
@@ -920,13 +920,24 @@ write_ctl <- function(ctl, run_id, dir = getOption("models.dir")){
   ctl <- ctl_character(ctl)
   ctl_name <- attr(ctl, "file_name")
   
-  if(!missing(run_id)){
-    if(inherits(run_id, "nmexecute")) {
+  if(!missing(dest)){  ## dest could be nm, file name, or run identifier
+    if(inherits(dest, "nmexecute")) {
       run_id <- run_id$run_id
+      ctl_name <- model_file_name(run_id, dir = dir)
     } else {
-      file_name <- attributes(ctl)$file_name
+      if(length(dest) == 1){
+        if(is.numeric(dest)) { ## numeric run_id
+          ctl_name <- model_file_name(dest, dir = dir)
+        } else {
+          if(grepl(paste0("\\.|",.Platform$file.sep), dest)){ ## path
+            if(!file.exists(dirname(dest))) stop("destination directory does not exist")
+            ctl_name <- dest
+          } else {  ## character (probably) run_id
+            ctl_name <- model_file_name(dest, dir = dir)
+          }
+        }
+      } else stop("dest should either an nm object or a path or run_id")
     }
-    ctl_name <- model_file_name(run_id, dir = dir)
     attr(ctl, "file_name") <- ctl_name
   }
   

@@ -4,12 +4,12 @@
 \alias{write_ctl}
 \title{write control file}
 \usage{
-write_ctl(ctl, run_id, dir = getOption("models.dir"))
+write_ctl(ctl, dest, dir = getOption("models.dir"))
 }
 \arguments{
 \item{ctl}{object of class character, ctl_character, or ctl_list}
 
-\item{run_id}{character or numeric. new run_id}
+\item{dest}{character or numeric. new run_id}
 
 \item{dir}{character. Directory to place file. Default = getOption("models.dir")}
 }
