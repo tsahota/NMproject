@@ -4,39 +4,11 @@
 \alias{run}
 \title{Run NONMEM}
 \usage{
-run(r, overwrite = getOption("run_overwrite"), delete_dir = c(NA, TRUE,
-  FALSE), wait = getOption("wait"), update_db = TRUE,
-  ignore.stdout = TRUE, ignore.stderr = TRUE, initial_timeout = NA,
-  quiet = getOption("quiet_run"), intern = getOption("intern"))
+run(...)
 }
 \arguments{
-\item{r}{objects of class nm/or list of objects class nm}
-
-\item{overwrite}{logical. Should run directory be overwritten (default=FALSE)}
-
-\item{delete_dir}{logical. NA (default - directory will be deleted if no dependencies exists)
-TRUE or FALSE. Should run_dir be deleted.}
-
-\item{wait}{logical (default=FALSE). Should R wait for run to finish.
-Default can be changed with  wait_by_default() function}
-
-\item{update_db}{logical (default=TRUE). Should run_status be updated}
-
-\item{ignore.stdout}{logical (default=TRUE). Parameter passed to system()}
-
-\item{ignore.stderr}{logical (default=TRUE). Parameter passed to system()}
-
-\item{initial_timeout}{numeric. time in seconds.
-time period to give up on a run if directory hasn't been created.}
-
-\item{quiet}{logical (default=FALSE). should system_nm output be piped to screen}
-
-\item{intern}{logical. intern arg to be passed to system}
-}
-\value{
-If only one object of class nm was specified, silently returns object.
-Otherwise returns nothing.
+\item{...}{objects}
 }
 \description{
-Run NONMEM
+Use run_nm instead. run was deprecated due to naming conflict with future package's run() function
 }

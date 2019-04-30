@@ -246,6 +246,21 @@ Vectorize_nm <- function (FUN, vectorize.args = arg.names, SIMPLIFY = TRUE, USE.
   FUNV
 }
 
+is_nm <- function(x) inherits(x, "nm")
+
+is_list_nm <- function(x) {
+  if(!inherits(x, "list")) return(FALSE)
+  
+  is_valid_subobject <- function(x){
+    if(is_nm(x)) return(TRUE)
+    if(length(x) == 1) if(is.na(x)) return(TRUE) ## na's allowed
+    return(FALSE)
+  }
+  
+  all(sapply(x, is_valid_subobject))
+}
+
+
 nmdb_match_entry <- function(r,db=NULL){
   match_info <- nmdb_match_info(r,db=db)
   if(r$type %in% "execute") {
@@ -607,9 +622,19 @@ get_run_id <- function(ctl_name){
   ans
 }
 
+call_fun_on_nm_data_frame <- function(x, fun){
+  is_nm <- sapply(x, is_list_nm)
+  if(length(which(is_nm)) == 1) return(fun(x[is_nm])) else {
+    if(length(which(is_nm)) == 0) stop("can't find column of nm objects")
+    if(length(which(is_nm)) > 1) stop("can't find unique column of nm objects")
+  }
+}
 
 #' Run NONMEM
-#' @param r objects of class nm/or list of objects class nm
+#' 
+#' Run nm objects.  Uses system_nm() to submit the "cmd" value of object 
+#' 
+#' @param r objects of class nm/or list of objects class nm/or data.frame with column of nm objects
 #' @param overwrite logical. Should run directory be overwritten (default=FALSE)
 #' @param delete_dir logical. NA (default - directory will be deleted if no dependencies exists)
 #' TRUE or FALSE. Should run_dir be deleted.
@@ -627,30 +652,25 @@ get_run_id <- function(ctl_name){
 #' Otherwise returns nothing.
 #'
 #' @export
-run <- function(r,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
-                   update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
-                   initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern")){
+run_nm <- function(r, overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
+                      update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
+                      initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern"))
+  UseMethod("run_nm")
+
+#' @export
+run_nm.default <- function(r, overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
+                           update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
+                           initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern")){
+  invisible(r)
+}
+
+#' @export
+run_nm.nm <- function(r, overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
+                      update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
+                      initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern")){
   tidyproject::check_if_tidyproject()
   #if(!quiet & !wait) stop("quiet=FALSE requires wait=TRUE")
-  rl <- r
-  if(inherits(rl, "nm")) rl <- list(rl)
-  
-  if(inherits(rl, "data.frame")){
-    if(nrow(rl) == 1) {
-      rl <- as.list(rl)[[1]]
-    } else {
-      if("m" %in% names(rl))
-        if(inherits(rl[["m"]], "list"))
-          rl <- rl$m
-      stop("don't know how to handle this type")
-    }
-  }
-  
-  #rl <- rl[sapply(rl, inherits, what = "nm")]
-  rl <- rl[!sapply(rl, is.null)] ## remove nulls
-  rl <- rl[!sapply(rl, is.na)] ## remove nas
-  rl <- lapply(rl,function(r){
-    if(!inherits(r, "nm")) return(NA)
+
     if(is.null(r$db_name)) update_db <- FALSE
     ## if directory exists, and if it's definately a directory stop
     if(file.exists(r$run_dir) & !overwrite)if(file.info(r$run_dir)$isdir %in% TRUE) stop("run already exists. To rerun select overwrite=TRUE\n  or use the switch overwrite_default(TRUE)",call.=FALSE)
@@ -679,31 +699,57 @@ run <- function(r,overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALS
       update_char_field(r$db_name,matched_entry,job_info=job_info)
     }
     r$job_info <- job_info
-    r
-  })
-  if(wait) wait_for_finished(rl,initial_timeout=initial_timeout)
-  #job_infos <- sapply(rl, function(r) r$job_info)
-  #return(invisible(job_infos))
-  if(length(rl)==1) return(invisible(rl[[1]])) else return(invisible(rl))
+
+  if(wait) wait_for_finished(r, initial_timeout=initial_timeout)
+  invisible(r)
 }
 
-#' Run run.nm method
-#' @param ... objects of class nm and other args
 #' @export
-run_nm <- function(...){
-  run(...)
+run_nm.list <- function(r, overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
+                        update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
+                        initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern")){
+  
+  args <- as.list(match.call()[-1])
+  
+  call_run_nm <- function(r, args){
+    args[["r"]] <- r
+    args[["wait"]] <- FALSE
+    do.call(run_nm, args)
+  }
+  
+  r <- lapply(r, call_run_nm, args = args)
+
+  if(wait) wait_for_finished(r, initial_timeout=initial_timeout)
+  
+}
+
+#' Run NONMEM
+#' 
+#' Use run_nm instead. run was deprecated due to naming conflict with future package's run() function
+#' 
+#' @param ... objects
+#' @export
+
+run <- function(...){
+  .Deprecated("run_nm", msg = "run() will soon be deprecated, use run_nm() instead")
+  run_nm(...)
 }
 
 #' wait for a run to finish
 #'
-#' @param ... objects of class nm
+#' @param r objects of class nm/or list of objects class nm
 #' @param initial_timeout numeric. time in seconds.
 #' time period to give up on a run if directory hasn't been created.
 #' @export
-wait_for_finished <- function(...,initial_timeout=NA){
-  rl <- list(...)
-  #rl <- rl[sapply(rl, inherits, what = "nm")]
+wait_for_finished <- function(r, initial_timeout=NA){
+  rl <- r
+  if(inherits(rl, "nm")) rl <- list(rl)
+  
   rl <- rl[!sapply(rl, is.null)] ## remove nulls
+  
+  is_single_na <- function(x) if(length(x) == 1) is.na(x) else FALSE
+  rl <- rl[!sapply(rl, is_single_na)] ## remove nas
+  
   message("Waiting for jobs:\n",paste(sapply(rl,function(i)paste0(" ",i$type,":",i$ctl)),collapse = "\n"))
 
   i <- 0
@@ -733,8 +779,8 @@ wait_for_finished <- function(...,initial_timeout=NA){
     i <- i + 1
     Sys.sleep(1)
   }
-  if(length(list(...)) == 1) return(invisible(list(...)[[1]]))
-  invisible(list(...))
+  
+  return(invisible(r))
 }
 
 #' run status
