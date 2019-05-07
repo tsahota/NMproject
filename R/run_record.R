@@ -219,6 +219,8 @@ coef_nm <- function(object,trans,...){
 
 #' @export
 coef.nm <- function(object,...){
+  
+  if(length(object) == 1) if(is.na(object)) return(NA)
 
   trans_arg <- list(...)$trans
   if(is.null(trans_arg)) {
@@ -324,7 +326,9 @@ run_table <- function(db_name = "runs.sqlite"){
   nmdb_printable_db(d)
 }
 
+#' @export
 AIC.nm <- function(object, ..., k = 2){
+  if(length(object) == 1) if(is.na(object)) return(NA)
   params <- coef.nm(object)
   params <- params[grepl("THETA|OMEGA|SIGMA", params$Type), ]
   
@@ -332,49 +336,58 @@ AIC.nm <- function(object, ..., k = 2){
   ofv(object) - k*n_parameters
 }
 
-#' Get BIC
-#' @param object nm object or list of nm objects
-#' @param ... additional arguments
-#' @param k integer. default = 2. AIC penalty
 #' @export
-AIC_nm <- function(object, ..., k = 2){
-  if(inherits(object, "nmexecute")) object <- list(object)
-  d <- tibble::tibble(object = object, k = k)
-  sapply(seq_along(object), function(i){
-    ob <- object[[i]]
-    if(!inherits(ob, "nmexecute")) return(NA) else
-      AIC.nm(ob, k = d$k[i])
-  })
+AIC.list <- function(object, ..., k = 2){
+  args <- as.list(match.call()[-1])
+  
+  call_f <- function(x, args){
+    args[["object"]] <- x
+    do.call(AIC.nm, args)
+  }
+  
+  sapply(object, call_f, args = args)
 }
 
-nobs_nm <- function(object, ...){
-  if(is.na(object)) return(NA)
+#' @importFrom stats nobs
+#' @export
+stats::nobs
+
+#' @export
+nobs.nm <- function(object, ...){
+  if(length(object) == 1) if(is.na(object)) return(NA)
   d <- get_data(object, filter = TRUE)
   d <- d %>% dplyr::filter(.data$EVID %in% 0)
-  d <- d %>% dplyr::filter(!.data$MDV %in% 1)
+  if("MDV" %in% names(d)){
+    d <- d %>% dplyr::filter(!.data$MDV %in% 1) 
+  }
   nrow(d)
 }
 
-#
-#BIC.nm <- function(object, ...){
-#  AIC.nm(object, ..., k = log(nobs(object)))
-#}
 
-#' Get BIC
-#' 
-#' @param object nm object or list of nm objects
-#' @param ... additional arguments
+#' @importFrom stats BIC
 #' @export
-BIC_nm <- function(object, ...){
-  if(inherits(object, "nmexecute")) object <- list(object)
+stats::BIC
+
+
+#' @export
+BIC.nm <- function(object, ...){
+  AIC.nm(object, ..., k = log(nobs.nm(object)))
+}
+
+#' @export
+BIC.list <- function(object, ...){
   d <- tibble::tibble(m = object)
   d$data_name <- sapply(object, function(object) {
-    if(is.na(object)) return(NA)
+    if(length(object) == 1) if(is.na(object)) return(NA)
     object$input$data_name 
   })
   
   d <- d %>% dplyr::group_by(.data$data_name) %>%
-    dplyr::mutate(lognobs = log(nobs_nm(dplyr::first(.data$m))))
+    dplyr::mutate(lognobs = log(nobs.nm(dplyr::first(.data$m))))
   
-  AIC_nm(object, ..., k = d$lognobs)
+  mapply(AIC.nm, object = object, k = d$lognobs, SIMPLIFY = TRUE, USE.NAMES = FALSE)
+  
 }
+
+
+

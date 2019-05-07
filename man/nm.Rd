@@ -4,10 +4,10 @@
 \alias{nm}
 \title{Make object of class nm}
 \usage{
-nm(cmd, parent, description = "", psn_command, shell_script_name,
-  shell_script_extn = "sh", ctl_name, run_id, run_dir,
-  run_in = getOption("models.dir"), db_name = "runs.sqlite",
-  scm_config_name)
+nm(cmd, parent = NULL, description = "", psn_command = NULL,
+  shell_script_name = NULL, shell_script_extn = "sh", ctl_name = NULL,
+  run_id = NULL, run_dir = NULL, run_in = getOption("models.dir"),
+  db_name = "runs.sqlite", scm_config_name = NULL)
 }
 \arguments{
 \item{cmd}{character. system command to launch NONMEM (PsN)}

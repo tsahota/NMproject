@@ -4,10 +4,12 @@
 \alias{status}
 \title{Run status}
 \usage{
-status(x)
+status(x, simple = TRUE)
 }
 \arguments{
 \item{x}{object to get status of}
+
+\item{simple}{logical default TRUE. Should result be simple one liner}
 }
 \description{
 Get status of NONMEM job

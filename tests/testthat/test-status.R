@@ -40,7 +40,7 @@ test_that("status",{
   too_long <- difftime(Sys.time(), start_time, units = "secs") > 10
   expect_true(!too_long)
 
-  st <- status(m1)
+  st <- status(m1, simple = FALSE)
   expect_true(inherits(st,"list"))
 
   sum0 <- run_summary(m1)

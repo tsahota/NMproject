@@ -48,6 +48,9 @@ m1 <- run_nm(m1, db = "runs.sqlite",       ## default
                ##   but it will hamper the "safety" bits of overlapping file names
    ## adds m1$promise = the promise of the run
 
+# r asynchronous queue
+#http://jaehyeon-kim.github.io/2016/05/Asynchronous-Processing-Using-Job-Queue.html
+
 ## how to use future.  Maybe future only for post()
 
 ## database (need concurrency):
@@ -71,6 +74,7 @@ m1boot <- nm("m1boot", parent = m1) %>%
 
 
 ###############################
+## attempt with future
 
 resolved.nm <- function(x, ...) is_finished(x, ...)
 value.nm <- function(...) identity(...)
@@ -90,7 +94,6 @@ after_results <- function(r, expr){
   f1 %<-% future(expr)
   
 }
-
 
 ## want makefile like functionality (can't use future)
 
@@ -118,6 +121,14 @@ build_ctl({  ## segment for ctl file manipulation
   m1 %>% update_parameters(m0) %>%  ## if m0 is running, wait.
     manual_edit("KEFF log-normal -> normal")
 })
+
+
+##or
+
+m1 <- nm(parent = "m0")
+
+## why do we need a run id?  Why not just the object?
+## it's a short hand 
 
 
 nm <- function(r){
@@ -249,23 +260,16 @@ call_fun_on_nm_data_frame <- function(x, fun){
   }
 }
   
-
-
-
 ## run_nm
 ## status
 ## ofv
 ## AIC*
 ## BIC*
 
-
-
-
-
 ## TODO:
 ## User level accessor functions for function template construction
 
-## run_id(r)
+## run_id(r) - DONE
 ## run_in(r)
 ## type(r)
 ## results_loc(r)
