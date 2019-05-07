@@ -146,19 +146,11 @@ system_nm <- function(cmd,dir=getOption("models.dir"),...){
   getOption("system_nm")(cmd,...)
 }
 
-#' Copy NONMEM control stream
-#'
-#' @param from character. File to copy from
-#' @param to character. File to copy to
-#' @param overwrite logical. Should to file be overwritten? Default = FALSE.
-#' @param alt_paths character vector. paths to other candidate files to search
-#' @param from_base logical (default = FALSE). Should "to" be taken to be relative to base.
-#'
-#' @export
-copy_control <- function(from,to,overwrite=FALSE,alt_paths,from_base=FALSE){
+copy_control0 <- function(from,to,overwrite=FALSE,alt_paths,from_base=FALSE){
   ## if from = NONMEM control in current directory, it will copy and update $TABLE numbers
   ## if from = control file code_library(), it will copy it.
   ## First it will look for "from" in current directory, then it will look in code_library()
+  
   if(!from_base) to <- from_models(to)
   if(file.exists(to) & !overwrite) stop("file already exists. Rerun with overwrite = TRUE")
 
@@ -200,22 +192,85 @@ copy_control <- function(from,to,overwrite=FALSE,alt_paths,from_base=FALSE){
   tidyproject::setup_file(to)
 }
 
+Vectorize_invisible <- function (FUN, vectorize.args = arg.names, SIMPLIFY = TRUE, USE.NAMES = TRUE) 
+{
+  arg.names <- as.list(formals(FUN))
+  arg.names[["..."]] <- NULL
+  arg.names <- names(arg.names)
+  vectorize.args <- as.character(vectorize.args)
+  if (!length(vectorize.args)) 
+    return(FUN)
+  if (!all(vectorize.args %in% arg.names)) 
+    stop("must specify names of formal arguments for 'vectorize'")
+  collisions <- arg.names %in% c("FUN", "SIMPLIFY", "USE.NAMES", 
+                                 "vectorize.args")
+  if (any(collisions)) 
+    stop(sQuote("FUN"), " may not have argument(s) named ", 
+         paste(sQuote(arg.names[collisions]), collapse = ", "))
+  FUNV <- function() {
+    args <- lapply(as.list(match.call())[-1L], eval, parent.frame())
+    names <- if (is.null(names(args))) 
+      character(length(args))
+    else names(args)
+    dovec <- names %in% vectorize.args
+    invisible(do.call("mapply", c(FUN = FUN, args[dovec], MoreArgs = list(args[!dovec]), 
+                        SIMPLIFY = SIMPLIFY, USE.NAMES = USE.NAMES)))
+  }
+  formals(FUNV) <- formals(FUN)
+  FUNV
+}
+
+#' Copy NONMEM control stream
+#'
+#' @param from character. File to copy from
+#' @param to character. File to copy to
+#' @param overwrite logical. Should to file be overwritten? Default = FALSE.
+#' @param alt_paths character vector. paths to other candidate files to search
+#' @param from_base logical (default = FALSE). Should "to" be taken to be relative to base.
+#'
+#' @export
+copy_control <- Vectorize_invisible(copy_control0, vectorize.args = c("from", "to"))
+
 #' Get run id
 #'
 #' @param x character or nm or ctl_list/ctl_character
-run_id <- function(x){
-  if(inherits(x, "nm")) return(x$run_id)
-  if(inherits(x, "character") & length(x) == 1){
+#' @export
+run_id <- function(x)
+  UseMethod("run_id")
+
+#' @export
+run_id.nm <- function(x) x$run_id
+
+#' @export
+run_id.ctl_list <- function(x){
+  file_name <- attr(x, "file_name")
+  run_id(file_name)
+}
+
+#' @export
+run_id.character <- function(x){
+  if(length(x) == 1){
     file.regex <- paste0("^.*",getOption("model_file_stub"),"(.*)\\.",getOption("model_file_extn"),"$")
     run_id <- gsub(file.regex,"\\1",x)
-  }
-  if(inherits(x, "ctl_list") | inherits(x, "ctl_character")){
+  } else {
     file_name <- attr(x, "file_name")
-    run_id <- run_id(file_name)
+    run_id <- run_id(file_name)    
   }
   run_id
 }
 
+#' @export
+run_id.list <- function(x){
+  args <- as.list(match.call()[-1])
+  
+  call_f <- function(x, args){
+    args[["x"]] <- x
+    do.call(run_id, args)
+  }
+  
+  sapply(x, call_f, args = args)
+}
+  
 #' path of directory from models dir
 #'
 #' @param x character vector. Relative path from models.dir

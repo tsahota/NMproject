@@ -898,12 +898,12 @@ consider using the default with state \"linear\" or use additional_state_text")
 #' @export
 
 ofv <- function(r){
-  if(is.null(r)) return(NA)
+  if(length(r) == 1) if(is.null(r)) return(NA)
   dc <- try(coef_nm(r, trans = FALSE), silent = TRUE)
   if(inherits(dc, "try-error")) return(NA)
   dc$FINAL[dc$Parameter %in% "OBJ"]
 }
-ofv <- Vectorize_nm(ofv, vectorize.args = "r")
+ofv <- Vectorize_nm(ofv, vectorize.args = "r", SIMPLIFY = TRUE)
 
 #' write control file
 #'

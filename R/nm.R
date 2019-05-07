@@ -1,30 +1,14 @@
-#' Make object of class nm
-#'
-#' @param cmd character. system command to launch NONMEM (PsN)
-#' @param parent object of class nm. Parent object to create (optional)
-#' @param description character. Description of model (optional)
-#' @param psn_command character. Name of PsN command (optional)
-#' @param shell_script_name character. Name of shell script for grid submission (optional)
-#' @param shell_script_extn character. File extension shell script for grid submission (optional)
-#' @param ctl_name character. Name of control file (optional)
-#' @param run_id character or numeric. Run identifier (optional)
-#' @param run_dir character or numeric. Run directory (optional)
-#' @param run_in character. Directory to execute. Default = getOption("models.dir")
-#' @param db_name character. Name of db. NULL = don't put in database
-#' @param scm_config_name character. Name of scm config file (optional)
-#' @return object of class nm
-#' @export
-nm <- function(cmd,
-               parent,
-               description = "",
-               psn_command,
-               shell_script_name,shell_script_extn="sh",
-               ctl_name,run_id,run_dir,
-               run_in=getOption("models.dir"),
-               db_name = "runs.sqlite",
-               scm_config_name){
+nm0 <- function(cmd,
+                parent = NULL,
+                description = "",
+                psn_command = NULL,
+                shell_script_name = NULL,shell_script_extn="sh",
+                ctl_name = NULL,run_id = NULL,run_dir = NULL,
+                run_in=getOption("models.dir"),
+                db_name = "runs.sqlite",
+                scm_config_name = NULL){
   tidyproject::check_if_tidyproject()
-  if(!missing(parent)) if(!identical(parent.frame(),.GlobalEnv)) stop("parent_ob can only be used if this function is called from the global environment")
+  if(!is.null(parent)) if(!identical(parent.frame(),.GlobalEnv)) stop("parent_ob can only be used if this function is called from the global environment")
 
   r <- list()
   class(r) <- "nm"
@@ -35,7 +19,7 @@ nm <- function(cmd,
   r$cmd <- cmd
   r$description <- description
 
-  if(!missing(shell_script_name)){
+  if(!is.null(shell_script_name)){
     if(!file.exists(file.path(r$run_in,shell_script_name)))
       stop("cannot find shell script in ",r$run_in," directory",call. = FALSE)
     ss_contents <- readLines(file.path(r$run_in,shell_script_name))
@@ -58,8 +42,8 @@ nm <- function(cmd,
   ## cmd is now set
   cmd <- paste(cmd,collapse = " ")
 
-  if(!missing(psn_command)) r$type <- psn_command
-  if(!missing(ctl_name)) {
+  if(!is.null(psn_command)) r$type <- psn_command
+  if(!is.null(ctl_name)) {
     if(any(!file.exists(file.path(r$run_in,ctl_name))))
       stop(paste(ctl_name,collapse = ",")," do(es) not exist",call. = FALSE)
     r$ctl <- file.path(r$run_in,ctl_name)
@@ -84,7 +68,7 @@ nm(\"bootstrap run1.mod -threads=4\",psn_command=\"bootstrap\")"
     matched_ctl <- gsub2(paste0("^.*(",getOption("model_file_stub"),"\\S+",getOption("model_file_extn"),")\\s*.*$"),"\\1",subcmd)
     if(length(matched_ctl)==0) {
       if(r$type %in% "scm") {
-        if(missing(scm_config_name)){
+        if(is.null(scm_config_name)){
           config_file <- gsub2(".*-config\\S*=(\\S*)\\s*.*$","\\1",cmd)
           if(length(config_file)==0) stop("cannot infer scm file")
           message("inferring scm config file : ",config_file)
@@ -99,7 +83,7 @@ nm(\"bootstrap run1.mod -threads=4\",psn_command=\"bootstrap\")"
     r$ctl <- file.path(r$run_in,matched_ctl)
   }
 
-  if(missing(run_dir)){
+  if(is.null(run_dir)){
     matched_run_dir <-
       gsub2(paste0("^.*-dir[a-z]*=\\s*(\\S*)\\s*.*$"),"\\1",cmd)
     if(length(matched_run_dir)==0)
@@ -110,14 +94,14 @@ nm(\"bootstrap run1.mod -threads=4\",psn_command=\"bootstrap\")"
     r$run_dir <- file.path(r$run_in,matched_run_dir)
   } else r$run_dir <- run_dir
 
-  if(missing(run_id)){
+  if(is.null(run_id)){
     matched_run_id <- get_run_id(r$ctl[1])
     r$run_id <- matched_run_id
   } else r$run_id <- run_id
 
   if(length(r$ctl)==0) stop("cannot infer model file.\nRerun with ctl_name argument",call. = FALSE)
   if(!file.exists(r$ctl)) {
-    if(missing(parent)) stop("cannot find model file",call. = FALSE)
+    if(is.null(parent)) stop("cannot find model file",call. = FALSE)
     ## assume parent exists
     if(!identical(normalizePath(run_in),normalizePath(getOption("models.dir"))))
       stop("the functionality to create the control stream does not yet exist when the run is not in Models dir",call. = FALSE)
@@ -126,7 +110,7 @@ nm(\"bootstrap run1.mod -threads=4\",psn_command=\"bootstrap\")"
     if(!getOption("wait")) get("file.edit")(r$ctl)
   }
 
-  if(!missing(parent)) {
+  if(!is.null(parent)) {
     r$parent_entry <- nmdb_match_entry(parent)
   } else {
     r$parent_entry <- NA
@@ -212,7 +196,48 @@ nm(\"bootstrap run1.mod -threads=4\",psn_command=\"bootstrap\")"
   return(r)
 }
 
-Vectorize_nm <- function (FUN, vectorize.args = arg.names, SIMPLIFY = TRUE, USE.NAMES = TRUE) 
+#' Make object of class nm
+#'
+#' @param cmd character. system command to launch NONMEM (PsN)
+#' @param parent object of class nm. Parent object to create (optional)
+#' @param description character. Description of model (optional)
+#' @param psn_command character. Name of PsN command (optional)
+#' @param shell_script_name character. Name of shell script for grid submission (optional)
+#' @param shell_script_extn character. File extension shell script for grid submission (optional)
+#' @param ctl_name character. Name of control file (optional)
+#' @param run_id character or numeric. Run identifier (optional)
+#' @param run_dir character or numeric. Run directory (optional)
+#' @param run_in character. Directory to execute. Default = getOption("models.dir")
+#' @param db_name character. Name of db. NULL = don't put in database
+#' @param scm_config_name character. Name of scm config file (optional)
+#' @return object of class nm
+#' @export
+
+nm <- function(cmd,
+               parent = NULL,
+               description = "",
+               psn_command = NULL,
+               shell_script_name = NULL,shell_script_extn="sh",
+               ctl_name = NULL,run_id = NULL,run_dir = NULL,
+               run_in=getOption("models.dir"),
+               db_name = "runs.sqlite",
+               scm_config_name = NULL){
+
+  nm0(cmd = cmd,
+      parent = parent,
+      description = description,
+      psn_command = psn_command,
+      shell_script_name = shell_script_name,
+      shell_script_extn = shell_script_extn,
+      ctl_name = ctl_name,
+      run_id = run_id,
+      run_dir = run_dir,
+      run_in = run_in,
+      db_name = db_name,
+      scm_config_name = scm_config_name)
+}
+
+Vectorize_nm <- function (FUN, vectorize.args = arg.names, SIMPLIFY = FALSE, USE.NAMES = TRUE) 
 {
   arg.names <- as.list(formals(FUN))
   arg.names[["..."]] <- NULL
@@ -239,12 +264,21 @@ Vectorize_nm <- function (FUN, vectorize.args = arg.names, SIMPLIFY = TRUE, USE.
       character(length(args))
     else names(args)
     dovec <- names %in% vectorize.args
-    do.call("mapply", c(FUN = FUN, args[dovec], MoreArgs = list(args[!dovec]), 
-                        SIMPLIFY = SIMPLIFY, USE.NAMES = USE.NAMES))
+    ans <- do.call("mapply", c(FUN = FUN, args[dovec], MoreArgs = list(args[!dovec]), 
+                               SIMPLIFY = SIMPLIFY, USE.NAMES = USE.NAMES))
+    ###############################
+    ## MODIFIED CODE FOR NMPROJECT
+    if(is.list(ans) & length(ans) == 1) ans[[1]] else {
+      names(ans) <- NULL
+      ans
+    }
+    ###############################
   }
   formals(FUNV) <- formals(FUN)
   FUNV
 }
+
+nm <- Vectorize_nm(nm)
 
 is_nm <- function(x) inherits(x, "nm")
 
@@ -670,36 +704,36 @@ run_nm.nm <- function(r, overwrite=getOption("run_overwrite"),delete_dir=c(NA,TR
                       initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern")){
   tidyproject::check_if_tidyproject()
   #if(!quiet & !wait) stop("quiet=FALSE requires wait=TRUE")
-
-    if(is.null(r$db_name)) update_db <- FALSE
-    ## if directory exists, and if it's definately a directory stop
-    if(file.exists(r$run_dir) & !overwrite)if(file.info(r$run_dir)$isdir %in% TRUE) stop("run already exists. To rerun select overwrite=TRUE\n  or use the switch overwrite_default(TRUE)",call.=FALSE)
-    if(!is.null(getOption("kill_run"))) getOption("kill_run")(r)
-    clean_run(r,delete_dir=delete_dir[1],update_db = update_db)
-    wait_arg <- FALSE
-    if(!quiet) {
-      #if(.Platform$OS.type == "windows") wait_arg <- TRUE
-      ignore.stdout = FALSE
-      ignore.stderr = FALSE
-    }
-    message(paste0("Running: ",r$type,":",r$ctl))
-    stdout0 <- system_nm(cmd = r$cmd, dir = r$run_in, wait = wait_arg,
-                         ignore.stdout = ignore.stdout, ignore.stderr = ignore.stderr, intern=intern)
-    if(intern) {
-      cat(stdout0,sep = "\n")
-      job_info <- getOption("get_job_info")(stdout0)
-      if(is.null(job_info)) job_info <- NA
-    } else job_info <- NA
-
-    if(update_db){
-      matched_entry <- nmdb_match_entry(r)
-      status_ob <- list(status="submitted",run_at=Sys.time(),job_info=job_info)
-      update_object_field(r$db_name,matched_entry,run_status_ob=status_ob)
-      update_char_field(r$db_name,matched_entry,run_status=status_ob$status)
-      update_char_field(r$db_name,matched_entry,job_info=job_info)
-    }
-    r$job_info <- job_info
-
+  
+  if(is.null(r$db_name)) update_db <- FALSE
+  ## if directory exists, and if it's definately a directory stop
+  if(file.exists(r$run_dir) & !overwrite)if(file.info(r$run_dir)$isdir %in% TRUE) stop("run already exists. To rerun select overwrite=TRUE\n  or use the switch overwrite_default(TRUE)",call.=FALSE)
+  if(!is.null(getOption("kill_run"))) getOption("kill_run")(r)
+  clean_run(r,delete_dir=delete_dir[1],update_db = update_db)
+  wait_arg <- FALSE
+  if(!quiet) {
+    #if(.Platform$OS.type == "windows") wait_arg <- TRUE
+    ignore.stdout = FALSE
+    ignore.stderr = FALSE
+  }
+  message(paste0("Running: ",r$type,":",r$ctl))
+  stdout0 <- system_nm(cmd = r$cmd, dir = r$run_in, wait = wait_arg,
+                       ignore.stdout = ignore.stdout, ignore.stderr = ignore.stderr, intern=intern)
+  if(intern) {
+    cat(stdout0,sep = "\n")
+    job_info <- getOption("get_job_info")(stdout0)
+    if(is.null(job_info)) job_info <- NA
+  } else job_info <- NA
+  
+  if(update_db){
+    matched_entry <- nmdb_match_entry(r)
+    status_ob <- list(status="submitted",run_at=Sys.time(),job_info=job_info)
+    update_object_field(r$db_name,matched_entry,run_status_ob=status_ob)
+    update_char_field(r$db_name,matched_entry,run_status=status_ob$status)
+    update_char_field(r$db_name,matched_entry,job_info=job_info)
+  }
+  r$job_info <- job_info
+  
   if(wait) wait_for_finished(r, initial_timeout=initial_timeout)
   invisible(r)
 }
@@ -711,15 +745,16 @@ run_nm.list <- function(r, overwrite=getOption("run_overwrite"),delete_dir=c(NA,
   
   args <- as.list(match.call()[-1])
   
-  call_run_nm <- function(r, args){
+  call_f <- function(r, args){
     args[["r"]] <- r
     args[["wait"]] <- FALSE
     do.call(run_nm, args)
   }
   
-  r <- lapply(r, call_run_nm, args = args)
+  r <- lapply(r, call_f, args = args)
 
   if(wait) wait_for_finished(r, initial_timeout=initial_timeout)
+  invisible(r)
   
 }
 
@@ -1007,7 +1042,7 @@ is_finished <- function(r,initial_timeout=NA){
   status_ob <- run_status(r,initial_timeout=initial_timeout)
   is_status_finished(status_ob)
 }
-is_finished <- Vectorize_nm(is_finished, vectorize.args = "r")
+is_finished <- Vectorize_nm(is_finished, vectorize.args = "r", SIMPLIFY = TRUE)
 
 #' Condition number of run
 #' 
@@ -1023,7 +1058,7 @@ cond_num <- function(r){
   if(inherits(dc, "try-error")) return(as.numeric(NA))
   as.numeric(dc$FINAL[dc$Parameter %in% "CONDNUM"])
 }
-cond_num <- Vectorize_nm(cond_num, vectorize.args = "r")
+cond_num <- Vectorize_nm(cond_num, vectorize.args = "r", SIMPLIFY = TRUE, USE.NAMES = FALSE)
 
 
 nm_steps_finished <- function(r){ # for waiting
