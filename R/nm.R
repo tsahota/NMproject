@@ -278,7 +278,7 @@ Vectorize_nm <- function (FUN, vectorize.args = arg.names, SIMPLIFY = FALSE, USE
   FUNV
 }
 
-nm <- Vectorize_nm(nm)
+nm <- Vectorize_nm(nm, vectorize.args = names(formals(nm))[!names(formals(nm)) %in% "db_name"])
 
 is_nm <- function(x) inherits(x, "nm")
 
@@ -1039,6 +1039,7 @@ is_status_finished <- function(status_ob){
 #' time period to give up on a run if directory hasn't been created.
 #' @export
 is_finished <- function(r,initial_timeout=NA){
+  if(length(r) == 1) if(is.na(r)) return(FALSE)
   status_ob <- run_status(r,initial_timeout=initial_timeout)
   is_status_finished(status_ob)
 }
@@ -1056,7 +1057,8 @@ cond_num <- function(r){
   }
   dc <- try(coef_nm(r, trans = FALSE), silent = TRUE)
   if(inherits(dc, "try-error")) return(as.numeric(NA))
-  as.numeric(dc$FINAL[dc$Parameter %in% "CONDNUM"])
+  ans <- as.numeric(dc$FINAL[dc$Parameter %in% "CONDNUM"])
+  if(length(ans) == 0) as.numeric(NA) else ans
 }
 cond_num <- Vectorize_nm(cond_num, vectorize.args = "r", SIMPLIFY = TRUE, USE.NAMES = FALSE)
 

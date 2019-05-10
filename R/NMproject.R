@@ -146,13 +146,13 @@ system_nm <- function(cmd,dir=getOption("models.dir"),...){
   getOption("system_nm")(cmd,...)
 }
 
-copy_control0 <- function(from,to,overwrite=FALSE,alt_paths,from_base=FALSE){
+copy_control0 <- function(from, to, overwrite=FALSE, alt_paths, dest_dir = getOption("models.dir")){
   ## if from = NONMEM control in current directory, it will copy and update $TABLE numbers
   ## if from = control file code_library(), it will copy it.
   ## First it will look for "from" in current directory, then it will look in code_library()
   
-  if(!from_base) to <- from_models(to)
-  if(file.exists(to) & !overwrite) stop("file already exists. Rerun with overwrite = TRUE")
+  to <- file.path(dest_dir, to)
+  if(any(file.exists(to)) & !overwrite) stop("file already exists. Rerun with overwrite = TRUE")
 
   use_code_library <- missing(alt_paths)
   from_path <- tidyproject::locate_file(from,search_path = NULL)
@@ -171,25 +171,32 @@ copy_control0 <- function(from,to,overwrite=FALSE,alt_paths,from_base=FALSE){
 
   is_project_file <- normalizePath(dirname(from_path))==normalizePath(getOption("models.dir"))
 
-  is_nm_file_name(to,error_if_false = TRUE)
-  run_id <- run_id(to)
-  ctl <- readLines(from_path,warn = FALSE)
+  #is_nm_file_name(to,error_if_false = TRUE)
+  ctl <- ctl_list(from_path)
   ## Modify the file here.
   if(is_nm_file_name(from_path))
     run_id_from <- run_id(from_path) else
       run_id_from <- basename(from_path)
-
-  ctl <- gsub(paste0("(FILE\\s*=\\s*\\S*)",run_id_from,"\\b"),paste0("\\1",run_id),ctl)
-  if(is_project_file)
-    ctl <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",run_id_from),ctl) else
-      ctl <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",from_path),ctl)
-  ctl <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*",paste("\\1",Sys.info()["user"]),ctl)
-
-  writeLines(ctl,to)
-  if(!requireNamespace("git2r", quietly = TRUE))
-    warning("git2r is recommended for this function. Please install it.")
-  git2r::repository
-  tidyproject::setup_file(to)
+  
+  #lapply(to, function(to){
+    run_id <- run_id(to)
+    
+    ctl <- ctl %>% new_ctl(to)
+    attr(ctl, "file_name") <- to
+    #ctl <- gsub(paste0("(FILE\\s*=\\s*\\S*)",run_id_from,"\\b"),paste0("\\1",run_id),ctl)
+    if(!is_project_file) ctl[[1]] <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",from_path),ctl[[1]])
+    #  ctl <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",run_id_from),ctl) else
+    #    ctl <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",from_path),ctl)
+    ctl[[1]] <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*",paste("\\1",Sys.info()["user"]),ctl[[1]])
+    
+    dir.create(dirname(to), recursive = TRUE, showWarnings = FALSE)
+    write_ctl(ctl)
+    if(!requireNamespace("git2r", quietly = TRUE))
+      warning("git2r is recommended for this function. Please install it.")
+    git2r::repository
+    #tidyproject::setup_file(to)    
+  #})
+  return()
 }
 
 Vectorize_invisible <- function (FUN, vectorize.args = arg.names, SIMPLIFY = TRUE, USE.NAMES = TRUE) 
@@ -226,10 +233,10 @@ Vectorize_invisible <- function (FUN, vectorize.args = arg.names, SIMPLIFY = TRU
 #' @param to character. File to copy to
 #' @param overwrite logical. Should to file be overwritten? Default = FALSE.
 #' @param alt_paths character vector. paths to other candidate files to search
-#' @param from_base logical (default = FALSE). Should "to" be taken to be relative to base.
+#' @param dest_dir character. default "Models" dir
 #'
 #' @export
-copy_control <- Vectorize_invisible(copy_control0, vectorize.args = c("from", "to"))
+copy_control <- Vectorize_invisible(copy_control0)
 
 #' Get run id
 #'
@@ -237,6 +244,11 @@ copy_control <- Vectorize_invisible(copy_control0, vectorize.args = c("from", "t
 #' @export
 run_id <- function(x)
   UseMethod("run_id")
+
+#' @export
+run_id.default <- function(x) {
+  if(is_single_na(x)) return(NA) else stop("don't know how to handle this")
+}
 
 #' @export
 run_id.nm <- function(x) x$run_id
@@ -249,12 +261,12 @@ run_id.ctl_list <- function(x){
 
 #' @export
 run_id.character <- function(x){
-  if(length(x) == 1){
+  if(is.null(attr(x, "file_name"))){
     file.regex <- paste0("^.*",getOption("model_file_stub"),"(.*)\\.",getOption("model_file_extn"),"$")
     run_id <- gsub(file.regex,"\\1",x)
   } else {
     file_name <- attr(x, "file_name")
-    run_id <- run_id(file_name)    
+    if(!is.null(file_name)) run_id <- run_id(file_name) else run_id <- x
   }
   run_id
 }
@@ -270,7 +282,45 @@ run_id.list <- function(x){
   
   sapply(x, call_f, args = args)
 }
+ 
+
+#' Get run in
+#'
+#' @param x character or nm or ctl_list/ctl_character
+#' @export
+run_in <- function(x)
+  UseMethod("run_in")
+
+#' @export
+run_in.default <- function(x) {
+  if(is_single_na(x)) return(NA) else stop("don't know how to handle this")
+}
+
+#' @export
+run_in.nm <- function(x) x$run_in
+
+#' @export
+run_in.ctl_list <- function(x){
+  file_name <- attr(x, "file_name")
+  dirname(file_name)
+}
+
+#' @export
+run_in.character <- function(x) dirname(x)
+
+#' @export
+run_in.list <- function(x){
+  args <- as.list(match.call()[-1])
   
+  call_f <- function(x, args){
+    args[["x"]] <- x
+    do.call(run_in, args)
+  }
+  
+  sapply(x, call_f, args = args)
+}
+
+ 
 #' path of directory from models dir
 #'
 #' @param x character vector. Relative path from models.dir
@@ -287,7 +337,7 @@ from_models <- function(x, models_dir=getOption("models.dir")) {
 is_nm_file_name <- function(x,error_if_false=FALSE){
   file.regex <- paste0("^.*",getOption("model_file_stub"),"(.*)\\.",getOption("model_file_extn"),"$")
   out <- grepl(file.regex,x)
-  if(error_if_false & !out)
+  if(error_if_false & any(!out))
     stop(paste0("file.name doesn't match ",getOption("model_file_stub"),"XX.",getOption("model_file_extn")," convention")) else
       return(out)
 }
@@ -369,6 +419,7 @@ get_data_name <- function(ctl){
 #' @param new_data_name character. Name of new dataset
 #' @export
 update_dollar_data <- function(ctl_name,new_data_name){
+  if(is_single_na(ctl_name)) return(NA)
   ctl <- ctl_character(ctl_name)
   ctl <- gsub("^(\\s*\\$DATA\\s*)[^ ]+(.*)$",paste0("\\1",new_data_name,"\\2"),ctl)
   ctl
@@ -382,6 +433,7 @@ update_dollar_data <- function(ctl_name,new_data_name){
 #' @export
 
 update_dollar_input <- function(ctl, ...){
+  if(is_single_na(ctl)) return(NA)
   ctl <- ctl_list(ctl)
   d <- suppressMessages(get_data(ctl))
   replace_with <- suppressMessages(dollar_data(d, ...))

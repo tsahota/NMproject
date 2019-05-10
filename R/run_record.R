@@ -114,7 +114,6 @@ coef_ext0 <- function(ext.file){
 #' @param trans logical. Default = TRUE. Should parameters be transformed
 #' @param ... additional arguments to carry to coef
 #' @return a \code{data.frame} of parameter values
-#' @export
 
 coef_nm <- function(object,trans,...){
 
@@ -220,7 +219,7 @@ coef_nm <- function(object,trans,...){
 #' @export
 coef.nm <- function(object,...){
   
-  if(length(object) == 1) if(is.na(object)) return(NA)
+  if(is_single_na(object)) return(NA)
 
   trans_arg <- list(...)$trans
   if(is.null(trans_arg)) {
@@ -228,7 +227,8 @@ coef.nm <- function(object,...){
   } else {
     trans <- trans_arg
   }
-  coef_nm(object=object,trans=trans)
+  ans <- try(coef_nm(object=object,trans=trans), silent = TRUE)
+  if(inherits(ans, "try-error")) dplyr::tibble() else ans
 }
 
 
@@ -275,6 +275,88 @@ run_record <- function(...,trans=TRUE){
   do.call(run_record.tmp,a)
 
 }
+
+summary0 <- function(object, ref_model = NA, ...){
+  d <- dplyr::as_tibble(list(m=object))
+  d$ofv <- ofv(d$m)
+  d$dofv <- d$ofv - ofv(ref_model) 
+  
+  n_parameters_fun <- function(x){
+    if(!inherits(x, "nm")) return(NA)
+    params <- coef.nm(x)
+    if(!"Type" %in% names(params)) return(NA)
+    params <- params[grepl("THETA|OMEGA|SIGMA", params$Type), ]
+    nrow(params)
+  }
+  
+  rr_fun <- function(x){
+    if(!inherits(x, "nm")) return(NA)
+    params <- try(run_record(x, trans = FALSE), silent = TRUE)
+    if(inherits(params, "try-error")) return(NA)
+    params
+  }
+  
+  if(!is_single_na(ref_model)) {
+    rr_ref <- run_record(ref_model, trans = FALSE)
+    d$rr <- lapply(d$m, rr_fun)
+  }
+  
+  ## get the parameter relative to ref_model
+  
+  get_extra_params <- function(rr){
+    if(is_single_na(rr)) return(dplyr::as_tibble(NA))
+    rr_diff <- suppressMessages(suppressWarnings(dplyr::anti_join(rr, rr_ref)))
+    rr_diff <- rr_diff[,c(1,4)]
+    names(rr_diff)[2] <- "val"
+    rr_diff <- dplyr::as_tibble(rr_diff)
+    
+    ans <- as.list(rr_diff$val)
+    names(ans) <- rr_diff$Parameter
+    
+    dplyr::as_tibble(ans)
+  }
+  
+  #get_extra_params(rr[[90]])
+  
+  #rrtmp <- lapply(rr, get_extra_params)
+  
+  ## for each rr, get additional params
+  
+  base_n <- n_parameters_fun(ref_model)
+  d$df <- sapply(d$m, n_parameters_fun) - base_n
+  d$p_chisq <- 1-stats::pchisq(-d$dofv, df = d$df)
+  d$ref_cn <- cond_num(ref_model)
+  d$cond_num <- cond_num(d$m)
+  d$AIC <- AIC.list(d$m)
+  d$BIC <- BIC.list(d$m)
+  
+  if(!is_single_na(ref_model)) {
+    d$row <- 1:nrow(d)
+    d <- do.call(dplyr::bind_rows,by(d, d$row, function(d){
+      dplyr::bind_cols(d, get_extra_params(d$rr[[1]]))
+    }))
+    d$rr <- NULL
+    d$row <- NULL
+    d$value <- NULL
+  }
+  
+  d$m <- NULL
+  #d <- d %>% arrange(p_chisq, dofv)
+  d  
+}
+
+#' @export
+summary.nm <- function(object, ref_model = NA, ...){
+  object <- list(object)
+  summary0(object, ref_model = ref_model, ...)
+}
+
+#' @export
+summary.list <- function(object, ref_model = NA, ...){
+  summary0(object, ref_model = ref_model, ...)
+}
+
+
 
 run_summary <- function(r, db = NULL){
   res <- list()
@@ -329,7 +411,8 @@ run_table <- function(db_name = "runs.sqlite"){
 #' @export
 AIC.nm <- function(object, ..., k = 2){
   if(length(object) == 1) if(is.na(object)) return(NA)
-  params <- coef.nm(object)
+  params <- try(coef.nm(object),silent = TRUE)
+  if(inherits(params, "try-error")) return(NA)
   params <- params[grepl("THETA|OMEGA|SIGMA", params$Type), ]
   
   n_parameters <- nrow(params)
