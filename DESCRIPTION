@@ -38,4 +38,5 @@ Collate:
     'read_ext.R'
     'run_record.R'
     'status.R'
+    'utils.R'
     'zzz.R'

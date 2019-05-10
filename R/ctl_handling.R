@@ -399,6 +399,7 @@ update_parameters0 <- function(ctl,coef_from,type = c("THETA","OMEGA","SIGMA")){
 #' @export
 
 update_parameters <- function(ctl, from){
+  if(is_single_na(ctl)) return(NA)
   if(missing(from) & inherits(ctl, "nmexecute")) from <- ctl
   ctl_lines <- ctl_list(ctl)
   coef_from <- coef.nm(from, trans=FALSE)
@@ -942,13 +943,14 @@ write_ctl <- function(ctl, dest, dir = getOption("models.dir")){
   }
   
   writeLines(ctl, ctl_name)
-  tidyproject::setup_file(ctl_name)
+  suppressMessages(tidyproject::setup_file(ctl_name))
   message("written: ", ctl_name)
   invisible(ctl)
   
 }
 
 update_table_numbers <- function(ctl, run_id){
+  if(is_single_na(ctl)) return(NA)
   ctl <- ctl_list(ctl)
   if(missing(run_id)) run_id <- get_run_id(attributes(ctl)$file_name)
   ctl$TABLE <- gsub(paste0("(FILE\\s*=\\s*\\S*tab)\\S*\\b"),paste0("\\1",run_id),ctl$TABLE)
@@ -960,10 +962,22 @@ update_table_numbers <- function(ctl, run_id){
 #' @param r object coercible into ctl_list
 #' @param run_id character or numeric. new run_id
 #' @param based_on optional character new run_id
+#' @param dir character. default "Models" dir
+#' @examples 
+#' \dontrun{
+#' new_ctl(m1, "m2")  ## "models/runm2.mod"
+#' new_ctl(m1, "models/runm2.mod") ## "models/runm2.mod"
+#' new_ctl(m1, "runm2.mod")  ## "models/runm2.mod"
+#' new_ctl(m1, "models/a/b/runm2.mod")  ## "models/a/b/runm2.mod"
+#' }
 #' @export
 
-new_ctl <- function(r, run_id, based_on){
+new_ctl <- function(r, run_id, based_on, dir = getOption("models.dir")){
   ctl <- ctl_list(r)
+
+  orig_data_name <- get_data_name(ctl)
+  data_full_path <- normalizePath(file.path(dirname(attr(ctl, "file_name")), orig_data_name), mustWork = FALSE)
+    
   if(missing(based_on)){
     if(inherits(r, "nm")){
       based_on <- r$run_id
@@ -978,17 +992,25 @@ new_ctl <- function(r, run_id, based_on){
       based_on <- temp
     }
   }
-
-  if(file.exists(run_id)) file_name <- run_id else
-    file_name <- from_models(paste0(getOption("model_file_stub"),run_id,".",getOption("model_file_extn")))
-
+  
+  file_name <- coerce_to_ctl_name(run_id, dir = dir)
+  run_id <- run_id(file_name)
+  
   attr(ctl, "file_name") <- file_name
-
+  
+  new_relative_data_name <- relative_path(data_full_path, dirname(file_name))
+  
+  if(normalizePath(new_relative_data_name, mustWork = FALSE) != normalizePath(orig_data_name, mustWork = FALSE)){
+    ctl <- update_dollar_data(ctl, new_relative_data_name)
+  }
+  
   ctl <- update_table_numbers(ctl, run_id)
   ctl[[1]] <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",based_on),ctl[[1]])
   ctl[[1]] <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*",paste("\\1",Sys.info()["user"]),ctl[[1]])
+  
   ctl
 }
+
 
 #' Generate model file name
 #' 
@@ -1003,6 +1025,30 @@ model_file_name <- function(run_id, dir = getOption("models.dir"), mustWork = FA
   normalizePath(path, mustWork = mustWork)
 }
 
+#' get file name
+#' 
+#' @param ctl object coercible into ctl_list
+#' @export
+
+file_name <- function(ctl){
+  ctl <- ctl_list(ctl)
+  attr(ctl, "file_name")
+}
+
+coerce_to_ctl_name <- function(x, dir = getOption("models.dir")){
+  if(normalizePath(dirname(x), mustWork = FALSE) == normalizePath(getOption("models.dir"), mustWork = FALSE)){
+    file_name <- x
+  } else {
+    ## if it's a file name
+    is_file_name <- grepl(paste0("\\.|",.Platform$file.sep), x)
+    if(is_file_name) file_name <- x else {  ## x = non Models path
+      file_name <- model_file_name(x, dir = dir)  ## x = run_id
+    }
+  }
+  ## check file name for convention 
+  if(!is_nm_file_name(file_name)) warning("file name doesn't match model_file_stub, model_file_extn convention")
+  file_name
+}
 
 #' make new control file based on previous
 #'

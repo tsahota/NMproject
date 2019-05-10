@@ -4,7 +4,7 @@
 \alias{new_ctl}
 \title{make new control file based on previous}
 \usage{
-new_ctl(r, run_id, based_on)
+new_ctl(r, run_id, based_on, dir = getOption("models.dir"))
 }
 \arguments{
 \item{r}{object coercible into ctl_list}
@@ -12,7 +12,17 @@ new_ctl(r, run_id, based_on)
 \item{run_id}{character or numeric. new run_id}
 
 \item{based_on}{optional character new run_id}
+
+\item{dir}{character. default "Models" dir}
 }
 \description{
 make new control file based on previous
+}
+\examples{
+\dontrun{
+new_ctl(m1, "m2")  ## "models/runm2.mod"
+new_ctl(m1, "models/runm2.mod") ## "models/runm2.mod"
+new_ctl(m1, "runm2.mod")  ## "models/runm2.mod"
+new_ctl(m1, "models/a/b/runm2.mod")  ## "models/a/b/runm2.mod"
+}
 }
