@@ -3,6 +3,8 @@
 \docType{import}
 \name{reexports}
 \alias{reexports}
+\alias{AIC}
+\alias{reexports}
 \alias{nobs}
 \alias{reexports}
 \alias{BIC}
@@ -13,6 +15,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{stats}{\code{\link[stats]{nobs}}, \code{\link[stats]{BIC}}}
+  \item{stats}{\code{\link[stats]{AIC}}, \code{\link[stats]{nobs}}, \code{\link[stats]{BIC}}}
 }}
 
