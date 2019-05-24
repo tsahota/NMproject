@@ -121,7 +121,10 @@ coef_nm <- function(object,trans,...){
   d$file <- object$ctl
   if(!unique(d$is_final)) d$file <- paste0(d$file,"*")
   d$is_final <- NULL
-  if(!trans) return(d)
+  if(!trans) {
+    class(d) <- append(class(d), "nmcoef")
+    return(d)
+  }
 
   p <- param_info(object)
 
@@ -212,8 +215,8 @@ coef_nm <- function(object,trans,...){
   d$transSEUnit <- NULL
   d$Parameter <- d$Name
   d$Name <- NULL
+  class(d) <- append(class(d), "nmcoef")
   d
-
 }
 
 #' @export
@@ -228,8 +231,14 @@ coef.nm <- function(object,...){
     trans <- trans_arg
   }
   ans <- try(coef_nm(object=object,trans=trans), silent = TRUE)
-  if(inherits(ans, "try-error")) dplyr::tibble() else ans
+  if(inherits(ans, "try-error")) {
+    ans <- dplyr::tibble()
+    class(ans) <- append(class(ans), "nmcoef")
+    
+  }
+  ans
 }
+
 
 
 run_record0 <- function(..., coef.func = coef_ext0){
@@ -278,7 +287,10 @@ run_record <- function(...,trans=TRUE){
 
 summary0 <- function(object, ref_model = NA, ...){
   d <- dplyr::as_tibble(list(m=object))
-  d$ofv <- ofv(d$m)
+  
+  coef_obs <- lapply(d$m, coef.nm)
+
+  d$ofv <- ofv(coef_obs)
   d$dofv <- d$ofv - ofv(ref_model) 
   
   n_parameters_fun <- function(x){
@@ -327,8 +339,8 @@ summary0 <- function(object, ref_model = NA, ...){
   d$p_chisq <- 1-stats::pchisq(-d$dofv, df = d$df)
   d$ref_cn <- cond_num(ref_model)
   d$cond_num <- cond_num(d$m)
-  d$AIC <- AIC.list(d$m)
-  d$BIC <- BIC.list(d$m)
+  d$AIC <- AIC(d$m)
+  d$BIC <- BIC(d$m)
   
   if(!is_single_na(ref_model)) {
     d$row <- 1:nrow(d)
@@ -408,15 +420,35 @@ run_table <- function(db_name = "runs.sqlite"){
   nmdb_printable_db(d)
 }
 
+#' @importFrom stats AIC
+#' @export
+stats::AIC
+
+#' @export
+AIC.default <- function(object, ..., k = 2){
+  if(is_single_na(object)) return(NA)
+  stats::AIC(object, ..., k = 2)
+}
+
 #' @export
 AIC.nm <- function(object, ..., k = 2){
-  if(length(object) == 1) if(is.na(object)) return(NA)
+  if(is_single_na(object)) return(NA)
   params <- try(coef.nm(object),silent = TRUE)
   if(inherits(params, "try-error")) return(NA)
   params <- params[grepl("THETA|OMEGA|SIGMA", params$Type), ]
   
   n_parameters <- nrow(params)
-  ofv(object) - k*n_parameters
+  ofv(object) + k*n_parameters
+}
+
+#' @export
+AIC.nmcoef <- function(object, ..., k = 2){
+  if(is_single_na(object)) return(NA)
+  params <- object
+  params <- params[grepl("THETA|OMEGA|SIGMA", params$Type), ]
+  
+  n_parameters <- nrow(params)
+  ofv(object) + k*n_parameters
 }
 
 #' @export
@@ -424,8 +456,9 @@ AIC.list <- function(object, ..., k = 2){
   args <- as.list(match.call()[-1])
   
   call_f <- function(x, args){
+    #if(is_single_na(x)) return(NA)
     args[["object"]] <- x
-    do.call(AIC.nm, args)
+    do.call(AIC, args)
   }
   
   sapply(object, call_f, args = args)
@@ -437,7 +470,7 @@ stats::nobs
 
 #' @export
 nobs.nm <- function(object, ...){
-  if(length(object) == 1) if(is.na(object)) return(NA)
+  if(is_single_na(object)) return(NA)
   d <- get_data(object, filter = TRUE)
   d <- d %>% dplyr::filter(.data$EVID %in% 0)
   if("MDV" %in% names(d)){
@@ -454,21 +487,21 @@ stats::BIC
 
 #' @export
 BIC.nm <- function(object, ...){
-  AIC.nm(object, ..., k = log(nobs.nm(object)))
+  AIC(object, ..., k = log(nobs.nm(object)))
 }
 
 #' @export
 BIC.list <- function(object, ...){
   d <- tibble::tibble(m = object)
   d$data_name <- sapply(object, function(object) {
-    if(length(object) == 1) if(is.na(object)) return(NA)
+    if(is_single_na(object)) return(NA)
     object$input$data_name 
   })
   
   d <- d %>% dplyr::group_by(.data$data_name) %>%
     dplyr::mutate(lognobs = log(nobs.nm(dplyr::first(.data$m))))
   
-  mapply(AIC.nm, object = object, k = d$lognobs, SIMPLIFY = TRUE, USE.NAMES = FALSE)
+  mapply(AIC, object = object, k = d$lognobs, SIMPLIFY = TRUE, USE.NAMES = FALSE)
   
 }
 

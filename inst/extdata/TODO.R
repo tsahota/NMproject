@@ -95,6 +95,24 @@ after_results <- function(r, expr){
   
 }
 
+############################
+## I'm using S3 classes more - so need unified strategy on different classes
+## need empty versions of each - use NA with right class.
+
+## behaviour - if working on single objects, want errors, if working on vectors/lists want NAs
+###               are there exceptions to this?
+
+## classes:
+
+## nm/nmexecute/nm...
+## ctl_list/ctl_character
+## list of ctl_lists   ## for mass control stream editing.
+## nmcoef/nmres - outputs computed once and ready for subsequent functions.
+## nmlist  - No - because I want people to create their own lists with list(m1, ....)
+
+############################
+
+
 ## want makefile like functionality (can't use future)
 
 ## want a separate process to offload computation and waiting (future)

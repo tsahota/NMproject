@@ -282,6 +282,11 @@ nm <- Vectorize_nm(nm, vectorize.args = names(formals(nm))[!names(formals(nm)) %
 
 is_nm <- function(x) inherits(x, "nm")
 
+#' is nm list
+#' 
+#' @param x object
+#' @export
+
 is_list_nm <- function(x) {
   if(!inherits(x, "list")) return(FALSE)
   
@@ -389,8 +394,8 @@ get_char_field <- function(db_name="runs.sqlite",entry,field){
 #' @param r object class nm
 #' @export
 job_info <- function(r){
-  if(is.null(r$db_name)) return(NA)
   if("job_info" %in% names(r)) return(r$job_info)
+  if(is.null(r$db_name)) return(NA)
   matched_entry <- nmdb_match_entry(r)
   get_char_field(r$db_name,matched_entry,"job_info")
 }
@@ -758,6 +763,63 @@ run_nm.list <- function(r, overwrite=getOption("run_overwrite"),delete_dir=c(NA,
   
 }
 
+#' experimental fast version of run (only tested in linux)
+#' @param r objects of class nm/or list of objects class nm/or data.frame with column of nm objects
+#' @param wait logical (default=FALSE). Should R wait for run to finish.
+#' Default can be changed with  wait_by_default() function
+#' @param ignore.stdout logical (default=TRUE). Parameter passed to system()
+#' @param ignore.stderr logical (default=TRUE). Parameter passed to system()
+#' @param intern logical. intern arg to be passed to system
+#'
+#' @return If only one object of class nm was specified, silently returns object.
+#' Otherwise returns nothing.
+#'
+#' @export
+
+run_nm_fast_linux <- function(r, wait=getOption("wait"),
+                              ignore.stdout = TRUE,
+                              ignore.stderr = TRUE,
+                              intern=getOption("intern")){
+  
+  if(inherits(r, "nm")) r <- list(r)
+  
+  cmd <- sapply(r, function(r) {
+    if(is_single_na(r)) return(NA)
+    r$cmd
+  })
+  
+  run_in <- run_in(r)
+  
+  cmd <- paste0("cd $(pwd); cd ", run_in, "; echo ",seq_along(run_in)," ; ", cmd)
+  
+  cmd <- cmd[!is.na(r)]
+  
+  cmd <- paste(cmd, collapse = "; ")
+  
+  for(ri in r[!is.na(r)]){
+    message(paste0("Running: ",ri$type,":",ri$ctl))
+    clean_run(ri, delete_dir=NA,update_db = FALSE)
+  }
+
+  stdout0 <- system_nm(cmd = cmd, dir = ".", wait = FALSE,
+                       ignore.stdout = FALSE, 
+                       ignore.stderr = FALSE, 
+                       intern=TRUE)
+  cat(stdout0,sep = "\n")
+  
+  index <- cumsum(grepl("^[0-9]+$", stdout0))
+  
+  job_info <- sapply(seq_along(run_in), function(i){
+    getOption("get_job_info")(stdout0[index %in% i])
+  })
+  
+  for (i in seq_along(r)){
+    if(!is_single_na(r[[i]])) r[[i]]$job_info <- job_info[i] 
+  }
+  
+  return(r)
+}
+  
 #' Run NONMEM
 #' 
 #' Use run_nm instead. run was deprecated due to naming conflict with future package's run() function
@@ -1039,7 +1101,7 @@ is_status_finished <- function(status_ob){
 #' time period to give up on a run if directory hasn't been created.
 #' @export
 is_finished <- function(r,initial_timeout=NA){
-  if(length(r) == 1) if(is.na(r)) return(FALSE)
+  if(is_single_na(r)) return(FALSE)
   status_ob <- run_status(r,initial_timeout=initial_timeout)
   is_status_finished(status_ob)
 }
@@ -1051,16 +1113,36 @@ is_finished <- Vectorize_nm(is_finished, vectorize.args = "r", SIMPLIFY = TRUE)
 #' @export
 
 cond_num <- function(r){
-  if(length(r) == 1){
-    if(is.na(r)) return(as.numeric(NA))
-    if(is.null(r)) return(as.numeric(NA))
-  }
+  UseMethod("cond_num")
+}
+
+#' @export
+cond_num.default <- function(r){
+  if(is_single_na(r)) return(as.numeric(NA))
+  stop("don't know how to get cond_num of this")
+}
+
+#' @export
+cond_num.nm <- function(r){
   dc <- try(coef_nm(r, trans = FALSE), silent = TRUE)
   if(inherits(dc, "try-error")) return(as.numeric(NA))
+  cond_num(dc)
+}
+
+#' @export
+cond_num.nmcoef <- function(r){
+  if(is_empty_nmcoef(r)) return(as.numeric(NA))
+  dc <- r
   ans <- as.numeric(dc$FINAL[dc$Parameter %in% "CONDNUM"])
   if(length(ans) == 0) as.numeric(NA) else ans
 }
-cond_num <- Vectorize_nm(cond_num, vectorize.args = "r", SIMPLIFY = TRUE, USE.NAMES = FALSE)
+
+#' @export
+cond_num.list <- function(r){
+  sapply(r, cond_num)
+}
+
+#cond_num <- Vectorize_nm(cond_num, vectorize.args = "r", SIMPLIFY = TRUE, USE.NAMES = FALSE)
 
 
 nm_steps_finished <- function(r){ # for waiting
