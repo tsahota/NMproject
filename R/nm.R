@@ -1573,8 +1573,8 @@ update_ignore <- function(ctl, ignore_char){
   if(ignore_present){
     ## remove any row that matches exactly
     ctl$DATA <- ctl$DATA[!grepl("^(\\s*)IGNORE\\s*=\\s*\\(*\\S[^\\)]+\\)*(\\s*)$",ctl$DATA)]
-    ## remove only IGNORE statement if other things are on the line.
-    ctl$DATA <- gsub("(.*)IGNORE\\s*=\\s*\\(*\\S[^\\)]+\\)*(.*)",
+    ## remove only bracketed IGNORE statement if other things are on the line.
+    ctl$DATA <- gsub("(.*)IGNORE\\s*=\\s*\\(+\\S[^\\)]+\\)+(.*)",
          "\\1\\2", ctl$DATA)
   }
   

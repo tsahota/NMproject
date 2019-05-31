@@ -314,8 +314,6 @@ call_fun_on_nm_data_frame <- function(x, fun){
 ##    VPCs/outputs are dependent on run results.
 ##    Plan behaviour
 
-## TODO: create a project_library(TRUE/FALSE) flag option
-
 ## TODO: an easy way to copy-modify this code:
 ##  -- add ons
 
@@ -334,18 +332,16 @@ e14 <- nm("e14", type = "execute", based_on = "ADVAN13.mod") ## code library
 ##   e.g. dsc$ofv <- ofv(dsc$m)
 ##        run_nm(dsc$m, batches = 10)  ## works like run_batch_list
 
-## TODO: import_code()
+## TODO: import_code()  - (import instead of "copy")
 ##     Scripts  - import_script_file()
 ##       "~/script.R" - no change
 ##       "../scripts.R" - no change
-##       "script.R" - [code_library]/Scripts/script.R
 ##       "script.R" - [code_library]/Scripts/script.R
 ##       will add R comment to top
 
 ##     Models   - import_model_file()
 ##       "~/runTTE.mod" - no change
 ##       "../runTTE.mod" - no change
-##       "runTTE.mod" - [code_library]/Models/script.R
 ##       "runTTE.mod" - [code_library]/Models/script.R
 
 ##     Projects  - import_project
