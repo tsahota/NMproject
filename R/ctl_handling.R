@@ -5,10 +5,13 @@ rem_comment <- function(s,char=";") gsub(paste0("^([^",char,"]*)",char,"*.*$"),"
 get_comment <- function(s,char=";") gsub(paste0("^[^",char,"]*",char,"*(.*)$"),"\\1",s)
 
 setup_dollar <- function(x,type){
-  if(grepl("THETA|OMEGA|SIGMA|PK|PRED|ERROR|DES", type)){
-    x <- c(type, x)
-  } else {
-    x[1] <- paste(type,x[1]) 
+  ## if $TYPE isn't in x, add it
+  if(!grepl(paste0("\\s*\\",type),x[1])){
+    if(grepl("THETA|OMEGA|SIGMA|PK|PRED|ERROR|DES", type)){
+      x <- c(type, x)
+    } else {
+      x[1] <- paste(type,x[1]) 
+    }
   }
   names(x) <- NULL
   class(x) <- paste0("nm.",tolower(gsub("^\\$","",type)))
@@ -970,6 +973,8 @@ write_ctl <- function(ctl, dest, dir = getOption("models.dir")){
     attr(ctl, "file_name") <- ctl_name
   }
   
+  if(!file.exists(dirname(ctl_name)))
+    dir.create(dirname(ctl_name), showWarnings = FALSE, recursive = TRUE)
   writeLines(ctl, ctl_name)
   suppressMessages(tidyproject::setup_file(ctl_name))
   message("written: ", ctl_name)
