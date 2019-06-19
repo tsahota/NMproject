@@ -36,6 +36,7 @@ Collate:
     'plot_iter.R'
     'read.table.nm.R'
     'read_ext.R'
+    'read_table_nm.R'
     'run_record.R'
     'status.R'
     'utils.R'
