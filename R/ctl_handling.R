@@ -81,7 +81,44 @@ print_ctl <- function(r) {
 #' @param r either class nmexecute, character, ctl_list, ctl_character
 #' @return object of class ctl_list
 #' @export
+
 ctl_list <- function(r){
+  UseMethod("ctl_list")
+}
+
+#' @export
+ctl_list.ctl_character <- function(r){
+    ctl <- ctl_nm2r(r)
+    attr(ctl, "file_name") <- attributes(r)$file_name
+    ctl
+}
+
+#' @export
+ctl_list.nmexecute <- function(r){
+  ctl <- ctl_character(r)
+  file_name <- attributes(ctl)$file_name
+  ctl <- ctl_nm2r(ctl)
+  attr(ctl, "file_name") <- file_name
+  return(ctl)  
+}
+
+#' @export
+ctl_list.ctl_list <- function(r){
+  r
+}
+
+#' @export
+ctl_list.character <- function(r){
+  if(length(r) == 1){
+    ctl <- ctl_character(r)
+    file_name <- attributes(ctl)$file_name
+    ctl <- ctl_nm2r(ctl)
+    attr(ctl, "file_name") <- file_name
+    return(ctl)
+  } else stop("cannot coerce to ctl_list")
+}
+
+ctl_list_old <- function(r){
   if(inherits(r, "ctl_character")) {
     ctl <- ctl_nm2r(r)
     attr(ctl, "file_name") <- attributes(r)$file_name

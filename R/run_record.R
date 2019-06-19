@@ -219,6 +219,10 @@ coef_nm <- function(object,trans,...){
   d
 }
 
+#' @importFrom stats coef
+#' @export
+stats::coef
+
 #' @export
 coef.nm <- function(object,...){
   
@@ -425,9 +429,8 @@ run_table <- function(db_name = "runs.sqlite"){
 stats::AIC
 
 #' @export
-AIC.default <- function(object, ..., k = 2){
+AIC.logical <- function(object, ..., k = 2){
   if(is_single_na(object)) return(NA)
-  stats::AIC(object, ..., k = 2)
 }
 
 #' @export
