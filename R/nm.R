@@ -1631,3 +1631,27 @@ update_sizes <- function(ctl, sizes_char){
   ctl_list(ctl)
 }
 
+
+#' Exclude rows of NONMEM dataset
+#' 
+#' @param d data.frame for NONMEM dataset
+#' @param dexcl data.frame consisting of rows to be ignored
+#' @param exclude_col character.  Name of exclude column in d
+#' @examples 
+#' \dontrun{
+#' ## use with dplyr
+#' dexcl <- d %>% filter(ID == 23, TIME > 18, TIME < 24) %>% select(ID, TIME, DV, EXCL)
+#' dexcl  ## view rows to be excluded
+#' d <- d %>% exclude_rows(dexcl)
+#' }
+#' @export
+
+exclude_rows <- function(d, dexcl, exclude_col = "EXCL"){
+  excluded <- do.call(paste, d[, names(d) %in% names(dexcl)]) %in% 
+    do.call(paste, dexcl)
+  excluded <- which(excluded)
+  if(nrow(dexcl) != length(excluded)) stop("couldn't find all rows")
+  d[[exclude_col]][excluded] <- 1
+  d
+}
+
