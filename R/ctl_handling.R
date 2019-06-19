@@ -452,11 +452,17 @@ update_parameters <- function(ctl, from){
 #' 
 #' @param ctl object coercible into ctl_character
 #' @param ... arguments passed to gsub
+#' @param dollar character name of subroutine
 #' @export
 
-gsub_ctl <- function(ctl, ...){
-  ctl <- ctl_character(ctl)
-  ctl <- gsub(..., x = ctl)
+gsub_ctl <- function(ctl, ..., dollar = NA){
+  if(is.na(dollar)){
+    ctl <- ctl_character(ctl)
+    ctl <- gsub(..., x = ctl)    
+  } else {
+    ctl <- ctl_list(ctl)
+    ctl[[dollar]] <- gsub(..., x = ctl[[dollar]])    
+  }
   ctl_list(ctl)
 }
 

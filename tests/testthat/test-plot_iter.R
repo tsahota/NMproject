@@ -65,7 +65,7 @@ test_that("db & plot_iter works",{
         add_cov(param = "K", cov = "WT", force = TRUE)
     })
   })
-
+  
   ctl <- ctl %>% gsub_ctl("THEOPP\\.csv", "THEOFILENAME")
 
   expect_true(any(grep("THEOFILENAME", as.character(ctl))))
