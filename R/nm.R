@@ -585,14 +585,6 @@ out <- function(r) {
   .Deprecated("show_out")
 }
 
-#' Edit control file
-#'
-#' @param r object of class nm, a file name, or a run_id
-#' @export
-ctl <- function(r) {
-  .Deprecated("show_ctl")
-}
-
 show_file <- function(file_name){
   if(.Platform$OS.type=="windows")
     file.show(file_name) else
