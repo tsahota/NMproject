@@ -241,8 +241,9 @@ copy_control <- Vectorize_invisible(copy_control0)
 #' Get run id
 #'
 #' @param x character or nm or ctl_list/ctl_character
+#' @param ... additional arguments
 #' @export
-run_id <- function(x)
+run_id <- function(x, ...)
   UseMethod("run_id")
 
 #' @export

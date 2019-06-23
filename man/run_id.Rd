@@ -4,10 +4,12 @@
 \alias{run_id}
 \title{Get run id}
 \usage{
-run_id(x)
+run_id(x, ...)
 }
 \arguments{
 \item{x}{character or nm or ctl_list/ctl_character}
+
+\item{...}{additional arguments}
 }
 \description{
 Get run id
