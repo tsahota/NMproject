@@ -240,48 +240,49 @@ copy_control <- Vectorize_invisible(copy_control0)
 
 #' Get run id
 #'
-#' @param x character or nm or ctl_list/ctl_character
+#' @param m character or nm or ctl_list/ctl_character
+#' @param text optional character to set run_id 
 #' @param ... additional arguments
 #' @export
-run_id <- function(x, ...)
+run_id <- function(m, text, ...)
   UseMethod("run_id")
 
 #' @export
-run_id.default <- function(x) {
-  if(is_single_na(x)) return(NA) else stop("don't know how to handle this")
+run_id.default <- function(m, text, ...) {
+  if(is_single_na(m)) return(NA) else stop("don't know how to handle this")
 }
 
 #' @export
-run_id.nm <- function(x) x$run_id
+run_id.nm <- function(m, text, ...) m[["run_id"]]
 
 #' @export
-run_id.ctl_list <- function(x){
-  file_name <- attr(x, "file_name")
+run_id.ctl_list <- function(m, text, ...){
+  file_name <- attr(m, "file_name")
   run_id(file_name)
 }
 
 #' @export
-run_id.character <- function(x){
-  if(is.null(attr(x, "file_name"))){
+run_id.character <- function(m, text, ...){
+  if(is.null(attr(m, "file_name"))){
     file.regex <- paste0("^.*",getOption("model_file_stub"),"(.*)\\.",getOption("model_file_extn"),"$")
-    run_id <- gsub(file.regex,"\\1",x)
+    run_id <- gsub(file.regex,"\\1",m)
   } else {
-    file_name <- attr(x, "file_name")
-    if(!is.null(file_name)) run_id <- run_id(file_name) else run_id <- x
+    file_name <- attr(m, "file_name")
+    if(!is.null(file_name)) run_id <- run_id(file_name) else run_id <- m
   }
   run_id
 }
 
 #' @export
-run_id.list <- function(x){
+run_id.list <- function(m, text, ...){
   args <- as.list(match.call()[-1])
   
-  call_f <- function(x, args){
-    args[["x"]] <- x
+  call_f <- function(m, args){
+    args[["m"]] <- m
     do.call(run_id, args)
   }
   
-  sapply(x, call_f, args = args)
+  sapply(m, call_f, args = args)
 }
  
 
