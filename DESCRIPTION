@@ -20,14 +20,18 @@ Imports:
     DT,
     git2r (>= 0.18.0),
     dplyr (>= 0.7.2),
-    tibble
+    tibble,
+    methods
 RoxygenNote: 6.0.1
 Suggests:
     testthat,
     ggplot2,
-    xpose4
+    xpose4,
+    diffobj
 Collate: 
     'NMproject.R'
+    'utilsExtra.R'
+    'NMprojectExtra.R'
     'nm.R'
     'ctl_handling.R'
     'dollar_data.R'
@@ -36,7 +40,6 @@ Collate:
     'plot_iter.R'
     'read.table.nm.R'
     'read_ext.R'
-    'read_table_nm.R'
     'run_record.R'
     'status.R'
     'utils.R'
