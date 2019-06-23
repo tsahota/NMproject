@@ -1,18 +1,10 @@
 ## TODO: desired interface
 
-## execute runs are default
-##  children can be execute, vpc, ppc, ....
-
-## Assume only executes can have children?
-##  for now, no
-
 ## Unique identifiers:
-##  run_id = "m0"       ## run_m0.mod
+##  run_id = "m0"       ## run_m0.mod used for dir name, sdtabs, ...
 ##    used for TABLEs, results tracking, 
-##  type = "execute"    ## assume everything is "execute"
-##  run_in = "Models"   ## assume everything is in "Models"
-
-## current - create from "execute runm0.mod -dir=m0"
+##  type = "execute"    ## default =  "execute"
+##  run_in = "Models"   ## default =  "Models"
 
 ## instead, specify run_id, type, run_in and create "execute ..."
 
@@ -41,7 +33,7 @@ m1 <- run_nm(m1, db = "runs.sqlite",       ## default
              check_for_conflicts = TRUE)   ## default
                ## (this saves m1 to db,
                ##  records SHA of ctl/data)
-               ##   this will help determine is run is invalidated
+               ##   this will help determine if run is invalidated
                ## do nothing if SHA matches
                ##   (force rerun with force arg)
                ## only run/post process can write to db  - this will speed up nmproject a lot
@@ -68,9 +60,17 @@ m1 <- m1 %>% post(gof_xpose)
 ## will wait for run to finish and then launch in parallel
 ## saves results in object/db
 
-m1boot <- nm("m1boot", parent = m1) %>%
+m1vpc <- nm("m1boot", parent = m1) %>%
   cmd("vpc run_{run_id}.mod -dir={run_id}") %>%
   type("vpc")
+
+
+## how to handle concurrency with multiple runs, but sqlite
+## one process manages all database connections.
+
+## need database for run management.
+
+
 
 
 ###############################
@@ -253,51 +253,34 @@ post(m1, gof_xpose)  ## will write to db
 ##   list is pretty general will this conflict with other packages?
 ##    can always rename if it does
 
-#' Fun title
-#'
-#' fun
-#'
-#' @param x arg
-#' @export
-fun <- function(x) UseMethod("fun")
+## objects:
+## nm
+## list  - is_nm_list()
 
-#' @export
-fun.nm <- function(x) "the meat of the function"
+## want all functions to work on both.
 
-#' @export
-fun.list <- function(x) sapply(x, fun)
+## orrrr.....
+## one type of object that can be concatenated
+##  new object type is called "nm"
+##  i.e. "new nm" = list("old nm")
 
-#' @export
-fun.data.frame <- function(x) call_fun_on_nm_data_frame(x, fun)
+## nm then becomes an expandable concatenatable object.
+## sub-object is then nm_generic, nm_execute, nm_bootstrap, ...
 
-call_fun_on_nm_data_frame <- function(x, fun){
-  is_nm <- sapply(x, is_list_nm)
-  if(length(which(is_nm)) == 1) return(fun(x[is_nm])) else {
-    if(length(which(is_nm)) == 0) stop("can't find column of nm objects")
-    if(length(which(is_nm)) > 1) stop("can't find unique column of nm objects")
-  }
-}
-  
-## run_nm
-## status
-## ofv
-## AIC*
-## BIC*
+## specific methods can then be dispatched as needed on the back end.
+
+## TODO: insert_dollar(MODEL = "sdlkfjsfdlj")  will insert a $MODEL after $SUB (i.e. a default order)
 
 ## TODO:
 ## User level accessor functions for function template construction
 
 ## run_id(r) - DONE
-## run_in(r)
+## run_in(r) - DONE
 ## type(r)
 ## results_loc(r)
 
 ## TODO: make snapshot work even if no db is present - this should
 ##  be a tidyproject function as opposed to NMproject?
-
-## TODO: functions to be used in function templates:
-##     - require_finished(r) - will wait if not finsihed
-##     - require_processed(r) - will process if needed
 
 ## TODO: register_output(r, "Results/file.pdf")
 ##     - adds file to $output tracker
@@ -309,28 +292,14 @@ call_fun_on_nm_data_frame <- function(x, fun){
 
 ## TODO: Store SHA's to all inputs - check before running.
 ##   then eliminate interactive/non-interactive options
-## TODO: Principle: ctrl + alt + b/source works like "make".
-##    Need dependency graphs.
-##    VPCs/outputs are dependent on run results.
-##    Plan behaviour
 
-## TODO: an easy way to copy-modify this code:
+## TODO: an easy way to copy-modify code:
 ##  -- add ons
 
-## TODO: need a modular way of referring to previous run
-
-e14 <- nm("e14", type = "execute", based_on = e13)
-e14 <- nm("e14", type = "execute", based_on = "e13") ## picks execute
-e14 <- nm("e14", type = "execute", based_on = "ADVAN13.mod") ## code library
-
-## would be easiest if i had all info in e13 e.g. cmd
-
-## TODO: function to save nm objects and load them easily
-
-
-## TODO: make functions work on lists of nm objects
-##   e.g. dsc$ofv <- ofv(dsc$m)
-##        run_nm(dsc$m, batches = 10)  ## works like run_batch_list
+## TODO: possible to combine with caret?
+## - would need parameters passed as arguments, and automatic fitting
+## - maybe as long term goal 
+## - could create wrapper around nm(), run_nm(), wait_for_finished()...
 
 ## TODO: import_code()  - (import instead of "copy")
 ##     Scripts  - import_script_file()
@@ -358,43 +327,11 @@ e14 <- nm("e14", type = "execute", based_on = "ADVAN13.mod") ## code library
 
 ##      find_code("script.R") %>% import_code
 
-###################################################
-## start low level
-
-## Need to know what to do in the event of a clash
-##   stop (current behaviour - safest) with message of import conflicts. Option to overwrite.
-
-## tidyproject::import_r_script(overwrite = FALSE)
-##   ifmissing(finds script in code library/Scripts) and copies into Scripts and stamps with R comment
-## tidyproject::import_file(overwrite = FALSE)
-##   ifmissing(finds file in code library) and copies to relevant subdir
-## NMproject::import_nm_file(overwrite = FALSE)
-##   ifmissing(finds model file in code library/Models), copies into Models and modifies.
-
-## tidyproject::import_code(search_location = code_library_path())
-##  detects what type of file it is:
-##   if it's an r scirpt it uses tidyproject::import_r_script()
-##   if it's unknown, it searchs one level from search_location, into relevant subdir
-
-## NMproject::import_code(search_location = code_library_path())
-##  detects what type of file it is:
-##   if it's a mod file it uses NMproject::import_nm_file()
-##   otherwise it uses tidyproject::import_code()
-
-## tidyproject::import_project(proj_name, search_location = code_library_path())
-##  find unique project path (look in code_library_path/Projects)
-##  list all files.
-##  run tidyproject::import_code
-
-## NMproject::import_project(proj_name, search_location = code_library_path())
-##  find unique project path (look in code_library_path/Projects)
-##  list all files.
-##  run tidyproject::import_code
-
 ## the following is better - allows you to pause before importing.
 
 search_code_library("script.R") %>% import
 search_code_library("aztheopp") %>% import
+
 
 ## tidyproject
 
@@ -481,27 +418,6 @@ import_rscript <- function(path){
 ## structure the code_library identically to a big tidyproject - yes do this.
 ##  DerivedData, Models, ...
 ##  dependency_tree will extract all dependencies and they are all imported a la vez
-
-## New for tidyproject
-##  subdirectories
-
-## Scripts/plot_functions/gof.R
-## Scripts/..
-
-## Models: no subdirs, use database searching instead.
-##  User might want subdirs.... how?
-##   R script reverse dependencies would need to be changed
-
-
-
-
-
-
-
-
-
-
-
 
 import_code <- function(file_name,
                         script_extns = c("R", "r")){
