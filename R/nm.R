@@ -1436,40 +1436,6 @@ setup_nm_demo <- function(demo_name="theopp",
 
 }
 
-import_files <- function(files, pattern, replacement, overwrite=FALSE){
-  
-  #files_to_copy <- dir(from_dir, all.files = TRUE, recursive = TRUE)
-  
-  dest_names <- files#_to_copy
-  dest_names <- gsub("^Models/",paste0(getOption("models.dir"),"/"), dest_names)
-  dest_names <- gsub("^Scripts/",paste0(getOption("scripts.dir"),"/"), dest_names)
-  
-  if(!missing(pattern) & !missing(replacement)){
-    d <- data.frame(pattern, replacement)
-    for(i in seq_len(nrow(d)))
-      dest_names <- gsub(pattern[i], replacement[i], dest_names)
-  }
-  
-  already_there <- file.exists(dest_names)
-  if(any(already_there) & !overwrite)
-    stop("File(s) already exist:\n",
-         paste(paste0("  ",dest_names[already_there]),collapse="\n"),
-         "\nRename or rerun with overwrite=TRUE",call. = FALSE)
-  
-  for(i in seq_along(files_to_copy)){
-    if(is.null(exclude)) do_copy <- TRUE else {
-      if(grepl(paste0("\\.",exclude,"$"),files_to_copy[i]))
-        do_copy <- FALSE else do_copy <- TRUE
-    }
-    if(do_copy) copy_file(file.path(from_dir,files_to_copy[i]),
-                          dest_names[i],
-                          version_control=TRUE,
-                          overwrite = TRUE)
-  }
-  
-}
-
-
 #' Get NONMEM output tables
 #'
 #' This combines $TABLE output with the input data, allowing text columns to be retained for plotting/summaries.
