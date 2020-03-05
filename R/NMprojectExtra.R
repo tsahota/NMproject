@@ -160,13 +160,12 @@ overlapping_outputs <- function(m){
   #files[[3]] <- c(files[[3]], files[[1]][1]) ## for testing only
   tibble::tibble(uid = names(files), files = files) %>%
     tidyr::unnest(files) %>%
-    group_by(files) %>%
-    dplyr::summarise(conflicts = length(unique(uid))-1,
-              runs = paste(uid, collapse = ", ")) %>%add
-    dplyr::arrange(desc(conflicts)) %>%
-    dplyr::filter(conflicts > 0)
+    dplyr::group_by(files) %>%
+    dplyr::summarise(conflicts = length(unique(.data$uid))-1,
+              runs = paste(.data$uid, collapse = ", ")) %>% #add
+    dplyr::arrange(dplyr::desc(.data$conflicts)) %>%
+    dplyr::filter(.data$conflicts > 0)
 }
-
 
 
 #' @export
@@ -470,7 +469,7 @@ result_files <- function(r, text){
 }
 #' @export
 result_files.nm_generic <- function(r, text){
-  if(missing(text)) return(m[["result_files"]])
+  if(missing(text)) return(r[["result_files"]])
   r[["result_files"]] <- c(r[["result_files"]], text)
   r
 }
@@ -1316,7 +1315,8 @@ rr2 <- function(m, trans = TRUE){
   }
   
   d$parameter[d$key %in% "SE"] <- paste0("se_", d$parameter[d$key %in% "SE"])
-  d <- d %>% group_by(parameter) %>% mutate(par_no = max(par_no))
+  d <- d %>% dplyr::group_by(.data$parameter) %>% 
+    dplyr::mutate(par_no = max(.data$par_no))
 
   m_names <- unique(d$run_name)  
   d <- d %>% tidyr::spread(key = "run_name", value = "estimate")
@@ -2785,7 +2785,7 @@ param_r2nm_extra <- function(d){
   
   d$value[d$FIX %in% TRUE] <- paste(d$value[d$FIX %in% TRUE], "FIX")
   
-  d <- d %>% dplyr::group_by(line) %>%
+  d <- d %>% dplyr::group_by(.data$line) %>%
     dplyr::summarise(value = paste0(.data$value, collapse = " "),
                      comment = dplyr::first(stats::na.omit(.data$comment)))
   
@@ -3523,9 +3523,9 @@ nmsave_multiplot.nm_generic <- function(r, plot_ob, plot_name, plot_dir = result
   if(length(plot_name) > 1) stop("multiple plot names", call. = FALSE)
   dir.create(unique(plot_dir), showWarnings = FALSE, recursive = TRUE)
   
-  pdf(file.path(unique(plot_dir), plot_name), ...)
+  grDevices::pdf(file.path(unique(plot_dir), plot_name), ...)
   print(plot_ob)
-  dev.off()
+  grDevices::dev.off()
   r <- r %>% result_files(plot_name)
   invisible(r)
   
@@ -3539,7 +3539,11 @@ nmsave_multiplot.nm_list <- Vectorize_nm_list(nmsave_multiplot.nm_generic, SIMPL
 summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new", "all"), keep_m = FALSE, ...){
 
   d <- rr_row(object)
-  d <- d %>% dplyr::select(run_id, m, parent_run_id, parent_run_in, data_path)
+  d <- d %>% dplyr::select(.data$run_id, 
+                           .data$m, 
+                           .data$parent_run_id, 
+                           .data$parent_run_in, 
+                           .data$data_path)
   cat("reading outputs...")
   d$coef_obs <- coef(d$m)  ## slowest step - crashes
   cat("done\n", append = TRUE)
@@ -3552,29 +3556,29 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
     nrow(coef)
   }
   
-  d <- d %>% group_by(parent_run_id, parent_run_in) %>%
-    mutate(
-      parent = parent(m[1]),
-      parent_coef_obs = coef(parent[1]),
-      n_params = sapply(coef_obs, n_parameters_fun),
-      parent_n_params = n_parameters_fun(parent_coef_obs[[1]])
+  d <- d %>% dplyr::group_by(.data$parent_run_id, .data$parent_run_in) %>%
+    dplyr::mutate(
+      parent = parent(.data$m[1]),
+      parent_coef_obs = coef(.data$parent[1]),
+      n_params = sapply(.data$coef_obs, n_parameters_fun),
+      parent_n_params = n_parameters_fun(.data$parent_coef_obs[[1]])
       ) %>% 
-    group_by(data_path) %>% ## nobs reads data - only once per data_path
-    mutate(nobs = nobs(m[1])) %>% 
-    group_by(parent_run_id, parent_run_in) %>%
-    mutate(
-      status = status(m),
-      ofv = ofv(coef_obs),
-      dofv = ofv - ofv(parent_coef_obs[[1]]),
-      df = n_params - parent_n_params,
+    dplyr::group_by(.data$data_path) %>% ## nobs reads data - only once per data_path
+    dplyr::mutate(nobs = nobs(.data$m[1])) %>% 
+    dplyr::group_by(.data$parent_run_id, .data$parent_run_in) %>%
+    dplyr::mutate(
+      status = status(.data$m),
+      ofv = ofv(.data$coef_obs),
+      dofv = .data$ofv - ofv(.data$parent_coef_obs[[1]]),
+      df = .data$n_params - .data$parent_n_params,
       p_chisq =
-        ifelse(df >=0,
-               1-stats::pchisq(-dofv, df = df),
-               1-stats::pchisq(dofv, df = -df)),
-      AIC = ofv + 2*n_params,
-      BIC = ofv + log(nobs)*n_params,
-      ref_cn = cond_num(parent_coef_obs[[1]]),
-      cond_num = cond_num(coef_obs)
+        ifelse(.data$df >=0,
+               1-stats::pchisq(-.data$dofv, df = .data$df),
+               1-stats::pchisq(.data$dofv, df = -.data$df)),
+      AIC = .data$ofv + 2*.data$n_params,
+      BIC = .data$ofv + log(.data$nobs)*.data$n_params,
+      ref_cn = cond_num(.data$parent_coef_obs[[1]]),
+      cond_num = cond_num(.data$coef_obs)
       )
   d$coef_obs <- NULL
   d$parent_coef_obs <- NULL
@@ -3656,12 +3660,12 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
 
   d <- d %>% 
     dplyr::ungroup() %>%
-    dplyr::select(-data_path,
-                  -parent,
-                  -parent_run_id,
-                  -parent_run_in,
-                  -parent_n_params,
-                  -n_params)
+    dplyr::select(-.data$data_path,
+                  -.data$parent,
+                  -.data$parent_run_id,
+                  -.data$parent_run_in,
+                  -.data$parent_n_params,
+                  -.data$n_params)
   
   if(!keep_m) d$m <- NULL
   
@@ -3691,7 +3695,7 @@ summary_long <- function(..., parameters = c("none", "new", "all")){
   names(d) <- gsub("execute:","", unique_id(m))
   d <- d %>% dplyr::mutate_all(trimws)
   dcol <- tibble::tibble("field" = dnames)
-  d <- bind_cols(dcol, d)
+  d <- dplyr::bind_cols(dcol, d)
   d
 }
 
@@ -4187,7 +4191,8 @@ param_cov_diag <- function(r, param, cov, ..., categorical = FALSE, plot_tv = TR
   pk_block_param <- parse(text = c(pk_block, param))
   pk_block_tvparam <- parse(text = c(pk_block,tvparam))
   
-  wide_coef <- dc %>% select(parameter, FINAL) %>% tidyr::spread(key = "parameter", value = "FINAL")
+  wide_coef <- dc %>% dplyr::select(.data$parameter, .data$FINAL) %>% 
+    tidyr::spread(key = "parameter", value = "FINAL")
   
   dos <- do[!duplicated(paste(do$ID, do[[cov]])), ]
   
