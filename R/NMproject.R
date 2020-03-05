@@ -289,29 +289,30 @@ run_id.list <- function(m, text, ...){
 #' Get run in
 #'
 #' @param x character or nm or ctl_list/ctl_character
+#' @param text optional character to set directory to run in
 #' @export
-run_in <- function(x)
+run_in <- function(x, text)
   UseMethod("run_in")
 
 #' @export
-run_in.default <- function(x) {
+run_in.default <- function(x, text) {
   if(is_single_na(x)) return(NA) else stop("don't know how to handle this")
 }
 
 #' @export
-run_in.nm <- function(x) x$run_in
+run_in.nm <- function(x, text) x$run_in
 
 #' @export
-run_in.ctl_list <- function(x){
+run_in.ctl_list <- function(x, text){
   file_name <- attr(x, "file_name")
   dirname(file_name)
 }
 
 #' @export
-run_in.character <- function(x) dirname(x)
+run_in.character <- function(x, text) dirname(x)
 
 #' @export
-run_in.list <- function(x){
+run_in.list <- function(x, text){
   args <- as.list(match.call()[-1])
   
   call_f <- function(x, args){
@@ -375,6 +376,7 @@ nm_tran.default <- function(x){
     update_dollar_data(file.path(tempdir0,basename(x)),dataset.name) %>% 
       write_ctl(file.path(tempdir0,basename(x)))
   })
+  message("running NMTRAN on ", x)
   system_nm(paste(nm_tran_command,"<",basename(x)),dir=tempdir0,wait=TRUE) ## run nmtran in tempdir0
 }
 
@@ -527,10 +529,10 @@ get_PMX_code_library <- function(local_path,
 #' @export
 omega_matrix <- function(r){
   dc <- coef.nm(r,trans=FALSE)
-  dc <- dc[dc$Type %in% c("OMEGAVAR","OMEGACOV"),]
-  dc <- dc[,c("Parameter","FINAL")]
-  dc$ROW <- as.numeric(gsub("OMEGA\\.([0-9]+)\\..*","\\1",dc$Parameter))
-  dc$COL <- as.numeric(gsub("OMEGA\\.[0-9]+\\.([0-9]+).*","\\1",dc$Parameter))
+  dc <- dc[dc$type %in% c("OMEGAVAR","OMEGACOV"),]
+  dc <- dc[,c("parameter","FINAL")]
+  dc$ROW <- as.numeric(gsub("OMEGA\\.([0-9]+)\\..*","\\1",dc$parameter))
+  dc$COL <- as.numeric(gsub("OMEGA\\.[0-9]+\\.([0-9]+).*","\\1",dc$parameter))
   dc <- dc[order(dc$ROW,dc$COL),]
   max_size <- max(c(dc$ROW,dc$COL))
   dc <- dc[,c("FINAL","ROW","COL")]

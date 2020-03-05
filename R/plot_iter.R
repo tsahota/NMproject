@@ -5,7 +5,12 @@
 #' @param skip numeric (default 0). how many iterations to skip when plotting
 #' @param yvar character (default = "OBJ"). Name of variable/parameter to display
 #' @export
+
 plot_iter_data <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
+  UseMethod("plot_iter_data")
+}
+
+plot_iter_data.default <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
 
   if(!requireNamespace("reshape2", quietly = TRUE))
     stop("reshape2 needed for this function to work. Please install it.",

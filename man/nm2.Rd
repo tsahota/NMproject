@@ -2,33 +2,40 @@
 % Please edit documentation in R/NMprojectExtra.R
 \name{nm2}
 \alias{nm2}
-\title{Create a new nm object}
+\title{Create core NM object}
 \usage{
-nm2(run_id = as.character(NA), prev_run_id = as.character(NA),
-  ctl_path = file.path(getOption("models.dir"), "run{run_id}.mod"),
-  type = "execute", run_dir = "{run_id}", results_dir = "Results")
+nm2(run_id = NA_character_, run_in = getOption("models.dir"),
+  parent_run_id = NA_character_, parent_run_in = NA_character_,
+  ctl_name = "run{run_id}.mod", type = "execute",
+  run_dir = "{run_id}_{version}", results_dir = "Results",
+  output_location = "{run_dir}/NM_run1/psn.lst")
 }
 \arguments{
 \item{run_id}{character vector. Run identifier}
 
-\item{prev_run_id}{character vector (optional). Run identifier of previous run}
+\item{run_in}{character vector. ctl file and run location}
 
-\item{ctl_path}{character. Path to control file}
+\item{parent_run_id}{character vector (optional). Run identifier of previous run}
+
+\item{parent_run_in}{character vector (optional). Run location of previous run}
+
+\item{ctl_name}{character. Name of control file}
 
 \item{type}{character (default = "execute").  Type of run to run}
 
-\item{run_dir}{character (default = {run_id}).  Subdirectory where PsN wll run NONMEM}
+\item{run_dir}{character (default = "{run_id}").  Subdirectory where PsN wll run NONMEM}
 
 \item{results_dir}{character (default = "Results").
 Directory to store results of this run}
+
+\item{output_location}{character (default = "{run_dir}/NM_run1/psn.lst") expected location of lst file}
 }
 \value{
 An object of class nm_list.  Object is concatenatable.
    Length of object corresponds to length of run_id
 }
 \description{
-Experimental new nm object for v0.5 interface.  Not compatible with previous system.
-  The basic object this package centres around.  Most package functions act on this object.
+Create core NM object
 }
 \examples{
 \dontrun{

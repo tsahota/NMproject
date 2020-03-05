@@ -2,39 +2,39 @@ if(0){
   
   ## use case
   
-  m0 <- nm2() 
-  m0
-  cmd(m0)  ## NA
-  run_id(m0)  ## "m0"
-  run_in(m0)
-  run_dir(m0)
-  type(m0)
-  ctl(m0)
-  target(m0)
-
-  db <- nm_db$new("pk.RDS")
-    
+  # m0 <- nm2() ## shouldn't this be length 0? what is the use case for length 0 objects
+  # m0
+  # cmd(m0)  ## NA
+  # run_id(m0)
+  # run_in(m0)
+  # run_dir(m0)
+  # type(m0)
+  # ctl(m0)
+  # target(m0)
+  
+  #db <- nm_db$new("pk.RDS")
+  
   m1 <- nm2(run_id = "m1")
-  db$register(m1)
-  m1 <- m1 %>% cmd("qpsn -t 100 -c auto -- execute run{run_id}.mod -dir={run_dir}")
+  #db$register(m1)
+  m1 <- m1 %>% cmd("qpsn -t 100 -c auto -- execute {ctl_name} -dir={run_dir}")
   m1 <- m1 %>% ctl("tests/testthat/testfiles/Models/run1.mod")
-  db$refresh()
+  #db$refresh()
   
-  db$save()
+  #db$save()
   
-  rm(m1)
-  rm(db)
-  exists("m1")  ## FALSE
-  exists("db")  ## FALSE
-  db <- load_db()
-  db$repopulate()
-  exists("m1")  ## TRUE
-  exists("db")  ## TRUE
+  # rm(m1)
+  # rm(db)
+  # exists("m1")  ## FALSE
+  # exists("db")  ## FALSE
+  # db <- load_db("pk.RDS")
+  # db$repopulate()
+  # exists("m1")  ## TRUE
+  # exists("db")  ## TRUE
   
   ## following should be via shiny
   #m1 <- m1 %>% ctl("/projects/qcp/QCP_MODELING/ONC/azd6094/poppk_20181203_pk-eff-ae-interim3/Models/runm2.mod")
-
-
+  
+  
   
   ## equivalent of old code
   # m1 <- nm("qpsn -t 100 -c auto -- execute runm1.mod -dir=m1")
@@ -42,7 +42,7 @@ if(0){
   # 
   # m2 <- nm("qpsn -t 100 -c auto -- execute runm2.mod -dir=m2")
   # run_nm(m2)
-
+  
   ## equivalent in new code
   # m1 <- nm(run_id = "m1") %>%
   #   cmd("qpsn -t 100 -c auto -- execute run{run_id}.mod -dir={run_dir}")
@@ -54,23 +54,27 @@ if(0){
   ## always specify data_path, control file, assume ctl is out of date.
   ##  but if there is no data_path, ctl shouldn't update data_path.
   
-    
+  ctl_name(m1)
+  m1 %>% glue_fields()
+  m1 %>% ctl_name("runm1.mod") %>% glue_fields()
+  m1 %>% ctl_name("runm1.mod") %>% child(run_id = "m2")
+  
   m2 <- m1 %>% child(run_id = "m2")
-  db$register(m2)
+  #db$register(m2)
   
   cmd(m2)
   ctl_path(m2)
   m2 %>% dollar("TABLE")
   text(m2)
   parent_run_id(m2)
-
+  
   db$refresh()
   m2 %>% parent(db)
   
   
   
   m2boot <- m2 %>% child(type = "bootstrap") %>%
-    cmd("qpsn -t 100 -c auto -- {type} --samples=50 run{run_id}.mod -dir={run_id}")
+    cmd("qpsn -t 100 -c auto -- {type} run{run_id}.mod -samples=50 -dir={run_id}")
   
   ## target certain aspects of the control stream in an intermediate step
   
@@ -90,8 +94,8 @@ if(0){
   m2 %>% dollar("$PK")
   
   m2 %>% target("$PK") %>% text(c("",
-                                "TVCL = THETA(1)",
-                                "blah de blah")) %>% dollar("PK") ## works
+                                  "TVCL = THETA(1)",
+                                  "blah de blah")) %>% dollar("PK") ## works
   
   m2 %>% target("$PK") %>% text("
                                 TVCL = THETA(1)
@@ -102,11 +106,11 @@ if(0){
   
   m2 %>% ignore("TAD>30, EXCL>0") %>% dollar("$DATA") 
   m2 %>% ignore("TAD>30, EXCL>0") %>% ignore()
-  m2 %>% delete_dollar("$PK") %>% ctl
+  m2 %>% delete_dollar("$PK") %>% text
   
-  m2 %>% target("$PK") %>% gsub_ctl("KA", "TLEKSJSFL")
+  m2 %>% target("$PK") %>% gsub_ctl("KA", "TLEKSJSFL") %>% dollar("PK")
   
-  m2 %>% new_dollar("$MODEL", "sdflksjf", after_dollar = "$SUB")
+  m2 %>% new_dollar("$MODEL", "sdflksjf", after_dollar = "$SUB") %>% text()
   
   ## following requires separate SUBROUTINES not to be lumped
   m2 %>% target("$EST", contains = "IMP\\b", nth = 2) %>% uncomment()
@@ -127,6 +131,8 @@ if(0){
   advan(m2)
   trans(m2)
   
+  #m2old <- nm(cmd(m2))
+  
   m3 <- m2 %>% child(run_id = "m3") %>%
     subroutine(advan = 4, trans = 1)
   db$register(m3)
@@ -145,11 +151,13 @@ if(0){
   d$m <- d$m %>% subroutine(advan = d$advan, trans = d$trans)
   d$m <- d$m %>% ctl_path("Models/m2_adtrans/run{run_id}.mod")
   d$m[d$advan %in% 2] <- d$m[d$advan %in% 2] %>%
-    cmd("qpsn -t 59 -c auto -- execute run{run_id}.mod -dir={run_id}")
-  
+    cmd("qpsn -t 59 -c auto -- execute {ctl_name} -dir={run_id}")
   
   nm_tran(d$m)
   d$m <- d$m %>% run_nm()
+  
+  is_finished(d$m)
+  wait_for_finished(d$m)
   
   rr(d$m)
   
@@ -160,9 +168,17 @@ if(0){
   ds$BIC <- BIC(d$m)
   ds$cond_num <- cond_num(ds$m)
   
-  d$m <- d$m %>% update_parameters %>% run_nm
+  ds %>% arrange(AIC) %>% 
+    select(run_id, ofv:cond_num)
   
-
+  a4t3 <- ds$m[advan(ds$m)%in%4 & trans(ds$m)%in%3]
+  plot_iter(a4t3)
+  coef(a4t3)
+  read_ext(a4t3)
+  a4t3 %>% dollar("THETA")
+  
+  #d$m <- d$m %>% update_parameters %>% run_nm
+  
   library(dplyr)
   
   d <- dplyr::tibble(cores = 1:36) %>%
@@ -171,12 +187,11 @@ if(0){
            m = m %>% cmd("qpsn -t 100 -c {run_id} -- execute run{run_id}.mod -dir={run_dir}"))
   db$register(d$m)
   
-  
   m2cores <- m2 %>% 
     child(run_id=1:36) %>%
     ctl_path("Models/m2_coretest/run{run_id}.mod") %>%  ## run in subdirectory to be clean & tidy
     cmd("qpsn -t 100 -c {run_id} -- execute run{run_id}.mod -dir={run_dir}")
-    
+  
   d$m <- d$m %>% data_path(data_path(m2))
   d$m <- d$m %>% ctl_path("Models/m2_coretest/run{run_id}.mod")
   d$m <- d$m %>% cmd("qpsn -t 100 -c {run_id} -- execute run{run_id}.mod -dir={run_dir}")
@@ -214,16 +229,6 @@ if(0){
     str_replace("TVV", "TVV2") %s>%
     str_to_lower() %>% text
   
-  
-  m2 %>% advan()
-  m2 %>% trans()
-  
-  m2 %>% model_type(advan = 4, trans = 4)
-  
-  
-  
-  
-  
   ## need interface for lower level parameter changes
   
   ## dollar_theta could refer to
@@ -237,7 +242,6 @@ if(0){
   ##  Getting final ests for a simulation
   ##    need to get vector of thetas and a FULL omega block
   ##    look into what mrgsolve needs
-  
   
   ## use data.frame instead?  fixed_err_nm2r_extra?
   ## would need convenience functions to interact with it.
@@ -264,8 +268,6 @@ if(0){
   m2 %>% create_omega_block(parameters = c("CL", "V", "K"))
   ## default = all
   
-  
-  
   m2 %>% remove_mixed_effect(name = "V")
   ## may have reverse dependencies (e.g. S2 = V, K12 = CL/V)
   ## do not try to fix this - this requires user decision making
@@ -283,7 +285,6 @@ if(0){
   
   m2 %>% dollar_omega(dollar_omega(m0))  ## sets 
   m2 %>% dollar_omega(parameter = "CL", init = 0.1)
-  
   
   iomega <- raw_omega_init(m1)
   iomega$init[3] <- 0.2
