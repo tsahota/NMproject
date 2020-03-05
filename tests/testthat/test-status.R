@@ -26,50 +26,16 @@ test_that("status",{
 
   m1 <- nm("qpsn -m -c auto -t 3000 -- execute run1.mod -dir=1")
 
-  expect_error(run_nm(m1)) ## already run so this should fail
-  expect_output(print(m1),"List of") ## does object print using str
-
-  wait_default(FALSE)
-  expect_false(getOption("wait"))
-  wait_default(TRUE)
-  expect_true(getOption("wait"))
-
-  ## performance test
-  start_time <- Sys.time()
-  wait_for_finished(m1)
-  too_long <- difftime(Sys.time(), start_time, units = "secs") > 10
-  expect_true(!too_long)
-
-  st <- status(m1, simple = FALSE)
-  expect_true(inherits(st,"list"))
-
-  sum0 <- run_summary(m1)
-  expect_true(inherits(sum0,"data.frame"))
-
-  rt <- run_table()
-  expect_true(inherits(rt,"data.frame"))
+  st <- status(m1)
+  #expect_true(inherits(st,"list"))
 
   d <- check_session(check_rstudio = FALSE)
   expect_true(inherits(d,"data.frame"))
 
-  r <- extract_nm(1)
-  expect_true(inherits(r,"nmexecute"))
 
-
-  res <- run_record0(m1,coef.func = coef.nm)
+  res <- rr(m1)
   expect_true(inherits(res,"data.frame"))
   expect_true(nrow(res)>1)
-  res <- run_record(m1)
-  expect_true(inherits(res,"data.frame"))
-  expect_true(nrow(res)>1)
-
-  expect_true(file.exists(m1$run_dir))
-  clean_run(m1)
-  expect_true(!file.exists(m1$run_dir))
-
-  get_PMX_code_library("testCodeLibrary",
-                       config_file="test_config.R")
-
-  expect_true(length(readLines("test_config.R"))>0)
+  
 
 })
