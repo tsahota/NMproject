@@ -32,12 +32,13 @@ Suggests:
     xpose4,
     knitr,
     rmarkdown
-Collate:
+Collate: 
     'NMproject.R'
     'nm.R'
     'ctl_handling.R'
     'utilsExtra.R'
     'NMprojectExtra.R'
+    'NMprojectExtraDB.R'
     'NMprojectExtraTest.R'
     'dollar_data.R'
     'insert_addin.R'
@@ -46,6 +47,7 @@ Collate:
     'read.table.nm.R'
     'read_ext.R'
     'run_record.R'
+    'sim_reestExtra.R'
     'status.R'
     'utils.R'
     'zzz.R'

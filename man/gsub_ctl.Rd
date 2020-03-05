@@ -4,7 +4,7 @@
 \alias{gsub_ctl}
 \title{gsub for ctl file}
 \usage{
-gsub_ctl(ctl, ..., dollar = NA)
+gsub_ctl(ctl, ..., dollar = NA_character_)
 }
 \arguments{
 \item{ctl}{object coercible into ctl_character}

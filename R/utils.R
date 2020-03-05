@@ -6,8 +6,18 @@
 #' @export
 
 relative_path <- function (path, relative_path){
+  
+  file.exists_path <- file.exists(path)
+  file.exists_relative_path <- file.exists(relative_path)
+  
+  if(!file.exists_path) path <- file.path(getwd(), path)  ## if doesn't exist assume relative path
+  if(!file.exists_relative_path) relative_path <- file.path(getwd(), relative_path)
+  
   mainPieces <- strsplit(normalizePath(path, mustWork = FALSE), .Platform$file.sep, fixed=TRUE)[[1]]
   refPieces <- strsplit(normalizePath(relative_path, mustWork = FALSE), .Platform$file.sep, fixed=TRUE)[[1]]
+  
+  #if(!file.exists_path) unlink(path)
+  #if(!file.exists_relative_path) unlink(relative_path)
   
   shorterLength <- min(length(mainPieces), length(refPieces))
   

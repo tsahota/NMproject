@@ -70,7 +70,10 @@ m1vpc <- nm("m1boot", parent = m1) %>%
 
 ## need database for run management.
 
-
+## better detection of completed runs
+## https://stackoverflow.com/questions/23456170/get-the-number-of-lines-in-a-text-file-using-r
+## possibly useful
+## https://www.rdocumentation.org/packages/R.utils/versions/2.8.0/topics/countLines
 
 
 ###############################
@@ -324,6 +327,27 @@ post(m1, gof_xpose)  ## will write to db
 ## import_project()
 ## import_code()
 ## import_file() - straight foward copy - this is just file.copy
+
+# "/project/qcp/..../azd6094/poppksdfklkj/DerivedData/data.csv"
+# "/project/qcp/..../azd6094/poppksdfklkj/DerivedData/data2.csv"
+#->
+#  detect analysis directory "/project/qcp/..../azd6094/poppksdfklkj"
+#   "DerivedData/data.csv"
+#   "DerivedData/data2.csv"
+
+file_mapping <- function(files){
+  d <- data.frame(files, analysis_dir)
+  dest_path <- sapply(seq_len(nrow(d)), function(i) relative_path(d$files[i], d$analysis_dir[i]))
+  tibble::tibble(from = files, to = dest_path)
+}
+
+
+import_file <- function(files, analysis_dir, overwrite){
+  d <- data.frame(files, analysis_dir)
+  dest_path <- sapply(seq_len(nrow(d)), function(i) relative_path(d$files[i], d$analysis_dir[i]))
+  file.copy(files, dest_path, overwrite = overwrite)
+}
+
 
 ##      find_code("script.R") %>% import_code
 

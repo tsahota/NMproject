@@ -4,14 +4,16 @@
 \alias{ctl}
 \title{set/get control file object}
 \usage{
-ctl(m, ctl_ob, update_ctl = TRUE, ...)
+ctl(m, ctl_ob, update_numbering = TRUE, update_dollar_data = TRUE, ...)
 }
 \arguments{
 \item{m}{nm object}
 
 \item{ctl_ob}{optional path to control file}
 
-\item{update_ctl}{logical. Should table numbers and author fields be updated}
+\item{update_numbering}{logical. Should table numbers and author fields be updated}
+
+\item{update_dollar_data}{logical. Should $DATA in control file be updated}
 
 \item{...}{additional arguments}
 }

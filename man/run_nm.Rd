@@ -7,7 +7,8 @@
 run_nm(r, overwrite = getOption("run_overwrite"), delete_dir = c(NA, TRUE,
   FALSE), wait = getOption("wait"), update_db = TRUE,
   ignore.stdout = TRUE, ignore.stderr = TRUE, initial_timeout = NA,
-  quiet = getOption("quiet_run"), intern = getOption("intern"))
+  quiet = getOption("quiet_run"), intern = getOption("intern"),
+  force = FALSE)
 }
 \arguments{
 \item{r}{objects of class nm/or list of objects class nm/or data.frame with column of nm objects}
@@ -32,6 +33,8 @@ time period to give up on a run if directory hasn't been created.}
 \item{quiet}{logical (default=FALSE). should system_nm output be piped to screen}
 
 \item{intern}{logical. intern arg to be passed to system}
+
+\item{force}{logical (default = FALSE).  Force run even results unchanged}
 }
 \value{
 If only one object of class nm was specified, silently returns object.

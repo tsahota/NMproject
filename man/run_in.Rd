@@ -4,10 +4,12 @@
 \alias{run_in}
 \title{Get run in}
 \usage{
-run_in(x)
+run_in(x, text)
 }
 \arguments{
 \item{x}{character or nm or ctl_list/ctl_character}
+
+\item{text}{optional character to set directory to run in}
 }
 \description{
 Get run in

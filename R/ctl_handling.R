@@ -4,17 +4,19 @@ rem_dollars <- function(s) gsub("\\s*\\$\\S*\\s*","",s)
 rem_comment <- function(s,char=";") gsub(paste0("^([^",char,"]*)",char,"*.*$"),"\\1",s)
 get_comment <- function(s,char=";") gsub(paste0("^[^",char,"]*",char,"*(.*)$"),"\\1",s)
 
-setup_dollar <- function(x,type){
+setup_dollar <- function(x, type, add_dollar_text = TRUE){
   ## if $TYPE isn't in x, add it
-  if(!grepl(paste0("\\s*\\",type),x[1])){
-    if(grepl("THETA|OMEGA|SIGMA|PK|PRED|ERROR|DES", type)){
-      x <- c(type, x)
-    } else {
-      x[1] <- paste(type,x[1]) 
-    }
+  if(add_dollar_text){
+    if(!grepl(paste0("\\s*\\",type),x[1], ignore.case = TRUE)){
+      if(grepl("THETA|OMEGA|SIGMA|PK|PRED|ERROR|DES", type)){
+        x <- c(type, x)
+      } else {
+        x[1] <- paste(type,x[1]) 
+      }
+    }    
   }
   names(x) <- NULL
-  class(x) <- paste0("nm.",tolower(gsub("^\\$","",type)))
+  class(x) <- c(paste0("nm.",tolower(gsub("^\\$","",type))),"nm_subroutine")
   x
 }
 
@@ -191,25 +193,26 @@ ctl_nm2r <- function(ctl){
     tmp <- ctl[start:finish]
     type <- dol.type(tmp)
     if(is.na(type)) type <- paste0("UNKNOWN",i)
-    class(tmp) <- paste0("nm.",tolower(type))
+    class(tmp) <- c(paste0("nm.",tolower(gsub("^\\$","",type))),"nm_subroutine")
+    #class(tmp) <- c(paste0("nm.",tolower(type)),"nm_subroutine")
     ctl2[[i]] <- tmp
   }
   ctl <- ctl2
 
-  x <- sapply(ctl,function(s)class(s))
+  x <- lapply(ctl,function(s) class(s))
 
   ## find consecutive statements and combine them
   ## can use a for loop
 
   for(i in rev(seq_along(x))){
     if(i==1) break
-    if(x[i]==x[i-1]) {
-      ctl[[i-1]] <- c(ctl[[i-1]],ctl[[i]])
+    if(identical(x[i],x[i-1])) {
+      ctl[[i-1]] <- c(ctl[[i-1]], ctl[[i]])
       class(ctl[[i-1]]) <- class(ctl[[i]])
       ctl[[i]] <- NULL
     }
   }
-  names(ctl) <- sapply(ctl,function(s)gsub("NM\\.","",toupper(class(s))))
+  names(ctl) <- sapply(ctl,function(s) gsub("NM\\.","",toupper(class(s)[1])))
   class(ctl) <- "ctl_list"
   ctl
 }
@@ -231,9 +234,9 @@ ctl_r2nm <- function(x) {
 theta_nm2r <- function(x){
   x <- rem_dollars(x)
   x <- gsub("FIX","",x) ## ignore FIX for now
-  x <- x[!grepl("^\\s*$",x)]
-  x <- gsub("\\t"," ",x)
-  x <- x[!grepl("^\\s*;.*",x)]
+  x <- x[!grepl("^\\s*$",x)] ## remove $THETA
+  x <- gsub("\\t"," ",x)     ## change tabs to spaces
+  x <- x[!grepl("^\\s*;.*",x)]  ## remove comment only rows
   x0 <- x
   x <- rem_comment(x,";")
   x <- paste(x,collapse = " ")
@@ -272,14 +275,14 @@ theta_nm2r <- function(x){
   }
 
   tmp <- strsplit(comments,";")
-  x$Name <- sapply(tmp,"[",1)
-  x$Name <- rem_trailing_spaces(x$Name)
-  x$Unit <- sapply(tmp,"[",2)
-  x$Unit <- rem_trailing_spaces(x$Unit)
+  x$name <- sapply(tmp,"[",1)
+  x$name <- rem_trailing_spaces(x$name)
+  x$unit <- sapply(tmp,"[",2)
+  x$unit <- rem_trailing_spaces(x$unit)
   x$trans <- sapply(tmp,"[",3)
   x$trans <- rem_trailing_spaces(x$trans)
   x$trans[is.na(x$trans) & x$lower %in% 0] <- "RATIO"
-  x$Parameter <- paste0("THETA",x$N)
+  x$parameter <- paste0("THETA",x$N)
   x
 }
 
@@ -297,12 +300,12 @@ rem_trailing_spaces <- function(x){
 
 theta_r2nm <- function(x){
   x0 <- x
-  x0$Name[is.na(x0$Name)] <- paste0("THETA",x0$N[is.na(x0$Name)])
-  x0$Unit[!is.na(x0$Unit)] <- paste(";",x0$Unit[!is.na(x0$Unit)])
-  x0$Unit[is.na(x0$Unit)] <- ""
+  x0$name[is.na(x0$name)] <- paste0("THETA",x0$N[is.na(x0$name)])
+  x0$unit[!is.na(x0$unit)] <- paste(";",x0$unit[!is.na(x0$unit)])
+  x0$unit[is.na(x0$unit)] <- ""
   x0$trans[!is.na(x0$trans)] <- paste(";",x0$trans[!is.na(x0$trans)])
   x0$trans[is.na(x0$trans)] <- ""
-  x0$COM <- paste(x0$Name,x0$Unit,x0$trans)
+  x0$COM <- paste(x0$name,x0$unit,x0$trans)
   x0$COM <- rem_trailing_spaces(x0$COM)
   x <- by(x,x$N,function(d){
     if(!is.na(d$lower)) paste0("(",d$lower,",",d$init,")") else d$init
@@ -317,6 +320,7 @@ theta_r2nm <- function(x){
 #' @param ctl object coercible to ctl_list
 #' @param ... named replacement argument of class character
 #' @param which_dollar (default = 1) which subroutine if multiple matches
+#' @param append logical (default = FALSE).  Should results be appended to subroutine
 #' @examples
 #' \dontrun{
 #' m1 %>% update_dollar(THETA=c("1             	; KA ; h-1 ; LOG
@@ -325,8 +329,12 @@ theta_r2nm <- function(x){
 #'        write_ctl()
 #' }
 #' @export
+update_dollar <- function(ctl,..., which_dollar = 1, append = FALSE){
+  UseMethod("update_dollar")
+}
 
-update_dollar <- function(ctl,..., which_dollar = 1){
+#' @export
+update_dollar.default <- function(ctl,..., which_dollar = 1, append = FALSE){
   ctl <- ctl_list(ctl)
   arg <- list(...)
   if(length(arg) != 1) stop("need argument")
@@ -339,15 +347,21 @@ update_dollar <- function(ctl,..., which_dollar = 1){
   dollar_match <- dollar_matches[which_dollar]
   dollar_name <- names(ctl)[dollar_match]
   
+  if(append) replace <- c(ctl[[dollar_name]], replace)
+  
   ctl[[dollar_name]] <- setup_dollar(replace,paste0("$",dollar_name))
   ctl
 }
+
 
 #' Get parameter information
 #'
 #' @param ctl character. Path to control file
 #' @export
 param_info <- function(ctl){
+  UseMethod("param_info")
+}
+param_info.default <- function(ctl){
   ctl <- ctl_list(ctl)
   if("THETA" %in% names(ctl)) return(theta_nm2r(ctl$THETA)) else
     return(data.frame())
@@ -364,17 +378,17 @@ update_parameters0 <- function(ctl,coef_from,type = c("THETA","OMEGA","SIGMA")){
   comments[!grepl("^\\s*$",comments)] <- paste0(";",comments[!grepl("^\\s*$",comments)])
 
   final_params <- coef_from
-  final_params <- final_params[,c("Parameter", "FINAL")]
-  final_params <- final_params[grepl(type,final_params$Parameter),]
+  final_params <- final_params[,c("parameter", "FINAL")]
+  final_params <- final_params[grepl(type,final_params$parameter),]
 
   if(type %in% c("OMEGA","SIGMA")){
-    final_params$ROW <- as.numeric(gsub(paste0(type,"\\.([0-9]+)\\..*"),"\\1",final_params$Parameter))
-    final_params$COL <- as.numeric(gsub(paste0(type,"\\.[0-9]+\\.([0-9]+).*"),"\\1",final_params$Parameter))
+    final_params$ROW <- as.numeric(gsub(paste0(type,"\\.([0-9]+)\\..*"),"\\1",final_params$parameter))
+    final_params$COL <- as.numeric(gsub(paste0(type,"\\.[0-9]+\\.([0-9]+).*"),"\\1",final_params$parameter))
     final_params <- final_params[order(final_params$ROW, final_params$COL), ]
   }
 
   if(type %in% c("THETA")){
-    final_params$ROW <- as.numeric(gsub(paste0(type,"([0-9]+)"),"\\1",final_params$Parameter))
+    final_params$ROW <- as.numeric(gsub(paste0(type,"([0-9]+)"),"\\1",final_params$parameter))
     final_params <- final_params[order(final_params$ROW), ]
   }
 
@@ -438,6 +452,11 @@ update_parameters0 <- function(ctl,coef_from,type = c("THETA","OMEGA","SIGMA")){
 #' @export
 
 update_parameters <- function(ctl, from){
+  UseMethod("update_parameters")
+}
+
+#' @export
+update_parameters.default <- function(ctl, from){
   if(is_single_na(ctl)) return(NA)
   if(missing(from) & inherits(ctl, "nmexecute")) from <- ctl
   ctl_lines <- ctl_list(ctl)
@@ -455,7 +474,12 @@ update_parameters <- function(ctl, from){
 #' @param dollar character name of subroutine
 #' @export
 
-gsub_ctl <- function(ctl, ..., dollar = NA){
+gsub_ctl <- function(ctl, ..., dollar = NA_character_){
+  UseMethod("gsub_ctl")
+}
+
+#' @export
+gsub_ctl.default <- function(ctl, ..., dollar = NA_character_){
   if(is.na(dollar)){
     ctl <- ctl_character(ctl)
     ctl <- gsub(..., x = ctl)    
@@ -544,6 +568,14 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
                     time_varying, additional_state_text, id_var = "ID",
                     force = FALSE, force_TV_var = FALSE, 
                     init, lower, upper){
+  UseMethod("add_cov")
+}
+
+#' @export
+add_cov.default <- function(ctl, param, cov, state = 2, continuous = TRUE,
+                    time_varying, additional_state_text, id_var = "ID",
+                    force = FALSE, force_TV_var = FALSE, 
+                    init, lower, upper){
 
   ctl <- ctl_list(ctl)
   param <- as.character(param)
@@ -625,7 +657,7 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
                 ctl[[dol_PK]][-1])
 
     tv_definition_row <- which(grepl(paste0("^\\s*",tvparam,"\\s*="), rem_comment(ctl[[dol_PK]])))
-    dont_count <- which(grepl(paste0("^\\s*",tvparam,"\\s*=.*",tvparam), rem_comment(ctl[[dol_PK]])))
+    dont_count <- which(grepl(paste0("^\\s*",tvparam,"\\s*=.*\\b",tvparam), rem_comment(ctl[[dol_PK]])))
     tv_definition_row <- setdiff(tv_definition_row, dont_count)
     if(length(tv_definition_row) > 1) stop("can't find unique TV parameter definition in $PK")
     if(length(tv_definition_row) == 0) stop("can't find TV parameter definition in $PK")
@@ -712,6 +744,12 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
 
 remove_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
                        time_varying, additional_state_text, id_var = "ID"){
+  UseMethod("remove_cov")
+}
+
+#' @export
+remove_cov.default <- function(ctl, param, cov, state = 2, continuous = TRUE,
+                               time_varying, additional_state_text, id_var = "ID"){
   
   ctl <- ctl_list(ctl)
 
@@ -955,13 +993,13 @@ ofv.default <- function(r){
 ofv.nm <- function(r){
   dc <- try(coef_nm(r, trans = FALSE), silent = TRUE)
   if(inherits(dc, "try-error")) return(NA)
-  dc$FINAL[dc$Parameter %in% "OBJ"]
+  dc$FINAL[dc$parameter %in% "OBJ"]
 }
 
 #' @export
 ofv.nmcoef <- function(r){
   if(is_empty_nmcoef(r)) return(NA)
-  r$FINAL[r$Parameter %in% "OBJ"]
+  r$FINAL[r$parameter %in% "OBJ"]
 }
 
 #' @export
@@ -1154,9 +1192,10 @@ change_seed <- function(ctl,new_seed){
 #' @param ... additional arguments for read.csv
 #' @export
 get_data <- function(r, filter = FALSE, ...){
+  .Deprecated("input_data")
   ## doesn't rely on data base or r object contents
   if(inherits(r, "nm")) {
-    file_name <- file.path(r$run_in,get_data_name(ctl_character(r)))
+    file_name <- file.path(run_in(r), get_data_name(ctl_character(r)))
   } else {
     from <- dirname(attr(r, "file_name"))
     file_name <- file.path(from, get_data_name(ctl_character(r)))

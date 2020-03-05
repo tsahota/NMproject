@@ -24,13 +24,16 @@ Get and set path to control file.
 \dontrun{
 
 m0 <- nm2(run_id = "m0")
-ctl_path(m0)
-m0 <- m0 \%>\% ctl_path("Models/run_m0.mod")
+#ctl_path(m0) ## deleteme
+#m0 <- m0 \%>\% ctl_path("Models/run_m0.mod") ## deleteme
+ctl_name(m0)
+m0 <- m0 \%>\% ctl_name("run{run_id}.mod")
 m0
-## warning: this has make the run identifier in old xpose4 "_m0" not "m0"!
+## warning: this has make the run identifier in old xpose4 "_m0" not "m0"! ## deleteme
 
 m1 <- m0 \%>\% run_id("m1")
 ctl_path(m1)  ## run_id number has updated but ctl_path hasn't changed
+#ctl_name(m1)  ## run_id number has updated but ctl_path hasn't changed
 
 ## To avoid this use {run_id}
 m0 <- m0 \%>\% ctl_path("Models/run_{run_id}.mod")

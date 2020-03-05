@@ -6,6 +6,7 @@ ext2coef <- function(extout,file_name){
          call. = FALSE)
 
   d <- extout
+  if(nrow(d) == 0) return(data.frame())
 
   has_final_est <- "FINAL" %in% d$TYPE
   if(has_final_est){
@@ -23,9 +24,9 @@ ext2coef <- function(extout,file_name){
 
   par.names <- names(d)[match("THETA1",names(d)):match("OBJ",names(d))]
 
-  d <- reshape2::melt(data = d, variable.name = "Parameter",
+  d <- reshape2::melt(data = d, variable.name = "parameter",
                       measure.vars = par.names)
-  if(!"Parameter" %in% names(d)) stop("melt has failed - could be due to reshape being loaded. reshape can interfere with reshape2")
+  if(!"parameter" %in% names(d)) stop("melt has failed - could be due to reshape being loaded. reshape can interfere with reshape2")
 
 
   d <- reshape2::dcast(data = d,
@@ -36,7 +37,7 @@ ext2coef <- function(extout,file_name){
   ## messy hard coding - consider refactoring if need more than just eigenvalues
   if(has_final_est & length(cond_num) > 0){
     dlast <- d[nrow(d),]
-    dlast$Parameter <- "CONDNUM"
+    dlast$parameter <- "CONDNUM"
     dlast$FINAL <- cond_num
     dlast$SE <- 0
 
@@ -48,49 +49,49 @@ ext2coef <- function(extout,file_name){
   d <- d[order(d$EST.NO,decreasing = TRUE),]
   d$file <- file_name
 
-  is.diag.omega <- grepl("OMEGA.([0-9]+\\.)\\1",d$Parameter)
-  is.omega <- grepl("OMEGA.([0-9]+\\.)+",d$Parameter)
+  is.diag.omega <- grepl("OMEGA.([0-9]+\\.)\\1",d$parameter)
+  is.omega <- grepl("OMEGA.([0-9]+\\.)+",d$parameter)
   is.off.diag.omega <- is.omega & !is.diag.omega
   d <- d[!(is.off.diag.omega & d$FINAL == 0), ] ## get rid of off diag 0s
-  is.diag.sigma <- grepl("SIGMA.([0-9]+\\.)\\1",d$Parameter)
-  is.sigma <- grepl("SIGMA.([0-9]+\\.)+",d$Parameter)
+  is.diag.sigma <- grepl("SIGMA.([0-9]+\\.)\\1",d$parameter)
+  is.sigma <- grepl("SIGMA.([0-9]+\\.)+",d$parameter)
   is.off.diag.sigma <- is.sigma & !is.diag.sigma
   d <- d[!(is.off.diag.sigma & d$FINAL == 0), ] ## get rid of off diag 0s
 
 
-  is.diag.omega <- grepl("OMEGA.([0-9]+\\.)\\1",d$Parameter) ## redefine
-  is.omega <- grepl("OMEGA.([0-9]+\\.)+",d$Parameter) ## redefine
+  is.diag.omega <- grepl("OMEGA.([0-9]+\\.)\\1",d$parameter) ## redefine
+  is.omega <- grepl("OMEGA.([0-9]+\\.)+",d$parameter) ## redefine
   is.off.diag.omega <- is.omega & !is.diag.omega  ## redefine
-  is.diag.sigma <- grepl("SIGMA.([0-9]+\\.)\\1",d$Parameter) ## redefine
-  is.sigma <- grepl("SIGMA.([0-9]+\\.)+",d$Parameter) ## redefine
+  is.diag.sigma <- grepl("SIGMA.([0-9]+\\.)\\1",d$parameter) ## redefine
+  is.sigma <- grepl("SIGMA.([0-9]+\\.)+",d$parameter) ## redefine
   is.off.diag.sigma <- is.sigma & !is.diag.sigma ## redefine
 
   ## sort so that THETAs first, then diagonal OMEGAs, then off diag, then SIGMA, then OBJ
 
-  par.char <- as.character(d$Parameter)
+  par.char <- as.character(d$parameter)
   par.order <- c(sort(par.char[grepl("THETA",par.char)]),
                  sort(par.char[is.diag.omega]),
                  sort(par.char[is.off.diag.omega]),
                  sort(par.char[grepl("SIGMA",par.char)]),
                  "OBJ",
                  sort(par.char[grepl("CONDNUM",par.char)]))
-  if(!identical(sort(par.order),sort(as.character(d$Parameter)))) stop("Bug in code. Debug.")
-  d$Parameter <- factor(d$Parameter,levels=par.order)
-  d$Type <- NA
-  d$Type[grepl("THETA",par.char)] <- "THETA"
-  d$Type[is.diag.omega] <- "OMEGAVAR"
-  d$Type[is.off.diag.omega] <- "OMEGACOV"
-  d$Type[grepl("SIGMA",par.char)] <- "SIGMA"
-  d$Type[grepl("OBJ",par.char)] <- "OBJ"
+  if(!identical(sort(par.order),sort(as.character(d$parameter)))) stop("Bug in code. Debug.")
+  d$parameter <- factor(d$parameter,levels=par.order)
+  d$type <- NA
+  d$type[grepl("THETA",par.char)] <- "THETA"
+  d$type[is.diag.omega] <- "OMEGAVAR"
+  d$type[is.off.diag.omega] <- "OMEGACOV"
+  d$type[grepl("SIGMA",par.char)] <- "SIGMA"
+  d$type[grepl("OBJ",par.char)] <- "OBJ"
   if(has_final_est){
-    d$Type[grepl("CONDNUM",par.char)] <- "CONDNUM"
-    d$Type <- factor(d$Type,levels=c("THETA","OMEGAVAR","OMEGACOV","SIGMA","OBJ","CONDNUM"))
+    d$type[grepl("CONDNUM",par.char)] <- "CONDNUM"
+    d$type <- factor(d$type,levels=c("THETA","OMEGAVAR","OMEGACOV","SIGMA","OBJ","CONDNUM"))
   } else {
-    d$Type <- factor(d$Type,levels=c("THETA","OMEGAVAR","OMEGACOV","SIGMA","OBJ"))
+    d$type <- factor(d$type,levels=c("THETA","OMEGAVAR","OMEGACOV","SIGMA","OBJ"))
   }
-  d <- d[order(d$Type),]
-  d$Unit <- NA
-  d$SEUnit <- NA
+  d <- d[order(d$type),]
+  d$unit <- NA
+  d$SEunit <- NA
   if(!"SE" %in% names(d)) {
     namesd <- names(d)
     d$SE <- NA
@@ -128,30 +129,30 @@ coef_nm <- function(object,trans,...){
 
   p <- param_info(object)
 
-  p$Parameter <- paste0("THETA",p$N)
+  p$parameter <- paste0("THETA",p$N)
 
-  d0 <- d[,names(d)[!names(d) %in% "Unit"]]
-  d1 <- p[,c("Name","Parameter","Unit","trans")]
+  d0 <- d[,names(d)[!names(d) %in% "unit"]]
+  d1 <- p[,c("name","parameter","unit","trans")]
 
-  d <- merge(d0,d1,all.x = TRUE,by="Parameter")
-  d$Name[is.na(d$Name)] <- as.character(d$Parameter)[is.na(d$Name)]
-  d$Name <- factor(d$Name,levels=d$Name)
-  d$transUnit <- d$Unit
-  d$transSEUnit <- d$SEUnit
+  d <- merge(d0,d1,all.x = TRUE,by="parameter")
+  d$name[is.na(d$name)] <- as.character(d$parameter)[is.na(d$name)]
+  d$name <- factor(d$name,levels=d$name)
+  d$trans_unit <- d$unit
+  d$transSEunit <- d$SEunit
   ## transformations
   d$FINAL.TRANS <- d$FINAL
   d$SE.TRANS <- d$SE
   ## RATIO data
   d$SE.TRANS[d$trans %in% "RATIO"] <- 100*d$SE[d$trans %in% "RATIO"]/d$FINAL[d$trans %in% "RATIO"]
-  d$transSEUnit[d$trans %in% "RATIO"] <- "%"
+  d$transSEunit[d$trans %in% "RATIO"] <- "%"
   ## LOG
   d$FINAL.TRANS[d$trans %in% c("LOG","LOGODDS")] <- exp(d$FINAL[d$trans %in% c("LOG","LOGODDS")])
   d$SE.TRANS[d$trans %in% c("LOG","LOGODDS")] <- 100*sqrt((exp(d$SE[d$trans %in% c("LOG","LOGODDS")]^2)-1))
-  d$transSEUnit[d$trans %in% c("LOG","LOGODDS")] <- "%"
+  d$transSEunit[d$trans %in% c("LOG","LOGODDS")] <- "%"
   ## LOGIT
   if("LOGIT" %in% d$trans){
     d$FINAL.TRANS[d$trans %in% "LOGIT"] <- 100*1/(1+exp(-d$FINAL[d$trans %in% "LOGIT"]))
-    d$transUnit[d$trans %in% "LOGIT"] <- "%"
+    d$transunit[d$trans %in% "LOGIT"] <- "%"
     # delt <- lapply(which(d$trans %in% "LOGIT"),function(i){
     #   par <- c(logit=d$FINAL[i])
     #   separ <- c(logit=d$SE[i])
@@ -161,22 +162,22 @@ coef_nm <- function(object,trans,...){
     # d$SE.TRANS[d$trans %in% "LOGIT"] <- 100*delt$SE
   }
   ## OMEGA
-  d$trans[grepl("OMEGA.([0-9]+\\.)\\1",d$Parameter)] <- "OM"   ## temp code - make an identifyer for OMEGA.X.X
+  d$trans[grepl("OMEGA.([0-9]+\\.)\\1",d$parameter)] <- "OM"   ## temp code - make an identifyer for OMEGA.X.X
   d$SE.TRANS[d$trans %in% "OM"] <- 100*(d$SE[d$trans %in% "OM"]/d$FINAL[d$trans %in% "OM"])/2
   d$FINAL.TRANS[d$trans %in% "OM"] <- 100*sqrt(exp(d$FINAL[d$trans %in% "OM"])-1)
-  d$transUnit[d$trans %in% "OM"] <- "CV%"
-  d$transSEUnit[d$trans %in% "OM"] <- "%"
+  d$trans_unit[d$trans %in% "OM"] <- "CV%"
+  d$transSEunit[d$trans %in% "OM"] <- "%"
   ## COV
-  d$trans[grepl("OMEGA.([0-9]+\\.)+",d$Parameter) & !d$trans %in% "OM"] <- "COV" ## temp code
+  d$trans[grepl("OMEGA.([0-9]+\\.)+",d$parameter) & !d$trans %in% "OM"] <- "COV" ## temp code
   # if("COV" %in% d$trans){
-  #   omx <- gsub("^OMEGA\\.([0-9]+)\\.([0-9]+)\\.","\\1",d$Parameter[d$trans %in% "COV"])
-  #   omy <- gsub("^OMEGA\\.([0-9]+)\\.([0-9]+)\\.","\\2",d$Parameter[d$trans %in% "COV"])
+  #   omx <- gsub("^OMEGA\\.([0-9]+)\\.([0-9]+)\\.","\\1",d$parameter[d$trans %in% "COV"])
+  #   omy <- gsub("^OMEGA\\.([0-9]+)\\.([0-9]+)\\.","\\2",d$parameter[d$trans %in% "COV"])
   #   omx <- paste0("OMEGA.",omx,".",omx,".")
   #   omy <- paste0("OMEGA.",omy,".",omy,".")
-  #   sdx <- sqrt(d$FINAL[match(omx,d$Parameter)])
-  #   sdy <- sqrt(d$FINAL[match(omy,d$Parameter)])
+  #   sdx <- sqrt(d$FINAL[match(omx,d$parameter)])
+  #   sdy <- sqrt(d$FINAL[match(omy,d$parameter)])
   #   d$FINAL.TRANS[d$trans %in% "COV"] <- d$FINAL[d$trans %in% "COV"]/(sdx*sdy)
-  #   d$transUnit[d$trans %in% "COV"] <- "CORR.COEF"
+  #   d$transunit[d$trans %in% "COV"] <- "CORR.COEF"
   #   ## COV[X,Y]/(SD[X]*SD[Y])
   #   ## know SE(COV[X,Y]) and SE[SDX^2] and SE[SDY^2]
   #   ## Need covariance matrix between these though - from .cov file.
@@ -185,8 +186,8 @@ coef_nm <- function(object,trans,...){
   #   dc <- utils::read.table(cov.file,skip=1,header = TRUE)
   #   for(i in seq_along(which(d$trans %in% "COV"))){
   #     ## loop through each COV variable and generate absolute SE
-  #     names.c <- c(omx[i],omy[i],as.character(d$Parameter[d$trans %in% "COV"][i]))
-  #     names.c <- d$Parameter[d$Parameter %in% names.c] ## reorder
+  #     names.c <- c(omx[i],omy[i],as.character(d$parameter[d$trans %in% "COV"][i]))
+  #     names.c <- d$parameter[d$parameter %in% names.c] ## reorder
   #     names.c2 <- gsub("\\.([0-9]+)\\.([0-9]+)\\.","(\\1,\\2)",names.c)
   #
   #     ## same order as names.c - important
@@ -194,8 +195,8 @@ coef_nm <- function(object,trans,...){
   #     rownames(vcov) <- names(vcov)
   #     vcov <- as.matrix(vcov)
   #
-  #     pmean <- d$FINAL[match(names.c,d$Parameter)]  ## may as well recompute FINALs
-  #     names(pmean) <- d$Name[match(names.c,d$Parameter)]
+  #     pmean <- d$FINAL[match(names.c,d$parameter)]  ## may as well recompute FINALs
+  #     names(pmean) <- d$name[match(names.c,d$parameter)]
   #
   #     formula.i <- paste0(names.c[3],"/(sqrt(",names.c[1],")*sqrt(",names.c[2],"))")
   #     #tmp <- car::deltaMethod(pmean,formula.i,vcov.=vcov)
@@ -209,12 +210,12 @@ coef_nm <- function(object,trans,...){
   d$FINAL.TRANS <- NULL
   d$SE <- d$SE.TRANS
   d$SE.TRANS <- NULL
-  d$Unit <- d$transUnit
-  d$transUnit <- NULL
-  d$SEUnit <- d$transSEUnit
-  d$transSEUnit <- NULL
-  d$Parameter <- d$Name
-  d$Name <- NULL
+  d$unit <- d$trans_unit
+  d$trans_unit <- NULL
+  d$SEunit <- d$transSEunit
+  d$transSEunit <- NULL
+  d$parameter <- d$name
+  d$name <- NULL
   class(d) <- append(class(d), "nmcoef")
   d
 }
@@ -249,21 +250,21 @@ run_record0 <- function(..., coef.func = coef_ext0){
   coef.func <- coef.func
   d <- lapply(list(...),coef.func)
   d <- do.call(rbind,d)
-  d$Unit[is.na(d$Unit)] <- ""
-  d$SEUnit[is.na(d$SEUnit)] <- ""
+  d$unit[is.na(d$unit)] <- ""
+  d$SEunit[is.na(d$SEunit)] <- ""
   if("trans" %in% d$trans) d$trans[is.na(d$trans)] <- ""   ## optional item
   d <- d[,names(d)[!names(d) %in% c("EVALUATION", "EST.NO","EST.NAME")]]
   d$Estimate <- NA
-  d$Estimate[d$Parameter!="OBJ"] <- paste0(signif(d$FINAL[d$Parameter!="OBJ"],3)," (",signif(d$SE[d$Parameter!="OBJ"],3),d$SEUnit[d$Parameter!="OBJ"],")")
-  d$Estimate[d$Parameter=="OBJ"] <- round(d$FINAL[d$Parameter=="OBJ"],3)
+  d$Estimate[d$parameter!="OBJ"] <- paste0(signif(d$FINAL[d$parameter!="OBJ"],3)," (",signif(d$SE[d$parameter!="OBJ"],3),d$SEunit[d$parameter!="OBJ"],")")
+  d$Estimate[d$parameter=="OBJ"] <- round(d$FINAL[d$parameter=="OBJ"],3)
   d <- d[,names(d)[!names(d) %in% c("SE","FINAL")]]
   d <- reshape2::dcast(data = d,
                        stats::as.formula(paste(paste(names(d)[!names(d) %in% c("file","Estimate")],collapse=" + "),
                                                "~ file")),
                        value.var = "Estimate")
 
-  d <- d[order(d$Type,d$Parameter),]
-  d$SEUnit <- NULL
+  d <- d[order(d$type,d$parameter),]
+  d$SEunit <- NULL
   d
 }
 
@@ -300,8 +301,8 @@ summary0 <- function(object, ref_model = NA, ...){
   n_parameters_fun <- function(x){
     if(!inherits(x, "nm")) return(NA)
     params <- coef.nm(x)
-    if(!"Type" %in% names(params)) return(NA)
-    params <- params[grepl("THETA|OMEGA|SIGMA", params$Type), ]
+    if(!"type" %in% names(params)) return(NA)
+    params <- params[grepl("THETA|OMEGA|SIGMA", params$type), ]
     nrow(params)
   }
   
@@ -327,7 +328,7 @@ summary0 <- function(object, ref_model = NA, ...){
     rr_diff <- dplyr::as_tibble(rr_diff)
     
     ans <- as.list(rr_diff$val)
-    names(ans) <- rr_diff$Parameter
+    names(ans) <- rr_diff$parameter
     
     dplyr::as_tibble(ans)
   }
@@ -340,7 +341,11 @@ summary0 <- function(object, ref_model = NA, ...){
   
   base_n <- n_parameters_fun(ref_model)
   d$df <- sapply(d$m, n_parameters_fun) - base_n
-  d$p_chisq <- 1-stats::pchisq(-d$dofv, df = d$df)
+  d <- d %>% dplyr::mutate(p_chisq = 
+                             ifelse(df >=0,
+                                    1-stats::pchisq(-dofv, df = df),
+                                    1-stats::pchisq(dofv, df = -df)))
+  #d$p_chisq <- 1-stats::pchisq(-d$dofv, df = d$df)
   d$ref_cn <- cond_num(ref_model)
   d$cond_num <- cond_num(d$m)
   d$AIC <- AIC(d$m)
@@ -438,7 +443,7 @@ AIC.nm <- function(object, ..., k = 2){
   if(is_single_na(object)) return(NA)
   params <- try(coef.nm(object),silent = TRUE)
   if(inherits(params, "try-error")) return(NA)
-  params <- params[grepl("THETA|OMEGA|SIGMA", params$Type), ]
+  params <- params[grepl("THETA|OMEGA|SIGMA", params$type), ]
   
   n_parameters <- nrow(params)
   ofv(object) + k*n_parameters
@@ -448,7 +453,7 @@ AIC.nm <- function(object, ..., k = 2){
 AIC.nmcoef <- function(object, ..., k = 2){
   if(is_single_na(object)) return(NA)
   params <- object
-  params <- params[grepl("THETA|OMEGA|SIGMA", params$Type), ]
+  params <- params[grepl("THETA|OMEGA|SIGMA", params$type), ]
   
   n_parameters <- nrow(params)
   ofv(object) + k*n_parameters
@@ -492,6 +497,11 @@ stats::BIC
 BIC.nm <- function(object, ...){
   AIC(object, ..., k = log(nobs.nm(object)))
 }
+
+
+# BIC.nmcoef <- function(object, ...){
+#   AIC(object, ..., k = log(nobs.nm(object)))
+# }
 
 #' @export
 BIC.list <- function(object, ...){

@@ -4,12 +4,14 @@
 \alias{setup_nm_demo}
 \title{Setup demo files}
 \usage{
-setup_nm_demo(demo_name = "theopp",
+setup_nm_demo(demo_name = "theopp", new_project = NA,
   file_stub = paste0(getOption("model_file_stub"), 1), overwrite = FALSE,
   exclude = NULL, additional_demo_locations = NULL)
 }
 \arguments{
 \item{demo_name}{character. Name of demo. Default = "theopp"}
+
+\item{new_project}{character. To set up demo in a separate (new) project}
 
 \item{file_stub}{character. Default = "run1". Stub to some file names}
 
