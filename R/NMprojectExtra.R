@@ -168,6 +168,7 @@ overlapping_outputs <- function(m){
 }
 
 
+
 #' @export
 print.nm_generic <- function(x, ...){
   x <- as.list(x)
