@@ -454,8 +454,9 @@ ppc_data <- function(r, FUN, statistic = "statistic", ...){
   ## apply stat FUN to each sim
   ## apply change to the dataset
   
-  stat_sim <- dsims %>% group_by(mod_no) %>% tidyr::nest() %>%
-    mutate(statistic = purrr::map(data, FUN)) %>%
+  stat_sim <- dsims %>% dplyr::group_by(.data$mod_no) %>% 
+    tidyr::nest() %>%
+    dplyr::mutate(statistic = purrr::map(.data$data, FUN)) %>%
     tidyr::unnest(statistic)
   
   merge(stat_sim, stat_orig)

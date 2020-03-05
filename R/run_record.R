@@ -342,9 +342,9 @@ summary0 <- function(object, ref_model = NA, ...){
   base_n <- n_parameters_fun(ref_model)
   d$df <- sapply(d$m, n_parameters_fun) - base_n
   d <- d %>% dplyr::mutate(p_chisq = 
-                             ifelse(df >=0,
-                                    1-stats::pchisq(-dofv, df = df),
-                                    1-stats::pchisq(dofv, df = -df)))
+                             ifelse(.data$df >=0,
+                                    1-stats::pchisq(-.data$dofv, df = .data$df),
+                                    1-stats::pchisq(.data$dofv, df = -.data$df)))
   #d$p_chisq <- 1-stats::pchisq(-d$dofv, df = d$df)
   d$ref_cn <- cond_num(ref_model)
   d$cond_num <- cond_num(d$m)
