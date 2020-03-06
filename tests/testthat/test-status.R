@@ -24,14 +24,22 @@ test_that("status",{
   ### end boiler plate
   ############################
 
-  m1 <- nm("qpsn -m -c auto -t 3000 -- execute run1.mod -dir=1")
-
+  ds <- tibble::tibble(run_id = 1)
+  
+  ds$m <- nm2(run_id = ds$run_id) %>%
+    ctl("staging/Models/run{run_id}.mod") %>%
+    #data_path("DerivedData/THEOPP.csv") %>%
+    cmd("execute run{run_id}.mod -dir={run_dir}")
+  
+  expect_message(ds$m %>% run_nm())
+  
+  m1 <- ds$m[1]
+  
   st <- status(m1)
-  #expect_true(inherits(st,"list"))
-
+  expect_true(inherits(st, "character"))
+  
   d <- check_session(check_rstudio = FALSE)
   expect_true(inherits(d,"data.frame"))
-
 
   res <- rr(m1)
   expect_true(inherits(res,"data.frame"))

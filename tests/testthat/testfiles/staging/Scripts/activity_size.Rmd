@@ -1,0 +1,82 @@
+---
+title: "QCP_MODELING disk monitoring"
+output: html_document
+---
+
+```{r setup, include=F}
+## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
+library(rprojroot)
+library(knitr)
+opts_knit$set(root.dir=find_root(has_file(".Rprofile")))
+opts_chunk$set(echo = TRUE)
+```
+
+```{r echo=FALSE,message=FALSE}
+library(NMprojectAZ)
+devtools::load_all("~/NMproject")
+library(dplyr)
+```
+
+Raw results are in:
+
+```{r}
+#report_path <- "/projects/qcp/scpqcpusage_report.txt"
+report_path <- "/home/klgk669/test_reports/du_report.txt"
+```
+
+```{r echo=FALSE}
+
+d <- read.table(report_path,sep = "\t",stringsAsFactors = FALSE)
+
+names(d) <- c("size", "path")
+
+d <- d[,rev(names(d))]
+
+d$size <- as.numeric(gsub("M","",d$size))
+
+d$unit <- "MB"
+
+d <- as_tibble(d)
+
+d <- d %>% arrange(desc(size))
+
+is_activity <- function(path){
+  all(c("Models", "Scripts", "SourceData") %in% dir(path))
+}
+
+d$is_activity <- sapply(d$path, is_activity)
+
+```
+
+### Overall qcp directory size:
+
+```{r}
+kable(d[grepl("/qcp$", d$path), ])
+```
+
+### Overall qcp subdirectory size:
+
+```{r}
+kable(d[grepl("/qcp/[^/]+$", d$path), ])
+```
+
+### Overall TA directory size:
+
+```{r}
+kable(d[grepl("/qcp/QCP_MODELING/[^/]+$", d$path), ])
+```
+
+### Summary of 40 largest activities
+
+```{r}
+
+owner <- function(path){
+  file.info(file.path(path, "Results"))$uname
+}
+
+da <- d %>% filter(is_activity)
+da$owner <- sapply(da$path, owner)
+kable(da %>% select(-is_activity) %>% head(40))
+
+```
+

@@ -42,7 +42,7 @@ To use the alpha interface, install NMproject 0.3.2",
   m$executed <- FALSE
   m$result_files <- c()
   
-  unique_id <- "{type}:{file.path(run_in,run_dir)}"
+  unique_id <- "{type};{file.path(run_in,run_dir)}"
   ## the following is in order of glueing
   m$glue_fields <- c(run_dir, ctl_name, results_dir, unique_id, output_location)
   names(m$glue_fields) <- c("run_dir", "ctl_name", "results_dir", "unique_id", "output_location")
@@ -3389,7 +3389,7 @@ execution_info <- function(m){  ## only works on single m
 
 unique_md5_file <- function(m){
   file.path("cache", 
-            paste0(gsub(.Platform$file.sep, ":-:", unique_id(m)), ".md5"))
+            paste0(gsub(.Platform$file.sep, ";-;", unique_id(m)), ".md5"))
 }
 
 md5_files <- function(m){
@@ -3398,7 +3398,7 @@ md5_files <- function(m){
   
   hack_m <- m %>% version("[0-9]+")
   pattern <- unique_id(hack_m)
-  pattern <- paste0(gsub(.Platform$file.sep, ":-:", pattern), "\\.md5")
+  pattern <- paste0(gsub(.Platform$file.sep, ";-;", pattern), "\\.md5")
 
   dir("cache", pattern = pattern, full.names = TRUE)
   
@@ -3419,7 +3419,7 @@ parent.nm_generic <- function(m, n = 1L){
     version("[0-9]+")
 
   pattern <- unique_id(hack_m)
-  pattern <- paste0(gsub(.Platform$file.sep, ":-:", pattern), "\\.md5")
+  pattern <- paste0(gsub(.Platform$file.sep, ";-;", pattern), "\\.md5")
   
   ## sort by most recent
 

@@ -1,3 +1,0 @@
-The pathlist /opt/scp/software/GCCcore/6.3.0/bin:/opt/scp/software/binutils/2.27-GCCcore-6.3.0/bin obtained from file /opt/scp/software/nonmem-standard/7.4.3-foss-2017a/nmloc is placed at the head of PATH
-The gfortran compiler at one of those locations will be used if it exists.
-If this is not what you want, then modify the file /opt/scp/software/nonmem-standard/7.4.3-foss-2017a/nmloc accordingly.
