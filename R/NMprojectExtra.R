@@ -631,7 +631,7 @@ start_manual_edit <- function(m, name){
 #' @param m nm object
 #' @param description character. Description of edit for documentation purposes
 #' @export
-do_manual_edit <- function(m, description){
+manual_edit <- function(m, description){
   m %>% start_manual_edit()
   message(
     "---Manual edit---
@@ -1979,13 +1979,12 @@ subroutine.nm_generic <- function(m, advan = NA, trans = NA, verbose = FALSE, re
   
   m <- m %>% advan(new_advan) %>% trans(new_trans)
   
-  browser()
-  
   if(old_advan %in% c(5, 7)){
     ## TODO: if general linear, get parameters in control
     ##   and replace dp (or available_advans?)
     
     ## detect KXY parameters
+    browser()
     
   }
   
@@ -2002,6 +2001,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = NA, verbose = FALSE, re
     
     ## TODO: detect 
     
+    browser()
   }
   
   thetas <- raw_init_theta(m)
