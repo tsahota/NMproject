@@ -58,7 +58,7 @@ if(level == 1) {
 
 ds <- tibble(run_id = 1:6)  ## runs 1 to 6 to be run single core
 
-ds$m <- nm2(run_id = ds$run_id) %>%
+ds$m <- nm(run_id = ds$run_id) %>%
   ctl("staging/Models/run{run_id}.mod") %>%
   #data_path("DerivedData/THEOPP.csv") %>%
   cmd("qpsn -t 100 -r 1000 -- execute run{run_id}.mod -dir={run_dir}")

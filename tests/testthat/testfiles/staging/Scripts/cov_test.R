@@ -26,7 +26,7 @@ module_cmd("module load psn")
 ## Use existing model to generate ETAs - produce fake covariates that are
 ##  correlated and then try to recapitulate them
 
-c0 <- nm2(run_id = "c0") %>%
+c0 <- nm(run_id = "c0") %>%
   ctl("staging/Models/run1.mod") %>%
   cmd("qpsn -t 100 -r 1000 -- execute {ctl_name} -dir={run_dir}")
 

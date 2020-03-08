@@ -23,7 +23,7 @@ Get and set path to control file.
 \examples{
 \dontrun{
 
-m0 <- nm2(run_id = "m0")
+m0 <- nm(run_id = "m0")
 #ctl_path(m0) ## deleteme
 #m0 <- m0 \%>\% ctl_path("Models/run_m0.mod") ## deleteme
 ctl_name(m0)

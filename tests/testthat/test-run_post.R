@@ -29,7 +29,7 @@ test_that("run and post",{
   ## dataset procesing
   ds <- tibble::tibble(run_id = 1)
   
-  ds$m <- nm2(run_id = ds$run_id) %>%
+  ds$m <- nm(run_id = ds$run_id) %>%
     ctl("staging/Models/run{run_id}.mod") %>%
     #data_path("DerivedData/THEOPP.csv") %>%
     cmd("execute run{run_id}.mod -dir={run_dir}")

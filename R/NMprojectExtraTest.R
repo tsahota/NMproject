@@ -2,7 +2,7 @@ if(0){
   
   ## use case
   
-  # m0 <- nm2() ## shouldn't this be length 0? what is the use case for length 0 objects
+  # m0 <- nm() ## shouldn't this be length 0? what is the use case for length 0 objects
   # m0
   # cmd(m0)  ## NA
   # run_id(m0)
@@ -14,7 +14,7 @@ if(0){
   
   #db <- nm_db$new("pk.RDS")
   
-  m1 <- nm2(run_id = "m1")
+  m1 <- nm(run_id = "m1")
   #db$register(m1)
   m1 <- m1 %>% cmd("qpsn -t 100 -c auto -- execute {ctl_name} -dir={run_dir}")
   m1 <- m1 %>% ctl("tests/testthat/testfiles/Models/run1.mod")

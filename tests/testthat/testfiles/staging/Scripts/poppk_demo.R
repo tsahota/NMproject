@@ -24,7 +24,7 @@ read_derived_data("DerivedData/THEOPcov1.csv") %>%
          MDV = EVID) %>%
   write_derived_data("THEOPcov2")
 
-c1 <- nm2(run_id = "c1") %>%
+c1 <- nm(run_id = "c1") %>%
   ctl("staging/Models/run1.mod") %>%
   cmd("qpsn -t 100 -r 1000 -- execute {ctl_name} -dir={run_dir}") %>%
   data_path("DerivedData/THEOPcov2.csv") %>%
