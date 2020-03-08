@@ -555,23 +555,6 @@ omega_matrix <- function(r){
   matrix(d_all$FINAL,nrow=max_size)
 }
 
-#' Document manual edit
-#'
-#' @param ctl object coercible into ctl_list
-#' @param comment character. Description of change
-#' @return error with comment name
-#' @export
-manual_edit <- function(ctl, comment){
-  if(missing(comment)) stop("needs two arguments, see ?manual_edit for help")
-  ctl <- ctl_list(ctl)
-  ctl_name <- attr(ctl, "file_name")
-  write_ctl(ctl)
-  message("perform manual edit: ", comment)
-  show_ctl(ctl_name)
-  message("(Recommended) after edit, save and use commit_file(\"",ctl_name,"\")")
-}
-
-
 #' Document manual steps for traceability
 #'
 #' This function will not execute to prevent accidental partial execution
