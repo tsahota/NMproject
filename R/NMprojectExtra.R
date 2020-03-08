@@ -82,18 +82,18 @@ To use the alpha interface, install NMproject 0.3.2",
 #' @examples 
 #' \dontrun{
 #' 
-#' m0 <- nm2(run_id = "m0")
+#' m0 <- nm(run_id = "m0")
 #' m0  ## a human readable representation
 #'   
 #' ## nm objects can be put into tibbles to group runs together
 #' d <- tibble(run_id = c("m1","m2"))
-#' d$m <- nm2(d$run_id)
+#' d$m <- nm(d$run_id)
 #' d  
 #' 
 #' }
 #' 
 #' @export
-nm2 <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
+nm <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
 
 #' @export
 is.na.nm_generic <- function(x) is.na(run_id(x))
@@ -293,7 +293,7 @@ custom_vector_field.nm_list <- Vectorize_nm_list(custom_vector_field.nm_generic,
 #' @examples
 #' \dontrun{
 #' 
-#' m0 <- nm2(run_id = "m0")
+#' m0 <- nm(run_id = "m0")
 #' #ctl_path(m0) ## deleteme
 #' #m0 <- m0 %>% ctl_path("Models/run_m0.mod") ## deleteme
 #' ctl_name(m0)
@@ -1428,7 +1428,7 @@ cache_update.nm_generic <- function(r){
       return(invisible(r))    ## if up to date, skip
     }
   }
-  return(nm2(NA))
+  return(nm(NA))
 }
 #' @export
 cache_update.nm_list <- Vectorize_nm_list(cache_update.nm_generic, SIMPLIFY = FALSE)
@@ -3411,7 +3411,7 @@ parent <- function(m, n = 1L){
 #' @export
 parent.nm_generic <- function(m, n = 1L){
   
-  if(n == 0) return(as_nm_generic(nm2(NA)))
+  if(n == 0) return(as_nm_generic(nm(NA)))
   
   hack_m <- m %>% 
     run_id(parent_run_id(m)) %>% 
@@ -3430,7 +3430,7 @@ parent.nm_generic <- function(m, n = 1L){
   md5_files <- dir_list[order(file_info$mtime, decreasing = TRUE)]
   
   ## get proposed parent objects and update
-  if(length(md5_files) == 0) return(as_nm_generic(nm2(NA)))
+  if(length(md5_files) == 0) return(as_nm_generic(nm(NA)))
 
   md5_file <- md5_files[1]
   parent_ob <- readRDS(md5_file)$object
@@ -3770,7 +3770,7 @@ add_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
   existing_param_rel <- any(grepl(paste0("\\b",tvparam,"COV"), PK_section))
   existing_param_cov_rel <- any(grepl(paste0("\\b",tvparam,cov), PK_section))
   if(existing_param_cov_rel) {
-    return(as_nm_generic(nm2(NA)))
+    return(as_nm_generic(nm(NA)))
     #stop("covariate relation already exists, cannot add", call. = FALSE)
   }
   
@@ -3905,7 +3905,7 @@ remove_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
   match_start <- grep(paste0(";;; ",tvparam,cov,"-DEFINITION START"),ctl[[dol_PK]])
   match_end <- grep(paste0(";;; ",tvparam,cov,"-DEFINITION END"),ctl[[dol_PK]])
   if(length(match_start) == 0 | length(match_end) == 0){
-    return(as_nm_generic(nm2(NA)))
+    return(as_nm_generic(nm(NA)))
     #stop("can't find cov definition code - did you add with add_cov()?")
   }
   

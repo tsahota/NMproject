@@ -25,17 +25,17 @@ test_that("nm object basic use",{
   ############################
   
   ## empty object
-  #mempty <- nm2()
+  #mempty <- nm()
   #expect_true(length(mempty) == 0) 
   ## Currently no empty object
   ##  - do only if there is a need
   
   ## NA object
-  mNA <- nm2(NA)
+  mNA <- nm(NA)
   expect_true(length(mNA) == 1)
   expect_true(is.na(mNA))
   
-  m1 <- nm2(run_id = "m1")
+  m1 <- nm(run_id = "m1")
   
   expect_output(print(m1))
   
