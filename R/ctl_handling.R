@@ -470,22 +470,23 @@ update_parameters.default <- function(ctl, from){
 #' gsub for ctl file
 #' 
 #' @param ctl object coercible into ctl_character
-#' @param ... arguments passed to gsub
+#' @param pattern argument passed to gsub
+#' @param replacement argument passed to gsub
 #' @param dollar character name of subroutine
 #' @export
 
-gsub_ctl <- function(ctl, ..., dollar = NA_character_){
+gsub_ctl <- function(ctl, pattern, replacement, ..., dollar = NA_character_){
   UseMethod("gsub_ctl")
 }
 
 #' @export
-gsub_ctl.default <- function(ctl, ..., dollar = NA_character_){
+gsub_ctl.default <- function(ctl, pattern, replacement, ..., dollar = NA_character_){
   if(is.na(dollar)){
     ctl <- ctl_character(ctl)
-    ctl <- gsub(..., x = ctl)    
+    ctl <- gsub(pattern, replacement, x = ctl, ...)    
   } else {
     ctl <- ctl_list(ctl)
-    ctl[[dollar]] <- gsub(..., x = ctl[[dollar]])    
+    ctl[[dollar]] <- gsub(pattern, replacement, x = ctl[[dollar]], ...)    
   }
   ctl_list(ctl)
 }

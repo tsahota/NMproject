@@ -958,11 +958,11 @@ ignore.nm_generic <- function(ctl, ignore_char){
 ignore.nm_list <- Vectorize_nm_list(ignore.nm_generic, replace_arg = "ignore_char")
 
 #' @export
-gsub_ctl.nm_generic <- function(ctl, ..., dollar = NA_character_){
+gsub_ctl.nm_generic <- function(ctl, pattern, replacement, ..., dollar = NA_character_){
   m <- ctl
   
   text <- get_target_text(m)
-  text <- gsub(..., text)
+  text <- gsub(pattern, replacement, text, ...)
   
   m <- m %>% set_target_text(text)
   m
