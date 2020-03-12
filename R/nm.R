@@ -1028,10 +1028,11 @@ output_files <- function(run_in,run_type,run_dir,ctl_name){
 #' @param quote logical. Fefault changed to FALSE
 #' @export
 
-write.csv.nm <- function(...,na=".",
+write.csv.nm <- function(d, ...,na=".",
                          row.names=FALSE,
                          quote=FALSE){
-  utils::write.csv(...,na=na,row.names=row.names,quote=quote)
+  
+  utils::write.csv(d, ...,na=na,row.names=row.names,quote=quote)
 }
 
 #' Setup demo files

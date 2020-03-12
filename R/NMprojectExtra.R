@@ -4393,8 +4393,9 @@ cov_cov_plot <- function(d,
 #' @param ...  additional arguments to be passed dto write.csv
 #' @export
 
-write_derived_data_extra <- function(d, name, ...){
-  if(grepl("\\.", name)) stop("name should be extensionless")
+write_derived_data <- function(d, name, ...){
+  
+  name <- tools::file_path_sans_ext(name)
   
   RDS_name <- file.path("DerivedData",paste0(name,".RDS"))
   csv_name <- file.path("DerivedData",paste0(name,".csv"))
@@ -4417,34 +4418,37 @@ write_derived_data_extra <- function(d, name, ...){
 #' @param ...  additional arguments to be passed to read.csv
 #' @export
 
-read_derived_data_extra <- function(name, na = ".", ...){
+read_derived_data <- function(name, na = ".", ...){
   
   ## TODO: expand to other types of argument
   if(length(name) != 1) stop("name should have length 1", call. = FALSE)
   
+  load_file <- NA
+  
   if(file.exists(name)){
-    if(grepl("\\.RDS", name)) {
-      message("loading: ", name)
-      d <- readRDS(file = name)
+    if(grepl("\\.RDS", name)) load_file <- "RDS" else
+      if(grepl("\\.csv", name)) load_file <- "csv" else
+        stop("file is not RDS or csv")
+  } else { ## file doesn't exist
+    orig_name <- tools::file_path_sans_ext(name)
+    name <- file.path("DerivedData", paste0(orig_name,".RDS"))
+    if(file.exists(name)) load_file <- "RDS" else {
+      name <- file.path("DerivedData", paste0(orig_name,".csv"))
+      if(file.exists(name)) load_file <- "csv" else
+        stop("file is not RDS or csv")
     }
-    if(grepl("\\.csv", name)) {
-      message("loading: ", name)
-      d <- utils::read.csv(name, na = na, ...)
-    }
-    return(d)
   }
   
-  if(grepl("\\.", name)) stop("name should be extensionless")
+  ## load_file should be set now
+  if(is.na(load_file)) stop("debug") ## unneccesary with stop()s
   
-  RDS_name <- file.path("DerivedData",paste0(name,".RDS"))
-  csv_name <- file.path("DerivedData",paste0(name,".csv"))
-  
-  if(file.exists(RDS_name)){
-    message("loading: ", RDS_name)
-    d <- readRDS(file = RDS_name)
-  } else {
-    if(!file.exists(csv_name)) stop("looking for ", csv_name, " but it doesn't exist. stopping...")
-    d <- utils::read.csv(csv_name, na = na, ...)
+  if(identical(load_file, "RDS")){
+    message("loading: ", name)
+    d <- readRDS(file = name)
+  } 
+  if(identical(load_file, "csv")){
+    message("loading: ", name)
+    d <- utils::read.csv(name, na = na, ...)
   }
   return(d)
 }
@@ -4522,7 +4526,10 @@ make_OCC_every_dose <- function(dose_trigger, sample_trigger){
     dplyr::mutate(PKSAMPLE = as.numeric(any(.data$sample_trigger))) # does that dosing period have PK sample?
 
   ## select temporarly unique DPERIOD and HAS PK SAMPLE for each ID
-  tmp <- d %>% dplyr::distinct(.data$DPERIOD,.data$PKSAMPLE)
+  tmp <- d %>% 
+    dplyr::ungroup() %>% 
+    dplyr::distinct(.data$DPERIOD,.data$PKSAMPLE)
+  
   tmp <- tmp %>% 
     dplyr::ungroup() %>% 
     dplyr::mutate(OCC = cumsum(.data$PKSAMPLE))

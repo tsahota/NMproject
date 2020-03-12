@@ -4,7 +4,7 @@
 \alias{write.csv.nm}
 \title{write csv for NONMEM control files}
 \usage{
-write.csv.nm(..., na = ".", row.names = FALSE, quote = FALSE)
+write.csv.nm(d, ..., na = ".", row.names = FALSE, quote = FALSE)
 }
 \arguments{
 \item{...}{arguments for write.csv}
