@@ -38,12 +38,6 @@ test_that("run and post",{
   
   d <- input_data(ds$m[1])
 
-  write_derived_data_extra(d, "data")
-
-  expect_true(file.exists("DerivedData/data.csv"))
-  expect_true(file.exists("DerivedData/data.RDS"))
-
-  d <- read_derived_data_extra("data")
   expect_true(inherits(d, "data.frame"))
 
   ## post processing

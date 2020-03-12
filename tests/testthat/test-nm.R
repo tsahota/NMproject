@@ -56,8 +56,6 @@ test_that("nm object basic use",{
   
   expect_true(is.character(status(m1)))
   
-  browser()
-  
   m2 <- m1 %>% child(run_id = "m2")
   
   ## parent hasn't been run
@@ -93,9 +91,12 @@ test_that("nm object basic use",{
   
   d2$DUMMY <- 1
   
-  d2 %>% write_derived_data_extra("data")
+  d2 %>% write_derived_data("data")
   
   expect_true(file.exists("DerivedData/data.csv"))
+
+  d2r <- read_derived_data("data")
+  expect_identical(d2, d2r)
   
   m2 <- m2 %>% data_path("DerivedData/data.csv")
   
