@@ -4,12 +4,14 @@
 \alias{gsub_ctl}
 \title{gsub for ctl file}
 \usage{
-gsub_ctl(ctl, ..., dollar = NA_character_)
+gsub_ctl(ctl, pattern, replacement, ..., dollar = NA_character_)
 }
 \arguments{
 \item{ctl}{object coercible into ctl_character}
 
-\item{...}{arguments passed to gsub}
+\item{pattern}{argument passed to gsub}
+
+\item{replacement}{argument passed to gsub}
 
 \item{dollar}{character name of subroutine}
 }
