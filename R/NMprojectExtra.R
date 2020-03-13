@@ -782,7 +782,7 @@ text.nm_generic <- function(x, text, append = FALSE, ...){
   
   text <- paste(text, collapse = "\n")
   text <- strsplit(text, split = "\n")[[1]]
-  text <- trimws(text)
+  #text <- trimws(text)
   
   if(append) text <- c(current_text,text)
   
