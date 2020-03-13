@@ -1726,12 +1726,13 @@ dollar <- function(m, dollar, ...) {
 }
 
 ## pipe for string functions
+
 #' @export
-'%s>%' <- function(m, expr){
-  UseMethod('%s>%')
+'%ns>%' <- function(m, expr){
+  UseMethod('%ns>%')
 }
 #' @export
-'%s>%.nm_generic' <- function(m, expr){
+'%ns>%.nm_generic' <- function(m, expr){
   if(!requireNamespace("stringr")) stop("install stringr to use this pipe")
   string <- m %>% text
   expr <- substitute(expr)
@@ -1743,13 +1744,39 @@ dollar <- function(m, dollar, ...) {
 }
 
 #' @export
-'%s>%.nm_list' <- function(m, expr){
-  m <- lapply(m, function(m_generic){
-    eval(substitute(m_generic %s>% expr, 
-                    env = parent.env(environment())))
+'%ns>%.nm_list' <- function(m, expr){
+  if(!requireNamespace("stringr")) stop("install stringr to use this pipe")
+  strings <- m %>% text ## list of chars
+  
+  expr <- substitute(expr)
+  list_expr <- as.list(expr)
+  
+  ## vectorize the stringr function
+  stringr_fun <- list_expr[[1]]
+  stringr_fun <- eval(stringr_fun) 
+  stringr_fun_vec <- Vectorize(stringr_fun, SIMPLIFY = FALSE)
+  
+  ## evaluate args
+  args <- list_expr
+  args[[1]] <- strings  ## only args remaining
+  args <- lapply(args, eval) ## evaluate them
+  
+  ## make new call with vectorized stringr fun
+  ##  and pre-evaluated args
+  new_call <- rlang::call2("stringr_fun_vec", !!!args)
+  strings_new <- eval(new_call)
+  
+  ## text() isn't vectorized for lists of characters
+  ## need to loop
+  m <- lapply(seq_along(strings_new), function(i){
+    mi <- m[[i]] ## nm_generic
+    string_new <- strings_new[[i]]
+    mi %>% text(string_new)
   })
+  
   as_nm_list(m)
 }
+
 
 #' @export
 n_thetas <- function(m){
