@@ -46,6 +46,7 @@ Collate:
     'dollar_data.R'
     'insert_addin.R'
     'load_sse.R'
+    'manual_edit.R'
     'nm_data.R'
     'plot_iter.R'
     'read.table.nm.R'
