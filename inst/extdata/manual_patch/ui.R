@@ -5,7 +5,7 @@ library(miniUI)
 setwd(.currentwd)
 
 # Gets The active Documeent
-ctx <- rstudioapi::getActiveDocumentContext()
+ctx <- rstudioapi::getSourceEditorContext()
 selected_text <- ctx$selection[[1]]$text
 
 ui <- miniPage(
@@ -13,6 +13,7 @@ ui <- miniPage(
   miniContentPanel(
     textInput("model_object", "model object", value = selected_text),
     actionButton("go", "start edit"),
+    br(),
     textOutput("out_text"),
     textOutput("final_text")
   )

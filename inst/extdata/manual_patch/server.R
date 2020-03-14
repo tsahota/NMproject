@@ -21,14 +21,21 @@ server <- function(input, output, session) {
   observeEvent(input$go, {
     res()
     
-    showModal(modalDialog(
-      title = "Instructions",
-      "1) edit control file\n
+    # showModal(modalDialog(
+    #   title = "Instructions",
+    #   "1) edit control file\n
+    #   2) save & close file\n
+    #   3) Press \"Done\"",
+    #   easyClose = TRUE,
+    #   footer = NULL
+    # ))
+    
+    output$out_text <- renderText({
+      "Instructions
+      1) edit control file\n
       2) save & close file\n
-      3) Press \"Done\"",
-      easyClose = TRUE,
-      footer = NULL
-    ))
+      3) Press \"Done\""
+    })
 
     # Sys.sleep(2)  
     # ctx()
