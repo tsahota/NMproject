@@ -620,29 +620,6 @@ delete_ctl.nm_generic <- function(m){
 }
 delete_ctl.nm_list <- Vectorize_nm_list(delete_ctl.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
-start_manual_edit <- function(m, name){
-  m %>% write_ctl()            ## update file
-  edit_file(ctl_path(m))
-  invisible(m)
-}
-
-#' Perform manual edit of control file
-#' 
-#' @param m nm object
-#' @param description character. Description of edit for documentation purposes
-#' @export
-manual_edit <- function(m, description){
-  m %>% start_manual_edit()
-  message(
-    "---Manual edit---
-    Instructions:
-    1) edit control file
-    2) save & close
-    Press ENTER when done...")
-  readline()
-  m %>% stop_manual_edit()
-}
-
 #' @include ctl_handling.R
 #' @export
 update_dollar.nm_generic <- function(ctl,..., which_dollar = 1, append = FALSE){
@@ -656,28 +633,6 @@ update_dollar.nm_generic <- function(ctl,..., which_dollar = 1, append = FALSE){
 #' @export
 update_dollar.nm_list <- Vectorize_nm_list(update_dollar.nm_generic, SIMPLIFY = FALSE)
 
-stop_manual_edit <- function(m){
-  old_m <- m
-  #old_target <- target(m)
-  m <- m %>% ctl(ctl_path(m), update_ctl = FALSE)  ## update object
-  
-  old_ctl <- as.character(ctl_character(ctl(as_nm_generic(old_m))))
-  new_ctl <- as.character(ctl_character(ctl(as_nm_generic(m))))
-  
-  if(requireNamespace("diffobj", quietly = TRUE)){
-    dff <- diffobj::diffChr(new_ctl, old_ctl, format = "ansi256")
-    #dff <- diffobj::diffChr(new_ctl, old_ctl, format = "html")
-    
-    ## TODO: store patch in object for later retrieval
-    ## learn how git2r calls libgit - maybe something useful there
-
-    message("--- file diff: new_ctl and old_ctl colours show additions/deletions---")
-    print(dff)
-    #m <- m %>% target(old_target)
-  }
-  
-  invisible(m)
-}
   
 #' Target part of control object for further modification
 #' 
@@ -1473,28 +1428,6 @@ run_nm.nm_generic <- function(r, overwrite=getOption("run_overwrite"),delete_dir
       }
     }
   }
-  
-  # if(!force){
-  #   unique_md5_file <- unique_md5_file(r)
-  #   if(file.exists(unique_md5_file)){
-  #     ## assume file.exists
-  #     checksuminfo_disk <- readRDS(file = unique_md5_file)
-  #     
-  #     current_md5 <- execution_info(m)
-  #     matched_run <- identical(checksuminfo_disk$md5, current_md5)
-  #     
-  #     ## if any matches, this job has been run before
-  #     if(matched_run){
-  #       message("ctl file, data and cmd unchanged from last run, skipping run... use force = TRUE to override")
-  #       max_match <- max(which(matches))
-  #       r <- r %>% job_info(checksuminfo_disk[[max_match]]$job_info)
-  #       r <- r %>% version(max_match + 1)
-  #       return(invisible(r))  ## if up to date, skip
-  #     }
-  #   }    
-  # }
-
-  
   
   ## TODO: kill exisitng run
   
@@ -4567,6 +4500,8 @@ make_OCC_every_dose <- function(dose_trigger, sample_trigger){
   
   d$OCC
 }
+
+
 
 
 
