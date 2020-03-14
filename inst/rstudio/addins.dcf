@@ -1,0 +1,15 @@
+Name: make manual edit patch
+Description: create patch to apply with apply_patch()
+Binding: manual_patch_app
+Interactive: true
+
+Name: view patch
+Description: run view_patch on selected string
+Binding: view_patch_app
+Interactive: true
+
+Name: nm_tran
+Description: run nm_tran on selected object
+Binding: nm_tran_app
+Interactive: true
+

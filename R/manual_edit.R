@@ -10,6 +10,11 @@ start_manual_edit <- function(m, name){
 #' @param description character. Description of edit for documentation purposes
 #' @export
 manual_edit <- function(m, description){
+  
+  if(.Platform$OS.type == "unix") 
+    stop("manual_edit() is for non-unix systems.  Use manual_patch() instead",
+         call. = FALSE)
+  
   m %>% start_manual_edit()
   message(
     "---Manual edit---
@@ -45,11 +50,37 @@ stop_manual_edit <- function(m){
 }
 
 #' @export
-create_patch <- function(m){
+manual_patch <- function(m){
   
+  res <- start_manual_edit_unix(m)
+  
+  message(
+    "---Manual edit---
+    Instructions:
+    1) edit control file
+    2) save & close
+    Press ENTER when done...")
+  readline()
+  
+  ## now diff ctl_path(m) and old_file_path
+  
+  diff_manual_edit(m, res)
+  
+  message("patch created:\n ", res$patch_path, "\n")
+  
+  message("copy-paste the following into your script to apply:\n
+  [nm_object] %>%
+  apply_patch(\"", res$patch_name,"\")")
+  
+}
+
+start_manual_edit_unix <- function(m){
   if(.Platform$OS.type != "unix") 
     stop("patching functionality only implemented for linux/unix systems\n consider manual_edit() instead",
          call. = FALSE)
+  
+  if(is_nm_list(m) & length(m) > 1)
+    stop("m cannot refer to multiple runs", call. = FALSE)
   
   time_stamp <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S")
   
@@ -67,29 +98,20 @@ create_patch <- function(m){
   
   edit_file(ctl_path(mnew)) ## edit new one
   
-  message(
-    "---Manual edit---
-    Instructions:
-    1) edit control file
-    2) save & close
-    Press ENTER when done...")
-  readline()
+  res <- list()
+  res$new_ctl_path <- new_ctl_path
+  res$patch_name <- patch_name
+  res$patch_path <- patch_path
   
-  ## now diff ctl_path(m) and old_file_path
-  
-  diff_cmd <- paste("diff -u", ctl_path(m), new_ctl_path, ">", patch_path)
-  
-  system(diff_cmd)
-  
-  unlink(new_ctl_path)
-  
-  message("patch created:\n ", patch_path, "\n")
-  
-  message("copy-paste the following into your script to apply:\n
-  [nm_object] %>%
-  apply_patch(\"", patch_name,"\")")
-  
+  res
 }
+
+diff_manual_edit <- function(m, res){
+  diff_cmd <- paste("diff -u", ctl_path(m), res$new_ctl_path, ">", res$patch_path)
+  system(diff_cmd)
+  unlink(res$new_ctl_path)
+}
+
 
 #' @export
 view_patch <- function(patch_name){
@@ -116,5 +138,40 @@ apply_patch <- function(m, patch_name){
   m <- m %>% ctl(ctl_path(m), update_ctl = FALSE)
   
   invisible(m)
+  
+}
+
+manual_patch_app <- function() {
+  
+  shiny_dir <- system.file("extdata/manual_patch",package="NMproject")
+  .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env
+  on.exit({
+    .sso_env$.currentwd <- NULL
+  }, add = TRUE)
+  viewer <- shiny::paneViewer(300)
+  shiny::runGadget(shiny::shinyAppDir(shiny_dir), viewer = viewer)
+  
+}
+
+nm_tran_app <- function(){
+  
+  ctx <- rstudioapi::getActiveDocumentContext()
+  selected_text <- ctx$selection[[1]]$text
+  
+  m <- eval(parse(text = selected_text))
+  
+  nm_tran(m)
+  
+}
+
+
+view_patch_app <- function(){
+  
+  ctx <- rstudioapi::getActiveDocumentContext()
+  selected_text <- ctx$selection[[1]]$text
+  
+  selected_text <- gsub("\"","", selected_text)
+  
+  view_patch(selected_text)
   
 }
