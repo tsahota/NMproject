@@ -224,27 +224,6 @@ coef_nm <- function(object,trans,...){
 #' @export
 stats::coef
 
-#' @export
-coef.nm <- function(object,...){
-  
-  if(is_single_na(object)) return(NA)
-
-  trans_arg <- list(...)$trans
-  if(is.null(trans_arg)) {
-    trans <- TRUE
-  } else {
-    trans <- trans_arg
-  }
-  ans <- try(coef_nm(object=object,trans=trans), silent = TRUE)
-  if(inherits(ans, "try-error")) {
-    ans <- dplyr::tibble()
-    class(ans) <- append(class(ans), "nmcoef")
-    
-  }
-  ans
-}
-
-
 
 run_record0 <- function(..., coef.func = coef_ext0){
   coef.func <- coef.func
@@ -293,7 +272,7 @@ run_record <- function(...,trans=TRUE){
 summary0 <- function(object, ref_model = NA, ...){
   d <- dplyr::as_tibble(list(m=object))
   
-  coef_obs <- lapply(d$m, coef.nm)
+  coef_obs <- lapply(d$m, coef)
 
   d$ofv <- ofv(coef_obs)
   d$dofv <- d$ofv - ofv(ref_model) 
@@ -366,88 +345,9 @@ summary0 <- function(object, ref_model = NA, ...){
   d  
 }
 
-#' @export
-summary.nm <- function(object, ref_model = NA, ...){
-  object <- list(object)
-  summary0(object, ref_model = ref_model, ...)
-}
-
-#' @export
-summary.list <- function(object, ref_model = NA, ...){
-  summary0(object, ref_model = ref_model, ...)
-}
-
-
-
-run_summary <- function(r, db = NULL){
-  res <- list()
-  outputs <- unlist(r$output)
-  if(!is.null(outputs)) existing_files <- file.exists(outputs) else
-    existing_files <- NA
-  res$outputs_present <- sum(existing_files)/length(existing_files)
-  res$last_update <- last_modified(r)
-  if(missing(db)){
-    res$status <- run_status(r)$status
-  } else {
-    res$status <- run_status(r, db = db)$status 
-  }
-  res$lst_exists <- NA
-  res$stop_time_reached <- NA
-  res$ofv <- NA
-  if(r$type %in% "execute"){
-    res$lst_exists <- file.exists(r$output$psn.lst)
-    res$stop_time_reached <- FALSE
-    if(res$lst_exists) {
-      lst_file <- readLines(r$output$psn.lst)
-      last_lst_file <- lst_file[max(1,length(lst_file)-10):length(lst_file)]
-      res$stop_time_reached <- any(grepl("Stop Time",last_lst_file))
-      objv_lines <- suppressWarnings(which(grepl("#OBJV",lst_file)))
-      if(length(objv_lines)==0) {
-        res$ofv <- NA
-      } else {
-        objv_lines <- max(objv_lines)
-        lst_file[objv_lines]
-        objv <- as.numeric(gsub("[#OBJV:* ]","",lst_file[objv_lines]))
-        if(length(objv)!=1) stop("Couldn't get ofv. Debug")
-        res$ofv <- objv
-      }
-    }
-  }
-  as.data.frame(res)
-}
-
-#' Generate table of runs
-#' @param db_name character. Name of db
-#' @export
-run_table <- function(db_name = "runs.sqlite"){
-  d <- nmdb_get(db_name)
-  res <- lapply(d$object, unserialize, refhook=NULL)
-  res <- lapply(res, run_summary, db = d)
-  res <- do.call(rbind,res)
-  res <- cbind(data.frame(entry=d$entry),res)
-  d <- merge(d,res)
-  nmdb_printable_db(d)
-}
-
 #' @importFrom stats AIC
 #' @export
 stats::AIC
-
-#' @export
-AIC.logical <- function(object, ..., k = 2){
-  if(is_single_na(object)) return(NA)
-}
-
-#' @export
-AIC.nm <- function(object, ..., k = 2){
-  if(is_single_na(object)) return(NA)
-  params <- try(coef.nm(object),silent = TRUE)
-  if(inherits(params, "try-error")) return(NA)
-  params <- params[grepl("THETA|OMEGA|SIGMA", params$type), ]
-  
-  n_parameters <- nrow(params)
-  ofv(object) + k*n_parameters
-}
 
 #' @export
 AIC.nmcoef <- function(object, ..., k = 2){
@@ -459,33 +359,9 @@ AIC.nmcoef <- function(object, ..., k = 2){
   ofv(object) + k*n_parameters
 }
 
-#' @export
-AIC.list <- function(object, ..., k = 2){
-  args <- as.list(match.call()[-1])
-  
-  call_f <- function(x, args){
-    #if(is_single_na(x)) return(NA)
-    args[["object"]] <- x
-    do.call(AIC, args)
-  }
-  
-  sapply(object, call_f, args = args)
-}
-
 #' @importFrom stats nobs
 #' @export
 stats::nobs
-
-#' @export
-nobs.nm <- function(object, ...){
-  if(is_single_na(object)) return(NA)
-  d <- get_data(object, filter = TRUE)
-  d <- d %>% dplyr::filter(.data$EVID %in% 0)
-  if("MDV" %in% names(d)){
-    d <- d %>% dplyr::filter(!.data$MDV %in% 1) 
-  }
-  nrow(d)
-}
 
 
 #' @importFrom stats BIC
@@ -493,30 +369,9 @@ nobs.nm <- function(object, ...){
 stats::BIC
 
 
-#' @export
-BIC.nm <- function(object, ...){
-  AIC(object, ..., k = log(nobs.nm(object)))
-}
-
-
 # BIC.nmcoef <- function(object, ...){
 #   AIC(object, ..., k = log(nobs.nm(object)))
 # }
-
-#' @export
-BIC.list <- function(object, ...){
-  d <- tibble::tibble(m = object)
-  d$data_name <- sapply(object, function(object) {
-    if(is_single_na(object)) return(NA)
-    object$input$data_name 
-  })
-  
-  d <- d %>% dplyr::group_by(.data$data_name) %>%
-    dplyr::mutate(lognobs = log(nobs.nm(dplyr::first(.data$m))))
-  
-  mapply(AIC, object = object, k = d$lognobs, SIMPLIFY = TRUE, USE.NAMES = FALSE)
-  
-}
 
 
 

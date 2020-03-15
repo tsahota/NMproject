@@ -1284,6 +1284,16 @@ rr2 <- function(m, trans = TRUE){
   d 
 }
 
+#' update parameters from a control stream
+#'
+#' @param ctl object coercible into ctl_list
+#' @param from class nm. object from which to extract results
+#' @export
+
+update_parameters <- function(ctl, from){
+  UseMethod("update_parameters")
+}
+
 
 #' @export
 update_parameters.nm_generic <- function(ctl, from){

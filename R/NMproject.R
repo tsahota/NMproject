@@ -528,7 +528,7 @@ get_PMX_code_library <- function(local_path,
 #' @param r object of class nm
 #' @export
 omega_matrix <- function(r){
-  dc <- coef.nm(r,trans=FALSE)
+  dc <- coef(r,trans=FALSE)
   dc <- dc[dc$type %in% c("OMEGAVAR","OMEGACOV"),]
   dc <- dc[,c("parameter","FINAL")]
   dc$ROW <- as.numeric(gsub("OMEGA\\.([0-9]+)\\..*","\\1",dc$parameter))
@@ -653,27 +653,6 @@ commit_file <- function(file_name){
   file_name <- search_ctl_name(file_name)
   tidyproject::commit_file(file_name)
 }
-
-#' Git commit of ctl files, SourceData and Scripts
-#'
-#' @param message character. Description to be added to commit
-#' @param session logical. Should sessionInfo be included in commit message
-#' @param db_name character. Name of database
-#' @param ... additional arguments for git2r::commit
-#' @export
-
-snapshot <- function(message = "created automatic snapshot", session = TRUE, db_name = "runs.sqlite", ...){
-  current_runs <- show_runs(db_name = db_name)
-
-  files_to_stage <- c(file.path(getOption("scripts.dir"),"*"),
-                      current_runs$ctl,
-                      file.path("SourceData","*"),
-                      db_name)
-
-  tidyproject::code_snapshot_files(message = message, session = session, files_to_stage = files_to_stage, ...)
-
-}
-
 
 #' Posterior predictive check computations
 #' 

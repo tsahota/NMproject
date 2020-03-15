@@ -327,15 +327,6 @@ test_relations <- function(dtest, param, cov, state, continuous){
   
 }
 
-summary_step_nm <- function(d, ref_model = NA){
-  m_col <- which(sapply(d, is_list_nm))
-  stopifnot(length(m_col)==1)
-  m <- d[,m_col][[1]]
-  
-  nm_results <- summary(m, ref_model = ref_model)
-  dplyr::bind_cols(d[,names(d)[!names(d) %in% names(nm_results)]], nm_results)
-}
-
 identify_cov_relations <- function(r){
   ctl <- ctl_list(r)
   pk_block <- ctl$PK

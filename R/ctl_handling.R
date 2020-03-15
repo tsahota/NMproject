@@ -445,28 +445,6 @@ update_parameters0 <- function(ctl,coef_from,type = c("THETA","OMEGA","SIGMA")){
   ctl_lines
 }
 
-#' update parameters from a control stream
-#'
-#' @param ctl object coercible into ctl_list
-#' @param from class nm. object from which to extract results
-#' @export
-
-update_parameters <- function(ctl, from){
-  UseMethod("update_parameters")
-}
-
-#' @export
-update_parameters.default <- function(ctl, from){
-  if(is_single_na(ctl)) return(NA)
-  if(missing(from) & inherits(ctl, "nmexecute")) from <- ctl
-  ctl_lines <- ctl_list(ctl)
-  coef_from <- coef.nm(from, trans=FALSE)
-  ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "THETA")
-  ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "OMEGA")
-  ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "SIGMA")
-  ctl_lines
-}
-
 #' gsub for ctl file
 #' 
 #' @param ctl object coercible into ctl_character
