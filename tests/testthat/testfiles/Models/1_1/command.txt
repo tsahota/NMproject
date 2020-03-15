@@ -1,1 +1,0 @@
-/opt/scp/software/psn/4.4.8-foss-2017a-gfortran-5.2/bin/execute run1.mod -dir=1_1

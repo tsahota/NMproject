@@ -1,0 +1,1 @@
+/opt/scp/software/psn/4.4.8-foss-2017a-gfortran-5.2/bin/execute runm2.mod -dir=m2_1
