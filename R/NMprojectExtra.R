@@ -2195,10 +2195,19 @@ trans.nm_generic <- function(m, text){
   old_target <- target(m)
   m <- m %>% target("SUB") 
   
-  if(grepl("TRANS", text(m))){ ## TRANS already exists
+  if(any(grepl("TRANS", text(m)))){ ## TRANS already exists
     m <- m %>% gsub_ctl("TRANS\\s?\\=?\\s?[0-9]+", paste0("TRANS", text))
   } else { ## append
-    m <- m %>% text(paste(text(m), paste0("TRANS", text)))
+    
+    new_text <- text(m)
+    blanks <- grepl("^\\s*$", new_text)
+    
+    new_text[max(which(!blanks))] <- 
+      paste0(new_text[max(which(!blanks))], " TRANS", text)
+    
+    new_text <- gsub("\\s+", " ", new_text)
+    
+    m <- m %>% text(new_text)
   }
   
   ## if not 
@@ -3966,7 +3975,7 @@ remove_cov.nm_list <- Vectorize_nm_list(remove_cov.nm_generic, SIMPLIFY = FALSE)
 
 #' @export
 cov_forest_plot <- function(m){
-  if(!is_finished(m)) wait_for_finished(m)
+  if(!is_finished(m)) wait_finish(m)
   # d <- nm_output(m) ## read in combined output 
   
   ## assume m is nm_list
