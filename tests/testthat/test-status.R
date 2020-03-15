@@ -24,14 +24,13 @@ test_that("status",{
   ### end boiler plate
   ############################
 
-  ds <- tibble::tibble(run_id = 1)
+  ds <- tibble::tibble(run_id = "m1")
   
   ds$m <- nm(run_id = ds$run_id) %>%
-    ctl("staging/Models/run{run_id}.mod") %>%
-    #data_path("DerivedData/THEOPP.csv") %>%
-    cmd("execute run{run_id}.mod -dir={run_dir}")
+    ctl("staging/Models/run1.mod") %>%
+    cmd("execute {ctl_name} -dir={run_dir}")
   
-  expect_message(ds$m %>% run_nm())
+  expect_message(ds$m <- ds$m %>% run_nm())
   
   m1 <- ds$m[1]
   

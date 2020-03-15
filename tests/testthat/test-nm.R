@@ -35,14 +35,16 @@ test_that("nm object basic use",{
   expect_true(length(mNA) == 1)
   expect_true(is.na(mNA))
   
-  m1 <- nm(run_id = "m1")
+  ## pick a different run_id to post processing tests
+  
+  m1 <- nm(run_id = "mod1")
   
   expect_output(print(m1))
   
   m1 <- m1 %>% cmd("qpsn -t 100 -c auto -- execute {ctl_name} -dir={run_dir}")
   m1 <- m1 %>% ctl("staging/Models/run1.mod")
   
-  expect_identical(ctl_path(m1), "Models/runm1.mod")
+  expect_identical(ctl_path(m1), "Models/runmod1.mod")
   ## file doesn't exist yet
   expect_true(!file.exists(ctl_path(m1)))
   
@@ -56,7 +58,7 @@ test_that("nm object basic use",{
   
   expect_true(is.character(status(m1)))
   
-  m2 <- m1 %>% child(run_id = "m2")
+  m2 <- m1 %>% child(run_id = "mod2")
   
   ## parent hasn't been run
   expect_true(is.na(parent(m2)))
@@ -64,19 +66,19 @@ test_that("nm object basic use",{
   dtemp <- overlapping_outputs(c(m1,m2))
   expect_true(nrow(dtemp) == 0)
   
-  expect_identical(ctl_name(m2), "runm2.mod")
+  expect_identical(ctl_name(m2), "runmod2.mod")
   
   ## table renumbering
   tabs <- psn_exported_files(m2) %>% dplyr::first()  
   expect_true(
-    any(grepl("sdtabm2", tabs)) & ## contains sdtabm2
-      !any(grepl("sdtabm1", tabs)) ## doesn't contain sdtabm1
+    any(grepl("sdtabmod2", tabs)) & ## contains sdtabm2
+      !any(grepl("sdtabmod1", tabs)) ## doesn't contain sdtabm1
   )
   
   m2 <- m2 %>% 
     run_in("Models/base")
   
-  expect_identical(ctl_path(m2), "Models/base/runm2.mod")
+  expect_identical(ctl_path(m2), "Models/base/runmod2.mod")
   
   expect_true(file.exists(data_path(m2)))
   
@@ -126,7 +128,25 @@ test_that("nm object basic use",{
     m1 <- m1 %>% subroutine(advan = 2, trans = 2)
   })
   
-  #expect_true(trans(m1) == 2)
+  expect_true(trans(m1) == 2)
+  
+  ds <- available_advans %>%
+    dplyr::filter(advan %in% c(2,4)) %>%
+    dplyr::mutate(
+      m = m1 %>% child(run_id = label) %>%
+        subroutine(advan = advan, trans = trans)
+    )
+  
+  expect_true(inherits(ds, "data.frame"))
+  
+  dollar_subs <- ds$m %>% dollar("SUB") %>% unlist()
+  names(dollar_subs) <- NULL
+  
+  expect_true(all.equal(
+    dollar_subs,
+    paste0("$SUB ADVAN", ds$advan, " TRANS", ds$trans)
+  ))
+  
   
   
 })

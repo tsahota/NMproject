@@ -27,25 +27,30 @@ test_that("run and post",{
   #m1 <- nm("qpsn -m -c auto -t 3000 -- execute run1.mod -dir=1")
   
   ## dataset procesing
-  ds <- tibble::tibble(run_id = 1)
   
-  ds$m <- nm(run_id = ds$run_id) %>%
-    ctl("staging/Models/run{run_id}.mod") %>%
-    #data_path("DerivedData/THEOPP.csv") %>%
-    cmd("execute run{run_id}.mod -dir={run_dir}")
+  m1 <- nm(run_id = "m1") %>%
+    ctl("staging/Models/run1.mod") %>%
+    cmd("execute {ctl_name} -dir={run_dir}") %>%
+    run_nm()
   
-  expect_message(ds$m %>% run_nm())
+  m2 <- m1 %>% child(run_id = "m2") %>%
+    subroutine(advan = 4, trans = 1) %>%
+    run_nm()
   
-  d <- input_data(ds$m[1])
+  mlist <- c(m1, m2)
 
-  expect_true(inherits(d, "data.frame"))
-
+  ## running
+  
+  expect_message(mlist %>% run_nm())
+  
   ## post processing
 
-  m1 <- ds$m[1]
   
-  expect_true(inherits(ofv(ds$m), "numeric"))
-  expect_true(!is.na(ofv(m1)))
+  expect_true(inherits(rr(mlist), "data.frame"))
+  expect_true(inherits(summary_wide(mlist), "data.frame"))
+  expect_true(inherits(summary_long(mlist), "data.frame"))
+  
+  expect_true(inherits(ofv(mlist), "numeric"))
   
   do <- output_table(m1) %>% dplyr::first()
   expect_true(inherits(do, "data.frame"))
