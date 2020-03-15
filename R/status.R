@@ -8,11 +8,6 @@
 status <- function(x, simple = TRUE) UseMethod("status",x)
 
 #' @export
-status.nm <- function(x, simple = TRUE) {
-  if(simple) run_status(x)$status else run_status(x)
-}
-
-#' @export
 status.default <- function(x, simple = TRUE) {
   if(length(x) == 1) if(is.na(x)) return(NA)
   stop("don't know how to handle this")

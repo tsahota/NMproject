@@ -27,7 +27,6 @@ Imports:
     diffobj (>= 0.1.11),
     purrr,
     tidyr,
-    shiny (>= 1.1.0),
     miniUI (>= 0.1.1),
     rstudioapi (>= 0.7)
 RoxygenNote: 6.0.1
