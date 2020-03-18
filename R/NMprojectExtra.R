@@ -3548,6 +3548,35 @@ nmsave_multiplot.nm_generic <- function(r, plot_ob, plot_name, plot_dir = result
 nmsave_multiplot.nm_list <- Vectorize_nm_list(nmsave_multiplot.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
 
+
+nm_render <- function(r, 
+                      rmd_path = scripts_dir(), 
+                      plot_dir = results_dir(r), ...){
+  UseMethod("nm_render")
+}
+#' @export
+nm_render.nm_generic <- function(r, 
+                                 rmd_path = scripts_dir(), 
+                                 plot_dir = results_dir(r), ...){
+  
+  
+}
+
+#' Create new R notebook
+#' @param script_name character
+#' @param overwrite logical. Whether to overwrite existing file (default = FALSE)
+#' @param open_file logical. Whether function should open script (default = TRUE)
+#' @param libs character. What libraries to add.
+#' @export
+new_notebook_template <- function(script_name, overwrite = FALSE, open_file = TRUE, libs=c("NMproject")) {
+  tidyproject::new_notebook_template(script_name = script_name,
+                                     overwrite = overwrite,
+                                     open_file = open_file,
+                                     libs = libs)
+}
+
+
+
 #' @export
 summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new", "all"), keep_m = FALSE, ...){
 
@@ -4465,6 +4494,9 @@ read_derived_data <- function(name, na = ".", ...){
   }
   return(d)
 }
+
+
+
 
 
 if(0){
