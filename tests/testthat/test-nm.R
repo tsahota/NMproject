@@ -125,10 +125,30 @@ test_that("nm object basic use",{
   expect_true(trans(m1) == 1)
   
   suppressWarnings({
-    m1 <- m1 %>% subroutine(advan = 2, trans = 2)
+    m1trans2 <- m1 %>% 
+      subroutine(advan = 2, trans = 2)
   })
   
-  expect_true(trans(m1) == 2)
+  diff_fails <- FALSE
+  if(requireNamespace("diffobj", quietly = TRUE)){
+    dff <- nm_diff(m1, m1trans2)
+    diff_fails <- !inherits(dff, "Diff")    
+  }
+  expect_false(diff_fails)
+
+  expect_true(trans(m1trans2) == 2)
+  
+  itheta_m1 <- init_theta(m1)
+  log_K <- itheta_m1$init[itheta_m1$name == "K"]
+  log_V <- itheta_m1$init[itheta_m1$name == "V"]
+  
+  itheta_m1trans2 <- init_theta(m1trans2)
+  log_CL <- itheta_m1trans2$init[itheta_m1trans2$name == "CL"]
+  
+  ## CL = K*V
+  ## log_CL = log_K + log_V
+  ## tol = 0.01 for numerical precision
+  expect_true(abs(log_CL - log_K - log_V) < 0.01)
   
   ds <- available_advans %>%
     dplyr::filter(advan %in% c(2,4)) %>%
@@ -139,14 +159,14 @@ test_that("nm object basic use",{
   
   expect_true(inherits(ds, "data.frame"))
   
-  dollar_subs <- ds$m %>% dollar("SUB") %>% unlist()
+  dollar_subs <- ds$m[-1] %>% dollar("SUB") %>% unlist()
   names(dollar_subs) <- NULL
   
   expect_true(all.equal(
     dollar_subs,
-    paste0("$SUB ADVAN", ds$advan, " TRANS", ds$trans)
+    paste0("$SUB ADVAN", ds$advan[-1], " TRANS", ds$trans[-1])
   ))
-  
+
   ## use of stringr pipe
   mdummy <- m1 %ns>% stringr::str_replace("THETA", "DUMMY")
   
