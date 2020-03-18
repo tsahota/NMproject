@@ -1,8 +1,8 @@
 # NMproject
 
-[![Travis-CI Build Status](https://travis-ci.org/tsahota/NMproject.svg?branch=master)](https://travis-ci.org/tsahota/NMproject)
-[![Coverage Status](https://coveralls.io/repos/github/tsahota/NMproject/badge.svg?branch=master)](https://coveralls.io/github/tsahota/NMproject?branch=newinterface)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/tsahota/NMproject?branch=master&svg=true)](https://ci.appveyor.com/project/tsahota/NMproject)
+[![Travis-CI Build Status](https://travis-ci.org/tsahota/NMproject.svg?branch=newinterface)](https://travis-ci.org/tsahota/NMproject)
+[![Coverage Status](https://coveralls.io/repos/github/tsahota/NMproject/badge.svg?branch=newinterface)](https://coveralls.io/github/tsahota/NMproject?branch=newinterface)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/tsahota/NMproject?branch=newinterface&svg=true)](https://ci.appveyor.com/project/tsahota/NMproject)
 
 Script based NONMEM execution on tidyprojects with shiny interface.
 
@@ -152,36 +152,32 @@ gof_xpose(mod1)
 
 ### + I want to repeat my model development script, how do I do this?
 
-You need to make the `run()` function submit NONMEM jobs synchronously.  To do this:
-
-```r
-interactive_mode(FALSE)
-```
-
-The `run()` function will now wait for each run to finish before moving onto the next R command.  To return to interactive mode (asynchronous NONMEM execution) run:
-
-```r
-interactive_mode(TRUE)
-```
+Just rerun the code in R
 
 ### + How can I queue multiple PsN jobs, forcing some to wait, and some not to.
 
 Assuming you have the `nm` objects defined, you can queing jobs, by forcing some to wait, e.g.:
 
 ```r
-run(mod1,wait=TRUE) ; run(mod1vpc,mod1sse)
+mod1 <- run_nm(mod1) %>% wait_finish()
+mod1vpc <- run_nm(mod1vpc)
+mod1sse <- run_nm(mod1sse)
 ```
 
 This will run mod1, wait for it to finish and then execute mod1vpc and mod1see at the same time.  You will not be able to use the R console while mod1 is running however since it will be waiting for mod1 to finish.  To get around this consider the `future` package to have a separate R process control the execution:
 
 ```r
 future::plan("multisession")
-future::future({run(mod1,wait=TRUE) ; run(mod1vpc,mod1sse)})
+mod1 %<-%{
+  run(mod1,wait=TRUE) ; run(mod1vpc,mod1sse)})
 ```
 
-### + After having closed my session how to I recreate an nm object
+### + After having closed my session how to I recreate my workspace
 
-Just re-run the `nm()` statements again. The objects will be recreated.  Alternatively, if you know the database entry number you can use `extract_nm()`
+Just re-run all the code again.
+
+If nothing has changed with regards to datasets and control files run_nm() will retrieve cached results without running nonmem.
+
 
 ### + I see the PMX code library has been updated, how can I update my local version of it?
 
@@ -215,19 +211,14 @@ This is not recommended as it requires R working directory being set to a networ
 
 ### + My organisation has a different control file convention to the runXX.mod convention.  Can I change this?
 
-Yes, you need to modify the `model_file_sub` and `model_file_extn` options.  To do this add the following to your `~/.Rprofile` configuration file. E.g. to change the convention to nm.XX.con
+Yes, you can specify the convention with the ctl_path() e.g. to change the convention to nm.XX.con
 
 ```r
-options(model_file_stub="nm.")
-options(model_file_extn="con")
+m %>% ctl_path("Models/nm.{run_id}.com")
 
 ```
 
-### + How do I submit a command directly to the NONMEM server?
-
-```r
-system_nm("command_to_run",dir="path/to/dir")
-```
+Consider making a wrapper function around nm() and ctl_path() and distributing to your users
 
 ### + How do I submit a command directly to the NONMEM server?
 
@@ -237,7 +228,7 @@ system_nm("command_to_run",dir="path/to/dir")
 
 ### + There is functionality in PsN's runrecord, sumo or Pirana that I would like but is not currently available in NMproject.
 
-NMproject doesn't change PsN's default directory structure, everything in the "Models"" directory is as if you lauched the jobs from the command line.  Therefore you can continue to use PsN functions on the command line.  You can also continue using Pirana by pointing it towards your models directory.
+NMproject doesn't change PsN's default directory structure, everything in the "Models" directory is as if you lauched the jobs from the command line.  Therefore you can continue to use PsN functions on the command line.  You can also continue using Pirana by pointing it towards your models directory.
 
 If it's something you think really should be part of NMproject, open a github "issue" and ask for the feature.
 
@@ -245,7 +236,7 @@ If it's something you think really should be part of NMproject, open a github "i
 
 Yes, NMproject doesn't change PsN's default directory structure, so you can go back to running PsN via command line.  If there a bug or a feature you think really should be part of NMproject, consider opening a github "issue" and asking.
 
-### + I work for a CRO. My client doesn't have NMproject, how can send the project to them.
+### + I work for a CRO. My client doesn't have NMproject, how can send the analysis to them.
 
 NMproject doesn't change PsN's default directory structure, and everything will work for them as long as their version of R (and package versions) are compatible.  It is recommended to run Renvironment_info() as a last step before sending the analysis directory so they can see the package versions you used.
 
