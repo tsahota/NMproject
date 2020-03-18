@@ -62,9 +62,9 @@ To use the alpha interface, install NMproject 0.3.2",
 }
 
 #' Create core NM object
-# 
-# Experimental new nm object for v0.5 interface.  Not compatible with previous system.
-#   The basic object this package centres around.  Most package functions act on this object.
+#' 
+#' Experimental new nm object interface.  Not compatible with previous system.
+#'   The basic object this package centres around.  Most package functions act on this object.
 #' 
 #' @param run_id character vector. Run identifier
 #' @param run_in character vector. ctl file and run location  
@@ -101,6 +101,8 @@ is.na.nm_generic <- function(x) is.na(run_id(x))
 is.na.nm_list <- function(x) is.na(run_id(x))
 
 #' Make child nm object from parent
+#' 
+#' Child objects inherit attributes of parent but with a new run_id
 #' 
 #' @param m parent nm object
 #' @param run_id character.  New run id to assign to child object
@@ -249,13 +251,13 @@ replace_tags <- function(m, field){
   m
 }
 
-#' @export
+
 glue_fields <- function(m){
   UseMethod("glue_fields")
 }
-#' @export
+
 glue_fields.nm_generic <- function(m) m$glue_fields
-#' @export
+
 glue_fields.nm_list <- Vectorize_nm_list(glue_fields.nm_generic, SIMPLIFY = FALSE)
 
 ## following is only to get, not to set 
@@ -315,17 +317,6 @@ custom_vector_field.nm_list <- Vectorize_nm_list(custom_vector_field.nm_generic,
 #' }
 #' @export
 
-# ctl_path <- function(m, text, glue = TRUE) {
-#   if(missing(text)) custom_1d_field(m, "ctl_path") else {
-#     
-#     m <- custom_1d_field(m, "ctl_path", text, glue = TRUE)
-# 
-#     data_path <- data_path(m)
-#     m <- m %>% data_path(data_path) ## reset data path
-#     m
-#   }
-# }
-
 ctl_path <- function(m, text) {
   if(missing(text)) file.path(run_in(m), ctl_name(m)) else {
     m <- m %>% run_in(dirname(text))
@@ -333,9 +324,6 @@ ctl_path <- function(m, text) {
     m
   }
 }
-
-
-
 
 #' @export
 run_dir <- function(m, text, full_path = FALSE) {
@@ -411,20 +399,6 @@ job_info.nm_generic <- function(m, text) {
 #' @export
 job_info.nm_list <- Vectorize_nm_list(job_info.nm_generic)
 
-#' ## run_in UseMethod already defined
-#' #' @export
-#' run_in.nm_generic <- function(x, text){
-#'   if(missing(text)) {
-#'     if(length(x$ctl_path) > 0) return(dirname(x$ctl_path)) else 
-#'       return(NA_character_)
-#'   }
-#'   ctl_name <- basename(x$glue_fields["ctl_path"])
-#'   x <- x %>% ctl_path(file.path(text, ctl_name))
-#'   x
-#' }
-#' #' @export
-#' run_in.nm_list <- Vectorize_nm_list(run_in.nm_generic)
-
 ## run_in UseMethod already defined
 #' @export
 run_in.nm_generic <- function(x, text){
@@ -491,15 +465,12 @@ find_result_files.nm_generic <- function(r, pattern){
 find_result_files.nm_list <- Vectorize_nm_list(find_result_files.nm_generic, SIMPLIFY = TRUE)
 
 
-#' @export
 ctl_list2 <- function(r){
   UseMethod("ctl_list2")
 }
 
-#' @export
 ctl_list2.ctl_list <- function(r) r
 
-#' @export
 ctl_list2.character <- function(r){
   if(length(r) == 1){
     ctl <- readLines(r)
@@ -509,10 +480,8 @@ ctl_list2.character <- function(r){
   ctl_nm2r(ctl)
 }
 
-#' @export
 ctl_list2.nm_generic <- function(r) r[["ctl"]]
 
-#' @export
 ctl_list2.nm_list <- Vectorize_nm_list(ctl_list2.nm_generic, SIMPLIFY = FALSE)
 
 #' set/get control file object

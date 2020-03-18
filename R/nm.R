@@ -172,13 +172,6 @@ cond_num.default <- function(r){
 }
 
 #' @export
-cond_num.nm <- function(r){
-  dc <- try(coef_nm(r, trans = FALSE), silent = TRUE)
-  if(inherits(dc, "try-error")) return(as.numeric(NA))
-  cond_num(dc)
-}
-
-#' @export
 cond_num.nmcoef <- function(r){
   if(is_empty_nmcoef(r)) return(as.numeric(NA))
   dc <- r
