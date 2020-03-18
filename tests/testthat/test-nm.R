@@ -147,7 +147,15 @@ test_that("nm object basic use",{
     paste0("$SUB ADVAN", ds$advan, " TRANS", ds$trans)
   ))
   
+  ## use of stringr pipe
+  mdummy <- m1 %ns>% stringr::str_replace("THETA", "DUMMY")
   
+  expect_true( ## dummy present
+    any(
+      grepl("DUMMY",
+            mdummy %>% dollar("PK") %>% .[[1]])
+    )
+  )
   
 })
 
