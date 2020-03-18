@@ -45,6 +45,17 @@ test_that("run and post",{
   
   ## post processing
 
+  cw <- coef_wide(mlist[1])
+  cl <- coef_long(mlist[1])
+
+  expect_true(inherits(cw, "data.frame"))
+  expect_true(nrow(cw) > 0)
+  
+  expect_true(inherits(cl, "data.frame"))
+  expect_true(nrow(cl) > 0)
+  
+  #rr2(mlist)
+  status_table(mlist) 
   
   expect_true(inherits(rr(mlist), "data.frame"))
   expect_true(inherits(summary_wide(mlist), "data.frame"))
@@ -61,6 +72,19 @@ test_that("run and post",{
 
   p <- plot_iter(m1)
   expect_true(inherits(p,"ggplot"))
+  
+  ## parameter updates and initial value setting
+  itheta0 <- init_theta(m1)
+  m1 <- m1 %>% update_parameters()
+  itheta1 <- init_theta(m1)
+  
+  expect_true(!identical(itheta0, itheta1))
+  expect_false(in_cache(m1))
+  
+  ## last thing to do: clean up run
+  expect_true(all(file.exists(psn_exported_files(m1)[[1]])))
+  clean_run(m1)
+  expect_true(all(!file.exists(psn_exported_files(m1)[[1]])))
 
 
 })
