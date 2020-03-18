@@ -3584,7 +3584,7 @@ nm_render.nm_generic <- function(m,
                                  args = list(),
                                  ...){
   
-  if(m %in% names(args))
+  if("m" %in% names(args))
     stop("can't have m in arg.  m is reserved for model object")
   
   args <- c(args, list(m = as_nm_list(m)))
@@ -4637,8 +4637,55 @@ make_OCC_every_dose <- function(dose_trigger, sample_trigger){
   d$OCC
 }
 
+#' Shiny view of NMproject
+#' 
+#' @param m either nm_list object, or data.frame or list contain nm_lists
+#' @param envir if missing, the environment to search
+#' @examples 
+#' \dontrun{
+#' 
+#' m1 %>% nm_shiny()
+#' d$m %>% nm_shiny()
+#' d %>% nm_shiny()
+#' 
+#' }
+#' @export
+shiny_nm <- function(m, envir = .GlobalEnv){
+  if(missing(m)) {
+    m <- get_nm_lists(envir = envir)
+  } else {
+    if(inherits(m, "data.frame") | inherits(m, "list"))
+      m <- get_nm_lists(envir = m)
+  }
+  if(!requireNamespace("DT", quietly = TRUE))
+    stop("DT needed for this function to work. Please install it.",
+         call. = FALSE)
+  if(!requireNamespace("dygraphs", quietly = TRUE))
+    stop("dygraphs needed for this function to work. Please install it.",
+         call. = FALSE)
+  dygraphs::dygraph
+  DT::datatable
+  shiny_dir <- system.file("extdata/shiny",package="NMproject")
+  .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env
+  .sso_env$.m <- m  # see zzz.R for .sso_env
+  on.exit({
+    .sso_env$.currentwd <- NULL
+    .sso_env$m <- NULL
+  }, add = TRUE)
+  shiny::runApp(shiny_dir,launch.browser = TRUE)
+}
 
+get_nm_lists <- function(envir = .GlobalEnv){
 
+  m <- lapply(envir, function(object){
+    if(inherits(object, "nm_list")) object else NA
+  })
+  
+  m <- m[!is.na(m)]
+  m <- do.call(c, m)
+  m
+  
+}
 
 
 

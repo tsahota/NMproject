@@ -34,9 +34,9 @@ status.list <- function(x, simple = TRUE) {
 #' @param r nm object
 #' @export
 tail_lst <- function(r){
-  if(r$type == "execute"){
-    lst_name <- r$output$psn.lst
-    out_name <- file.path(dirname(r$output$psn.lst),"OUTPUT")
+  if(type(r) == "execute"){
+    lst_name <- r %>% nm_output_path("ext") #r$output$psn.lst
+    out_name <- file.path(dirname(lst_name),"OUTPUT")
     if(file.exists(out_name)) lst_name <- out_name
     lst <- try(readLines(lst_name),silent = TRUE)
     if(inherits(lst,"try-error")) return("no output")

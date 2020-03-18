@@ -351,30 +351,6 @@ update_dollar_input <- function(ctl, ...){
   ctl
 }
 
-
-#' Shiny view of NMproject
-#' @param db_name character. Name of db
-#' @export
-shiny_nm <- function(db_name="runs.sqlite"){
-  if(!requireNamespace("DT", quietly = TRUE))
-    stop("DT needed for this function to work. Please install it.",
-         call. = FALSE)
-  if(!requireNamespace("dygraphs", quietly = TRUE))
-    stop("dygraphs needed for this function to work. Please install it.",
-         call. = FALSE)
-  dygraphs::dygraph
-  DT::datatable
-  shiny_dir <- system.file("extdata/shiny",package="NMproject")
-  .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env
-  .sso_env$.db_name <- db_name  # see zzz.R for .sso_env
-  on.exit({
-    .sso_env$.currentwd <- NULL
-    .sso_env$.db_name <- NULL
-  }, add = TRUE)
-  shiny::runApp(shiny_dir,launch.browser = TRUE)
-}
-
-
 #' Check tidyproject for best practice compliance
 #'
 #' @param proj_name character. default = current working directory. path to directory.
