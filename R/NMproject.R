@@ -146,97 +146,8 @@ system_nm <- function(cmd,dir=getOption("models.dir"),...){
   getOption("system_nm")(cmd,...)
 }
 
-copy_control0 <- function(from, to, overwrite=FALSE, alt_paths, dest_dir = getOption("models.dir")){
-  ## if from = NONMEM control in current directory, it will copy and update $TABLE numbers
-  ## if from = control file code_library(), it will copy it.
-  ## First it will look for "from" in current directory, then it will look in code_library()
-  
-  to <- file.path(dest_dir, to)
-  if(any(file.exists(to)) & !overwrite) stop("file already exists. Rerun with overwrite = TRUE")
 
-  use_code_library <- missing(alt_paths)
-  from_path <- tidyproject::locate_file(from,search_path = NULL)
-  if(length(from_path)==0) from_path <- tidyproject::locate_file(from,getOption("models.dir"))
-  using_code_library <- length(from_path)==0
 
-  if(length(from_path)==0){ ## if file is not found directory or in scripts.dir
-    if(use_code_library) alt_paths <- getOption("code_library_path")
-    from_path <- tidyproject::locate_file(from,search_path = alt_paths,recursive = TRUE)
-    if(length(from_path)==0) stop(paste(from,"not found"))
-    if(length(from_path)>1 & use_code_library)
-      stop("Matched more than one file with that name in code library.\n Try:\n  1) specifying full path OR\n  2) ensuring getOption(\"code_library_path\") points to non-overlapping directories")
-    if(length(from_path)>1 & !use_code_library)
-      stop("Matched more than one file with that name in alt_paths.\n Try specifying full path")
-  }
-
-  is_project_file <- normalizePath(dirname(from_path))==normalizePath(getOption("models.dir"))
-
-  #is_nm_file_name(to,error_if_false = TRUE)
-  ctl <- ctl_list(from_path)
-  ## Modify the file here.
-  if(is_nm_file_name(from_path))
-    run_id_from <- run_id(from_path) else
-      run_id_from <- basename(from_path)
-  
-  #lapply(to, function(to){
-    run_id <- run_id(to)
-    
-    ctl <- ctl %>% new_ctl(to)
-    attr(ctl, "file_name") <- to
-    #ctl <- gsub(paste0("(FILE\\s*=\\s*\\S*)",run_id_from,"\\b"),paste0("\\1",run_id),ctl)
-    if(!is_project_file) ctl[[1]] <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",from_path),ctl[[1]])
-    #  ctl <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",run_id_from),ctl) else
-    #    ctl <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",from_path),ctl)
-    ctl[[1]] <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*",paste("\\1",Sys.info()["user"]),ctl[[1]])
-    
-    dir.create(dirname(to), recursive = TRUE, showWarnings = FALSE)
-    write_ctl(ctl)
-    if(!requireNamespace("git2r", quietly = TRUE))
-      warning("git2r is recommended for this function. Please install it.")
-    git2r::repository
-    #tidyproject::setup_file(to)    
-  #})
-  return()
-}
-
-Vectorize_invisible <- function (FUN, vectorize.args = arg.names, SIMPLIFY = TRUE, USE.NAMES = TRUE) 
-{
-  arg.names <- as.list(formals(FUN))
-  arg.names[["..."]] <- NULL
-  arg.names <- names(arg.names)
-  vectorize.args <- as.character(vectorize.args)
-  if (!length(vectorize.args)) 
-    return(FUN)
-  if (!all(vectorize.args %in% arg.names)) 
-    stop("must specify names of formal arguments for 'vectorize'")
-  collisions <- arg.names %in% c("FUN", "SIMPLIFY", "USE.NAMES", 
-                                 "vectorize.args")
-  if (any(collisions)) 
-    stop(sQuote("FUN"), " may not have argument(s) named ", 
-         paste(sQuote(arg.names[collisions]), collapse = ", "))
-  FUNV <- function() {
-    args <- lapply(as.list(match.call())[-1L], eval, parent.frame())
-    names <- if (is.null(names(args))) 
-      character(length(args))
-    else names(args)
-    dovec <- names %in% vectorize.args
-    invisible(do.call("mapply", c(FUN = FUN, args[dovec], MoreArgs = list(args[!dovec]), 
-                        SIMPLIFY = SIMPLIFY, USE.NAMES = USE.NAMES)))
-  }
-  formals(FUNV) <- formals(FUN)
-  FUNV
-}
-
-#' Copy NONMEM control stream
-#'
-#' @param from character. File to copy from
-#' @param to character. File to copy to
-#' @param overwrite logical. Should to file be overwritten? Default = FALSE.
-#' @param alt_paths character vector. paths to other candidate files to search
-#' @param dest_dir character. default "Models" dir
-#'
-#' @export
-copy_control <- Vectorize_invisible(copy_control0)
 
 #' Get run id
 #'
@@ -251,9 +162,6 @@ run_id <- function(m, text, ...)
 run_id.default <- function(m, text, ...) {
   if(is_single_na(m)) return(NA) else stop("don't know how to handle this")
 }
-
-#' @export
-run_id.nm <- function(m, text, ...) m[["run_id"]]
 
 #' @export
 run_id.ctl_list <- function(m, text, ...){
@@ -299,8 +207,6 @@ run_in.default <- function(x, text) {
   if(is_single_na(x)) return(NA) else stop("don't know how to handle this")
 }
 
-#' @export
-run_in.nm <- function(x, text) x$run_in
 
 #' @export
 run_in.ctl_list <- function(x, text){
@@ -445,14 +351,6 @@ update_dollar_input <- function(ctl, ...){
   ctl
 }
 
-add_pop_param <- function(ctl, param, unit, trans){
-
-  ctl <- ctl_list(ctl)
-  browser()
-
-
-}
-
 
 #' Shiny view of NMproject
 #' @param db_name character. Name of db
@@ -553,89 +451,6 @@ omega_matrix <- function(r){
   d_all <- d_all[order(d_all$ROW,d_all$COL), ]
 
   matrix(d_all$FINAL,nrow=max_size)
-}
-
-#' Document manual steps for traceability
-#'
-#' This function will not execute to prevent accidental partial execution
-#'
-#' @param code_section code section. A potential mix of R code and manual_edit() statements
-#' @return message to user
-#' @examples
-#' \dontrun{
-#' build_ctl({
-#'   m16 %>% new_ctl("17") %>%  ## changes sdtab16 to sdtab17 and updated "based on: 16"
-#'   update_parameters(m16) %>% ## update parameter with final estimates from run 16
-#'   write_ctl() %>%            ## save results to file
-#'   manual_edit("reparameterised CL -> K")  ## manual edit. Save afterwards
-#'   commit_file("17")          ## (optional) snapshot file in version control system
-#' })
-#'
-#' ## or equivalently:
-#'
-#' build_ctl({
-#'   m16 %>% new_ctl("17") %>%
-#'   update_parameters(m16) %>%
-#'   write_ctl()
-#'   manual_edit("17", "reparameterised CL -> K")
-#'   commit_file("17")
-#' })
-#'
-#' }
-#' @export
-build_ctl <- function(code_section){
-  code_section <- substitute(code_section)
-  code_section_text <- deparse(code_section)
-
-  if(find_ast_name(code_section, "manual_edit")){
-    message("  ------------- MANUAL CODE SEGMENT -------------
-manual_steps() detected, skipping code segment to prevent partial building of modfile,
-run line by line and follow instructions in manual_step() to build modfile")
-  } else {
-    eval(code_section, envir = parent.frame(n=1))
-  }
-  return(invisible())
-}
-
-find_ast_name <- function(object, find){
-  tests <- sapply(object, function(obj) identical(deparse(obj), find))
-  if(any(tests)) return(TRUE)
-  lengths <- sapply(object, length) > 1
-  if(!any(lengths)) return(FALSE)
-  any(sapply(object[sapply(object, length) > 1], find_ast_name, find = find))
-}
-
-load_models <- function (x){
-  if (is.name(x) || is.atomic(x)) {
-    return(NULL)
-  }
-  else if (is.call(x)) {
-    if (identical(x[[1]], quote(`<-`))){
-      if(is.call(x[[3]])){
-        if(identical(x[[3]][[1]], quote(nm))){
-          message("\nrunning: ", deparse(x))
-          return(eval(x, envir = .GlobalEnv))
-        }
-      }
-    }
-    return(NULL)
-  }
-}
-
-#' load all model objects defined in a script
-#'
-#' Will rerun all '<- nm()' definitions
-#' Only remakes top level definitions.
-#' Programmatic use of nm() (e.g. in a for loop or using paste with other objects) will generally not work.
-#' Sorry!
-#'
-#' @param script_name path to script file
-#' @export
-
-load_top_level_models <- function(script_name){
-  text <- parse(script_name)
-  unlist(lapply(text, load_models))
-  invisible()
 }
 
 #' commit individual file(s)

@@ -35,7 +35,8 @@ An object of class nm_list.  Object is concatenatable.
    Length of object corresponds to length of run_id
 }
 \description{
-Create core NM object
+Experimental new nm object interface.  Not compatible with previous system.
+  The basic object this package centres around.  Most package functions act on this object.
 }
 \examples{
 \dontrun{

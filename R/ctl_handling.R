@@ -969,13 +969,6 @@ ofv.default <- function(r){
 }
 
 #' @export
-ofv.nm <- function(r){
-  dc <- try(coef_nm(r, trans = FALSE), silent = TRUE)
-  if(inherits(dc, "try-error")) return(NA)
-  dc$FINAL[dc$parameter %in% "OBJ"]
-}
-
-#' @export
 ofv.nmcoef <- function(r){
   if(is_empty_nmcoef(r)) return(NA)
   r$FINAL[r$parameter %in% "OBJ"]
