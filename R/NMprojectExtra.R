@@ -1112,13 +1112,17 @@ cond_num.nm_list <- function(r){
   unlist(cond_nums)
 }
 
-
 #' run record
 #' 
 #' @param m nm object
 #' @param trans logical. if TRUE (default) will transform using control file $THETA/OMEGA conventions
 #' @export
 rr <- function(m, trans = TRUE){
+  UseMethod("rr")
+}
+  
+#' @export
+rr.nm_list <- function(m, trans = TRUE){
   d <- coef(m, trans = trans)
   d <- do.call(rbind, d)
   if(nrow(d) == 0) return(data.frame())
@@ -1148,6 +1152,10 @@ rr <- function(m, trans = TRUE){
   tmp <- sapply(d, is.factor)
   d[tmp] <- lapply(d[tmp], as.character)
   d
+}
+
+rr.nm_generic <- function(m, trans = TRUE){
+  rr(as_nm_list(m), trans = trans)
 }
 
 #' @export
@@ -3548,19 +3556,51 @@ nmsave_multiplot.nm_generic <- function(r, plot_ob, plot_name, plot_dir = result
 nmsave_multiplot.nm_list <- Vectorize_nm_list(nmsave_multiplot.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
 
-
-nm_render <- function(r, 
-                      rmd_path = scripts_dir(), 
-                      plot_dir = results_dir(r), ...){
+#' @export
+nm_render <- function(m, 
+                      input, 
+                      output_dir = results_dir(m), 
+                      output_file = 
+                        paste0(
+                          tools::file_path_sans_ext(input),
+                          ".",run_id(m),
+                          ".html"
+                        ),
+                      args = list(),
+                      ...){
   UseMethod("nm_render")
 }
+
 #' @export
-nm_render.nm_generic <- function(r, 
-                                 rmd_path = scripts_dir(), 
-                                 plot_dir = results_dir(r), ...){
+nm_render.nm_generic <- function(m, 
+                                 input, 
+                                 output_dir = results_dir(m), 
+                                 output_file = 
+                                   paste0(
+                                     tools::file_path_sans_ext(input),
+                                     ".",run_id(m),
+                                     ".html"
+                                   ),
+                                 args = list(),
+                                 ...){
   
+  if(m %in% names(args))
+    stop("can't have m in arg.  m is reserved for model object")
+  
+  args <- c(args, list(m = as_nm_list(m)))
+
+  rmarkdown::render(input = input, 
+                    output_file = output_file,
+                    output_dir = output_dir,
+                    params = args,
+                    ...)
+  
+  invisible(m)
   
 }
+
+#' @export
+nm_render.nm_list <- Vectorize_nm_list(nm_render.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
 #' Create new R notebook
 #' @param script_name character
@@ -3718,6 +3758,17 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
   d <- d %>% dplyr::ungroup()
   d  
 }
+
+#' @export
+summary.nm_generic <- function(object, ref_model = NA, parameters = c("none", "new", "all"), keep_m = FALSE, ...){
+  summary(object = as_nm_list(object), ref_model = ref_model, parameters = parameters, keep_m = keep_m, ...)
+}
+  
+
+#' #' @export
+#' summary_wide <- function(..., parameters = c("none", "new", "all")){
+#'   UseMethod("summary_wide")
+#' }
 
 #' @export
 summary_wide <- function(..., parameters = c("none", "new", "all")){
