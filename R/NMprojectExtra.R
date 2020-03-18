@@ -1800,7 +1800,6 @@ default_trans <- function(advan){
 #' @param m nm object
 #' @param advan character. desired ADVAN
 #' @param trans character. desired TRANS
-#' @param verbose logical (default = FALSE)
 #' @param recursive logical (default = TRUE). Internal argument, do not modify
 #' 
 #' @details
@@ -1818,12 +1817,12 @@ default_trans <- function(advan){
 #' }
 #' @export
 
-subroutine <- function(m, advan = NA, trans = NA, verbose = FALSE, recursive = TRUE){
+subroutine <- function(m, advan = NA, trans = NA, recursive = TRUE){
   UseMethod("subroutine")
 }
 
 #' @export
-subroutine.nm_generic <- function(m, advan = NA, trans = NA, verbose = FALSE, recursive = TRUE){
+subroutine.nm_generic <- function(m, advan = NA, trans = NA, recursive = TRUE){
   
   dps <- available_advans
   
@@ -1894,7 +1893,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = NA, verbose = FALSE, re
     
     return(m)
   }
-  
+
   ## check source is valid
   if(!any(dps$advan %in% old_advan & dps$trans %in% old_trans)){
     message("advan/trans not available:")
@@ -1944,6 +1943,12 @@ subroutine.nm_generic <- function(m, advan = NA, trans = NA, verbose = FALSE, re
   }
   
   thetas <- raw_init_theta(m)
+  thetas$init_trans <- thetas$init
+  thetas$init_trans[thetas$trans %in% c("LOG","LOGODDS")] <- 
+    exp(thetas$init_trans[thetas$trans %in% c("LOG","LOGODDS")])
+  thetas$init_trans[thetas$trans %in% "LOGIT"] <- 
+    100*1/(1+exp(-thetas$init_trans[thetas$trans %in% "LOGIT"]))
+  
   omegas <- raw_init_omega(m)
   
   dold <- dp %>% dplyr::filter(.data$advan %in% old_advan,
@@ -1957,7 +1962,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = NA, verbose = FALSE, re
   ## loop through rows 
   
   for(i in seq_len(nrow(d))){
-    di <- d[i,]
+    di <- d[i, ]
     strategy <- "none"
     if(is.na(di$nm_name.x) & !is.na(di$nm_name.y)) strategy <- "add_new" else {
       if(!is.na(di$nm_name.x) & is.na(di$nm_name.y)) strategy <- "remove" else {
@@ -1966,10 +1971,45 @@ subroutine.nm_generic <- function(m, advan = NA, trans = NA, verbose = FALSE, re
     }
     if(strategy == "none") next
     if(strategy == "rename") {
-      ## TODO:
+
       ## set initial estimates from current
+      
+      relation <- di$relation.y
+      for(j in seq_len(nrow(d))){
+        dj <- d[j, ]
+        relation <- gsub(dj$base_name,
+                         dj$nm_name.x,
+                         relation) 
+      }
+      
+      ## find initial estimates of TVK and TVV2
+      
+      theta_vec <- as.list(thetas$init_trans)
+      names(theta_vec) <- thetas$name
+      
+      relation_expr <- parse(text = relation)
+      new_theta <- 
+        try(with(theta_vec, eval(relation_expr)), silent = TRUE)
+      
       m <- m %>% rename_parameter_(new_name = di$nm_name.y,
                                    name = di$nm_name.x)
+      
+      if(!inherits(new_theta, "try-error")){
+        ithetai <- init_theta(m)
+        ithetai$init[ithetai$name == di$nm_name.y] <- new_theta
+        if(ithetai$trans[ithetai$name == di$nm_name.y] %in% c("LOG", "LOGODDS"))
+          ithetai$init[ithetai$name == di$nm_name.y] <- log(new_theta)
+        if(ithetai$trans[ithetai$name == di$nm_name.y] %in% c("LOGIT")){
+          p <- new_theta/100
+          ithetai$init[ithetai$name == di$nm_name.y] <-
+            log(p/(1-p))
+        }
+        ithetai$init[ithetai$name == di$nm_name.y] <- 
+          signif(ithetai$init[ithetai$name == di$nm_name.y], 5)
+        
+        m <- m %>% init_theta(ithetai)
+        
+      }
       
     }
     if(strategy == "add_new") {
@@ -2003,20 +2043,45 @@ subroutine.nm_generic <- function(m, advan = NA, trans = NA, verbose = FALSE, re
   ## update $MODEL if present
   #browser()
   
-  
-  if(verbose) if(requireNamespace("diffobj", quietly = TRUE)){
-    old_ctl <- as.character(ctl_character(ctl(as_nm_generic(old_m))))
-    new_ctl <- as.character(ctl_character(ctl(as_nm_generic(m))))
-    #"ansi256"
-    dff <- diffobj::diffChr(new_ctl, old_ctl, format = "raw")
-    message("--- file diff: new_ctl and old_ctl colours show additions/deletions---")
-    print(dff)
-  }
-  
   m
 }
 #' @export
 subroutine.nm_list <- Vectorize_nm_list(subroutine.nm_generic, SIMPLIFY = FALSE)
+
+#' Compute diff between two NONMEM runs
+#' 
+#' NMproject's control file manipulation functions (e.g. subroutine())
+#'  may not work for all control files. It is the responsibilty of 
+#'  the user to check automatic manipulations are done properly.
+#'  Displaying diffs provides a means of manually checking.
+#' 
+#' @param ref_m nm object (base/reference object)
+#' @param m nm object
+#' 
+#' @return diff object
+#' @examples 
+#' \dontrun{
+#' 
+#' m1 <- nm(run_id = "m1") %>%
+#'   ctl("staging/Models/run1.mod")
+#' 
+#' m2 <- m1 %>% child(run_id = "m2") %>%
+#'   subroutine(advan = 2, trans = 2)
+#' 
+#' nm_diff(m1, m2)
+#' 
+#' }
+#' @export
+nm_diff <- function(ref_m, m){
+  requireNamespace("diffobj", quietly = TRUE)
+  
+  old_ctl <- as.character(ctl_character(ctl(as_nm_generic(ref_m))))
+  new_ctl <- as.character(ctl_character(ctl(as_nm_generic(m))))
+  #"ansi256"
+  dff <- diffobj::diffChr(old_ctl, new_ctl, format = "raw")
+  #message("--- file diff: new_ctl and old_ctl colours show additions/deletions---")
+  dff
+}
 
 #' @export
 remove_parameter <- function(m, name){

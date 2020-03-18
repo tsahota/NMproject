@@ -4,7 +4,7 @@
 \alias{subroutine}
 \title{Subroutine}
 \usage{
-subroutine(m, advan = NA, trans = NA, verbose = FALSE, recursive = TRUE)
+subroutine(m, advan = NA, trans = NA, recursive = TRUE)
 }
 \arguments{
 \item{m}{nm object}
@@ -12,8 +12,6 @@ subroutine(m, advan = NA, trans = NA, verbose = FALSE, recursive = TRUE)
 \item{advan}{character. desired ADVAN}
 
 \item{trans}{character. desired TRANS}
-
-\item{verbose}{logical (default = FALSE)}
 
 \item{recursive}{logical (default = TRUE). Internal argument, do not modify}
 }
