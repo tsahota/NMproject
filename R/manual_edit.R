@@ -166,11 +166,17 @@ nm_tran_app <- function(){
 
 
 view_patch_app <- function(){
-  
+
   ctx <- rstudioapi::getActiveDocumentContext()
   selected_text <- ctx$selection[[1]]$text
+  if(selected_text == ""){
+    line <- ctx$selection[[1]]$range$start[[1]]
+    selected_text <- ctx$contents[line]
+  }
   
-  selected_text <- gsub("\"","", selected_text)
+  selected_text <- gsub(".*(patch-[^\"]+)\".*","\\1", selected_text)
+  
+  #selected_text <- gsub("\"","", selected_text)
   
   view_patch(selected_text)
   

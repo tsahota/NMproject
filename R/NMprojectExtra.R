@@ -1406,7 +1406,7 @@ run_nm.nm_generic <- function(r, overwrite=getOption("run_overwrite"),delete_dir
       current_md5 <- execution_info(r)
       matches <- sapply(checksuminfo_disk, function(i) identical(i$md5, current_md5))
       if(any(matches)){
-        message("ctl file, data and cmd unchanged from last run, skipping run... use force = TRUE to override")
+        message("rebuilding run from cache... use run_nm(force = TRUE) to override")
         max_match <- max(available_versions[matches])
         r <- r %>% executed(TRUE)
         r <- r %>% job_info(checksuminfo_disk[[max_match]]$job_info)
@@ -3559,7 +3559,6 @@ nmsave_multiplot.nm_list <- Vectorize_nm_list(nmsave_multiplot.nm_generic, SIMPL
 #' @export
 nm_render <- function(m, 
                       input, 
-                      output_dir = results_dir(m), 
                       output_file = 
                         paste0(
                           tools::file_path_sans_ext(input),
@@ -3574,7 +3573,6 @@ nm_render <- function(m,
 #' @export
 nm_render.nm_generic <- function(m, 
                                  input, 
-                                 output_dir = results_dir(m), 
                                  output_file = 
                                    paste0(
                                      tools::file_path_sans_ext(input),
@@ -3591,9 +3589,13 @@ nm_render.nm_generic <- function(m,
 
   rmarkdown::render(input = input, 
                     output_file = output_file,
-                    output_dir = output_dir,
+                    output_dir = results_dir(m),
                     params = args,
+                    envir = new.env(),
                     ...)
+  
+  ## use as_nm_generic incase m is redefined in rmd
+  m <- m %>% result_files(output_file)
   
   invisible(m)
   
@@ -4670,7 +4672,7 @@ shiny_nm <- function(m, envir = .GlobalEnv){
   .sso_env$.m <- m  # see zzz.R for .sso_env
   on.exit({
     .sso_env$.currentwd <- NULL
-    .sso_env$m <- NULL
+    .sso_env$.m <- NULL
   }, add = TRUE)
   shiny::runApp(shiny_dir,launch.browser = TRUE)
 }
