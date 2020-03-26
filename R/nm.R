@@ -469,6 +469,7 @@ nm_output.default <- function(r,dorig,...){
     dORD <- seq_len(nrow(dorig))
   } else {
     expre <- parse(text=filter_statements)
+    dorig[is.na(dorig)] <- 0
     dORD <- which(with(dorig,eval(expre)))    
   }
 
