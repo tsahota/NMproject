@@ -70,7 +70,9 @@ manual_patch <- function(m){
   
   message("copy-paste the following into your script to apply:\n
   [nm_object] %>%
-  apply_patch(\"", res$patch_name,"\")")
+  apply_patch(\"", res$patch_name,"\")
+
+(dont forget to comment your code)")
   
 }
 
