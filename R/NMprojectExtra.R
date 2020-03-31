@@ -129,6 +129,7 @@ child.nm_generic <- function(m, run_id = NA_character_, type = "execute", silent
   m <- m %>% parent_run_in(run_in(m))
   if(!is.na(run_id)) m <- m %>% run_id(run_id)
   if(!type %in% "execute") m <- m %>% type(type)
+  m[["ctl_orig"]] <- m[["ctl"]]  ## reset ctl_orig
   
   ## check for file conficts
   file_conflicts <- intersect(psn_exported_files(mparent), psn_exported_files(m))
@@ -173,7 +174,7 @@ overlapping_outputs <- function(m){
 #' @export
 print.nm_generic <- function(x, ...){
   x <- as.list(x)
-  collapse_fields <- c("ctl")
+  collapse_fields <- c("ctl", "ctl_orig")
   for(field in collapse_fields){
     if(field %in% names(x)) x[[field]] <- "...[collapsed]..."    
   }
@@ -187,7 +188,7 @@ print.nm_generic <- function(x, ...){
 print.nm_list <- function(x, ...){
   for(i in seq_along(x)) {
     x[[i]] <- as.list(x[[i]])
-    collapse_fields <- c("ctl")
+    collapse_fields <- c("ctl", "ctl_orig")
     for(field in collapse_fields){
       if(field %in% names(x[[i]])) x[[i]][[field]] <- "...[collapsed]..."
     }
@@ -525,6 +526,8 @@ ctl.nm_generic <- function(m, ctl_ob, update_numbering = TRUE, update_dollar_dat
   }
   
   m[["ctl"]] <- ctl
+  ## set as ctl_orig only if ctl_orig doesn't exist
+  if(!"ctl_orig" %in% names(m)) m[["ctl_orig"]] <- ctl
   
   ## overwrite the data_path field if it's blank
   data_path <- data_path(m)
