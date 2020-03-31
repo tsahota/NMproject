@@ -4,12 +4,14 @@
 \alias{nm_diff}
 \title{Compute diff between two NONMEM runs}
 \usage{
-nm_diff(ref_m, m)
+nm_diff(m, ref_m, format = "raw")
 }
 \arguments{
+\item{m}{nm object}
+
 \item{ref_m}{nm object (base/reference object)}
 
-\item{m}{nm object}
+\item{format}{character (default = "raw") argument passed to diffobj::diffChr}
 }
 \value{
 diff object
@@ -29,7 +31,7 @@ m1 <- nm(run_id = "m1") \%>\%
 m2 <- m1 \%>\% child(run_id = "m2") \%>\%
   subroutine(advan = 2, trans = 2)
 
-nm_diff(m1, m2)
+nm_diff(m2, m1)
 
 }
 }

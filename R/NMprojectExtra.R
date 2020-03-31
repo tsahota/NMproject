@@ -2063,8 +2063,9 @@ subroutine.nm_list <- Vectorize_nm_list(subroutine.nm_generic, SIMPLIFY = FALSE)
 #'  the user to check automatic manipulations are done properly.
 #'  Displaying diffs provides a means of manually checking.
 #' 
-#' @param ref_m nm object (base/reference object)
 #' @param m nm object
+#' @param ref_m nm object (base/reference object)
+#' @param format character (default = "raw") argument passed to diffobj::diffChr
 #' 
 #' @return diff object
 #' @examples 
@@ -2076,17 +2077,28 @@ subroutine.nm_list <- Vectorize_nm_list(subroutine.nm_generic, SIMPLIFY = FALSE)
 #' m2 <- m1 %>% child(run_id = "m2") %>%
 #'   subroutine(advan = 2, trans = 2)
 #' 
-#' nm_diff(m1, m2)
+#' nm_diff(m2, m1)
 #' 
 #' }
 #' @export
-nm_diff <- function(ref_m, m){
+nm_diff <- function(m, ref_m, format = "raw"){
   requireNamespace("diffobj", quietly = TRUE)
   
-  old_ctl <- as.character(ctl_character(ctl(as_nm_generic(ref_m))))
+  if(missing(ref_m)){
+    old_ctl <- as.character(ctl_character(
+      as_nm_generic(m)[["ctl_orig"]]
+    ))
+  } else {
+    old_ctl <- as.character(ctl_character(ctl(as_nm_generic(ref_m)))) 
+  }
   new_ctl <- as.character(ctl_character(ctl(as_nm_generic(m))))
   #"ansi256"
-  dff <- diffobj::diffChr(old_ctl, new_ctl, format = "raw")
+  dff <- diffobj::diffChr(old_ctl, new_ctl, format = format)
+  
+  if(grepl("No visible differences between objects", as.character(dff)[1])){
+    dff <- character()
+  }
+  
   #message("--- file diff: new_ctl and old_ctl colours show additions/deletions---")
   dff
 }
