@@ -1,0 +1,104 @@
+---
+title: "unknown"
+output:
+  html_notebook: default
+params:
+  m: NA
+---
+
+<!-- To run as a notebook: -->
+<!--   1. define .m to be your model in your workspace (e.g. .m <- m1) -->
+<!--   2. run as normal notebook -->
+
+<!-- To run as a report: -->
+<!--   1. Use the nm_render() on your object -->
+<!--   (e.g. m1 <- m1 %>% nm_render("path/to/this/report")) -->
+<!--   2. see ?nm_render for additional information including results location -->
+
+<!-- To make your own report (this is only a bare template) -->
+<!--   1. start with an already run model object (e.g. m1) -->
+<!--   2. add code and run as a notebook (see above) to see results -->
+<!--   3. when finished, run as a report (see above) to see report -->
+<!--   4. use nm_render() to run on other model objects -->
+
+
+```{r setup, include=F}
+## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
+library(rprojroot)
+library(knitr)
+opts_knit$set(root.dir=find_root(has_file(".Rprofile")))
+opts_chunk$set(echo = FALSE)
+opts_chunk$set(message = FALSE)
+if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
+  .m <- params$m  
+}
+```
+
+```{r}
+library(NMprojectAZ)
+devtools::load_all("~/NMproject")
+```
+
+## run details
+
+```{r}
+.m
+```
+
+## convergence
+
+```{r}
+plot_iter(.m)
+```
+
+## outputs
+
+```{r}
+rr(.m)
+```
+
+## Diagnostics
+
+```{r}
+
+## simple ggplot example
+
+library(ggplot2)
+
+.m %>%
+  output_table() %>%
+  dplyr::first() %>%
+  ggplot(aes(x = PRED, y = DV)) +
+  theme_bw() +
+  geom_point() +
+  geom_abline()
+
+```
+
+```{r}
+
+## simple xpose example
+
+library(xpose)
+
+xpdb <- xpose_data(runno = run_id(.m), dir = run_in(.m))
+
+dv_vs_pred(xpdb)
+
+```
+
+## Appendix
+
+### control file
+
+```{r}
+.m %>% text() %>% .[[1]]
+```
+
+### control file diff
+
+```{r}
+.m %>% nm_diff()
+```
+
+
