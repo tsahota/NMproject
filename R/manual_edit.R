@@ -166,6 +166,16 @@ nm_tran_app <- function(){
   
 }
 
+nm_diff_app <- function(){
+  
+  ctx <- rstudioapi::getActiveDocumentContext()
+  selected_text <- ctx$selection[[1]]$text
+  
+  m <- eval(parse(text = selected_text))
+  
+  nm_diff(m)
+  
+}
 
 view_patch_app <- function(){
 

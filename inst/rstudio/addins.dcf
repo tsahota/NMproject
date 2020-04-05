@@ -13,3 +13,7 @@ Description: run nm_tran on selected object
 Binding: nm_tran_app
 Interactive: true
 
+Name: view diff
+Description: run nm_diff on selected object
+Binding: nm_diff_app
+Interactive: true

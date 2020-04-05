@@ -61,7 +61,7 @@ test_that("nm object basic use",{
   m2 <- m1 %>% child(run_id = "mod2")
   
   ## parent hasn't been run
-  expect_true(is.na(parent(m2)))
+  expect_true(is.na(parent_run(m2)))
   
   dtemp <- overlapping_outputs(c(m1,m2))
   expect_true(nrow(dtemp) == 0)
