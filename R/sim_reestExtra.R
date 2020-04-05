@@ -402,30 +402,49 @@ psn_style_scm <- function(base, run_in, dtest,
 #' @param r nm object
 #' @param FUN statistic function with NONMEM dataset as arg and
 #'   returns data.frame with a column "statistic"
+#' @param ... additional arguments for FUN
+#' @param max_mod_mo integer. Maximum model number to read (set low for debugging)
+#' @param DV character (default = "DV")
 #' @param statistic character (default = "statistic") name of statistic column
 #'   returned by FUN
-#' @param additional arguments passed to dplyr::mutate for data manipulaion prior
-#'   to statistic (FUN) calculation
 #' @export
 
-ppc_data <- function(r, FUN, statistic = "statistic", ...){
+ppc_data <- function(r, FUN, ..., max_mod_no = NA, DV = "DV", statistic = "statistic"){
   
   if(length(unique(data_path(r))) > 1) stop("non-unique datasets")
   
-  dorig <- input_data(r[1])
-  dsims <- output_table(r)
+  dorig <- input_data(r[1], filter = TRUE)
+  dsims <- output_table(r) %>% 
+    dplyr::bind_rows() %>%
+    dplyr::filter(INNONMEM)
   
-  dsims <- lapply(seq_along(dsims), function(i){
-    dsims[[i]]$mod_no <- i
-    dsims[[i]]
-  })
+  total_rows <- nrow(dorig)
   
-  dsims <- dplyr::bind_rows(dsims)
-  dsims$DV <- dsims$DV_OUT
-
+  nsim <- nrow(dsims)/nrow(dorig)
+  
+  dsims$mod_no <- rep(1:nsim, each = total_rows)
+  
+  if(!is.na(max_mod_no)) {
+    dsims <- dsims[dsims$mod_no <= max_mod_no, ]
+    nsim <- nrow(dsims)/nrow(dorig)
+  }
+  
+  dsims <- dsims[, c("DV_OUT", "mod_no")]
+  names(dsims)[1] <- DV
+  
+  dorig2 <- dorig
+  dorig2[[DV]] <- NULL
+  
+  dorig2$ORD <- 1:nrow(dorig2)
+  dsims$ORD <- 1:nrow(dorig2)
+  
+  nrow(dsims)
+  dsims <- dplyr::right_join(dorig2, dsims)
+  nrow(dsims)
+  
   ## two datasets dorig and dsims ready now, apply function
   
-  stat_orig <- FUN(dorig)
+  stat_orig <- FUN(dorig,...)
   if(!inherits(stat_orig, "data.frame")) stop("FUN must return a data.frame", call. = FALSE)
   if(!statistic %in% names(stat_orig)) stop("statistic must be a column of FUN output", call. = FALSE)
   
@@ -437,18 +456,20 @@ ppc_data <- function(r, FUN, statistic = "statistic", ...){
   supplied_args <- names(current_call[-1])
   total_args <- names(formals(ppc_data))
   dots_present <- any(!supplied_args %in% total_args)
-
-  if(dots_present){
-    dsims <- dsims %>% dplyr::mutate(...)    
-  }
+  
+  # if(dots_present){
+  #    dsims <- dsims %>% dplyr::mutate(...)    
+  #  }
   
   ## apply stat FUN to each sim
   ## apply change to the dataset
   
   stat_sim <- dsims %>% dplyr::group_by(.data$mod_no) %>% 
     tidyr::nest() %>%
-    dplyr::mutate(statistic = purrr::map(.data$data, FUN)) %>%
+    dplyr::mutate(statistic = purrr::map(.data$data, FUN,...)) %>%
     tidyr::unnest(statistic)
+  
+  stat_sim$data <- NULL
   
   merge(stat_sim, stat_orig)
   

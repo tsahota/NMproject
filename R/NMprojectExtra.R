@@ -9,7 +9,7 @@ nm_generic <- function(run_id = NA_character_,
                        type = "execute",
                        run_dir = "{run_id}_{version}",
                        results_dir = "Results",
-                       output_location = "{run_dir}/NM_run1/psn.lst"){
+                       lst_path = "{run_dir}/NM_run1/psn.lst"){
   
   #m <- new.env()
   m <- list()
@@ -44,8 +44,8 @@ To use the alpha interface, install NMproject 0.3.2",
   
   unique_id <- "{type};{file.path(run_in,run_dir)}"
   ## the following is in order of glueing
-  m$glue_fields <- c(run_dir, ctl_name, results_dir, unique_id, output_location)
-  names(m$glue_fields) <- c("run_dir", "ctl_name", "results_dir", "unique_id", "output_location")
+  m$glue_fields <- c(run_dir, ctl_name, results_dir, unique_id, lst_path)
+  names(m$glue_fields) <- c("run_dir", "ctl_name", "results_dir", "unique_id", "lst_path")
   
   for(field in names(m$glue_fields)){
     m <- replace_tags(m, field)
@@ -75,7 +75,7 @@ To use the alpha interface, install NMproject 0.3.2",
 #' @param run_dir character (default = "{run_id}").  Subdirectory where PsN wll run NONMEM
 #' @param results_dir character (default = "Results").
 #'    Directory to store results of this run
-#' @param output_location character (default = "{run_dir}/NM_run1/psn.lst") expected location of lst file
+#' @param lst_path character (default = "{run_dir}/NM_run1/psn.lst") expected location of lst file
 #' 
 #' @return An object of class nm_list.  Object is concatenatable.
 #'    Length of object corresponds to length of run_id
@@ -389,8 +389,8 @@ executed <- function(m, text) {
 }
 
 #' @export
-output_location <- function(m, text) {
-  if(missing(text)) custom_1d_field(m, "output_location") else custom_1d_field(m, "output_location", text, glue = TRUE)
+lst_path <- function(m, text) {
+  if(missing(text)) custom_1d_field(m, "lst_path") else custom_1d_field(m, "lst_path", text, glue = TRUE)
 }
 
 #' @export
@@ -799,7 +799,7 @@ fill_input <- function(m, ...){
 fill_input.nm_generic <- function(m, ...){
   ctl <- ctl(m)
   d <- suppressMessages(input_data(m))
-  replace_with <- paste("$INPUT", suppressMessages(dollar_data(d, ...)))
+  replace_with <- c("$INPUT", suppressMessages(dollar_data(d, ...)))
   old_target <- m %>% target()
   m <- m %>% target("INPUT") %>% text(replace_with) %>%
     target(old_target)
@@ -1286,6 +1286,7 @@ update_parameters.nm_generic <- function(ctl, from){
   
   coef_from <- coef(from, trans=FALSE)
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "THETA")
+  warning("bug in updating IOV model parameters - unresolved")
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "OMEGA")
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "SIGMA")
   
@@ -1556,7 +1557,7 @@ clean_run.nm_generic <- function(r,delete_dir=c(NA,TRUE,FALSE),update_db=!is.nul
   #       c(".phi", ".ext", ".cov", ".coi", ".cor", ".lst"))
   
   ## and output - in case it's different  
-  output_location <- file.path(run_in(r), output_location(r))
+  lst_path <- file.path(run_in(r), lst_path(r))
   
   # ## need to get table files too
   # ctl_table_files <- file.path(run_in(r), ctl_table_files(r))
@@ -1571,8 +1572,8 @@ clean_run.nm_generic <- function(r,delete_dir=c(NA,TRUE,FALSE),update_db=!is.nul
     }
   }
   
-  #ctl_out_files <- c(output_location, output_files, ctl_table_files, run_dir_to_delete)
-  ctl_out_files <- c(output_location, psn_exported_files, run_dir_to_delete)
+  #ctl_out_files <- c(lst_path, output_files, ctl_table_files, run_dir_to_delete)
+  ctl_out_files <- c(lst_path, psn_exported_files, run_dir_to_delete)
   
   unlink(ctl_out_files, recursive = TRUE)
   
@@ -2930,12 +2931,29 @@ nm_object_exists <- function(object_name, env){
 run_dir_path <- function(m) file.path(run_in(m), run_dir(m))
 #nm_run_dir_path <- function(m, subdir = "NM_run1") file.path(run_dir_path(m), subdir)
 #nm_out_file <- function(m, file_name) file.path(nm_run_dir_path(m), file_name)
-nm_output_path <- function(m, extn) {
-  lst_file <- output_location(m)
-  current_extn <- tools::file_ext(lst_file)
-  out_file <- gsub(paste0("\\.", current_extn, "$"), paste0(".", extn), lst_file)
+
+#' @export
+nm_output_path <- function(m, extn, file_name) {
+  lst_file <- lst_path(m)
+  if(!missing(extn)){
+    current_extn <- tools::file_ext(lst_file)
+    out_file <- gsub(paste0("\\.", current_extn, "$"), paste0(".", extn), lst_file)
+  }
+  if(!missing(file_name)){
+    out_file <- file.path(dirname(lst_file), file_name)
+  }
   file.path(run_in(m), out_file)
 }
+
+#' @export
+output_location <- function(m) file.path(run_in(m), dirname(lst_path(m)))
+
+#' @export
+ls_output <- function(m, pattern = ".", recursive = TRUE) {
+  output <- dir(output_location(m), recursive = recursive, full.names = TRUE, pattern = pattern)
+  return(normalizePath(output, winslash = "/"))
+}
+
 
 read_ext.nm_list <- function(r,trans=FALSE){
   exts <- lapply(r, read_ext)
@@ -2950,7 +2968,7 @@ plot_iter_data.nm_list <- function(r, trans = TRUE, skip = 0, yvar = "OBJ"){
 
 #' @export
 show_out.nm_generic <- function(r) {
-  out_file <- file.path(run_in(r), output_location(r))
+  out_file <- file.path(run_in(r), lst_path(r))
   #out_file <- nm_output_path(r, extn = "lst")
   show_file(out_file)
 }
@@ -3330,7 +3348,7 @@ ctl_table_paths <- function(ctl) {
 ctl_table_paths.nm_generic <- function(ctl) {
   ## path should go from base directory
   ## in psn directory
-  file.path(run_in(ctl), dirname(output_location(ctl)), ctl_table_files(ctl(ctl)))
+  file.path(output_location(ctl), ctl_table_files(ctl(ctl)))
 }
 ctl_table_paths.nm_list <- Vectorize_nm_list(ctl_table_paths.nm_generic, SIMPLIFY = FALSE)
 
@@ -3340,18 +3358,20 @@ nm_output.nm_generic <- function(r,dorig,...){
   r <- as_nm_generic(r)  ## because nm_list method is identical
   wait_finish(r)
   
-  if(requireNamespace("xpose4", quietly = TRUE)) {
-    xpdb <- xpose4::xpose.data(run_id(r), directory=paste0(run_in(r),"/"))
-    d <- xpdb@Data
-  } else d <- data.frame()
+  # if(requireNamespace("xpose4", quietly = TRUE)) {
+  #   xpdb <- xpose4::xpose.data(run_id(r), directory=paste0(run_in(r),"/"))
+  #   d <- xpdb@Data
+  # } else 
+    d <- data.frame()
   
   if(nrow(d) == 0){
     ctl_out_files <- ctl_table_paths(as_nm_generic(r))
     #ctl_out_files <- ctl_table_files(as_nm_generic(r))
     #ctl_out_files <- file.path(run_in(r), ctl_out_files)
+    #requireNamespace("vpc")
     
     d <- lapply(ctl_out_files, function(out_file){
-      d <- utils::read.table(out_file, skip = 1, header = TRUE)
+      d <- nm_read_table(out_file, skip = 1, header = TRUE)
     })
     
     d <- do.call(cbind,d)
@@ -3400,7 +3420,10 @@ nm_output.nm_generic <- function(r,dorig,...){
   d <- d[,c(setdiff(names(d),names(dorig)[!names(dorig) %in% c("PRKEY")]))]
   #dorig <- dorig[,names(dorig)[!names(dorig) %in% c("DV")]]
   
+  d$.tempORD <- 1:nrow(d) ## to preserve order
   d2 <- merge(dorig, d, all.x = TRUE, by = "PRKEY")
+  d2 <- d2[order(d2$.tempORD), ]
+  d2$.tempORD <- NULL
   
   d2$INNONMEM <- d2$INNONMEM %in% TRUE
   if(nreps > 1) d2$SIM[is.na(d2$SIM)] <- 0
@@ -3441,11 +3464,11 @@ md5_files <- function(m){
 }
 
 #' @export
-parent <- function(m, n = 1L){
-  UseMethod("parent")
+parent_run <- function(m, n = 1L){
+  UseMethod("parent_run")
 }
 #' @export
-parent.nm_generic <- function(m, n = 1L){
+parent_run.nm_generic <- function(m, n = 1L){
   
   if(n == 0) return(as_nm_generic(nm(NA)))
   
@@ -3471,12 +3494,12 @@ parent.nm_generic <- function(m, n = 1L){
   md5_file <- md5_files[1]
   parent_ob <- readRDS(md5_file)$object
 
-  if(n > 1) return(parent(parent_ob, n = n - 1))
+  if(n > 1) return(parent_run(parent_ob, n = n - 1))
   parent_ob
   
 }
 #' @export
-parent.nm_list <- Vectorize_nm_list(parent.nm_generic, SIMPLIFY = FALSE)
+parent_run.nm_list <- Vectorize_nm_list(parent_run.nm_generic, SIMPLIFY = FALSE)
 
 
 save_execution_info <- function(m) {
@@ -3601,6 +3624,7 @@ nm_render.nm_generic <- function(m,
     stop("can't have m in arg.  m is reserved for model object")
   
   args <- c(args, list(m = as_nm_list(m)))
+  print(getwd())
 
   rmarkdown::render(input = input, 
                     output_file = output_file,
@@ -3657,7 +3681,7 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
   
   d <- d %>% dplyr::group_by(.data$parent_run_id, .data$parent_run_in) %>%
     dplyr::mutate(
-      parent = parent(.data$m[1]),
+      parent = parent_run(.data$m[1]),
       parent_coef_obs = coef(.data$parent[1]),
       n_params = sapply(.data$coef_obs, n_parameters_fun),
       parent_n_params = n_parameters_fun(.data$parent_coef_obs[[1]])
@@ -4624,32 +4648,39 @@ if(0){
   
 }
 
-
 #' @export
-make_OCC_every_dose <- function(dose_trigger, sample_trigger){
+make_OCC_every_dose <- function(dose_trigger, new_OCC_trigger){
   # Rule for when new occasion is happening
   # whenever we have a dose, if there is a sample after it and before next dose, that dose is considered a new OCC
   
-  d <- data.frame(dose_trigger = dose_trigger,
-                  sample_trigger = sample_trigger)
+  ## TODO: walk the ast of new_OCC_trigger
+  ## pull out variables, evaluate them to create a mini d
   
-  d <- d %>% 
-    dplyr::mutate(DPERIOD = cumsum(.data$dose_trigger)) %>% # dosing period 
-    dplyr::group_by(.data$DPERIOD) %>% 
-    dplyr::mutate(PKSAMPLE = as.numeric(any(.data$sample_trigger))) # does that dosing period have PK sample?
-
+  
+  new_OCC_trigger <- rlang::enquo(new_OCC_trigger)
+  id_group <- rlang::enquo(id_group)
+  dose_trigger <- rlang::enquo(dose_trigger)
+  
+  d <- d %>% group_by(!!id_group) %>%
+    mutate(DPERIOD = cumsum(!!dose_trigger)) %>%
+    group_by(!!id_group, DPERIOD) %>%
+    mutate(new_OCC = !!new_OCC_trigger)
+  
   ## select temporarly unique DPERIOD and HAS PK SAMPLE for each ID
   tmp <- d %>% 
     dplyr::ungroup() %>% 
-    dplyr::distinct(.data$DPERIOD,.data$PKSAMPLE)
+    dplyr::distinct(!!id_group, .data$DPERIOD,.data$new_OCC)
   
   tmp <- tmp %>% 
-    dplyr::ungroup() %>% 
-    dplyr::mutate(OCC = cumsum(.data$PKSAMPLE))
+    dplyr::group(!!id_group) %>% 
+    dplyr::mutate(OCC = cumsum(.data$new_OCC))
   
   d$ROW <- seq_len(nrow(d))
   d <- merge(d,tmp)
   d <- d[order(d$ROW), ]
+  
+  ## normalise to start at 1
+  d$OCC <- d$OCC - min(d$OCC) + 1
   
   d$OCC
 }
@@ -4703,7 +4734,6 @@ get_nm_lists <- function(envir = .GlobalEnv){
   m
   
 }
-
 
 
 

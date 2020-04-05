@@ -1,9 +1,11 @@
 ---
-title: "unknown"
 output:
   html_notebook: default
 params:
   m: NA
+title: "`r paste0(ctl_path(params$m), ': GOF')`"
+author: "`r Sys.info()['user']`"
+date: "`r Sys.time()`"
 ---
 
 <!-- To run as a notebook: -->
@@ -36,12 +38,16 @@ if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
 
 ```{r}
 library(NMprojectAZ)
+devtools::load_all("~/tidyproject")
 devtools::load_all("~/NMproject")
+devtools::load_all("~/tidyprojectAZ")
+devtools::load_all("~/NMprojectAZ")
 ```
 
-## run details
+## model object
 
 ```{r}
+wait_finish(.m)
 .m
 ```
 
@@ -75,7 +81,7 @@ library(ggplot2)
 
 ```
 
-```{r}
+```{r, warning=FALSE}
 
 ## simple xpose example
 
@@ -92,7 +98,7 @@ dv_vs_pred(xpdb)
 ### control file
 
 ```{r}
-.m %>% text() %>% .[[1]]
+.m %>% text() %>% dplyr::first()
 ```
 
 ### control file diff

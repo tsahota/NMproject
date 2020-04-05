@@ -454,8 +454,9 @@ nm_output.default <- function(r,dorig,...){
     ctl_out_files <- r$output$ctl_out_files
     ctl_out_files <- ctl_out_files[grepl("tab", ctl_out_files)]
     
+    
     d <- lapply(ctl_out_files, function(out_file){
-      d <- utils::read.table(out_file, skip = 1, header = TRUE)
+      d <- nm_read_table(out_file, skip = 1, header = TRUE)
     })
     
     d <- do.call(cbind,d)
@@ -505,7 +506,10 @@ there's ",length(dORD),"rows, but NONMEM output has ", nrow(d), " rows")
   d <- d[,c(setdiff(names(d),names(dorig)[!names(dorig) %in% c("PRKEY")]))]
   #dorig <- dorig[,names(dorig)[!names(dorig) %in% c("DV")]]
 
+  d$.tempORD <- 1:nrow(d) ## to preserve order
   d2 <- merge(dorig, d, all.x = TRUE, by = "PRKEY")
+  d2 <- d2[order(d2$.tempORD), ]
+  d2$.tempORD <- NULL
 
   d2$INNONMEM <- d2$INNONMEM %in% TRUE
   if(nreps > 1) d2$SIM[is.na(d2$SIM)] <- 0

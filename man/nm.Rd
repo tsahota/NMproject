@@ -8,7 +8,7 @@ nm(run_id = NA_character_, run_in = getOption("models.dir"),
   parent_run_id = NA_character_, parent_run_in = NA_character_,
   ctl_name = "run{run_id}.mod", type = "execute",
   run_dir = "{run_id}_{version}", results_dir = "Results",
-  output_location = "{run_dir}/NM_run1/psn.lst")
+  lst_path = "{run_dir}/NM_run1/psn.lst")
 }
 \arguments{
 \item{run_id}{character vector. Run identifier}
@@ -28,7 +28,7 @@ nm(run_id = NA_character_, run_in = getOption("models.dir"),
 \item{results_dir}{character (default = "Results").
 Directory to store results of this run}
 
-\item{output_location}{character (default = "{run_dir}/NM_run1/psn.lst") expected location of lst file}
+\item{lst_path}{character (default = "{run_dir}/NM_run1/psn.lst") expected location of lst file}
 }
 \value{
 An object of class nm_list.  Object is concatenatable.

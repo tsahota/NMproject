@@ -4,7 +4,7 @@
 \alias{ppc_data}
 \title{process data from PPC for plotting}
 \usage{
-ppc_data(r, FUN, statistic = "statistic", ...)
+ppc_data(r, FUN, ..., max_mod_no = NA, DV = "DV", statistic = "statistic")
 }
 \arguments{
 \item{r}{nm object}
@@ -12,11 +12,14 @@ ppc_data(r, FUN, statistic = "statistic", ...)
 \item{FUN}{statistic function with NONMEM dataset as arg and
 returns data.frame with a column "statistic"}
 
+\item{...}{additional arguments for FUN}
+
+\item{DV}{character (default = "DV")}
+
 \item{statistic}{character (default = "statistic") name of statistic column
 returned by FUN}
 
-\item{additional}{arguments passed to dplyr::mutate for data manipulaion prior
-to statistic (FUN) calculation}
+\item{max_mod_mo}{integer. Maximum model number to read (set low for debugging)}
 }
 \description{
 process data from PPC for plotting
