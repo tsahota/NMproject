@@ -1393,17 +1393,19 @@ setup_nm_demo <- function(demo_name="theopp",
 #' @export
 nm_output <- function(r,dorig,...){
   
-  if(requireNamespace("xpose4")) {
-    xpdb <- xpose4::xpose.data(r$run_id,directory=paste0(r$run_in,"/"))
-    d <- xpdb@Data
-  } else d <- data.frame()
+  #if(requireNamespace("xpose4")) {
+  #  xpdb <- xpose4::xpose.data(run_id(r), directory=paste0(run_in(r),"/"))
+  #  d <- xpdb@Data
+  #} else 
+  d <- data.frame()
   
   if(nrow(d) == 0){
     ctl_out_files <- r$output$ctl_out_files
     ctl_out_files <- ctl_out_files[grepl("tab", ctl_out_files)]
     
+    
     d <- lapply(ctl_out_files, function(out_file){
-      d <- utils::read.table(out_file, skip = 1, header = TRUE)
+      d <- nm_read_table(out_file, skip = 1, header = TRUE)
     })
     
     d <- do.call(cbind,d)
@@ -1420,19 +1422,12 @@ nm_output <- function(r,dorig,...){
     dorig[is.na(dorig)] <- 0
     dORD <- which(with(dorig,eval(expre)))    
   }
-  #if(length(filter_statements) > 0){
-
-  #if("IGNORE" %in% type) dORD <- which(with(dorig,eval(expre)))
-  #if("ACCEPT" %in% type) dORD <- which(!with(dorig,eval(expre)))
   
   if(nrow(d) %% length(dORD) != 0) {
     stop("something wrong... when R reads in original dataset
-and applies filter ",filter_statements,",
-there's ",length(dORD),"rows, but NONMEM output has ", nrow(d), " rows")
+         and applies filter ",filter_statements,",
+         there's ",length(dORD),"rows, but NONMEM output has ", nrow(d), " rows")
   }    
-  #} else {
-  #  dORD <- seq_len(nrow(dorig))
-  #}
   
   ctl_contents <- ctl_character(r)
   sim_ctl <- any(grepl("^\\s*\\$SIM",rem_comment(ctl_contents)))
@@ -1441,7 +1436,7 @@ there's ",length(dORD),"rows, but NONMEM output has ", nrow(d), " rows")
   
   if("PRKEY" %in% names(d)) stop("name conflict with PRKEY in xpose table. aborting...")
   if("PRKEY" %in% names(dorig)) stop("name conflict with PRKEY in original data. aborting...")
-
+  
   d$PRKEY <- dORD
   dorig$PRKEY <- 1:nrow(dorig)
   if(sim_ctl){
@@ -1450,27 +1445,31 @@ there's ",length(dORD),"rows, but NONMEM output has ", nrow(d), " rows")
     d$SIM <- rep(1:nreps,each=length(dORD))
     message("Adding column: SIM")
   }
-
+  
   d$INNONMEM <- TRUE
-
+  
   ## want a DV_OUT columsn
   if("DV_OUT" %in% names(d)) warning("name conflict with DV_OUT in xpose table. replacing...")
   d$DV_OUT <- d$DV
   d$DV <- NULL
   d <- d[,c(setdiff(names(d),names(dorig)[!names(dorig) %in% c("PRKEY")]))]
   #dorig <- dorig[,names(dorig)[!names(dorig) %in% c("DV")]]
-
+  
+  d$.tempORD <- 1:nrow(d) ## to preserve order
   d2 <- merge(dorig, d, all.x = TRUE, by = "PRKEY")
-
+  d2 <- d2[order(d2$.tempORD), ]
+  d2$.tempORD <- NULL
+  
   d2$INNONMEM <- d2$INNONMEM %in% TRUE
   if(nreps > 1) d2$SIM[is.na(d2$SIM)] <- 0
-
+  
   ## row number check
   if(nrow(d2) != nrow(d)*(nreps-1)/nreps + nrow(dorig)) stop("merge went wrong. debug")
-
+  
   message("Adding column: PRKEY")
-
+  
   return(d2)
+  
 }
 
 process_output <- function(r, ...){
