@@ -564,6 +564,7 @@ data_ignore_char.default <- function(r){
   dol_data <- ctl_list(r)$DATA
   dol_data <- dol_data[!dol_data %in% ""]
   dol_data <- rem_comment(dol_data)
+  dol_data <- unlist(strsplit(dol_data, split = "\\s"))
   
   ignore_present <- any(grepl(".*IGNORE\\s*=\\s*\\(",dol_data))
   accept_present <- any(grepl(".*ACCEPT\\s*=\\s*\\(",dol_data))
