@@ -1393,20 +1393,24 @@ setup_nm_demo <- function(demo_name="theopp",
 #' @export
 nm_output <- function(r,dorig,...){
   
-  #if(requireNamespace("xpose4")) {
-  #  xpdb <- xpose4::xpose.data(run_id(r), directory=paste0(run_in(r),"/"))
-  #  d <- xpdb@Data
-  #} else 
+  # if(requireNamespace("xpose4")) {
+  #   xpdb <- xpose4::xpose.data(run_id(r), directory=paste0(run_in(r),"/"))
+  #   d <- xpdb@Data
+  # } else 
   d <- data.frame()
   
   if(nrow(d) == 0){
     ctl_out_files <- file.path(run_in(r), ctl_table_files(r))
     #ctl_out_files <- ctl_out_files[grepl("tab", ctl_out_files)]
     
-    
     d <- lapply(ctl_out_files, function(out_file){
       d <- nm_read_table(out_file, skip = 1, header = TRUE)
     })
+    
+    ## TODO: this will break if some tables have FIRSTONLY
+    nrows <- sapply(d, nrow)
+    if(length(unique(nrows[!nrows %in% 0])) > 1)
+      stop("output tables are different sizes")
     
     d <- do.call(cbind,d)
     d <- d[,!duplicated(names(d))]
@@ -1455,10 +1459,10 @@ nm_output <- function(r,dorig,...){
   d <- d[,c(setdiff(names(d),names(dorig)[!names(dorig) %in% c("PRKEY")]))]
   #dorig <- dorig[,names(dorig)[!names(dorig) %in% c("DV")]]
   
-  d$.tempORD <- 1:nrow(d) ## to preserve order
-  d2 <- merge(dorig, d, all.x = TRUE, by = "PRKEY")
-  d2 <- d2[order(d2$.tempORD), ]
-  d2$.tempORD <- NULL
+  #d$.tempORD <- 1:nrow(d) ## to preserve order (old code merge())
+  d2 <- dplyr::full_join(d, dorig, by = "PRKEY")
+  #d2 <- d2[order(d2$.tempORD), ]
+  #d2$.tempORD <- NULL
   
   d2$INNONMEM <- d2$INNONMEM %in% TRUE
   if(nreps > 1) d2$SIM[is.na(d2$SIM)] <- 0
