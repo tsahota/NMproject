@@ -1332,7 +1332,7 @@ in_cache <- function(r){
 in_cache.nm_generic <- function(r){
   r %>% write_ctl()
   ## get all md5_files
-  #checksuminfo_disk <- readRDS(file = unique_md5_file)
+  
   checksuminfo_disk <- lapply(md5_files(r), function(md5_file) readRDS(md5_file))
   if(length(checksuminfo_disk) > 0){
     available_versions <- sapply(checksuminfo_disk, function(i) i$version)
@@ -1347,6 +1347,20 @@ in_cache.nm_generic <- function(r){
 }
 #' @export
 in_cache.nm_list <- Vectorize_nm_list(in_cache.nm_generic)
+
+#' @export
+cache_history <- function(r){
+  UseMethod("cache_history")
+}
+#' @export
+cache_history.nm_generic <- function(r){
+  lapply(md5_files(r), function(md5_file) readRDS(md5_file))
+}
+#' @export
+cache_history.nm_list <- Vectorize_nm_list(cache_history.nm_generic, SIMPLIFY = FALSE)
+
+#' @export
+cache_current <- function(m) execution_info(m)
 
 #' @export
 clear_cache <- function() unlink("cache", recursive = TRUE)
@@ -3455,7 +3469,7 @@ md5_files <- function(m){
   
   ## sort by version number
   
-  hack_m <- m %>% version("[0-9]+")
+  hack_m <- m %>% version("[0-9]+")  ## use regex to get all versions
   pattern <- unique_id(hack_m)
   pattern <- paste0(gsub(.Platform$file.sep, ";-;", pattern), "\\.md5")
 
