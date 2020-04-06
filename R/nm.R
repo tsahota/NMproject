@@ -452,9 +452,8 @@ nm_output.default <- function(r,dorig,...){
   d <- data.frame()
   
   if(nrow(d) == 0){
-    ctl_out_files <- r$output$ctl_out_files
-    ctl_out_files <- ctl_out_files[grepl("tab", ctl_out_files)]
-    
+    ctl_out_files <- file.path(run_in(r), ctl_table_files(r))
+    #ctl_out_files <- ctl_out_files[grepl("tab", ctl_out_files)]
     
     d <- lapply(ctl_out_files, function(out_file){
       d <- nm_read_table(out_file, skip = 1, header = TRUE)
