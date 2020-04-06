@@ -3406,10 +3406,7 @@ nm_output.nm_generic <- function(r,dorig,...){
   
   if(nrow(d) == 0){
     ctl_out_files <- ctl_table_paths(as_nm_generic(r))
-    #ctl_out_files <- ctl_table_files(as_nm_generic(r))
-    #ctl_out_files <- file.path(run_in(r), ctl_out_files)
-    #requireNamespace("vpc")
-    
+
     d <- lapply(ctl_out_files, function(out_file){
       d <- nm_read_table(out_file, skip = 1, header = TRUE)
     })
