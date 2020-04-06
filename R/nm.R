@@ -1400,8 +1400,8 @@ nm_output <- function(r,dorig,...){
   d <- data.frame()
   
   if(nrow(d) == 0){
-    ctl_out_files <- r$output$ctl_out_files
-    ctl_out_files <- ctl_out_files[grepl("tab", ctl_out_files)]
+    ctl_out_files <- file.path(run_in(r), ctl_table_files(r))
+    #ctl_out_files <- ctl_out_files[grepl("tab", ctl_out_files)]
     
     
     d <- lapply(ctl_out_files, function(out_file){
@@ -1502,6 +1502,7 @@ data_ignore_char <- function(r){
   dol_data <- ctl_list(r)$DATA
   dol_data <- dol_data[!dol_data %in% ""]
   dol_data <- rem_comment(dol_data)
+  dol_data <- unlist(strsplit(dol_data, split = "\\s"))
   
   ignore_present <- any(grepl(".*IGNORE\\s*=\\s*\\(",dol_data))
   accept_present <- any(grepl(".*ACCEPT\\s*=\\s*\\(",dol_data))
