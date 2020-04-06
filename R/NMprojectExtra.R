@@ -3043,6 +3043,32 @@ init_omega <- function(m, replace){
   }
 }
 
+init_sigma <- function(m, replace){
+  d <- raw_init_sigma(m)
+  d$orig_line <- d$line
+  d$orig_pos <- d$pos
+  if(missing(replace)){  ## get
+    d$value <- NULL
+    d$comment <- NULL
+    d$parameter <- NULL
+    d$SUB <- NULL
+    return(d)
+  } else {               ## set
+    d_derived <- d[,c("value","comment","parameter","SUB", ## same as what was deleted above
+                      "orig_line", "orig_pos")] 
+    
+    replace <- dplyr::left_join(replace, d_derived, by = c("orig_line", "orig_pos"))
+    if("new_value" %in% names(replace)) {  ## for characters
+      replace$value[!is.na(replace$new_value)] <- as.character(replace$new_value[!is.na(replace$new_value)])
+    }
+    if("new_line" %in% names(replace)) replace$line <- replace$new_line
+    if("new_pos" %in% names(replace)) replace$pos <- replace$new_pos
+    
+    m <- m %>% raw_init_sigma(replace)
+    m
+  }
+}
+
 update_variable_in_text_numbers <- function(m, before_number, after_number){
   
   before_regex <- paste0("\\b", before_number)
