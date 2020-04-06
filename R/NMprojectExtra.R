@@ -3406,10 +3406,15 @@ nm_output.nm_generic <- function(r,dorig,...){
   
   if(nrow(d) == 0){
     ctl_out_files <- ctl_table_paths(as_nm_generic(r))
-
+    
     d <- lapply(ctl_out_files, function(out_file){
       d <- nm_read_table(out_file, skip = 1, header = TRUE)
     })
+    
+    ## TODO: this will break if some tables have FIRSTONLY
+    nrows <- sapply(d, nrow)
+    if(length(unique(nrows[!nrows %in% 0])) > 1)
+      stop("output tables are different sizes")
     
     d <- do.call(cbind,d)
     d <- d[,!duplicated(names(d))]
@@ -3457,10 +3462,10 @@ nm_output.nm_generic <- function(r,dorig,...){
   d <- d[,c(setdiff(names(d),names(dorig)[!names(dorig) %in% c("PRKEY")]))]
   #dorig <- dorig[,names(dorig)[!names(dorig) %in% c("DV")]]
   
-  d$.tempORD <- 1:nrow(d) ## to preserve order
-  d2 <- merge(dorig, d, all.x = TRUE, by = "PRKEY")
-  d2 <- d2[order(d2$.tempORD), ]
-  d2$.tempORD <- NULL
+  #d$.tempORD <- 1:nrow(d) ## to preserve order (old code merge())
+  d2 <- dplyr::full_join(d, dorig, by = "PRKEY")
+  #d2 <- d2[order(d2$.tempORD), ]
+  #d2$.tempORD <- NULL
   
   d2$INNONMEM <- d2$INNONMEM %in% TRUE
   if(nreps > 1) d2$SIM[is.na(d2$SIM)] <- 0
