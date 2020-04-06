@@ -131,6 +131,11 @@ as_nm_list.nm_generic <- function(m){
 }
 
 #' @export
+is_nm_generic <- function(x){
+  inherits(x, "nm_generic")
+}
+
+#' @export
 as_nm_generic <- function(m){
   UseMethod("as_nm_generic")
 }

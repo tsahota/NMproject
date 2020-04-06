@@ -4702,8 +4702,12 @@ shiny_nm <- function(m, envir = .GlobalEnv){
   if(missing(m)) {
     m <- get_nm_lists(envir = envir)
   } else {
-    if(inherits(m, "data.frame") | inherits(m, "list"))
+    if(is_nm_generic(m)) m <- as_nm_list(m)
+    if(!is_nm_list(m)){
       m <- get_nm_lists(envir = m)
+      if(!is_nm_list(m))
+        stop("couldn't find any nm_list objects in m")
+    }
   }
   if(!requireNamespace("DT", quietly = TRUE))
     stop("DT needed for this function to work. Please install it.",
