@@ -527,15 +527,6 @@ there's ",length(dORD),"rows, but NONMEM output has ", nrow(d), " rows")
   return(d2)
 }
 
-
-
-process_output <- function(r, ...){
-  #if(!inherits(r, "nmexecute")) stop("can only currently process outputs for execute runs")
-  do <- nm_output(r, ...)
-  save(do, file = file.path(run_dir(r, full_path = TRUE), "NMout.RData"))
-  invisible(do)
-}
-
 #' Get processed output table
 #' 
 #' @param r object of class nm
@@ -548,15 +539,35 @@ output_table <- function(r, ...){
 
 #' @export
 output_table.default <- function(r, ...){
-  out_path <- file.path(run_dir(r, full_path = TRUE), "NMout.RData")
+  out_path <- file.path(run_dir(r, full_path = TRUE), "NMout.RDS")
   if(!file.exists(out_path)) {
-    do <- process_output(r, ...)
+    do <- nm_output(r, ...)
+    saveRDS(do, file = out_path)
   } else {
-    load(out_path)
+    do <- readRDS(out_path)
   }
   return(do)
 }
 
+#' @export
+output_table_firstonly <- function(r, ...){
+  UseMethod("output_table_firstonly")
+}
+
+#' @export
+output_table_firstonly.default <- output_table
+
+#' @export
+output_table_firstonly.nm_list <- function(r, ...){
+  if(length(r) > 1) stop("only works on length 1 objects", call. = FALSE)
+  outtab <- output_table(r, ...)
+  outtab <- outtab[[1]]
+  outtab
+}
+
+
+
+  
 #' Get ignore statement
 #' @param r object coercible into ctl_list
 #' @export
