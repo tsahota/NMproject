@@ -3636,6 +3636,32 @@ nmsave_multiplot.nm_generic <- function(r, plot_ob, plot_name, plot_dir = result
 nmsave_multiplot.nm_list <- Vectorize_nm_list(nmsave_multiplot.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
 
+#' render function for nm objects
+#' 
+#' @param m nm object
+#' @param input character. Same as rmarkdown::render() arg
+#' @param output_file character. Same as rmarkdown::render() arg
+#' @param args list. Same as "params" arg in rmarkdown::render()
+#' @param force logical (default = FALSE). will force execution
+#' 
+#' @details 
+#' \code{input} must refer to a properly specified Rmd document.
+#' The R markdown template "model diagnostic" in RStudio sets this up 
+#' for you.
+#' 
+#' These R markdown templates are usable as R Notebooks (e.g. for code
+#' development and debugging) if the object \code{.m} is defined in the
+#' global work space first.
+#' 
+#' @examples 
+#' \dontrun{
+#'   m1 %>% nm_render("Scripts/basic_gof.Rmd")
+#' 
+#'   ## to run "Scripts/basic_gof.Rmd" as an R Notebook
+#'   ## first define .m
+#'   
+#'   .m <- m1 ## Now you can run "Scripts/basic_gof.Rmd" as a Notebook
+#' }
 #' @export
 nm_render <- function(m, 
                       input, 
@@ -3646,6 +3672,7 @@ nm_render <- function(m,
                           ".html"
                         ),
                       args = list(),
+                      force = FALSE,
                       ...){
   UseMethod("nm_render")
 }
@@ -3660,6 +3687,7 @@ nm_render.nm_generic <- function(m,
                                      ".html"
                                    ),
                                  args = list(),
+                                 force = FALSE,
                                  ...){
   
   if("m" %in% names(args))
@@ -3684,6 +3712,8 @@ nm_render.nm_generic <- function(m,
 
 #' @export
 nm_render.nm_list <- Vectorize_nm_list(nm_render.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
+
+# TODO: nm_render_async
 
 #' Create new R notebook
 #' @param script_name character
@@ -3879,6 +3909,19 @@ summary_long <- function(..., parameters = c("none", "new", "all")){
 output_table.nm_generic <- output_table.default
 #' @export
 output_table.nm_list <- Vectorize_nm_list(output_table.nm_generic, SIMPLIFY = FALSE)
+
+#' @export
+output_table_first <- function(r, ...){
+  UseMethod("output_table_first")
+}
+
+#' @export
+output_table_first.nm_list <- function(r, ...){
+  if(length(r) > 1) stop("only works on length 1 objects", call. = FALSE)
+  outtab <- output_table(r, ...)
+  outtab <- outtab[[1]]
+  outtab
+}
 
 #' @export
 add_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
