@@ -1652,3 +1652,129 @@ exclude_rows <- function(d, dexcl, exclude_col = "EXCL"){
   d
 }
 
+#' @export
+cov_forest_plot <- function(m){
+  if(!is_finished(m)) stop("run not finished yet")#wait_for_finish(m)
+  # d <- nm_output(m) ## read in combined output 
+  
+  ## assume m is nm_list
+  requireNamespace("ggplot2")
+  
+  ###############
+  ## include plotting code here
+  dpar <- coef(m, trans = FALSE) 
+  dpar$name <- coef(m)$Parameter
+  
+  dpar$SE[is.na(dpar$SE)] <- 0
+  
+  dpar$lower <- dpar$FINAL - 1.96*dpar$SE
+  dpar$upper <- dpar$FINAL + 1.96*dpar$SE
+  
+  PK_text <- ctl(m)$PK
+  PK_text_R <- nonmem_code_to_r(PK_text)
+  
+  par_covs <- PK_text[grepl(";;; .*-DEFINITION START", PK_text)]
+  par_covs <- gsub(";;; (.*)-.*", "\\1", par_covs)
+  
+  pars <- PK_text[grepl(";;; .*-RELATION START", PK_text)]
+  pars <- gsub(";;; (.*)-.*", "\\1", pars)
+  
+  dd <- get_data(m, filter = TRUE)
+  
+  ## to be used later in evaluation of R expressions  
+  dpar_mid <- dpar$FINAL
+  names(dpar_mid) <- dpar$Parameter
+  
+  dpar_low <- dpar$lower
+  names(dpar_low) <- dpar$Parameter
+  
+  dpar_upp <- dpar$upper
+  names(dpar_upp) <- dpar$Parameter
+  
+  d <- lapply(seq_along(par_covs), function(i){
+    
+    par_cov <- par_covs[i]
+    
+    par <- sapply(pars, function(par) grepl(paste0("^", par), par_cov))
+    par <- pars[par]
+    
+    if(length(par) != 1) stop("can't get param value for ", par_cov, call. = FALSE)
+    
+    cov <- gsub(paste0(par,"(.*)"), "\\1", par_cov)
+    
+    theta_lines <- PK_text_R[grepl(paste0(par_cov, "\\s*\\="), PK_text_R)]
+    theta_lines <- c(theta_lines, par_cov)
+    exprs <- parse(text = theta_lines)
+    
+    cov_col <- dd[[cov]]
+    cov_col <- stats::na.omit(cov_col)
+    
+    categorical <- TRUE
+    if(length(unique(dd[[cov]])) > 10) categorical <- FALSE  ## too many levels = FALSE
+    
+    if(!all(stats::na.omit(floor(dd[[cov]]) == dd[[cov]]))) categorical <- FALSE  ## not round = FALSE
+    
+    if("ID" %in% names(dd)) {
+      dd <- dd[!duplicated(dd$ID), ]
+    }
+    
+    if(categorical) {
+      levs <- unique(cov_col) 
+      lev_text <- paste0(cov,"_",levs)
+    } else {
+      levs <- stats::quantile(cov_col, probs = c(0.05, 0.5, 0.95))
+      levs <- signif(levs, 2)
+      lev_text <- paste0(cov,"_",c("low5","mid","upp95"),"_",levs)
+    }
+    
+    d <- tibble::tibble(par, cov, levs, lev_text)
+    
+    d$mask_mid <- lapply(levs, function(lev){
+      d <- tibble::tibble(lev)
+      names(d) <- cov
+      cbind(d, as.data.frame(as.list(dpar_mid)))
+    })
+    
+    d$mask_low <- lapply(levs, function(lev){
+      d <- tibble::tibble(lev)
+      names(d) <- cov
+      cbind(d, as.data.frame(as.list(dpar_low)))
+    })
+    
+    d$mask_upp <- lapply(levs, function(lev){
+      d <- tibble::tibble(lev)
+      names(d) <- cov
+      cbind(d, as.data.frame(as.list(dpar_upp)))
+    })
+    
+    d$mid <- sapply(seq_along(levs), function(i){
+      with(d$mask_mid[[i]], eval(exprs))
+    })
+    
+    d$low <- sapply(seq_along(levs), function(i){
+      with(d$mask_low[[i]], eval(exprs))
+    })
+    
+    d$upp <- sapply(seq_along(levs), function(i){
+      with(d$mask_upp[[i]], eval(exprs))
+    })
+    
+    return(d)
+    
+  })
+  
+  d <- dplyr::bind_rows(d)
+  
+  ggplot2::ggplot(d, ggplot2::aes_string(x = "mid", y = "lev_text")) + ggplot2::theme_bw() +
+    ggplot2::geom_rect(ggplot2::aes(ymin = -Inf, ymax = Inf, xmin = 1-0.2, xmax = 1+0.2), colour = "grey90") +
+    ggplot2::geom_point() +
+    ggplot2::geom_errorbarh(ggplot2::aes_string(xmin = "low", xmax = "upp"), height = 0.1) + 
+    ggplot2::geom_vline(xintercept = 1, color='black', linetype='dashed') +
+    ggplot2::facet_grid(par~., scales = "free_y", space = "free") +
+    ggplot2::scale_y_discrete("") +
+    ggplot2::scale_x_continuous("effect size", breaks = seq(floor(min(d$low)), ceiling(max(d$upp)), 0.1))
+  
+  ###############
+  ## return plotting object here
+  
+}
