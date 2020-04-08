@@ -549,25 +549,7 @@ output_table.default <- function(r, ...){
   return(do)
 }
 
-#' @export
-output_table_firstonly <- function(r, ...){
-  UseMethod("output_table_firstonly")
-}
 
-#' @export
-output_table_firstonly.default <- output_table
-
-#' @export
-output_table_firstonly.nm_list <- function(r, ...){
-  if(length(r) > 1) stop("only works on length 1 objects", call. = FALSE)
-  outtab <- output_table(r, ...)
-  outtab <- outtab[[1]]
-  outtab
-}
-
-
-
-  
 #' Get ignore statement
 #' @param r object coercible into ctl_list
 #' @export
