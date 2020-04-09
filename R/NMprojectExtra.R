@@ -3668,7 +3668,7 @@ nm_render <- function(m,
                       output_file = 
                         paste0(
                           tools::file_path_sans_ext(input),
-                          ".",run_id(m),
+                          ".",run_dir(m),
                           ".html"
                         ),
                       args = list(),
@@ -3683,7 +3683,7 @@ nm_render.nm_generic <- function(m,
                                  output_file = 
                                    paste0(
                                      tools::file_path_sans_ext(input),
-                                     ".",run_id(m),
+                                     ".",run_dir(m),
                                      ".html"
                                    ),
                                  args = list(),
