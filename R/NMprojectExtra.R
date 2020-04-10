@@ -815,6 +815,14 @@ fill_input.nm_generic <- function(m, ...){
 #' @export
 fill_input.nm_list <- Vectorize_nm_list(fill_input.nm_generic, SIMPLIFY = FALSE)
 
+
+#' Read in input dataset
+#' 
+#' @param m nm object
+#' @param filter logical (default = FALSE). should NONMEM ignore statement be applied
+#' @param na character. passed to read.csv
+#' @param ... additional arguments passed to either read_derived_data or read.csv
+#' 
 #' @export
 input_data <- function(m, filter = FALSE, na = ".", ...){
   UseMethod("input_data")
@@ -825,13 +833,13 @@ input_data.nm_generic <- function(m, filter = FALSE, na = ".", ...){
   if(is.na(file_name)) return(tibble::tibble())
   
   if(normalizePath(dirname(file_name), mustWork = FALSE) == normalizePath("DerivedData", mustWork = FALSE)){
-    d <- read_derived_data(basename(get_stub_name(file_name)),...)
+    d <- read_derived_data(basename(tools::file_path_sans_ext(file_name)),...)
   } else {
     d <- utils::read.csv(file_name, na = na, ...)
   }
   
   if(filter) {
-    data_filter <- parse(text = data_filter_char(m))
+    data_filter <- parse(text = data_filter_char(m, data = d))
     d <- subset(d, eval(data_filter))
   }
   d
@@ -857,13 +865,13 @@ input_data.default <- function(m, filter = FALSE, na = ".", ...){   ## old get_d
   if(!grepl("[a-zA-Z0-9]",basename(file_name))) stop("$DATA doesn't look like it refers to a file. Is this correct?")
   
   if(normalizePath(dirname(file_name), mustWork = FALSE) == normalizePath("DerivedData")){
-    d <- read_derived_data(basename(get_stub_name(file_name)),...)
+    d <- read_derived_data(basename(tools::file_path_sans_ext(file_name)),...)
   } else {
     d <- utils::read.csv(file_name, ...)
   }
   
   if(filter) {
-    data_filter <- parse(text = data_filter_char(m))
+    data_filter <- parse(text = data_filter_char(m, data = d))
     d <- subset(d, eval(data_filter))
   }
   d
@@ -1293,7 +1301,7 @@ update_parameters.nm_generic <- function(ctl, from){
   
   coef_from <- coef(from, trans=FALSE)
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "THETA")
-  warning("bug in updating IOV model parameters - unresolved")
+  message("bug in updating IOV model parameters - unresolved")
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "OMEGA")
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "SIGMA")
   
@@ -4727,10 +4735,11 @@ write_derived_data <- function(d, name, ...){
 #'
 #' @param name name of file (without extension)
 #' @param na character to be passed to read.csv
+#' @param silent logical (default = TRUE). should messages be suppressed
 #' @param ...  additional arguments to be passed to read.csv
 #' @export
 
-read_derived_data <- function(name, na = ".", ...){
+read_derived_data <- function(name, na = ".", silent = FALSE, ...){
 
   ## TODO: expand to other types of argument
   if(length(name) != 1) stop("name should have length 1", call. = FALSE)
@@ -4755,11 +4764,11 @@ read_derived_data <- function(name, na = ".", ...){
   if(is.na(load_file)) stop("debug") ## unneccesary with stop()s
 
   if(identical(load_file, "RDS")){
-    message("loading: ", name)
+    if(!silent) message("loading: ", name)
     d <- readRDS(file = name)
   }
   if(identical(load_file, "csv")){
-    message("loading: ", name)
+    if(!silent) message("loading: ", name)
     d <- utils::read.csv(name, na = na, ...)
   }
   return(d)
@@ -4917,6 +4926,70 @@ get_nm_lists <- function(envir = .GlobalEnv){
 
 }
 
+## generic already defined
+## internal function
+data_ignore_char.nm_generic <- function(r, data){
+  dol_data <- r %>% dollar("$DATA")
+  dol_data <- dol_data[!dol_data %in% ""]
+  dol_data <- rem_comment(dol_data)
+  dol_data <- unlist(strsplit(dol_data, split = "\\s"))
+  
+  ignore_present <- any(grepl(".*IGNORE\\s*=\\s*\\(",dol_data))
+  accept_present <- any(grepl(".*ACCEPT\\s*=\\s*\\(",dol_data))
+  
+  type <- NA
+  if(ignore_present & accept_present) stop("cannot identify ignore columns")
+  if(ignore_present) type <- "IGNORE"
+  if(accept_present) type <- "ACCEPT"
+  no_filter <- is.na(type)
+  
+  if(missing(data)) data <- input_data(r, filter = FALSE, silent = TRUE)
+  
+  r_data_names <- names(data)
+  ## now get nonmem names
+  dollar_input <- r %>% dollar("INPUT")
+  nonmem_data_names <- gsub("\\$\\w+", "", dollar_input)
+  nonmem_data_names <- unlist(strsplit(nonmem_data_names, split = "\\s"))
+  nonmem_data_names <- nonmem_data_names[!nonmem_data_names %in% ""]
+  nonmem_data_names <- gsub("\\w+=(\\w+)", "\\1", nonmem_data_names)
+  #if(length(r_data_names) != length(nonmem_data_names))
+  #  stop("length of items in $INPUT doesn't match dataset")
+  name_chart <- data.frame(r_data_names, nonmem_data_names, stringsAsFactors = FALSE)
+  name_chart <- name_chart[name_chart$r_data_names != name_chart$nonmem_data_names,]
+  
+  if(!no_filter){
+    filter_statements <- paste0(".*",type,"\\s*=\\s*\\((\\S[^\\)]+)\\)*.*")
+    dol_data <- dol_data[grepl(filter_statements, dol_data)]
+    filter_statements <- gsub(filter_statements,"\\1",dol_data)
+    filter_statements <- unlist(strsplit(filter_statements,","))
+    filter_statements <- gsub("\\.EQ\\.","==",filter_statements)
+    filter_statements <- gsub("\\.NE\\.","!=",filter_statements)
+    filter_statements <- gsub("\\.EQN\\.","==",filter_statements)
+    filter_statements <- gsub("\\.NEN\\.","!=",filter_statements)
+    filter_statements <- gsub("\\./E\\.","!=",filter_statements)
+    filter_statements <- gsub("\\.GT\\.",">",filter_statements)
+    filter_statements <- gsub("\\.LT\\.","<",filter_statements)
+    filter_statements <- gsub("\\.GE\\.",">=",filter_statements)
+    filter_statements <- gsub("\\.LE\\.","<=",filter_statements)
+    
+    ## substitute names from 
+    for(i in seq_len(nrow(name_chart))){
+      nonmem_data_name <- paste0("\\b", name_chart$nonmem_data_names[i], "\\b")
+      r_data_name <- name_chart$r_data_names[i]
+      filter_statements <- gsub(nonmem_data_name,
+                                r_data_name,
+                                filter_statements)
+    }
+    
+    filter_statements <- paste(filter_statements, collapse= " | ")
+    if("ACCEPT" %in% type) filter_statements <- paste0("!(",filter_statements,")")
+  } else {
+    filter_statements <- "FALSE"
+  }
+  filter_statements
+  
+}
+data_ignore_char.nm_list <- Vectorize_nm_list(data_ignore_char.nm_generic, SIMPLIFY = TRUE)
 
 
 ###############

@@ -444,7 +444,7 @@ nm_output <- function(r,dorig,...){
 }
 
 nm_output.default <- function(r,dorig,...){
-  
+
   # if(requireNamespace("xpose4")) {
   #   xpdb <- xpose4::xpose.data(run_id(r), directory=paste0(run_in(r),"/"))
   #   d <- xpdb@Data
@@ -468,7 +468,7 @@ nm_output.default <- function(r,dorig,...){
     d <- d[,!duplicated(names(d))]
   }
   
-  if(missing(dorig)) dorig <- get_data(r,...)
+  if(missing(dorig)) dorig <- get_data(r, ...)
   
   filter_statements <- data_filter_char(r)
   if(identical(filter_statements, "TRUE")){
@@ -552,12 +552,13 @@ output_table.default <- function(r, ...){
 
 #' Get ignore statement
 #' @param r object coercible into ctl_list
+#' @param data data.frame (default = missing) optional input dataset from r
 #' @export
-data_ignore_char <- function(r){
+data_ignore_char <- function(r, data){
   UseMethod("data_ignore_char")
 }
 #' @export
-data_ignore_char.default <- function(r){
+data_ignore_char.default <- function(r, data){
   dol_data <- ctl_list(r)$DATA
   dol_data <- dol_data[!dol_data %in% ""]
   dol_data <- rem_comment(dol_data)
@@ -571,6 +572,22 @@ data_ignore_char.default <- function(r){
   if(ignore_present) type <- "IGNORE"
   if(accept_present) type <- "ACCEPT"
   no_filter <- is.na(type)
+  
+  ## get nonmem names and input names
+  ## read in the data - need only header though
+  if(missing(data)) data <- input_data(r, filter = FALSE, silent = TRUE)
+  
+  r_data_names <- names(data)
+  ## now get nonmem names
+  dollar_input <- ctl_list(r)$INPUT
+  nonmem_data_names <- gsub("\\$\\w+", "", dollar_input)
+  nonmem_data_names <- unlist(strsplit(nonmem_data_names, split = "\\s"))
+  nonmem_data_names <- nonmem_data_names[!nonmem_data_names %in% ""]
+  nonmem_data_names <- gsub("\\w+=(\\w+)", "\\1", nonmem_data_names)
+  #if(length(r_data_names) != length(nonmem_data_names))
+  #  stop("length of items in $INPUT doesn't match dataset")
+  name_chart <- data.frame(r_data_names, nonmem_data_names, stringsAsFactors = FALSE)
+  name_chart <- name_chart[name_chart$r_data_names != name_chart$nonmem_data_names,]
   
   if(!no_filter){
     filter_statements <- paste0(".*",type,"\\s*=\\s*\\((\\S[^\\)]+)\\)*.*")
@@ -586,6 +603,16 @@ data_ignore_char.default <- function(r){
     filter_statements <- gsub("\\.LT\\.","<",filter_statements)
     filter_statements <- gsub("\\.GE\\.",">=",filter_statements)
     filter_statements <- gsub("\\.LE\\.","<=",filter_statements)
+    
+    ## substitute names from 
+    for(i in seq_len(nrow(name_chart))){
+      nonmem_data_name <- paste0("\\b", name_chart$nonmem_data_names[i], "\\b")
+      r_data_name <- name_chart$r_data_names[i]
+      filter_statements <- gsub(nonmem_data_name,
+                                r_data_name,
+                                filter_statements)
+    }
+    
     filter_statements <- paste(filter_statements, collapse= " | ")
     if("ACCEPT" %in% type) filter_statements <- paste0("!(",filter_statements,")")
   } else {
@@ -599,9 +626,10 @@ data_ignore_char.default <- function(r){
 #' Opposite of data_ignore_char 
 #' 
 #' @param r object coercible into ctl_list
+#' @param ... arguments passed to data_ignore_char
 #' @export
-data_filter_char <- function(r){
-  ignore_char <- data_ignore_char(r)
+data_filter_char <- function(r, ...){
+  ignore_char <- data_ignore_char(r, ...)
   if(ignore_char == "FALSE") return("TRUE")
   ignored <- !grepl("^!\\((.*)\\)", ignore_char)
   accepted <- !ignored

@@ -4,10 +4,12 @@
 \alias{data_filter_char}
 \title{Get filter statement}
 \usage{
-data_filter_char(r)
+data_filter_char(r, ...)
 }
 \arguments{
 \item{r}{object coercible into ctl_list}
+
+\item{...}{arguments passed to data_ignore_char}
 }
 \description{
 Opposite of data_ignore_char
