@@ -191,46 +191,6 @@ mutate_cond <- function(.data, condition, ..., envir = parent.frame()) {
   .data
 }
 
-## generic already defined
-## internal function
-data_ignore_char.nm_generic <- function(r){
-  dol_data <- r %>% target("$DATA") %>% text
-  dol_data <- dol_data[!dol_data %in% ""]
-  dol_data <- rem_comment(dol_data)
-  
-  ignore_present <- any(grepl(".*IGNORE\\s*=\\s*\\(",dol_data))
-  accept_present <- any(grepl(".*ACCEPT\\s*=\\s*\\(",dol_data))
-  
-  type <- NA
-  if(ignore_present & accept_present) stop("cannot identify ignore columns")
-  if(ignore_present) type <- "IGNORE"
-  if(accept_present) type <- "ACCEPT"
-  no_filter <- is.na(type)
-  
-  if(!no_filter){
-    filter_statements <- paste0(".*",type,"\\s*=\\s*\\((\\S[^\\)]+)\\)*.*")
-    dol_data <- dol_data[grepl(filter_statements, dol_data)]
-    filter_statements <- gsub(filter_statements,"\\1",dol_data)
-    filter_statements <- unlist(strsplit(filter_statements,","))
-    filter_statements <- gsub("\\.EQ\\.","==",filter_statements)
-    filter_statements <- gsub("\\.NE\\.","!=",filter_statements)
-    filter_statements <- gsub("\\.EQN\\.","==",filter_statements)
-    filter_statements <- gsub("\\.NEN\\.","!=",filter_statements)
-    filter_statements <- gsub("\\./E\\.","!=",filter_statements)
-    filter_statements <- gsub("\\.GT\\.",">",filter_statements)
-    filter_statements <- gsub("\\.LT\\.","<",filter_statements)
-    filter_statements <- gsub("\\.GE\\.",">=",filter_statements)
-    filter_statements <- gsub("\\.LE\\.","<=",filter_statements)
-    filter_statements <- paste(filter_statements, collapse= " | ")
-    if("ACCEPT" %in% type) filter_statements <- paste0("!(",filter_statements,")")
-  } else {
-    filter_statements <- "FALSE"
-  }
-  filter_statements
-}
-data_ignore_char.nm_list <- Vectorize_nm_list(data_ignore_char.nm_generic, SIMPLIFY = TRUE)
-
-
 gsub_in_brackets <- function(pattern, replacement, x){
   x <- gsub("\\(", "~(", x)
   x <- gsub("\\)", ")~", x)

@@ -1,4 +1,4 @@
-Sun Mar 15 09:57:39 UTC 2020
+Sat Apr 11 15:14:13 UTC 2020
 ;; 1. Based on: m1
 ;; 2. Description: 1CMT+oral
 ;; x1. Author: klgk669
@@ -126,8 +126,8 @@ Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG 
 
 License Registered to: AstraZeneca - R
 Expiration Date:    14 AUG 2020
-Current Date:       15 MAR 2020
-Days until program expires : 149
+Current Date:       11 APR 2020
+Days until program expires : 123
 1NONLINEAR MIXED EFFECTS MODEL PROGRAM (NONMEM) VERSION 7.3.0
  ORIGINALLY DEVELOPED BY STUART BEAL, LEWIS SHEINER, AND ALISON BOECKMANN
  CURRENT DEVELOPERS ARE ROBERT BAUER, ICON DEVELOPMENT SOLUTIONS,
@@ -756,14 +756,14 @@ Days until program expires : 149
  EPSshrink(%):   1.0849E+01
 
  #TERE:
- Elapsed estimation time in seconds:     1.08
+ Elapsed estimation time in seconds:     1.12
 0R MATRIX ALGORITHMICALLY SINGULAR
 0COVARIANCE MATRIX UNOBTAINABLE
 0R MATRIX IS OUTPUT
 0S MATRIX ALGORITHMICALLY SINGULAR
 0S MATRIX IS OUTPUT
 0T MATRIX - EQUAL TO RS*RMAT, WHERE S* IS A PSEUDO INVERSE OF S - IS OUTPUT
- Elapsed covariance time in seconds:     0.78
+ Elapsed covariance time in seconds:     0.79
 1
  
  
@@ -1171,6 +1171,6 @@ Days until program expires : 149
 +       ......... ......... ......... ......... ......... ......... ......... ......... ......... ......... ......... .........
          ......... ......... ......... ......... ......... ......... ......... ......... ......... ......... .........
  
- #CPUT: Total CPU Time in Seconds,        2.023
+ #CPUT: Total CPU Time in Seconds,        2.080
 Stop Time:
-Sun Mar 15 09:57:44 UTC 2020
+Sat Apr 11 15:14:19 UTC 2020

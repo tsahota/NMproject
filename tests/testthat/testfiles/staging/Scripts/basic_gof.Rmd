@@ -1,0 +1,70 @@
+---
+output:
+  html_notebook: default
+params:
+  m: NA
+title: "`r paste0(ctl_path(params$m), ': GOF')`"
+author: "`r Sys.info()['user']`"
+date: "`r Sys.time()`"
+---
+
+```{r setup, include=F}
+## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
+library(rprojroot)
+library(knitr)
+opts_knit$set(root.dir=find_root(has_file(".Rprofile")))
+opts_chunk$set(echo = FALSE)
+opts_chunk$set(message = FALSE)
+if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
+  .m <- params$m  
+}
+```
+
+```{r echo=FALSE,message=FALSE}
+## IF RUNNING INTERACTIVELY
+##  set m to be your object
+if(!interactive()) m <- params$m
+```
+
+```{r echo=FALSE,message=FALSE}
+library(NMprojectAZ)
+devtools::load_all("~/NMproject")
+```
+
+## run details
+
+```{r echo=FALSE}
+m
+```
+
+## convergence
+
+```{r echo=FALSE}
+plot_iter(m)
+```
+
+## outputs
+
+```{r echo=FALSE}
+rr(m)
+```
+
+```{r echo=FALSE}
+summary(m) %>%
+  select(run_id, status, ofv:cond_num)
+```
+
+## Diagnostics
+
+```{r echo=FALSE}
+m %>% gof_ggplot2()
+```
+
+## Appendix
+
+### Control file
+
+```{r echo=FALSE, message=FALSE}
+m %>% text() %>% .[[1]]
+```
+

@@ -4,12 +4,14 @@
 \alias{read_derived_data}
 \title{Read derived data}
 \usage{
-read_derived_data(name, na = ".", ...)
+read_derived_data(name, na = ".", silent = FALSE, ...)
 }
 \arguments{
 \item{name}{name of file (without extension)}
 
 \item{na}{character to be passed to read.csv}
+
+\item{silent}{logical (default = TRUE). should messages be suppressed}
 
 \item{...}{additional arguments to be passed to read.csv}
 }
