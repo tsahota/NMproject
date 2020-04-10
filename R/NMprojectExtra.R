@@ -3579,8 +3579,10 @@ parent_run.nm_generic <- function(m, n = 1L){
     run_in(parent_run_in(m)) %>% 
     version("[0-9]+")
 
-  pattern <- unique_id(hack_m)
-  pattern <- paste0(gsub(.Platform$file.sep, ";-;", pattern), "\\.md5")
+  pattern <- hack_m %>%
+    unique_run_cache_path() %>%
+    basename()
+  pattern <- paste0("^",pattern,"$")
   
   ## sort by most recent
 
