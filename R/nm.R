@@ -1652,11 +1652,12 @@ exclude_rows <- function(d, dexcl, exclude_col = "EXCL"){
   d
 }
 
-#' produce covariate forest plots
+#' produce dataset for covariate forest plotting
 #'
 #' @param m nm object
+#' @param id_col character (default = "ID"). name of column
 #' @export
-cov_forest_plot <- function(m){
+cov_forest_data <- function(m, id_col = "ID"){
   if(!is_finished(m)) stop("run not finished yet")#wait_for_finish(m)
   # d <- nm_output(m) ## read in combined output 
   
@@ -1673,15 +1674,15 @@ cov_forest_plot <- function(m){
   dpar$lower <- dpar$FINAL - 1.96*dpar$SE
   dpar$upper <- dpar$FINAL + 1.96*dpar$SE
   
-  PK_text <- ctl(m)$PK
+  PK_text <- ctl_list(m)$PK
   PK_text_R <- nonmem_code_to_r(PK_text)
-  
+
   par_covs <- PK_text[grepl(";;; .*-DEFINITION START", PK_text)]
   par_covs <- gsub(";;; (.*)-.*", "\\1", par_covs)
   
   pars <- PK_text[grepl(";;; .*-RELATION START", PK_text)]
   pars <- gsub(";;; (.*)-.*", "\\1", pars)
-  
+
   dd <- get_data(m, filter = TRUE)
   
   ## to be used later in evaluation of R expressions  
@@ -1709,17 +1710,17 @@ cov_forest_plot <- function(m){
     theta_lines <- c(theta_lines, par_cov)
     exprs <- parse(text = theta_lines)
     
+    #if("ID" %in% names(dd)) {
+      dd <- dd[!duplicated(dd[[id_col]]), ]
+    #}
+    
     cov_col <- dd[[cov]]
-    cov_col <- stats::na.omit(cov_col)
+    cov_col[is.na(cov_col)] <- 0 #stats::na.omit(cov_col)
     
     categorical <- TRUE
     if(length(unique(dd[[cov]])) > 10) categorical <- FALSE  ## too many levels = FALSE
     
     if(!all(stats::na.omit(floor(dd[[cov]]) == dd[[cov]]))) categorical <- FALSE  ## not round = FALSE
-    
-    if("ID" %in% names(dd)) {
-      dd <- dd[!duplicated(dd$ID), ]
-    }
     
     if(categorical) {
       levs <- unique(cov_col) 
@@ -1767,7 +1768,16 @@ cov_forest_plot <- function(m){
   })
   
   d <- dplyr::bind_rows(d)
-  
+  d
+
+}
+
+#' plotting covariate forest plots
+#'
+#' @param d data.frame from cov_forest_data
+#' @export
+
+cov_forest_plot <- function(d){
   ggplot2::ggplot(d, ggplot2::aes_string(x = "mid", y = "lev_text")) + ggplot2::theme_bw() +
     ggplot2::geom_rect(ggplot2::aes(ymin = -Inf, ymax = Inf, xmin = 1-0.2, xmax = 1+0.2), colour = "grey90") +
     ggplot2::geom_point() +
@@ -1776,8 +1786,4 @@ cov_forest_plot <- function(m){
     ggplot2::facet_grid(par~., scales = "free_y", space = "free") +
     ggplot2::scale_y_discrete("") +
     ggplot2::scale_x_continuous("effect size", breaks = seq(floor(min(d$low)), ceiling(max(d$upp)), 0.1))
-  
-  ###############
-  ## return plotting object here
-  
 }

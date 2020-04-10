@@ -2,13 +2,13 @@
 % Please edit documentation in R/nm.R
 \name{cov_forest_plot}
 \alias{cov_forest_plot}
-\title{produce covariate forest plots}
+\title{plotting covariate forest plots}
 \usage{
-cov_forest_plot(m)
+cov_forest_plot(d)
 }
 \arguments{
-\item{m}{nm object}
+\item{d}{data.frame from cov_forest_data}
 }
 \description{
-produce covariate forest plots
+plotting covariate forest plots
 }
