@@ -1,5 +1,5 @@
 
-dollar_data <- function(d,keep,rename){
+dollar_input <- function(d,keep,rename){
   keep0 <- sapply(d,is_a_number)
   if(missing(keep)){
     message("Excluding all non-numeric items")

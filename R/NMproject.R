@@ -339,14 +339,14 @@ update_dollar_data <- function(ctl_name,new_data_name){
 #'
 #' Generic function
 #' @param ctl object coercible into ctl_lst
-#' @param ... arguments to be passed to dollar_data
+#' @param ... arguments to be passed to dollar_input
 #' @export
 
 update_dollar_input <- function(ctl, ...){
   if(is_single_na(ctl)) return(NA)
   ctl <- ctl_list(ctl)
   d <- suppressMessages(get_data(ctl))
-  replace_with <- suppressMessages(dollar_data(d, ...))
+  replace_with <- suppressMessages(dollar_input(d, ...))
   ctl$INPUT <- c("$INPUT", replace_with, "")
   ctl
 }

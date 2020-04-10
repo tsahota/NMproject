@@ -806,7 +806,7 @@ fill_input <- function(m, ...){
 fill_input.nm_generic <- function(m, ...){
   ctl <- ctl(m)
   d <- suppressMessages(input_data(m))
-  replace_with <- c("$INPUT", suppressMessages(dollar_data(d, ...)))
+  replace_with <- c("$INPUT", suppressMessages(dollar_input(d, ...)))
   old_target <- m %>% target()
   m <- m %>% target("INPUT") %>% text(replace_with) %>%
     target(old_target)
