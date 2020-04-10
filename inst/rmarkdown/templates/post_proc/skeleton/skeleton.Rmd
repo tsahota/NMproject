@@ -48,7 +48,6 @@ devtools::load_all("~/NMprojectAZ")
 
 ```{r}
 wait_finish(.m)
-.m
 ```
 
 ## convergence
@@ -72,8 +71,7 @@ rr(.m)
 library(ggplot2)
 
 .m %>%
-  output_table() %>%
-  dplyr::first() %>%
+  output_table_first() %>%
   ggplot(aes(x = PRED, y = DV)) +
   theme_bw() +
   geom_point() +
