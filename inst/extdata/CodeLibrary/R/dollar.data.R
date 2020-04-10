@@ -23,8 +23,8 @@ dollar_data <- function(d,keep,rename){
 
   ## rename variables in 
   if(!missing(rename)){ 
-    tmp <- match(names(d),names(rename))
-    tmp <- rename[tmp]
+    tmp <- match(names(d),rename)
+    tmp <- names(rename)[tmp]
     names(d)[!is.na(tmp)] <- tmp[!is.na(tmp)]
   }
   
