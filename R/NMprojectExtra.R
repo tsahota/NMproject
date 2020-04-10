@@ -786,11 +786,18 @@ fill_dollar_data <- function(m, data_name){
   m
 }
 
-
-#' Get/set $INPUT
+#' set $INPUT
 #' 
 #' @param m nm object
-#' @param ... optional additional arguments passed to dollar_data()
+#' @param keep character vector. Names of columns to keep
+#' @param rename named character vector. Renaming instructions
+#' 
+#' @examples 
+#' \dontrun{
+#' 
+#'  m1 <- m1 %>% fill_input(rename = c("DAT0" = "DATE"))
+#' 
+#' }
 #' @export
 fill_input <- function(m, ...){
   UseMethod("fill_input")

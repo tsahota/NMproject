@@ -2,15 +2,24 @@
 % Please edit documentation in R/NMprojectExtra.R
 \name{fill_input}
 \alias{fill_input}
-\title{Get/set $INPUT}
+\title{set $INPUT}
 \usage{
 fill_input(m, ...)
 }
 \arguments{
 \item{m}{nm object}
 
-\item{...}{optional additional arguments passed to dollar_data()}
+\item{keep}{character vector. Names of columns to keep}
+
+\item{rename}{named character vector. Renaming instructions}
 }
 \description{
-Get/set $INPUT
+set $INPUT
+}
+\examples{
+\dontrun{
+
+ m1 <- m1 \%>\% fill_input(rename = c("DAT0" = "DATE"))
+
+}
 }
