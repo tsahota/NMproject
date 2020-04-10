@@ -1652,6 +1652,9 @@ exclude_rows <- function(d, dexcl, exclude_col = "EXCL"){
   d
 }
 
+#' produce covariate forest plots
+#'
+#' @param m nm object
 #' @export
 cov_forest_plot <- function(m){
   if(!is_finished(m)) stop("run not finished yet")#wait_for_finish(m)
