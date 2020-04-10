@@ -1192,23 +1192,30 @@ get_data <- function(r, filter = FALSE, ...){
 #' This is a developer function
 #' 
 #' @param code character vector of NONMEM code block
+#' @param eta_to_0 logical (default = TRUE) set all etas to 0
 #' @export
 
-nonmem_code_to_r <- function(code){
+nonmem_code_to_r <- function(code, eta_to_0 = TRUE){
   pk_block <- rem_comment(code)
   
   pk_block <- pk_block[!grepl("^\\s*\\$.*", pk_block)]
+
+  if(eta_to_0){
+    pk_block <- gsub("\\bETA\\(([0-9]+)\\)","0", pk_block)
+  }
   
-  pk_block <- gsub("ETA\\(([0-9]+)\\)","ETA\\1", pk_block)
+  ## will replace both THETA and ETA
+  pk_block <- gsub("ETA\\(([0-9]+)\\)","ETA\\1", pk_block) 
   
-  pk_block <- gsub("LOG","log", pk_block)
-  pk_block <- gsub("EXP","exp", pk_block)
-  pk_block <- gsub("IF","if", pk_block)
+  pk_block <- gsub("\\bLOG\\b","log", pk_block)
+  pk_block <- gsub("\\bEXP\\b","exp", pk_block)
+  pk_block <- gsub("\\bIF\\b","if", pk_block)
   
-  ## TODO: handle IF ELSE ENDIF blocks
-  ##  strategy: 
-  ##   put all on single string, gsub IF ELSE ENDIF to use curly braces
-  
+  pk_block <- gsub("\\bTHEN\\b","{", pk_block)
+  pk_block <- gsub("\\bENDIF\\b","}", pk_block)
+  pk_block <- gsub("\\bELSE\\b","} else {", pk_block)
+  ## TODO: handle IF THEN (no ENDIF) blocks
+
   pk_block <- gsub("\\.EQ\\.","==",pk_block)
   pk_block <- gsub("\\.NE\\.","!=",pk_block)
   pk_block <- gsub("\\.EQN\\.","==",pk_block)
