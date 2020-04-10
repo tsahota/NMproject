@@ -4,10 +4,12 @@
 \alias{nonmem_code_to_r}
 \title{convert nonmem code to R ready}
 \usage{
-nonmem_code_to_r(code)
+nonmem_code_to_r(code, eta_to_0 = TRUE)
 }
 \arguments{
 \item{code}{character vector of NONMEM code block}
+
+\item{eta_to_0}{logical (default = TRUE) set all etas to 0}
 }
 \description{
 This is a developer function
