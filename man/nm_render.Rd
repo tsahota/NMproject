@@ -5,7 +5,8 @@
 \title{render function for nm objects}
 \usage{
 nm_render(m, input, output_file = paste0(tools::file_path_sans_ext(input),
-  ".", run_id(m), ".html"), args = list(), force = FALSE, ...)
+  ".", run_dir(m), ".html"), args = list(), force = FALSE, async = FALSE,
+  ...)
 }
 \arguments{
 \item{m}{nm object}
