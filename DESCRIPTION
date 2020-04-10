@@ -43,7 +43,7 @@ Collate:
     'NMprojectExtra.R'
     'NMprojectExtraDB.R'
     'NMprojectExtraTest.R'
-    'dollar_data.R'
+    'dollar_input.R'
     'insert_addin.R'
     'load_sse.R'
     'manual_edit.R'

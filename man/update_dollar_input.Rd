@@ -9,7 +9,7 @@ update_dollar_input(ctl, ...)
 \arguments{
 \item{ctl}{object coercible into ctl_lst}
 
-\item{...}{arguments to be passed to dollar_data}
+\item{...}{arguments to be passed to dollar_input}
 }
 \description{
 Generic function

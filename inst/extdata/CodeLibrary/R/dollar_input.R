@@ -3,7 +3,7 @@
 ## Run interactively: FALSE
 ## Key words: function
 
-dollar_data <- function(d,keep,rename){
+dollar_input <- function(d,keep,rename){
   keep0 <- sapply(d,class) %in% c("integer","numeric")
   if(missing(keep)){
     message("Excluding all non-numeric items")
