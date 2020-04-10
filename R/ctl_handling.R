@@ -1170,7 +1170,7 @@ get_data <- function(r, filter = FALSE, ...){
   }
 
   if(filter) {
-    data_filter <- parse(text = data_filter_char(r))
+    data_filter <- parse(text = data_filter_char(r, data = d))
     d <- subset(d, eval(data_filter))
   }
   d
