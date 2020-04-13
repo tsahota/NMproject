@@ -92,6 +92,69 @@ plot_iter <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
   plot_iter_ggplot(d)
 }
 
+#' Plot iterations vs parameters/OBJ with dygraphs
+#'
+#' @param m object of class nmexecute
+#' @param trans logical. should parameter transformations be performed
+#' @export
+plot_iter_dygraph <- function(m, trans = TRUE){
+  requireNamespace("dygraphs")
+  psn_ext_path <- m %>% nm_output_path("ext")
+  #if(is.null(m$output$psn.ext)) return(dygraph(data.frame(x=0,y=0)))
+  if(!file.exists(psn_ext_path)) return(dygraph(data.frame(x=0,y=0)))
+  d <- try(plot_iter_data(m,trans = trans, skip = 0),silent=TRUE)
+  if(inherits(d,"try-error")) return(dygraph(data.frame(x=0,y=0)))
+  p <- list()
+  for(i in seq_along(unique(d$variable))){
+    var_name <- unique(d$variable)[i]
+    dt <- d[d$variable %in% var_name,c("ITERATION","value")]
+    p[[i]] <- dygraphs::dygraph(dt,main=var_name,xlab="Iteration",group = "hi", width = 400) %>%
+      dygraphs::dyOptions(drawPoints = TRUE, pointSize = 2, sigFigs=3) %>%
+      dygraphs::dyRangeSelector()
+  }
+  #htmltools::browsable(htmltools::tagList(p))
+  
+  #get_plot_bootstrapjs_div(p)
+  htmltools::browsable(get_plot_bootstrapjs_div(p))
+}
+
+get_plot_bootstrapjs_div <- function(plot_object_list) {
+
+  get_col_div <- function(plot_object_list, index, css_class = 'col-xs-12 col-sm-4'){
+    col_div <- htmltools::div(class = css_class)
+    
+    if(length(plot_object_list) >= index) {
+      plotname <- paste("plot", index, sep="")
+      plot_output_object <- htmltools::tagList(plot_object_list[[index]]) #dygraphOutput(plotname)
+      col_div <- htmltools::tagAppendChild(col_div, plot_output_object)
+    }
+    return(col_div)
+  }
+  #
+  get_plot_div <- function(plot_object_list) {
+    result_div <- htmltools::div(class = 'container-fluid', dep)
+    
+    suppressWarnings(for(i in seq(1,length(plot_object_list),3)) {
+      row_div <- htmltools::div(class = 'row')
+      row_div <- htmltools::tagAppendChild(row_div, get_col_div(plot_object_list, i))
+      row_div <- htmltools::tagAppendChild(row_div, get_col_div(plot_object_list, i+1))
+      row_div <- htmltools::tagAppendChild(row_div, get_col_div(plot_object_list, i+2))
+      result_div <- htmltools::tagAppendChild(result_div, row_div)
+    })
+    return(result_div)
+  }
+  ####
+  plot_output_list_div <- get_plot_div(plot_object_list)
+  
+  #browser()
+  
+  dep <- htmltools::HTML('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">')
+  
+  plot_output_list_div <- htmltools::tagList(dep, plot_output_list_div)
+  
+  return(plot_output_list_div)
+}
+
 
 #plot_iter_rplots <- function(d){
 #  p <- rPlot(value ~ ITERATION | variable, data= d, type = "point")
