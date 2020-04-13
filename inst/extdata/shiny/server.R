@@ -154,7 +154,6 @@ function(input, output, session) {
   plot_iter_ob <- eventReactive(
     list(input$refresh_plot,
          input$run_table_rows_selected),{
-           #orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
            object <- objects()[[1]]
            psn_ext_path <- object %>% nm_output_path("ext")
            #if(is.null(object$output$psn.ext)) return(dygraph(data.frame(x=0,y=0)))
