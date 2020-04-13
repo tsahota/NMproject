@@ -1791,7 +1791,7 @@ cov_forest_data <- function(m, covariate_scenarios){
     if(nrow(dcov_sc) == 0)
       stop("couldn't find covariate ", cov, " in covariate scenarios")
     
-    dcov_sc_simple <- tibble(dcov_sc$value)
+    dcov_sc_simple <- tibble::tibble(dcov_sc$value)
     names(dcov_sc_simple) <- cov
     
     dd_first[[cov]] <- NULL
