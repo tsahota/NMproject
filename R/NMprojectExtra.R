@@ -4324,13 +4324,38 @@ remove_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
 remove_cov.nm_list <- Vectorize_nm_list(remove_cov.nm_generic, SIMPLIFY = FALSE)
 
 
+#' produce dataset for covariate forest plotting
+#'
+#' @param m nm object
+#' @param covariate_scenarios data.frame. need names "cov", "value" and (optional) "text"
+#' 
+#' @examples 
+#' \dontrun{
+#' 
+#' dcov <- get_data(m1, filter = TRUE)
+#' dcov <- dcov[!duplicated(dcov$NMSEQSID), ]
+#' covariate_scenarios <- bind_rows(
+#'   tibble(cov = "HEALTHGP", value = c(0, 1)),
+#'   tibble(cov = "HEPATIC", value = unique(dcov$HEPATIC[dcov$HEPATIC > -99])),
+#'   tibble(cov = "BWTIMP", value = c(50, 80, 120)),
+#'   tibble(cov = "ECOG", value = c(0,1,2,3)),
+#'   tibble(cov = "BEGFRIMP", value = quantile(dcov$BEGFR[dcov$BEGFR > -99])),
+#'   tibble(cov = "RACE", value = c(1,2),text=c("white","black")),
+#'   tibble(cov = "PPI", value = c(0,1)),
+#'   tibble(cov = "H2RA", value = c(0,1))
+#' )
+#' 
+#' dplot <- cov_forest_data(m1, covariate_scenarios = covariate_scenarios)
+#' cov_forest_plot(dplot)
+#' 
+#' }
+#' 
 #' @export
-cov_forest_plot <- function(m){
+cov_forest_data <- function(m, covariate_scenarios){
   if(!is_finished(m)) wait_finish(m)
   # d <- nm_output(m) ## read in combined output
 
   ## assume m is nm_list
-  requireNamespace("ggplot2")
   m <- as_nm_generic(m)
 
   ###############
@@ -4364,40 +4389,97 @@ cov_forest_plot <- function(m){
   dpar_upp <- dpar$upper
   names(dpar_upp) <- dpar$parameter
 
+  dd[is.na(dd)] <- 0
+  dd_first <- dd[1,]
+  
+  dpar_df <- as.data.frame(as.list(dpar_mid))
+  dd_first <- cbind(dd_first, dpar_df)
   d <- lapply(seq_along(par_covs), function(i){
 
     par_cov <- par_covs[i]
-
-    par <- sapply(pars, function(par) grepl(paste0("^", par), par_cov))
-    par <- pars[par]
-
-    if(length(par) != 1) stop("can't get param value for ", par_cov, call. = FALSE)
-
+    
+    potential_pars <- sapply(pars, function(par) grepl(par, par_cov))
+    potential_pars <- pars[potential_pars]
+    
+    matches <- unlist(lapply(potential_pars, function(potential_par){
+      grep(paste0(potential_par, "COV = .*", par_cov), PK_text_R)
+    }))
+    
+    if(length(matches) != 1) stop("can't get param value for ", par_cov, call. = FALSE)
+    
+    PK_matched_row <- PK_text_R[matches]
+    par <- gsub("^(.*)COV .*$", "\\1", PK_matched_row)
+    
+    #par <- sapply(pars, function(par) grepl(paste0("^", par), par_cov))
+    #par <- pars[par]
+    #if(length(par) != 1) stop("can't get param value for ", par_cov, call. = FALSE)
+    
     cov <- gsub(paste0(par,"(.*)"), "\\1", par_cov)
-
+    
+    if(!any(grepl(paste0(par_cov, "\\s*\\="), PK_text_R)))
+      stop("can't find TVPARCOV= rows")
+    
+    # ## use code before TVPARCOV lines to compute derived covariates
+    # prior_indicies <- seq_len(min(grep(paste0(par_cov, "\\s*\\="), PK_text_R))-1)
+    # prior_code <- PK_text_R[prior_indicies]
+    # prior_code <- c(prior_code, cov)
+    # prior_exprs <- parse(text = prior_code)
+    
+    
+    #theta_lines <- PK_text_R[seq_len(max(grep(paste0(par_cov, "\\s*\\="), PK_text_R)))]
     theta_lines <- PK_text_R[grepl(paste0(par_cov, "\\s*\\="), PK_text_R)]
     theta_lines <- c(theta_lines, par_cov)
     exprs <- parse(text = theta_lines)
-
-    cov_col <- dd[[cov]]
-    cov_col <- stats::na.omit(cov_col)
-
-    categorical <- TRUE
-    if(length(unique(dd[[cov]])) > 10) categorical <- FALSE  ## too many levels = FALSE
-
-    if(!all(stats::na.omit(floor(dd[[cov]]) == dd[[cov]]))) categorical <- FALSE  ## not round = FALSE
-
-    if("ID" %in% names(dd)) {
-      dd <- dd[!duplicated(dd$ID), ]
-    }
-
-    if(categorical) {
-      levs <- unique(cov_col)
-      lev_text <- paste0(cov,"_",levs)
+    
+    
+    ## redefine data covariates with 
+    ##browser()
+    dcov_sc <- covariate_scenarios[covariate_scenarios$cov %in% cov, ]
+    if(nrow(dcov_sc) == 0)
+      stop("couldn't find covariate ", cov, " in covariate scenarios")
+    
+    dcov_sc_simple <- tibble::tibble(dcov_sc$value)
+    names(dcov_sc_simple) <- cov
+    
+    dd_first[[cov]] <- NULL
+    dd_first <- merge(dd_first, dcov_sc_simple)
+    
+    #dd_first[[cov]] <- with(dd_first, eval(prior_exprs))
+    
+    # cov_col <- sapply(seq_len(nrow(dd)), function(j) {
+    #   with(dd[j,], eval(prior_exprs))
+    # })     
+    
+    #dd[[cov]] <- cov_col
+    #browser()
+    #cov_col <- dd[[cov]]
+    #cov_col[is.na(cov_col)] <- 0 #stats::na.omit(cov_col)
+    
+    # categorical <- TRUE
+    # if(length(unique(dd[[cov]])) > 10) categorical <- FALSE  ## too many levels = FALSE
+    # 
+    # if(!all(stats::na.omit(floor(dd[[cov]]) == dd[[cov]]))) categorical <- FALSE  ## not round = FALSE
+    
+    # print(cov)
+    # if(cov=="BWTIMP") browser()
+    ### Need to change it to generate quantile based on original BWT
+    # without accounting the imputed BWT to the median value
+    
+    # if(categorical) {
+    #   levs <- unique(cov_col) 
+    #   lev_text <- paste0(cov,"_",levs)
+    # } else {
+    #   levs <- stats::quantile(cov_col, probs = c(0.05, 0.5, 0.95))
+    #   levs <- signif(levs, 2)
+    #   lev_text <- paste0(cov,"_",c("low5","mid","upp95"),"_",levs)
+    # }
+    
+    levs <- dd_first[[cov]]
+    if(!"text" %in% names(covariate_scenarios)){
+      lev_text <- paste0(cov, "_", levs) 
     } else {
-      levs <- stats::quantile(cov_col, probs = c(0.05, 0.5, 0.95))
-      levs <- signif(levs, 2)
-      lev_text <- paste0(cov,"_",c("low5","mid","upp95"),"_",levs)
+      if(is.na(dcov_sc$text)) lev_text <- paste0(cov, "_", levs) else
+        lev_text <- dcov_sc$text
     }
 
     d <- tibble::tibble(par, cov, levs, lev_text)
@@ -4437,20 +4519,30 @@ cov_forest_plot <- function(m){
   })
 
   d <- dplyr::bind_rows(d)
+  d
+  
+}
 
+#' plotting covariate forest plots
+#'
+#' @param d data.frame from cov_forest_data
+#' @export
+
+cov_forest_plot <- function(d){
+  requireNamespace("ggplot2")
+  
   ggplot2::ggplot(d, ggplot2::aes_string(x = "mid", y = "lev_text")) + ggplot2::theme_bw() +
-    ggplot2::geom_rect(ggplot2::aes(ymin = -Inf, ymax = Inf, xmin = 1-0.2, xmax = 1+0.2), colour = "grey90") +
+    ggplot2::geom_rect(ggplot2::aes(ymin = -Inf, ymax = Inf, xmin = 1-0.2, xmax = 1+0.2), 
+                       colour = "grey100") +
     ggplot2::geom_point() +
-    ggplot2::geom_errorbarh(ggplot2::aes_string(xmin = "low", xmax = "upp"), height = 0.1) +
+    ggplot2::geom_errorbarh(ggplot2::aes_string(xmin = "low", xmax = "upp"), height = 0.1) + 
     ggplot2::geom_vline(xintercept = 1, color='black', linetype='dashed') +
     ggplot2::facet_grid(par~., scales = "free_y", space = "free") +
     ggplot2::scale_y_discrete("") +
-    ggplot2::scale_x_continuous("effect size", breaks = seq(floor(min(d$low)), ceiling(max(d$upp)), 0.1))
-
-  ###############
-  ## return plotting object here
-
+    ggplot2::scale_x_continuous("effect size \n (bars: 95% CI)", breaks = seq(floor(min(d$low)), ceiling(max(d$upp)), 0.1))
 }
+
+
 
 #' @export
 append_nonmem_var <- function(output_table, r, var){
