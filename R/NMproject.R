@@ -181,7 +181,9 @@ copy_control0 <- function(from, to, overwrite=FALSE, alt_paths, dest_dir = getOp
   #lapply(to, function(to){
     run_id <- run_id(to)
     
-    ctl <- ctl %>% new_ctl(to)
+    ## get based on run_id
+    based_on_run_id <- get_run_id(from)
+    ctl <- ctl %>% new_ctl(to, based_on = based_on_run_id)
     attr(ctl, "file_name") <- to
     #ctl <- gsub(paste0("(FILE\\s*=\\s*\\S*)",run_id_from,"\\b"),paste0("\\1",run_id),ctl)
     if(!is_project_file) ctl[[1]] <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",from_path),ctl[[1]])
