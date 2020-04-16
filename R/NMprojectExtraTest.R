@@ -9,7 +9,7 @@ if(0){
   # run_in(m0)
   # run_dir(m0)
   # type(m0)
-  # ctl(m0)
+  # ctl_contents(m0)
   # target(m0)
   
   #db <- nm_db$new("pk.RDS")
@@ -17,7 +17,7 @@ if(0){
   m1 <- nm(run_id = "m1")
   #db$register(m1)
   m1 <- m1 %>% cmd("qpsn -t 100 -c auto -- execute {ctl_name} -dir={run_dir}")
-  m1 <- m1 %>% ctl("tests/testthat/testfiles/Models/run1.mod")
+  m1 <- m1 %>% ctl_contents("tests/testthat/testfiles/Models/run1.mod")
   #db$refresh()
   
   #db$save()
@@ -32,7 +32,7 @@ if(0){
   # exists("db")  ## TRUE
   
   ## following should be via shiny
-  #m1 <- m1 %>% ctl("/projects/qcp/QCP_MODELING/ONC/azd6094/poppk_20181203_pk-eff-ae-interim3/Models/runm2.mod")
+  #m1 <- m1 %>% ctl_contents("/projects/qcp/QCP_MODELING/ONC/azd6094/poppk_20181203_pk-eff-ae-interim3/Models/runm2.mod")
   
   
   

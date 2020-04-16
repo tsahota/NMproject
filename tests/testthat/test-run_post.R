@@ -29,7 +29,7 @@ test_that("run and post",{
   ## dataset procesing
   
   m1 <- nm(run_id = "m1") %>%
-    ctl("staging/Models/run1.mod") %>%
+    ctl_contents("staging/Models/run1.mod") %>%
     cmd("execute {ctl_name} -dir={run_dir}") %>%
     run_nm()
   
@@ -56,7 +56,7 @@ test_that("run and post",{
   
   #rr2(mlist)
   status_table(mlist) 
-  
+
   expect_true(inherits(rr(mlist), "data.frame"))
   expect_true(inherits(summary_wide(mlist), "data.frame"))
   expect_true(inherits(summary_long(mlist), "data.frame"))

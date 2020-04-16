@@ -29,10 +29,10 @@ manual_edit <- function(m, description){
 stop_manual_edit <- function(m){
   old_m <- m
   #old_target <- target(m)
-  m <- m %>% ctl(ctl_path(m), update_ctl = FALSE)  ## update object
+  m <- m %>% ctl_contents(ctl_path(m), update_ctl = FALSE)  ## update object
   
-  old_ctl <- as.character(ctl_character(ctl(as_nm_generic(old_m))))
-  new_ctl <- as.character(ctl_character(ctl(as_nm_generic(m))))
+  old_ctl <- as.character(ctl_character(ctl_contents(as_nm_generic(old_m))))
+  new_ctl <- as.character(ctl_character(ctl_contents(as_nm_generic(m))))
   
   if(requireNamespace("diffobj", quietly = TRUE)){
     dff <- diffobj::diffChr(new_ctl, old_ctl, format = "ansi256")
@@ -137,7 +137,7 @@ apply_patch <- function(m, patch_name){
   ## use system_nm instead
   system_nm(patch_cmd, dir = getwd())
   
-  m <- m %>% ctl(ctl_path(m), update_ctl = FALSE)
+  m <- m %>% ctl_contents(ctl_path(m), update_ctl = FALSE)
   
   invisible(m)
   

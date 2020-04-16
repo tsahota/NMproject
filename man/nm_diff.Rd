@@ -26,7 +26,7 @@ NMproject's control file manipulation functions (e.g. subroutine())
 \dontrun{
 
 m1 <- nm(run_id = "m1") \%>\%
-  ctl("staging/Models/run1.mod")
+  ctl_contents("staging/Models/run1.mod")
 
 m2 <- m1 \%>\% child(run_id = "m2") \%>\%
   subroutine(advan = 2, trans = 2)
