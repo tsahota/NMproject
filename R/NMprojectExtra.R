@@ -54,7 +54,7 @@ To use the alpha interface, install NMproject 0.3.2",
   # ## if ctl file already exists, bring it into object
   # ctl_path <- ctl_path(m)
   # if(file.exists(ctl_path)){
-  #   m <- m %>% ctl(ctl_path)
+  #   m <- m %>% ctl_contents(ctl_path)
   # }
   
   ## leave space to track output files (do in run_nm)
@@ -129,7 +129,7 @@ child.nm_generic <- function(m, run_id = NA_character_, type = "execute", silent
   m <- m %>% parent_run_in(run_in(m))
   if(!is.na(run_id)) m <- m %>% run_id(run_id)
   if(!type %in% "execute") m <- m %>% type(type)
-  m[["ctl_orig"]] <- m[["ctl"]]  ## reset ctl_orig
+  m[["ctl_orig"]] <- m[["ctl_contents"]]  ## reset ctl_orig
   
   ## check for file conficts
   file_conflicts <- intersect(psn_exported_files(mparent), psn_exported_files(m))
@@ -174,7 +174,7 @@ overlapping_outputs <- function(m){
 #' @export
 print.nm_generic <- function(x, ...){
   x <- as.list(x)
-  collapse_fields <- c("ctl", "ctl_orig")
+  collapse_fields <- c("ctl_contents", "ctl_orig")
   for(field in collapse_fields){
     if(field %in% names(x)) x[[field]] <- "...[collapsed]..."    
   }
@@ -188,7 +188,7 @@ print.nm_generic <- function(x, ...){
 print.nm_list <- function(x, ...){
   for(i in seq_along(x)) {
     x[[i]] <- as.list(x[[i]])
-    collapse_fields <- c("ctl", "ctl_orig")
+    collapse_fields <- c("ctl_contents", "ctl_orig")
     for(field in collapse_fields){
       if(field %in% names(x[[i]])) x[[i]][[field]] <- "...[collapsed]..."
     }
@@ -432,7 +432,7 @@ run_id.nm_generic <- function(m, text, ...){
     m <- replace_tags(m, field)
   }
   
-  if("ctl" %in% names(m)) m <- m %>% ctl(m[["ctl"]]) ## update ctl object
+  if("ctl_contents" %in% names(m)) m <- m %>% ctl_contents(m[["ctl_contents"]]) ## update ctl_contents object
   m
 }
 #' @export
@@ -481,7 +481,7 @@ ctl_list2.character <- function(r){
   ctl_nm2r(ctl)
 }
 
-ctl_list2.nm_generic <- function(r) r[["ctl"]]
+ctl_list2.nm_generic <- function(r) r[["ctl_contents"]]
 
 ctl_list2.nm_list <- Vectorize_nm_list(ctl_list2.nm_generic, SIMPLIFY = FALSE)
 
@@ -495,16 +495,16 @@ ctl_list2.nm_list <- Vectorize_nm_list(ctl_list2.nm_generic, SIMPLIFY = FALSE)
 #' 
 #' @export
 
-ctl <- function(m, ctl_ob, update_numbering = TRUE, update_dollar_data = TRUE, ...){
+ctl_contents <- function(m, ctl_ob, update_numbering = TRUE, update_dollar_data = TRUE, ...){
   #.Deprecated("show_ctl")
-  UseMethod("ctl")
+  UseMethod("ctl_contents")
 }
 
 #' @export
-ctl.nm_generic <- function(m, ctl_ob, update_numbering = TRUE, update_dollar_data = TRUE, ...){
+ctl_contents.nm_generic <- function(m, ctl_ob, update_numbering = TRUE, update_dollar_data = TRUE, ...){
   
   if(missing(ctl_ob)){
-    if(length(m[["ctl"]]) > 0) return(m[["ctl"]]) else return(NA_character_)
+    if(length(m[["ctl_contents"]]) > 0) return(m[["ctl_contents"]]) else return(NA_character_)
   }
   
   #if(inherits(try(ctl_list2(ctl_ob)), "try-error")) browser()
@@ -525,7 +525,7 @@ ctl.nm_generic <- function(m, ctl_ob, update_numbering = TRUE, update_dollar_dat
     ctl[[1]] <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*",paste("\\1",Sys.info()["user"]),ctl[[1]])
   }
   
-  m[["ctl"]] <- ctl
+  m[["ctl_contents"]] <- ctl
   ## set as ctl_orig only if ctl_orig doesn't exist
   if(!"ctl_orig" %in% names(m)) m[["ctl_orig"]] <- ctl
   
@@ -556,7 +556,18 @@ ctl.nm_generic <- function(m, ctl_ob, update_numbering = TRUE, update_dollar_dat
   m
 }
 #' @export
-ctl.nm_list <- Vectorize_nm_list(ctl.nm_generic, SIMPLIFY = FALSE, replace_arg = "ctl_ob", pre_glue = TRUE)
+ctl_contents.nm_list <- Vectorize_nm_list(ctl_contents.nm_generic, SIMPLIFY = FALSE, replace_arg = "ctl_ob", pre_glue = TRUE)
+
+#' Read control file contents into object
+#'
+#' @param m nm object
+#' @param ctl_ob path to source control file or nm object
+#' @param update_numbering logical. Should table numbers and author fields be updated
+#' @param update_dollar_data logical. Should $DATA in control file be updated
+#' @param ... additional arguments
+#' 
+#' @export
+ctl_contents <- ctl_contents
 
 new_ctl_extra <- function(m, ctl, dir = getOption("models.dir")){
   
@@ -571,7 +582,7 @@ new_ctl_extra <- function(m, ctl, dir = getOption("models.dir")){
 write_ctl.nm_generic <- function(ctl, dest, dir = getOption("models.dir"), ...){
   m <- ctl
   ctl_name <- ctl_path(m)
-  ctl_ob <- ctl(m) %>% ctl_character()
+  ctl_ob <- ctl_contents(m) %>% ctl_character()
   dir_name <- run_in(m)
   
   if(!file.exists(dir_name)) 
@@ -597,9 +608,9 @@ delete_ctl.nm_list <- Vectorize_nm_list(delete_ctl.nm_generic, SIMPLIFY = FALSE,
 update_dollar.nm_generic <- function(ctl,..., which_dollar = 1, append = FALSE){
   dots <- list(...)
   m <- ctl
-  ctl <- ctl(m)
+  ctl <- ctl_contents(m)
   ctl_new <- update_dollar(ctl, ..., which_dollar = which_dollar, append = append)
-  m <- m %>% ctl(ctl_new)
+  m <- m %>% ctl_contents(ctl_new)
   m
 }
 #' @export
@@ -666,7 +677,7 @@ untarget.nm_list <- Vectorize_nm_list(untarget.nm_generic, SIMPLIFY = FALSE)
 
 get_target_text <- function(m){
   ## m is nm_generic
-  ctl <- ctl(m)
+  ctl <- ctl_contents(m)
   target <- target(m) # m[["target"]]
   if(!is.na(target)) {
     if(target %in% names(ctl)) text <- ctl[[target]] else text <- NA_character_
@@ -685,17 +696,17 @@ print.nm_ctl_text <- function(x, ...){
 
 set_target_text <- function(m, text){
   ## m is nm_generic
-  ctl <- ctl(m)
+  ctl <- ctl_contents(m)
   target <- target(m) # m[["target"]]
   if(!is.na(target)) {
     #if(append) text <- c(ctl[[target]],"",text)
     ctl[[target]] <- setup_dollar(text, paste0("$",target), add_dollar_text = FALSE)
-    m <- m %>% ctl(ctl, update_dollar_data = FALSE)
+    m <- m %>% ctl_contents(ctl, update_dollar_data = FALSE)
   } else {
     #if(append) text <- c(ctl_character(ctl),"",text)
     text <- ctl_list2(text)
     #text <- ctl_nm2r(text)
-    m[["ctl"]] <- text
+    m[["ctl_contents"]] <- text
   }
   m
 }
@@ -804,7 +815,7 @@ fill_input <- function(m, ...){
 }
 #' @export
 fill_input.nm_generic <- function(m, ...){
-  ctl <- ctl(m)
+  ctl <- ctl_contents(m)
   d <- suppressMessages(input_data(m))
   replace_with <- c("$INPUT", suppressMessages(dollar_input(d, ...)))
   old_target <- m %>% target()
@@ -891,9 +902,9 @@ ignore.nm_generic <- function(ctl, ignore_char){
   if(missing(ignore_char)){
     return(data_ignore_char(m))
   }
-  ctl <- ctl(m)
+  ctl <- ctl_contents(m)
   ctl <- update_ignore.default(ctl, ignore_char)
-  m <- m %>% ctl(ctl)
+  m <- m %>% ctl_contents(ctl)
   m
 }
 #' @export
@@ -922,10 +933,10 @@ delete_dollar <- function(m, dollar){
 }
 #' @export
 delete_dollar.nm_generic <- function(m, dollar){
-  ctl <- m %>% ctl()
+  ctl <- m %>% ctl_contents()
   dollar_text <- gsub("\\$","",dollar)
   ctl[[dollar_text]] <- NULL
-  m <- m %>% ctl(ctl)
+  m <- m %>% ctl_contents(ctl)
   m
 }
 #' @export
@@ -943,7 +954,7 @@ insert_dollar <- function(m, dollar, text, after_dollar){
 }
 #' @export
 insert_dollar.nm_generic <- function(m, dollar, text, after_dollar = NA){
-  ctl <- m %>% ctl()
+  ctl <- m %>% ctl_contents()
   
   dollar_text <- gsub("\\$","",dollar)
   text <- setup_dollar(text, paste0("$", dollar_text), add_dollar_text = FALSE)
@@ -962,7 +973,7 @@ insert_dollar.nm_generic <- function(m, dollar, text, after_dollar = NA){
   attributes(ctl) <- save_attributes
   names(ctl) <- save_names
   
-  m <- m %>% ctl(ctl)
+  m <- m %>% ctl_contents(ctl)
   m
 }
 #' @export
@@ -1294,7 +1305,7 @@ update_parameters <- function(ctl, from){
 update_parameters.nm_generic <- function(ctl, from){
   
   m <- ctl
-  ctl <- m %>% ctl()
+  ctl <- m %>% ctl_contents()
   if(missing(from)) from <- m
   wait_finish(from)
   ctl_lines <- ctl
@@ -1305,7 +1316,7 @@ update_parameters.nm_generic <- function(ctl, from){
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "OMEGA")
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "SIGMA")
   
-  m <- m %>% ctl(ctl_lines)
+  m <- m %>% ctl_contents(ctl_lines)
   m
 }
 #' @export
@@ -1412,11 +1423,11 @@ run_nm.nm_generic <- function(r, overwrite=getOption("run_overwrite"),delete_dir
   if(is.na(r)) return(r)
   
   ## write control stream
-  ctl <- ctl(r)
+  ctl <- ctl_contents(r)
   if(length(ctl) == 1){
     if(is.na(ctl)){
-      warning("no ctl defined.
- Use ctl() e.g. m <- m %>% ctl(\"/path/to/ctl/file\")")
+      warning("no ctl_contents defined.
+ Use ctl_contents() e.g. m <- m %>% ctl_contents(\"/path/to/ctl/file\")")
       return(r)
     }
   }
@@ -1478,7 +1489,7 @@ run_nm.nm_generic <- function(r, overwrite=getOption("run_overwrite"),delete_dir
   r <- r %>% executed(TRUE)
   r <- r %>% job_info(job_info)
   
-  ## there should be no more modifications to ctl
+  ## there should be no more modifications to ctl_contents
   ## after a run, want:
   
   r <- r %>% save_run_cache()
@@ -1624,7 +1635,7 @@ psn_exported_files.nm_generic <- function(r, minimal = FALSE){
   if(minimal){
     ctl_out_files <- c(output_files)
   }  else {
-    exported_table_paths <- file.path(run_in(r), ctl_table_files(ctl(r)))
+    exported_table_paths <- file.path(run_in(r), ctl_table_files(ctl_contents(r)))
     ctl_out_files <- c(output_files, exported_table_paths)
   }
   
@@ -1867,7 +1878,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = NA, recursive = TRUE){
   old_m <- m
   old_advan <- advan(m)
   old_trans <- trans(m)
-  old_ctl <- ctl(m)
+  old_ctl <- ctl_contents(m)
   
   if(advan %in% old_advan & trans %in% old_trans) return(m)
   
@@ -2102,7 +2113,7 @@ subroutine.nm_list <- Vectorize_nm_list(subroutine.nm_generic, SIMPLIFY = FALSE)
 #' \dontrun{
 #' 
 #' m1 <- nm(run_id = "m1") %>%
-#'   ctl("staging/Models/run1.mod")
+#'   ctl_contents("staging/Models/run1.mod")
 #' 
 #' m2 <- m1 %>% child(run_id = "m2") %>%
 #'   subroutine(advan = 2, trans = 2)
@@ -2119,9 +2130,9 @@ nm_diff <- function(m, ref_m, format = "raw"){
       as_nm_generic(m)[["ctl_orig"]]
     ))
   } else {
-    old_ctl <- as.character(ctl_character(ctl(as_nm_generic(ref_m)))) 
+    old_ctl <- as.character(ctl_character(ctl_contents(as_nm_generic(ref_m)))) 
   }
-  new_ctl <- as.character(ctl_character(ctl(as_nm_generic(m))))
+  new_ctl <- as.character(ctl_character(ctl_contents(as_nm_generic(m))))
   #"ansi256"
   dff <- diffobj::diffChr(old_ctl, new_ctl, format = format)
   
@@ -2153,7 +2164,7 @@ add_mixed_param <- function(m, name,
   
   old_target <- target(m)
   
-  sub_names <- names(ctl(as_nm_generic(m)))
+  sub_names <- names(ctl_contents(as_nm_generic(m)))
   
   if("PK" %in% sub_names) PK_PRED <- "PK"
   if("PRED" %in% sub_names) PK_PRED <- "PRED"
@@ -2394,10 +2405,10 @@ raw_init_theta <- function(m, replace){
   if(missing(replace)){
     m <- as_nm_generic(m)
     
-    ctl <- m %>% ctl()
+    ctl <- m %>% ctl_contents()
     ctl_char <- ctl_character(ctl)
     
-    sub_names <- names(ctl(m))
+    sub_names <- names(ctl_contents(m))
     if("PK" %in% sub_names) PK_PRED <- "PK"
     if("PRED" %in% sub_names) PK_PRED <- "PRED"
     
@@ -2569,10 +2580,10 @@ raw_init_random <- function(m, replace, dollar = "OMEGA"){
     
     dollar_text <- gsub("\\$","",dollar)
     
-    ctl <- m %>% ctl()
+    ctl <- m %>% ctl_contents()
     ctl_char <- ctl_character(ctl)
     
-    sub_names <- names(ctl(m))
+    sub_names <- names(ctl_contents(m))
     if("PK" %in% sub_names) PK_PRED <- "PK"
     if("PRED" %in% sub_names) PK_PRED <- "PRED"
     
@@ -3401,7 +3412,7 @@ ctl_table_paths <- function(ctl) {
 ctl_table_paths.nm_generic <- function(ctl) {
   ## path should go from base directory
   ## in psn directory
-  file.path(output_location(ctl), ctl_table_files(ctl(ctl)))
+  file.path(output_location(ctl), ctl_table_files(ctl_contents(ctl)))
 }
 #' @export
 ctl_table_paths.nm_list <- Vectorize_nm_list(ctl_table_paths.nm_generic, SIMPLIFY = FALSE)
@@ -3450,7 +3461,7 @@ nm_output.nm_generic <- function(r,dorig,...){
          there's ",length(dORD),"rows, but NONMEM output has ", nrow(d), " rows")
   }    
   
-  ctl_contents <- ctl_character(ctl(r))
+  ctl_contents <- ctl_character(ctl_contents(r))
   sim_ctl <- any(grepl("^\\s*\\$SIM",rem_comment(ctl_contents)))
   
   nreps <- nrow(d) / length(dORD)
@@ -4031,7 +4042,7 @@ add_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
                     init, lower, upper){
 
   m <- ctl
-  ctl <- ctl(m)
+  ctl <- ctl_contents(m)
   param <- as.character(param)
   cov <- as.character(cov)
   state <- as.character(state)
@@ -4181,7 +4192,7 @@ add_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
     ctl$THETA <- c(ctl$THETA,theta_lines)
   }
 
-  m <- m %>% ctl(ctl)
+  m <- m %>% ctl_contents(ctl)
 
 }
 
@@ -4193,7 +4204,7 @@ remove_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
                                   time_varying, additional_state_text, id_var = "ID"){
 
   m <- ctl
-  ctl <- ctl(m)
+  ctl <- ctl_contents(m)
   param <- as.character(param)
   cov <- as.character(cov)
   state <- as.character(state)
@@ -4317,7 +4328,7 @@ remove_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
 
   ctl$THETA <- ctl$THETA[setdiff(seq_along(ctl$THETA), matched_theta)]
 
-  m <- m %>% ctl(ctl)
+  m <- m %>% ctl_contents(ctl)
 }
 
 #' @export
@@ -4368,7 +4379,7 @@ cov_forest_data <- function(m, covariate_scenarios){
   dpar$lower <- dpar$FINAL - 1.96*dpar$SE
   dpar$upper <- dpar$FINAL + 1.96*dpar$SE
 
-  PK_text <- ctl(m)$PK
+  PK_text <- ctl_contents(m)$PK
   PK_text_R <- nonmem_code_to_r(PK_text)
 
   par_covs <- PK_text[grepl(";;; .*-DEFINITION START", PK_text)]
@@ -4551,7 +4562,7 @@ append_nonmem_var <- function(output_table, r, var){
 
   dc <- coef(r, trans = FALSE)
 
-  ctl <- ctl(r)
+  ctl <- ctl_contents(r)
 
   pk_dollar <- ifelse("PK" %in% names(ctl), "PK", "PRED")
 
@@ -4592,7 +4603,7 @@ param_cov_diag <- function(r, param, cov, ..., categorical = FALSE, plot_tv = TR
 
   dc <- coef(r, trans = FALSE)
 
-  ctl <- ctl(r)
+  ctl <- ctl_contents(r)
 
   pk_dollar <- ifelse("PK" %in% names(ctl), "PK", "PRED")
 
@@ -4651,7 +4662,7 @@ convert_to_simulation.nm_generic <- function(m, seed = 12345, subpr = 1){
   old_target <- target(m)
   m <- m %>% target("$EST") %>% comment_out() %>% untarget()
   m <- m %>% target("$COV") %>% comment_out() %>% untarget()
-  if(any(grepl("\\$SIM", ctl(m)))){  ## if there is a $SIM
+  if(any(grepl("\\$SIM", ctl_contents(m)))){  ## if there is a $SIM
     m <- m %>% uncomment(pattern = "\\$SIM")
   } else {  ## if there is NOT a $SIM
     m <- m %>% insert_dollar(dollar = "SIM", "$SIM (1234) ONLYSIM SUBPR=1", after_dollar = "SIGMA")

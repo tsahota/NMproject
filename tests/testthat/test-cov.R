@@ -25,7 +25,7 @@ test_that("covariate modelling",{
   ############################
   
   m1 <- nm(run_id = "m1") %>%
-    ctl("staging/Models/run1.mod") %>%
+    ctl_contents("staging/Models/run1.mod") %>%
     cmd("execute {ctl_name} -dir={run_dir}") %>%
     run_nm()
   

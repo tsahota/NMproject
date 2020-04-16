@@ -5,7 +5,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://namespaces.oreilly.com/xmlnut/address output.xsd"
 xmlns:nm="http://namespaces.oreilly.com/xmlnut/address"
 >
-<nm:start_datetime>2020-04-11T15:14:16.905</nm:start_datetime>
+<nm:start_datetime>2020-04-16T15:20:06.281</nm:start_datetime>
 <nm:control_stream><![CDATA[
 ;; 1. Based on: m1
 ;; 2. Description: 1CMT+oral
@@ -136,8 +136,8 @@ Note: The following floating-point exceptions are signalling: IEEE_INVALID_FLAG 
 <nm:license_information><![CDATA[
 License Registered to: AstraZeneca - R
 Expiration Date:    14 AUG 2020
-Current Date:       11 APR 2020
-Days until program expires : 123
+Current Date:       16 APR 2020
+Days until program expires : 118
 ]]></nm:license_information>
 <nm:program_information><![CDATA[
 1NONLINEAR MIXED EFFECTS MODEL PROGRAM (NONMEM) VERSION 7.3.0
@@ -402,7 +402,7 @@ Days until program expires : 123
 <nm:col nm:cname='EPS1'>10.848816777192516</nm:col>
 </nm:row>
 </nm:epsshrink>
-<nm:estimation_elapsed_time>1.12</nm:estimation_elapsed_time>
+<nm:estimation_elapsed_time>12.37</nm:estimation_elapsed_time>
 <nm:covariance_information><![CDATA[
 0R MATRIX ALGORITHMICALLY SINGULAR
 0COVARIANCE MATRIX UNOBTAINABLE
@@ -412,7 +412,7 @@ Days until program expires : 123
 0T MATRIX - EQUAL TO RS*RMAT, WHERE S* IS A PSEUDO INVERSE OF S - IS OUTPUT
 ]]></nm:covariance_information>
 <nm:covariance_status nm:error='1' nm:numnegeigenvalues='-1' nm:mineigenvalue='0.0000000000000000' nm:maxeigenvalue='0.0000000000000000' nm:rms='0.0000000000000000'/>
-<nm:covariance_elapsed_time>0.79</nm:covariance_elapsed_time>
+<nm:covariance_elapsed_time>0.73</nm:covariance_elapsed_time>
 <nm:final_objective_function_text>MINIMUM VALUE OF OBJECTIVE FUNCTION</nm:final_objective_function_text>
 <nm:final_objective_function>94.059569965809089</nm:final_objective_function>
 <nm:theta>
@@ -1463,6 +1463,6 @@ Days until program expires : 123
 </nm:estimation>
 </nm:problem>
 </nm:nonmem>
-<nm:stop_datetime>2020-04-11T15:14:19.015</nm:stop_datetime>
-<nm:total_cputime>2.080</nm:total_cputime>
+<nm:stop_datetime>2020-04-16T15:20:24.411</nm:stop_datetime>
+<nm:total_cputime>1.964</nm:total_cputime>
 </nm:output>

@@ -1,5 +1,5 @@
 PsN version: 4.4.8
-Run started: 2020-04-11 at 15:14
+Run started: 2020-04-16 at 15:19
 version_and_option_info.txt is overwitten if the run is restarted later using option -directory.
 The original file from the first call is saved as original_version_and_option_info.txt.
 
@@ -25,7 +25,7 @@ Actual values optional PsN (common) options (undefined values not listed):
 -correlation_limit=0.85
 -crash_restarts=0
 -degree=0.1
--directory=/scratch/klgk669/test59/Models/m1_1/
+-directory=/scratch/klgk669/test60/Models/m1_1/
 -display_iterations=1
 -handle_crashes=1
 -handle_msfo=0
@@ -56,7 +56,7 @@ Actual values optional PsN (common) options (undefined values not listed):
 -run_on_torque=0
 -run_on_ud=0
 -run_on_zink=0
--seed=156171
+-seed=137050
 -send_email=0
 -shrinkage=0
 -sign_digits_off_diagonals=2
