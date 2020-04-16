@@ -2965,6 +2965,8 @@ nm_object_exists <- function(object_name, env){
 
 
 ## functions to locate output files 
+
+#' @export
 run_dir_path <- function(m) file.path(run_in(m), run_dir(m))
 #nm_run_dir_path <- function(m, subdir = "NM_run1") file.path(run_dir_path(m), subdir)
 #nm_out_file <- function(m, file_name) file.path(nm_run_dir_path(m), file_name)
