@@ -1612,7 +1612,7 @@ clean_run.nm_generic <- function(r,delete_dir=c(NA,TRUE,FALSE),update_db=!is.nul
   #ctl_out_files <- c(lst_path, output_files, ctl_table_files, run_dir_to_delete)
   ctl_out_files <- c(lst_path, psn_exported_files, run_dir_to_delete)
   
-  unlink(ctl_out_files, recursive = TRUE)
+  unlink(ctl_out_files, recursive = TRUE, force = TRUE)
   
   invisible()
 }
