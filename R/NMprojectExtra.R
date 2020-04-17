@@ -3532,6 +3532,20 @@ run_cache_paths <- function(m){
   
 }
 
+#' @export
+cached_object <- function(m){
+  UseMethod("cached_object")
+}
+#' @export
+cached_object.nm_generic <- function(m){
+  path <- unique_run_cache_path(m)
+  if(!file.exists(path)) return(nm(NA))
+  readRDS(path)$object
+}
+#' @export
+cached_object.nm_list <- Vectorize_nm_list(cached_object.nm_generic, SIMPLIFY = FALSE)
+
+
 unique_render_cache_path <- function(m, input){
   file.path(".cache", 
             paste0(gsub(.Platform$file.sep, ";-;", unique_id(m)),
