@@ -1459,18 +1459,9 @@ run_nm.nm_generic <- function(r, overwrite=getOption("run_overwrite"),delete_dir
   
   ## TODO: kill exisitng run
   
-  ## clean output files just in case
-  # output_files <- output_files(run_in = run_in(r),
-  #                              run_type = type(r),
-  #                              run_dir = run_dir(r),
-  #                              ctl_name = ctl_path(r))
-  # 
-  # output_files <- unlist(output_files)
-  # unlink(output_files, force = TRUE, recursive = TRUE)
-  # unlink(run_dir(r, full_path = TRUE), force = TRUE, recursive = TRUE)
-
   if(executed(r)) r <- r %>% version(version(r) + 1)  ## increment version before running
   clean_run(r)
+  kill_job(r)
   
   message(paste0("Running: ",type(r),":",ctl_path(r)))
   stdout0 <- system_nm(cmd = cmd(r),

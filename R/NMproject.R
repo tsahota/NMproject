@@ -101,6 +101,7 @@ set_nm_opts <- function(){
 
   if(is.null(getOption("run_overwrite"))) options(run_overwrite=FALSE)
   if(is.null(getOption("wait"))) options(wait=FALSE)
+  if(is.null(getOption("kill_job"))) options(kill_job=identity)
 
 }
 
@@ -147,6 +148,15 @@ system_nm <- function(cmd,dir=getOption("models.dir"),...){
 }
 
 
+#' kill cluster job
+#' 
+#' Requires setting "kill_job" \code{option()}
+#'
+#' @param m nm object 
+#' @export
+kill_job <- function(m){
+  getOption("kill_job")(m)
+}
 
 
 #' Get run id
