@@ -2045,45 +2045,6 @@ tol <- function(m, text){
 }
 
 #' @export
-two_compartment <- function(m,
-                            V3_init = 30, V3_unit = "L", 
-                            Q_init = 30, Q_unit = "L/h"){
-  UseMethod("two_compartment")
-}
-#' @export
-two_compartment.nm_generic <- function(m,
-                                       V3_init = 30, V3_unit = "L", 
-                                       Q_init = 30, Q_unit = "L/h"){
-  
-  advan <- advan(m)
-  if(is.na(advan)){
-    warning("can't identify advan")
-    return(m)
-  }
-  trans <- trans(m)
-  
-  if(!advan %in% c(1:4)){
-    warning("can't convert from advan ", advan, " yet")
-  }
-  
-  if(advan %in% c(1,2)){
-    if(advan %in% 1) m <- m %>% advan(3)
-    if(advan %in% 2) m <- m %>% advan(4)
-    if(2 %in% trans) m <- m %>% trans(4)
-
-    m <- m %>% rename_parameter("V2" = "V")
-    
-    m <- m %>% 
-      add_mixed_param("V3", init = V3_init, unit = V3_unit) %>%
-      add_mixed_param("Q",  init = Q_init, unit = Q_unit)
-    
-  }
-  m
-}
-#' @export
-two_compartment.nm_list <- Vectorize_nm_list(two_compartment.nm_generic, SIMPLIFY = FALSE)
-
-#' @export
 raw_init_theta <- function(m, replace){
 
   if(missing(replace)){

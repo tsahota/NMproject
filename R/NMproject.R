@@ -168,41 +168,6 @@ kill_job <- function(m){
 run_id <- function(m, text, ...)
   UseMethod("run_id")
 
-#' @export
-run_id.default <- function(m, text, ...) {
-  if(is_single_na(m)) return(NA) else stop("don't know how to handle this")
-}
-
-#' @export
-run_id.ctl_list <- function(m, text, ...){
-  file_name <- attr(m, "file_name")
-  run_id(file_name)
-}
-
-#' @export
-run_id.character <- function(m, text, ...){
-  if(is.null(attr(m, "file_name"))){
-    file.regex <- paste0("^.*",getOption("model_file_stub"),"(.*)\\.",getOption("model_file_extn"),"$")
-    run_id <- gsub(file.regex,"\\1",m)
-  } else {
-    file_name <- attr(m, "file_name")
-    if(!is.null(file_name)) run_id <- run_id(file_name) else run_id <- m
-  }
-  run_id
-}
-
-#' @export
-run_id.list <- function(m, text, ...){
-  args <- as.list(match.call()[-1])
-  
-  call_f <- function(m, args){
-    args[["m"]] <- m
-    do.call(run_id, args)
-  }
-  
-  sapply(m, call_f, args = args)
-}
- 
 
 #' Get run in
 #'
@@ -212,34 +177,7 @@ run_id.list <- function(m, text, ...){
 run_in <- function(x, text)
   UseMethod("run_in")
 
-#' @export
-run_in.default <- function(x, text) {
-  if(is_single_na(x)) return(NA) else stop("don't know how to handle this")
-}
 
-
-#' @export
-run_in.ctl_list <- function(x, text){
-  file_name <- attr(x, "file_name")
-  dirname(file_name)
-}
-
-#' @export
-run_in.character <- function(x, text) dirname(x)
-
-#' @export
-run_in.list <- function(x, text){
-  args <- as.list(match.call()[-1])
-  
-  call_f <- function(x, args){
-    args[["x"]] <- x
-    do.call(run_in, args)
-  }
-  
-  sapply(x, call_f, args = args)
-}
-
- 
 #' path of directory from models dir
 #'
 #' @param x character vector. Relative path from models.dir
@@ -247,18 +185,6 @@ run_in.list <- function(x, text){
 #' @export
 from_models <- function(x, models_dir=getOption("models.dir")) {
   file.path(models_dir,x)
-}
-
-#' test if NONMEM file name conforms to convention
-#'
-#' @param x character vector. file name or path
-#' @param error_if_false logical. Default=FALSE. If true, will make an error if test fails
-is_nm_file_name <- function(x,error_if_false=FALSE){
-  file.regex <- paste0("^.*",getOption("model_file_stub"),"(.*)\\.",getOption("model_file_extn"),"$")
-  out <- grepl(file.regex,x)
-  if(error_if_false & any(!out))
-    stop(paste0("file.name doesn't match ",getOption("model_file_stub"),"XX.",getOption("model_file_extn")," convention")) else
-      return(out)
 }
 
 #' Run NMTRAN step only
@@ -454,60 +380,6 @@ commit_file <- function(file_name){
   file_name <- search_ctl_name(file_name)
   tidyproject::commit_file(file_name)
 }
-
-#' Posterior predictive check computations
-#' 
-#' Experimental function. Computes statistic on DV and DV_OUT for observed
-#' and simulated datasets prospectively
-#' 
-#' @param d data.frame (normally output of nm_output())
-#' @param stat_fun function to compute statistic.
-#'   Requirements:
-#'   1) First argument = data frame upon which to compute statistic.
-#'   2) Function must compute statistic on DV.
-#'   3) Function must return a data frame.
-#' @param sim_col character (default = "SIM"). name of subproblem number column 
-#' @param ... additional arguments to be passed to stat_fun
-#' 
-#' @export
-#' @examples 
-#' \dontrun{
-#' do <- nm_output(m1)
-#' cmax <- function(d){
-#'   d %>% group_by(DOSE) %>% 
-#'   summarise(Cmax = max(DV, na.rm = TRUE))
-#' }
-#' dppc <- process_ppc(d, cmax)
-#' ## then plot dppc$obs and dppc$sim
-#' }
-
-process_ppc <- function (d, stat_fun, sim_col = "SIM", ...) 
-{
-  if (!sim_col %in% names(d)) stop("Need sim_col column in dataset")
-  if(!1 %in% d[[sim_col]]) stop("sim_col does not contain a 1 in dataset")
-
-  dobs <- stat_fun(d[d[[sim_col]] %in% 1, ], ...)
-  if(!inherits(dobs, "data.frame")) stop("output of stat_fun should be a data.frame")
-  dobs <- as.data.frame(dobs)
-  dobs$SIM <- NA
-  
-  stat_fun_sim <- stat_fun
-  stat_fun_sim_body <- body(stat_fun_sim)
-  stat_fun_sim_body <- replace_DV_with_DV_OUT(stat_fun_sim_body)
-  body(stat_fun_sim) <- stat_fun_sim_body
-  
-  dsim <- by(d, d[[sim_col]], function(d) {
-    sim <- unique(d[[sim_col]])
-    d <- stat_fun_sim(d, ...)
-    d$SIM <- sim
-    d
-  })
-  dsim <- do.call(rbind, as.data.frame(dsim))
-  
-  list(obs = dobs, sim = dsim)
-}
-
-
 
 replace_DV_with_DV_OUT <- function(x){
   if(identical(x, quote(DV))){
