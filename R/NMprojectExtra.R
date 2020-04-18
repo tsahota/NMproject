@@ -37,15 +37,14 @@ To use the alpha interface, install NMproject 0.3.2",
   m[["parent_run_in"]] <- as.character(parent_run_in)
   m[["job_info"]] <- NA_character_
   m$target <- NA_character_
-  m$data_path <- NA_character_
   m$version <- as.integer(1)
   m$executed <- FALSE
   m$result_files <- c()
   
   unique_id <- "{type};{file.path(run_in,run_dir)}"
   ## the following is in order of glueing
-  m$glue_fields <- c(run_dir, ctl_name, results_dir, unique_id, lst_path)
-  names(m$glue_fields) <- c("run_dir", "ctl_name", "results_dir", "unique_id", "lst_path")
+  m$glue_fields <- c(run_dir, ctl_name, results_dir, unique_id, lst_path, NA_character_)
+  names(m$glue_fields) <- c("run_dir", "ctl_name", "results_dir", "unique_id", "lst_path", "data_path")
   
   for(field in names(m$glue_fields)){
     m <- replace_tags(m, field)
@@ -76,6 +75,7 @@ To use the alpha interface, install NMproject 0.3.2",
 #' @param results_dir character (default = "Results").
 #'    Directory to store results of this run
 #' @param lst_path character (default = "{run_dir}/NM_run1/psn.lst") expected location of lst file
+#' @param data_path character (default = NA) expected location of dataset file
 #' 
 #' @return An object of class nm_list.  Object is concatenatable.
 #'    Length of object corresponds to length of run_id
@@ -764,10 +764,14 @@ data_path <- function(m, text){
 #' @export
 data_path.nm_generic <- function(m, text){
   if(missing(text)){
-    if(length(m[["data_path"]]) > 0) return(m[["data_path"]]) else return(NA_character_)
+    if(length(m[["data_path"]]) > 0) {
+      return(custom_1d_field(m, "data_path")) 
+    } else { 
+      return(NA_character_)
+    }
   }
-  m <- m %>% custom_1d_field(field = "data_path", replace = text)
-
+  m <- m %>% custom_1d_field(field = "data_path", replace = text, glue = TRUE)
+  
   if(!is.na(data_path(m))){
     ## update ctl contents
     m <- m %>% fill_dollar_data(text)
