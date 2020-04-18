@@ -189,7 +189,7 @@ from_models <- function(x, models_dir=getOption("models.dir")) {
 
 #' Run NMTRAN step only
 #'
-#' Requires options("path/to/nmtran") to be set up.
+#' Requires \code{options("path/to/nmtran")} to be set up.
 #'
 #' @param x character. file name of NONMEM control stream
 #' @export

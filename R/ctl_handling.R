@@ -696,21 +696,6 @@ file_name <- function(ctl){
   attr(ctl, "file_name")
 }
 
-coerce_to_ctl_name <- function(x, dir = getOption("models.dir")){
-  if(normalizePath(dirname(x), mustWork = FALSE) == normalizePath(getOption("models.dir"), mustWork = FALSE)){
-    file_name <- x
-  } else {
-    ## if it's a file name
-    is_file_name <- grepl(paste0("\\.|",.Platform$file.sep), x)
-    if(is_file_name) file_name <- x else {  ## x = non Models path
-      file_name <- model_file_name(x, dir = dir)  ## x = run_id
-    }
-  }
-  ## check file name for convention 
-  if(!is_nm_file_name(file_name)) warning("file name doesn't match model_file_stub, model_file_extn convention")
-  file_name
-}
-
 #' make new control file based on previous
 #'
 #' @param ctl object of class nmexecute, ctl_list, ctl_character or character
