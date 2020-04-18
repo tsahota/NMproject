@@ -48,6 +48,7 @@ Collate:
     'load_sse.R'
     'manual_edit.R'
     'nm_data.R'
+    'nm_gettersetters.R'
     'plot_iter.R'
     'read.table.nm.R'
     'read_ext.R'

@@ -16,5 +16,13 @@ child(m, run_id = NA_character_, type = "execute", silent = FALSE)
 \item{silent}{logical (default = FALSE)}
 }
 \description{
-Child objects inherit attributes of parent but with a new run_id
+Child objects inherit attributes of parent but with a new run_id.
+The control file will be inherited too with $TABLEs updated
+}
+\examples{
+\dontrun{
+
+m2 <- m1 \%>\% child("m2")
+
+}
 }
