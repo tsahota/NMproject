@@ -100,10 +100,10 @@ plot_iter <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
 plot_iter_dygraph <- function(m, trans = TRUE){
   requireNamespace("dygraphs")
   psn_ext_path <- m %>% nm_output_path("ext")
-  #if(is.null(m$output$psn.ext)) return(dygraph(data.frame(x=0,y=0)))
-  if(!file.exists(psn_ext_path)) return(dygraph(data.frame(x=0,y=0)))
+  #if(is.null(m$output$psn.ext)) return(dygraphs::dygraph(data.frame(x=0,y=0)))
+  if(!file.exists(psn_ext_path)) return(dygraphs::dygraph(data.frame(x=0,y=0)))
   d <- try(plot_iter_data(m,trans = trans, skip = 0),silent=TRUE)
-  if(inherits(d,"try-error")) return(dygraph(data.frame(x=0,y=0)))
+  if(inherits(d,"try-error")) return(dygraphs::dygraph(data.frame(x=0,y=0)))
   p <- list()
   for(i in seq_along(unique(d$variable))){
     var_name <- unique(d$variable)[i]
