@@ -1351,18 +1351,45 @@ nm_tran.nm_generic <- function(x){
 nm_tran.nm_list <- Vectorize_nm_list(nm_tran.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
 #' @export
-in_cache <- function(r){
+in_cache <- function(r,
+                     cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE){
   UseMethod("in_cache")
 }
 #' @export
-in_cache.nm_generic <- function(r){
+in_cache.nm_generic <- function(r,
+                                cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE){
   r %>% write_ctl()
   ## get all md5_files
   
   run_cache_disk <- lapply(run_cache_paths(r), readRDS)
   if(length(run_cache_disk) > 0){
     current_checksums <- run_checksums(r)
-    matches <- sapply(run_cache_disk, function(i) identical(i$checksums, current_checksums))
+    matches <- sapply(run_cache_disk, function(i) {
+      
+      if(cache_ignore_cmd){  ## remove cmd check
+        keep <- !names(current_checksums) %in% "cmd"
+        i$checksums <- i$checksums[keep]
+        current_checksums <- current_checksums[keep]
+      }
+      
+      if(cache_ignore_ctl){  ## remove cmd check
+        keep <- !names(current_checksums) %in% "ctl"
+        i$checksums <- i$checksums[keep]
+        current_checksums <- current_checksums[keep]
+      }        
+      
+      if(cache_ignore_data){  ## remove cmd check
+        keep <- !names(current_checksums) %in% "data"
+        i$checksums <- i$checksums[keep]
+        current_checksums <- current_checksums[keep]
+      }
+      
+      ## ignore names
+      names(current_checksums) <- NULL
+      names(i$checksums) <- NULL
+      
+      identical(i$checksums, current_checksums)
+    })
     if(any(matches)){
       return(TRUE)    ## if up to date, skip
     }
@@ -1388,107 +1415,6 @@ cache_current <- function(m) run_checksums(m)
 
 #' @export
 clear_cache <- function() unlink(".cache", recursive = TRUE)
-
-#' @export
-cache_update <- function(r){
-}
-#' @export
-cache_update.nm_generic <- function(r){
-  r %>% write_ctl()
-  ## get all run_cache_paths
-  run_cache_disk <- lapply(run_cache_paths(r), readRDS)
-  if(length(run_cache_disk) > 0){
-    current_checksums <- run_checksums(r)
-    matches <- sapply(run_cache_disk, function(i) identical(i$checksums, current_checksums))
-    if(any(matches)){
-      available_versions <- sapply(run_cache_disk[matches], function(i) i$version)
-      max_match <- max(available_versions)
-      r <- r %>% executed(TRUE)
-      r <- r %>% job_info(run_cache_disk[[max_match]]$job_info)
-      r <- r %>% version(max_match)
-      return(invisible(r))    ## if up to date, skip
-    }
-  }
-  return(nm(NA))
-}
-#' @export
-cache_update.nm_list <- Vectorize_nm_list(cache_update.nm_generic, SIMPLIFY = FALSE)
-
-#' @export
-run_nm.nm_generic <- function(r, overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
-                              update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
-                              initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern"),
-                              force = FALSE){
-  
-  if(is.na(r)) return(r)
-  
-  ## write control stream
-  ctl <- ctl_contents(r)
-  if(length(ctl) == 1){
-    if(is.na(ctl)){
-      warning("no ctl_contents defined.
- Use ctl_contents() e.g. m <- m %>% ctl_contents(\"/path/to/ctl/file\")")
-      return(r)
-    }
-  }
-  
-  r %>% write_ctl()
-  
-  ## caching
-  if(!force){
-    ## pull existing checksum info
-    run_cache_disk <- lapply(run_cache_paths(r), readRDS)
-    if(length(run_cache_disk) > 0){
-      ## get current checksum
-      current_checksums <- run_checksums(r)
-      ## determine matches
-      matches <- sapply(run_cache_disk, function(i) identical(i$checksums, current_checksums))
-      if(any(matches)){
-        message("rebuilding run from cache... use run_nm(force = TRUE) to override")
-        ## pick highest available version
-        available_versions <- sapply(run_cache_disk[matches], function(i) i$version)
-        max_match <- max(available_versions)
-        ## update object and return
-        r <- r %>% executed(TRUE)
-        r <- r %>% job_info(run_cache_disk[[max_match]]$job_info)
-        r <- r %>% version(max_match)
-        return(invisible(r))    ## if up to date, skip
-      }
-    }
-  }
-  
-  ## TODO: kill exisitng run
-  
-  if(executed(r)) r <- r %>% version(version(r) + 1)  ## increment version before running
-  clean_run(r)
-  kill_job(r)
-  
-  message(paste0("Running: ",type(r),":",ctl_path(r)))
-  stdout0 <- system_nm(cmd = cmd(r),
-                       dir = run_in(r), 
-                       wait = FALSE,
-                       ignore.stdout = FALSE,
-                       ignore.stderr = FALSE,
-                       intern=intern)
-  
-  if(intern) {
-    cat(stdout0,sep = "\n")
-    job_info <- getOption("get_job_info")(stdout0)
-    if(is.null(job_info)) job_info <- NA
-  } else job_info <- NA
-  
-  r <- r %>% executed(TRUE)
-  r <- r %>% job_info(job_info)
-  
-  ## there should be no more modifications to ctl_contents
-  ## after a run, want:
-  
-  r <- r %>% save_run_cache()
-  #r <- r %>% version(version(r) + 1)  ## increment version
-  invisible(r)
-}
-#' @export
-run_nm.nm_list <- Vectorize_nm_list(run_nm.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
 #' @export
 nm_prev_version <- function(m){
@@ -1639,10 +1565,21 @@ psn_exported_files.nm_list <- Vectorize_nm_list(psn_exported_files.nm_generic, S
 #' @export
 clean_run.nm_list <- Vectorize_nm_list(clean_run.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
+#' tests if job is finished
+#'
+#' @param r object class nm
+#' @param initial_timeout numeric. time in seconds.
+#' time period to give up on a run if directory hasn't been created.
+#' @export
+is_finished <- function(r,initial_timeout=NA){
+  UseMethod("is_finished")
+}
+
 #' @export
 is_finished.nm_generic <- function(r,initial_timeout=NA){
   all(status(r) %in% c("finished", "error") | is.na(r))
 }
+
 #' @export
 is_finished.nm_list <- Vectorize_nm_list(is_finished.nm_generic)
 
@@ -3503,8 +3440,14 @@ run_checksums <- function(m){  ## only works on single m
   ## information determinative to whether run should be rerun
   m %>% write_ctl()
   files <- c(ctl_path(m), data_path(m))
-  c(tools::md5sum(files), 
-    get_glue_field(as_nm_generic(m), "cmd"))
+  
+  checksums <- tools::md5sum(files)
+  names(checksums) <- c("ctl", "data")
+  checksums <- c(checksums, 
+                 cmd = get_glue_field(as_nm_generic(m), "cmd"))
+  
+  checksums
+  
 }
 
 render_checksums <- function(m, input){  ## only works on single m

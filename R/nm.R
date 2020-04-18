@@ -97,64 +97,7 @@ get_run_id <- function(ctl_name){
   ans
 }
 
-#' Run NONMEM
-#' 
-#' Run nm objects.  Uses system_nm() to submit the "cmd" value of object 
-#' 
-#' @param r objects of class nm/or list of objects class nm/or data.frame with column of nm objects
-#' @param overwrite logical. Should run directory be overwritten (default=FALSE)
-#' @param delete_dir logical. NA (default - directory will be deleted if no dependencies exists)
-#' TRUE or FALSE. Should run_dir be deleted.
-#' @param wait logical (default=FALSE). Should R wait for run to finish.
-#' Default can be changed with  wait_by_default() function
-#' @param update_db logical (default=TRUE). Should run_status be updated
-#' @param ignore.stdout logical (default=TRUE). Parameter passed to system()
-#' @param ignore.stderr logical (default=TRUE). Parameter passed to system()
-#' @param initial_timeout numeric. time in seconds.
-#' time period to give up on a run if directory hasn't been created.
-#' @param quiet logical (default=FALSE). should system_nm output be piped to screen
-#' @param intern logical. intern arg to be passed to system
-#' @param force logical (default = FALSE).  Force run even results unchanged
-#'
-#' @return If only one object of class nm was specified, silently returns object.
-#' Otherwise returns nothing.
-#'
-#' @export
-run_nm <- function(r, overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
-                   update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
-                   initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern"),
-                   force = FALSE)
-  UseMethod("run_nm")
 
-#' @export
-run_nm.default <- function(r, overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
-                           update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
-                           initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern"),
-                           force = FALSE){
-  invisible(r)
-}
-  
-#' Run NONMEM
-#' 
-#' Use run_nm instead. run was deprecated due to naming conflict with future package's run() function
-#' 
-#' @param ... objects
-#' @export
-
-run <- function(...){
-  .Deprecated("run_nm", msg = "run() will soon be deprecated, use run_nm() instead")
-  run_nm(...)
-}
-
-#' tests if job is finished
-#'
-#' @param r object class nm
-#' @param initial_timeout numeric. time in seconds.
-#' time period to give up on a run if directory hasn't been created.
-#' @export
-is_finished <- function(r,initial_timeout=NA){
-  UseMethod("is_finished")
-}
 
 #' Condition number of run
 #' 
