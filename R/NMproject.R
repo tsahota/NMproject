@@ -289,8 +289,8 @@ nm_tran.default <- function(x){
   file.copy(data_path,tempdir0) ## copy dataset
   dataset.name <- basename(data_path)
   suppressMessages({
-    update_dollar_data(file.path(tempdir0,basename(x)),dataset.name) %>% 
-      write_ctl(file.path(tempdir0,basename(x)))
+    ctl_text <- update_dollar_data(file.path(tempdir0,basename(x)),dataset.name)
+    write(ctl_text, file.path(tempdir0,basename(x)))
   })
   message("running NMTRAN on ", x)
   system_nm(paste(nm_tran_command,"<",basename(x)),dir=tempdir0,wait=TRUE) ## run nmtran in tempdir0
