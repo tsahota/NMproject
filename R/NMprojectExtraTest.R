@@ -17,7 +17,8 @@ if(0){
   m1 <- nm(run_id = "m1")
   #db$register(m1)
   m1 <- m1 %>% cmd("qpsn -t 100 -c auto -- execute {ctl_name} -dir={run_dir}")
-  m1 <- m1 %>% ctl_contents("tests/testthat/testfiles/Models/run1.mod")
+  m1 <- m1 %>% ctl_contents("tests/testthat/testfiles/Models/runm1.mod")
+  m1 <- m1 %>% data_path("tests/testthat/testfiles/DerivedData/{run_id}/THEOPP.csv")
   #db$refresh()
   
   #db$save()
