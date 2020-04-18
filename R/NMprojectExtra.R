@@ -4901,10 +4901,10 @@ make_OCC_every_dose <- function(dose_trigger, new_OCC_trigger){
   id_group <- rlang::enquo(id_group)
   dose_trigger <- rlang::enquo(dose_trigger)
 
-  d <- d %>% group_by(!!id_group) %>%
-    mutate(DPERIOD = cumsum(!!dose_trigger)) %>%
-    group_by(!!id_group, DPERIOD) %>%
-    mutate(new_OCC = !!new_OCC_trigger)
+  d <- d %>% dplyr::group_by(!!id_group) %>%
+    dplyr::mutate(DPERIOD = cumsum(!!dose_trigger)) %>%
+    dplyr::group_by(!!id_group, .data$DPERIOD) %>%
+    dplyr::mutate(new_OCC = !!new_OCC_trigger)
 
   ## select temporarly unique DPERIOD and HAS PK SAMPLE for each ID
   tmp <- d %>%

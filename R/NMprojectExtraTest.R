@@ -118,13 +118,7 @@ if(0){
   
   m2 <- m2 %>% do_manual_edit()
   
-  ## patch functionality
-  patch_name <- "patchm21"
-  if(!patch_exists(m2, patch_name)){
-    patch <- m2 %>% do_manual_edit(patch)
-  }
-  m2 %>% apply_patch_if_needed(patch)
-  
+
   nm_tran(m2)
   m2 <- m2 %>% run_nm  ## run asynchronously
   
@@ -182,9 +176,9 @@ if(0){
   library(dplyr)
   
   d <- dplyr::tibble(cores = 1:36) %>%
-    mutate(m = m2 %>% child(run_id = cores),
-           m = m %>% ctl_path("Models/m2_coretest/run{run_id}.mod"),
-           m = m %>% cmd("qpsn -t 100 -c {run_id} -- execute run{run_id}.mod -dir={run_dir}"))
+    dplyr::mutate(m = m2 %>% child(run_id = cores),
+                  m = m %>% ctl_path("Models/m2_coretest/run{run_id}.mod"),
+                  m = m %>% cmd("qpsn -t 100 -c {run_id} -- execute run{run_id}.mod -dir={run_dir}"))
   db$register(d$m)
   
   m2cores <- m2 %>% 

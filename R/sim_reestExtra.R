@@ -39,83 +39,6 @@ by_row_df <- function(.data, .f, .apply_fun=lapply, ...) {
   d
 }
 
-mark_completed <- function(data, task, name, result, result_character,
-                           return = c("logical","character"), RDS_name="progress.RDS"){
-  
-  ## use on exit points of functions
-  
-  progress_file_name <- file.path(data$location, RDS_name)
-  if(file.exists(progress_file_name)) {
-    progress <- readRDS(progress_file_name)
-    #  } else progress <- data.frame()
-  } else progress <- tibble::tibble()
-  ## progress is now defined
-  
-  if(missing(name)) name <- NA
-  if(missing(result_character)) result_character <- NA
-  if(missing(result)) result <- NA
-  
-  d <- tibble::tibble(task, name, result = as.logical(result), result_character = as.character(result_character))
-  dmatch <- merge(progress,d[,c("task","name")])
-  if(nrow(dmatch) == 0){ ## if this task is new
-    progress <- rbind(progress, d)
-  } else {
-    progress$result[progress$task %in% task & progress$name %in% name] <- as.logical(result)
-    progress$result_character[progress$task %in% task & progress$name %in% name] <- as.character(result_character)
-  }
-  progress <- unique(progress)
-  
-  saveRDS(progress, file = progress_file_name)
-  return <- match.arg(return)
-  if(return == "logical") return_col <- "result"
-  if(return == "character") return_col <- "result_character"
-  get(return_col)
-  
-}
-
-completed <- function(data, task, name = as.character(NA), return = c("logical","character"), RDS_name="progress.RDS"){
-  
-  return <- match.arg(return)
-  progress_file_name <- file.path(data$location, RDS_name)
-  if(return == "logical") return_col <- "result"
-  if(return == "character") return_col <- "result_character"
-  
-  if(!file.exists(progress_file_name)){
-    if(return %in% "logical") return(FALSE) 
-    if(return %in% "character") return("FALSE")
-  }
-  
-  progress <- readRDS(file = progress_file_name)
-  progressi <- progress[progress$task %in% task &
-                          progress$name %in% name,]
-  if(nrow(progressi)==0) {
-    if(return %in% "logical") return(FALSE) 
-    if(return %in% "character") return("FALSE")
-  }
-  progressi[[return_col]]
-}
-
-collate_res <- function(data,data_name){
-  paths <- file.path(data$location,data_name)
-  res <- lapply(paths,function(path){
-    if(!file.exists(path)) return(NA)
-    return(readRDS(path))
-  })
-  res
-}
-
-collate_data <- function(data, data_name){
-  data <- collate_res(data, data_name)
-  data <- do.call(rbind,data)
-  data
-}
-
-collate_m <- function(data, data_name = "m.RDS"){
-  m <- collate_res(data, data_name)
-  m <- do.call(c, m)
-  m
-}
-
 run_nm_batch <- function(m, threads = 10, ...){
   runs_remaining <- seq_along(m)
   while(length(runs_remaining) > 0){
@@ -128,13 +51,6 @@ run_nm_batch <- function(m, threads = 10, ...){
   }
   Sys.sleep(10) ## this shouldn't be needed, soemthing weird going on with wait_for_finished?
 }
-
-get_progress <- function(data, RDS_name = "progress.RDS"){
-  RDS_name <- file.path(data$location, RDS_name)
-  if(!file.exists(RDS_name)) progress <- tibble::tibble() else progress <- readRDS(RDS_name)
-  merge(data,progress)
-}
-
 
 #' Prepare forward covariate step
 #' 
@@ -245,32 +161,6 @@ bind_covariate_results <- function(dsc, nm_col = "m", parameters = "new"){
   dsc %>%
     dplyr::bind_cols(dsum) %>% 
     dplyr::arrange(.data$p_chisq)
-}
-
-stamp_completed <- function(data, d){
-  task <- "run completed"
-  if(!completed(data, "object created")) {
-    mark_completed(data, task, result = FALSE)
-    return()
-  }
-  
-  m <- readRDS(file.path(data$location, "m.RDS"))
-  mark_completed(data, task, result = is_finished(m))
-}
-
-process_outputs <- function(data, d){
-  task <- "results saved"
-  if(!completed(data, "run completed")) {
-    mark_completed(data, task, result = FALSE)
-    return()
-  }
-  m <- readRDS(file.path(data$location, "m.RDS"))
-  out <- try(process_output(m, dorig = d))
-  if(inherits(out, "try-error")){
-    mark_completed(data, task, result = FALSE)
-    return()
-  }
-  mark_completed(data, task, result = TRUE)
 }
 
 covariates_define_old <- function(dcov, cov, continuous){
@@ -416,7 +306,7 @@ ppc_data <- function(r, FUN, ..., max_mod_no = NA, DV = "DV", statistic = "stati
   dorig <- input_data(r[1], filter = TRUE)
   dsims <- output_table(r) %>% 
     dplyr::bind_rows() %>%
-    dplyr::filter(INNONMEM)
+    dplyr::filter(.data$INNONMEM)
   
   total_rows <- nrow(dorig)
   
