@@ -237,6 +237,48 @@ custom_1d_field.nm_generic <- function(m, field, replace, glue = FALSE){
 }
 custom_1d_field.nm_list <- Vectorize_nm_list(custom_1d_field.nm_generic, replace_arg = "replace")
 
+#' @export
+set_simple_field <- function(m, ...){
+  UseMethod("set_simple_field")  
+}
+
+#' Add a simple field to nm object
+#' 
+#' @param m nm object
+#' @param ... arguments to set fields
+#' 
+#' @examples 
+#' \dontrun{
+#' 
+#' core_list <- c(1,4,12)
+#' 
+#' mc <- m1 %>% child(run_id = paste0(corelist)) %>%
+#'   set_simple_field(cores = corelist) %>%
+#'   cmd("qpsn -c {cores} -t 59 -- execute {ctl_name} -dir={run_dir}")
+#' 
+#' }
+#' @export
+set_simple_field <- function(m, ...){
+
+  dots <- list(...)
+  fields <- names(dots)
+
+  for(i in seq_along(dots)){
+    m <- m %>% custom_1d_field(field = fields[i], replace = dots[[i]])
+  }
+  m
+}
+
+
+#' @export
+get_simple_field <- function(m, field){
+
+  field <- rlang::enquo(field)
+  field <- rlang::quo_name(field)
+  
+  m %>% custom_1d_field(field = field)
+  
+}
 
 glue_text_nm <- function(m, text){
   UseMethod("glue_text_nm")
@@ -4787,3 +4829,4 @@ data_ignore_char.nm_list <- Vectorize_nm_list(data_ignore_char.nm_generic, SIMPL
 
 
 ################
+
