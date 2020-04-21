@@ -1,5 +1,5 @@
 .onLoad <- function(libname, pkgname){
-  if(!requireNamespace("tidyproject",quietly = TRUE))
+  if(!requireNamespace("tidyproject",quietly = TRUE,lib.loc = libname))
     stop("tidyproject needed for this function to work. Please install it.",
          call. = FALSE)
   
