@@ -76,6 +76,7 @@ manual_patch <- function(m){
   
 }
 
+#' @export
 start_manual_edit_unix <- function(m){
   if(.Platform$OS.type != "unix") 
     stop("patching functionality only implemented for linux/unix systems\n consider manual_edit() instead",
