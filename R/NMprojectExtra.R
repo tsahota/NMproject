@@ -41,7 +41,7 @@ To use the alpha interface, install NMproject 0.3.2",
   m$executed <- FALSE
   m$result_files <- c()
   
-  unique_id <- "{type};{file.path(run_in,run_dir)}"
+  unique_id <- "{type}.{file.path(run_in,run_dir)}"
   ## the following is in order of glueing
   m$glue_fields <- c(run_dir, ctl_name, results_dir, unique_id, lst_path, NA_character_)
   names(m$glue_fields) <- c("run_dir", "ctl_name", "results_dir", "unique_id", "lst_path", "data_path")
@@ -3218,7 +3218,7 @@ render_checksums <- function(m, input){  ## only works on single m
 
 unique_run_cache_path <- function(m){
   file.path(".cache", 
-            paste0(gsub(.Platform$file.sep, ";-;", unique_id(m))))
+            paste0(gsub(.Platform$file.sep, "--", unique_id(m))))
 }
 
 run_cache_paths <- function(m){
@@ -3250,10 +3250,9 @@ cached_object.nm_list <- Vectorize_nm_list(cached_object.nm_generic, SIMPLIFY = 
 
 unique_render_cache_path <- function(m, input){
   file.path(".cache", 
-            paste0(gsub(.Platform$file.sep, ";-;", unique_id(m)),
-                   ";--;", 
-                   gsub(.Platform$file.sep, ";-;", input),
-                   ".md5"))
+            paste0(gsub(.Platform$file.sep, "--", unique_id(m)),
+                   "-.-", 
+                   gsub(.Platform$file.sep, "--", input)))
 }
 
 render_cache_paths <- function(m, input){
