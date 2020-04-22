@@ -33,8 +33,6 @@ file.copy("DerivedData", "~/NMproject/tests/testthat/testfiles/", recursive = TR
 
 unlink("~/NMproject/tests/testthat/testfiles/.cache/", recursive = TRUE, force = TRUE)
 file.copy(".cache", "~/NMproject/tests/testthat/testfiles/", recursive = TRUE)
-file.rename("~/NMproject/tests/testthat/testfiles/.cache/", 
-            "~/NMproject/tests/testthat/testfiles/cache/")
 
 unlink("~/NMproject/tests/testthat/testfiles/staging/", recursive = TRUE, force = TRUE)
 file.copy("staging", "~/NMproject/tests/testthat/testfiles/", recursive = TRUE)

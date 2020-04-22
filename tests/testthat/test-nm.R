@@ -20,6 +20,7 @@ test_that("nm object basic use",{
   testfilesloc <- file.path(currentwd,"testfiles")
   setwd(proj_name)
   file.copy(file.path(testfilesloc,"."),".",recursive = TRUE)
+  file.rename("cache", ".cache")
   
   ## end boiler plate
   ############################
