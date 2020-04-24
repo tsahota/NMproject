@@ -103,7 +103,7 @@ run_nm.nm_generic <- function(m, wait=getOption("wait"),
   
   
   if(executed(m)) m <- m %>% version(version(m) + 1)  ## increment version before running
-  clean_run(m)
+  wipe_run(m)
   kill_job(m)
   
   message(paste0("Running: ",type(m),":",ctl_path(m)))
