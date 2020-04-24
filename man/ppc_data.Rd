@@ -4,7 +4,8 @@
 \alias{ppc_data}
 \title{process data from PPC for plotting}
 \usage{
-ppc_data(r, FUN, ..., max_mod_no = NA, DV = "DV", statistic = "statistic")
+ppc_data(r, FUN, ..., pre_proc = identity, max_mod_no = NA, DV = "DV",
+  statistic = "statistic")
 }
 \arguments{
 \item{r}{nm object}
@@ -13,6 +14,8 @@ ppc_data(r, FUN, ..., max_mod_no = NA, DV = "DV", statistic = "statistic")
 returns data.frame with a column "statistic"}
 
 \item{...}{additional arguments for FUN}
+
+\item{pre_proc}{function to mutate dataset prior to compute statistics}
 
 \item{DV}{character (default = "DV")}
 
@@ -23,4 +26,9 @@ returned by FUN}
 }
 \description{
 process data from PPC for plotting
+}
+\examples{
+\dontrun{
+
+}
 }

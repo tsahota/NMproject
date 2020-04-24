@@ -88,6 +88,7 @@ Vectorize_nm_list <- function (FUN, vectorize.args = arg.names, SIMPLIFY = FALSE
 
 #' @export
 is_nm_list <- function(x){
+  if(inherits(x, "nm_list")) return(TRUE)
   if(!inherits(x, "list") & !inherits(x, "environment")) return(FALSE)
   
   is_valid_subobject <- function(x){
