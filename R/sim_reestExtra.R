@@ -293,18 +293,26 @@ psn_style_scm <- function(base, run_in, dtest,
 #' @param FUN statistic function with NONMEM dataset as arg and
 #'   returns data.frame with a column "statistic"
 #' @param ... additional arguments for FUN
+#' @param pre_proc function to mutate dataset prior to compute statistics
 #' @param max_mod_mo integer. Maximum model number to read (set low for debugging)
 #' @param DV character (default = "DV")
 #' @param statistic character (default = "statistic") name of statistic column
 #'   returned by FUN
+#'   
+#' @examples 
+#' \dontrun{
+#' 
+#' }
 #' @export
 
-ppc_data <- function(r, FUN, ..., max_mod_no = NA, DV = "DV", statistic = "statistic"){
+ppc_data <- function(r,  FUN, ..., pre_proc = identity, max_mod_no = NA, DV = "DV", statistic = "statistic"){
   
+  if(!"..." %in% names(formals(FUN))) stop("FUN must have ... in arguments")
+  if(length(names(formals(FUN))) < 2) stop("FUN must have at least two arguments (a data.frame and ...")
   if(length(unique(data_path(r))) > 1) stop("non-unique datasets")
   
   dorig <- input_data(r[1], filter = TRUE)
-  dsims <- output_table(r) %>% 
+  dsims <- output_table(r) %>%
     dplyr::bind_rows() %>%
     dplyr::filter(.data$INNONMEM)
   
@@ -333,8 +341,8 @@ ppc_data <- function(r, FUN, ..., max_mod_no = NA, DV = "DV", statistic = "stati
   nrow(dsims)
   
   ## two datasets dorig and dsims ready now, apply function
-  
-  stat_orig <- FUN(dorig,...)
+  dorig <- pre_proc(dorig)
+  stat_orig <- FUN(dorig, ...)
   if(!inherits(stat_orig, "data.frame")) stop("FUN must return a data.frame", call. = FALSE)
   if(!statistic %in% names(stat_orig)) stop("statistic must be a column of FUN output", call. = FALSE)
   
@@ -355,6 +363,7 @@ ppc_data <- function(r, FUN, ..., max_mod_no = NA, DV = "DV", statistic = "stati
   ## apply change to the dataset
   
   stat_sim <- dsims %>% dplyr::group_by(.data$mod_no) %>% 
+    pre_proc() %>%
     tidyr::nest() %>%
     dplyr::mutate(statistic = purrr::map(.data$data, FUN,...)) %>%
     tidyr::unnest(statistic)

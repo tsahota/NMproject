@@ -4698,11 +4698,11 @@ make_OCC_every_dose <- function(dose_trigger, new_OCC_trigger){
 #' @export
 shiny_nm <- function(m, envir = .GlobalEnv){
   if(missing(m)) {
-    m <- get_nm_lists(envir = envir)
+    m <- nm_list_gather(envir = envir)
   } else {
     if(is_nm_generic(m)) m <- as_nm_list(m)
     if(!is_nm_list(m)){
-      m <- get_nm_lists(envir = m)
+      m <- nm_list_gather(envir = m)
       if(!is_nm_list(m))
         stop("couldn't find any nm_list objects in m")
     }
@@ -4725,7 +4725,11 @@ shiny_nm <- function(m, envir = .GlobalEnv){
   shiny::runApp(shiny_dir,launch.browser = TRUE)
 }
 
-get_nm_lists <- function(envir = .GlobalEnv){
+#' get all nm_list objects
+#' 
+#' @param envir environment (default = .GlobalEnv) to search
+#' @export
+nm_list_gather <- function(envir = .GlobalEnv){
 
   m <- lapply(envir, function(object){
     if(inherits(object, "nm_list")) object else NA
