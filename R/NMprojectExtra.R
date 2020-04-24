@@ -1293,8 +1293,16 @@ status_table <- function(m){
   tibble::as_tibble(tab)
 }
 
+#' wipe previous run files
+#'
+#' @param r object class nm
 #' @export
-clean_run.nm_generic <- function(r,delete_dir=c(NA,TRUE,FALSE),update_db=!is.null(r$db_name)){
+wipe_run <- function(r){
+  UseMethod("wipe_run")
+}
+
+#' @export
+wipe_run.nm_generic <- function(r){
   ## assumes ctrl file is run[run_id].mod and -dir=[run_id] was used
   
   ## get and remove all ctl output files
@@ -1332,6 +1340,8 @@ clean_run.nm_generic <- function(r,delete_dir=c(NA,TRUE,FALSE),update_db=!is.nul
   invisible()
 }
 
+#' @export
+wipe_run.nm_list <- Vectorize_nm_list(wipe_run.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
 psn_exported_files <- function(r, minimal = FALSE){
   UseMethod("psn_exported_files")
@@ -1360,8 +1370,6 @@ psn_exported_files.nm_generic <- function(r, minimal = FALSE){
 psn_exported_files.nm_list <- Vectorize_nm_list(psn_exported_files.nm_generic, SIMPLIFY = FALSE)
   
 
-#' @export
-clean_run.nm_list <- Vectorize_nm_list(clean_run.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
 #' tests if job is finished
 #'

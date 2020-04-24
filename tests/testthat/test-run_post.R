@@ -84,7 +84,7 @@ test_that("run and post",{
   
   ## last thing to do: clean up run
   expect_true(all(file.exists(psn_exported_files(m1)[[1]])))
-  clean_run(m1)
+  wipe_run(m1)
   expect_true(all(!file.exists(psn_exported_files(m1)[[1]])))
 
 

@@ -232,15 +232,6 @@ extra_files <- function(r){
   return(files)
 }
 
-#' clean_run files
-#'
-#' @param r object class nm
-#' @param delete_dir logical. NA (default), TRUE or FALSE. Should run_dir be deleted.
-#' @param update_db logical (default=TRUE). Should run_status be updated
-#' @export
-clean_run <- function(r,delete_dir=c(NA,TRUE,FALSE),update_db=!is.null(r$db_name)){
-  UseMethod("clean_run")
-}
 
 ctl_table_files <- function(ctl){
   UseMethod("ctl_table_files") 
