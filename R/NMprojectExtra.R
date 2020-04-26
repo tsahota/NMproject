@@ -860,7 +860,17 @@ coef.nm_generic <- function(object,trans=TRUE,...){
     # d$SE.TRANS[d$trans %in% "LOGIT"] <- 100*delt$SE
   }
   ## OMEGA
-  #d$trans[grepl("OMEGA.([0-9]+\\.)\\1",d$parameter)] <- "OM"   ## temp code - make an identifyer for OMEGA.X.X
+
+  ## https://www.cognigen.com/nmusers/2008-February/0811.html
+  ## delta method:
+  ## FINAL = E[OM^2]
+  ## SE = SE(OM^2)
+  ## f = sqrt
+  ## SE(OM) ~= SE(OM^2)/(2*sqrt(E[OM^2]))
+  ## SE(OM) ~= SE/(2*sqrt(FINAL))
+  ## E(OM) ~= sqrt(E[OM^2]) = sqrt(FINAL)
+  ## RSE(OM) = SE(OM) / (2* E(OM))
+  
   d$SE.TRANS[d$trans %in% "LOG" & om] <- 100*(d$SE[d$trans %in% "LOG" & om]/d$FINAL[d$trans %in% "LOG" & om])/2
   d$FINAL.TRANS[d$trans %in% "LOG" & om] <- 100*sqrt(exp(d$FINAL[d$trans %in% "LOG" & om])-1)
   d$trans_unit[d$trans %in% "LOG" & om] <- "CV%"
@@ -902,6 +912,12 @@ coef.nm_generic <- function(object,trans=TRUE,...){
   #   }
   #
   # }
+  
+  ## SIGMA
+  d$SE.TRANS[d$type %in% "SIGMA"] <- 100*(d$SE[d$type %in% "SIGMA"]/d$FINAL[d$type %in% "SIGMA"])/2
+  d$FINAL.TRANS[d$type %in% "SIGMA"] <- sqrt(d$FINAL[d$type %in% "SIGMA"])
+  d$trans_unit[d$type %in% "SIGMA"] <- "SD"
+  #d$transSEunit[d$type %in% "SIGMA"] <- ""
   
   ## get names back to what they should be
   d$FINAL <- d$FINAL.TRANS
@@ -1342,6 +1358,130 @@ wipe_run.nm_generic <- function(r){
 
 #' @export
 wipe_run.nm_list <- Vectorize_nm_list(wipe_run.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
+
+
+#' Clean up temporary files
+#' 
+#' @param m nm object
+#' @param output_loc character either "run_dir" or "base
+#' @param include_grid_files logical (default = TRUE) should slurm files be included
+#' 
+#' @export
+clean_run <- function(m, output_loc = c("run_dir", "base"), include_grid_files = TRUE){
+  UseMethod("clean_run")
+}
+#' @export
+clean_run.nm_list <- function(m, output_loc = c("run_dir", "base"), include_grid_files = TRUE){
+
+  ls_tempfiles(m, output_loc = output_loc) %>%
+    unlink(force = TRUE)
+  
+}
+
+#' get all temp files
+#'
+#' list all tempfiles (normally for deletion)
+#'
+#' @param object nm object or path to project (default = ".")
+#' @param output_loc character either "run_dir" or "base
+#' @param run_files optional character with NM_run* file paths
+#' @param include_grid_files logical (default = TRUE) should slurm files be included
+#'
+#' @export
+ls_tempfiles <- function(object = ".", output_loc = c("run_dir", "base"),
+                         run_files = NA_character_, include_grid_files = TRUE){
+  
+  UseMethod("ls_tempfiles")
+  
+}
+
+#' @export
+ls_tempfiles.default <- function(object = ".", output_loc = c("run_dir", "base"),
+                                 run_files = NA_character_, include_grid_files = TRUE){
+  
+  output_loc <- match.arg(output_loc)
+
+  ## get all_run_files (in NM_run1 dir)
+  if(identical(run_files, NA_character_)){
+    all_run_dirs <- list_dirs(
+      object, 
+      pattern = "NM_run[0-9]+", 
+      recursive = TRUE, full.names = TRUE, maxdepth = 10
+    )
+    
+    all_run_files <- dir(all_run_dirs, full.names = TRUE)
+  } else {
+    all_run_files <- run_files 
+  }
+  
+  all_psn.mod <- all_run_files[basename(all_run_files) == "psn.mod"]
+  
+  all_run_dir_table_files <- 
+    lapply(all_psn.mod, function(psn.mod){
+      file.path(dirname(psn.mod), ctl_table_files(psn.mod))
+    })
+  all_run_dir_table_files <- unlist(all_run_dir_table_files)
+
+  all_base_tables <- all_run_dir_table_files
+  all_base_table_dir <- dirname(all_base_tables)
+  all_base_table_dir <- file.path(all_base_table_dir, "..", "..")
+  all_base_table_dir <- normalizePath(all_base_table_dir)
+  
+  if(output_loc == "run_dir"){ ## add base tables to temp files
+    all_base_tables <- file.path(all_base_table_dir, basename(all_run_dir_table_files))
+    all_base_tables <- all_base_tables[file.exists(all_base_tables)]
+    
+    all_base_mod_files <- dir(unique(all_base_table_dir),
+                              pattern = "\\.mod$",
+                              full.names = TRUE)
+    
+    all_base_stubs <- tools::file_path_sans_ext(all_base_mod_files)
+    
+    all_base_psn_files <- lapply(all_base_stubs, function(base_mod_stub){
+      base_dir <- dirname(base_mod_stub)
+      stub <- basename(base_mod_stub)
+      dir(base_dir, pattern = paste0("^", stub, "\\..*"), full.names = TRUE)
+    })
+    all_base_psn_files <- unlist(all_base_psn_files)
+    
+    all_base_psn_files <- all_base_psn_files[
+      ## exclude mod and lst files
+      !tools::file_ext(all_base_psn_files) %in% c("mod", "lst")
+    ]
+  }
+  
+  temp_files <- all_run_files
+  ## exclude all_run_dir_table_files
+  if(output_loc == "run_dir")
+    temp_files <- temp_files[!temp_files %in% all_run_dir_table_files]
+  ## exclude csvs (psns intermediate results)
+  temp_files <- temp_files[!tools::file_ext(temp_files) == "csv"]
+  ## exclude psn.something (psns intermediate results)
+  temp_files <- temp_files[!grepl("psn-?[0-9]?", tools::file_path_sans_ext(basename(temp_files)))]
+  
+  if(output_loc == "run_dir")
+    temp_files <- c(temp_files, all_base_tables, all_base_psn_files)
+  
+  temp_files <- tidyproject::relative_path(temp_files, getwd())
+  
+  return(temp_files)
+  
+}
+
+
+#' @export
+ls_tempfiles.nm_list <- function(object = ".", output_loc = c("run_dir", "base"),
+                                 run_files = NA_character_, include_grid_files = TRUE){
+  
+  all_run_dirs <- list_dirs(
+    run_dir_path(object), 
+    pattern = "NM_run[0-9]+", 
+    full.names = TRUE)
+  
+  all_run_files <- dir(all_run_dirs, full.names = TRUE)
+  
+  ls_tempfiles(run_files = all_run_files, output_loc = output_loc)
+}
 
 psn_exported_files <- function(r, minimal = FALSE){
   UseMethod("psn_exported_files")
