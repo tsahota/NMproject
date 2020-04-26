@@ -1462,6 +1462,8 @@ ls_tempfiles.default <- function(object = ".", output_loc = c("run_dir", "base")
   if(output_loc == "run_dir")
     temp_files <- c(temp_files, all_base_tables, all_base_psn_files)
   
+  if(length(temp_files) == 0) return(character())
+  
   temp_files <- tidyproject::relative_path(temp_files, getwd())
   
   return(temp_files)
