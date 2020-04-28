@@ -6,9 +6,9 @@
 \usage{
 nm(run_id = NA_character_, run_in = getOption("models.dir"),
   parent_run_id = NA_character_, parent_run_in = NA_character_,
-  ctl_name = "run{run_id}.mod", type = "execute",
-  run_dir = "{run_id}_{version}", results_dir = "Results",
-  lst_path = "{run_dir}/NM_run1/psn.lst")
+  parent_ctl_name = NA_character_, ctl_name = "run{run_id}.mod",
+  type = "execute", run_dir = "{run_id}_{version}",
+  results_dir = "Results", lst_path = "{run_dir}/NM_run1/psn.lst")
 }
 \arguments{
 \item{run_id}{character vector. Run identifier}
@@ -18,6 +18,8 @@ nm(run_id = NA_character_, run_in = getOption("models.dir"),
 \item{parent_run_id}{character vector (optional). Run identifier of previous run}
 
 \item{parent_run_in}{character vector (optional). Run location of previous run}
+
+\item{parent_ctl_name}{character vector (optional). Ctl name of previous run}
 
 \item{ctl_name}{character. Name of control file}
 

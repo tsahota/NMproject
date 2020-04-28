@@ -5,6 +5,7 @@ nm_generic <- function(run_id = NA_character_,
                        run_in = getOption("models.dir"),
                        parent_run_id = NA_character_,
                        parent_run_in = NA_character_,
+                       parent_ctl_name = NA_character_,
                        ctl_name = "run{run_id}.mod",
                        type = "execute",
                        run_dir = "{run_id}_{version}",
@@ -35,6 +36,7 @@ To use the alpha interface, install NMproject 0.3.2",
   m[["run_in"]] <- as.character(run_in)
   m[["parent_run_id"]] <- as.character(parent_run_id)
   m[["parent_run_in"]] <- as.character(parent_run_in)
+  m[["parent_ctl_name"]] <- as.character(parent_ctl_name)
   m[["job_info"]] <- NA_character_
   m$target <- NA_character_
   m$version <- as.integer(1)
@@ -69,6 +71,7 @@ To use the alpha interface, install NMproject 0.3.2",
 #' @param run_in character vector. ctl file and run location  
 #' @param parent_run_id character vector (optional). Run identifier of previous run 
 #' @param parent_run_in character vector (optional). Run location of previous run 
+#' @param parent_ctl_name character vector (optional). Ctl name of previous run 
 #' @param ctl_name character. Name of control file
 #' @param type character (default = "execute").  Type of run to run
 #' @param run_dir character (default = "{run_id}").  Subdirectory where PsN wll run NONMEM
@@ -135,6 +138,7 @@ child.nm_generic <- function(m, run_id = NA_character_, type = "execute", silent
   m <- m %>% version(as.integer(1))
   m <- m %>% parent_run_id(run_id(m))
   m <- m %>% parent_run_in(run_in(m))
+  m <- m %>% parent_ctl_name(ctl_name(m))
   if(!is.na(run_id)) m <- m %>% run_id(run_id)
   if(!type %in% "execute") m <- m %>% type(type)
   m[["ctl_orig"]] <- m[["ctl_contents"]]  ## reset ctl_orig
