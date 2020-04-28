@@ -3597,12 +3597,7 @@ nmsave_multiplot.nm_list <- Vectorize_nm_list(nmsave_multiplot.nm_generic, SIMPL
 #' @export
 nm_render <- function(m, 
                       input, 
-                      output_file = 
-                        paste0(
-                          tools::file_path_sans_ext(input),
-                          ".",run_dir(m),
-                          ".html"
-                        ),
+                      output_file = NA,
                       args = list(),
                       force = FALSE,
                       async = FALSE,
@@ -3613,16 +3608,17 @@ nm_render <- function(m,
 #' @export
 nm_render.nm_generic <- function(m, 
                                  input, 
-                                 output_file = 
-                                   paste0(
-                                     tools::file_path_sans_ext(input),
-                                     ".",run_dir(m),
-                                     ".html"
-                                   ),
+                                 output_file = NA,
                                  args = list(),
                                  force = FALSE,
                                  async = FALSE,
                                  ...){
+  
+  if(is.na(output_file))
+    output_file <- paste0(
+      basename(tools::file_path_sans_ext(input)),
+      ".",run_dir(m),".html"
+    )
   
   if("m" %in% names(args))
     stop("can't have m in arg.  m is reserved for model object")
