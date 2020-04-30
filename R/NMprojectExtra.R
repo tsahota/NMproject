@@ -904,7 +904,8 @@ param_info.nm_list <- function(ctl) param_info(as_nm_generic(ctl))
 param_info2 <- function(m){
   p_info <- dplyr::bind_rows(
     raw_init_theta(m),
-    raw_init_omega(m)
+    raw_init_omega(m),
+    raw_init_sigma(m),
   )
   p_info[!is.na(p_info$parameter),]
 }
@@ -1032,7 +1033,7 @@ coef.nm_generic <- function(object,trans=TRUE,...){
   d$SE.TRANS[d$type %in% "SIGMA"] <- 100*(d$SE[d$type %in% "SIGMA"]/d$FINAL[d$type %in% "SIGMA"])/2
   d$FINAL.TRANS[d$type %in% "SIGMA"] <- sqrt(d$FINAL[d$type %in% "SIGMA"])
   d$trans_unit[d$type %in% "SIGMA"] <- "SD"
-  #d$transSEunit[d$type %in% "SIGMA"] <- ""
+  d$transSEunit[d$type %in% "SIGMA"] <- "%"
   
   ## get names back to what they should be
   d$FINAL <- d$FINAL.TRANS
