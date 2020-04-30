@@ -9,8 +9,30 @@ data_path(m, text)
 \arguments{
 \item{m}{nm object}
 
-\item{text}{optional character. Path to input dataset}
+\item{text}{(optional) character. Path to input dataset}
+}
+\value{
+if text is not specified, will return the data_path name
+ otherwise will set data_path to the text provided
 }
 \description{
-Get/set path to dataset
+Mainly used to associate a dataset with an nm object.
+Requires ctl_contents to already be specified.
+}
+\examples{
+\dontrun{
+
+## The following assumes a ctl file exists in the staging area:
+##  staging/Models/ADVAN2.mod
+## and a dataset
+##  DerivedData/data.csv
+
+m1 <- nm(run_id = "m1") \%>\%
+      prior_ctl("staging/Models/ADVAN2.mod") \%>\%
+      data_path("DerivedData/data.csv")
+      
+data_path(m1)  ## display data name
+
+}
+
 }

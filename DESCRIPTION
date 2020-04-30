@@ -26,7 +26,8 @@ Imports:
     purrr,
     tidyr,
     miniUI (>= 0.1.1),
-    rstudioapi (>= 0.7)
+    rstudioapi (>= 0.7),
+    crayon (>= 1.3.4)
 RoxygenNote: 6.0.1
 Suggests:
     testthat,

@@ -42,14 +42,18 @@ To use the alpha interface, install NMproject 0.3.2",
   m$version <- as.integer(1)
   m$executed <- FALSE
   m$result_files <- c()
+  m$ctl_contents <- NA_character_
+  m$ctl_orig <- NA_character_
+  m$data_path <- NA_character_
+  m$cmd <- NA_character_
   
-  unique_id <- "{type}.{file.path(run_in,run_dir)}"
+  unique_id <- "{type}.{run_in}{.Platform$file.sep}{run_dir}"
   ## the following is in order of glueing
-  m$glue_fields <- c(run_dir, ctl_name, results_dir, unique_id, lst_path, NA_character_)
+  m$glue_fields <- list(run_dir, ctl_name, results_dir, unique_id, lst_path, NA_character_)
   names(m$glue_fields) <- c("run_dir", "ctl_name", "results_dir", "unique_id", "lst_path", "data_path")
   
   for(field in names(m$glue_fields)){
-    m <- replace_tags(m, field)
+    m <- replace_tag(m, field)
   }
   
   # ## if ctl file already exists, bring it into object
@@ -152,7 +156,7 @@ child.nm_generic <- function(m, run_id = NA_character_, type = "execute", silent
   }
   
   ## warn if ctl_name or run_dir aren't glueable
-  relevant_glue_fields <- m$glue_fields[c("ctl_name", "run_dir")]
+  relevant_glue_fields <- unlist(m$glue_fields[c("ctl_name", "run_dir")])
   non_glued_glue_fields <- relevant_glue_fields[!grepl("\\{", relevant_glue_fields)]
   if(length(non_glued_glue_fields) > 0){
     if(!silent) warning("Following parents attributes do not use {glue} fields:\n", 
@@ -196,19 +200,95 @@ print.nm_generic <- function(x, ...){
   utils::str(x, ...)
 }
 
+printable_nm_generic <- function(x){
+  pretty_empty_fields <- c("ctl_contents", "data_path", "cmd")
+  pretty_empty_fill_f <- c("prior_ctl", "data_path", "cmd")
+  
+  ## included even if NA
+  minimum_fields <- c("run_id", pretty_empty_fields)
+  
+  for(field in names(x)){
+    if(!field %in% minimum_fields)
+      if(is_single_na(x[[field]])) x[[field]] <- NULL
+  }
+  
+  ## if ctl_contents is NA, remove ctl_name
+  if(is_single_na(x[["ctl_contents"]])){
+    x[["ctl_name"]] <- NULL
+    x[["glue_fields"]][["ctl_name"]] <- NULL
+  }
+  
+  for(j in seq_along(pretty_empty_fields)){
+    pretty_empty_field <- pretty_empty_fields[j]
+    pretty_empty_f <- pretty_empty_fill_f[j]
+    if(is_single_na(x[[pretty_empty_field]])){
+      x[[pretty_empty_field]] <- 
+        paste0("...[NA - fill with ", pretty_empty_f, "()]...")
+    }
+  }
+  
+  collapse_fields <- c("ctl_contents", "ctl_orig")
+  for(field in collapse_fields){
+    ## special handling of these two    
+    if(field %in% names(x)) 
+      if(length(x[[field]]) > 1)
+        x[[field]] <- paste0("...[collapsed - view with ", field, "()]...")
+  }
+  ## remove all raw fields from output
+  #remove_fields <- c("glue_fields")
+  #for(field in remove_fields) x[[field]] <- NULL
+  
+  ##put glue fields to end
+  xglue_list <- x[["glue_fields"]]
+  
+  for(j in seq_along(pretty_empty_fields)){
+    pretty_empty_field <- pretty_empty_fields[j]
+    pretty_empty_f <- pretty_empty_fill_f[j]
+    if(is_single_na(xglue_list[[pretty_empty_field]])){
+      xglue_list[[pretty_empty_field]] <- 
+        paste0("...[NA - fill with ", pretty_empty_f,"()]...")
+    }
+  }
+  
+  x[["glue_fields"]] <- NULL
+  x[["glue_fields"]] <- xglue_list
+  
+  x
+}
+
+#' @export
+print.nm_generic <- function(x, ...){
+
+  x <- printable_nm_generic(x)
+
+  str_ob <- utils::capture.output(utils::str(x, ...))
+  str_ob <- gsub("(.*?)\"\\.{3}\\[(NA.*)\\].*", 
+                 paste0("\\1",crayon::underline("\\2")), str_ob)
+  str_ob <- gsub("(.*?)\"\\.{3}\\[(collapsed.*)\\].*", 
+                 paste0("\\1",crayon::green("\\2")), str_ob)
+  cat(str_ob, sep = "\n")
+  return(invisible(x))
+  #utils::str(x, ...)
+}
+
 #' @export
 print.nm_list <- function(x, ...){
   for(i in seq_along(x)) {
-    x[[i]] <- as.list(x[[i]])
-    collapse_fields <- c("ctl_contents", "ctl_orig")
-    for(field in collapse_fields){
-      if(field %in% names(x[[i]])) x[[i]][[field]] <- "...[collapsed]..."
-    }
-    remove_fields <- c("glue_fields")
-    for(field in remove_fields) x[[i]][[field]] <- NULL    
+    x[[i]] <- printable_nm_generic(x[[i]])
   }
-  utils::str(x, ...)
+
+  str_ob <- utils::capture.output(utils::str(x, ...))
+  ## post str modification
+  str_ob <- gsub(":List of.*", "", str_ob)
+  str_ob <- gsub("(.*?)\"\\.{3}\\[(NA.*)\\].*", 
+                 paste0("\\1",crayon::underline("\\2")), str_ob)
+  str_ob <- gsub("(.*?)\"\\.{3}\\[(collapsed.*)\\].*", 
+                 paste0("\\1",crayon::green("\\2")), str_ob)
+  cat(str_ob, sep = "\n")
+  return(invisible(x))
+  #utils::str(x, ...)
 }
+
 
 custom_1d_field <- function(m, field, replace, glue = FALSE){
   UseMethod("custom_1d_field")
@@ -288,20 +368,28 @@ glue_text_nm <- function(m, text){
   UseMethod("glue_text_nm")
 }
 glue_text_nm.nm_generic <- function(m, text){
-  stringr::str_glue(text, .envir = m)
+  stringr::str_glue(text, .envir = m, .na = NULL)
 }
 glue_text_nm.nm_list <- Vectorize_nm_list(glue_text_nm.nm_generic, SIMPLIFY = TRUE)
+
+replace_tag <- function(m, field){
+  ## this function is rate limiting - use it as little as possible.
+  ## only proceed if "raw" field exists
+  if(!is.na(m$glue_fields[[field]])){
+    ## start by resetting to raw
+    m[[field]] <- glue_text_nm(m, m$glue_fields[[field]])
+    #m[[field]] <- stringr::str_glue(m$glue_fields[[field]], .envir = m)
+    m[[field]] <- as.character(m[[field]])
+  }
+  m
+}
 
 replace_tags <- function(m, field){
   ## this function is rate limiting - use it as little as possible.
   ## only proceed if "raw" field exists
+  ## this will update all tags
   if(field %in% names(m$glue_fields)){
-    if(!is.na(m$glue_fields[[field]])){
-      ## start by resetting to raw
-      m[[field]] <- glue_text_nm(m, m$glue_fields[[field]])
-      #m[[field]] <- stringr::str_glue(m$glue_fields[[field]], .envir = m)
-      m[[field]] <- as.character(m[[field]])
-    }
+    m <- replace_tag(m, field)
   }
   m
 }
@@ -553,8 +641,31 @@ uncomment <- function(m, pattern = ".*"){
 
 #' Get/set path to dataset
 #' 
+#' Mainly used to associate a dataset with an nm object.
+#' Requires ctl_contents to already be specified.
+#' 
 #' @param m nm object
-#' @param text optional character. Path to input dataset
+#' @param text (optional) character. Path to input dataset
+#' 
+#' @return if text is not specified, will return the data_path name
+#'  otherwise will set data_path to the text provided
+#' 
+#' @examples 
+#' \dontrun{
+#' 
+#' ## The following assumes a ctl file exists in the staging area:
+#' ##  staging/Models/ADVAN2.mod
+#' ## and a dataset
+#' ##  DerivedData/data.csv
+#' 
+#' m1 <- nm(run_id = "m1") %>%
+#'       prior_ctl("staging/Models/ADVAN2.mod") %>%
+#'       data_path("DerivedData/data.csv")
+#'       
+#' data_path(m1)  ## display data name
+#' 
+#' }
+#' 
 #' @export
 data_path <- function(m, text){
   UseMethod("data_path")
@@ -3682,8 +3793,6 @@ nm_render.nm_generic <- function(m,
 
 #' @export
 nm_render.nm_list <- Vectorize_nm_list(nm_render.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
-
-# TODO: nm_render_async
 
 #' Create new R notebook
 #' @param script_name character
