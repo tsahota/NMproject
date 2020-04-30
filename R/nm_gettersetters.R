@@ -224,7 +224,8 @@ ctl_contents.nm_generic <- function(m, ctl_ob, update_numbering = TRUE, update_d
   
   m[["ctl_contents"]] <- ctl
   ## set as ctl_orig only if ctl_orig doesn't exist
-  if(!"ctl_orig" %in% names(m)) m[["ctl_orig"]] <- ctl
+  #if(!"ctl_orig" %in% names(m)) m[["ctl_orig"]] <- ctl
+  if(is_single_na(m[["ctl_orig"]])) m[["ctl_orig"]] <- ctl
   
   ## overwrite the data_path field if it's blank
   data_path <- data_path(m)
@@ -255,3 +256,14 @@ ctl_contents.nm_generic <- function(m, ctl_ob, update_numbering = TRUE, update_d
 #' @export
 ctl_contents.nm_list <- Vectorize_nm_list(ctl_contents.nm_generic, SIMPLIFY = FALSE, replace_arg = "ctl_ob", pre_glue = TRUE)
 
+#' Add a prior ctl file contents to object
+#'
+#' @param m nm object
+#' @param ctl_ob path to control file
+#' @param update_numbering logical. Should table numbers and author fields be updated
+#' @param update_dollar_data logical. Should $DATA in control file be updated
+#' @param ... additional arguments
+#' 
+#' @export
+
+prior_ctl <- ctl_contents
