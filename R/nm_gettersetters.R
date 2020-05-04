@@ -146,10 +146,11 @@ run_id.nm_generic <- function(m, text, ...){
   
   ## Do all glueing first.
   for(field in names(m$glue_fields)){
-    m <- replace_tags(m, field)
+    m <- replace_tag(m, field)
   }
   
-  if("ctl_contents" %in% names(m)) m <- m %>% ctl_contents(m[["ctl_contents"]]) ## update ctl_contents object
+  ## why was this here?
+  #if("ctl_contents" %in% names(m)) m <- m %>% ctl_contents(m[["ctl_contents"]]) ## update ctl_contents object
   m
 }
 #' @export
@@ -206,12 +207,11 @@ ctl_contents.nm_generic <- function(m, ctl_ob, update_numbering = TRUE, update_d
   
   #if(inherits(try(ctl_list2(ctl_ob)), "try-error")) browser()
   
-  ## is ctl_ob in staging?
-  
-  from_staging <- FALSE
-  if(inherits(ctl_ob, "character"))
-    if(length(ctl_ob) == 1)
-      if(grepl(paste0("staging", .Platform$file.sep), ctl_ob)) from_staging <- TRUE
+  ## if NA just set field as NA
+  if(is_single_na(ctl_ob)) {
+    m[["ctl_contents"]] <- NA_character_
+    return(m)
+  }
   
   ctl <- ctl_list2(ctl_ob)
   
@@ -233,7 +233,6 @@ ctl_contents.nm_generic <- function(m, ctl_ob, update_numbering = TRUE, update_d
     ## NOTE: this assumes run is from same run_in(m) directory
     data_name <- gsub("^ *\\$DATA\\s*([^ ]+).*$","\\1",ctl$DATA)[1]
     data_path <- normalizePath(file.path(run_in(m), data_name), mustWork = FALSE)
-    #data_path <- normalizePath(file.path(dirname(ctl_ob), data_name), mustWork = FALSE)
     
     if(file.exists(data_path)){
       ## issue - run_in might not exist
@@ -247,14 +246,22 @@ ctl_contents.nm_generic <- function(m, ctl_ob, update_numbering = TRUE, update_d
       
       data_path <- relative_path(data_path, getwd())
       m[["data_path"]] <- data_path
-      #if(update_dollar_data) m <- m %>% fill_dollar_data(data_path)
     }
   }
+  
+  if(!is.na(data_path) & update_dollar_data)
+    m <- m %>% fill_dollar_data(data_path)
   
   m
 }
 #' @export
 ctl_contents.nm_list <- Vectorize_nm_list(ctl_contents.nm_generic, SIMPLIFY = FALSE, replace_arg = "ctl_ob", pre_glue = TRUE)
+
+## minimal version of ctl_contents (just sets ctl_contents without mods)
+## for internal package use
+ctl_contents_simple <- function(m, ctl_ob, ...){
+  ctl_contents(m, ctl_ob, update_numbering = FALSE, update_dollar_data = FALSE, ...)
+}
 
 #' Add a prior ctl file contents to object
 #'

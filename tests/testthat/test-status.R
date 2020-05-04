@@ -28,7 +28,7 @@ test_that("status",{
   ds <- tibble::tibble(run_id = "m1")
   
   ds$m <- nm(run_id = ds$run_id) %>%
-    ctl_contents("staging/Models/run1.mod") %>%
+    prior_ctl("staging/Models/run1.mod") %>%
     cmd("execute {ctl_name} -dir={run_dir}")
   
   expect_message(ds$m <- ds$m %>% run_nm())
