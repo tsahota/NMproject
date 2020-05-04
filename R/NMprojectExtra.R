@@ -56,13 +56,6 @@ To use the alpha interface, install NMproject 0.3.2",
     m <- replace_tag(m, field)
   }
   
-  # ## if ctl file already exists, bring it into object
-  # ctl_path <- ctl_path(m)
-  # if(file.exists(ctl_path)){
-  #   m <- m %>% ctl_contents(ctl_path)
-  # }
-  
-  ## leave space to track output files (do in run_nm)
   m
 }
 
@@ -143,16 +136,30 @@ child.nm_generic <- function(m, run_id = NA_character_, type = "execute", silent
   m <- m %>% parent_run_id(run_id(m))
   m <- m %>% parent_run_in(run_in(m))
   m <- m %>% parent_ctl_name(ctl_name(m))
+  
+  ## if missing increment run_id
+  if(is.na(run_id)) {
+    if(!is.na(run_id(m))){
+      run_id <- increment_run_id(run_id(m))
+      message("child run_id automatically set to: ", run_id)
+    }
+  }
   if(!is.na(run_id)) m <- m %>% run_id(run_id)
+  
+  m <- m %>% ctl_contents(ctl_contents(m), 
+                          update_numbering = TRUE,
+                          update_dollar_data = FALSE)
   if(!type %in% "execute") m <- m %>% type(type)
   m[["ctl_orig"]] <- m[["ctl_contents"]]  ## reset ctl_orig
   
   ## check for file conficts
-  file_conflicts <- intersect(psn_exported_files(mparent), psn_exported_files(m))
-  if(length(file_conflicts) > 0){
-    if(!silent) warning("Child file(s) currently in conflict with parent:\n",
-                        paste(paste0(" ",file_conflicts),collapse="\n"),
-                        "\nYou will overwrite parent object outputs if you run now", call. = FALSE)
+  if(!is_single_na(m[["ctl_contents"]])){
+    file_conflicts <- intersect(psn_exported_files(mparent), psn_exported_files(m))
+    if(length(file_conflicts) > 0){
+      if(!silent) warning("Child file(s) currently in conflict with parent:\n",
+                          paste(paste0(" ",file_conflicts),collapse="\n"),
+                          "\nYou will overwrite parent object outputs if you run now", call. = FALSE)
+    }
   }
   
   ## warn if ctl_name or run_dir aren't glueable
@@ -168,6 +175,22 @@ child.nm_generic <- function(m, run_id = NA_character_, type = "execute", silent
 }
 #' @export
 child.nm_list <- Vectorize_nm_list(child.nm_generic, SIMPLIFY = FALSE)
+
+increment_run_id <- function(run_id){
+  if(length(run_id) != 1) stop("run_id must be of length 1")
+  stop_msg <- paste0("cannot automatically increment ", run_id, ", specify run_id argument explicitly")
+  
+  # number at end
+  run_id_regex <- "^(\\w*?)([0-9]+)$" 
+  if(!grepl(run_id_regex, run_id)) stop(stop_msg)
+  
+  prefix_part <- gsub("^(\\w*?)([0-9]+)$", "\\1", run_id)
+  numeric_part <- gsub("^(\\w*?)([0-9]+)$", "\\2", run_id)
+  numeric_part <- as.numeric(numeric_part)
+  
+  paste0(prefix_part, numeric_part + 1)
+}
+
 
 #' Determine if runs are expected to have overlapping output files (from PsN)
 #' 
@@ -234,24 +257,24 @@ printable_nm_generic <- function(x){
       if(length(x[[field]]) > 1)
         x[[field]] <- paste0("...[collapsed - view with ", field, "()]...")
   }
-  ## remove all raw fields from output
-  #remove_fields <- c("glue_fields")
-  #for(field in remove_fields) x[[field]] <- NULL
+  # remove all raw fields from output
+  remove_fields <- c("glue_fields")
+  for(field in remove_fields) x[[field]] <- NULL
   
-  ##put glue fields to end
-  xglue_list <- x[["glue_fields"]]
-  
-  for(j in seq_along(pretty_empty_fields)){
-    pretty_empty_field <- pretty_empty_fields[j]
-    pretty_empty_f <- pretty_empty_fill_f[j]
-    if(is_single_na(xglue_list[[pretty_empty_field]])){
-      xglue_list[[pretty_empty_field]] <- 
-        paste0("...[NA - fill with ", pretty_empty_f,"()]...")
-    }
-  }
-  
-  x[["glue_fields"]] <- NULL
-  x[["glue_fields"]] <- xglue_list
+  # ##put glue fields to end
+  # xglue_list <- x[["glue_fields"]]
+  # 
+  # for(j in seq_along(pretty_empty_fields)){
+  #   pretty_empty_field <- pretty_empty_fields[j]
+  #   pretty_empty_f <- pretty_empty_fill_f[j]
+  #   if(is_single_na(xglue_list[[pretty_empty_field]])){
+  #     xglue_list[[pretty_empty_field]] <- 
+  #       paste0("...[NA - fill with ", pretty_empty_f,"()]...")
+  #   }
+  # }
+  # 
+  # x[["glue_fields"]] <- NULL
+  # x[["glue_fields"]] <- xglue_list 
   
   x
 }
@@ -267,7 +290,7 @@ print.nm_generic <- function(x, ...){
   str_ob <- gsub("(.*?)\"\\.{3}\\[(collapsed.*)\\].*", 
                  paste0("\\1",crayon::green("\\2")), str_ob)
   cat(str_ob, sep = "\n")
-  return(invisible(x))
+  #return(invisible(x))
   #utils::str(x, ...)
 }
 
@@ -285,7 +308,7 @@ print.nm_list <- function(x, ...){
   str_ob <- gsub("(.*?)\"\\.{3}\\[(collapsed.*)\\].*", 
                  paste0("\\1",crayon::green("\\2")), str_ob)
   cat(str_ob, sep = "\n")
-  return(invisible(x))
+  #return(invisible(x))
   #utils::str(x, ...)
 }
 
@@ -496,7 +519,7 @@ update_dollar.nm_generic <- function(ctl,..., which_dollar = 1, append = FALSE){
   m <- ctl
   ctl <- ctl_contents(m)
   ctl_new <- update_dollar(ctl, ..., which_dollar = which_dollar, append = append)
-  m <- m %>% ctl_contents(ctl_new)
+  m <- m %>% ctl_contents_simple(ctl_new)
   m
 }
 #' @export
@@ -587,7 +610,7 @@ set_target_text <- function(m, text){
   if(!is.na(target)) {
     #if(append) text <- c(ctl[[target]],"",text)
     ctl[[target]] <- setup_dollar(text, paste0("$",target), add_dollar_text = FALSE)
-    m <- m %>% ctl_contents(ctl, update_dollar_data = FALSE)
+    m <- m %>% ctl_contents_simple(ctl)
   } else {
     #if(append) text <- c(ctl_character(ctl),"",text)
     text <- ctl_list2(text)
@@ -680,17 +703,11 @@ data_path.nm_generic <- function(m, text){
     }
   }
   m <- m %>% custom_1d_field(field = "data_path", replace = text, glue = TRUE)
-  
+
   if(!is.na(data_path(m))){
-    ## update ctl contents
-    m <- m %>% fill_dollar_data(text)
-    # old_target <- m %>% target()
-    # m <- m %>% target("$DATA")
-    # 
-    # data_name <- relative_path(text, run_in(m))
-    # m <- m %>% gsub_ctl("^(\\s*\\$DATA\\s+)\\S+(.*)$",paste0("\\1",data_name,"\\2"))
-    # 
-    # m <- m %>% target(old_target)
+    ## update ctl contents (if it exists)
+    if(!is_single_na(ctl_contents(m)))
+      m <- m %>% fill_dollar_data(text)
   }
   
   m
@@ -817,7 +834,7 @@ ignore.nm_generic <- function(ctl, ignore_char){
   }
   ctl <- ctl_contents(m)
   ctl <- update_ignore.default(ctl, ignore_char)
-  m <- m %>% ctl_contents(ctl)
+  m <- m %>% ctl_contents_simple(ctl)
   m
 }
 #' @export
@@ -849,7 +866,7 @@ delete_dollar.nm_generic <- function(m, dollar){
   ctl <- m %>% ctl_contents()
   dollar_text <- gsub("\\$","",dollar)
   ctl[[dollar_text]] <- NULL
-  m <- m %>% ctl_contents(ctl)
+  m <- m %>% ctl_contents_simple(ctl)
   m
 }
 #' @export
@@ -886,7 +903,7 @@ insert_dollar.nm_generic <- function(m, dollar, text, after_dollar = NA){
   attributes(ctl) <- save_attributes
   names(ctl) <- save_names
   
-  m <- m %>% ctl_contents(ctl)
+  m <- m %>% ctl_contents_simple(ctl)
   m
 }
 #' @export
@@ -1246,7 +1263,7 @@ update_parameters.nm_generic <- function(ctl, from){
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "OMEGA")
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "SIGMA")
   
-  m <- m %>% ctl_contents(ctl_lines)
+  m <- m %>% ctl_contents_simple(ctl_lines)
   m
 }
 #' @export
@@ -2105,7 +2122,7 @@ subroutine.nm_list <- Vectorize_nm_list(subroutine.nm_generic, SIMPLIFY = FALSE)
 #' \dontrun{
 #' 
 #' m1 <- nm(run_id = "m1") %>%
-#'   ctl_contents("staging/Models/run1.mod")
+#'   prior_ctl("staging/Models/run1.mod")
 #' 
 #' m2 <- m1 %>% child(run_id = "m2") %>%
 #'   subroutine(advan = 2, trans = 2)
@@ -3045,6 +3062,67 @@ init_sigma <- function(m, replace){
     m <- m %>% raw_init_sigma(replace)
     m
   }
+}
+
+#' get/set parameter values
+#' 
+#' @param m nm object
+#' @param replace optional argument to replace
+#' 
+#' @examples
+#' \dontrun{
+#' 
+#' m1 %>% pull_init_theta() %>%
+#'   mutate_cond(
+#'     name %in% "CL",
+#'     init = 30
+#'   ) %>%
+#'   push_init_theta()
+#' 
+#' } 
+#' 
+#' @name push_init_theta
+#' @export
+pull_init_theta <- function(m){
+  init <- init_theta(m)
+  attr(init, "object") <-  m
+  init
+}
+
+#' @rdname push_init_theta
+#' @export
+push_init_theta <- function(replace, m) {
+  if(missing(m)) m <- attr(replace, "object")
+  init_theta(m, replace)
+}
+
+#' @rdname push_init_theta
+#' @export
+pull_init_omega <- function(m){
+  init <- init_omega(m)
+  attr(init, "object") <-  m
+  init
+}
+#' @rdname push_init_theta
+#' @export
+push_init_omega <- function(replace, m) {
+  if(missing(m)) m <- attr(replace, "object")
+  init_omega(m, replace)
+}
+
+
+#' @rdname push_init_theta
+#' @export
+pull_init_sigma <- function(m){
+  init <- init_sigma(m)
+  attr(init, "object") <-  m
+  init
+}
+#' @rdname push_init_theta
+#' @export
+push_init_sigma <- function(replace, m) {
+  if(missing(m)) m <- attr(replace, "object")
+  init_sigma(m, replace)
 }
 
 update_variable_in_text_numbers <- function(m, before_number, after_number){
@@ -4160,7 +4238,7 @@ add_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
     ctl$THETA <- c(ctl$THETA,theta_lines)
   }
 
-  m <- m %>% ctl_contents(ctl)
+  m <- m %>% ctl_contents_simple(ctl)
 
 }
 
@@ -4296,7 +4374,7 @@ remove_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
 
   ctl$THETA <- ctl$THETA[setdiff(seq_along(ctl$THETA), matched_theta)]
 
-  m <- m %>% ctl_contents(ctl)
+  m <- m %>% ctl_contents_simple(ctl)
 }
 
 #' @export

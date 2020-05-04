@@ -34,7 +34,7 @@ load_localpackage()
 ```{r}
 
 m1 <- nm(run_id = "m1") %>%
-  ctl_contents("staging/Models/runm1.mod") %>%
+  prior_ctl("staging/Models/runm1.mod") %>%
   data_path("DerivedData/THEOPP.csv") %>%
   cmd("qpsn -c auto -t 59 -- execute {ctl_name} -dir={run_dir}") %>%
   fill_input(rename = c("DATE" = "DAT0")) %>%
