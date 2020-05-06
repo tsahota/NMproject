@@ -5036,11 +5036,11 @@ make_OCC_every_dose <- function(dose_trigger, new_OCC_trigger){
 #' @export
 shiny_nm <- function(m, envir = .GlobalEnv){
   if(missing(m)) {
-    m <- nm_list_gather(envir = envir)
+    m <- nm_list_gather(envir)
   } else {
     if(is_nm_generic(m)) m <- as_nm_list(m)
     if(!is_nm_list(m)){
-      m <- nm_list_gather(envir = m)
+      m <- nm_list_gather(m)
       if(!is_nm_list(m))
         stop("couldn't find any nm_list objects in m")
     }
