@@ -4,10 +4,11 @@
 \alias{nm_list_gather}
 \title{get all nm_list objects}
 \usage{
-nm_list_gather(envir = .GlobalEnv)
+nm_list_gather(x = .GlobalEnv)
 }
 \arguments{
-\item{envir}{environment (default = .GlobalEnv) to search}
+\item{x}{environment (default = .GlobalEnv) to search
+or data.frame with (nm_list column) or nm_list}
 }
 \description{
 get all nm_list objects

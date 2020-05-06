@@ -5065,19 +5065,30 @@ shiny_nm <- function(m, envir = .GlobalEnv){
 
 #' get all nm_list objects
 #' 
-#' @param envir environment (default = .GlobalEnv) to search
+#' @param x environment (default = .GlobalEnv) to search
+#'   or data.frame with (nm_list column) or nm_list
 #' @export
-nm_list_gather <- function(envir = .GlobalEnv){
+nm_list_gather <- function(x = .GlobalEnv){
+  UseMethod("nm_list_gather")
+}
 
-  m <- lapply(envir, function(object){
+#' @export
+nm_list_gather.default <- function(x = .GlobalEnv){
+
+  m <- lapply(x, function(object){
     if(inherits(object, "nm_list")) object else NA
   })
 
   m <- m[!is.na(m)]
   m <- do.call(c, m)
   m
-
 }
+
+#' @export
+nm_list_gather.nm_list <- function(x = .GlobalEnv) x
+
+
+
 
 ## generic already defined
 ## internal function
@@ -5167,6 +5178,46 @@ data_ignore_char.nm_generic <- function(r, data){
 }
 data_ignore_char.nm_list <- Vectorize_nm_list(data_ignore_char.nm_generic, SIMPLIFY = TRUE)
 
+
+#' Make data.tree object
+#' 
+#' @param ... arguments passed to nm_list_gather(...)
+#' @param summary logical (default = FALSE) should summary_wide variables be appended
+#' @export
+nm_tree <- function(..., summary = FALSE){
+  
+  if(!requireNamespace("data.tree")) stop("install data.tree")
+  
+  m <- nm_list_gather(...) 
+  
+  if(summary){
+    sink(file="/dev/null")
+    m_row <- m %>% 
+    {suppressMessages(
+      dplyr::right_join(nm_row(.), summary_wide(.)) 
+    )}
+    sink()
+  } else {
+    m_row <- m %>% nm_row()
+  }
+
+  network <- m_row %>%
+    dplyr::mutate(
+      parent_run_id = ifelse(is.na(.data$parent_run_id), 
+                             "start", 
+                             .data$parent_run_id),
+      parent_run_id = ifelse(is.na(.data$parent_run_in),
+                             .data$parent_run_id,
+                             file.path(.data$parent_run_in, .data$parent_run_id)
+                             ),
+      run_id = file.path(.data$run_in, .data$run_id)
+    ) %>%
+    dplyr::select(.data$parent_run_id, .data$run_id, dplyr::everything())
+  
+  tree <- data.tree::FromDataFrameNetwork(network)
+  
+  tree
+}
 
 ###############
 
