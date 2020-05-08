@@ -5219,6 +5219,71 @@ nm_tree <- function(..., summary = FALSE){
   tree
 }
 
+
+#' make decision point
+#' 
+#' formalise process of decision making.  Creates a decision point.
+#' Requests inputs (\code{values} and \code{files}) that you base a
+#' decision on and stop for users to remake decision if inputs change
+#' 
+#' @param values (optional) non file names upon which decision depends
+#' @param files (optional) file names upon which decision depends
+#' @param auto_decision (optional) logical. logical statement for automatic decisions
+#' @param outcome character. Description of the decision outcome
+#' @export 
+decision <- function(values = c(), 
+                     files = c(), 
+                     auto_decision = TRUE,
+                     outcome){
+  
+  if(!requireNamespace("drake"))
+    stop("install drake")
+  
+  error_msg <- "decision needs revisiting"
+
+  if(!auto_decision){
+    stop("auto-decision failed: ", error_msg, call. =  FALSE)
+  }
+    
+  wait_input <- function(inputs){
+    inputs
+    cat("---manual decision check---\n")
+    cat("decision: ", outcome)
+    ans <- readline("Is this decision correct? [y/n/esc]:\n")
+    if(ans %in% ""){
+      stop("blank detected (if in R Notebooks, make sure no blank line between decision() and end of chunk")
+    }
+    if(!ans %in% "y"){
+      stop(error_msg, call. =  FALSE)
+    }
+    return(TRUE)
+  }
+
+  inputs <- c()  
+  if(length(values)){
+    inputs <- c(inputs, values)
+  }
+  if(length(files)){
+    if(!all(file.exists(files))){
+      stop("file(s) do not exist", call. = FALSE)
+    }
+    inputs <- c(inputs, tools::md5sum(files))
+  }
+
+  drpl <- drake::drake_plan(decision_inputs = inputs,
+                            pause = wait_input(decision_inputs))
+
+  outdated <- drake::outdated(drake::drake_config(drpl))
+  if(!length(outdated)){
+    message("decision inputs haven't changed, trusting that decision is still correct")
+  }
+  
+  suppressMessages({
+    drake::make(drpl)
+  })  
+  
+}
+
 ###############
 
 ## mrgsolve method extension
