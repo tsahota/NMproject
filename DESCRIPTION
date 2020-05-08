@@ -27,7 +27,9 @@ Imports:
     tidyr,
     miniUI (>= 0.1.1),
     rstudioapi (>= 0.7),
-    crayon (>= 1.3.4)
+    crayon (>= 1.3.4),
+    drake (>= 5.3.0),
+    data.tree
 RoxygenNote: 6.0.1
 Suggests:
     testthat,
@@ -35,7 +37,7 @@ Suggests:
     rmarkdown,
     ggplot2,
     future,
-    xpose4,
+    xpose4
 Collate: 
     'NMproject.R'
     'nm.R'
