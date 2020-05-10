@@ -1796,7 +1796,7 @@ dp <- rbind(
   data.frame(advan = 3,trans = 4,
              base_name = c("R20","R23","V2","V3"),
              relation = c("R20*V2", "R23*V2", NA , NA),
-             nm_name = c("CL","Q","V2","V3")),
+             nm_name = c("CL","Q","V1","V2")),
   ## skip advan 3 trans 5/6
   data.frame(advan = 4,trans = 1,
              base_name = c("R12","R20","R23","R32","V2"),
@@ -1810,30 +1810,49 @@ dp <- rbind(
              base_name = c("R12","R20","R23","V2","V3"),
              relation = c(NA, "R20*V2", "R23*V2", NA , NA),               
              nm_name = c("KA","CL","Q","V2","V3")),
+  ## add advan 11
+  data.frame(advan = 11,trans = 1,
+             base_name = c("R20","R23","R32","R24","R42","V2"),
+             relation = NA,
+             nm_name = c("K","K12","K21","K13","K31","V")),
+  data.frame(advan = 11,trans = 4,
+             base_name = c("R20","R23","V2","V3","R24","V4"),
+             relation = c("R20*V2", "R23*V2", NA , NA, "R24*V2", NA),
+             nm_name = c("CL","Q2","V1","V2","Q3","V3")),
+  ## add advan 12
+  data.frame(advan = 12,trans = 1,
+             base_name = c("R12","R20","R23","R32","R24","R42","V2"),
+             relation = NA,
+             nm_name = c("KA","K","K23","K32","K24","K42","V2")),
+  data.frame(advan = 12,trans = 4,
+             base_name = c("R12","R20","R23","V2","V3","R24","V4"),
+             relation = c(NA,"R20*V2", "R23*V2", NA , NA, "R24*V2", NA),
+             nm_name = c("KA","CL","Q3","V2","V3","Q4","V4")),
+  ## non closed form advans
   data.frame(advan = 5,trans = NA,
-             base_name = c("R12","R20","R23","R32","V2","..."),
+             base_name = c("RXY","VX"),
              relation = NA,
-             nm_name = c("K12","K20","K23","K32","V2","...")),
+             nm_name = c("KXY","VX")),
   data.frame(advan = 6,trans = NA,
-             base_name = c("R12","R20","R23","R32","V2","..."),
+             base_name = c("RXY","VX"),
              relation = NA,
-             nm_name = c("K12","K20","K23","K32","V2","...")),
+             nm_name = c("KXY","VX")),
   data.frame(advan = 7,trans = NA,
-             base_name = c("R12","R20","R23","R32","V2","..."),
+             base_name = c("RXY","VX"),
              relation = NA,
-             nm_name = c("K12","K20","K23","K32","V2","...")),
+             nm_name = c("KXY","VX")),
   data.frame(advan = 8,trans = NA,
-             base_name = c("R12","R20","R23","R32","V2","..."),
+             base_name = c("RXY","VX"),
              relation = NA,
-             nm_name = c("K12","K20","K23","K32","V2","...")),
+             nm_name = c("KXY","VX")),
   data.frame(advan = 9,trans = NA,
-             base_name = c("R12","R20","R23","R32","V2","..."),
+             base_name = c("RXY","VX"),
              relation = NA,
-             nm_name = c("K12","K20","K23","K32","V2","...")),
+             nm_name = c("KXY","VX")),
   data.frame(advan = 13,trans = NA,
-             base_name = c("R12","R20","R23","R32","V2","..."),
+             base_name = c("RXY","VX"),
              relation = NA,
-             nm_name = c("K12","K20","K23","K32","V2","..."))
+             nm_name = c("KXY","VX"))
 )
 dp <- tibble::as_tibble(dp)
 
@@ -5242,13 +5261,13 @@ decision <- function(values = c(),
   error_msg <- "decision needs revisiting"
 
   if(!auto_decision){
-    stop("auto-decision failed: ", error_msg, call. =  FALSE)
+    stop("auto-decision failed - ", error_msg, call. =  FALSE)
   }
     
   wait_input <- function(inputs){
-    inputs
-    cat("---manual decision check---\n")
-    cat("decision: ", outcome)
+    inputs  ## create inputs dependency
+    cat(crayon::underline("manual decision check\n"))
+    cat("decision outcome:\n", outcome)
     ans <- readline("Is this decision correct? [y/n/esc]:\n")
     if(ans %in% ""){
       stop("blank detected (if in R Notebooks, make sure no blank line between decision() and end of chunk")
@@ -5270,9 +5289,11 @@ decision <- function(values = c(),
     inputs <- c(inputs, tools::md5sum(files))
   }
 
-  drpl <- drake::drake_plan(decision_inputs = inputs,
-                            pause = wait_input(decision_inputs))
-
+  drpl <- drake::drake_plan(
+    decision_inputs = inputs,
+    pause = wait_input(decision_inputs)
+  )
+  
   outdated <- drake::outdated(drake::drake_config(drpl))
   if(!length(outdated)){
     message("decision inputs haven't changed, trusting that decision is still correct")
