@@ -4,7 +4,7 @@
 \alias{subroutine}
 \title{Subroutine}
 \usage{
-subroutine(m, advan = NA, trans = NA, recursive = TRUE)
+subroutine(m, advan = NA, trans = 1, recursive = TRUE)
 }
 \arguments{
 \item{m}{nm object}
