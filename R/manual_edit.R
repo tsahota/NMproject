@@ -109,6 +109,7 @@ start_manual_edit_unix <- function(m){
   res
 }
 
+#' @export
 diff_manual_edit <- function(m, res){
   diff_cmd <- paste("diff -u", ctl_path(m), res$new_ctl_path, ">", res$patch_path)
   system(diff_cmd)

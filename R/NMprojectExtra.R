@@ -547,6 +547,7 @@ target.nm_generic <- function(m, dollar, lines){
   #if(!missing(dollar) & !missing(lines)){
   #  stop("can't have both 'dollar' and 'lines' arguments")
   #}
+  dollar <- toupper(dollar)
   
   dollar_text <- gsub("\\$","",dollar)
   m <- m %>% custom_1d_field(field = "target", replace = dollar_text)
@@ -1858,6 +1859,12 @@ available_advans <- dplyr::summarise(available_advans,
 available_advans <- dplyr::mutate(available_advans,
                                   label = ifelse(is.na(trans), paste0("a",advan), paste0("a",advan,"t",trans)))
 available_advans <- dplyr::ungroup(available_advans)
+
+#' @export
+dp
+
+#' @export
+available_advans
 
 default_trans <- function(advan){
   sapply(advan, function(advan){

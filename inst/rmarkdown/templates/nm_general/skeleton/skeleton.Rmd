@@ -19,10 +19,6 @@ opts_chunk$set(message = TRUE)
 ```{r echo=FALSE,message=FALSE}
 ## LOAD PACKAGES HERE
 library(NMprojectAZ)
-devtools::load_all("~/tidyproject/")
-devtools::load_all("~/NMproject/")
-devtools::load_all("~/tidyprojectAZ/")
-devtools::load_all("~/NMprojectAZ/")
 library(future)
 future::plan("future::multiprocess", workers = 2)
 
