@@ -1768,90 +1768,86 @@ grab_variables <- function(m, pattern){
   grab_variables0(text, pattern)
 }
 
-dp <- rbind(
-  data.frame(advan = 1,trans = 1,
-             base_name = c("R20","V2"),
-             relation = NA,
+dp <- dplyr::bind_rows(
+  tibble::tibble(advan = 1,trans = 1,
+             base_name = c("R2T0","V2"),
              nm_name = c("K","V")),
-  data.frame(advan = 1,trans = 2,
-             base_name = c("R20","V2"),
-             relation = c("R20*V2", NA),
+  tibble::tibble(advan = 1,trans = 2,
+             base_name = c("R2T0","V2"),
+             relation = c("R2T0*V2", NA),
+             inv_relation = c("R2T0/V2", NA),
              nm_name = c("CL","V")),
-  data.frame(advan = 2,trans = 1,
-             base_name = c("R12","R20","V2"),
-             relation = NA,
+  tibble::tibble(advan = 2,trans = 1,
+             base_name = c("R1T2","R2T0","V2"),
              nm_name = c("KA","K","V")),
-  data.frame(advan = 2,trans = 2,
-             base_name = c("R12","R20","V2"),
-             relation = c(NA, "R20*V2", NA),
+  tibble::tibble(advan = 2,trans = 2,
+             base_name = c("R1T2","R2T0","V2"),
+             relation = c(NA, "R2T0*V2", NA),
+             inv_relation = c(NA, "R2T0/V2", NA),
              nm_name = c("KA","CL","V")),
-  data.frame(advan = 3,trans = 1,
-             base_name = c("R20","R23","R32","V2"),
-             relation = NA,
+  tibble::tibble(advan = 3,trans = 1,
+             base_name = c("R2T0","R2T3","R3T2","V2"),
              nm_name = c("K","K12","K21","V")),
-  data.frame(advan = 3,trans = 3,
-             base_name = c("R20","R23","V2","V3"),
-             relation = c("R20*V2", "R23*V2", NA , "V2+V3"),
+  tibble::tibble(advan = 3,trans = 3,
+             base_name = c("R2T0","R2T3","V2","V3"),
+             relation = c("R2T0*V2", "R2T3*V2", NA , "V3+V2"),
+             inv_relation = c("R2T0/V2", "R2T3/V2", NA , "V3-V2"),
              nm_name = c("CL","Q","V","VSS")),
-  data.frame(advan = 3,trans = 4,
-             base_name = c("R20","R23","V2","V3"),
-             relation = c("R20*V2", "R23*V2", NA , NA),
+  tibble::tibble(advan = 3,trans = 4,
+             base_name = c("R2T0","R2T3","V2","V3"),
+             relation = c("R2T0*V2", "R2T3*V2", NA , NA),
+             inv_relation = c("R2T0/V2", "R2T3/V2", NA , NA),
              nm_name = c("CL","Q","V1","V2")),
   ## skip advan 3 trans 5/6
-  data.frame(advan = 4,trans = 1,
-             base_name = c("R12","R20","R23","R32","V2"),
-             relation = NA,
+  tibble::tibble(advan = 4,trans = 1,
+             base_name = c("R1T2","R2T0","R2T3","R3T2","V2"),
              nm_name = c("KA","K","K23","K32","V2")),
-  data.frame(advan = 4,trans = 3,
-             base_name = c("R12","R20","R23","V2","V3"),
-             relation = c(NA, "R20*V2", "R23*V2", NA , "V2+V3"),
+  tibble::tibble(advan = 4,trans = 3,
+             base_name = c("R1T2","R2T0","R2T3","V2","V3"),
+             relation = c(NA, "R2T0*V2", "R2T3*V2", NA , "V3+V2"),
+             inv_relation = c(NA, "R2T0/V2", "R2T3/V2", NA , "V3-V2"),
              nm_name = c("KA","CL","Q","V","VSS")),
-  data.frame(advan = 4,trans = 4,
-             base_name = c("R12","R20","R23","V2","V3"),
-             relation = c(NA, "R20*V2", "R23*V2", NA , NA),               
+  tibble::tibble(advan = 4,trans = 4,
+             base_name = c("R1T2","R2T0","R2T3","V2","V3"),
+             relation = c(NA, "R2T0*V2", "R2T3*V2", NA , NA),               
+             inv_relation = c(NA, "R2T0/V2", "R2T3/V2", NA , NA),               
              nm_name = c("KA","CL","Q","V2","V3")),
   ## add advan 11
-  data.frame(advan = 11,trans = 1,
-             base_name = c("R20","R23","R32","R24","R42","V2"),
-             relation = NA,
+  tibble::tibble(advan = 11,trans = 1,
+             base_name = c("R2T0","R2T3","R3T2","R2T4","R4T2","V2"),
              nm_name = c("K","K12","K21","K13","K31","V")),
-  data.frame(advan = 11,trans = 4,
-             base_name = c("R20","R23","V2","V3","R24","V4"),
-             relation = c("R20*V2", "R23*V2", NA , NA, "R24*V2", NA),
+  tibble::tibble(advan = 11,trans = 4,
+             base_name = c("R2T0","R2T3","V2","V3","R2T4","V4"),
+             relation = c("R2T0*V2", "R2T3*V2", NA , NA, "R2T4*V2", NA),
+             inv_relation = c("R2T0/V2", "R2T3/V2", NA , NA, "R2T4/V2", NA),
              nm_name = c("CL","Q2","V1","V2","Q3","V3")),
   ## add advan 12
-  data.frame(advan = 12,trans = 1,
-             base_name = c("R12","R20","R23","R32","R24","R42","V2"),
-             relation = NA,
+  tibble::tibble(advan = 12,trans = 1,
+             base_name = c("R1T2","R2T0","R2T3","R3T2","R2T4","R4T2","V2"),
              nm_name = c("KA","K","K23","K32","K24","K42","V2")),
-  data.frame(advan = 12,trans = 4,
-             base_name = c("R12","R20","R23","V2","V3","R24","V4"),
-             relation = c(NA,"R20*V2", "R23*V2", NA , NA, "R24*V2", NA),
+  tibble::tibble(advan = 12,trans = 4,
+             base_name = c("R1T2","R2T0","R2T3","V2","V3","R2T4","V4"),
+             relation = c(NA,"R2T0*V2", "R2T3*V2", NA , NA, "R2T4*V2", NA),
+             inv_relation = c(NA,"R2T0/V2", "R2T3/V2", NA , NA, "R2T4/V2", NA),
              nm_name = c("KA","CL","Q3","V2","V3","Q4","V4")),
   ## non closed form advans
-  data.frame(advan = 5,trans = NA,
-             base_name = c("RXY","VX"),
-             relation = NA,
+  tibble::tibble(advan = 5, trans = 1,
+             base_name = c("RXTY","VX"),
              nm_name = c("KXY","VX")),
-  data.frame(advan = 6,trans = NA,
-             base_name = c("RXY","VX"),
-             relation = NA,
+  tibble::tibble(advan = 6, trans = 1,
+             base_name = c("RXTY","VX"),
              nm_name = c("KXY","VX")),
-  data.frame(advan = 7,trans = NA,
-             base_name = c("RXY","VX"),
-             relation = NA,
+  tibble::tibble(advan = 7, trans = 1,
+             base_name = c("RXTY","VX"),
              nm_name = c("KXY","VX")),
-  data.frame(advan = 8,trans = NA,
-             base_name = c("RXY","VX"),
-             relation = NA,
+  tibble::tibble(advan = 8, trans = 1,
+             base_name = c("RXTY","VX"),
              nm_name = c("KXY","VX")),
-  data.frame(advan = 9,trans = NA,
-             base_name = c("RXY","VX"),
-             relation = NA,
+  tibble::tibble(advan = 9, trans = 1,
+             base_name = c("RXTY","VX"),
              nm_name = c("KXY","VX")),
-  data.frame(advan = 13,trans = NA,
-             base_name = c("RXY","VX"),
-             relation = NA,
+  tibble::tibble(advan = 13, trans = 1,
+             base_name = c("RXTY","VX"),
              nm_name = c("KXY","VX"))
 )
 dp <- tibble::as_tibble(dp)
@@ -1866,7 +1862,8 @@ available_advans <- dplyr::ungroup(available_advans)
 default_trans <- function(advan){
   sapply(advan, function(advan){
     default_trans_vec <- available_advans$trans[available_advans$advan %in% advan]
-    if(any(is.na(default_trans_vec))) return(NA) else return(1)
+    #if(any(is.na(default_trans_vec))) return(NA) else return(1)
+    return(1)
   })
 }
 
@@ -1894,14 +1891,16 @@ default_trans <- function(advan){
 #' }
 #' @export
 
-subroutine <- function(m, advan = NA, trans = NA, recursive = TRUE){
+subroutine <- function(m, advan = NA, trans = 1, recursive = TRUE){
   UseMethod("subroutine")
 }
 
 #' @export
-subroutine.nm_generic <- function(m, advan = NA, trans = NA, recursive = TRUE){
+subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE){
   
   dps <- available_advans
+  dps$trans[dps$trans %in% NA] <- 1
+  dp$trans[dp$trans %in% NA] <- 1
   
   old_m <- m
   old_advan <- advan(m)
@@ -1910,67 +1909,12 @@ subroutine.nm_generic <- function(m, advan = NA, trans = NA, recursive = TRUE){
   
   if(advan %in% old_advan & trans %in% old_trans) return(m)
   
-  if(recursive){
-    orig_call <- match.call()
-    
-    if(old_advan %in% c(5, 7, 6, 8, 9, 13)){
-
-      # the following code breaks down:
-      # ADVAN5 -> ADVAN2 TRANS2
-      # to:
-      # ADVAN5 -> ADVAN2 TRANS1 -> ADVAN2 TRANS2
-
-      # ADVAN5 -> ADVAN2 TRANS1
-      call1 <- orig_call
-      call1[["m"]] <- m
-      call1[["advan"]] <- advan
-      call1[["trans"]] <- default_trans(advan)
-      call1[["recursive"]] <- FALSE
-      m <- eval(call1)
-      
-      # ADVAN2 TRANS1 -> ADVAN2 TRANS2
-      call2 <- orig_call
-      call2[["m"]] <- m
-      call2[["advan"]] <- advan
-      call2[["trans"]] <- trans
-      call2[["recursive"]] <- FALSE
-      m <- eval(call2)
-      
-    }
-    
-    # the following code breaks down:
-    # ADVAN2 TRANS2 -> ADVAN5
-    # to:
-    # ADVAN2 TRANS2 -> ADVAN2 TRANS1 -> ADVAN5
-    
-    dadvan <- available_advans[
-      available_advans$advan %in% old_advan & 
-        !available_advans$trans %in% c(1, NA), ## non default trans
-      ]
-    
-    if(nrow(dadvan) > 0){       ## if non-default trans and non
-      
-      # ADVAN2 TRANS2 -> ADVAN2 TRANS1
-      call3 <- orig_call
-      call3[["m"]] <- m
-      call3[["advan"]] <- old_advan
-      call3[["trans"]] <- default_trans(old_advan)
-      call3[["recursive"]] <- FALSE
-      m <- eval(call3)
-      
-      # ADVAN2 TRANS1 -> ADVAN5
-      call4 <- orig_call
-      call4[["m"]] <- m
-      call4[["advan"]] <- advan
-      call4[["trans"]] <- trans
-      call4[["recursive"]] <- FALSE
-      m <- eval(call4)
-      
-    }    
-    
-    return(m)
-  }
-
+  if(is.na(advan)) advan <- old_advan
+  if(is.na(trans)) trans <- old_trans
+  
+  new_advan <- advan
+  new_trans <- trans
+  
   ## check source is valid
   if(!any(dps$advan %in% old_advan & dps$trans %in% old_trans)){
     message("advan/trans not available:")
@@ -1979,12 +1923,6 @@ subroutine.nm_generic <- function(m, advan = NA, trans = NA, recursive = TRUE){
     stop("stopping...", call. = FALSE)
   }
   
-  if(is.na(advan)) advan <- old_advan
-  if(is.na(trans)) trans <- old_trans
-  
-  new_advan <- advan
-  new_trans <- trans
-  
   if(!any(dps$advan %in% new_advan & dps$trans %in% new_trans)){
     message("advan/trans not available:")
     message("compatible combinations:")
@@ -1992,33 +1930,138 @@ subroutine.nm_generic <- function(m, advan = NA, trans = NA, recursive = TRUE){
     stop("stopping...", call. = FALSE)
   }
   
+  if(new_advan %in% c(6, 7, 8, 9, 13)){ ## first to ADVAN5
+    m <- m %>% subroutine(advan = 5)
+    old_advan <- advan(m)
+    old_trans <- trans(m)
+  }
+  
   m <- m %>% advan(new_advan) %>% trans(new_trans)
   
-  if(old_advan %in% c(5, 7)){
-    ## TODO: if general linear, get parameters in control
-    ##   and replace dp (or available_advans?)
+  dold <- dp %>% dplyr::filter(.data$advan %in% old_advan,
+                               .data$trans %in% old_trans)
+  
+  dnew <- dp %>% dplyr::filter(.data$advan %in% new_advan,
+                               .data$trans %in% new_trans)
+  
+  if(new_advan %in% 6) browser()
+  
+  if(new_advan %in% c(5, 6, 7, 8, 9, 13)){
     
-    ## detect KXY parameters
-    browser()
+    ## grab all existing variables.
+    tv_vars <- m %>% grab_variables("\\bTV\\w*?\\b")
+    vars <- gsub("TV", "", tv_vars)
+    
+    dtrans_detect <- dp %>% 
+      dplyr::group_by(.data$advan, .data$trans) %>%
+      dplyr::summarise(match_trans = all(vars %in% .data$nm_name),
+                       n_params = length(.data$nm_name)) %>%
+      dplyr::filter(.data$match_trans)
+    
+    if(nrow(dtrans_detect) < 0)
+      stop("can't match $PK parameters to an available advan/trans combo (available_trans)", call. = FALSE)
+    
+    dtrans_detect <- dtrans_detect[1, ] ## simplest
+    
+    old_matched_trans <- dtrans_detect$trans
+    old_matched_advan <- dtrans_detect$advan
+    
+    ## redefine dold
+    dnew <- dp %>% dplyr::filter(.data$advan %in% old_matched_advan,
+                                 .data$trans %in% old_matched_trans)
+    
+    dnew$advan <- new_advan
+    dnew$trans <- new_trans
+    
+    ## add KXY definitions to $PK
+    
+    for(i in seq_len(nrow(dold))){
+      if(!is.na(dold$inv_relation[i])){
+        inv_relation <- dold$inv_relation[i]
+        for(j in seq_len(nrow(dold))){
+          inv_relation <- gsub(dold$base_name[j], dold$nm_name[j], inv_relation)
+        }
+        definition_to_add <- paste0(
+          gsub("R", "K", dold$base_name[i]), " = ", inv_relation, "\n"
+        )
+      } else {
+        definition_to_add <- paste0(
+          gsub("R", "K", dold$base_name[i]), " = ", dold$nm_name[i], "\n"
+        )
+      }
+      
+      m <- m %>% target("PK") %>%
+        text(definition_to_add, append = TRUE) %>%
+        untarget()
+    }
     
   }
   
-  if(old_advan %in% c(6, 8, 9, 13)){
-    ## TODO: if $DES, get parameters in control
-    ##   and replace dp (or available_advans?)
+  
+  if(old_advan %in% c(5, 6, 7, 8, 9, 13)){
     
-    ## could be CL, Q, KXY and multiple combinations
-    ## how to specify which?
-    ## could pull out variables from $DES?
+    dold <- dnew
+    dold$advan <- old_advan
+    dold$trans <- old_trans
     
-    ## restriction: for now
-    ## $DES -> closed form, will only work if parameters are compatible
-    
-    ## TODO: detect 
-    
-    browser()
   }
   
+  
+  # if(0){
+  #   var_K <- m %>% grab_variables("\\bK\\b")
+  #   var_KA <- m %>% grab_variables("\\bKA\\b")
+  #   
+  #   if(length(var_K)){
+  #     m <- m %>% rename_parameter_(new_name = "K20", name = "K")
+  #     ## adjust dp accordingly
+  #     dp$nm_name[dp$advan %in% old_advan & dp$nm_name %in% "K"] <- "K20"
+  #   }
+  #   
+  #   if(length(var_KA)){
+  #     m <- m %>% rename_parameter_(new_name = "K12", name = "KA")
+  #     ## adjust dp accordingly
+  #     dp$nm_name[dp$advan %in% old_advan & dp$nm_name %in% "KA"] <- "K12"
+  #   }
+  #   
+  #   var_KXTY <- m %>% grab_variables("\\bK[0-9]+T[0-9]+\\b")
+  #   
+  #   if(length(var_KXTY)){ ## if any KXTY change all to KXTY notation
+  #     var_KXY <- m %>% grab_variables("\\bK[0-9]{2}\\b")
+  #     var_KXY_new <- gsub("\\bK([0-9])([0-9])\\b", "K\\1T\\2", var_KXY)
+  #     for(i in seq_along(var_KXY)){ 
+  #       m <- m %>% rename_parameter_(new_name = var_KXY_new[i],
+  #                                    name = var_KXY[i])
+  #     }
+  #   }
+  #   
+  #   var_KXY <- m %>% grab_variables("\\bK[0-9]{2}\\b")
+  #   if(!length(var_KXY)){
+  #     var_KXY <- m %>% grab_variables("\\bK[0-9]+T[0-9]+\\b")
+  #   } 
+  #   
+  #   ## make RXY representations
+  #   var_RXY <- var_KXY
+  #   var_RXY <- gsub("K", "R", var_RXY)
+  #   var_RXY <- gsub("\\bR([0-9])([0-9])\\b", "R\\1T\\2", var_RXY)
+  #   
+  #   ##var_KXY is now either KXY or KXTY notation.
+  #   ## modify dp
+  #   
+  #   dp_add <- tibble::tibble(
+  #     advan = new_advan,
+  #     trans = 1,
+  #     base_name = var_RXY,
+  #     nm_name = var_KXY
+  #   )
+  #   
+  #   dp <- dp[!dp$advan %in% new_advan, ]
+  #   
+  #   dp <- dplyr::bind_rows(dp, dp_add)      
+  # }
+  
+  ## get transformed initial thetas/omegas
+  ## TODO: offload into a common transform function.
+  ##  this is repeating code in coef
   thetas <- raw_init_theta(m)
   thetas$init_trans <- thetas$init
   thetas$init_trans[thetas$trans %in% c("LOG","LOGODDS")] <- 
@@ -2028,15 +2071,22 @@ subroutine.nm_generic <- function(m, advan = NA, trans = NA, recursive = TRUE){
   
   omegas <- raw_init_omega(m)
   
-  dold <- dp %>% dplyr::filter(.data$advan %in% old_advan,
-                               .data$trans %in% old_trans)
-    
-  dnew <- dp %>% dplyr::filter(.data$advan %in% new_advan,
-                               .data$trans %in% new_trans)
-
   d <- dplyr::full_join(dold, dnew, by = "base_name")
   
-  ## loop through rows 
+  # if(new_advan %in% c(5, 6, 7, 8, 9)){
+  #   ## do Volumes here
+  #   ## leave names alone otherwise they're strategy="remove"
+  #   volume_rows <- is.na(d$advan.y)
+  #   if(any(volume_rows)){
+  #     d$advan.y[volume_rows] <- unique(d$advan.y[!volume_rows])
+  #     d$trans.y[volume_rows] <- unique(d$trans.y[!volume_rows])
+  #     ## name same as old
+  #     d$nm_name.y[volume_rows] <- d$nm_name.x[volume_rows]
+  #   }
+  #   
+  # }
+  
+  ## loop through rows
   
   for(i in seq_len(nrow(d))){
     di <- d[i, ]
@@ -2048,10 +2098,16 @@ subroutine.nm_generic <- function(m, advan = NA, trans = NA, recursive = TRUE){
     }
     if(strategy == "none") next
     if(strategy == "rename") {
-
+      
       ## set initial estimates from current
       
-      relation <- di$relation.y
+      ## if going to trans 1, use inv_relation otherwise normal
+      if(new_trans %in% 1){
+        relation <- di$inv_relation.x
+      } else {
+        relation <- di$relation.y 
+      }
+      
       for(j in seq_len(nrow(d))){
         dj <- d[j, ]
         relation <- gsub(dj$base_name,
@@ -2096,7 +2152,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = NA, recursive = TRUE){
       m <- m %>% remove_parameter(di$nm_name.x)
     }
   }
-
+  
   ## parameters included now
   
   ##########################  
@@ -2110,20 +2166,69 @@ subroutine.nm_generic <- function(m, advan = NA, trans = NA, recursive = TRUE){
   
   ##########################
   
-  ## need a list of all relevant parameters
-  
-  ## for advans 1-4 they are in d
-  ## for advan 5, they are KXY
+  if(new_advan %in% c(5, 6, 7, 8, 9, 13)){
+
+    R_regex <- "R([0-9]+)T([0-9]+)"
+    R_names <- dnew$base_name[grepl(R_regex, dnew$base_name)]
+    
+    comp_from <- gsub(R_regex, "\\1", R_names)
+    comp_to <- gsub(R_regex, "\\2", R_names)
+    comp_from <- as.numeric(comp_from)
+    comp_to <- as.numeric(comp_to)
+    
+    n_compartments <- max(c(comp_from, comp_to))
+    
+    if(any(grepl("\\s*\\$MODEL", text(m)))){
+      ## there's already a $MODEL remove it
+      
+      models_text <- m %>% dollar("MODEL")
+      ## look for number of = signs
+      
+      models_text <- paste(models_text, collapse = "\\s")
+      models_text <- strsplit(models_text, "\\s")[[1]]
+      n_current_compartments <- 
+        length(which(grepl("\\=", models_text)))
+      
+      if(n_current_compartments != n_compartments){
+        m <- m %>% delete_dollar("MODEL") 
+      }
+    } else {
+      ## no $MODEL, create
+      models_text <- paste0("COMP = (COMP", seq_len(n_compartments), ")")
+      models_text <- c("$MODEL", models_text)
+      
+      m <- m %>% insert_dollar("MODEL", models_text, 
+                               after_dollar = "SUB")
+      
+    }
+    
+    if(new_advan %in% c(6, 7, 8, 9, 13)){ ## insert $DES
+      
+      browser()
+      
+      
+    } else {
+      if(any(grepl("\\s*\\$DES", text(m))))
+        m <- m %>% delete_dollar("DES")
+    }
+    
+  } else {
+    
+    if(any(grepl("\\s*\\$MODEL", text(m))))
+      m <- m %>% delete_dollar("MODEL")
+    
+    if(any(grepl("\\s*\\$DES", text(m))))
+      m <- m %>% delete_dollar("DES")
+    
+  }
   
   ## update $DES if present
-  
-  ## update $MODEL if present
-  #browser()
   
   m
 }
 #' @export
 subroutine.nm_list <- Vectorize_nm_list(subroutine.nm_generic, SIMPLIFY = FALSE)
+
 
 #' Compute diff between two NONMEM runs
 #' 
@@ -2323,8 +2428,9 @@ trans.nm_generic <- function(m, text){
       base_trans <- base_advans$trans[base_advans$advan %in% advan(m)]
       trans <- base_trans
     }
+    if(is.na(trans)) trans <- 1
     return(trans)
-  } 
+  }
   old_target <- target(m)
   m <- m %>% target("SUB") 
   
@@ -2344,7 +2450,8 @@ trans.nm_generic <- function(m, text){
   }
   
   ## if not 
-  m <- m %>% gsub_ctl("\\s*TRANSNA", "") %>%
+  m <- m %>% 
+    gsub_ctl("\\s*TRANS(NA|1)", "") %>%
     target(old_target)
   m
 }
