@@ -1300,19 +1300,21 @@ nm_tran.nm_list <- Vectorize_nm_list(nm_tran.nm_generic, SIMPLIFY = FALSE, invis
 
 #' @export
 in_cache <- function(r,
-                     cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE){
+                     cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE,
+                     return_checksums = FALSE){
   UseMethod("in_cache")
 }
 #' @export
 in_cache.nm_generic <- function(r,
-                                cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE){
+                                cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE,
+                                return_checksums = FALSE){
   r %>% write_ctl()
   ## get all md5_files
   
   run_cache_disk <- lapply(run_cache_paths(r), readRDS)
   if(length(run_cache_disk) > 0){
     current_checksums <- run_checksums(r)
-    matches <- sapply(run_cache_disk, function(i) {
+    checksums_reduced <- lapply(run_cache_disk, function(i) {
       
       if(cache_ignore_cmd){  ## remove cmd check
         keep <- !names(current_checksums) %in% "cmd"
@@ -1333,15 +1335,26 @@ in_cache.nm_generic <- function(r,
       }
       
       ## ignore names
-      names(current_checksums) <- NULL
-      names(i$checksums) <- NULL
+      #names(current_checksums) <- NULL
+      #names(i$checksums) <- NULL
+
+      list(
+        checksums = current_checksums,
+        stored_checksums = i$checksums
+        )
       
-      identical(i$checksums, current_checksums)
+      #identical(i$checksums, current_checksums)
     })
+
+    matches <- sapply(checksums_reduced,
+                      function(i) identical(i$checksums, 
+                                            i$stored_checksums))
+    
     if(any(matches)){
       return(TRUE)    ## if up to date, skip
     }
   }
+  if(return_checksums) return(checksums_reduced)
   return(FALSE)
 }
 #' @export
