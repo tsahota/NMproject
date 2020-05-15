@@ -1913,13 +1913,8 @@ available_advans <- dplyr::mutate(available_advans,
                                   label = ifelse(is.na(trans), paste0("a",advan), paste0("a",advan,"t",trans)))
 available_advans <- dplyr::ungroup(available_advans)
 
-
-
 #' @export
-dp
-
-#' @export
-available_advans
+.available_advans <- available_advans
 
 default_trans <- function(advan){
   sapply(advan, function(advan){
