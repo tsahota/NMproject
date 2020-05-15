@@ -2373,9 +2373,9 @@ add_mixed_param <- function(m, name,
   if(trans == "LOG"){
     m <- m %>% target(PK_PRED) %>%
       text("TV_NEWPARAM_=EXP(THETA(_N_PARAM_))
-            MU__MU_PARAM_=LOG(TV_NEWPARAM_)
-            _NEWPARAM_ = EXP(MU__MU_PARAM_+ETA(_MU_PARAM_))
-          ", append = TRUE) %>%
+MU__MU_PARAM_=LOG(TV_NEWPARAM_)
+_NEWPARAM_ = EXP(MU__MU_PARAM_+ETA(_MU_PARAM_))
+", append = TRUE) %>%
       target("THETA") %>%
       text(paste(signif(log(init),2), "      ; TV_NEWPARAM_ ; _UNIT_PARAM_ ; ",
                  trans), append = TRUE) %>%
