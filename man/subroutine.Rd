@@ -16,11 +16,10 @@ subroutine(m, advan = NA, trans = 1, recursive = TRUE)
 \item{recursive}{logical (default = TRUE). Internal argument, do not modify}
 }
 \description{
-This is currently experimental. Set/modify subroutine of an nm object
+This is currently experimental. Modify subroutine of an nm object
 }
 \details{
 Can only switch between subroutines listed in \code{available_advans}
- TODO: modify parameter initial estimates based on conversion
 }
 \examples{
 \dontrun{
@@ -30,5 +29,15 @@ trans(m)  ## 1
 
 m <- m \%>\% subroutine(ADVAN = 2, TRANS = 2)
 
+ds <- .available_advans \%>\%
+  filter(oral) \%>\%
+  mutate(
+      m = m1 \%>\% child(run_id = label) \%>\%
+        subroutine(advan = advan, trans = trans)
+  )
+
 }
+}
+\seealso{
+\code{\link{advan}}, \code{\link{advan}}
 }

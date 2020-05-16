@@ -1926,7 +1926,7 @@ default_trans <- function(advan){
 
 #' Subroutine
 #' 
-#' This is currently experimental. Set/modify subroutine of an nm object
+#' This is currently experimental. Modify subroutine of an nm object
 #' 
 #' @param m nm object
 #' @param advan character. desired ADVAN
@@ -1935,7 +1935,8 @@ default_trans <- function(advan){
 #' 
 #' @details
 #'  Can only switch between subroutines listed in \code{available_advans}
-#'  TODO: modify parameter initial estimates based on conversion
+#'
+#' @seealso \code{\link{advan}}, \code{\link{advan}}
 #' 
 #' @examples
 #' \dontrun{
@@ -1944,6 +1945,13 @@ default_trans <- function(advan){
 #' trans(m)  ## 1
 #' 
 #' m <- m %>% subroutine(ADVAN = 2, TRANS = 2)
+#' 
+#' ds <- .available_advans %>%
+#'   filter(oral) %>%
+#'   mutate(
+#'       m = m1 %>% child(run_id = label) %>%
+#'         subroutine(advan = advan, trans = trans)
+#'   )
 #' 
 #' }
 #' @export
