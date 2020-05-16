@@ -58,13 +58,14 @@ run_dir.nm_list <- run_dir.nm_generic
 #' @export
 cmd <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "cmd") else {
-    if(any(grepl("\\-clean\\=", text))) {
-      clean_number <- gsub(".*\\-clean\\=([0-9]+).*", "\\1", text)
+    clean_text <- text[grepl("\\-clean\\=", text)]
+    if(length(clean_text)) {
+      clean_number <- gsub(".*\\-clean\\=([0-9]+).*", "\\1", clean_text)
       clean_number <- as.numeric(clean_number)
       if(clean_number > 2)
         warning("use of -clean flag more than 2 is not recommended with NMproject.
 NMproject uses files in the NM_run directories instead of files copied back to main directory.
-see ?ls_tempfiles for post run clean up")
+see ?ls_tempfiles for post run clean up options")
     }
     custom_1d_field(m, "cmd", text, glue = TRUE)
   }

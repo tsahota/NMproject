@@ -150,8 +150,8 @@ test_that("nm object basic use",{
   ## log_CL = log_K + log_V
   ## tol = 0.01 for numerical precision
   expect_true(abs(log_CL - log_K - log_V) < 0.01)
-  
-  ds <- available_advans %>%
+
+  ds <- .available_advans %>%
     dplyr::filter(advan %in% c(2,4)) %>%
     dplyr::mutate(
       m = m1 %>% child(run_id = label) %>%
@@ -159,14 +159,6 @@ test_that("nm object basic use",{
     )
   
   expect_true(inherits(ds, "data.frame"))
-  
-  dollar_subs <- ds$m[-1] %>% dollar("SUB") %>% unlist()
-  names(dollar_subs) <- NULL
-  
-  expect_true(all.equal(
-    dollar_subs,
-    paste0("$SUB ADVAN", ds$advan[-1], " TRANS", ds$trans[-1])
-  ))
 
   ## use of stringr pipe
   mdummy <- m1 %ns>% stringr::str_replace("THETA", "DUMMY")
