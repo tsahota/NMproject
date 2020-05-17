@@ -192,6 +192,11 @@ nm_diff_app <- function(){
   nm_diff(m)
 }
 
+in_cache_app <- function(){
+  m <- get_single_object_for_app()
+  in_cache(m)
+}
+
 view_patch_app <- function(){
 
   ctx <- rstudioapi::getActiveDocumentContext()
