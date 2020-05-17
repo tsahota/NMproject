@@ -299,7 +299,7 @@ psn_style_scm <- function(base, run_in, dtest,
 #' @param statistic character (default = "statistic") name of statistic column
 #'   returned by FUN
 #'   
-#' @seealso \code{\link(ppc_whisker_plot)}, \code{\link(ppc_histogram_plot)}
+#' @seealso \code{\link{ppc_whisker_plot}}, \code{\link{ppc_histogram_plot}}
 #' @examples 
 #' \dontrun{
 #' 

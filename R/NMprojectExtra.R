@@ -1303,6 +1303,11 @@ nm_tran.nm_generic <- function(x){
 #' @export
 nm_tran.nm_list <- Vectorize_nm_list(nm_tran.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
+
+#' Test whether object is in cache or not
+#' 
+#' If TRUE run_nm() will skip model.  If FALSE run_nm() will run model
+#' 
 #' @export
 in_cache <- function(r,
                      cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE,
@@ -1964,7 +1969,7 @@ default_trans <- function(advan){
 #' @details
 #'  Can only switch between subroutines listed in \code{available_advans}
 #'
-#' @seealso \code{\link{advan}}, \code{\link{advan}}
+#' @seealso \code{\link{advan}}
 #' 
 #' @examples
 #' \dontrun{
@@ -2470,7 +2475,13 @@ rename_parameter <- function(m, ...){
   rename_parameter_(m, new_name, name)
 }
 
-
+#' get/set advan/trans/tol in ctl_contents
+#' 
+#' Will make no other changes to control file
+#' 
+#' @param m nm object
+#' @param text optional number/character number to set to
+#' @name advan
 #' @export
 advan <- function(m, text){
   UseMethod("advan")
@@ -2503,6 +2514,7 @@ advan.nm_generic <- function(m, text){
 #' @export
 advan.nm_list <- Vectorize_nm_list(advan.nm_generic)
 
+#' @rdname advan
 #' @export
 trans <- function(m, text){
   UseMethod("trans")
@@ -2551,11 +2563,7 @@ trans.nm_generic <- function(m, text){
 #' @export
 trans.nm_list <- Vectorize_nm_list(trans.nm_generic)
 
-#' @export
-advan <- function(m, text){
-  UseMethod("advan")
-}
-
+#' @rdname advan
 #' @export
 tol.nm_generic <- function(m, text){
   if(missing(text)){

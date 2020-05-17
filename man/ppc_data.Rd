@@ -60,5 +60,5 @@ m1s \%>\% ppc_data(EXPstat)
 }
 }
 \seealso{
-\code{\link(ppc_whisker_plot)}, \code{\link(ppc_histogram_plot)}
+\code{\link{ppc_whisker_plot}}, \code{\link{ppc_histogram_plot}}
 }
