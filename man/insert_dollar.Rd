@@ -2,7 +2,7 @@
 % Please edit documentation in R/NMprojectExtra.R
 \name{insert_dollar}
 \alias{insert_dollar}
-\title{Create new subroutine}
+\title{Insert a new subroutine into ctl_contents}
 \usage{
 insert_dollar(m, dollar, text, after_dollar)
 }
@@ -16,5 +16,5 @@ insert_dollar(m, dollar, text, after_dollar)
 \item{after_dollar}{character. Positioning of subroutine}
 }
 \description{
-Create new subroutine
+Insert a new subroutine into ctl_contents
 }
