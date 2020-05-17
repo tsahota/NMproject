@@ -2,7 +2,7 @@
 % Please edit documentation in R/NMprojectExtra.R
 \name{input_data}
 \alias{input_data}
-\title{Read in input dataset}
+\title{Read input dataset}
 \usage{
 input_data(m, filter = FALSE, na = ".", ...)
 }
@@ -16,5 +16,5 @@ input_data(m, filter = FALSE, na = ".", ...)
 \item{...}{additional arguments passed to either read_derived_data or read.csv}
 }
 \description{
-Read in input dataset
+Read input dataset
 }

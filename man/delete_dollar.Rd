@@ -2,7 +2,7 @@
 % Please edit documentation in R/NMprojectExtra.R
 \name{delete_dollar}
 \alias{delete_dollar}
-\title{Deleted subroutine}
+\title{Delete a $ subroutine from ctl_contents}
 \usage{
 delete_dollar(m, dollar)
 }
@@ -12,5 +12,5 @@ delete_dollar(m, dollar)
 \item{dollar}{character. Name of subroutine}
 }
 \description{
-Deleted subroutine
+Delete a $ subroutine from ctl_contents
 }

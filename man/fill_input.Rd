@@ -2,24 +2,26 @@
 % Please edit documentation in R/NMprojectExtra.R
 \name{fill_input}
 \alias{fill_input}
-\title{set $INPUT}
+\title{fill $INPUT}
 \usage{
 fill_input(m, ...)
 }
 \arguments{
 \item{m}{nm object}
 
-\item{keep}{character vector. Names of columns to keep}
-
-\item{rename}{named character vector. Renaming instructions}
+\item{...}{either keep, drop, rename}
 }
 \description{
-set $INPUT
+Uses dataset to fill $INPUT in ctl_contents
 }
 \examples{
 \dontrun{
 
  m1 <- m1 \%>\% fill_input(rename = c("DAT0" = "DATE"))
+ m1 \%>\% dollar("INPUT") ## view $INPUT
 
+ m1 <- m1 \%>\% fill_input(drop = "RATE")
+ m1 \%>\% dollar("INPUT")
+ 
 }
 }

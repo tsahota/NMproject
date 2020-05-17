@@ -728,17 +728,22 @@ fill_dollar_data <- function(m, data_name){
   m
 }
 
-#' set $INPUT
+#' fill $INPUT
+#' 
+#' Uses dataset to fill $INPUT in ctl_contents
 #' 
 #' @param m nm object
-#' @param keep character vector. Names of columns to keep
-#' @param rename named character vector. Renaming instructions
+#' @param ... either keep, drop, rename
 #' 
 #' @examples 
 #' \dontrun{
 #' 
 #'  m1 <- m1 %>% fill_input(rename = c("DAT0" = "DATE"))
+#'  m1 %>% dollar("INPUT") ## view $INPUT
 #' 
+#'  m1 <- m1 %>% fill_input(drop = "RATE")
+#'  m1 %>% dollar("INPUT")
+#'  
 #' }
 #' @export
 fill_input <- function(m, ...){
@@ -758,7 +763,7 @@ fill_input.nm_generic <- function(m, ...){
 fill_input.nm_list <- Vectorize_nm_list(fill_input.nm_generic, SIMPLIFY = FALSE)
 
 
-#' Read in input dataset
+#' Read input dataset
 #' 
 #' @param m nm object
 #' @param filter logical (default = FALSE). should NONMEM ignore statement be applied
@@ -819,7 +824,7 @@ input_data.default <- function(m, filter = FALSE, na = ".", ...){   ## old get_d
   d
 }
 
-#' Get/set ignore statement
+#' Get/set ignore statement from ctl_contents
 #' 
 #' @param ctl nm object
 #' @param ignore_char optional character. Ignore statement
@@ -854,7 +859,7 @@ gsub_ctl.nm_generic <- function(ctl, pattern, replacement, ..., dollar = NA_char
 #' @export
 gsub_ctl.nm_list <- Vectorize_nm_list(gsub_ctl.nm_generic, SIMPLIFY = FALSE)
 
-#' Deleted subroutine
+#' Delete a $ subroutine from ctl_contents
 #' 
 #' @param m nm object
 #' @param dollar character. Name of subroutine
@@ -873,7 +878,7 @@ delete_dollar.nm_generic <- function(m, dollar){
 #' @export
 delete_dollar.nm_list <- Vectorize_nm_list(delete_dollar.nm_generic, SIMPLIFY = FALSE)
 
-#' Create new subroutine
+#' Insert a new subroutine into ctl_contents
 #' 
 #' @param m nm object
 #' @param dollar character. Name of subroutine
@@ -923,7 +928,7 @@ param_info2 <- function(m){
   p_info <- dplyr::bind_rows(
     raw_init_theta(m),
     raw_init_omega(m),
-    raw_init_sigma(m),
+    raw_init_sigma(m)
   )
   p_info[!is.na(p_info$parameter),]
 }
@@ -1690,6 +1695,29 @@ wait_finish.nm_generic <- function(r, timeout=NA){
 }
 #' @export
 wait_finish.nm_list <- wait_finish.nm_generic
+
+
+#' Show lst file
+#'
+#' @param r object of class nm
+#' @export
+show_out <- function(r){
+  UseMethod("show_out")
+}
+
+#' @export
+show_out.nm <- function(r) {
+  show_file(r$output$psn.lst)
+}
+
+
+#' Show an uneditable version of the control file
+#'
+#' @param r nm object
+#' @export
+show_ctl <- function(r) {
+  UseMethod("show_ctl")
+}
 
 #' @export
 show_ctl.nm_generic <- function(r) {
@@ -5385,7 +5413,7 @@ nm_tree <- function(..., summary = FALSE){
     sink(file="/dev/null")
     m_row <- m %>% 
     {suppressMessages(
-      dplyr::right_join(nm_row(.), summary_wide(.)) 
+      dplyr::right_join(nm_row(.data), summary_wide(.data)) 
     )}
     sink()
   } else {
@@ -5463,7 +5491,7 @@ decision <- function(values = c(),
 
   drpl <- drake::drake_plan(
     decision_inputs = inputs,
-    pause = wait_input(decision_inputs)
+    pause = wait_input(.data$decision_inputs)
   )
   
   outdated <- drake::outdated(drake::drake_config(drpl))

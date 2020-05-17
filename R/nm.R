@@ -32,32 +32,6 @@ edit_file <- function(file_name){
       get("file.edit")(file_name)
 }
 
-#' Edit control file
-#'
-#' @param r object of class nm, a file name, or a run_id
-#' @export
-show_ctl <- function(r) {
-  UseMethod("show_ctl")
-}
-#' @export
-show_ctl.default <- function(r) {
-  edit_file(search_ctl_name(r))
-}
-
-#' Show lst file
-#'
-#' @param r object of class nm
-#' @export
-show_out <- function(r){
-  UseMethod("show_out")
-}
-
-#' @export
-show_out.nm <- function(r) {
-  show_file(r$output$psn.lst)
-}
-
-
 
 search_ctl_name <- function(r, models_dir=getOption("models.dir")){
   if(inherits(r,"nm")) ctl_name <- r$ctl

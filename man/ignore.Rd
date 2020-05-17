@@ -2,7 +2,7 @@
 % Please edit documentation in R/NMprojectExtra.R
 \name{ignore}
 \alias{ignore}
-\title{Get/set ignore statement}
+\title{Get/set ignore statement from ctl_contents}
 \usage{
 ignore(ctl, ignore_char)
 }
@@ -12,5 +12,5 @@ ignore(ctl, ignore_char)
 \item{ignore_char}{optional character. Ignore statement}
 }
 \description{
-Get/set ignore statement
+Get/set ignore statement from ctl_contents
 }
