@@ -303,34 +303,36 @@ psn_style_scm <- function(base, run_in, dtest,
 #' @examples 
 #' \dontrun{
 #' 
-#' idEXPstat <- function(d, ...){ ## example statistic function
-#'
-#' d %>% group_by(ID, ...) %>% filter(is.na(AMT)) %>%
-#'  summarise(
-#'    AUC = AUC(time = TIME, conc = DV),
-#'    CMAX = max(DV, na.rm = TRUE),
-#'    TMAX = TIME[which.max(DV)]
-#'  ) %>%
-#'  tidyr::gather(key = "exposure", value = "statistic", AUC:TMAX) %>%
-#'  ungroup()
+#' idEXPstat <- function(d, ...){ ## example individual statistic function
+#'  ## arg = nonmem dataset data.frame
+#'  ## return data.frame with statistic column
+#'   d %>% group_by(ID, ...) %>% filter(is.na(AMT)) %>%
+#'     summarise(
+#'       AUC = AUC(time = TIME, conc = DV),
+#'       CMAX = max(DV, na.rm = TRUE),
+#'       TMAX = TIME[which.max(DV)]
+#'     ) %>%
+#'     tidyr::gather(key = "exposure", value = "statistic", AUC:TMAX) %>%
+#'     ungroup()
 #'}
 #'
-#'EXPstat <- function(d, ...){ ## example statistic function
+#'EXPstat <- function(d, ...){ ## example summary statistic function
 #'  ## arg = nonmem dataset data.frame
 #'  ## return data.frame with statistic column
 #'  d %>% idEXPstat(...) %>%  ## reuse idEXPstat for individual stats
 #'    ## summarise over study and any other variables (...)
 #'    group_by(exposure, ...) %>%
 #'    summarise(
-#'    median = median(statistic, na.rm = TRUE),
-#'    cv = 100*sd(statistic, na.rm = TRUE)/mean(statistic, na.rm = TRUE)
-#'  ) %>%
-#'  tidyr::gather(key = "type", value = "statistic", median:cv)
+#'      median = median(statistic, na.rm = TRUE),
+#'      cv = 100*sd(statistic, na.rm = TRUE)/mean(statistic, na.rm = TRUE)
+#'    ) %>%
+#'    tidyr::gather(key = "type", value = "statistic", median:cv)
 #'}
 #' 
 #' m1s %>% ppc_data(EXPstat)
 #' 
 #' }
+#' @rdname ppc
 #' @export
 
 ppc_data <- function(r,  FUN, ..., pre_proc = identity, max_mod_no = NA, DV = "DV", statistic = "statistic"){
