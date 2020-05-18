@@ -20,5 +20,5 @@ Interactive: true
 
 Name: test if run_nm will skip
 Description: if TRUE, run_nm will skip
-Binding: in_cach_app
+Binding: in_cache_app
 Interactive: true
