@@ -6,7 +6,7 @@
 \alias{ppc}
 \alias{ppc_histogram_plot}
 \alias{ppc_data}
-\title{process data from PPC for plotting}
+\title{PPC functions: process data from simulation and plot}
 \usage{
 ppc_whisker_plot(d, group, var1, var2, statistic = "statistic")
 
@@ -16,10 +16,12 @@ ppc_data(r, FUN, ..., pre_proc = identity, max_mod_no = NA, DV = "DV",
   statistic = "statistic")
 }
 \arguments{
+\item{group, var1, var2}{grouping variables for plotting}
+
 \item{statistic}{character (default = "statistic") name of statistic column
 returned by FUN}
 
-\item{r}{nm object}
+\item{r}{nm object (simulation)}
 
 \item{FUN}{statistic function with NONMEM dataset as arg and
 returns data.frame with a column "statistic"}
@@ -33,7 +35,7 @@ returns data.frame with a column "statistic"}
 \item{max_mod_mo}{integer. Maximum model number to read (set low for debugging)}
 }
 \description{
-process data from PPC for plotting
+PPC functions: process data from simulation and plot
 }
 \examples{
 \dontrun{
@@ -64,10 +66,13 @@ EXPstat <- function(d, ...){ ## example summary statistic function
    tidyr::gather(key = "type", value = "statistic", median:cv)
 }
 
-m1s \%>\% ppc_data(EXPstat)
+dppc <- m1s \%>\% ppc_data(EXPstat)
+
+dppc \%>\% ppc_whisker_plot()
+dppc \%>\% ppc_forest_plot()
 
 }
 }
 \seealso{
-\code{\link{ppc_whisker_plot}}, \code{\link{ppc_histogram_plot}}
+\code{\link{nm_render}}
 }
