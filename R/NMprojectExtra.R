@@ -5501,9 +5501,11 @@ decision <- function(values = c(),
     inputs <- c(inputs, tools::md5sum(files))
   }
 
+  decision_inputs_exp <- rlang::parse_expr("decision_inputs")
+  ## that was just to avoid CRAN error with using decision_inputs below
   drpl <- drake::drake_plan(
     decision_inputs = inputs,
-    pause = wait_input(.data$decision_inputs)
+    pause = wait_input(!!decision_inputs_exp)
   )
   
   outdated <- drake::outdated(drake::drake_config(drpl))
