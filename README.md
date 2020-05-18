@@ -97,40 +97,44 @@ Preview code:
 preview("NONMEM/ADVAN2.mod")
 ```
 
-Copy it into your "Models" directory
+Stage file into project
 
 ```r
-copy_control("NONMEM/ADVAN2.mod","run1.mod")
+ls_code_library("NONMEM/ADVAN2.mod") %>%
+  stage()
 ```
-
-NOTE: default behaviour is to enforce the `runXX.mod` naming convention for control streams.  e.g. `run1.mod`, `run1vpc.mod`, `run2.mod`.
 
 Get started with a model development by using the following template from the PMX code library:
 
 ```r
-copy_script("R/nm.log.R")
+ls_code_library("R/nm.log.R"") %>%
+  stage() %>%
+  import()
 ```
 
 The following command will create an object of class `nm` with information about the run. This will not run the command yet.
 
 ```r
-mod1 <- nm("execute run1.mod -dir=1")
+m1 <- nm(run_id = "m1") %>%
+   prior_ctl("staging/Models/ADVAN2.mod") %>%
+   data_path("DerivedData/data.csv") %>%
+   cmd("execute {ctl_name} -dir={run_dir}")
 ```
 
 NOTE: the `-dir` option must always be specified when using NMproject
 
-If you have set up the `nmtran_exe_path` option configured (see FAQ below), you can run a quick test that your control stream and dataset pass NMTRAN checks without running NONMEM via:
+NOTE: If you have set up the `nmtran_exe_path` option configured (see FAQ below), you can run a quick test that your control stream and dataset pass NMTRAN checks without running NONMEM via:
 
 ```r
-nm_tran(mod1)
+nm_tran(m1) 
 ```
 
 This is especially useful to do on a cluster submission system where a job may take a while to come back with an error message.
 
-To run `mod1` use:
+To run `m1` use:
 
 ```r
-run(mod1)
+m1 <- m1 %>% run_nm()
 ```
 
 To view all runs and track progress:
@@ -139,12 +143,12 @@ To view all runs and track progress:
 shiny_nm()
 ```
 
-To do basic goodness of fit plots consider the `gof_xpose.R` function template in the PMX code library:
+To do basic goodness of fit plots consider the `basic_gof.Rmd` function template in the PMX code library:
 
 ```r
-copy_script("R/gof_xpose.R")
-source("R/gof_xpose.R")
-gof_xpose(mod1)
+ls_codelibrary("single_files/Scripts/basic_gof.Rmd") %>%
+  stage()
+m1 <- m1 %>% nm_render("Scripts/basic_gof.Rmd")
 ```
 
 
