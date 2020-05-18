@@ -18,7 +18,7 @@ Description: run nm_diff on selected object
 Binding: nm_diff_app
 Interactive: true
 
-Name: test if cached
-Description: run in_cache on selected object
+Name: test if run_nm will skip
+Description: if TRUE, run_nm will skip
 Binding: in_cach_app
 Interactive: true
