@@ -287,9 +287,9 @@ psn_style_scm <- function(base, run_in, dtest,
   m
 }
 
-#' process data from PPC for plotting
+#' PPC functions: process data from simulation and plot
 #' 
-#' @param r nm object
+#' @param r nm object (simulation)
 #' @param FUN statistic function with NONMEM dataset as arg and
 #'   returns data.frame with a column "statistic"
 #' @param ... additional arguments for FUN
@@ -298,8 +298,9 @@ psn_style_scm <- function(base, run_in, dtest,
 #' @param DV character (default = "DV")
 #' @param statistic character (default = "statistic") name of statistic column
 #'   returned by FUN
+#' @param group,var1,var2 grouping variables for plotting
 #'   
-#' @seealso \code{\link{ppc_whisker_plot}}, \code{\link{ppc_histogram_plot}}
+#' @seealso \code{\link{nm_render}}
 #' @examples 
 #' \dontrun{
 #' 
@@ -329,7 +330,10 @@ psn_style_scm <- function(base, run_in, dtest,
 #'    tidyr::gather(key = "type", value = "statistic", median:cv)
 #'}
 #' 
-#' m1s %>% ppc_data(EXPstat)
+#' dppc <- m1s %>% ppc_data(EXPstat)
+#' 
+#' dppc %>% ppc_whisker_plot()
+#' dppc %>% ppc_forest_plot()
 #' 
 #' }
 #' @rdname ppc

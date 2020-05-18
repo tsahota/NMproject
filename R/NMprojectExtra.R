@@ -5235,7 +5235,7 @@ make_OCC_every_dose <- function(dose_trigger, new_OCC_trigger){
     dplyr::distinct(!!id_group, .data$DPERIOD,.data$new_OCC)
 
   tmp <- tmp %>%
-    dplyr::group(!!id_group) %>%
+    dplyr::group_by(!!id_group) %>%
     dplyr::mutate(OCC = cumsum(.data$new_OCC))
 
   d$ROW <- seq_len(nrow(d))
