@@ -9,10 +9,11 @@ write_derived_data(d, name, ...)
 \arguments{
 \item{d}{data.frame. Data frame to be saved}
 
-\item{name}{name of file (without extension)}
+\item{name}{name of file (without extension). If not a path, will save to
+DerivedData directory}
 
-\item{...}{additional arguments to be passed dto write.csv}
+\item{...}{additional arguments to be passed to write.csv}
 }
 \description{
-Write derived data file.
+will write to (DerivedData) directory
 }

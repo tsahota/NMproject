@@ -7,19 +7,21 @@
 shiny_nm(m, envir = .GlobalEnv)
 }
 \arguments{
-\item{m}{either nm_list object, or data.frame or list contain nm_lists}
+\item{m}{either nm_list object, or data.frame or list or environment contain nm_lists}
 
 \item{envir}{if missing, the environment to search}
 }
 \description{
-Shiny view of NMproject
+Interactively monitor NONMEM runs.  This interface is intentionally limited to monitoring
+ activities only.  Running and post processing should be scripted
 }
 \examples{
 \dontrun{
 
-m1 \%>\% nm_shiny()
-d$m \%>\% nm_shiny()
-d \%>\% nm_shiny()
+shiny_nm()        ## use all objects in global workspace
+shiny_nm(m1)      ## only m1
+shiny_nm(d$m)     ## only d$m
+shiny_nm(d)       ## all nm_lists in d (data.frame/list/environment)
 
 }
 }

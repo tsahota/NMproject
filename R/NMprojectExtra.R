@@ -4950,6 +4950,7 @@ convert_to_simulation.nm_list <- Vectorize_nm_list(convert_to_simulation.nm_gene
 
 ## TODO: get Renvironment_info to skip unparseable scripts
 
+#' @name ppc
 #' @export
 ppc_whisker_plot <- function(d, group, var1, var2, statistic = "statistic"){
   requireNamespace("ggplot2")
@@ -4972,6 +4973,7 @@ ppc_whisker_plot <- function(d, group, var1, var2, statistic = "statistic"){
   p
 }
 
+#' @name ppc
 #' @export
 ppc_histogram_plot <- function(d, var1, var2, statistic = "statistic"){
   requireNamespace("ggplot2")
@@ -4991,14 +4993,6 @@ ppc_histogram_plot <- function(d, var1, var2, statistic = "statistic"){
 
   p
 
-}
-
-#' @export
-ppc_plots <- function(r, .f, ..., statistic = "statistic"){
-  dppc <- r %>% ppc_data(.f, statistic = statistic)
-  p1 <- dppc %>% ppc_whisker_plot(..., statistic = statistic)
-  p2 <- dppc %>% ppc_histogram_plot(..., statistic = statistic)
-  list(p1, p2)
 }
 
 #' @export
@@ -5084,17 +5078,24 @@ cov_cov_plot <- function(d,
 
 #' Write derived data file.
 #'
+#' will write to (DerivedData) directory
+#' 
 #' @param d data.frame. Data frame to be saved
-#' @param name name of file (without extension)
-#' @param ...  additional arguments to be passed dto write.csv
+#' @param name name of file (without extension). If not a path, will save to
+#'  DerivedData directory
+#' @param ...  additional arguments to be passed to write.csv
 #' @export
 
 write_derived_data <- function(d, name, ...){
 
   name <- tools::file_path_sans_ext(name)
-
-  RDS_name <- file.path("DerivedData",paste0(name,".RDS"))
-  csv_name <- file.path("DerivedData",paste0(name,".csv"))
+  if(dirname(name) %in% "."){
+    RDS_name <- file.path("DerivedData",paste0(name,".RDS"))
+    csv_name <- file.path("DerivedData",paste0(name,".csv"))
+  } else {  ## directory is specified
+      RDS_name <- paste0(name,".RDS")
+      csv_name <- paste0(name,".csv")
+  }
 
   d <- as.data.frame(d)
   if(!inherits(d, "data.frame")) stop("d needs to be a data.frame or coercible into one")
@@ -5117,7 +5118,6 @@ write_derived_data <- function(d, name, ...){
 
 read_derived_data <- function(name, na = ".", silent = FALSE, ...){
 
-  ## TODO: expand to other types of argument
   if(length(name) != 1) stop("name should have length 1", call. = FALSE)
 
   load_file <- NA
@@ -5249,15 +5249,19 @@ make_OCC_every_dose <- function(dose_trigger, new_OCC_trigger){
 }
 
 #' Shiny view of NMproject
-#'
-#' @param m either nm_list object, or data.frame or list contain nm_lists
+#' 
+#' Interactively monitor NONMEM runs.  This interface is intentionally limited to monitoring
+#'  activities only.  Running and post processing should be scripted
+#' 
+#' @param m either nm_list object, or data.frame or list or environment contain nm_lists
 #' @param envir if missing, the environment to search
 #' @examples
 #' \dontrun{
 #'
-#' m1 %>% nm_shiny()
-#' d$m %>% nm_shiny()
-#' d %>% nm_shiny()
+#' shiny_nm()        ## use all objects in global workspace
+#' shiny_nm(m1)      ## only m1
+#' shiny_nm(d$m)     ## only d$m
+#' shiny_nm(d)       ## all nm_lists in d (data.frame/list/environment)
 #'
 #' }
 #' @export
