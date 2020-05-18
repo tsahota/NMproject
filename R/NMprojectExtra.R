@@ -5519,6 +5519,76 @@ decision <- function(values = c(),
   
 }
 
+#' Write bootstrap dataset
+#'
+#' @param m nm object
+#' @param replicates numeric vector of bootstrap replicate numbers
+#' @param dboot_rds path to bootstrap RDS file
+#' @export
+make_boot_df <- function(m, replicates, dboot_rds){
+  
+  if(!requireNamespace("rsample"))
+    stop("install rsample", call. = FALSE)
+  
+  write_boot_replicate <- function(rsplit, dbase, csv_name, id = "ID"){
+    
+    ## need an orginal dataset.
+    dd_boot <- rsample::analysis(rsplit)
+    dd_boot[[id]] <- 1:nrow(dd_boot)
+    
+    dd_boot <- dd_boot %>%
+      dplyr::inner_join(dbase)
+    
+    dd_boot %>%
+      write_derived_data(csv_name)
+    
+    return(csv_name)
+    
+  }
+  
+  
+  drpl <- suppressWarnings(
+    drake::drake_plan(
+      base_data = data_path(m1),
+      base_data_dir = tools::file_path_sans_ext(base_data),
+      dboots_big = readRDS(drake::file_in(!!dboot_rds)),
+      dboot = dboots_big[replicates, ],
+      dbase = input_data(m1, filter = TRUE),
+      csv_name = file.path(base_data_dir, paste0("boot", 1:nrow(dboot), ".csv")),
+      csv_name2 = write_boot_replicate(dboot$splits[[1]], 
+                                       dbase, 
+                                       drake::file_out(csv_name[1]),
+                                       id = "ID")
+    )
+  )
+  
+  ## get csv_names as own variable for later
+  csv_names <- file.path(tools::file_path_sans_ext(data_path(m1)),
+                         paste0("boot",replicates, ".csv"))
+  
+  drpl_add <- drpl %>% dplyr::filter(target == "csv_name2")
+  
+  drpl_repl <- tibble::tibble(target = paste0("csv_name", replicates),
+                              command = drpl_add$command)
+  
+  drpl_repl$command <- sapply(seq_along(replicates), function(i){
+    command <- drpl_repl$command[i]
+    command <- gsub("\\[\\[1\\]\\]",paste0("[[",replicates[i],"]]"), command) 
+    command <- gsub("csv_name\\[1\\]",paste0("'",csv_names[i],"'"), command) 
+  })
+  
+  drpl <- dplyr::anti_join(drpl, drpl_add)
+  drpl <- dplyr::bind_rows(drpl, drpl_repl)
+  
+  suppressMessages(suppressWarnings({
+    drake::make(drpl)    
+  }))
+  
+  return(tibble::tibble(data_path = csv_names))
+  
+}
+
+
 ###############
 
 ## mrgsolve method extension
