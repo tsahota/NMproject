@@ -4061,8 +4061,7 @@ nm_render.nm_generic <- function(m,
         if(any(matches)){
           message("nm_render cache found, skipping... use nm_render(force = TRUE) to override")
           ## pick highest available version
-          # ## update object and return
-          # m <- m %>% result_files(...)
+          m <- m %>% result_files(output_file)
           return(invisible(m))    ## if up to date, skip
         }
       } 
@@ -4269,9 +4268,11 @@ summary.nm_generic <- function(object, ref_model = NA, parameters = c("none", "n
 #' }
 
 #' @export
-summary_wide <- function(..., parameters = c("none", "new", "all")){
+summary_wide <- function(..., parameters = c("none", "new", "all"), m = TRUE){
   parameters <- match.arg(parameters)
-  summary(..., parameters = parameters)
+  d <- summary(..., parameters = parameters)
+  if(m) d$m <- c(...)
+  d
 }
 
 #' @export
@@ -5525,7 +5526,11 @@ decision <- function(values = c(),
 #' @param replicates numeric vector of bootstrap replicate numbers
 #' @param dboot_rds path to bootstrap RDS file
 #' @export
-make_boot_df <- function(m, replicates, dboot_rds){
+nm_boot <- function(m, replicates, dboot_rds = "dboots_big.RDS"){
+  
+  dboot_rds <- file.path(
+    tools::file_path_sans_ext(data_path(m)), dboot_rds
+  )
   
   if(!requireNamespace("rsample"))
     stop("install rsample", call. = FALSE)
@@ -5584,7 +5589,14 @@ make_boot_df <- function(m, replicates, dboot_rds){
     drake::make(drpl)    
   }))
   
-  return(tibble::tibble(data_path = csv_names))
+  dboot <- tibble::tibble(data_path = csv_names, rep = replicates)
+  dboot <- dboot %>%
+    dplyr::mutate(
+      m = m %>% child(.data$rep) %>%
+        data_path(.data$data_path)
+    )
+  
+  return(dboot$m)  ## only return the nm_list
   
 }
 
