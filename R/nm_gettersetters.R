@@ -174,7 +174,7 @@ result_files <- function(r, text){
 #' @export
 result_files.nm_generic <- function(r, text){
   if(missing(text)) return(r[["result_files"]])
-  r[["result_files"]] <- c(r[["result_files"]], text)
+  r[["result_files"]] <- unique(c(r[["result_files"]], text))
   r
 }
 #' @export
