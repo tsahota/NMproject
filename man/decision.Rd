@@ -4,10 +4,10 @@
 \alias{decision}
 \title{make decision point}
 \usage{
-decision(values = c(), files = c(), auto_decision = TRUE, outcome)
+decision(inputs = c(), files = c(), auto_decision = TRUE, outcome)
 }
 \arguments{
-\item{values}{(optional) non file names upon which decision depends}
+\item{inputs}{(optional) non file names upon which decision depends}
 
 \item{files}{(optional) file names upon which decision depends}
 
