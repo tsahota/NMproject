@@ -5458,12 +5458,12 @@ nm_tree <- function(..., summary = FALSE){
 #' Requests inputs (\code{values} and \code{files}) that you base a
 #' decision on and stop for users to remake decision if inputs change
 #' 
-#' @param values (optional) non file names upon which decision depends
+#' @param inputs (optional) non file names upon which decision depends
 #' @param files (optional) file names upon which decision depends
 #' @param auto_decision (optional) logical. logical statement for automatic decisions
 #' @param outcome character. Description of the decision outcome
 #' @export 
-decision <- function(values = c(), 
+decision <- function(inputs = c(), 
                      files = c(), 
                      auto_decision = TRUE,
                      outcome){
@@ -5481,20 +5481,27 @@ decision <- function(values = c(),
     inputs  ## create inputs dependency
     cat(crayon::underline("manual decision check\n"))
     cat("decision outcome:\n", outcome)
-    ans <- readline("Is this decision correct? [y/n/esc]:\n")
+    ans <- readline("Is this decision correct? [y]es/[n]o/[c]heck:\n")
     if(ans %in% ""){
       stop("blank detected (if in R Notebooks, make sure no blank line between decision() and end of chunk")
     }
-    if(!ans %in% "y"){
+    if(nchar(ans) > 1){
+      stop("give single character response", call. = FALSE)
+    }
+    if(ans %in% "n"){
       stop(error_msg, call. =  FALSE)
     }
-    return(TRUE)
+    if(ans %in% "c"){
+      message("check inputs and files with outcome, then re-execute")
+    }
+    if(ans %in% "y"){
+      return(TRUE)
+    }
+    stop("invalid response", call. = FALSE)
   }
 
-  inputs <- c()  
-  if(length(values)){
-    inputs <- c(inputs, values)
-  }
+  if(!length(inputs)) inputs <- c()
+  
   if(length(files)){
     if(!all(file.exists(files))){
       stop("file(s) do not exist", call. = FALSE)
@@ -5599,6 +5606,15 @@ nm_boot <- function(m, replicates, dboot_rds = "dboots_big.RDS"){
   return(dboot$m)  ## only return the nm_list
   
 }
+
+## TODO: no_rerun()
+##  stops instead of rerunning.
+##  traceability check
+
+## TODO: nm_render use drake instead
+##  it will work better probably (evaluate this)
+
+## TODO: decision give message if "esc" is hit
 
 
 ###############
