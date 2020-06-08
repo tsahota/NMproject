@@ -135,6 +135,8 @@ apply_patch <- function(m, patch_name){
   patch_cmd <- paste("patch -i", patch_path, ctl_paths)
   patch_cmd <- paste(patch_cmd, collapse = " ; ")
   
+  unlink(paste0(ctl_paths, ".rej"))
+  
   ## for some reason no "patch" on AZ rstudio server :(
   ## use system_nm instead
   system_nm(patch_cmd, dir = getwd())
