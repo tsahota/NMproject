@@ -132,9 +132,9 @@ apply_patch <- function(m, patch_name){
   
   ctl_paths <- ctl_path(m)
   
+  unlink(paste0(ctl_paths, ".rej"))
   patch_cmd <- paste("patch -i", patch_path, ctl_paths)
   patch_cmd <- paste(patch_cmd, collapse = " ; ")
-  
   unlink(paste0(ctl_paths, ".rej"))
   
   ## for some reason no "patch" on AZ rstudio server :(
