@@ -3291,67 +3291,6 @@ init_sigma <- function(m, replace){
   }
 }
 
-#' get/set parameter values
-#' 
-#' @param m nm object
-#' @param replace optional argument to replace
-#' 
-#' @examples
-#' \dontrun{
-#' 
-#' m1 %>% pull_init_theta() %>%
-#'   mutate_cond(
-#'     name %in% "CL",
-#'     init = 30
-#'   ) %>%
-#'   push_init_theta()
-#' 
-#' } 
-#' 
-#' @name push_init_theta
-#' @export
-pull_init_theta <- function(m){
-  init <- init_theta(m)
-  attr(init, "object") <-  m
-  init
-}
-
-#' @rdname push_init_theta
-#' @export
-push_init_theta <- function(replace, m) {
-  if(missing(m)) m <- attr(replace, "object")
-  init_theta(m, replace)
-}
-
-#' @rdname push_init_theta
-#' @export
-pull_init_omega <- function(m){
-  init <- init_omega(m)
-  attr(init, "object") <-  m
-  init
-}
-#' @rdname push_init_theta
-#' @export
-push_init_omega <- function(replace, m) {
-  if(missing(m)) m <- attr(replace, "object")
-  init_omega(m, replace)
-}
-
-
-#' @rdname push_init_theta
-#' @export
-pull_init_sigma <- function(m){
-  init <- init_sigma(m)
-  attr(init, "object") <-  m
-  init
-}
-#' @rdname push_init_theta
-#' @export
-push_init_sigma <- function(replace, m) {
-  if(missing(m)) m <- attr(replace, "object")
-  init_sigma(m, replace)
-}
-
 update_variable_in_text_numbers <- function(m, before_number, after_number){
   
   before_regex <- paste0("\\b", before_number)
