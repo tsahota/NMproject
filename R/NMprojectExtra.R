@@ -3217,7 +3217,40 @@ print.nm_subroutine <- function(x, ...){
   cat(paste0(format(seq_along(x), width = 3),"| ",x), sep = "\n")
 }
 
-
+#' Get/set initial parameters
+#' 
+#' @param m nm object
+#' @param replace optional tibble for replacement
+#' 
+#' @examples
+#' \dontrun{
+#' 
+#'  ## fix THETA on KA
+#'   ip <- init_theta(m1)
+#'   ip$FIX[ip$name %in% "KA"] <- TRUE
+#'   m1 <- m1 %>% init_theta(ip)
+#'   
+#'  ## fix OMEGA on KA to 0.0225
+#'   ip <- init_omega(m1)
+#'   ip$init[ip$name %in% "IIV_KA"] <- 0.0225
+#'   ip$FIX[ip$name %in% "IIV_KA"] <- TRUE
+#'   m1 <- m1 %>% init_omega(ip)
+#'   
+#'  ## perturb all log transformed parameters by ~10%
+#'   ip <- init_theta(m1)
+#'   ip <- ip %>% mutate(
+#'     init = ifelse(
+#'       trans %in% "LOG",
+#'       rnorm(length(init), mean = init, sd = 0.1),
+#'       init
+#'     )
+#'   )
+#'   m1 <- m1 %>% init_theta(ip)
+#'  
+#' 
+#' }
+#' @name init_theta
+#' @export
 init_theta <- function(m, replace){
   d <- raw_init_theta(m)
   d$orig_line <- d$line
@@ -3239,6 +3272,8 @@ init_theta <- function(m, replace){
   }
 }
 
+#' @rdname init_theta
+#' @export
 init_omega <- function(m, replace){
   d <- raw_init_omega(m)
   d$orig_line <- d$line
@@ -3265,6 +3300,8 @@ init_omega <- function(m, replace){
   }
 }
 
+#' @name init_theta
+#' @export
 init_sigma <- function(m, replace){
   d <- raw_init_sigma(m)
   d$orig_line <- d$line
