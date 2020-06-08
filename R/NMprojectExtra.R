@@ -4034,7 +4034,7 @@ nm_render.nm_generic <- function(m,
   if(is.na(output_file))
     output_file <- paste0(
       basename(tools::file_path_sans_ext(input)),
-      ".",run_dir(m),".html"
+      ".",run_dir(m),".nb.html"
     )
   
   if("m" %in% names(args))
@@ -5483,7 +5483,7 @@ decision <- function(inputs = c(),
     cat("decision outcome:\n", outcome)
     ans <- readline("Is this decision correct? [y]es/[n]o/[c]heck:\n")
     if(ans %in% ""){
-      stop("blank detected (if in R Notebooks, make sure no blank line between decision() and end of chunk")
+      stop("blank detected (if in R Notebooks, make sure decision() is at end of chunk with no blank line in between)")
     }
     if(nchar(ans) > 1){
       stop("give single character response", call. = FALSE)
@@ -5492,7 +5492,7 @@ decision <- function(inputs = c(),
       stop(error_msg, call. =  FALSE)
     }
     if(ans %in% "c"){
-      message("check inputs and files with outcome, then re-execute")
+      return(FALSE)
     }
     if(ans %in% "y"){
       return(TRUE)
@@ -5517,14 +5517,27 @@ decision <- function(inputs = c(),
   )
   
   outdated <- drake::outdated(drake::drake_config(drpl))
-  if(!length(outdated)){
+
+  ## if up-to-date and pause/outcome is TRUE  
+  previous_outcome <- try(drake::readd("pause"), silent = TRUE)
+  if(inherits(previous_outcome, "try-error")) previous_outcome <- FALSE
+  
+  if(!length(outdated) & previous_outcome){
     message("decision inputs haven't changed, trusting that decision is still correct")
+    suppressMessages({
+      drake::make(drpl)
+    })  
+  } else {
+    suppressMessages({
+      drake::clean("pause")
+      drake::make(drpl, force = TRUE)
+    })
+    current_outcome <- try(drake::readd("pause"), silent = TRUE)
+    if(inherits(current_outcome, "try-error")) current_outcome <- FALSE
+    
+    if(!current_outcome) ## if outcome = FALSE, then "[c]heck". ([n]o makes error)
+      message("make decision again (check inputs and files), then re-execute")
   }
-  
-  suppressMessages({
-    drake::make(drpl)
-  })  
-  
 }
 
 #' Write bootstrap dataset
