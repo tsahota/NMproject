@@ -29,7 +29,7 @@ test_that("Project has basic functionality",{
   options(code_library_path=c(system.file("extdata/CodeLibrary",package="NMproject")))
   expect_true(length(getOption("code_library_path"))>0)
   
-
+  #browser()
   setup_nm_demo(overwrite = TRUE)
   expect_true(file.exists("DerivedData/THEOPP.csv"))
 
