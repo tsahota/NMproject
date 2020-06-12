@@ -126,22 +126,58 @@ view_patch <- function(patch_name){
 #' @export
 apply_patch <- function(m, patch_name){
   
-  patch_path <- file.path(getOption("models.dir"), "patches", patch_name)  
+  patch_path <- file.path(getOption("models.dir"), 
+                          "patches", 
+                          patch_name)
   
-  write_ctl(m)
+  #write_ctl(m) 
   
   ctl_paths <- ctl_path(m)
   
-  unlink(paste0(ctl_paths, ".rej"))
   patch_cmd <- paste("patch -i", patch_path, ctl_paths)
   patch_cmd <- paste(patch_cmd, collapse = " ; ")
-  unlink(paste0(ctl_paths, ".rej"))
   
   ## for some reason no "patch" on AZ rstudio server :(
   ## use system_nm instead
-  system_nm(patch_cmd, dir = getwd())
+
+  ## 1.save the file via ssh  
+  ## remove from orig and rej files in system_nm instead of R
+  ##  because sometimes delay
+  ## also get modified file via the command (to avoid file sync issue)
   
-  m <- m %>% ctl_contents(ctl_path(m), update_ctl = FALSE)
+  patch_cmd <- paste0(
+    ## save the file via ssh  
+    paste0("echo ", 
+           shQuote(gsub("\\$", "\\\\$", paste(text(as_nm_generic(m)), collapse = "\n"))),
+           " > ", ctl_paths), ";",
+    ## remove orig and rej files
+    paste0("rm -f ", paste0(ctl_paths, ".orig")), ";",
+    paste0("rm -f ", paste0(ctl_paths, ".rej")), ";",
+#    paste0("ls ", paste0(ctl_paths), "*;"),
+#    paste0("md5sum ", paste0(ctl_paths), ";"),
+    patch_cmd, ";",
+#    paste0("rm -f ", paste0(ctl_paths, ".orig")), ";",
+#    paste0("rm -f ", paste0(ctl_paths, ".rej")), ";",
+#    paste0("ls ", paste0(ctl_paths), "*;"),
+#    paste0("md5sum ", paste0(ctl_paths), ";"),
+    "echo patched file below ;",
+    paste0("cat ", ctl_paths)
+  )
+  
+  out <- system_nm(patch_cmd, dir = getwd(), intern = TRUE)
+  
+  out_file <- out[seq_along(out) > match("patched file below" , out)]
+  preamble <- out[seq_along(out) < match("patched file below" , out)]
+  cat(preamble, sep = "\n")
+
+  was_nm_list <- inherits(m, "nm_list")
+  
+  m <- as_nm_generic(m) %>% 
+    ctl_contents_simple(out_file)
+  
+  if(was_nm_list) m <- as_nm_list(m)
+  
+  #print(m %>% dollar("SIGMA"))
   
   invisible(m)
   
