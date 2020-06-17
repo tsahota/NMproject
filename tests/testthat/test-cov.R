@@ -58,10 +58,12 @@ test_that("covariate modelling",{
                    state = "linear",
                    continuous = FALSE)
   
-  d_f1 <- m0 %>% covariate_step_setup(run_id = "m0_f1",
-                                      run_in = "Models/m0_cov",
-                                      dtest = dtest,
-                                      direction = "forward")
+  d_f1 <- m0 %>% covariate_step_tibble(
+    run_id = "m0_f1",
+    run_in = "Models/m0_cov",
+    dtest = dtest,
+    direction = "forward"
+  )
   
   d_f1$m %>% dollar("PK")
   
