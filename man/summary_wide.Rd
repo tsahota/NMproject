@@ -7,7 +7,8 @@ summary_wide <- function(..., parameters = c("none", "new", "all")){
   UseMethod("summary_wide")
 }}
 \usage{
-summary_wide(..., parameters = c("none", "new", "all"), m = TRUE)
+summary_wide(..., parameters = c("none", "new", "all"), m = TRUE,
+  trans = TRUE)
 }
 \description{
 #' @export

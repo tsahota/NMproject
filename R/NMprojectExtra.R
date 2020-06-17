@@ -4244,9 +4244,9 @@ summary.nm_generic <- function(object, ref_model = NA, parameters = c("none", "n
 #' }
 
 #' @export
-summary_wide <- function(..., parameters = c("none", "new", "all"), m = TRUE){
+summary_wide <- function(..., parameters = c("none", "new", "all"), m = TRUE, trans = TRUE){
   parameters <- match.arg(parameters)
-  d <- summary(..., parameters = parameters)
+  d <- summary(..., parameters = parameters, trans = trans)
   if(m) d$m <- c(...)
   d
 }
@@ -4859,7 +4859,7 @@ param_cov_diag <- function(r, param, cov, ..., categorical = FALSE, plot_tv = TR
 
   pk_block <- ctl[[pk_dollar]]
 
-  pk_block <- nonmem_code_to_r(pk_block)
+  pk_block <- nonmem_code_to_r(pk_block, eta_to_0 = FALSE)
 
   pk_block_param <- parse(text = c(pk_block, param))
   pk_block_tvparam <- parse(text = c(pk_block,tvparam))
@@ -5603,7 +5603,14 @@ nm_boot <- function(m, replicates, dboot_rds = "dboots_big.RDS"){
 ## TODO: nm_render use drake instead
 ##  it will work better probably (evaluate this)
 
-## TODO: decision give message if "esc" is hit
+## TODO: bug in auto_decision being treated as manual
+## TODO: decision stopping even selected y in a script
+##         maybe drake doesn't work with environments?
+
+## TODO: ignore split between getter and setter
+## TODO: ignore -> fill_ignore (name conflict with drake)
+## TODO: fill_ignore() should eliminate all ignores
+
 
 
 ###############
