@@ -63,7 +63,7 @@ run_nm_batch <- function(m, threads = 10, ...){
 #' 
 #' @return tibble::tibble dtest with appended columns 
 
-covariate_step_setup <- function(base, run_id, run_in = getOption("models.dir"), dtest, direction = c("forward", "backward"), ...){
+covariate_step_tibble <- function(base, run_id, run_in = getOption("models.dir"), dtest, direction = c("forward", "backward"), ...){
   
   direction <- match.arg(direction)
   
@@ -251,10 +251,10 @@ psn_style_scm <- function(base, run_in, dtest,
   bi <- 1
   while(TRUE){ ## foward step
     run_id <- paste0(base_run_id, "_", fi)
-    d <- m %>% covariate_step_setup(run_id = run_id,
-                                    run_in = run_in,
-                                    dtest = dtest,
-                                    direction = "forward")
+    d <- m %>% covariate_step_tibble(run_id = run_id,
+                                     run_in = run_in,
+                                     dtest = dtest,
+                                     direction = "forward")
     
     d <- d$m %>% run_nm() %>% wait_finish()
     
@@ -271,10 +271,10 @@ psn_style_scm <- function(base, run_in, dtest,
   
   while(TRUE){
     run_id <- paste0(forward_run_id, "_", bi)
-    d <- m %>% covariate_step_setup(run_id = run_id,
-                                    run_in = run_in,
-                                    dtest = dtest,
-                                    direction = "backward")
+    d <- m %>% covariate_step_tibble(run_id = run_id,
+                                     run_in = run_in,
+                                     dtest = dtest,
+                                     direction = "backward")
     
     d$m <- d$m %>% run_nm() %>% wait_finish()
     
