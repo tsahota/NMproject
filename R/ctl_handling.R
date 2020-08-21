@@ -502,7 +502,7 @@ change_to_sim <- function(ctl_lines,subpr=1,seed=1){
 #' @param ctl object coercible to ctl_list
 #' @param param character. Name of parameter
 #' @param cov character. Name of covariate
-#' @param state numeric. Number of state
+#' @param state numeric or character. Number/name of state (see details)
 #' @param continuous logical (default = TRUE). is covariate continuous?
 #' @param time_varying optional logical. is the covariate time varying?
 #' @param additional_state_text optional character. custom state variable to be passed to param_cov_text
@@ -512,6 +512,46 @@ change_to_sim <- function(ctl_lines,subpr=1,seed=1){
 #' @param init optional numeric/character vector.  Initial estimate of additional parameters
 #' @param lower optional numeric/character vector.  lower bound of additional parameters
 #' @param upper optional numeric/character vector.  Upper bound of additional parameters
+#' 
+#' @details 
+#' available states:
+#' "2" or "linear":
+#'   PARCOV= ( 1 + THETA(1)*(COV - median))
+#' 
+#' "3" or "hockey-stick":
+#'   IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))
+#'   IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))
+#'                     
+#' "4" or "exponential":
+#'    PARCOV= EXP(THETA(1)*(COV - median))
+#' 
+#' "5" or "power":
+#'    PARCOV= ((COV/median)**THETA(1))
+#'    
+#' "power1":
+#'    PARCOV= ((COV/median))
+#'    
+#' "power0.75":
+#'    PARCOV= ((COV/median)**0.75)
+#' 
+#' "6" or "log-linear":
+#'    PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
+#' 
+#' @examples 
+#' \dontrun{
+#' 
+#' m1WT <- m1 %>% child("m1WT") %>%
+#'   add_cov(param = "CL", cov = "WT", state = "power") %>% 
+#'   run_nm()
+#'   
+#' ## compare results
+#' 
+#' rr(c(m1, m1WT))
+#' summary_wide(c(m1, m1WT))
+#'   
+#' }
+#' 
+#' 
 #' @export
 
 add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
@@ -528,11 +568,50 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
 #' @param ctl object coercible to ctl_list
 #' @param param character. Name of parameter
 #' @param cov character. Name of covariate
-#' @param state numeric. Number of state
+#' @param state numeric or character. Number/name of state (see details)
 #' @param continuous logical (default = TRUE). is covariate continuous?
 #' @param time_varying optional logical. is the covariate time varying?
 #' @param additional_state_text optional character. custom state variable to be passed to param_cov_text
 #' @param id_var character (default = "ID"). Needed if time_varying is missing.
+#' 
+#' @details 
+#' available states:
+#' "2" or "linear":
+#'   PARCOV= ( 1 + THETA(1)*(COV - median))
+#' 
+#' "3" or "hockey-stick":
+#'   IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))
+#'   IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))
+#'                     
+#' "4" or "exponential":
+#'    PARCOV= EXP(THETA(1)*(COV - median))
+#' 
+#' "5" or "power":
+#'    PARCOV= ((COV/median)**THETA(1))
+#'    
+#' "power1":
+#'    PARCOV= ((COV/median))
+#'    
+#' "power0.75":
+#'    PARCOV= ((COV/median)**0.75)
+#' 
+#' "6" or "log-linear":
+#'    PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
+#' 
+#' @examples 
+#' \dontrun{
+#' 
+#' m1noWT <- m1 %>% child("m1noWT") %>%
+#'   remove_cov(param = "CL", cov = "WT") %>% 
+#'   run_nm()
+#'   
+#' ## compare results
+#' 
+#' rr(c(m1, m1noWT))
+#' summary_wide(c(m1, m1noWT))
+#'   
+#' }
+#' 
 #' @export
 
 remove_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
