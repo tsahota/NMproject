@@ -17,8 +17,8 @@ produce dataset for covariate forest plotting
 \examples{
 \dontrun{
 
-dcov <- get_data(m1, filter = TRUE)
-dcov <- dcov[!duplicated(dcov$NMSEQSID), ]
+dcov <- input_data(m1, filter = TRUE)
+dcov <- dcov[!duplicated(dcov$ID), ]
 covariate_scenarios <- bind_rows(
   tibble(cov = "HEALTHGP", value = c(0, 1)),
   tibble(cov = "HEPATIC", value = unique(dcov$HEPATIC[dcov$HEPATIC > -99])),

@@ -55,13 +55,70 @@ run_nm_batch <- function(m, threads = 10, ...){
 #' Prepare forward covariate step
 #' 
 #' @param base nm object
-#' @param run_id run_id 
-#' @param run_in run_in
-#' @param dtest tibble::tibble with testing relations
+#' @param run_id base run_id to construct run_ids of covariate runs
+#' @param run_in character.  See \code{\link{run_in}}
+#' @param dtest tibble::tibble with testing relations (from \code{\link{test_relations}})
 #' @param direction character. "forward" (default) or "backward"
 #' @param ... additional arguments passed to add_cov
 #' 
+#' 
 #' @return tibble::tibble dtest with appended columns 
+#' 
+#' @seealso \code{\link{test_relations}}, \code{\link{covariate_step_tibble}}, \code{\link{bind_covariate_results}} 
+#' 
+#' @examples 
+#' \dontrun{
+#' 
+#' dtest <- test_relations(param = c("KA", "K", "V"),
+#'                         cov = c("LIN1", "LIN2", "LIN3", "RND1", "RND2", "RND3"), 
+#'                         state = c("linear", "power"), 
+#'                         continuous = TRUE)
+#' dtest <- dtest %>% 
+#'              test_relations(param = c("KA", "K", "V"),
+#'                             cov = "BN1",
+#'                             state = "linear",
+#'                             continuous = FALSE)
+#'                             
+#' ## create tibble of covariate step with model objects as column m
+#' dsm1 <- m1 %>% covariate_step_tibble(
+#'   run_id = "m1_f1",
+#'   dtest = dtest,
+#'   direction = "forward"
+#' )
+#' 
+#' ## run all models greedily
+#' dsm1$m <- dsm1$m %>% run_nm()
+#' 
+#' ## extract results and put into tibble
+#' dsm1 <- dsm1 %>% bind_covariate_results()
+#' 
+#' ## sort by BIC (for example) and view
+#' dsm1 <- dsm1 %>% arrange(BIC)
+#' dsm1
+#' 
+#' ## check condition number, covariance,... 
+#' ## run any diagnostics here
+#' 
+#' ## when happy with selection, select run for subsequent step
+#' 
+#' m1_f1 <- dsm1$m[1]   ## select most signifcant BIC
+#' # alternative select by relationship
+#' m1_f1 <- dsm1 %>%
+#'     filter(param = "CL", cov = "BWT", state = "power") %$%
+#'     m
+#' 
+#' ## do next forward step
+#' 
+#' dsm2 <- m1_f1 %>% covariate_step_tibble(
+#'   run_id = "m1_f2",
+#'   dtest = dtest,
+#'   direction = "forward"
+#' )
+#' 
+#' ## continue ...
+#'   
+#' }
+#' @export
 
 covariate_step_tibble <- function(base, run_id, run_in = getOption("models.dir"), dtest, direction = c("forward", "backward"), ...){
   
@@ -126,24 +183,24 @@ covariate_step_tibble <- function(base, run_id, run_in = getOption("models.dir")
   dsc$m <- base %>% child(run_id = run_ids)
   
   if(direction == "forward") {
-    dsc$m <- try(add_cov(ctl = dsc$m,
-                         param = dsc$param,
-                         cov = dsc$cov,
-                         state = dsc$state,
-                         continuous = dsc$continuous,
-                         ...), silent = TRUE)
+    dsc$m <- add_cov(ctl = dsc$m,
+                     param = dsc$param,
+                     cov = dsc$cov,
+                     state = dsc$state,
+                     continuous = dsc$continuous,
+                     ...)
   } else {
-    dsc$m <- try(remove_cov(ctl = dsc$m,
-                            param = dsc$param,
-                            cov = dsc$cov,
-                            ...), silent = TRUE)
+    dsc$m <- remove_cov(ctl = dsc$m,
+                        param = dsc$param,
+                        cov = dsc$cov,
+                        ...)
     
     dsc <- dsc[!is.na(dsc$m), ] ## don't want covariates that aren't there
     dsc <- dsc[!duplicated(paste(dsc$param, dsc$cov)), ] ## dont want duplicate states
     dsc$state <- NULL
     dsc$continuous <- NULL
   }
-  
+
   dsc$m <- dsc$m %>% run_in(dsc$location)
   dsc$m <- dsc$m %>% results_dir(dsc$location)
   
@@ -151,6 +208,29 @@ covariate_step_tibble <- function(base, run_id, run_in = getOption("models.dir")
   
 }
 
+#' Add run results into a covariate tibble
+#' 
+#' @param dsc a covariate tibble (see \code{\link{covariate_step_tibble}})
+#' @param nm_col character (default = "m"). name of column to store nm objects
+#' @param parameters character (default = "new").  Passed to \code{\link{summary_wide}}
+#' 
+#' @seealso \code{\link{covariate_step_tibble}}
+#' 
+#' @examples 
+#' \dontrun{
+#' ## create tibble of covariate step with model objects as column m
+#' dsm1 <- m1 %>% covariate_step_tibble(
+#'   run_id = "m1_f1",
+#'   dtest = dtest,
+#'   direction = "forward"
+#' )
+#' 
+#' ## run all models greedily
+#' dsm1$m <- dsm1$m %>% run_nm()
+#' 
+#' ## extract results and put into tibble
+#' dsm1 <- dsm1 %>% bind_covariate_results()
+#' }
 #' @export
 bind_covariate_results <- function(dsc, nm_col = "m", parameters = "new"){
   
@@ -204,6 +284,54 @@ covariates_define <- function(d, continuous, categorical, log_transform_plot = c
   
 }
 
+#' Generate tibble of relations to test
+#'
+#' @param dtest (optional) existing dtest to append (from an previous use test_relations())
+#' @param param character. Name of parameter
+#' @param cov character. Name of covariate
+#' @param state numeric or character. Number/name of state (see details)
+#' @param continuous logical (default = TRUE). is covariate continuous?
+#'
+#' @details 
+#' available states (see also \code{\link{add_cov}}):
+#' "2" or "linear":
+#'   PARCOV= ( 1 + THETA(1)*(COV - median))
+#' 
+#' "3" or "hockey-stick":
+#'   IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))
+#'   IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))
+#'                     
+#' "4" or "exponential":
+#'    PARCOV= EXP(THETA(1)*(COV - median))
+#' 
+#' "5" or "power":
+#'    PARCOV= ((COV/median)**THETA(1))
+#'    
+#' "power1":
+#'    PARCOV= ((COV/median))
+#'    
+#' "power0.75":
+#'    PARCOV= ((COV/median)**0.75)
+#' 
+#' "6" or "log-linear":
+#'    PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
+#'    
+#' @seealso \code{\link{add_cov}}, \code{\link{covariate_step_tibble}} 
+#'    
+#' @examples 
+#' 
+#' \dontrun{
+#' dtest <- test_relations(param = c("KA", "K", "V"),
+#'                         cov = c("LIN1", "LIN2", "LIN3", "RND1", "RND2", "RND3"), 
+#'                         state = c("linear", "power"), 
+#'                         continuous = TRUE)
+#' dtest <- dtest %>% 
+#'              test_relations(param = c("KA", "K", "V"),
+#'                             cov = "BN1",
+#'                             state = "linear",
+#'                             continuous = FALSE)
+#' 
+#' }
 #' @export
 test_relations <- function(dtest, param, cov, state, continuous){
   
@@ -395,6 +523,18 @@ ppc_data <- function(r,  FUN, ..., pre_proc = identity, max_mod_no = NA, DV = "D
   
   ## apply stat FUN to each sim
   ## apply change to the dataset
+  # browser()
+  # stat_tmp <- FUN(dsims %>%
+  #                   filter(mod_no %in% 1), ...)
+  # 
+  # dtmp <- dsims %>%
+  #   filter(mod_no %in% 1) %>% 
+  #   dplyr::group_by(.data$mod_no) %>% 
+  #   pre_proc() %>%
+  #   tidyr::nest() %>%
+  #   dplyr::mutate(statistic = purrr::map(.data$data, FUN,...)) %>%
+  #   tidyr::unnest(statistic)
+  
   
   stat_sim <- dsims %>% dplyr::group_by(.data$mod_no) %>% 
     pre_proc() %>%
