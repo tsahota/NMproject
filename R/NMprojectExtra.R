@@ -4573,8 +4573,8 @@ remove_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
   }
 
   matched_theta <- grep(paste0("\\$THETA\\s.*;.*",tvparam, cov), ctl$THETA)
-  if(length(matched_theta) == 0)
-    stop("can't find $THETA entry to remove- did you add with add_cov()?")
+  #if(length(matched_theta) == 0)
+  #  stop("can't find $THETA entry to remove- did you add with add_cov()?")
 
   ctl$THETA <- ctl$THETA[setdiff(seq_along(ctl$THETA), matched_theta)]
 
@@ -4593,8 +4593,8 @@ remove_cov.nm_list <- Vectorize_nm_list(remove_cov.nm_generic, SIMPLIFY = FALSE)
 #' @examples 
 #' \dontrun{
 #' 
-#' dcov <- get_data(m1, filter = TRUE)
-#' dcov <- dcov[!duplicated(dcov$NMSEQSID), ]
+#' dcov <- input_data(m1, filter = TRUE)
+#' dcov <- dcov[!duplicated(dcov$ID), ]
 #' covariate_scenarios <- bind_rows(
 #'   tibble(cov = "HEALTHGP", value = c(0, 1)),
 #'   tibble(cov = "HEPATIC", value = unique(dcov$HEPATIC[dcov$HEPATIC > -99])),
@@ -4663,13 +4663,13 @@ cov_forest_data <- function(m, covariate_scenarios){
     potential_pars <- pars[potential_pars]
     
     matches <- unlist(lapply(potential_pars, function(potential_par){
-      grep(paste0(potential_par, "COV = .*", par_cov), PK_text_R)
+      grep(paste0(potential_par, "COV\\s*=\\s*.*", par_cov), PK_text_R)
     }))
     
     if(length(matches) != 1) stop("can't get param value for ", par_cov, call. = FALSE)
     
     PK_matched_row <- PK_text_R[matches]
-    par <- gsub("^(.*)COV .*$", "\\1", PK_matched_row)
+    par <- gsub("^(.*)COV\\s*.*$", "\\1", PK_matched_row)
     
     #par <- sapply(pars, function(par) grepl(paste0("^", par), par_cov))
     #par <- pars[par]
@@ -4694,7 +4694,7 @@ cov_forest_data <- function(m, covariate_scenarios){
     
     
     ## redefine data covariates with 
-    ##browser()
+    ## browser()
     dcov_sc <- covariate_scenarios[covariate_scenarios$cov %in% cov, ]
     if(nrow(dcov_sc) == 0)
       stop("couldn't find covariate ", cov, " in covariate scenarios")
@@ -4800,7 +4800,7 @@ cov_forest_plot <- function(d){
     ggplot2::geom_vline(xintercept = 1, color='black', linetype='dashed') +
     ggplot2::facet_grid(par~., scales = "free_y", space = "free") +
     ggplot2::scale_y_discrete("") +
-    ggplot2::scale_x_continuous("effect size \n (bars: 95% CI)", breaks = seq(floor(min(d$low)), ceiling(max(d$upp)), 0.1))
+    ggplot2::scale_x_continuous("effect size \n", breaks = seq(floor(min(d$low)), ceiling(max(d$upp)), 0.1))
 }
 
 
