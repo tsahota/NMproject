@@ -623,16 +623,28 @@ set_target_text <- function(m, text){
 
 #' @importFrom graphics text
 #' @export
-text.nm_generic <- function(x, text, append = FALSE, ...){
+text.nm_generic <- function(x, text, append = FALSE, after = character(), ...){
   m <- x
   current_text <- get_target_text(m)
   if(missing(text)) return(current_text)
   
   text <- paste(text, collapse = "\n")
   text <- strsplit(text, split = "\n")[[1]]
-  #text <- trimws(text)
+  text <- trimws(text)
   
-  if(append) text <- c(current_text,text)
+  if(length(after)) append <- TRUE
+  if(append) {
+    if(!length(after)) text <- c(current_text,text)
+    
+    if(length(after)){
+      matches <- grep(after, current_text)
+      if(!length(matches)) stop("cannot find 'after'")
+      matches <- matches[1]
+      text <- append(current_text, text, after = matches)
+    }
+    
+  }
+    
   
   if(is.na(target(m))) {
     #stop("not developed yet")
@@ -1798,7 +1810,7 @@ dollar <- function(m, dollar, ...) {
 #' @export
 n_thetas <- function(m){
   param_info <- param_info(m)
-  nrow(param_info[grepl("THETA", param_info$parameter)])
+  nrow(param_info[grepl("THETA", param_info$parameter),])
 }
 
 grab_variables0 <- function(text, pattern){
@@ -2389,7 +2401,8 @@ remove_parameter <- function(m, name){
 #' @export
 add_mixed_param <- function(m, name, 
                             init = 1, unit ="", trans = c("LOG"),
-                            position = NA_integer_){
+                            position = NA_integer_,
+                            after = character()){
   
   trans <- match.arg(trans)
   
@@ -2416,7 +2429,7 @@ add_mixed_param <- function(m, name,
       text("TV_NEWPARAM_=EXP(THETA(_N_PARAM_))
 MU__MU_PARAM_=LOG(TV_NEWPARAM_)
 _NEWPARAM_ = EXP(MU__MU_PARAM_+ETA(_MU_PARAM_))
-", append = TRUE) %>%
+", append = TRUE, after = after) %>%
       target("THETA") %>%
       text(paste(signif(log(init),2), "      ; TV_NEWPARAM_ ; _UNIT_PARAM_ ; ",
                  trans), append = TRUE) %>%
@@ -4075,6 +4088,76 @@ nm_render.nm_generic <- function(m,
 #' @export
 nm_render.nm_list <- Vectorize_nm_list(nm_render.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
+#' @export
+nm_list_render <- function(m, 
+                           input, 
+                           name,
+                           output_file = NA,
+                           args = list(),
+                           force = FALSE,
+                           async = FALSE,
+                           ...){
+  if(is.na(output_file))
+    output_file <- paste0(
+      basename(tools::file_path_sans_ext(input)),
+      ".", name, ".nb.html"
+    )
+  
+  if("m" %in% names(args))
+    stop("can't have m in arg.  m is reserved for model object")
+  
+  args <- c(args, list(m = as_nm_list(m)))
+  
+  output_dir <- "Results"
+  output_path <- file.path(output_dir, output_file)
+  
+  ## if force is TRUE skip caching and run
+  if(!force){
+    ## if output_path doesn't exist skip caching and run
+    # render_cache_disk <- lapply(render_cache_paths(m, input), readRDS)
+    # if(length(render_cache_disk) > 0){
+    #   ## get current checksum
+    #   current_checksums <- render_checksums(m, input)
+    #   ## determine matches
+    #   matches <- sapply(render_cache_disk, function(i) {
+    #     identical(i$checksums, current_checksums)
+    #   })
+    #   if(any(matches)){
+    #     message("nm_render cache found, skipping... use nm_render(force = TRUE) to override")
+    #     ## pick highest available version
+    #     m <- m %>% result_files(output_file)
+    #     return(invisible(m))    ## if up to date, skip
+    #   }
+    # } 
+  }
+  
+  if(async){
+    f0 <- future::future({
+      rmarkdown::render(input = input,
+                        output_file = output_file,
+                        output_dir = output_dir,
+                        params = args,
+                        envir = new.env(),
+                        ...)
+      
+    })
+  } else {
+    rmarkdown::render(input = input,
+                      output_file = output_file,
+                      output_dir = output_dir,
+                      params = args,
+                      envir = new.env(),
+                      ...)
+  }
+  
+  ## use as_nm_generic incase m is redefined in rmd
+  
+  #m <- m %>% save_render_cache(input)
+  
+  invisible(m)
+}
+  
+
 #' Create new R notebook
 #' @param script_name character
 #' @param overwrite logical. Whether to overwrite existing file (default = FALSE)
@@ -5339,7 +5422,7 @@ data_ignore_char.nm_generic <- function(r, data){
   
   dol_data <- unlist(strsplit(dol_data, split = "[,;]"))
   
-  if(missing(data)) data <- input_data(r, filter = FALSE, silent = TRUE)
+  if(missing(data)) data <- input_data(r, filter = FALSE)
   
   r_data_names <- names(data)
   ## now get nonmem names
@@ -5701,4 +5784,5 @@ covariance_result <- function(r,trans=TRUE){
 
 
 ################
+
 

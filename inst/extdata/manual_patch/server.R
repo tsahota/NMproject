@@ -7,11 +7,25 @@ setwd(.currentwd)
 server <- function(input, output, session) {
   
   m <- eventReactive(input$go, {
-    eval(parse(text = input$model_object))
+    
+    object <- eval(parse(text = input$model_object))
+    
+    patch_name <- input$patch_name
+    ## clean up
+    patch_name <- gsub("\"", "", patch_name)
+
+    if(patch_name %in% "") patch_name <- NA_character_
+        
+    ## apply patch
+    reslist <- list()
+    reslist$m <- object
+    reslist$patch_name <- patch_name
+    reslist
   })
-  
+
   res <- eventReactive(input$go, {
-    start_manual_edit_unix(m())
+    ## TODO: apply patch if one exists
+    start_manual_edit_unix(m()$m, combine_patch = m()$patch_name)
   })
   
   # ctx <- eventReactive(input$go, {
@@ -47,7 +61,7 @@ server <- function(input, output, session) {
       # if(normalizePath(res()$new_ctl_path) == normalizePath(ctx()$path)){
       #   rstudioapi::documentClose(ctx(), save = TRUE)
       # }
-      diff_manual_edit(m(), res())
+      diff_manual_edit(m()$m, res())
       final_text <- 
         paste0("copy-paste the following into your script to apply:\n
   [nm_object] %>%
