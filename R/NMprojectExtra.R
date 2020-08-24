@@ -5596,6 +5596,66 @@ nm_boot <- function(m, replicates, dboot_rds = "dboots_big.RDS"){
   
 }
 
+#' Plot covariance matrix
+#' 
+#' @param r nm object
+#' @param trans logical (default = TRUE)
+#' 
+#' @export
+
+covariance_result <- function(r,trans=TRUE){
+  
+  dc <- nm_output_path(r, extn = "cor") %>%
+    nm_read_table(header = TRUE, skip=1)
+  
+  names(dc)[1] <- "Var1"
+  dc$Var1 <- names(dc)[-1]
+  
+  n_ests <- nrow(dc)/length(unique(dc$Var1))
+  
+  dc$EST.NO <- rep(1:n_ests,each=length(unique(dc$Var1)))
+  dc <- dc %>% dplyr::filter(EST.NO == max(EST.NO))
+  dc$EST.NO <- NULL
+  
+  dc <- dc %>% tidyr::gather(key = "Var2", value="value",-Var1)
+  
+  dc$Var1 <- factor(dc$Var1)
+  dc$Var2 <- factor(dc$Var2)
+  
+  if(trans){
+    dp <- param_info(r)
+    current_levels <- levels(dc$Var1)
+    dl <- data.frame(cl = current_levels)
+    dl$ORD <- 1:nrow(dl)
+    dp <- dp[,c("name","parameter")]
+    names(dp)[2] <- "cl"
+    dl <- merge(dp,dl,all = TRUE)
+    dl$new_names <- dl$cl
+    dl$new_names[!is.na(dl$name)] <- paste0(dl$name[!is.na(dl$name)]," (",
+                                            dl$cl[!is.na(dl$name)],")")
+    levels(dc$Var1) <- dl$new_names
+    levels(dc$Var2) <- dl$new_names
+    
+  }
+  
+  dc <- dc %>% dplyr::filter(!value %in% 0)
+  dc <- dc %>% dplyr::filter(as.numeric(Var1) > as.numeric(Var2)) ## lower corner
+  
+  p <- ggplot2::ggplot(dc, ggplot2::aes(x= Var1, y= Var2, fill = value)) + 
+    ggplot2::theme_bw() +
+    ggplot2::geom_tile() + 
+    ggplot2::scale_fill_gradient2(
+      low = "blue", high = "red", mid = "white", 
+      midpoint = 0, limit = c(-1,1), space = "Lab", 
+      name="Correlation"
+    ) +
+    ggplot2::geom_text(ggplot2::aes(label = round(value,2))) +
+    ggplot2::theme(axis.text.x  = ggplot2::element_text(angle=90,vjust=0))
+  
+  p
+  
+}
+
 ## TODO: no_rerun()
 ##  stops instead of rerunning.
 ##  traceability check
@@ -5611,7 +5671,10 @@ nm_boot <- function(m, replicates, dboot_rds = "dboots_big.RDS"){
 ## TODO: ignore -> fill_ignore (name conflict with drake)
 ## TODO: fill_ignore() should eliminate all ignores
 
+## TODO: in_cache does error with certian types of object, nm(NA)?
 
+## TODO: need custom caching solution...
+##   or need unique targets in drake, use unique_id()?
 
 ###############
 
