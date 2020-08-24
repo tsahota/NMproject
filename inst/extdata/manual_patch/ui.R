@@ -11,7 +11,8 @@ selected_text <- ctx$selection[[1]]$text
 ui <- miniPage(
   gadgetTitleBar("Manual Edit"),
   miniContentPanel(
-    textInput("model_object", "model object", value = selected_text),
+    textInput("model_object", "base model object", value = selected_text),
+    textInput("patch_name", "(optional) patch to replace"),
     actionButton("go", "start edit"),
     br(),
     textOutput("out_text"),

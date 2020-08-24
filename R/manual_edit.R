@@ -77,7 +77,7 @@ manual_patch <- function(m){
 }
 
 #' @export
-start_manual_edit_unix <- function(m){
+start_manual_edit_unix <- function(m, combine_patch = NA_character_){
   if(.Platform$OS.type != "unix") 
     stop("patching functionality only implemented for linux/unix systems\n consider manual_edit() instead",
          call. = FALSE)
@@ -91,13 +91,16 @@ start_manual_edit_unix <- function(m){
   patch_path <- file.path(getOption("models.dir"), "patches", patch_name)
   dir.create(dirname(patch_path), showWarnings = FALSE, recursive = TRUE)
   
+  ## this isn't used - delete
   old_file_path <- file.path(run_in(m), paste0(ctl_name(m), ".old"))
   
   old_ctl_path <- ctl_path(m)
   new_ctl_path <- file.path(run_in(m), paste0("manual_", ctl_name(m)))
-  
+
   m %>% write_ctl()
-  mnew <- m %>% ctl_path(new_ctl_path) %>% write_ctl()
+  mnew <- m
+  mnew <- mnew %>% ctl_path(new_ctl_path) %>% write_ctl()
+  if(!is.na(combine_patch)) mnew <- mnew %>% apply_patch(combine_patch)
   
   edit_file(ctl_path(mnew)) ## edit new one
   
@@ -184,6 +187,10 @@ apply_patch <- function(m, patch_name){
 }
 
 manual_patch_app <- function() {
+  
+  ## have base object
+  
+  ## include a patch to modify
   
   shiny_dir <- system.file("extdata/manual_patch",package="NMproject")
   .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env
