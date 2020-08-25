@@ -2841,6 +2841,8 @@ raw_init_random <- function(m, replace, dollar = "OMEGA"){
     d$x_nc <- gsub("\\s*\\)","\\)",d$x_nc, perl = TRUE)
     d$x_nc <- gsub_in_brackets("\\s+", ",", d$x_nc)  
     d$x_nc <- gsub_out_brackets(",", " ", d$x_nc)  
+    ## subsequent code needs OMEGA BLOCK (n) format
+    d$x_nc <- gsub("BLOCK\\(", "BLOCK (",d$x_nc)
     
     x_nc <- d$x_nc
     x_nc <- paste(x_nc, collapse = " \n ")
@@ -2883,7 +2885,7 @@ raw_init_random <- function(m, replace, dollar = "OMEGA"){
     
     ##########################
     ## label parameters
-    
+
     d$block <- NA
     get_block_size <- FALSE
     current_block_size <- 1
@@ -3000,13 +3002,34 @@ raw_init_random <- function(m, replace, dollar = "OMEGA"){
     d$name <- trimws(d$name)
     
     d$unit <- NA
-    d$unit[d$comment_nfields %in% 2] <- gsub(two_field_regex, "\\2", d$comment[d$comment_nfields %in% 2])
+    #d$unit[d$comment_nfields %in% 2] <- gsub(two_field_regex, "\\2", d$comment[d$comment_nfields %in% 2])
     d$unit[d$comment_nfields %in% 3] <- gsub(three_field_regex, "\\2", d$comment[d$comment_nfields %in% 3])
     d$unit <- trimws(d$unit)
     
     d$trans <- NA
+    d$trans[d$comment_nfields %in% 2] <- gsub(two_field_regex, "\\2", d$comment[d$comment_nfields %in% 2])
     d$trans[d$comment_nfields %in% 3] <- gsub(three_field_regex, "\\3", d$comment[d$comment_nfields %in% 3])
     d$trans <- trimws(d$trans)
+    
+    ## modify name, unit and trans for off diagonals
+    off_diagonal <- (d$omega1 != d$omega2) %in% TRUE
+    if(any(off_diagonal)){
+      d$unit[off_diagonal] <- NA
+      d$trans[off_diagonal] <- NA
+      
+      off_diagonal_names <- sapply(which(off_diagonal), function(i){
+        omega1 <- d$omega1[i]
+        omega2 <- d$omega2[i]
+        name1 <- d$name[d$omega1 %in% omega1 & d$omega2 %in% omega1]
+        name2 <- d$name[d$omega1 %in% omega2 & d$omega2 %in% omega2]
+        
+        name1 <- gsub("IIV_", "", name1)
+        name2 <- gsub("IIV_", "", name2)
+        new_name <- paste0("COV_",name1,"_",name2)
+        new_name
+      })
+      d$name[off_diagonal] <- off_diagonal_names  
+    }
     
     d$comment_nfields <- NULL
     
