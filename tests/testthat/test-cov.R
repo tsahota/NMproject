@@ -75,7 +75,7 @@ test_that("covariate modelling",{
   ## take a winner
   m0_f1 <- d_f1$m[1]
   
-  d_f2 <- m0_f1 %>% covariate_step_setup(run_id = "m0_f2",
+  d_f2 <- m0_f1 %>% covariate_step_tibble(run_id = "m0_f2",
                                          run_in = "Models/m0_cov",
                                          dtest = dtest,
                                          direction = "forward")
@@ -86,7 +86,7 @@ test_that("covariate modelling",{
   ## take a winner
   m0_f2 <- d_f2$m[2]
   
-  d_b1 <- m0_f2 %>% covariate_step_setup(run_id = "m0_b1",
+  d_b1 <- m0_f2 %>% covariate_step_tibble(run_id = "m0_b1",
                                          run_in = "Models/m0_cov",
                                          dtest = dtest,
                                          direction = "backward")
