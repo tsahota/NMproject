@@ -5436,6 +5436,8 @@ data_ignore_char.nm_generic <- function(r, data){
   ## remove IGNORE=
   dol_data <- gsub(paste0(type, "\\s*=*"), 
                    "", dol_data)
+  #ensure bracketed ignore expression are comma separated
+  dol_data <- gsub("\\)\\s+\\(", "),(", dol_data)
   ## remove brackets
   dol_data <- gsub("\\(", "", dol_data)
   dol_data <- gsub("\\)", "", dol_data)
