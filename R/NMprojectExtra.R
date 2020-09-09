@@ -4344,16 +4344,15 @@ summary.nm_generic <- function(object, ref_model = NA, parameters = c("none", "n
 }
 
 
-#' #' @export
-#' summary_wide <- function(..., parameters = c("none", "new", "all")){
-#'   UseMethod("summary_wide")
-#' }
-
 #' @export
-summary_wide <- function(..., parameters = c("none", "new", "all"), m = TRUE, trans = TRUE){
+summary_wide <- function(..., parameters = c("none", "new", "all"), m = TRUE, trans = TRUE, include_fields = character()){
   parameters <- match.arg(parameters)
   d <- summary(..., parameters = parameters, trans = trans)
-  if(m) d$m <- c(...)
+  m_obj <- c(...)
+  if(m) d$m <- m_obj
+  for(field in include_fields){
+    d[[field]] <- get_simple_field(m_obj, !!field)
+  }
   d
 }
 
