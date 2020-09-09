@@ -5443,6 +5443,8 @@ data_ignore_char.nm_generic <- function(r, data){
   dol_data <- gsub("\\)", "", dol_data)
   ## remove spaces
   dol_data <- gsub("\\s*", "", dol_data)
+  ## remove blank lines
+  dol_data <- gsub(";+", ";", dol_data)
   ## should now be only statemetns with ,; separators
   
   dol_data <- unlist(strsplit(dol_data, split = "[,;]"))
