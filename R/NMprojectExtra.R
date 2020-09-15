@@ -3426,6 +3426,36 @@ init_sigma <- function(m, replace){
   }
 }
 
+#' perturb initial estimates
+#' 
+#' @param m nm object
+#' @param theta_log numeric (default = 0.1). Variance of theta perturbation
+#' @param omega_diag numeric (default = 0.1). Variance of omega perturbation
+#' @export
+perturb_inits <- function(m, theta_log, omega_diag){
+  UseMethod("perturb_inits")
+}
+
+#' @export
+perturb_inits.nm_generic <- function(m, theta_log, omega_diag){
+  it <- m %>% init_theta()
+  is_log <- which(it$trans %in% "LOG")
+  it$init[is_log] <- 
+    rnorm(length(is_log), mean = it$init[is_log], sd = theta_log)
+  
+  io <- m %>% init_omega()
+  is_diag <- which(io$omega1 == io$omega2)
+  io$init[is_diag] <- 
+    rlnorm(length(is_diag), meanlog = log(io$init[is_diag]),
+           sdlog = omega_diag)
+  
+  m %>% init_theta(it) %>% init_omega(io)
+}
+
+#' @export
+perturb_inits.nm_list <- Vectorize_nm_list(perturb_inits.nm_generic, SIMPLIFY = FALSE)
+
+
 update_variable_in_text_numbers <- function(m, before_number, after_number){
   
   before_regex <- paste0("\\b", before_number)
