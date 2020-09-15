@@ -387,6 +387,68 @@ get_simple_field <- function(m, field){
   
 }
 
+#' get/set simple fields of nm objects
+#' 
+#' @param m nm object
+#' @param ... arguments to get/set fields
+#' 
+#' @examples 
+#' \dontrun{
+#' 
+#' core_list <- c(1,4,12)
+#' 
+#' mc <- m1 %>% child(run_id = paste0(corelist)) %>%
+#'   simple_field(cores = corelist) %>%
+#'   cmd("qpsn -c {cores} -t 59 -- execute {ctl_name} -dir={run_dir}")
+#'   
+#' mc %>% simple_field(cores)  ## retrieve field from object
+#' 
+#' mc <- mc %>% simple_field(stars = 3)
+#' mc %>% simple_field(stars)
+#' 
+#' }
+#' @export
+
+simple_field <- function(m, ...){
+  dots_exp <- rlang::enexprs(...)
+  if(identical(names(dots_exp), "")) {
+    get_simple_field(m, ...)
+  } else {
+    set_simple_field(m, ...) 
+  }
+}
+
+#' @importFrom dplyr mutate
+#' @export
+dplyr::mutate
+
+#' @export
+mutate.nm_list <- function(.data, ...){
+  dots_exp <- rlang::enexprs(...)
+  data_extra <- dplyr::mutate(nm_row(.data), ...)
+  
+  for(name in names(dots_exp)){
+    .data <- .data %>% custom_1d_field(field = name, replace = data_extra[[name]])
+  }
+  .data
+  
+}
+
+#' @importFrom dplyr filter
+#' @export
+dplyr::filter
+
+#' @export
+filter.nm_list <- function(.data, ...){
+  dots_exp <- rlang::enexprs(...)
+  object <- .data
+  .data <- nm_row(object)
+  .data$m <- object
+
+  data_extra <- dplyr::filter(.data, ...)
+  data_extra$m
+}
+
 glue_text_nm <- function(m, text){
   UseMethod("glue_text_nm")
 }
@@ -4344,7 +4406,7 @@ summary.nm_generic <- function(object, ref_model = NA, parameters = c("none", "n
 
 
 #' @export
-summary_wide <- function(..., parameters = c("none", "new", "all"), m = TRUE, trans = TRUE, include_fields = character()){
+summary_wide <- function(..., include_fields = character(), parameters = c("none", "new", "all"), m = TRUE, trans = TRUE){
   parameters <- match.arg(parameters)
   d <- summary(..., parameters = parameters, trans = trans)
   m_obj <- c(...)
