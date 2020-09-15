@@ -103,6 +103,8 @@ set_nm_opts <- function(){
   if(is.null(getOption("wait"))) options(wait=FALSE)
   if(is.null(getOption("kill_job"))) options(kill_job=identity)
 
+  if(is.null(getOption("new_jobs"))) options(new_jobs="run")
+  
 }
 
 #' default system_nm
@@ -158,6 +160,23 @@ kill_job <- function(m){
   getOption("kill_job")(m)
 }
 
+#' get/set new_jobs
+#' 
+#' Requires setting "new_jobs" \code{option()}
+#'
+#' @param txt character either "run", "stop", "skip" 
+#' @export
+new_jobs <- function(txt = c("run", "stop", "skip")){
+  if(missing(txt)){
+    return(getOption("new_jobs"))
+  } 
+  txt <- match.arg(txt)
+  options(new_jobs = txt)
+  if(txt %in% "run") message("run: run_nm() will run NONMEM if job has not been previously executed")
+  if(txt %in% "stop") message("stop: run_nm() will not run NONMEM if job has not been previously executed\n and will stop R execution with an error")
+  if(txt %in% "skip") message("skip: run_nm() will not run NONMEM if job has not been previously executed\n and will not stop R execution")
+  return(invisible())
+}
 
 #' Get run id
 #'

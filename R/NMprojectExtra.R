@@ -3786,10 +3786,9 @@ run_checksums <- function(m){  ## only works on single m
   checksums <- tools::md5sum(files)
   names(checksums) <- c("ctl", "data")
   checksums <- c(checksums, 
-                 cmd = get_glue_field(as_nm_generic(m), "cmd"))
-  
+                 #cmd = get_glue_field(as_nm_generic(m), "cmd"))
+                 cmd = cmd(as_nm_generic(m)))
   checksums
-  
 }
 
 render_checksums <- function(m, input){  ## only works on single m

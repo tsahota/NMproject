@@ -101,6 +101,14 @@ run_nm.nm_generic <- function(m, wait=getOption("wait"),
     }
   }
   
+  ## NONMEM will run from this point on
+  ## check new_jobs() behaviour 
+  behaviour <- new_jobs()
+  if(behaviour == "stop") stop("new_jobs detected: stopping... \n change new_job behaviour with new_jobs()", call. = FALSE)
+  if(behaviour == "skip") {
+    message("new job detected: skip \n change new_job behaviour with new_jobs()")
+    return(invisible(m))
+  }
   
   if(executed(m)) m <- m %>% version(version(m) + 1)  ## increment version before running
   wipe_run(m)
