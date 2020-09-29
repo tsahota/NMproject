@@ -19,24 +19,34 @@ test_that("run and post",{
 
   testfilesloc <- file.path(currentwd,"testfiles")
   setwd(proj_name)
+
   file.copy(file.path(testfilesloc,"."),".",recursive = TRUE)
   file.rename("cache", ".cache")
   
   ## end boiler plate
   ############################
   
-  #m1 <- nm("qpsn -m -c auto -t 3000 -- execute run1.mod -dir=1")
+  #m1 <- nm("qpsn -m -c auto -t 60 -- execute run1.mod -dir=1")
   
   ## dataset procesing
   
   m1 <- nm(run_id = "m1") %>%
     prior_ctl("staging/Models/run1.mod") %>%
-    cmd("execute {ctl_name} -dir={run_dir}") %>%
-    run_nm()
+    cmd("execute {ctl_name} -dir={run_dir}")
+
+  stopifnot(in_cache(m1))  ## no point in continue if cache broken
+  
+  m1 <- m1 %>% run_nm()
   
   m2 <- m1 %>% child(run_id = "m2") %>%
     subroutine(advan = 4, trans = 1) %>%
     run_nm()
+  
+  ## to update cache files run the following lines.
+  # dir(file.path(testfilesloc,"cache"), full.names = TRUE) %>% unlink()
+  # file.copy(".cache/.", file.path(testfilesloc,"cache"), recursive = TRUE)
+  # dir(file.path(testfilesloc,"Models"), full.names = TRUE) %>% unlink()
+  # file.copy("Models/.", file.path(testfilesloc,"Models"), recursive = TRUE)
   
   mlist <- c(m1, m2)
 
