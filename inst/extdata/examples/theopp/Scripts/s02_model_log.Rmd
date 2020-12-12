@@ -22,11 +22,11 @@ opts_chunk$set(message = TRUE)
 ```{r echo=FALSE,message=FALSE}
 ## LOAD PACKAGES HERE
 
-library(NMprojectAZ)
+library(NMproject)
 # devtools::load_all("~/tidyproject/")
 # devtools::load_all("~/NMproject/")
 # devtools::load_all("~/tidyprojectAZ/")
-# devtools::load_all("~/NMprojectAZ/")
+# devtools::load_all("~/NMproject/")
 library(future)
 future::plan("future::multiprocess", workers = 2)
 library(dplyr)
@@ -42,7 +42,7 @@ load_localpackage()
 m1 <- nm(run_id = "m1") %>%
   prior_ctl("staging/Models/run1.mod") %>%
   data_path("DerivedData/data.csv") %>%
-  cmd("qpsn -c auto -r 600 -t 59 -- execute {ctl_name} -dir={run_dir}") %>%
+  cmd("execute {ctl_name} -dir={run_dir}") %>%
   fill_input(rename = c("DATE" = "DAT0")) %>%
   ## the default format is not compatible with new xpose
   gsub_ctl(" FORMAT=tF13.4", "") %>%

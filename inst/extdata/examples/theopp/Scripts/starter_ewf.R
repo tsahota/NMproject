@@ -33,7 +33,7 @@ dwnld <- ewf_scp_entimice_download( connection = conn,
                                     verify = TRUE)
 
 
-NMprojectAZ::setup_nm_demo()
+NMproject::setup_nm_demo()
 
 # create a local archive
 # stored in the EWF Workspace under .ewf/.archives
