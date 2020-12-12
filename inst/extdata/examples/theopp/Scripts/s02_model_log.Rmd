@@ -1,0 +1,97 @@
+---
+title: "model development"
+author: "`r Sys.info()['user']`"
+date: "`r Sys.time()`"
+output:
+  pdf_document: default
+  html_notebook: default
+  html_document:
+    df_print: paged
+---
+
+
+```{r setup, include=F}
+## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
+library(rprojroot)
+library(knitr)
+opts_knit$set(root.dir=find_root(has_file('.Rprofile')))
+opts_chunk$set(echo = TRUE)
+opts_chunk$set(message = TRUE)
+```
+
+```{r echo=FALSE,message=FALSE}
+## LOAD PACKAGES HERE
+
+library(NMprojectAZ)
+# devtools::load_all("~/tidyproject/")
+# devtools::load_all("~/NMproject/")
+# devtools::load_all("~/tidyprojectAZ/")
+# devtools::load_all("~/NMprojectAZ/")
+library(future)
+future::plan("future::multiprocess", workers = 2)
+library(dplyr)
+
+load_localpackage()
+
+```
+
+## model development
+
+```{r}
+
+m1 <- nm(run_id = "m1") %>%
+  prior_ctl("staging/Models/run1.mod") %>%
+  data_path("DerivedData/data.csv") %>%
+  cmd("qpsn -c auto -r 600 -t 59 -- execute {ctl_name} -dir={run_dir}") %>%
+  fill_input(rename = c("DATE" = "DAT0")) %>%
+  ## the default format is not compatible with new xpose
+  gsub_ctl(" FORMAT=tF13.4", "") %>%
+  run_nm()
+  
+```
+
+```{r}
+m1 %>% nm_render("Scripts/basic_gof.Rmd")
+```
+
+```{r}
+## simulation for ppc and vpc
+
+m1s <- m1 %>% child("m1s") %>%
+  update_parameters(m1) %>%
+  convert_to_simulation(subpr = 20) %>%
+  run_nm()
+
+```
+
+```{r}
+
+m1s %>% nm_render("Scripts/basic_ppc.Rmd")
+m1s %>% nm_render("Scripts/basic_vpc.Rmd")
+
+```
+
+
+```{r}
+
+m1 %>% saveRDS("Results/m1.RDS")
+
+m2 <- m1 %>% child("m2") %>%
+  subroutine(trans = 2) %>% 
+  run_nm()
+
+m2WT <- m2 %>% child("m2WT") %>%
+  add_cov(param = "CL", cov = "WT", state = "linear") %>%
+  run_nm()
+
+```
+
+```{r}
+
+wait_finish(c(m2, m2WT)) 
+
+#kable(summary_long(c(m2, m2WT), parameters = "all"))
+
+kable(rr(c(m2, m2WT)))
+
+```

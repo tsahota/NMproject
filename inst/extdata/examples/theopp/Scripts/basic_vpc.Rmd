@@ -1,0 +1,145 @@
+---
+output:
+  html_notebook: default
+params:
+  m: NA
+title: "`r paste0(ctl_path(params$m), ': VPC')`"
+author: "`r Sys.info()['user']`"
+date: "`r Sys.time()`"
+---
+
+<!-- To run as a notebook: -->
+<!--   1. define .m to be your model in your workspace (e.g. .m <- m1) -->
+<!--   2. run as normal notebook -->
+
+<!-- To run as a report: -->
+<!--   1. Use the nm_render() on your object -->
+<!--   (e.g. m1 <- m1 %>% nm_render("path/to/this/report")) -->
+<!--   2. see ?nm_render for additional information including results location -->
+
+<!-- To make your own report (this is only a bare template) -->
+<!--   1. start with an already run model object (e.g. m1) -->
+<!--   2. add code and run as a notebook (see above) to see results -->
+<!--   3. when finished, run as a report (see above) to see report -->
+<!--   4. use nm_render() to run on other model objects -->
+
+
+```{r setup, include=F}
+## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
+library(rprojroot)
+library(knitr)
+opts_knit$set(root.dir=find_root(has_file(".Rprofile")))
+opts_chunk$set(echo = FALSE)
+opts_chunk$set(message = FALSE)
+if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
+  .m <- params$m  
+}
+```
+
+```{r echo=FALSE,message=FALSE}
+## LOAD PACKAGES HERE
+
+# devtools::load_all("~/tidyproject/")
+# devtools::load_all("~/NMproject/")
+# devtools::load_all("~/tidyprojectAZ/")
+# devtools::load_all("~/NMprojectAZ/")
+library(dplyr)
+library(ggplot2)
+
+load_localpackage()
+
+```
+
+## model object
+
+```{r}
+wait_finish(.m)
+.m
+```
+
+## VPC
+
+```{r}
+
+library(vpc)
+
+## prep an obs and a sim for vpc function
+
+obs <- parent_run(.m) %>%
+  output_table_first() %>% 
+  filter(INNONMEM)
+
+## manipulate these to get TPERIOD
+obs <- obs %>% 
+  group_by(ID) %>%
+  mutate(DPERIOD = cumsum(!is.na(AMT))) %>%
+  group_by(ID, DPERIOD) %>%
+  mutate(TPERIOD = TIME - min(TIME)) %>%
+  ungroup()
+
+obs <- obs[!is.na(obs$DV), ]
+
+sim <- .m %>%
+  output_table_first() %>% 
+  filter(INNONMEM)
+
+sim <- sim[!is.na(sim$DV), ]
+
+sim$DPERIOD <- obs$DPERIOD
+sim$TPERIOD <- obs$TPERIOD
+sim$DV <- sim$DV_OUT  ## needed because output_table puts DV in DV_OUT
+
+
+```
+
+
+```{r}
+
+vpc(
+  sim = sim,
+  obs = obs,
+  obs_cols = list(idv = "TPERIOD"),
+  sim_cols = list(idv = "TPERIOD")
+)
+```
+
+## prediction corrected
+
+```{r}
+
+vpc(
+  sim = sim,
+  obs = obs,
+  obs_cols = list(idv = "TPERIOD"),
+  sim_cols = list(idv = "TPERIOD"),
+  pred_corr = TRUE
+)
+
+```
+
+## stratified by bodyweight
+
+```{r}
+
+sim$WT_c = Hmisc::cut2(sim$WT, g = 2)
+obs$WT_c = Hmisc::cut2(obs$WT, g = 2)
+
+vpc(
+  sim = sim,
+  obs = obs,
+  obs_cols = list(idv = "TPERIOD"),
+  sim_cols = list(idv = "TPERIOD"),
+  stratify = "WT_c"
+)
+```
+
+## Appendix
+
+### control file
+
+```{r}
+.m %>% text() %>% dplyr::first()
+```
+
+
+

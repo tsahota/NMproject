@@ -1,0 +1,51 @@
+---
+output:
+  html_notebook: default
+title: "data processing"
+author: "`r Sys.info()['user']`"
+date: "`r Sys.time()`"
+---
+
+
+```{r setup, include=F}
+## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
+library(rprojroot)
+library(knitr)
+opts_knit$set(root.dir=find_root(has_file('.Rprofile')))
+opts_chunk$set(echo = TRUE)
+opts_chunk$set(message = TRUE)
+```
+
+```{r echo=FALSE,message=FALSE}
+## LOAD PACKAGES HERE
+library(NMprojectAZ)
+library(dplyr)
+library(future)
+future::plan("future::multiprocess", workers = 2)
+
+load_localpackage()
+```
+
+- Read THEOPP.csv from SourceData
+- modify WT column so it's filled in for obs rows
+- save into DerivedData
+
+```{r}
+
+d <- read.csv("SourceData/THEOPP.csv", na = ".")
+kable(head(d, 20))
+
+```
+
+```{r}
+
+d %>%
+  group_by(ID) %>%
+  mutate(WT = na.omit(WT)) %>%
+  write_derived_data("data") ## DerivedData/data.csv
+
+```
+
+
+
+
