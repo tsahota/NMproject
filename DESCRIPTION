@@ -9,7 +9,7 @@ Description: A light interface between R and NONMEM for script based model devel
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-Remotes: tsahota/tidyproject
+Remotes: tsahota/tidyproject@newinterface
 Imports:
     tidyproject (>= 0.5.0),
     shiny,
