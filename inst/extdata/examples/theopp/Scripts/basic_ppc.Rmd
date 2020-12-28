@@ -107,10 +107,14 @@ ppc_data0 <- .m %>% ppc_data(EXPstat)
 
 ppc_data0 %>%
   filter(type %in% "median") %>%
+  ## redefine exposure to include the type of summary
+  mutate(exposure = paste(type, exposure, sep = "_")) %>%
   ppc_histogram_plot(exposure)
 
 ppc_data0 %>%
   filter(type %in% "cv") %>%
+  ## redefine exposure to include the type of summary
+  mutate(exposure = paste(type, exposure, sep = "_")) %>%
   ppc_histogram_plot(exposure)
 
 ```
@@ -125,14 +129,20 @@ ppc_data0 <- .m %>% ppc_data(EXPstat, WT_c, pre_proc = addWT_c)
 
 ppc_data0 %>%
   filter(type %in% "median") %>%
+  ## redefine exposure to include the type of summary
+  mutate(exposure = paste(type, exposure, sep = "_")) %>%
   ppc_histogram_plot(WT_c, exposure)
 
 ppc_data0 %>%
   filter(type %in% "cv") %>%
+  ## redefine exposure to include the type of summary
+  mutate(exposure = paste(type, exposure, sep = "_")) %>%
   ppc_histogram_plot(WT_c, exposure)
 
 ppc_data0 %>%
   filter(type %in% "median") %>%
+  ## redefine exposure to include the type of summary
+  mutate(exposure = paste(type, exposure, sep = "_")) %>%
   ppc_whisker_plot(WT_c, exposure)
 
 ppc_data0 %>%
