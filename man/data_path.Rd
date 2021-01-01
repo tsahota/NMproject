@@ -28,7 +28,7 @@ Requires ctl_contents to already be specified.
 ##  DerivedData/data.csv
 
 m1 <- nm(run_id = "m1") \%>\%
-      prior_ctl("staging/Models/ADVAN2.mod") \%>\%
+      based_on("staging/Models/ADVAN2.mod") \%>\%
       data_path("DerivedData/data.csv")
       
 data_path(m1)  ## display data name

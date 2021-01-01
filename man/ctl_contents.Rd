@@ -4,8 +4,13 @@
 \alias{ctl_contents}
 \title{set/get control file object}
 \usage{
-ctl_contents(m, ctl_ob, update_numbering = TRUE, update_dollar_data = TRUE,
-  ...)
+ctl_contents(
+  m,
+  ctl_ob,
+  update_numbering = TRUE,
+  update_dollar_data = TRUE,
+  ...
+)
 }
 \arguments{
 \item{m}{nm object}

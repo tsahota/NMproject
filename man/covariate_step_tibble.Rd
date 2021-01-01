@@ -4,8 +4,14 @@
 \alias{covariate_step_tibble}
 \title{Prepare forward covariate step}
 \usage{
-covariate_step_tibble(base, run_id, run_in = getOption("models.dir"), dtest,
-  direction = c("forward", "backward"), ...)
+covariate_step_tibble(
+  base,
+  run_id,
+  run_in = getOption("models.dir"),
+  dtest,
+  direction = c("forward", "backward"),
+  ...
+)
 }
 \arguments{
 \item{base}{nm object}

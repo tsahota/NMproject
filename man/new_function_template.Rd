@@ -4,8 +4,12 @@
 \alias{new_function_template}
 \title{Create new R function template}
 \usage{
-new_function_template(function_name, overwrite = FALSE, open_file = TRUE,
-  libs = c("NMproject"))
+new_function_template(
+  function_name,
+  overwrite = FALSE,
+  open_file = TRUE,
+  libs = c("NMproject")
+)
 }
 \arguments{
 \item{function_name}{character indicating name of function}

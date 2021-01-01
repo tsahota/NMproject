@@ -4,8 +4,13 @@
 \alias{in_cache}
 \title{Test whether object is in cache or not}
 \usage{
-in_cache(r, cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE,
-  cache_ignore_data = FALSE, return_checksums = FALSE)
+in_cache(
+  r,
+  cache_ignore_cmd = FALSE,
+  cache_ignore_ctl = FALSE,
+  cache_ignore_data = FALSE,
+  return_checksums = FALSE
+)
 }
 \description{
 If TRUE run_nm() will skip model.  If FALSE run_nm() will run model

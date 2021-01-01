@@ -4,8 +4,16 @@
 \alias{remove_cov}
 \title{Remove a covariate to a NONMEM model}
 \usage{
-remove_cov(ctl, param, cov, state = 2, continuous = TRUE, time_varying,
-  additional_state_text, id_var = "ID")
+remove_cov(
+  ctl,
+  param,
+  cov,
+  state = 2,
+  continuous = TRUE,
+  time_varying,
+  additional_state_text,
+  id_var = "ID"
+)
 }
 \arguments{
 \item{ctl}{object coercible to ctl_list}

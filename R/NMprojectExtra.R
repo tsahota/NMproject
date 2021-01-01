@@ -8,7 +8,7 @@ nm_generic <- function(run_id = NA_character_,
                        parent_ctl_name = NA_character_,
                        ctl_name = "run{run_id}.mod",
                        type = "execute",
-                       run_dir = "{run_id}_{version}",
+                       run_dir = "{run_id}",
                        results_dir = "Results",
                        lst_path = "{run_dir}/NM_run1/psn.lst"){
   
@@ -39,7 +39,6 @@ To use the alpha interface, install NMproject 0.3.2",
   m[["parent_ctl_name"]] <- as.character(parent_ctl_name)
   m[["job_info"]] <- NA_character_
   m$target <- NA_character_
-  m$version <- as.integer(1)
   m$executed <- FALSE
   m$result_files <- c()
   m$ctl_contents <- NA_character_
@@ -95,6 +94,32 @@ To use the alpha interface, install NMproject 0.3.2",
 #' @export
 nm <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
 
+#' create a new nm object
+#' 
+#' Wrapper function around nm()
+#' @param run_id character. Run identifier
+#' @param based_on character. Prior ctl file to base run on
+#' @param data_path character. Path to dataset
+#' @param cmd character. Psn command to use
+#' @examples 
+#' \dontrun{
+#'m1 <- new_nm(run_id = "m1",
+#'             based_on = "staging/Models/run1.mod",
+#'             data_path = "DerivedData/data.csv",
+#'             cmd = "execute -run_on_sge -sge_prepend_flags='-V' {ctl_name} -dir={run_dir}")
+#'}
+#' @export
+new_nm <- function(run_id, based_on, data_path, cmd = "execute {ctl_name} -dir={run_dir}"){
+  
+  m <- nm(run_id = run_id)
+  if(!missing(based_on)) m <- m %>% based_on(based_on)
+  if(!missing(data_path)) m <- m %>% data_path(data_path)
+  if(!missing(cmd)) m <- m %>% cmd(cmd)
+  m
+  
+}
+
+
 #' @export
 is.na.nm_generic <- function(x) is.na(run_id(x))
 #' @export
@@ -132,7 +157,6 @@ child.nm_generic <- function(m, run_id = NA_character_, type = "execute", silent
   m <- m %>% executed(FALSE)
   m <- m %>% job_info(NA_character_)
   m[["result_files"]] <- c()
-  m <- m %>% version(as.integer(1))
   m <- m %>% parent_run_id(run_id(m))
   m <- m %>% parent_run_in(run_in(m))
   m <- m %>% parent_ctl_name(ctl_name(m))
@@ -225,7 +249,7 @@ print.nm_generic <- function(x, ...){
 
 printable_nm_generic <- function(x){
   pretty_empty_fields <- c("ctl_contents", "data_path", "cmd")
-  pretty_empty_fill_f <- c("prior_ctl", "data_path", "cmd")
+  pretty_empty_fill_f <- c("based_on", "data_path", "cmd")
   
   ## included even if NA
   minimum_fields <- c("run_id", pretty_empty_fields)
@@ -757,7 +781,7 @@ uncomment <- function(m, pattern = ".*"){
 #' ##  DerivedData/data.csv
 #' 
 #' m1 <- nm(run_id = "m1") %>%
-#'       prior_ctl("staging/Models/ADVAN2.mod") %>%
+#'       based_on("staging/Models/ADVAN2.mod") %>%
 #'       data_path("DerivedData/data.csv")
 #'       
 #' data_path(m1)  ## display data name
@@ -1460,12 +1484,6 @@ cache_current <- function(m) run_checksums(m)
 
 #' @export
 clear_cache <- function() unlink(".cache", recursive = TRUE)
-
-#' @export
-nm_prev_version <- function(m){
-  version <- version(m)
-  if(version > 1) m %>% version(version - 1) else m
-}
 
 #' get status of a run
 #' 
@@ -2418,7 +2436,7 @@ subroutine.nm_list <- Vectorize_nm_list(subroutine.nm_generic, SIMPLIFY = FALSE)
 #' \dontrun{
 #' 
 #' m1 <- nm(run_id = "m1") %>%
-#'   prior_ctl("staging/Models/run1.mod")
+#'   based_on("staging/Models/run1.mod")
 #' 
 #' m2 <- m1 %>% child(run_id = "m2") %>%
 #'   subroutine(advan = 2, trans = 2)
@@ -3897,9 +3915,7 @@ unique_run_cache_path <- function(m){
 
 run_cache_paths <- function(m){
   
-  ## sort by version number
-  hack_m <- m %>% version("[0-9]+")  ## use regex to get all versions
-  pattern <- hack_m %>%
+  pattern <- m %>%
     unique_run_cache_path() %>%
     basename()
   pattern <- paste0("^",pattern,"$")
@@ -3945,8 +3961,7 @@ save_run_cache <- function(m) {
   unique_run_cache_path <- unique_run_cache_path(m)
   dir.create(dirname(unique_run_cache_path), recursive = TRUE, showWarnings = FALSE)
   
-  run_cache_disk <- list(version = version(m), 
-                         job_info = job_info(m),
+  run_cache_disk <- list(job_info = job_info(m),
                          object = m,
                          checksums = run_checksums(m))
   saveRDS(run_cache_disk, file = unique_run_cache_path)
@@ -3977,8 +3992,7 @@ parent_run.nm_generic <- function(m, n = 1L){
   
   hack_m <- m %>% 
     run_id(parent_run_id(m)) %>% 
-    run_in(parent_run_in(m)) %>% 
-    version("[0-9]+")
+    run_in(parent_run_in(m))
 
   pattern <- hack_m %>%
     unique_run_cache_path() %>%
@@ -4163,7 +4177,6 @@ nm_render.nm_generic <- function(m,
         })
         if(any(matches)){
           message("nm_render cache found, skipping... use nm_render(force = TRUE) to override")
-          ## pick highest available version
           m <- m %>% result_files(output_file)
           return(invisible(m))    ## if up to date, skip
         }

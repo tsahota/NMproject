@@ -3,7 +3,6 @@
 \name{init_theta}
 \alias{init_theta}
 \alias{init_omega}
-\alias{init_theta}
 \alias{init_sigma}
 \title{Get/set initial parameters}
 \usage{

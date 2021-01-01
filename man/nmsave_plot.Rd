@@ -4,8 +4,16 @@
 \alias{nmsave_plot}
 \title{Save plots in results_dir}
 \usage{
-nmsave_plot(r, plot_ob, plot_name, plot_dir = results_dir(r), width = 7,
-  height = 5, dpi = 300, ...)
+nmsave_plot(
+  r,
+  plot_ob,
+  plot_name,
+  plot_dir = results_dir(r),
+  width = 7,
+  height = 5,
+  dpi = 300,
+  ...
+)
 }
 \arguments{
 \item{r}{nm object}

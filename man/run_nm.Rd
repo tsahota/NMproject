@@ -4,10 +4,18 @@
 \alias{run_nm}
 \title{Run NONMEM jobs}
 \usage{
-run_nm(m, wait = getOption("wait"), ignore.stdout = TRUE,
-  ignore.stderr = TRUE, quiet = getOption("quiet_run"),
-  intern = getOption("intern"), force = FALSE, cache_ignore_cmd = FALSE,
-  cache_ignore_ctl = FALSE, cache_ignore_data = FALSE)
+run_nm(
+  m,
+  wait = getOption("wait"),
+  ignore.stdout = TRUE,
+  ignore.stderr = TRUE,
+  quiet = getOption("quiet_run"),
+  intern = getOption("intern"),
+  force = FALSE,
+  cache_ignore_cmd = FALSE,
+  cache_ignore_ctl = FALSE,
+  cache_ignore_data = FALSE
+)
 }
 \arguments{
 \item{m}{nm objects}
@@ -33,7 +41,6 @@ Default can be changed with  wait_by_default() function}
 }
 \value{
 m with \code{job_info} fields populated.
- If \code{version} has been previously run, it will be incremented
 }
 \description{
 Run nm objects.  Uses \code{system_nm()} to submit the \code{cmd()} value of object

@@ -4,9 +4,14 @@
 \alias{setup_nm_demo}
 \title{Setup demo files}
 \usage{
-setup_nm_demo(demo_name = "theopp", new_project = NA,
-  file_stub = paste0(getOption("model_file_stub"), 1), overwrite = FALSE,
-  exclude = NULL, additional_demo_locations = NULL)
+setup_nm_demo(
+  demo_name = "theopp",
+  new_project = NA,
+  file_stub = paste0(getOption("model_file_stub"), 1),
+  overwrite = FALSE,
+  exclude = NULL,
+  additional_demo_locations = NULL
+)
 }
 \arguments{
 \item{demo_name}{character. Name of demo. Default = "theopp"}

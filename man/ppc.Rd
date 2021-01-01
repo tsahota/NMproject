@@ -3,7 +3,6 @@
 \name{ppc}
 \alias{ppc}
 \alias{ppc_whisker_plot}
-\alias{ppc}
 \alias{ppc_histogram_plot}
 \alias{ppc_data}
 \title{PPC functions: process data from simulation and plot}
@@ -12,8 +11,15 @@ ppc_whisker_plot(d, group, var1, var2, statistic = "statistic")
 
 ppc_histogram_plot(d, var1, var2, statistic = "statistic")
 
-ppc_data(r, FUN, ..., pre_proc = identity, max_mod_no = NA, DV = "DV",
-  statistic = "statistic")
+ppc_data(
+  r,
+  FUN,
+  ...,
+  pre_proc = identity,
+  max_mod_no = NA,
+  DV = "DV",
+  statistic = "statistic"
+)
 }
 \arguments{
 \item{group, var1, var2}{grouping variables for plotting}

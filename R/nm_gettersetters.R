@@ -107,11 +107,6 @@ results_dir <- function(m, text) {
 }
 
 #' @export
-version <- function(m, text) {
-  if(missing(text)) custom_1d_field(m, "version") else custom_1d_field(m, "version", text)
-}
-
-#' @export
 executed <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "executed") else custom_1d_field(m, "executed", text)
 }
@@ -284,4 +279,4 @@ ctl_contents_simple <- function(m, ctl_ob, ...){
 #' 
 #' @export
 
-prior_ctl <- ctl_contents
+based_on <- ctl_contents

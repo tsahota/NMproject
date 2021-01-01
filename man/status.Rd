@@ -2,7 +2,6 @@
 % Please edit documentation in R/NMprojectExtra.R, R/status.R
 \name{status}
 \alias{status}
-\alias{status}
 \title{get status of a run}
 \usage{
 status(x, simple = TRUE)
@@ -10,16 +9,10 @@ status(x, simple = TRUE)
 status(x, simple = TRUE)
 }
 \arguments{
-\item{x}{nm object}
-
-\item{simple}{logical. deprecated}
-
 \item{x}{object to get status of}
 
 \item{simple}{logical default TRUE. Should result be simple one liner}
 }
 \description{
-get status of a run
-
 Get status of NONMEM job
 }

@@ -4,8 +4,11 @@
 \alias{get_PMX_code_library}
 \title{Download code repositor from github}
 \usage{
-get_PMX_code_library(local_path,
-  giturl = "https://github.com/tsahota/PMXcodelibrary", config_file)
+get_PMX_code_library(
+  local_path,
+  giturl = "https://github.com/tsahota/PMXcodelibrary",
+  config_file
+)
 }
 \arguments{
 \item{local_path}{character. Path to install repository}

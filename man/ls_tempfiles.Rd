@@ -4,8 +4,12 @@
 \alias{ls_tempfiles}
 \title{get all temp files}
 \usage{
-ls_tempfiles(object = ".", output_loc = c("run_dir", "base"),
-  run_files = NA_character_, include_grid_files = TRUE)
+ls_tempfiles(
+  object = ".",
+  output_loc = c("run_dir", "base"),
+  run_files = NA_character_,
+  include_grid_files = TRUE
+)
 }
 \arguments{
 \item{object}{nm object or path to project (default = ".")}

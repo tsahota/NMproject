@@ -4,15 +4,10 @@
 \name{reexports}
 \alias{reexports}
 \alias{mutate}
-\alias{reexports}
 \alias{filter}
-\alias{reexports}
 \alias{coef}
-\alias{reexports}
 \alias{AIC}
-\alias{reexports}
 \alias{nobs}
-\alias{reexports}
 \alias{BIC}
 \title{Objects exported from other packages}
 \keyword{internal}
@@ -21,8 +16,8 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{dplyr}{\code{\link[dplyr]{mutate}}, \code{\link[dplyr]{filter}}}
+  \item{dplyr}{\code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}}}
 
-  \item{stats}{\code{\link[stats]{coef}}, \code{\link[stats]{AIC}}, \code{\link[stats]{nobs}}, \code{\link[stats]{BIC}}}
+  \item{stats}{\code{\link[stats]{AIC}}, \code{\link[stats]{BIC}}, \code{\link[stats]{coef}}, \code{\link[stats]{nobs}}}
 }}
 

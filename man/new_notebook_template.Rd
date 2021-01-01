@@ -4,8 +4,12 @@
 \alias{new_notebook_template}
 \title{Create new R notebook}
 \usage{
-new_notebook_template(script_name, overwrite = FALSE, open_file = TRUE,
-  libs = c("NMproject"))
+new_notebook_template(
+  script_name,
+  overwrite = FALSE,
+  open_file = TRUE,
+  libs = c("NMproject")
+)
 }
 \arguments{
 \item{script_name}{character}

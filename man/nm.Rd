@@ -4,11 +4,18 @@
 \alias{nm}
 \title{Create core NM object}
 \usage{
-nm(run_id = NA_character_, run_in = getOption("models.dir"),
-  parent_run_id = NA_character_, parent_run_in = NA_character_,
-  parent_ctl_name = NA_character_, ctl_name = "run{run_id}.mod",
-  type = "execute", run_dir = "{run_id}_{version}",
-  results_dir = "Results", lst_path = "{run_dir}/NM_run1/psn.lst")
+nm(
+  run_id = NA_character_,
+  run_in = getOption("models.dir"),
+  parent_run_id = NA_character_,
+  parent_run_in = NA_character_,
+  parent_ctl_name = NA_character_,
+  ctl_name = "run{run_id}.mod",
+  type = "execute",
+  run_dir = "{run_id}",
+  results_dir = "Results",
+  lst_path = "{run_dir}/NM_run1/psn.lst"
+)
 }
 \arguments{
 \item{run_id}{character vector. Run identifier}

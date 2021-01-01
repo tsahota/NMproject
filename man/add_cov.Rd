@@ -4,9 +4,21 @@
 \alias{add_cov}
 \title{Add a covariate to a NONMEM model}
 \usage{
-add_cov(ctl, param, cov, state = 2, continuous = TRUE, time_varying,
-  additional_state_text, id_var = "ID", force = FALSE,
-  force_TV_var = FALSE, init, lower, upper)
+add_cov(
+  ctl,
+  param,
+  cov,
+  state = 2,
+  continuous = TRUE,
+  time_varying,
+  additional_state_text,
+  id_var = "ID",
+  force = FALSE,
+  force_TV_var = FALSE,
+  init,
+  lower,
+  upper
+)
 }
 \arguments{
 \item{ctl}{object coercible to ctl_list}

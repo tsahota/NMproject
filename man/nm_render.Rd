@@ -4,8 +4,15 @@
 \alias{nm_render}
 \title{render function for nm objects}
 \usage{
-nm_render(m, input, output_file = NA, args = list(), force = FALSE,
-  async = FALSE, ...)
+nm_render(
+  m,
+  input,
+  output_file = NA,
+  args = list(),
+  force = FALSE,
+  async = FALSE,
+  ...
+)
 }
 \arguments{
 \item{m}{nm object}
