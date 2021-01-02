@@ -31,7 +31,7 @@ test_that("run and post",{
   ## dataset procesing
   
   m1 <- nm(run_id = "m1") %>%
-    prior_ctl("staging/Models/run1.mod") %>%
+    based_on("staging/Models/run1.mod") %>%
     cmd("execute {ctl_name} -dir={run_dir}")
 
   stopifnot(in_cache(m1))  ## no point in continue if cache broken

@@ -1778,7 +1778,7 @@ summary {
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5tMSA8LSBubShydW5faWQgPSBcIm0xXCIpICU+JVxuICBwcmlvcl9jdGwoXCJzdGFnaW5nL01vZGVscy9ydW4xLm1vZFwiKSAlPiVcbiAgZGF0YV9wYXRoKFwiRGVyaXZlZERhdGEvZGF0YS5jc3ZcIikgJT4lXG4gIGNtZChcImV4ZWN1dGUge2N0bF9uYW1lfSAtZGlyPXtydW5fZGlyfVwiKSAlPiVcbiAgZmlsbF9pbnB1dChyZW5hbWUgPSBjKFwiREFURVwiID0gXCJEQVQwXCIpKSAlPiVcbiAgIyMgdGhlIGRlZmF1bHQgZm9ybWF0IGlzIG5vdCBjb21wYXRpYmxlIHdpdGggbmV3IHhwb3NlXG4gIGdzdWJfY3RsKFwiIEZPUk1BVD10RjEzLjRcIiwgXCJcIikgJT4lXG4gIHJ1bl9ubSgpXG4gIFxuYGBgIn0= -->
 <pre class="r"><code>
 m1 &lt;- nm(run_id = &quot;m1&quot;) %&gt;%
-  prior_ctl(&quot;staging/Models/run1.mod&quot;) %&gt;%
+  based_on(&quot;staging/Models/run1.mod&quot;) %&gt;%
   data_path(&quot;DerivedData/data.csv&quot;) %&gt;%
   cmd(&quot;execute {ctl_name} -dir={run_dir}&quot;) %&gt;%
   fill_input(rename = c(&quot;DATE&quot; = &quot;DAT0&quot;)) %&gt;%

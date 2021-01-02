@@ -43,7 +43,7 @@ test_that("nm object basic use",{
   expect_output(print(m1))
   
   m1 <- m1 %>% cmd("qpsn -t 100 -c auto -- execute {ctl_name} -dir={run_dir}")
-  m1 <- m1 %>% prior_ctl("staging/Models/run1.mod")
+  m1 <- m1 %>% based_on("staging/Models/run1.mod")
   
   expect_identical(ctl_path(m1), "Models/runmod1.mod")
   ## file doesn't exist yet
