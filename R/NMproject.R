@@ -105,6 +105,36 @@ set_nm_opts <- function(){
 
   if(is.null(getOption("new_jobs"))) options(new_jobs="run")
   
+  if(is.null(getOption("nmtran_exe_path"))) options(nmtran_exe_path=get_nm_tran_path())
+  
+}
+
+get_nm_tran_path <- function(name = "default"){
+
+  nm_versions <- system_nm("psn -nm_versions", intern = TRUE)
+  
+  nm_version <- nm_versions[grepl(paste0("^", name), nm_versions)]
+  
+  if(length(nm_version) != 1){
+    message("Could not determine path to nmtran from psn -nm_versions.")
+    message("To set manually add the following command:")
+    message("  options(nmtran_exe_path=\"path/to/nmtran\")")
+    message("     1. (for this session only) in the console")
+    message("     2. (for this user) to ~/.Rprofile")
+    message(paste0("     3. (for all users) to ",file.path(R.home(component = "home"), "etc", "Rprofile.site")))
+    return(NULL)
+  }
+  
+  ## can now assume version is unique
+  path <- gsub(".*\\((.*),.*\\)", "\\1", nm_version)
+  tr_path <- file.path(path, "tr")
+  if(file.exists(path)){
+    path <- dir(tr_path, pattern = "NMTRAN.exe", ignore.case = TRUE, full.names = TRUE)
+  } else { ## guess NMTRAN.exe
+    path <- file.path(tr_path, "NMTRAN.exe")    
+  }
+  path
+  
 }
 
 #' default system_nm
