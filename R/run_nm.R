@@ -54,8 +54,8 @@ run_nm.nm_generic <- function(m, wait=getOption("wait"),
   if(!force){
     ## pull existing checksum info
     #run_cache_disk <- lapply(run_cache_paths(m), readRDS)
-    run_cache_disk <- readRDS(run_cache_paths(m))
-    if(length(run_cache_disk) > 0){
+    if(length(run_cache_paths(m)) > 0){
+      run_cache_disk <- readRDS(run_cache_paths(m))
       ## get current checksum
       current_checksums <- run_checksums(m)
       ## determine matches
