@@ -3284,8 +3284,23 @@ run_dir_path <- function(m) file.path(run_in(m), run_dir(m))
 #nm_run_dir_path <- function(m, subdir = "NM_run1") file.path(run_dir_path(m), subdir)
 #nm_out_file <- function(m, file_name) file.path(nm_run_dir_path(m), file_name)
 
+#' Find an output file
+#' 
+#' @param m nm object
+#' @param extn character. name of extension
+#' @param file_name optional character. name of file name
+#' 
+#' @examples
+#' \dontrun{
+#' m %>% nm_output_path("ext")  ## path to ext file
+#' }
 #' @export
 nm_output_path <- function(m, extn, file_name) {
+  UseMethod("nm_output_path")
+}
+
+#' @export
+nm_output_path.nm_generic <- function(m, extn, file_name) {
   lst_file <- lst_path(m)
   if(!missing(extn)){
     current_extn <- tools::file_ext(lst_file)
@@ -3296,6 +3311,10 @@ nm_output_path <- function(m, extn, file_name) {
   }
   file.path(run_in(m), out_file)
 }
+
+#' @export
+nm_output_path.nm_list <- Vectorize_nm_list(nm_output_path.nm_generic, SIMPLIFY = TRUE)
+
 
 #' @export
 output_location <- function(m) file.path(run_in(m), dirname(lst_path(m)))
