@@ -37,7 +37,7 @@ if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
 ```
 
 ```{r}
-library(NMprojectAZ)
+library(NMproject)
 ```
 
 ## model object

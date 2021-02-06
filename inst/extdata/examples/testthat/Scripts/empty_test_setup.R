@@ -16,7 +16,7 @@
 
 library(future)
 future::plan("future::multiprocess", workers = 2)
-library(NMprojectAZ)
+library(NMproject)
 library(dplyr)
 devtools::load_all("~/NMproject/")
 load_localpackage()

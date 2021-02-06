@@ -107,6 +107,9 @@ set_nm_opts <- function(){
   
   if(is.null(getOption("nmtran_exe_path"))) options(nmtran_exe_path=get_nm_tran_path())
   
+  if(is.null(getOption("code_library_path"))) 
+    options(code_library_path=system.file("extdata", "CodeLibrary", package = "NMproject"))
+  
 }
 
 get_nm_tran_path <- function(name = "default"){
