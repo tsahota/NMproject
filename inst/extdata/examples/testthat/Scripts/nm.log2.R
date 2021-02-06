@@ -16,7 +16,7 @@ library(future)
 future::plan("future::multiprocess", workers = 2)
 library(NMproject)
 library(dplyr)
-devtools::load_all("~/NMproject/")
+
 load_localpackage()
 
 if(!exists("module_load_cmd")){
@@ -27,11 +27,11 @@ if(!exists("level")){
   level <- 1
 }
 
-module_cmd(module_load_cmd)
-#module_cmd("module load psn")
-#module_cmd("module load psn/4.8.1-foss-2017a")
-#module_cmd("module load psn/4.4.8-foss-2017a-gfortran-5.2-b1")
-#module_cmd("module load psn/4.9.0-foss-2017a-gfortran-5.2-test")
+
+#
+#
+#
+#
 
 ## resolution information
 if(level == 2) {
@@ -107,7 +107,7 @@ ds$m[1] <- ds$m[1] %>%
   nmsave_plot(pl2[[6]], plot_name = "run_times_1:6.png")
 
 
-# module_cmd("module load psn")
+# 
 # m1default <- ds$m[1] %>% child("1default") %>%
 #   run_in("Models/moduletest") %>%
 #   run_nm()

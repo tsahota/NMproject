@@ -10,12 +10,12 @@
 
 #.libPaths(c("/projects/qcp/packages/dev/installed/", .libPaths()))
 library(NMproject)
-# devtools::load_all("~/tidyproject/")
-# devtools::load_all("~/NMproject/")
-# devtools::load_all("~/tidyprojectAZ/")
-# devtools::load_all("~/NMproject/")
+# 
+# 
+# 
+# 
 
-module_cmd("module load psn/4.4.8-foss-2017a-gfortran-5.2-b1")
+
 
 # install.packages("rsample")
 library(dplyr)

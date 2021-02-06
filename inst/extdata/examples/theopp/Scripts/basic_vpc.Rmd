@@ -39,10 +39,10 @@ if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
 ```{r echo=FALSE,message=FALSE}
 ## LOAD PACKAGES HERE
 
-# devtools::load_all("~/tidyproject/")
-# devtools::load_all("~/NMproject/")
-# devtools::load_all("~/tidyprojectAZ/")
-# devtools::load_all("~/NMproject/")
+# 
+# 
+# 
+# 
 library(dplyr)
 library(ggplot2)
 

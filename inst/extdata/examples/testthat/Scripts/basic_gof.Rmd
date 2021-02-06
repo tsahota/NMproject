@@ -28,7 +28,7 @@ if(!interactive()) m <- params$m
 
 ```{r echo=FALSE,message=FALSE}
 library(NMproject)
-devtools::load_all("~/NMproject")
+
 ```
 
 ## run details

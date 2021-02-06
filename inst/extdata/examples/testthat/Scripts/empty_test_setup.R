@@ -18,15 +18,15 @@ library(future)
 future::plan("future::multiprocess", workers = 2)
 library(NMproject)
 library(dplyr)
-devtools::load_all("~/NMproject/")
+
 load_localpackage()
 
-#module_cmd("module load psn")
-#module_cmd("module load psn/4.8.1-foss-2017a")
-#module_cmd("module load psn/4.4.8-foss-2017a-gfortran-5.2-b1")
-module_cmd("module load psn/4.9.0-foss-2017a-gfortran-5.2-test")
+#
+#
+#
 
-#module_cmd("module use /opt/scp/unsupported/PSN_NONMEM/opt/scp/modules/all; module load psn/4.9.0-foss-2017a-gfortran-5.2")
+
+#
 
 
 ## resolution information
