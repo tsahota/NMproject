@@ -709,7 +709,7 @@ set_target_text <- function(m, text){
 
 #' @importFrom graphics text
 #' @export
-text.nm_generic <- function(x, text, append = FALSE, after = character(), ...){
+text.nm_generic <- function(x, text, append = FALSE, after = character(), add_dollar_text = FALSE, ...){
   m <- x
   current_text <- get_target_text(m)
   if(missing(text)) return(current_text)
@@ -735,7 +735,7 @@ text.nm_generic <- function(x, text, append = FALSE, after = character(), ...){
   if(is.na(target(m))) {
     #stop("not developed yet")
   } else {
-    text <- setup_dollar(text, paste0("$",target(m)), add_dollar_text = FALSE) 
+    text <- setup_dollar(text, paste0("$",target(m)), add_dollar_text = add_dollar_text) 
   }
   m <- m %>% set_target_text(text)
   m
@@ -1830,8 +1830,8 @@ show_ctl.nm_list <- show_ctl.nm_generic
 #' @param dollar character.  Subroutine to target
 #' @param ... arguments to be passed to text()
 #' @export
-dollar <- function(m, dollar, ...) {
-  m %>% target(dollar) %>% text(...)
+dollar <- function(m, dollar, ..., add_dollar_text = TRUE) {
+  m %>% target(dollar) %>% text(..., add_dollar_text = add_dollar_text)
 }
 
 ## pipe for string functions

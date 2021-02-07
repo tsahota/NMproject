@@ -11,9 +11,7 @@ start_manual_edit <- function(m, name){
 #' @export
 manual_edit <- function(m, description){
   
-  if(.Platform$OS.type == "unix") 
-    stop("manual_edit() is for non-unix systems.  Use manual_patch() instead",
-         call. = FALSE)
+  .Deprecated("manual_edit() is old. Use the make manual edit patch addin instead")
   
   m %>% start_manual_edit()
   message(
@@ -70,7 +68,7 @@ manual_patch <- function(m){
   
   message("copy-paste the following into your script to apply:\n
   [nm_object] %>%
-  apply_patch(\"", res$patch_name,"\")
+  apply_manual_edit(\"", res$patch_name,"\")
 
 (dont forget to comment your code)")
   
@@ -78,9 +76,9 @@ manual_patch <- function(m){
 
 #' @export
 start_manual_edit_unix <- function(m, combine_patch = NA_character_){
-  if(.Platform$OS.type != "unix") 
-    stop("patching functionality only implemented for linux/unix systems\n consider manual_edit() instead",
-         call. = FALSE)
+  # if(.Platform$OS.type != "unix") 
+  #   stop("patching functionality only implemented for linux/unix systems\n consider manual_edit() instead",
+  #        call. = FALSE)
   
   if(is_nm_list(m) & length(m) > 1)
     stop("m cannot refer to multiple runs", call. = FALSE)
@@ -92,20 +90,24 @@ start_manual_edit_unix <- function(m, combine_patch = NA_character_){
   dir.create(dirname(patch_path), showWarnings = FALSE, recursive = TRUE)
   
   ## this isn't used - delete
-  old_file_path <- file.path(run_in(m), paste0(ctl_name(m), ".old"))
   
-  old_ctl_path <- ctl_path(m)
-  new_ctl_path <- file.path(run_in(m), paste0("manual_", ctl_name(m)))
+  temp_ctl_path <- file.path(run_in(m), paste0("manual_", ctl_name(m)))
 
-  m %>% write_ctl()
-  mnew <- m
-  mnew <- mnew %>% ctl_path(new_ctl_path) %>% write_ctl()
-  if(!is.na(combine_patch)) mnew <- mnew %>% apply_patch(combine_patch)
+  mnew <- m %>% ctl_path(temp_ctl_path) %>% write_ctl()
+
+  ## soft unstage all first, then add only the file
+  if(!git_cmd_available) stop("need git available from system() for this to work")
+
+  system("git reset", intern = TRUE) ## for some reason git2r::reset() doesn't reset
+  git2r::add(path = ctl_path(mnew))
+  git2r::commit(message = paste("before manual change: ", ctl_path(mnew)))
+  
+  if(!is.na(combine_patch)) m <- m %>% apply_manual_edit(combine_patch)
   
   edit_file(ctl_path(mnew)) ## edit new one
   
   res <- list()
-  res$new_ctl_path <- new_ctl_path
+  res$new_ctl_path <- temp_ctl_path
   res$patch_name <- patch_name
   res$patch_path <- patch_path
   
@@ -114,8 +116,10 @@ start_manual_edit_unix <- function(m, combine_patch = NA_character_){
 
 #' @export
 diff_manual_edit <- function(m, res){
-  diff_cmd <- paste("diff -u", ctl_path(m), res$new_ctl_path, ">", res$patch_path)
-  system(diff_cmd)
+  git2r::add(path = res$new_ctl_path)
+  git2r::diff(git2r::repository(), index = TRUE, as_char = TRUE, filename = res$patch_path)
+  ## remove last commit and file 
+  system("git reset HEAD^1") ## for some reason git2r::reset() doesn't reset
   unlink(res$new_ctl_path)
 }
 
@@ -126,65 +130,102 @@ view_patch <- function(patch_name){
   file.show(patch_path)
 }
 
+#' apply a manual edit
+#' 
+#' Best used with "make manual edit patch" addin.
+#' 
+#' @param m nm object
+#' @param patch_name character name of patch
+#' 
 #' @export
-apply_patch <- function(m, patch_name){
+apply_manual_edit <- function(m, patch_name){
+  UseMethod("apply_manual_edit")
+}
+
+#' @export
+apply_manual_edit.nm_generic <- function(m, patch_name){
   
   patch_path <- file.path(getOption("models.dir"), 
                           "patches", 
                           patch_name)
   
-  #write_ctl(m) 
+  patch_text <- readLines(patch_path)
   
-  ctl_paths <- ctl_path(m)
+  temp_ctl_path <- file.path(run_in(m), paste0("manual_", ctl_name(m)))
+  mnew <- m %>% ctl_path(temp_ctl_path) %>% write_ctl()
   
-  patch_cmd <- paste("patch -i", patch_path, ctl_paths)
-  patch_cmd <- paste(patch_cmd, collapse = " ; ")
+  ## edit and save temporary patch
+  patch_text <- gsub("(a/).*?manual_\\S+", paste0("\\1", temp_ctl_path), patch_text, perl = TRUE)
+  patch_text <- gsub("(b/).*?manual_\\S+", paste0("\\1", temp_ctl_path), patch_text, perl = TRUE)
   
-  ## for some reason no "patch" on AZ rstudio server :(
-  ## use system_nm instead
+  patch_path_tmp <- paste0(patch_path, ".tmp")
+  writeLines(patch_text, patch_path_tmp)
+  
+  patch_cmd <- paste("git apply", patch_path_tmp)
 
-  ## 1.save the file via ssh  
-  ## remove from orig and rej files in system_nm instead of R
-  ##  because sometimes delay
-  ## also get modified file via the command (to avoid file sync issue)
+  if(!git_cmd_available) stop("need git available from system() for this to work")  
+  system(patch_cmd)  ## win = no need to use system_nm, no file sync issues
   
-  patch_cmd <- paste0(
-    ## save the file via ssh  
-    paste0("echo ", 
-           shQuote(gsub("\\$", "\\\\$", paste(text(as_nm_generic(m)), collapse = "\n"))),
-           " > ", ctl_paths), ";",
-    ## remove orig and rej files
-    paste0("rm -f ", paste0(ctl_paths, ".orig")), ";",
-    paste0("rm -f ", paste0(ctl_paths, ".rej")), ";",
-#    paste0("ls ", paste0(ctl_paths), "*;"),
-#    paste0("md5sum ", paste0(ctl_paths), ";"),
-    patch_cmd, ";",
-#    paste0("rm -f ", paste0(ctl_paths, ".orig")), ";",
-#    paste0("rm -f ", paste0(ctl_paths, ".rej")), ";",
-#    paste0("ls ", paste0(ctl_paths), "*;"),
-#    paste0("md5sum ", paste0(ctl_paths), ";"),
-    "echo patched file below ;",
-    paste0("cat ", ctl_paths)
-  )
+  out_file <- readLines(temp_ctl_path)
   
-  out <- system_nm(patch_cmd, dir = getwd(), intern = TRUE)
+  if(0){  ## delete this if working in AZ
+    ctl_paths <- ctl_path(m)
+    patch_cmd <- paste("patch -i", patch_path, ctl_paths)
+    patch_cmd <- paste(patch_cmd, collapse = " ; ")
+    
+    ## for some reason no "patch" on AZ rstudio server :(
+    ## use system_nm instead
+    
+    ## 1.save the file via ssh  
+    ## remove from orig and rej files in system_nm instead of R
+    ##  because sometimes delay
+    ## also get modified file via the command (to avoid file sync issue)
+    
+    patch_cmd <- paste0(
+      ## save the file via ssh  
+      paste0("echo ", 
+             shQuote(gsub("\\$", "\\\\$", paste(text(as_nm_generic(m)), collapse = "\n"))),
+             " > ", ctl_paths), ";",
+      ## remove orig and rej files
+      paste0("rm -f ", paste0(ctl_paths, ".orig")), ";",
+      paste0("rm -f ", paste0(ctl_paths, ".rej")), ";",
+      #    paste0("ls ", paste0(ctl_paths), "*;"),
+      #    paste0("md5sum ", paste0(ctl_paths), ";"),
+      patch_cmd, ";",
+      #    paste0("rm -f ", paste0(ctl_paths, ".orig")), ";",
+      #    paste0("rm -f ", paste0(ctl_paths, ".rej")), ";",
+      #    paste0("ls ", paste0(ctl_paths), "*;"),
+      #    paste0("md5sum ", paste0(ctl_paths), ";"),
+      "echo patched file below ;",
+      paste0("cat ", ctl_paths)
+    )
+    
+    out <- system_nm(patch_cmd, dir = getwd(), intern = TRUE)
+    
+    out_file <- out[seq_along(out) > match("patched file below" , out)]
+    preamble <- out[seq_along(out) < match("patched file below" , out)]
+    cat(preamble, sep = "\n")
+    
+    was_nm_list <- inherits(m, "nm_list")
+    
+    m <- as_nm_generic(m) %>% 
+      ctl_contents_simple(out_file)
+    
+    if(was_nm_list) m <- as_nm_list(m)
+    
+    
+  }
   
-  out_file <- out[seq_along(out) > match("patched file below" , out)]
-  preamble <- out[seq_along(out) < match("patched file below" , out)]
-  cat(preamble, sep = "\n")
 
-  was_nm_list <- inherits(m, "nm_list")
-  
-  m <- as_nm_generic(m) %>% 
-    ctl_contents_simple(out_file)
-  
-  if(was_nm_list) m <- as_nm_list(m)
-  
-  #print(m %>% dollar("SIGMA"))
+  m <- m %>% ctl_contents_simple(out_file)
   
   invisible(m)
   
 }
+
+#' @export
+apply_manual_edit.nm_list <- Vectorize_nm_list(apply_manual_edit.nm_generic, SIMPLIFY = FALSE)
+
 
 manual_patch_app <- function() {
   

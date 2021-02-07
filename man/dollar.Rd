@@ -4,7 +4,7 @@
 \alias{dollar}
 \title{Get/set existing subroutine}
 \usage{
-dollar(m, dollar, ...)
+dollar(m, dollar, ..., add_dollar_text = TRUE)
 }
 \arguments{
 \item{m}{nm object}

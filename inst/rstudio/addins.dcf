@@ -1,5 +1,5 @@
 Name: make manual edit patch
-Description: create patch to apply with apply_patch()
+Description: create patch to apply with apply_manual_edit()
 Binding: manual_patch_app
 Interactive: true
 

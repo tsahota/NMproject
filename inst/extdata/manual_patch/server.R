@@ -65,7 +65,7 @@ server <- function(input, output, session) {
       final_text <- 
         paste0("copy-paste the following into your script to apply:\n
   [nm_object] %>%
-  apply_patch(\"", res()$patch_name,"\")")
+  apply_manual_edit(\"", res()$patch_name,"\")")
       message(final_text)
     }
     stopApp()
