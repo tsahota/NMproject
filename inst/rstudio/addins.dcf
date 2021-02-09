@@ -1,11 +1,6 @@
-Name: new_manual_edit
+Name: manual_edit
 Description: create patch to apply with apply_manual_edit()
-Binding: new_patch_app
-Interactive: true
-
-Name: modify_manual_edit
-Description: modify the last manual edit
-Binding: modify_patch_app
+Binding: make_patch_app
 Interactive: true
 
 Name: view patch

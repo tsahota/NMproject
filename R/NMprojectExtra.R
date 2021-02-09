@@ -1394,8 +1394,9 @@ result_file.nm_list <- Vectorize_nm_list(result_file.nm_generic)
 
 #' @export
 nm_tran.nm_generic <- function(x){
-  write_ctl(x)
-  nm_tran.default(ctl_path(x))
+  xtmp <- x %>% run_in(file.path(run_in(x), "temp"))
+  write_ctl(xtmp)
+  nm_tran.default(ctl_path(xtmp))
   invisible(x)
 }
 #' @export
@@ -1818,6 +1819,7 @@ show_ctl <- function(r) {
 
 #' @export
 show_ctl.nm_generic <- function(r) {
+  rtmp <- r %>% run_in(file.path(run_in(r), "temp"))
   r %>% write_ctl()
   file.show(ctl_path(r))
 }
@@ -3909,8 +3911,9 @@ nm_output.nm_list <- nm_output.nm_generic
 
 run_checksums <- function(m){  ## only works on single m
   ## information determinative to whether run should be rerun
-  m %>% write_ctl()
-  files <- c(ctl_path(m), data_path(m))
+  mtmp <- m %>% run_in(file.path(run_in(m), "temp"))
+  mtmp %>% write_ctl()
+  files <- c(ctl_path(mtmp), data_path(mtmp))
   
   checksums <- tools::md5sum(files)
   names(checksums) <- c("ctl", "data")
@@ -5909,6 +5912,30 @@ covariance_result <- function(r,trans=TRUE){
     ggplot2::theme(axis.text.x  = ggplot2::element_text(angle=90,vjust=0))
   
   p
+  
+}
+
+#' get job stats
+#' @export
+job_stats <- function(m){
+  
+  if(!requireNamespace("pmxTools"))
+    stop("install pmxTools", call. = FALSE)
+  
+  d <- m %>% nm_row()
+  
+  d <- d %>% ungroup() %>%
+    mutate(xml_path = nm_output_path(m, "xml"),
+           xml = purrr::map(xml_path, pmxTools::read_nm))
+  
+  d %>% mutate(starttime = purrr::map_chr(xml, ~.x$start_datetime),
+               stoptime = purrr::map_chr(xml, ~.x$stop_datetime),
+               starttime = lubridate::ymd_hms(starttime),
+               stoptime = lubridate::ymd_hms(stoptime),
+               Rtime = difftime(stoptime, starttime, units = "mins"), 
+               launchtime = m %>% run_dir(full_path = TRUE) %>% file.path("command.txt") %>% file.info() %>% .$mtime %>% lubridate::ymd_hms(),
+               Qtime = difftime(starttime, launchtime, units = "mins"),
+               Ttime = difftime(stoptime, launchtime, units = "mins"))
   
 }
 

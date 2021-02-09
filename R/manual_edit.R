@@ -358,6 +358,22 @@ are changed.  It is recommended to use dollar() for custom edits of downstream (
   
 }
 
+make_patch_app <- function(){
+
+  ctx <- rstudioapi::getActiveDocumentContext()
+  selected_text <- ctx$selection[[1]]$text
+  
+  ## see if last function is apply_manual_edit
+  
+  ## get last function used in piping
+  full_expr <- parse(text = selected_text)
+  last_fun_name <- as.character(full_expr[[1]][[3]][[1]])
+  
+  if(last_fun_name == "apply_manual_edit") modify_patch_app() else
+    new_patch_app()
+    
+}
+
 
 view_patch_app <- function(){
 
