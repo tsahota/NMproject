@@ -36,9 +36,9 @@ load_localpackage()
 
 ```{r message=FALSE, results='hide'}
 
-c1 <- nm(run_id = "c1") %>%
-  based_on("staging/Models/run1.mod") %>%
-  data_path("DerivedData/THEOPcov1.csv") %>%
+c1 <- new_nm(run_id = "c1",
+             based_on = "staging/Models/run1.mod",
+             data_path = "DerivedData/THEOPcov1.csv") %>%
   cmd("execute {ctl_name} -dir={run_dir}") %>%
   fill_input(rename = c("DATE" = "DAT0")) %>%
   ## the default format is not compatible with new xpose

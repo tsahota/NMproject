@@ -4318,6 +4318,11 @@ new_notebook_template <- function(script_name, overwrite = FALSE, open_file = TR
 }
 
 
+nm_list2list <- function(m){
+  class(m) <- "list"
+  m
+}
+
 
 #' @export
 summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new", "all"), keep_m = FALSE, ...){
@@ -4340,10 +4345,23 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
     nrow(coef)
   }
 
+  # browser()
+  # 
+  # f <- function(x) {
+  #   ans <- list(x)
+  #   return(ans)
+  #   parent_run(x)
+  # }
+  # 
+  # tmp <- d %>% dplyr::group_by(.data$parent_run_id, .data$parent_run_in) %>%
+  #   dplyr::mutate(
+  #     parent = list(parent_run(.data$m[[1]]))
+  #   )
+  
   d <- d %>% dplyr::group_by(.data$parent_run_id, .data$parent_run_in) %>%
     dplyr::mutate(
-      parent = parent_run(.data$m[1]),
-      parent_coef_obs = coef(.data$parent[1]),
+      parent = list(parent_run(.data$m[[1]])),
+      parent_coef_obs = coef.nm_list(.data$parent[1]),
       n_params = sapply(.data$coef_obs, n_parameters_fun),
       parent_n_params = n_parameters_fun(.data$parent_coef_obs[[1]])
       ) %>%
@@ -4366,10 +4384,13 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
       )
   d$coef_obs <- NULL
   d$parent_coef_obs <- NULL
+  d$parent <- as_nm_list(d$parent)
 
   parameters <- match.arg(parameters)
   if(parameters != "none"){
     ## for each row, compute rr(d$m[i]) and rr(d$parent[i])
+    ## remove nm_list classes - they screw up in dplyr
+
     ds <- split(d, seq_len(nrow(d)))
 
     ds <- lapply(ds, function(d){
@@ -4430,9 +4451,12 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
       pars_to_add <- tibble::as_tibble(t(rri$m))
       names(pars_to_add) <- rri$parameter
 
-      dplyr::bind_cols(d, pars_to_add)
+      dplyr::bind_cols(d, pars_to_add) %>%
+        ## nm_lists screw up in dplyr...
+        mutate(m = nm_list2list(m),
+               parent = nm_list2list(parent))
     })
-
+    
     d <- suppressWarnings(dplyr::bind_rows(ds))
     d$m <- as_nm_list(d$m)
     d$parent <- as_nm_list(d$parent)
