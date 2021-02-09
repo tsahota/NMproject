@@ -313,6 +313,9 @@ new_patch_app <- function(){
                          id = ctx$id)
   
   message("apply_manual_edit() statement added to script")
+  if(!is.na(parent_run_id(m)))
+    warning("manual edits are subject to breakage if parent control files
+are changed.  It is recommended to use dollar() for custom edits of downstream (child) runs")
   
 }
 
@@ -348,6 +351,10 @@ modify_patch_app <- function(){
                          id = ctx$id)
   
   message("apply_manual_edit() statement modified in script")
+  
+  if(!is.na(parent_run_id(m)))
+    warning("manual edits are subject to breakage if parent control files
+are changed.  It is recommended to use dollar() for custom edits of downstream (child) runs")
   
 }
 
