@@ -119,7 +119,7 @@ diff_manual_edit <- function(m, res){
   git2r::add(path = res$new_ctl_path)
   git2r::diff(git2r::repository(), index = TRUE, as_char = TRUE, filename = res$patch_path)
   ## remove last commit and file 
-  system("git reset HEAD^1") ## for some reason git2r::reset() doesn't reset
+  system("git reset HEAD^1", intern = TRUE) ## for some reason git2r::reset() doesn't reset
   unlink(res$new_ctl_path)
 }
 
@@ -148,6 +148,7 @@ apply_manual_edit.nm_generic <- function(m, patch_name){
   patch_path <- file.path(getOption("models.dir"), 
                           "patches", 
                           patch_name)
+  if(!file.exists(patch_path)) stop("patch file doesn't exist")
   
   patch_text <- readLines(patch_path)
   
@@ -282,6 +283,74 @@ in_cache_app <- function(){
   m <- get_single_object_for_app()
   in_cache(m)
 }
+
+new_patch_app <- function(){
+
+  ctx <- rstudioapi::getActiveDocumentContext()
+  selected_text <- ctx$selection[[1]]$text
+  
+  m <- get_single_object_for_app()
+  
+  res <- start_manual_edit_unix(m)
+  
+  message(
+    "---Manual edit---
+    Instructions:
+    1) edit control file
+    2) save & close
+    Press ENTER when done...")
+  readline()
+  
+  ## now diff ctl_path(m) and old_file_path
+  
+  diff_manual_edit(m, res)
+  
+  code_to_add <- paste0(" %>%
+  apply_manual_edit(\"", res$patch_name,"\")")
+  
+  rstudioapi::insertText(ctx$selection[[1]]$range$end, 
+                         text = code_to_add,
+                         id = ctx$id)
+  
+  message("apply_manual_edit() statement added to script")
+  
+}
+
+modify_patch_app <- function(){
+  
+  ctx <- rstudioapi::getActiveDocumentContext()
+  selected_text <- ctx$selection[[1]]$text
+  
+  before_edit <- gsub("(.*)%>%.*apply_manual_edit.*", "\\1", selected_text)
+  
+  patch_name <- gsub(".*%>%.*apply_manual_edit\\(\"(.*)\"\\)", "\\1", selected_text)
+  
+  m <- eval(parse(text = before_edit))  
+  
+  res <- start_manual_edit_unix(m, combine_patch = patch_name)
+  
+  message(
+    "---Manual edit---
+    Instructions:
+    1) edit control file
+    2) save & close
+    Press ENTER when done...")
+  readline()
+  
+  ## now diff ctl_path(m) and old_file_path
+  
+  diff_manual_edit(m, res)
+  
+  code_to_add <- paste0(trimws(before_edit), " %>%
+  apply_manual_edit(\"", res$patch_name,"\")")
+  
+  rstudioapi::insertText(text = code_to_add,
+                         id = ctx$id)
+  
+  message("apply_manual_edit() statement modified in script")
+  
+}
+
 
 view_patch_app <- function(){
 

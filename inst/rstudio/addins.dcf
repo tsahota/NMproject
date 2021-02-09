@@ -1,6 +1,11 @@
-Name: make manual edit patch
+Name: new_manual_edit
 Description: create patch to apply with apply_manual_edit()
-Binding: manual_patch_app
+Binding: new_patch_app
+Interactive: true
+
+Name: modify_manual_edit
+Description: modify the last manual edit
+Binding: modify_patch_app
 Interactive: true
 
 Name: view patch
@@ -22,3 +27,4 @@ Name: test if run_nm will skip
 Description: if TRUE, run_nm will skip
 Binding: in_cache_app
 Interactive: true
+
