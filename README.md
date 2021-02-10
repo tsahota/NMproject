@@ -4,6 +4,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/tsahota/NMproject/badge.svg?branch=newinterface)](https://coveralls.io/github/tsahota/NMproject?branch=newinterface)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/tsahota/NMproject?branch=newinterface&svg=true)](https://ci.appveyor.com/project/tsahota/NMproject)
 
+This is the newer beta interface.  To use the older interface, install v0.3.2 (see releases)
+
 Script based NONMEM execution on tidyprojects with shiny interface.
 
 * Tidy code:
@@ -12,17 +14,15 @@ Script based NONMEM execution on tidyprojects with shiny interface.
 * PMX Code library:
   * Keep NONMEM template scripts to speed creation of NONMEM runs and facilitate adherence to best practices.
   * "Attach" community-wide, organisation-wide, or individual code repositories.
-  * Search the code library using keywords, tags, or raw text search.
 * Script based model development:
-  * Code your model development process using end-to-end R scripts.
+  * Code your model development process using end-to-end R workflows.
   * Private project R libraries for long term reproducibility and consistent running of R scripts between users.
-  * Behind the scenes database for run information storage.  Ensures runs do not overwrite previous outputs.
 * Shiny interface:
   * Table of runs
   * Real time run tracking
   * Run comparison
   
-Two-minute Youtube summary: https://www.youtube.com/watch?v=b7oBb6QZub8
+Two-minute Youtube summary (alpha interface): https://www.youtube.com/watch?v=b7oBb6QZub8
 
 <img src=https://user-images.githubusercontent.com/18026277/26879195-79b6f4c0-4b90-11e7-8228-01b117e64a12.png width=24.6% /><img src=https://user-images.githubusercontent.com/18026277/26879231-a046cfc0-4b90-11e7-9dbf-666086f32b9d.png width=24.5% /><img src=https://user-images.githubusercontent.com/18026277/26879238-a4a94fc0-4b90-11e7-8e8f-1b12a03f912d.png width=24.5% /><img src=https://user-images.githubusercontent.com/18026277/26879240-a7a53ebe-4b90-11e7-80fa-74bef643db29.png width=24.5% />
 
@@ -30,62 +30,51 @@ History: NMproject was previously an AstraZeneca project.  It is being reimpleme
  
 ## Installation
 
-NONMEM, PsN, and Rstudio are required to be installed prior to these steps. 
+NONMEM, PsN, and Rstudio are required to be installed prior to these steps.  To install a specific release version (e.g. v0.5.1)
 
 ```R
 if(!require("devtools")) install.packages("devtools")
+devtools::install_github("tsahota/NMproject@v0.5.1")
+```
+
+To install the latests developmental version:
+
+```R
 devtools::install_github("tsahota/NMproject")
 ```
+
 Load the package with 
 
 ```R
 library(NMproject)
 ```
 
-### Configuration
-
-NMproject also needs to know the path to your nmtran.exe file.  Do this by opening your `~/.Rprofile` - this can be done through R by:
-
-```r
-file.edit("~/.Rprofile")
-```
-
-and inserting the following option statement (adjusting the NONMEM installation path as necessary):
-
-```r
-options(nmtran_exe_path = "C:/nm741/tr/NMTRAN.exe")
-```
-There are many other options one can customise depending on your infrastructure and preferences.
-
-To download and configure the PMXcodelibrary, go to the R console and run:
-
-```r
-get_PMX_code_library("/path/to/desired/location", config_file="~/.Rprofile")
-```
-This will have updated your `~/.Rprofile`.
-
-If you are running NONMEM and R on a desktop/laptop this should suffice.  For more complicated set ups additional configuration may be required see FAQ (below) for details.
-
 ## Instructions
 
 * NMprojects are directories where you can work on pharmacometric analysis.
-* First, set up a tidyproject with the `make_project("/path/to/project/dir"")`.
+* First, set up a tidyproject with the `make_project("/path/to/project/dir"")` or in RStudio File -> New Project -> New Directory -> New tidyproject
    * See tutorial at https://github.com/tsahota/tidyproject for more information
-* Open the NMproject with the File -> Open Project menu items. NOTE: always use Rstudio to open an NMproject, never just `setwd()` to the directory.  From here you can either do the demo, or read through the "Basic commands" section below.
 
 ### Demo
 
-To step through the theophylline example
+The easiest way to familiarise your with NMproject is to follow through the demo.
+
+To step through the theophylline example, create a new tidyproject and run the following
 
 ```r
 library(NMproject)
 setup_nm_demo(demo_name = "theopp")
 ```
-open `Scripts/theopp-demo.R` and step through the commands one by one.
+
+open the `Scripts` directory and step through the scripts s01.....Rmd, s02....Rmd to familiarise yourself with the functions
 
 ### Basic commands
 
-View the code library:
+To get started with your own analysis, copy your dataset to `SourceData` directory.
+
+Then open a generic Rmardown template (New Rmarkdown -> From Template -> NMproject generic), write a script to read in your SourceData and save a processed NONMEM version of this in `DerivedData`.
+
+Then open a model development Rmarkdown template. First step is to find a NONMEM template control stream in the code library.  View it with: 
 
 ```r
 code_library()
@@ -97,45 +86,43 @@ Preview code:
 preview("NONMEM/ADVAN2.mod")
 ```
 
-Stage file into project
+import file into project
 
 ```r
 ls_code_library("NONMEM/ADVAN2.mod") %>%
   stage()
 ```
 
-Get started with a model development by using the following template from the PMX code library:
-
-```r
-ls_code_library("R/nm.log.R"") %>%
-  stage() %>%
-  import()
-```
+The model will be in the staging area: `staging/Models/ADVAN2.mod`
 
 The following command will create an object of class `nm` with information about the run. This will not run the command yet.
 
 ```r
 m1 <- nm(run_id = "m1") %>%
-   based_on("staging/Models/ADVAN2.mod") %>%
-   data_path("DerivedData/data.csv") %>%
-   cmd("execute {ctl_name} -dir={run_dir}")
+         based_on = "staging/Models/ADVAN2.mod",
+         data_path = "DerivedData/data.csv",  ## the name of the dataset you created
+         cmd = "execute {ctl_name} -dir={run_dir}")
 ```
 
-NOTE: the `-dir` option must always be specified when using NMproject
-
-NOTE: If you have set up the `nmtran_exe_path` option configured (see FAQ below), you can run a quick test that your control stream and dataset pass NMTRAN checks without running NONMEM via:
+Edit the control file manually by highlighting the entire command and starting a manual edit (addins -> manual edit).  Follow the instructions to edit the file to be fit for purpose.  Test out your run by running nm_tran
 
 ```r
 nm_tran(m1) 
 ```
 
-This is especially useful to do on a cluster submission system where a job may take a while to come back with an error message.
-
-To run `m1` use:
+Pipe it into a run command so it looks something like:
 
 ```r
-m1 <- m1 %>% run_nm()
+m1 <- nm(run_id = "m1") %>%
+         based_on = "staging/Models/ADVAN2.mod",
+         data_path = "DerivedData/data.csv",  ## the name of the dataset you created
+         cmd = "execute {ctl_name} -dir={run_dir}") %>%
+      apply_manual_edit("patch-tsdk2324-2021-01-01-02-42-28") %>%
+      run_nm()
+      
 ```
+
+Send this command to the console to get it running.
 
 To view all runs and track progress:
 
@@ -143,14 +130,47 @@ To view all runs and track progress:
 shiny_nm()
 ```
 
-To do basic goodness of fit plots consider the `basic_gof.Rmd` function template in the PMX code library:
+To do basic goodness of fit open the post processing Rmarkdown template, follow instructions, customise your template save it (e.g. as `Scripts/basic_gof.Rmd`) and run in your log script with
 
 ```r
-ls_codelibrary("single_files/Scripts/basic_gof.Rmd") %>%
-  stage()
 m1 <- m1 %>% nm_render("Scripts/basic_gof.Rmd")
 ```
 
+It will create the output in `Results` (or results_dir(m1))
+
+To create additional runs (child runs) use the child function and modify, e.g. to convert from `advan2 trans1` to `advan2 trans2` do the following
+
+```r
+m2 <- m1 %>% child(run_id = "m2") %>%
+             subroutine(trans = 2) %>%
+             run_nm()
+
+```
+
+To add a covariate:
+
+```r
+m3 <- m2 %>% child(run_id = "m3") %>%
+             add_cov(param = "CL", cov = "WT", state = "linear") %>%
+             run_nm()
+
+```
+
+Compare runs with 
+
+```r
+rr(c(m2, m3))
+
+```
+
+check convergence with:
+
+```r
+plot_iter(m2)
+convariance_results(m2)
+```
+
+Don't forget to comment your code with your decision making.
 
 ## FAQ
 
