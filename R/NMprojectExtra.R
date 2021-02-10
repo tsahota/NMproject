@@ -3358,6 +3358,7 @@ print.nm_subroutine <- function(x, ...){
 #' 
 #' @param m nm object
 #' @param replace optional tibble for replacement
+#' @param ... mutate init_theta
 #' 
 #' @examples
 #' \dontrun{
@@ -3388,30 +3389,37 @@ print.nm_subroutine <- function(x, ...){
 #' }
 #' @name init_theta
 #' @export
-init_theta <- function(m, replace){
+init_theta <- function(m, replace, ...){
   d <- raw_init_theta(m)
   d$orig_line <- d$line
+  mutate_args <- rlang::enquos(...)
   if(missing(replace)){  ## get
-    d <- d[!is.na(d$parameter), ]
-    d$value <- NULL
-    d$comment <- NULL
-    d$SUB <- NULL
-    return(d)
-  } else {               ## set
-    d$row <- seq_len(nrow(d))
-    d_new <- dplyr::full_join(d, replace, by = c("line", "pos"))
-    d_new <- d_new[, !grepl("\\.x$", names(d_new))]
-    names(d_new) <- gsub("(.*)\\.y", "\\1", names(d_new))
-    d_new <- d_new[order(d_new$row), ]
-    d_new$row <- NULL
-    m <- m %>% raw_init_theta(d_new)
-    m
+    if(length(mutate_args) > 0){
+      current_init <- init_theta(m)
+      replace <- current_init %>% mutate(!!!mutate_args)
+    } else {
+      d <- d[!is.na(d$parameter), ]
+      d$value <- NULL
+      d$comment <- NULL
+      d$SUB <- NULL
+      return(d) 
+    }
+  } else {
+    if(length(mutate_args) > 0) stop("can't specify additional args and replace args at same time") 
   }
+  d$row <- seq_len(nrow(d))
+  d_new <- dplyr::full_join(d, replace, by = c("line", "pos"))
+  d_new <- d_new[, !grepl("\\.x$", names(d_new))]
+  names(d_new) <- gsub("(.*)\\.y", "\\1", names(d_new))
+  d_new <- d_new[order(d_new$row), ]
+  d_new$row <- NULL
+  m <- m %>% raw_init_theta(d_new)
+  m
 }
 
 #' @rdname init_theta
 #' @export
-init_omega <- function(m, replace){
+init_omega <- function(m, replace, ...){
   d <- raw_init_omega(m)
   d$orig_line <- d$line
   d$orig_pos <- d$pos
@@ -3439,7 +3447,7 @@ init_omega <- function(m, replace){
 
 #' @name init_theta
 #' @export
-init_sigma <- function(m, replace){
+init_sigma <- function(m, replace, ...){
   d <- raw_init_sigma(m)
   d$orig_line <- d$line
   d$orig_pos <- d$pos

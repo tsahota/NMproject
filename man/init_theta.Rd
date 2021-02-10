@@ -6,16 +6,18 @@
 \alias{init_sigma}
 \title{Get/set initial parameters}
 \usage{
-init_theta(m, replace)
+init_theta(m, replace, ...)
 
-init_omega(m, replace)
+init_omega(m, replace, ...)
 
-init_sigma(m, replace)
+init_sigma(m, replace, ...)
 }
 \arguments{
 \item{m}{nm object}
 
 \item{replace}{optional tibble for replacement}
+
+\item{...}{mutate init_theta}
 }
 \description{
 Get/set initial parameters
