@@ -63,7 +63,7 @@ To step through the theophylline example, create a new tidyproject and run the f
 
 ```r
 library(NMproject)
-setup_nm_demo(demo_name = "theopp")
+setup_nm_demo()
 ```
 
 open the `Scripts` directory and step through the scripts s01.....Rmd, s02....Rmd to familiarise yourself with the functions
@@ -167,34 +167,23 @@ check convergence with:
 
 ```r
 plot_iter(m2)
-convariance_results(m2)
+covariance_results(m2)
 ```
+
+To create a simulation:
+
+```r
+m2s <- m2 %>% child(run_id = "m2s") %>%
+             convert_to_simulation(subpr = 50) %>%
+             run_nm()
+
+```
+
+For simulation runs, use the VPC and PPC templates together with `nm_render` like the basic goodness of template used above.
 
 Don't forget to comment your code with your decision making.
 
 ## FAQ
-
-### + I want to repeat my model development script, how do I do this?
-
-Just rerun the code in R
-
-### + How can I queue multiple PsN jobs, forcing some to wait, and some not to.
-
-Assuming you have the `nm` objects defined, you can queing jobs, by forcing some to wait, e.g.:
-
-```r
-mod1 <- run_nm(mod1) %>% wait_finish()
-mod1vpc <- run_nm(mod1vpc)
-mod1sse <- run_nm(mod1sse)
-```
-
-This will run mod1, wait for it to finish and then execute mod1vpc and mod1see at the same time.  You will not be able to use the R console while mod1 is running however since it will be waiting for mod1 to finish.  To get around this consider the `future` package to have a separate R process control the execution:
-
-```r
-future::plan("multisession")
-mod1 %<-%{
-  run(mod1,wait=TRUE) ; run(mod1vpc,mod1sse)})
-```
 
 ### + After having closed my session how to I recreate my workspace
 
@@ -239,7 +228,6 @@ Yes, you can specify the convention with the ctl_path() e.g. to change the conve
 
 ```r
 m %>% ctl_path("Models/nm.{run_id}.com")
-
 ```
 
 Consider making a wrapper function around nm() and ctl_path() and distributing to your users
