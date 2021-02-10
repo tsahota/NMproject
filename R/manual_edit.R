@@ -326,7 +326,7 @@ modify_patch_app <- function(){
   
   before_edit <- gsub("(.*)%>%.*apply_manual_edit.*", "\\1", selected_text)
   
-  patch_name <- gsub(".*%>%.*apply_manual_edit\\(\"(.*)\"\\)", "\\1", selected_text)
+  patch_name <- gsub(".*%>%.*apply_manual_edit\\(\"(.*)\"\\).*", "\\1", selected_text)
   
   m <- eval(parse(text = before_edit))  
   
@@ -366,8 +366,19 @@ make_patch_app <- function(){
   ## see if last function is apply_manual_edit
   
   ## get last function used in piping
-  full_expr <- parse(text = selected_text)
-  last_fun_name <- as.character(full_expr[[1]][[3]][[1]])
+  full_expr <- parse(text = selected_text)[[1]]
+  
+  if(as.character(full_expr[[1]]) == "<-"){
+    full_expr <- full_expr[[3]]  ## rhs of assignment
+  }
+  
+  if(as.character(full_expr[[1]]) == "%>%"){
+    last_fun_name <- as.character(full_expr[[3]][[1]]) 
+  }
+  
+  if(as.character(full_expr[[1]]) != "%>%"){ ## normal function
+    last_fun_name <- as.character(full_expr[[1]]) 
+  }
   
   if(last_fun_name == "apply_manual_edit") modify_patch_app() else
     new_patch_app()
