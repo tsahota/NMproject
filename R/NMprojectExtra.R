@@ -3396,7 +3396,8 @@ init_theta <- function(m, replace, ...){
   if(missing(replace)){  ## get
     if(length(mutate_args) > 0){
       current_init <- init_theta(m)
-      replace <- current_init %>% mutate(!!!mutate_args)
+      replace <- current_init %>% dplyr::mutate(!!!mutate_args)
+      replace <- replace %>% mutate_if(is.numeric, ~signif(., 5))
     } else {
       d <- d[!is.na(d$parameter), ]
       d$value <- NULL
@@ -3423,26 +3424,33 @@ init_omega <- function(m, replace, ...){
   d <- raw_init_omega(m)
   d$orig_line <- d$line
   d$orig_pos <- d$pos
+  mutate_args <- rlang::enquos(...)
   if(missing(replace)){  ## get
-    d$value <- NULL
-    d$comment <- NULL
-    d$parameter <- NULL
-    d$SUB <- NULL
-    return(d)
-  } else {               ## set
-    d_derived <- d[,c("value","comment","parameter","SUB", ## same as what was deleted above
-                      "orig_line", "orig_pos")] 
-
-    replace <- dplyr::left_join(replace, d_derived, by = c("orig_line", "orig_pos"))
-    if("new_value" %in% names(replace)) {  ## for characters
-      replace$value[!is.na(replace$new_value)] <- as.character(replace$new_value[!is.na(replace$new_value)])
+    if(length(mutate_args) > 0){
+      current_init <- init_omega(m)
+      replace <- current_init %>% mutate_cond(!is.na(name), !!!mutate_args)
+      replace <- replace %>% mutate_if(is.numeric, ~signif(., 5))
+    } else {
+      d$value <- NULL
+      d$comment <- NULL
+      d$parameter <- NULL
+      d$SUB <- NULL
+      return(d)
     }
-    if("new_line" %in% names(replace)) replace$line <- replace$new_line
-    if("new_pos" %in% names(replace)) replace$pos <- replace$new_pos
-    
-    m <- m %>% raw_init_omega(replace)
-    m
+  } 
+  ## set
+  d_derived <- d[,c("value","comment","parameter","SUB", ## same as what was deleted above
+                    "orig_line", "orig_pos")] 
+  
+  replace <- dplyr::left_join(replace, d_derived, by = c("orig_line", "orig_pos"))
+  if("new_value" %in% names(replace)) {  ## for characters
+    replace$value[!is.na(replace$new_value)] <- as.character(replace$new_value[!is.na(replace$new_value)])
   }
+  if("new_line" %in% names(replace)) replace$line <- replace$new_line
+  if("new_pos" %in% names(replace)) replace$pos <- replace$new_pos
+  
+  m <- m %>% raw_init_omega(replace)
+  m
 }
 
 #' @name init_theta
@@ -3451,26 +3459,33 @@ init_sigma <- function(m, replace, ...){
   d <- raw_init_sigma(m)
   d$orig_line <- d$line
   d$orig_pos <- d$pos
+  mutate_args <- rlang::enquos(...)
   if(missing(replace)){  ## get
-    d$value <- NULL
-    d$comment <- NULL
-    d$parameter <- NULL
-    d$SUB <- NULL
-    return(d)
-  } else {               ## set
-    d_derived <- d[,c("value","comment","parameter","SUB", ## same as what was deleted above
-                      "orig_line", "orig_pos")] 
-    
-    replace <- dplyr::left_join(replace, d_derived, by = c("orig_line", "orig_pos"))
-    if("new_value" %in% names(replace)) {  ## for characters
-      replace$value[!is.na(replace$new_value)] <- as.character(replace$new_value[!is.na(replace$new_value)])
+    if(length(mutate_args) > 0){
+      current_init <- init_sigma(m)
+      replace <- current_init %>% mutate_cond(!is.na(name), !!!mutate_args)
+      replace <- replace %>% mutate_if(is.numeric, ~signif(., 5))
+    } else {
+      d$value <- NULL
+      d$comment <- NULL
+      d$parameter <- NULL
+      d$SUB <- NULL
+      return(d)
     }
-    if("new_line" %in% names(replace)) replace$line <- replace$new_line
-    if("new_pos" %in% names(replace)) replace$pos <- replace$new_pos
-    
-    m <- m %>% raw_init_sigma(replace)
-    m
+  } 
+  ## set
+  d_derived <- d[,c("value","comment","parameter","SUB", ## same as what was deleted above
+                    "orig_line", "orig_pos")] 
+  
+  replace <- dplyr::left_join(replace, d_derived, by = c("orig_line", "orig_pos"))
+  if("new_value" %in% names(replace)) {  ## for characters
+    replace$value[!is.na(replace$new_value)] <- as.character(replace$new_value[!is.na(replace$new_value)])
   }
+  if("new_line" %in% names(replace)) replace$line <- replace$new_line
+  if("new_pos" %in% names(replace)) replace$pos <- replace$new_pos
+  
+  m <- m %>% raw_init_sigma(replace)
+  m
 }
 
 #' perturb initial estimates
