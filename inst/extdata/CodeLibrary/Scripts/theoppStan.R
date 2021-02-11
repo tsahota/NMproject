@@ -1,5 +1,4 @@
 ## Description: Stan PK (Rbloggers 19/04/15)
-## Depends on: 
 ## Run interactively: TRUE
 ## Keywords: Stan, script, template
 

@@ -1,21 +1,19 @@
 ## Author: klgk669
 ## First created: 2016-08-27
 ## Description: Forests plots full covariate model
-## Depends on: template, function
 ## Run interactively: FALSE
 ## Keywords: forest plot covariate
 
 ########################################
 ## load packages and source functions here
 
-library(NMproject,lib.loc = "ProjectLibrary")
+library(NMproject)
+library(ggplot2)
 
 ########################################
 ## main script here
 
 cov.plots <- function(run.no,pars=c("CL","V","KA")){
-  
-  library(ggplot2)
   
   d0 <- run_record(run.no)
   

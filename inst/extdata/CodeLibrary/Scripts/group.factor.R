@@ -1,5 +1,4 @@
 ## Description: creates group variable
-## Depends on: 
 ## Run interactively: FALSE
 ## Key words: function
 

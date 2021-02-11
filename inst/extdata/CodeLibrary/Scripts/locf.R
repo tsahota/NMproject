@@ -1,5 +1,4 @@
 ## Description: locf function
-## Depends on: 
 ## Run interactively: FALSE
 ## Key words: locf, function
 

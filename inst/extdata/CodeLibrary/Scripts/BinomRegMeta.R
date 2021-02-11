@@ -1,7 +1,6 @@
 ## Author: klgk669
 ## First created: 2016-11-09
 ## Description: Binomial regression meta-analysis in R
-## Depends on: 
 ## Run interactively: TRUE
 ## Keywords: binomial, meta-analysis, script, template
 

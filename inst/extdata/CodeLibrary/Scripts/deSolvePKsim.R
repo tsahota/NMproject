@@ -1,29 +1,25 @@
 ## Description: PK simulation deSolve
-## Depends on: 
 ## Run interactively: TRUE
 ## Keywords: deSolve, template, script
 
 library(manipulate)  ## for interactivity : Requires Rstudio
-library(deSolve)     ## DE solver
 library(ggplot2)     ## for plotting
-library(MASS)        ## for mvrnorm function : simulation from multivariate normal
-library(plyr)        ## for the ldply and ddply aggregation functions
 
 ############################
 
 ## POPULATION PARAMETERS/VARIABLES
-p <- c(CL=240,V2=3100,V3=2900,Q=336,KA=0.75)
+p <- c(CL=250,V2=3100,V3=2900,Q=336,KA=0.75)
 om <- diag(c(0.1, 0.1,0.1, 0.1, 0.1))
 
 ## GENERATE INDIVIDUAL PARAMETERS/VARIABLES
 n.ind <- 1
-params <- mvrnorm(n.ind, mu = log(p),Sigma = om)  ## multivarite log-normal distribution
+params <- MASS::mvrnorm(n.ind, mu = log(p),Sigma = om)  ## multivarite log-normal distribution
 params <- exp(params)
 if(n.ind %in% 1) params <- t(params)  ## bug fix for n.ind = 1
 
 ## loop through matrix row by row (i.e. by ID) output data.frame as you go
-out <- ldply(1:nrow(params),function(id){
-
+out <- plyr::ldply(1:nrow(params),function(id){
+  
   ## define compartment names and specify initial values
   yini <- c(Adepot = 0, Ablood = 0, Aperiph = 0)
   
@@ -36,7 +32,7 @@ out <- ldply(1:nrow(params),function(id){
   
   ## Define function for ODEs
   pkeq <- function(t, y, p) {with(as.list(p),{  
-
+    
     ## define any infusions here
     infusion <- 0  ## ifelse(t%%24<2,10,0) = Every 24 hrs a 2hr infustion at rate of 10
     
@@ -49,9 +45,9 @@ out <- ldply(1:nrow(params),function(id){
   
   ## observation times
   times <- seq(0,end,0.5)
-    
-  outi <- ode(func = pkeq, times = times,
-              y = yini, parms = params[id,],events=list(data=dose.events))
+  
+  outi <- deSolve::ode(func = pkeq, times = times,
+                       y = yini, parms = params[id,],events=list(data=dose.events))
   outi <- as.data.frame(outi)
   outi$Cblood <- outi$Ablood/params[id,"V2"]
   outi$ID <- id
@@ -59,15 +55,15 @@ out <- ldply(1:nrow(params),function(id){
 })
 
 ## create any plot you want, below I do a vpc type plot.
-ds <- ddply(out,"time",summarise,
-            low = quantile(Cblood,probs=0.025),
-            mid = quantile(Cblood,probs=0.5),
-            hi = quantile(Cblood,probs=0.975))
+ds <- plyr::ddply(out,"time",summarise,
+                  low = quantile(Cblood,probs=0.025),
+                  mid = quantile(Cblood,probs=0.5),
+                  hi = quantile(Cblood,probs=0.975))
 
 ## plot the results
 xbreaks <- c(seq(0,56,by=7),seq(56,168,by=7*4))  
 print(ggplot(ds,aes(x=time,y=mid)) + geom_line() + theme_bw() + 
-  geom_ribbon(aes(ymin=low,ymax=hi),fill="orange",alpha=0.4) +
-  scale_x_continuous("Time (hrs)")+#,breaks=xbreaks) +
-  scale_y_continuous("Plasma concentration (units)"))
+        geom_ribbon(aes(ymin=low,ymax=hi),fill="orange",alpha=0.4) +
+        scale_x_continuous("Time (hrs)")+#,breaks=xbreaks) +
+        scale_y_continuous("Plasma concentration (units)"))
 

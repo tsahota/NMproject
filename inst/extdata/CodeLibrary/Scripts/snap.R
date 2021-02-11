@@ -1,7 +1,6 @@
-## Author: klgk669
+## Author: klgk669, metrumrg
 ## First created: 2016-09-16
 ## Description: metrumrg snap function 
-## Depends on: 
 ## Run interactively: FALSE
 ## Keywords: function
 

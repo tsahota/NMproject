@@ -15,7 +15,7 @@ output.data.default <- function(run.no,primary.key,models.dir=getOption("models.
   
   s <- readLines(file.path(models.dir,paste0("run",run.no,".mod")))
   orig.data <- s[grepl("^\\s*\\$DATA",s)]
-  orig.data <- from_models(gsub("^\\s*\\$DATA\\s+(\\S+)\\s+.*$","\\1",orig.data))
+  orig.data <- file.path(models.dir,gsub("^\\s*\\$DATA\\s+(\\S+)\\s+.*$","\\1",orig.data))
   
   do <- read.table.nm(file.path(models.dir,paste0("sdtab",run.no)),skip=1,header=TRUE)
   do$SIM <- rep(1:(nrow(do)/length(unique(do$ORD))),each=length(unique(do$ORD)))

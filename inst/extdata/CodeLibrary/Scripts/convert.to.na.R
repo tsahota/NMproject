@@ -1,7 +1,6 @@
 ## Author: klgk669
 ## First created: 2016-09-16
 ## Description: replace -99 with NA in dataset
-## Depends on: 
 ## Run interactively: FALSE
 ## Keywords: function
 

@@ -1,6 +1,6 @@
-;; 1. Based on: run1
-;; 2. Description: Count data (Poisson) model
-;; x1. Author: John Smith
+;; 1. Based on: 
+;; 2. Description: Logistic regression model
+;; x1. Author: 
 
 $PROBLEM ...
 
@@ -9,44 +9,52 @@ $PROBLEM ...
 ;; 6. Label:
 ;; Basic model
 ;; 7. Structural model:
-;; poisson
+;; Emax
 ;; 8. Covariate model:
 ;; No covariates
 ;; 9. Inter-individual variability:
-;; Lambda
+;; 
 ;; 10. Inter-occasion variability:
 ;; No IOV
 ;; 11. Residual variability:
-;; poisson distribution
+;; Additive + Proportional
 ;; 12. Estimation:
 ;; IMP
 
-$INPUT ...
+$INPUT ... DOSE
 $DATA ... IGNORE=@ 
 
 $PRED
 
-TVLAMB=EXP(THETA(1))
-MU_1=LOG(TVLAMB)
-LAMB = EXP(MU_1+ETA(1))
+TVINT=THETA(1)
+MU_1=TVINT
+INT = MU_1+ETA(1)
 
-IF(DV.LE.1) THEN 
-  LFAC=0 
+TVSLOP=THETA(2)
+MU_2 = TVSLOP
+SLOP = MU_2+ETA(2)
+
+PROB0 = 1/(1+EXP(INT+SLOP*DOSE))
+
+IF(DV.LT.3) THEN 
+  PROB = PROB0
 ELSE 
-  LFAC = DV*LOG(DV)-DV +LOG(DV*(1+4*DV*(1+2*DV)))/6 +LOG(3.1415)/2 
+  PROB = 1-PROB0
 ENDIF 
 
-POIS = EXP(-LAMB)*(LAMB**DV)/FAC
-
 F_FLAG=1
-Y = POIS
+Y = PROB
 
-DUM = EPS(1)  ;; not used
+DUM = EPS(1) ;; dummy variable
 
 $THETA
-.....          	; LAMB ; ; LOG
+.....          	; INT ; ; 
+.....          	; SLOP ; ; 
+
 $OMEGA
-0.0225 FIX   ; IIV_LAMB ; LOG
+0 FIX       ; IIV_EMAX ; LOG
+0 FIX       ; IIV_E50 ; LOG
+
 $SIGMA
 1 FIX
 
@@ -66,13 +74,15 @@ PRINT=1 NOABORT INTERACTION LAPLACIAN
 ; Objective function and covariance evaluation
 $EST METHOD=IMP INTER EONLY= 1 MAPITER=0 ISAMPLE = 2000 NITER = 10 RANMETHOD=3S2 NOABORT PRINT=1 NSIG=3 SIGL=9 LAPLACIAN
 
-$COV PRINT=E UNCONDITIONAL SIGL=10
+$COV MATRIX=R PRINT=E UNCONDITIONAL SIGL=10
 
-$TABLE ID TIME IPRED IWRES IRES CWRES NPDE
-FILE=sdtab1 NOPRINT ONEHEADER FORMAT=tF13.4
-$TABLE ID LAMB; individual parameters
-FILE=patab1 NOPRINT ONEHEADER FORMAT=tF13.4
+;$SIM (1234) ONLYSIM SUBPR=1
+
+$TABLE ID CWRES NPDE
+FILE=sdtab1 NOPRINT ONEHEADER
+$TABLE ID ETAS(1:LAST); individual parameters
+FILE=patab1 NOPRINT ONEHEADER
 $TABLE ID ; continuous covariates
-FILE=cotab1 NOPRINT ONEHEADER FORMAT=tF13.4
+FILE=cotab1 NOPRINT ONEHEADER
 $TABLE ID ; categorical covariates
-FILE=catab1 NOPRINT ONEHEADER FORMAT=tF13.4
+FILE=catab1 NOPRINT ONEHEADER
