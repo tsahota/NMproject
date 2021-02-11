@@ -3389,7 +3389,13 @@ print.nm_subroutine <- function(x, ...){
 #' }
 #' @name init_theta
 #' @export
+
 init_theta <- function(m, replace, ...){
+  UseMethod("init_theta")
+}
+
+#' @export
+init_theta.nm_generic <- function(m, replace, ...){
   d <- raw_init_theta(m)
   d$orig_line <- d$line
   mutate_args <- rlang::enquos(...)
@@ -3418,9 +3424,30 @@ init_theta <- function(m, replace, ...){
   m
 }
 
+#' @export
+init_theta.nm_list <- function(m, replace, ...){
+  current_call <- match.call()
+  calling_env <- parent.frame()
+  result <- lapply(m, function(m){
+    current_call[[1]] <- as.symbol("init_theta")
+    current_call[[2]] <- m
+    eval(current_call, envir = calling_env)
+  })
+  if(is_nm_list(result)){
+    result <- as_nm_list(result)
+  }
+  result
+}
+
+
 #' @rdname init_theta
 #' @export
 init_omega <- function(m, replace, ...){
+  UseMethod("init_omega")
+}
+
+#' @export
+init_omega.nm_generic <- function(m, replace, ...){
   d <- raw_init_omega(m)
   d$orig_line <- d$line
   d$orig_pos <- d$pos
@@ -3453,9 +3480,29 @@ init_omega <- function(m, replace, ...){
   m
 }
 
+#' @export
+init_omega.nm_list <- function(m, replace, ...){
+  current_call <- match.call()
+  calling_env <- parent.frame()
+  result <- lapply(m, function(m){
+    current_call[[1]] <- as.symbol("init_omega")
+    current_call[[2]] <- m
+    eval(current_call, envir = calling_env)
+  })
+  if(is_nm_list(result)){
+    result <- as_nm_list(result)
+  }
+  result
+}
+
 #' @name init_theta
 #' @export
 init_sigma <- function(m, replace, ...){
+  UseMethod("init_sigma")
+}
+
+#' @export
+init_sigma.nm_generic <- function(m, replace, ...){
   d <- raw_init_sigma(m)
   d$orig_line <- d$line
   d$orig_pos <- d$pos
@@ -3486,6 +3533,21 @@ init_sigma <- function(m, replace, ...){
   
   m <- m %>% raw_init_sigma(replace)
   m
+}
+
+#' @export
+init_sigma.nm_list <- function(m, replace, ...){
+  current_call <- match.call()
+  calling_env <- parent.frame()
+  result <- lapply(m, function(m){
+    current_call[[1]] <- as.symbol("init_sigma")
+    current_call[[2]] <- m
+    eval(current_call, envir = calling_env)
+  })
+  if(is_nm_list(result)){
+    result <- as_nm_list(result)
+  }
+  result
 }
 
 #' perturb initial estimates
