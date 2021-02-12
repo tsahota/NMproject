@@ -1789,7 +1789,7 @@ wait_finish <- function(r, timeout=NA, force = FALSE){
 }
 #' @export
 wait_finish.nm_generic <- function(r, timeout=NA, force = FALSE){
-  if(any(!executed(r)) & !force) stop("run ", unique_id(r), " not executed. will not wait.\nuse force=TRUE to override")
+  if(!executed(r) & !force) stop("run ", unique_id(r), " not executed. will not wait.\nuse force=TRUE to override")
   if(is.na(timeout)) wait_for(all(is_finished(r))) else
     wait_for(all(is_finished(r)), timeout = timeout)
   invisible(r)
