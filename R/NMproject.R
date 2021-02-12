@@ -105,14 +105,35 @@ set_nm_opts <- function(){
 
   if(is.null(getOption("new_jobs"))) options(new_jobs="run")
   
-  if(is.null(getOption("nmtran_exe_path"))) options(nmtran_exe_path=get_nm_tran_path())
+  if(is.null(getOption("nmtran_exe_path"))) options(nmtran_exe_path=find_nm_tran_path())
   
   if(is.null(getOption("code_library_path"))) 
     options(code_library_path=system.file("extdata", "CodeLibrary", package = "NMproject"))
   
 }
 
-get_nm_tran_path <- function(name = "default"){
+#' @export
+sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_flags='-pe orte {cores} -V' {ctl_name} -dir={run_dir} -nodes={cores}"
+
+#' @export
+find_nm_install_path <- function(name = "default"){
+
+  nm_versions <- system_nm("psn -nm_versions", intern = TRUE)
+  
+  nm_version <- nm_versions[grepl(paste0("^", name), nm_versions)]
+  
+  if(length(nm_version) != 1){
+    message("Could not determine path to nonmem from psn -nm_versions.")
+    return(NULL)
+  }
+  
+  ## can now assume version is unique
+  path <- gsub(".*\\((.*),.*\\)", "\\1", nm_version)
+  if(!file.exists(path)) warning("directory ", path, "doesn't exist")
+  path
+}
+
+find_nm_tran_path <- function(name = "default"){
 
   nm_versions <- system_nm("psn -nm_versions", intern = TRUE)
   

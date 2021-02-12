@@ -107,6 +107,18 @@ results_dir <- function(m, text) {
 }
 
 #' @export
+cores <- function(m, text) {
+  if(missing(text)) custom_1d_field(m, "cores") else custom_1d_field(m, "cores", text)
+}
+
+#' @export
+parafile <- function(m, text) {
+  if(missing(text)) custom_1d_field(m, "parafile") else {
+    custom_1d_field(m, "parafile", normalizePath(text))
+  }
+}
+
+#' @export
 executed <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "executed") else custom_1d_field(m, "executed", text)
 }
