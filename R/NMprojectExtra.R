@@ -1784,11 +1784,12 @@ is_finished.nm_generic <- function(r,initial_timeout=NA){
 is_finished.nm_list <- Vectorize_nm_list(is_finished.nm_generic)
 
 #' @export
-wait_finish <- function(r, timeout=NA){
+wait_finish <- function(r, timeout=NA, force = FALSE){
   UseMethod("wait_finish")
 }
 #' @export
-wait_finish.nm_generic <- function(r, timeout=NA){
+wait_finish.nm_generic <- function(r, timeout=NA, force = FALSE){
+  if(any(!executed(r)) & !force) stop("run ", unique_id(r), " not executed. will not wait.\nuse force=TRUE to override")
   if(is.na(timeout)) wait_for(all(is_finished(r))) else
     wait_for(all(is_finished(r)), timeout = timeout)
   invisible(r)
