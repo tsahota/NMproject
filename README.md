@@ -83,13 +83,13 @@ code_library()
 Preview code:
 
 ```r
-preview("NONMEM/ADVAN2.mod")
+preview("Models/ADVAN2.mod")
 ```
 
 import file into project
 
 ```r
-ls_code_library("NONMEM/ADVAN2.mod") %>%
+ls_code_library("Models/ADVAN2.mod") %>%
   stage()
 ```
 
@@ -98,33 +98,44 @@ The model will be in the staging area: `staging/Models/ADVAN2.mod`
 The following command will create an object of class `nm` with information about the run. This will not run the command yet.
 
 ```r
-m1 <- nm(run_id = "m1") %>%
+m1 <- nm(run_id = "m1",
          based_on = "staging/Models/ADVAN2.mod",
-         data_path = "DerivedData/data.csv",  ## the name of the dataset you created
+         data_path = "DerivedData/data.csv",
          cmd = "execute {ctl_name} -dir={run_dir}")
 ```
 
-Edit the control file manually by highlighting the entire command and starting a manual edit (addins -> manual edit).  Follow the instructions to edit the file to be fit for purpose.  Test out your run by running nm_tran
+Edit the control file manually by highlighting the entire command and starting a manual edit (addins -> manual edit).  Follow the instructions to edit the file to be fit for purpose.  This will the `apply_manual_edit` command to your code like so:
 
 ```r
-nm_tran(m1) 
+m1 <- nm(run_id = "m1",
+         based_on = "staging/Models/ADVAN2.mod",
+         data_path = "DerivedData/data.csv",
+         cmd = "execute {ctl_name} -dir={run_dir}") %>%
+      apply_manual_edit("patch-tsdk2324-2021-01-01-02-42-28")
+      
 ```
 
-Pipe it into a run command so it looks something like:
+Add a `run_nm` command to make it run (at this point the control will be created on disk in the `run_in(m)` location.
 
 ```r
-m1 <- nm(run_id = "m1") %>%
+m1 <- nm(run_id = "m1",
          based_on = "staging/Models/ADVAN2.mod",
-         data_path = "DerivedData/data.csv",  ## the name of the dataset you created
+         data_path = "DerivedData/data.csv",
          cmd = "execute {ctl_name} -dir={run_dir}") %>%
       apply_manual_edit("patch-tsdk2324-2021-01-01-02-42-28") %>%
       run_nm()
       
 ```
 
+Test out your run by running nm_tran add_in or typing the following into the console
+
+```r
+nm_tran(m1) 
+```
+
 Send this command to the console to get it running.
 
-To view all runs and track progress:
+To view all runs in the workspace and track progress:
 
 ```r
 shiny_nm()
@@ -156,16 +167,11 @@ m3 <- m2 %>% child(run_id = "m3") %>%
 
 ```
 
-Compare runs with 
+Evaluate and compare runs on the fly with the following commands 
 
 ```r
+rr(m2)
 rr(c(m2, m3))
-
-```
-
-check convergence with:
-
-```r
 plot_iter(m2)
 covariance_results(m2)
 ```
@@ -174,12 +180,17 @@ To create a simulation:
 
 ```r
 m2s <- m2 %>% child(run_id = "m2s") %>%
-             convert_to_simulation(subpr = 50) %>%
-             run_nm()
+              convert_to_simulation(subpr = 50) %>%
+              run_nm()
 
 ```
 
 For simulation runs, use the VPC and PPC templates together with `nm_render` like the basic goodness of template used above.
+
+```r
+m2s <- m2s %>% nm_render("Scripts/basic_vpc.Rmd")
+m2s <- m2s %>% nm_render("Scripts/basic_ppc.Rmd")
+```
 
 Don't forget to comment your code with your decision making.
 
@@ -207,6 +218,10 @@ options(code_library_path = c("/path/to/PMXcodelibrary/","path/to/existing/repos
 ### + How can I contribute to the PMX code library?
 
 Log in to github (create an account if necessary).  Fork the repository `tsahota/PMXcodelibrary`. Make your change.  Create a pull request detailing your change.
+
+### + How do I run this on SGE?
+
+There is a built in `sge_command` that's part of NMproject.  Use this to set your `cmd()` field of the nm object 
 
 ### + My Rstudio Server is on a different linux server to my NONMEM cluster.  How can I set up NMproject to work with this?
 
