@@ -97,13 +97,13 @@ run_nm.nm_generic <- function(m, wait=getOption("wait"),
   ## NONMEM will run from this point on
   ## check new_jobs() behaviour 
   behaviour <- new_jobs()
-  if(behaviour == "stop") stop("new_jobs detected: stopping... \n change new_job behaviour with new_jobs()", call. = FALSE)
-  if(behaviour == "skip") {
+  if("stop new" %in% behaviour) stop("new_jobs detected: stopping... \n change new_job behaviour with new_jobs()", call. = FALSE)
+  if("skip" %in% behaviour) {
     message("new job detected: skip \n change new_job behaviour with new_jobs()")
     return(invisible(m))
   }
   
-  wipe_run(m)
+  wipe_run(m)  ## this will check for "ask" or "overwrite"
   kill_job(m)
   
   message(paste0("Running: ",type(m),":",ctl_path(m)))

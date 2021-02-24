@@ -103,7 +103,7 @@ set_nm_opts <- function(){
   if(is.null(getOption("wait"))) options(wait=FALSE)
   if(is.null(getOption("kill_job"))) options(kill_job=identity)
 
-  if(is.null(getOption("new_jobs"))) options(new_jobs="run")
+  if(is.null(getOption("new_jobs"))) options(new_jobs="ask")
   
   if(is.null(getOption("nmtran_exe_path"))) options(nmtran_exe_path=find_nm_tran_path())
   
@@ -220,15 +220,17 @@ kill_job <- function(m){
 #'
 #' @param txt character either "run", "stop", "skip" 
 #' @export
-new_jobs <- function(txt = c("run", "stop", "skip")){
+new_jobs <- function(txt = c("ask", "overwrite", "stop new", "skip")){
   if(missing(txt)){
     return(getOption("new_jobs"))
   }
   txt <- match.arg(txt)
   options(new_jobs = txt)
-  if(txt %in% "run") message("run: run_nm() will run NONMEM if job has not been previously executed")
-  if(txt %in% "stop") message("stop: run_nm() will not run NONMEM if job has not been previously executed\n and will stop R execution with an error")
-  if(txt %in% "skip") message("skip: run_nm() will not run NONMEM if job has not been previously executed\n and will not stop R execution")
+  
+  if(txt %in% "ask") message("ask: NMproject will ask before overwriting old files")
+  if(txt %in% "overwrite") message("overwrite: NMproject will overwrite previous runs without prompt")
+  if(txt %in% "stop new") message("stop: NMproject will stop R execution with an error instead of running NONMEM")
+  if(txt %in% "skip") message("skip: NMproject will not run NONMEM")
   return(invisible())
 }
 

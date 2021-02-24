@@ -1594,7 +1594,7 @@ wipe_run.nm_generic <- function(r){
   run_dir_to_delete <- file.path(run_in(r), run_dir(r))
   if(!file.exists(run_dir_to_delete)) run_dir_to_delete <- c() else {
     ## can now assume directory exists
-    ## make sure it's not the models directory
+    ## make sure it's not the same directory the ctl file is in
     if(run_dir_to_delete %in% c(".", ".\\")) run_dir_to_delete <- c() else {
       if(normalizePath(run_dir_to_delete) == normalizePath(run_in(r))) run_dir_to_delete <- c()
     }
@@ -1602,6 +1602,21 @@ wipe_run.nm_generic <- function(r){
   
   #ctl_out_files <- c(lst_path, output_files, ctl_table_files, run_dir_to_delete)
   ctl_out_files <- c(lst_path, psn_exported_files, run_dir_to_delete)
+
+  ## before deleting files, check
+  behaviour <- new_jobs()
+  existing_ctl_out_files <- ctl_out_files[file.exists(ctl_out_files)]
+  if(length(existing_ctl_out_files) > 0){
+    ## i.e. there is something to delete
+    if("ask" %in% behaviour){
+      message(paste("following files/directories will be overwritten:\n", 
+                    paste(existing_ctl_out_files, collapse = "\n ")))
+      ans <- readline("Type \"y\" if you're happy to overwrite or anything else to abort...\n")
+      if(tolower(ans) != "y") stop("aborting")
+    } else if(!"overwrite" %in% behaviour){
+      stop("behaviour in new_jobs() needs to be \"ask\" or \"overwrite\" to proceed")
+    }
+  }
   
   unlink(ctl_out_files, recursive = TRUE, force = TRUE)
   

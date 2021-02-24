@@ -12,7 +12,7 @@ ui <- miniPage(
   gadgetTitleBar("Run behaviour"),
   miniContentPanel(
     selectInput("run_behaviour", "run behaviour", 
-                c("run", "stop", "skip"), 
+                c("ask", "overwrite", "stop new", "skip"), 
                 selected = NMproject::new_jobs())
   )
 )

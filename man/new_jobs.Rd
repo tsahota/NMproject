@@ -4,7 +4,7 @@
 \alias{new_jobs}
 \title{get/set new_jobs}
 \usage{
-new_jobs(txt = c("run", "stop", "skip"))
+new_jobs(txt = c("ask", "overwrite", "stop new", "skip"))
 }
 \arguments{
 \item{txt}{character either "run", "stop", "skip"}
