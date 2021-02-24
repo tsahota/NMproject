@@ -223,7 +223,7 @@ kill_job <- function(m){
 new_jobs <- function(txt = c("run", "stop", "skip")){
   if(missing(txt)){
     return(getOption("new_jobs"))
-  } 
+  }
   txt <- match.arg(txt)
   options(new_jobs = txt)
   if(txt %in% "run") message("run: run_nm() will run NONMEM if job has not been previously executed")

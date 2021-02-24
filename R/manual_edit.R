@@ -227,7 +227,6 @@ apply_manual_edit.nm_generic <- function(m, patch_name){
 #' @export
 apply_manual_edit.nm_list <- Vectorize_nm_list(apply_manual_edit.nm_generic, SIMPLIFY = FALSE)
 
-
 manual_patch_app <- function() {
   
   ## have base object
@@ -400,5 +399,17 @@ view_patch_app <- function(){
   #selected_text <- gsub("\"","", selected_text)
   
   view_patch(selected_text)
+  
+}
+
+run_behaviour_app <- function() {
+  
+  shiny_dir <- system.file("extdata/run_behaviour", package="NMproject")
+  .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env
+  on.exit({
+    .sso_env$.currentwd <- NULL
+  }, add = TRUE)
+  viewer <- shiny::paneViewer(300)
+  shiny::runGadget(shiny::shinyAppDir(shiny_dir), viewer = viewer)
   
 }

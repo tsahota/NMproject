@@ -111,7 +111,7 @@ nm <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
 #'             cmd = "execute -run_on_sge -sge_prepend_flags='-V' {ctl_name} -dir={run_dir}")
 #'}
 #' @export
-new_nm <- function(run_id, based_on, data_path, cmd = "execute {ctl_name} -dir={run_dir}"){
+new_nm <- function(run_id = NA_character_, based_on, data_path, cmd = "execute {ctl_name} -dir={run_dir}"){
   
   m <- nm(run_id = run_id)
   if(!missing(based_on)) m <- m %>% based_on(based_on)

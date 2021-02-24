@@ -1,6 +1,11 @@
-Name: manual_edit
+Name: manual edit
 Description: create patch to apply with apply_manual_edit()
 Binding: make_patch_app
+Interactive: true
+
+Name: run behaviour
+Description: modify run behaviour
+Binding: run_behaviour_app
 Interactive: true
 
 Name: view patch

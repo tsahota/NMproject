@@ -4,7 +4,12 @@
 \alias{new_nm}
 \title{create a new nm object}
 \usage{
-new_nm(run_id, based_on, data_path, cmd = "execute {ctl_name} -dir={run_dir}")
+new_nm(
+  run_id = NA_character_,
+  based_on,
+  data_path,
+  cmd = "execute {ctl_name} -dir={run_dir}"
+)
 }
 \arguments{
 \item{run_id}{character. Run identifier}
