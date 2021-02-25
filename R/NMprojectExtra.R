@@ -1414,7 +1414,7 @@ result_file.nm_list <- Vectorize_nm_list(result_file.nm_generic)
 #' @export
 nm_tran.nm_generic <- function(x){
   xtmp <- x %>% run_in(file.path(run_in(x), "temp"))
-  write_ctl(xtmp)
+  xtmp %>% write_ctl(prompt = FALSE)
   nm_tran.default(ctl_path(xtmp))
   invisible(x)
 }
@@ -3503,7 +3503,7 @@ init_theta.nm_generic <- function(m, replace, ...){
     if(length(mutate_args) > 0){
       current_init <- init_theta(m)
       replace <- current_init %>% dplyr::mutate(!!!mutate_args)
-      replace <- replace %>% mutate_if(is.numeric, ~signif(., 5))
+      replace <- replace %>% dplyr::mutate_if(is.numeric, ~signif(., 5))
     } else {
       d <- d[!is.na(d$parameter), ]
       d$value <- NULL
@@ -3556,7 +3556,7 @@ init_omega.nm_generic <- function(m, replace, ...){
     if(length(mutate_args) > 0){
       current_init <- init_omega(m)
       replace <- current_init %>% mutate_cond(!is.na(name), !!!mutate_args)
-      replace <- replace %>% mutate_if(is.numeric, ~signif(., 5))
+      replace <- replace %>% dplyr::mutate_if(is.numeric, ~signif(., 5))
     } else {
       d$value <- NULL
       d$comment <- NULL
@@ -3611,7 +3611,7 @@ init_sigma.nm_generic <- function(m, replace, ...){
     if(length(mutate_args) > 0){
       current_init <- init_sigma(m)
       replace <- current_init %>% mutate_cond(!is.na(name), !!!mutate_args)
-      replace <- replace %>% mutate_if(is.numeric, ~signif(., 5))
+      replace <- replace %>% dplyr::mutate_if(is.numeric, ~signif(., 5))
     } else {
       d$value <- NULL
       d$comment <- NULL
@@ -4639,8 +4639,14 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
       pars_to_add <- tibble::as_tibble(t(rri$m))
       names(pars_to_add) <- rri$parameter
 
-      dplyr::bind_cols(d, pars_to_add) %>%
-        ## nm_lists screw up in dplyr...
+      dplyr::bind_cols(d, pars_to_add) #%>%
+        # mutate(m = nm_list2list(m),
+        #        parent = nm_list2list(parent))
+    })
+    
+    ## nm_lists screw up in dplyr...
+    ds <- lapply(ds, function(x) {
+      x %>% 
         mutate(m = nm_list2list(m),
                parent = nm_list2list(parent))
     })

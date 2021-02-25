@@ -137,7 +137,7 @@ covariate_step_tibble <- function(base, run_id, run_in = getOption("models.dir")
   }
   
   ## check no covariates are in dataset and have no missing values
-  dinput <- input_data(base)
+  dinput <- tibble::tibble(input_data(base))
   test_covs <- unique(dtest$cov)
   if(any(!test_covs %in% names(dinput))){
     stop("cannot find covariates:\n ",
