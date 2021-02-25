@@ -5718,6 +5718,15 @@ shiny_nm <- function(m, envir = .GlobalEnv){
   shiny::runApp(shiny_dir,launch.browser = TRUE)
 }
 
+code_library_app <- function(){
+  shiny_dir <- system.file("extdata/code_library_shiny", package="NMproject")
+  .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env
+  on.exit({
+    .sso_env$.currentwd <- NULL
+  }, add = TRUE)
+  shiny::runApp(shiny_dir,launch.browser = TRUE)
+}
+
 #' get all nm_list objects
 #' 
 #' @param x environment (default = .GlobalEnv) to search
