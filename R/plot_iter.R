@@ -10,6 +10,7 @@ plot_iter_data <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
   UseMethod("plot_iter_data")
 }
 
+#' @export
 plot_iter_data.default <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
 
   if(!requireNamespace("reshape2", quietly = TRUE))
