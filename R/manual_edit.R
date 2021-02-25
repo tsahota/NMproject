@@ -92,7 +92,6 @@ start_manual_edit_unix <- function(m, combine_patch = NA_character_){
   ## this isn't used - delete
   
   temp_ctl_path <- file.path(run_in(m), paste0("manual_", ctl_name(m)))
-
   mnew <- m %>% ctl_path(temp_ctl_path) %>% write_ctl(prompt = FALSE)
 
   ## soft unstage all first, then add only the file
@@ -137,6 +136,9 @@ view_patch <- function(patch_name){
 #' @param m nm object
 #' @param patch_name character name of patch
 #' 
+#' @details Generally best to to apply patches before automatic edits
+#'  and changes in directories e.g. via \code{run_in()}
+#' 
 #' @export
 apply_manual_edit <- function(m, patch_name){
   UseMethod("apply_manual_edit")
@@ -165,7 +167,11 @@ apply_manual_edit.nm_generic <- function(m, patch_name){
   patch_cmd <- paste("git apply", patch_path_tmp)
 
   if(!git_cmd_available) stop("need git available from system() for this to work")  
-  system(patch_cmd)  ## win = no need to use system_nm, no file sync issues
+  res <- system(patch_cmd, intern = TRUE)  ## win = no need to use system_nm, no file sync issues
+
+  if(1 %in% attributes(res)$status){
+    stop("patch failed", call. = TRUE)
+  }
   
   out_file <- readLines(temp_ctl_path)
   

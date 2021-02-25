@@ -1845,7 +1845,24 @@ is_finished <- function(r,initial_timeout=NA){
 
 #' @export
 is_finished.nm_generic <- function(r,initial_timeout=NA){
-  all(status(r) %in% c("finished", "error") | is.na(r))
+  
+  ## first check if meta.yaml is there, if so, just use that
+  ## otherwise do a basic check.
+  
+  meta_yaml <- file.path(run_dir_path(r), "meta.yaml")
+  
+  if(file.exists(meta_yaml)){
+    yaml_contents <- readLines(meta_yaml)
+    yaml_finish_match <- grep("finish_time", yaml_contents)
+    if(length(yaml_finish_match) == 0) return(FALSE)
+    if(length(yaml_finish_match) > 1) stop("more than one finish tag in meta.yaml. Debug needed")
+    ## can now assume a unique match
+    return(TRUE)
+  } else {
+    ## the backup way doesn't care about psn exports
+    return(all(status(r) %in% c("finished", "error") | is.na(r)) )
+  }
+  
 }
 
 #' @export

@@ -14,3 +14,7 @@ apply_manual_edit(m, patch_name)
 \description{
 Best used with "make manual edit patch" addin.
 }
+\details{
+Generally best to to apply patches before automatic edits
+ and changes in directories e.g. via \code{run_in()}
+}
