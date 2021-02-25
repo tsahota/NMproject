@@ -4,6 +4,9 @@ library(miniUI)
 .currentwd <- get(".currentwd", envir = NMproject:::.sso_env)
 setwd(.currentwd)
 
+current_selection <- match(NMproject::overwrite_behaviour(),
+                           NMproject::.overwrite_behaviour$txt)
+
 server <- function(input, output, session) {
   
   output$behaviour_table <- DT::renderDataTable(
@@ -17,7 +20,8 @@ server <- function(input, output, session) {
                    searching=FALSE,
                    filtering=FALSE,
                    ordering=FALSE),
-    selection = "single")
+    #selection = "single",
+    selection = list(mode = 'single', selected = current_selection))
   
   txt_value <- eventReactive(input$behaviour_table_rows_selected,{
     NMproject::.overwrite_behaviour$txt[input$behaviour_table_rows_selected]

@@ -1654,7 +1654,7 @@ prompt_overwrite <- function(paths, new_path_contents = c()){
     new_contents <- new_path_contents
     attributes(new_contents) <- NULL
     if(!identical(new_contents, old_contents)){
-      diff_val <- diffobj::diffChr(new_contents, old_contents, format = "raw") 
+      diff_val <- diffobj::diffChr(old_contents, new_contents, format = "raw") 
       if(length(as.character(diff_val)) <= 30) ## diff limit
         msg <- paste(msg, "\n", paste(diff_val, collapse = "\n"))
     } else {
@@ -2526,7 +2526,19 @@ nm_diff <- function(m, ref_m, format = "raw"){
       as_nm_generic(m)[["ctl_orig"]]
     ))
   } else {
-    old_ctl <- as.character(ctl_character(ctl_contents(as_nm_generic(ref_m)))) 
+    if(inherits(ref_m, "nm_list") | inherits(ref_m, "nm_generic")){
+      old_ctl <- as.character(ctl_character(ctl_contents(as_nm_generic(ref_m)))) 
+    } else {
+      if(is.character(ref_m)){
+        if(length(ref_m) > 1) old_ctl <- ref_m
+        if(length(ref_m) == 0) stop("ref_m should not be length 0")
+        if(length(ref_m) == 1) 
+          if(file.exists(ref_m)) 
+            old_ctl <- readLines(ref_m) 
+      } else {
+        stop("don't know how to handle ref_m")
+      }
+    }
   }
   new_ctl <- as.character(ctl_character(ctl_contents(as_nm_generic(m))))
   #"ansi256"
