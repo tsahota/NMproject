@@ -569,14 +569,15 @@ new_ctl_extra <- function(m, ctl, dir = getOption("models.dir")){
 #' Normally used by other functions
 #' 
 #' @param m nm object
+#' @param prompt logical (default = TRUE), should prompt if overwriting?
 #' 
 #' @export
-write_ctl <- function(m){
+write_ctl <- function(m, prompt = TRUE){
   UseMethod("write_ctl")
 }
 
 #' @export
-write_ctl.nm_generic <- function(m){
+write_ctl.nm_generic <- function(m, prompt = TRUE){
 
   ctl_name <- ctl_path(m)
   ctl_ob <- ctl_contents(m) %>% ctl_character()
@@ -584,6 +585,22 @@ write_ctl.nm_generic <- function(m){
   
   if(!file.exists(dir_name)) 
     dir.create(dir_name, showWarnings = FALSE, recursive = TRUE)
+  
+  if(file.exists(ctl_name)){
+    behaviour <- overwrite_behaviour()
+    old_contents <- readLines(ctl_name)
+    new_contents <- ctl_ob
+    attributes(new_contents) <- NULL
+    overwrite_required <- !identical(new_contents, old_contents)
+    if(overwrite_required){
+      if("stop" %in% behaviour)
+        stop("stopping because overwrite required: change behaviour in overwrite_behaviour()")
+      if("ask" %in% behaviour & prompt)
+        prompt_overwrite(ctl_name, new_path_contents = ctl_ob)
+      if("skip" %in% behaviour)
+        return(invisible(m))
+    }
+  }
   
   writeLines(ctl_ob, ctl_name)
   invisible(m)
@@ -1604,19 +1621,12 @@ wipe_run.nm_generic <- function(r){
   ctl_out_files <- c(lst_path, psn_exported_files, run_dir_to_delete)
 
   ## before deleting files, check
-  behaviour <- new_jobs()
   existing_ctl_out_files <- ctl_out_files[file.exists(ctl_out_files)]
-  if(length(existing_ctl_out_files) > 0){
-    ## i.e. there is something to delete
-    if("ask" %in% behaviour){
-      message(paste("following files/directories will be overwritten:\n", 
-                    paste(existing_ctl_out_files, collapse = "\n ")))
-      ans <- readline("Type \"y\" if you're happy to overwrite or anything else to abort...\n")
-      if(tolower(ans) != "y") stop("aborting")
-    } else if(!"overwrite" %in% behaviour){
-      stop("behaviour in new_jobs() needs to be \"ask\" or \"overwrite\" to proceed")
-    }
-  }
+  behaviour <- overwrite_behaviour()
+  if("stop" %in% behaviour & length(existing_ctl_out_files) > 0)
+    stop("no overwriting allowed, stopping due to following files/directories:\n ",
+         paste(paste(paths, collapse = "\n ")))
+  prompt_overwrite(rev(existing_ctl_out_files))
   
   unlink(ctl_out_files, recursive = TRUE, force = TRUE)
   
@@ -1625,6 +1635,49 @@ wipe_run.nm_generic <- function(r){
 
 #' @export
 wipe_run.nm_list <- Vectorize_nm_list(wipe_run.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
+
+prompt_overwrite <- function(paths, new_path_contents = c()){
+  
+  if(length(paths) == 0) return(NA_character_)
+  
+  behaviour <- overwrite_behaviour()  
+  if(!"ask" %in% behaviour) return(NA_character_)
+  
+  question <- "The following directories & files will be overwritten"
+  msg <- paste(paste(paths, collapse = "\n "))
+  
+  if(length(new_path_contents) > 0 & requireNamespace("diffobj")){
+    if(length(paths) > 1) stop("can only do diff with one path")
+    if(!is.character(new_path_contents)) stop("expecting character vector for new_path_contents")
+    ## can now assume one path
+    old_contents <- readLines(paths)
+    new_contents <- new_path_contents
+    attributes(new_contents) <- NULL
+    if(!identical(new_contents, old_contents)){
+      diff_val <- diffobj::diffChr(new_contents, old_contents, format = "raw") 
+      if(length(as.character(diff_val)) <= 30) ## diff limit
+        msg <- paste(msg, "\n", paste(diff_val, collapse = "\n"))
+    } else {
+      ## if same, no need to prompt
+      return(NA_character_)
+    }
+  }
+  
+  if(rstudioapi::isAvailable()){
+    proceed <- rstudioapi::showQuestion(question, msg, 
+                                        ok = "overwrite",
+                                        cancel = "abort")
+  } else {
+    message(question)
+    message(msg)
+    message("overwrite and proceed?")
+    ans <- readline("Type \"y\" or \"n\": ")
+    proceed <- tolower(ans) == "y"
+    if(length(proceed > 1)) stop("only one answer allowed", call. = FALSE)
+  }
+  if(!proceed) stop("aborting", call. = FALSE)
+  
+}
 
 
 #' Clean up temporary files
@@ -1838,7 +1891,7 @@ show_ctl <- function(r) {
 #' @export
 show_ctl.nm_generic <- function(r) {
   rtmp <- r %>% run_in(file.path(run_in(r), "temp"))
-  r %>% write_ctl()
+  r %>% write_ctl(prompt = FALSE)
   file.show(ctl_path(r))
 }
 #' @export
@@ -4015,7 +4068,7 @@ nm_output.nm_list <- nm_output.nm_generic
 run_checksums <- function(m){  ## only works on single m
   ## information determinative to whether run should be rerun
   mtmp <- m %>% run_in(file.path(run_in(m), "temp"))
-  mtmp %>% write_ctl()
+  mtmp %>% write_ctl(prompt = FALSE)
   files <- c(ctl_path(mtmp), data_path(mtmp))
   
   checksums <- tools::md5sum(files)

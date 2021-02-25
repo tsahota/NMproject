@@ -402,14 +402,15 @@ view_patch_app <- function(){
   
 }
 
-run_behaviour_app <- function() {
+overwrite_behaviour_app <- function() {
   
-  shiny_dir <- system.file("extdata/run_behaviour", package="NMproject")
+  shiny_dir <- system.file("extdata/overwrite_behaviour", package="NMproject")
   .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env
   on.exit({
     .sso_env$.currentwd <- NULL
   }, add = TRUE)
-  viewer <- shiny::paneViewer(300)
+  #viewer <- shiny::paneViewer(300)
+  viewer <- shiny::dialogViewer(dialogName = "overwrite behaviour")
   shiny::runGadget(shiny::shinyAppDir(shiny_dir), viewer = viewer)
   
 }

@@ -4,10 +4,12 @@
 \alias{write_ctl}
 \title{Write control file to disk}
 \usage{
-write_ctl(m)
+write_ctl(m, prompt = TRUE)
 }
 \arguments{
 \item{m}{nm object}
+
+\item{prompt}{logical (default = TRUE), should prompt if overwriting?}
 }
 \description{
 Normally used by other functions

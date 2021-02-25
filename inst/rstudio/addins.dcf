@@ -3,9 +3,9 @@ Description: create patch to apply with apply_manual_edit()
 Binding: make_patch_app
 Interactive: true
 
-Name: run behaviour
-Description: modify run behaviour
-Binding: run_behaviour_app
+Name: overwrite behaviour
+Description: modify overwrite behaviour
+Binding: overwrite_behaviour_app
 Interactive: true
 
 Name: view patch

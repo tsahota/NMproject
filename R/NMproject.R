@@ -103,7 +103,7 @@ set_nm_opts <- function(){
   if(is.null(getOption("wait"))) options(wait=FALSE)
   if(is.null(getOption("kill_job"))) options(kill_job=identity)
 
-  if(is.null(getOption("new_jobs"))) options(new_jobs="ask")
+  if(is.null(getOption("nm.overwrite_behaviour"))) options(nm.overwrite_behaviour="ask")
   
   if(is.null(getOption("nmtran_exe_path"))) options(nmtran_exe_path=find_nm_tran_path())
   
@@ -214,24 +214,47 @@ kill_job <- function(m){
   getOption("kill_job")(m)
 }
 
+#' overwrite behaviour of NMproject
+#' 
+#' Requires setting "nm.overwrite_behaviour" \code{option()}
+#'
+#' @param txt character either "run", "stop", "skip" 
+#' @export
+overwrite_behaviour <- function(txt = c("ask", 
+                                        "overwrite", 
+                                        "stop", 
+                                        "skip")){
+  if(missing(txt)){
+    return(getOption("nm.overwrite_behaviour"))
+  }
+  txt <- match.arg(txt)
+  options(nm.overwrite_behaviour = txt)
+  
+  # if(txt %in% "ask") message("ask: NMproject will ask before overwriting old files")
+  # if(txt %in% "overwrite") message("overwrite: NMproject will overwrite previous runs without prompt")
+  # if(txt %in% "stop") message("stop: NMproject will stop R execution with an error instead of running NONMEM")
+  # if(txt %in% "skip") message("skip: NMproject will not run NONMEM")
+  return(invisible())
+}
+
+#' @export
+.overwrite_behaviour <- tibble::tibble(
+  txt = c("ask", "overwrite", "stop", "skip"),
+  description =   c("ask before overwrite (default)",
+                    "overwrite all",
+                    "no overwriting (stop with error)",
+                    "no overwriting (skip, no error)")
+)
+
 #' get/set new_jobs
 #' 
-#' Requires setting "new_jobs" \code{option()}
+#' Requires setting "nm.overwrite_behaviour" \code{option()}
 #'
 #' @param txt character either "run", "stop", "skip" 
 #' @export
 new_jobs <- function(txt = c("ask", "overwrite", "stop new", "skip")){
-  if(missing(txt)){
-    return(getOption("new_jobs"))
-  }
-  txt <- match.arg(txt)
-  options(new_jobs = txt)
-  
-  if(txt %in% "ask") message("ask: NMproject will ask before overwriting old files")
-  if(txt %in% "overwrite") message("overwrite: NMproject will overwrite previous runs without prompt")
-  if(txt %in% "stop new") message("stop: NMproject will stop R execution with an error instead of running NONMEM")
-  if(txt %in% "skip") message("skip: NMproject will not run NONMEM")
-  return(invisible())
+  .Deprecated(overwrite_behaviour)
+  overwrite_behaviour(match.arg(txt))
 }
 
 #' Get run id

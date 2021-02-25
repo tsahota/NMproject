@@ -95,11 +95,11 @@ run_nm.nm_generic <- function(m, wait=getOption("wait"),
   }
   
   ## NONMEM will run from this point on
-  ## check new_jobs() behaviour 
-  behaviour <- new_jobs()
-  if("stop new" %in% behaviour) stop("new_jobs detected: stopping... \n change new_job behaviour with new_jobs()", call. = FALSE)
+  ## check overwrite_behaviour() behaviour 
+  behaviour <- overwrite_behaviour()
+  #if("stop" %in% behaviour) stop("No new NONMEM runs allowed. Stopping... \n change behaviour with overwrite_behaviour()", call. = FALSE)
   if("skip" %in% behaviour) {
-    message("new job detected: skip \n change new_job behaviour with new_jobs()")
+    message("skipping step as it would require overwriting \n change behaviour with overwrite_behaviour()")
     return(invisible(m))
   }
   
