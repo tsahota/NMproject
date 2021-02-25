@@ -39,10 +39,6 @@ if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
 ```{r echo=FALSE,message=FALSE}
 ## LOAD PACKAGES HERE
 
-# 
-# 
-# 
-# 
 library(dplyr)
 library(ggplot2)
 
@@ -52,7 +48,7 @@ load_localpackage()
 
 ## model object
 
-```{r}
+```{r wait_for_run_finish}
 wait_finish(.m)
 .m
 ```

@@ -48,7 +48,7 @@ load_localpackage()
 
 ## model object
 
-```{r}
+```{r wait_for_run_finish}
 wait_finish(.m)
 .m
 ```
