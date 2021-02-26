@@ -85,6 +85,12 @@ cond_num <- function(r){
 #' @export
 cond_num.default <- function(r){
   if(is_single_na(r)) return(as.numeric(NA))
+  if(is.data.frame(r)){
+    dc <- r
+    ans <- as.numeric(dc$FINAL[dc$parameter %in% "CONDNUM"])
+    if(length(ans) == 0) ans <- as.numeric(NA)
+    return(ans)
+  }
   stop("don't know how to get cond_num of this")
 }
 
