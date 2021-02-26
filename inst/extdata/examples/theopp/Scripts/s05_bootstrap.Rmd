@@ -1,0 +1,116 @@
+---
+output:
+  html_notebook: default
+title: "model development"
+author: "`r Sys.info()['user']`"
+date: "`r Sys.time()`"
+---
+
+<!-- Instructions: -->
+<!--  1. Run this as a notebook -->
+<!--  2. make sure you already have data in DerivedData directory -->
+<!--  3. Use the code_library() to import code -->
+<!--  4. Adapt code below to create a control file suitable for your problem -->
+<!--  5. Use the addins to help you -->
+<!--  6. There are R markdown templates to help you get started with diagnostics -->
+<!--  7. Write your thoughts and decision making in the document as you go -->
+<!--  8. Keep the script self contained - any R objects your need in other scripts, save them with saveRDS() and use readRDS() to load them in other scripts -->
+<!--  9. Rerun chunks whenever you need to restart R and periodically to ensure the reproducibility chain is unbroken -->
+<!--  10. after running everything check everything is update with "run all" and then knit the document to have a record of your model development log -->
+
+
+```{r setup, include=F}
+## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
+library(rprojroot)
+library(knitr)
+opts_knit$set(root.dir=find_root(has_file('.Rprofile')))
+opts_chunk$set(echo = TRUE)
+opts_chunk$set(message = TRUE)
+```
+
+```{r echo=FALSE,message=FALSE}
+## LOAD PACKAGES HERE
+library(NMproject)
+library(dplyr)
+library(rsample)
+
+load_localpackage()
+```
+
+## model development
+
+```{r}
+
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv",
+             cmd = "execute {ctl_name} -dir={run_dir}") %>%
+  fill_input() %>%
+  init_theta(init = c(1, -2.5, -0.5)) %>%
+  init_sigma(init = 0.1) %>%
+  run_nm()
+  
+```
+
+
+```{r}
+dd <- input_data(m1)
+
+## Define STRATA
+
+dd <-dd %>%
+  mutate(IDGRP = ID <= 6,
+         WT_C = factor(Hmisc::cut2(WT, g = 2, levels.mean = TRUE)),
+         STRATA = paste(IDGRP, WT_C, sep = "_"))
+
+dd_id <- dd %>% distinct(ID, STRATA)
+
+set.seed(123)
+
+## create large set of resamples (to enable simulation to grow without ruining seed)
+dboots_all <- rsample::bootstraps(dd_id, 1000, strata = "STRATA")
+
+## create subset to write to disk
+dboots <- dboots_all[1:10,] # datasets created
+dboots$run_id <- 1:nrow(dboots)
+
+## write bootstrap datasets
+dboots <- dboots %>% add_boot_datasets(d = dd, overwrite = TRUE)
+
+```
+
+End of generic bootstrap prep
+
+
+```{r}
+
+dm1_boot <- dboots %>%
+  mutate(
+    m = m1 %>%
+      child("tmp") %>%
+      run_in("Models/m1_boot") %>%
+      data_path(csv_name[1]) %>%
+      fill_input() %>%
+      child(run_id) %>%
+      data_path(csv_name) %>%
+      nm_list2list()
+  )
+
+dm1_boot$m <- dm1_boot$m %>%
+  as_nm_list() %>%
+  run_nm()
+
+
+## 95% CI on all param
+dres <- coef(dm1_boot$m[status(dm1_boot$m)%in%"finished"]) %>%
+  {do.call(rbind, .)} %>%
+  as_tibble() %>%
+  group_by(parameter) %>%
+  summarise(low=quantile(FINAL,probs=0.025),
+            med=median(FINAL),
+            upp=quantile(FINAL,probs=0.975))
+
+dres
+
+```
+

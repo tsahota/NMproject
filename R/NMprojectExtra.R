@@ -6140,6 +6140,74 @@ job_stats <- function(m){
   
 }
 
+
+#' save bootstrap datasets to disk
+#' 
+#' intended to be used in a mutate statement from rsample::bootstrap output
+#' 
+#' @param d dataset to merge
+#' @param rsplit splits object from rsample
+#' @param data_name name of dataset
+#' @param folder path to bootstrap datasets
+#' @param overwrite should datasets be overwritten
+#' 
+#' @export
+boot_to_csv <- function(d,
+                        rsplit, 
+                        data_name,
+                        folder = "DerivedData/bootstrap_datasets", 
+                        overwrite = FALSE){
+
+  if(!requireNamespace("rsample")) stop("install rsample")
+  
+  data_name <- tools::file_path_sans_ext(basename(as.character(data_name)))
+  
+  csv_name <- file.path(folder, paste0(data_name, ".csv"))
+  if(file.exists(csv_name) & !overwrite) return(csv_name)
+
+  suppressMessages(
+    dd_boot <- rsample::analysis(rsplit) %>%
+      dplyr::mutate(NEWID = 1:nrow(.)) %>%
+      dplyr::inner_join(d) %>%
+      dplyr::mutate(OLDID = ID,
+                    ID = NEWID)
+  )
+  dd_boot$NEWID <- NULL
+  
+  dir.create(folder, showWarnings = FALSE, recursive = TRUE)
+  
+  write.csv(dd_boot, file = csv_name, quote = FALSE, row.names = FALSE, na = ".")
+  
+  return(csv_name)
+}
+
+#' add/write bootstrap datasets
+#' 
+#' preparation step before creating nm models
+#' 
+#' @param dboots rsplits dataset with run_id column
+#' @param d dataset to merge
+#' @param folder folder to store datasets
+#' @param overwrite overwrite or not
+#' 
+#' @export
+add_boot_datasets <- function(dboots, 
+                              d,
+                              folder = "DerivedData/bootstrap_datasets", 
+                              overwrite = FALSE){
+  dboots <- dboots %>%
+    dplyr::group_by(run_id) %>%
+    dplyr::mutate(
+      csv_name = purrr::map2_chr(
+        splits, run_id,
+        ~boot_to_csv(d = d, rsplit = .x, data_name = .y, overwrite = overwrite)
+      )
+    ) %>%
+    dplyr::ungroup()
+  dboots
+}
+
+
 ## TODO: no_rerun()
 ##  stops instead of rerunning.
 ##  traceability check
