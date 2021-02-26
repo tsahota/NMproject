@@ -6148,21 +6148,21 @@ job_stats <- function(m){
 #' @param d dataset to merge
 #' @param rsplit splits object from rsample
 #' @param data_name name of dataset
-#' @param folder path to bootstrap datasets
+#' @param data_folder path to bootstrap datasets
 #' @param overwrite should datasets be overwritten
 #' 
 #' @export
 boot_to_csv <- function(d,
                         rsplit, 
                         data_name,
-                        folder = "DerivedData/bootstrap_datasets", 
+                        data_folder = "DerivedData/bootstrap_datasets", 
                         overwrite = FALSE){
 
   if(!requireNamespace("rsample")) stop("install rsample")
   
   data_name <- tools::file_path_sans_ext(basename(as.character(data_name)))
   
-  csv_name <- file.path(folder, paste0(data_name, ".csv"))
+  csv_name <- file.path(data_folder, paste0(data_name, ".csv"))
   if(file.exists(csv_name) & !overwrite) return(csv_name)
 
   suppressMessages(
@@ -6174,7 +6174,7 @@ boot_to_csv <- function(d,
   )
   dd_boot$NEWID <- NULL
   
-  dir.create(folder, showWarnings = FALSE, recursive = TRUE)
+  dir.create(data_folder, showWarnings = FALSE, recursive = TRUE)
   
   write.csv(dd_boot, file = csv_name, quote = FALSE, row.names = FALSE, na = ".")
   
@@ -6185,16 +6185,26 @@ boot_to_csv <- function(d,
 #' 
 #' preparation step before creating nm models
 #' 
-#' @param dboots rsplits dataset with run_id column
-#' @param d dataset to merge
-#' @param folder folder to store datasets
+#' @param bootsplits rsplits dataset from \code{rsample::bootstrap()}
+#' @param index index for subsetting
+#' @param m nm object
+#' @param data_folder folder to store datasets
 #' @param overwrite overwrite or not
+#' @param ... arguments passed to fill_input
 #' 
 #' @export
-add_boot_datasets <- function(dboots, 
-                              d,
-                              folder = "DerivedData/bootstrap_datasets", 
-                              overwrite = FALSE){
+make_boot_datasets <- function(bootsplits,
+                               index = 1:10,
+                               m,
+                               data_folder = "DerivedData/bootstrap_datasets", 
+                               overwrite = FALSE,
+                               ...){
+  
+  dboots <- bootsplits[index,] # datasets created
+  dboots$run_id <- 1:nrow(dboots)
+  
+  d <- input_data(m)
+  
   dboots <- dboots %>%
     dplyr::group_by(run_id) %>%
     dplyr::mutate(
@@ -6204,6 +6214,17 @@ add_boot_datasets <- function(dboots,
       )
     ) %>%
     dplyr::ungroup()
+  
+  dboots <- dboots %>% mutate(
+    m = m %>%
+      run_in(file.path(run_in(.), paste0(run_id(.), "_boot"))) %>%
+      data_path(csv_name[1]) %>%
+      results_dir(file.path(run_in(.), "Results")) %>%
+      fill_input(...) %>%
+      child(run_id) %>% ## expand to fill dboots
+      data_path(csv_name) ## set data_paths
+  )
+  
   dboots
 }
 

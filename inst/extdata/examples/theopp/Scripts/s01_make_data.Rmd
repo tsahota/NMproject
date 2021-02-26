@@ -39,13 +39,32 @@ kable(head(d, 20))
 
 ```{r}
 
-d %>%
+d <- d %>%
   group_by(ID) %>%
-  mutate(WT = na.omit(WT)) %>%
-  write_derived_data("data") ## DerivedData/data.csv
+  mutate(WT = na.omit(WT))
+
+d %>% write_derived_data("data") ## DerivedData/data.csv
 
 ```
 
 
+```{r}
+## Define STRATA (no spaces)
+
+d <-d %>%
+  mutate(IDGRP = ID <= 6,
+         WT_C = factor(Hmisc::cut2(WT, g = 2, levels.mean = TRUE)),
+         STRATA = paste(IDGRP, WT_C, sep = "_"))
+
+d_id <- d %>% distinct(ID, STRATA)
+
+set.seed(123)
+
+## create large set of resamples (to enable simulation to grow without ruining seed)
+bootsplits <- rsample::bootstraps(d_id, 1000, strata = "STRATA")
+
+bootsplits %>% saveRDS("DerivedData/bootsplit_data.csv.RData")
+
+```
 
 

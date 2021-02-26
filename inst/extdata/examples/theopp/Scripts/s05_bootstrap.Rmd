@@ -54,57 +54,20 @@ m1 <- new_nm(run_id = "m1",
 
 
 ```{r}
-dd <- input_data(m1)
 
-## Define STRATA
+splits <- readRDS("DerivedData/bootsplit_data.csv.RData")
 
-dd <-dd %>%
-  mutate(IDGRP = ID <= 6,
-         WT_C = factor(Hmisc::cut2(WT, g = 2, levels.mean = TRUE)),
-         STRATA = paste(IDGRP, WT_C, sep = "_"))
+dm1_boot <- splits %>% make_boot_datasets(index = 1:10,
+                                          m = m1, 
+                                          overwrite = TRUE)
 
-dd_id <- dd %>% distinct(ID, STRATA)
-
-set.seed(123)
-
-## create large set of resamples (to enable simulation to grow without ruining seed)
-dboots_all <- rsample::bootstraps(dd_id, 1000, strata = "STRATA")
-
-## create subset to write to disk
-dboots <- dboots_all[1:10,] # datasets created
-dboots$run_id <- 1:nrow(dboots)
-
-## write bootstrap datasets
-dboots <- dboots %>% add_boot_datasets(d = dd, overwrite = TRUE)
-
-```
-
-End of generic bootstrap prep
-
-
-```{r}
-
-dm1_boot <- dboots %>%
-  mutate(
-    m = m1 %>%
-      child("tmp") %>%
-      run_in("Models/m1_boot") %>%
-      data_path(csv_name[1]) %>%
-      fill_input() %>%
-      child(run_id) %>%
-      data_path(csv_name) %>%
-      nm_list2list()
-  )
-
-dm1_boot$m <- dm1_boot$m %>%
-  as_nm_list() %>%
-  run_nm()
-
+dm1_boot$m <- dm1_boot$m %>% run_nm()
 
 ## 95% CI on all param
-dres <- coef(dm1_boot$m[status(dm1_boot$m)%in%"finished"]) %>%
-  {do.call(rbind, .)} %>%
-  as_tibble() %>%
+dres <- dm1_boot$m %>%
+  subset(status(.) %in% "finished") %>%
+  coef() %>%
+  bind_rows() %>%
   group_by(parameter) %>%
   summarise(low=quantile(FINAL,probs=0.025),
             med=median(FINAL),

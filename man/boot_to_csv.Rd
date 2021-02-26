@@ -8,7 +8,7 @@ boot_to_csv(
   d,
   rsplit,
   data_name,
-  folder = "DerivedData/bootstrap_datasets",
+  data_folder = "DerivedData/bootstrap_datasets",
   overwrite = FALSE
 )
 }
@@ -19,7 +19,7 @@ boot_to_csv(
 
 \item{data_name}{name of dataset}
 
-\item{folder}{path to bootstrap datasets}
+\item{data_folder}{path to bootstrap datasets}
 
 \item{overwrite}{should datasets be overwritten}
 }
