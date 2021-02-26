@@ -121,7 +121,7 @@ as_nm_list.nm_list <- function(m){
 as_nm_list.list <- function(m){
   if(is_nm_list(m)){
     class(m) <- c("nm_list", "list")
-    names(m) <- unique_id(m)#paste0(run_id0(m),":",type(m),":",run_in(m))
+    names(m) <- unique_id(m)
     return(m)
   } else {
     stop("list not coercible to nm_list")
@@ -169,21 +169,29 @@ c.nm_list <- function(...){
 #' @export
 c.nm_generic <- function(...){
   basic_list <- list(...)
-  as_nm_list(basic_list)
+  class(basic_list) <- c("nm_list", "list")
+  #as_nm_list(basic_list)
+  basic_list
 }
 
 #' @export
 '[.nm_list' <- function(x, i, j, ...) {
   class(x) <- "list"
   val <- NextMethod()
-  as_nm_list(val)
+  class(val) <- c("nm_list", "list")
+  #val <- as_nm_list(val)
+  val
 }
+
+
 
 #' @export
 unique.nm_list <- function(x, incomparables = FALSE, ...) {
   class(x) <- "list"
   val <- NextMethod()
-  as_nm_list(val)
+  class(val) <- c("nm_list", "list")
+  #val <- as_nm_list(val)
+  val
 }
 
 ## experimental - goes against dplyr, maybe delete if not useful
