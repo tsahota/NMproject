@@ -116,7 +116,7 @@ new_nm <- function(run_id = NA_character_, based_on, data_path, cmd = "execute {
   m <- nm(run_id = run_id)
   if(!missing(based_on)) m <- m %>% based_on(based_on)
   if(!missing(data_path)) m <- m %>% data_path(data_path)
-  if(!missing(cmd)) m <- m %>% cmd(cmd)
+  m <- m %>% cmd(cmd)
   m
   
 }
@@ -6185,20 +6185,20 @@ boot_to_csv <- function(d,
 #' 
 #' preparation step before creating nm models
 #' 
-#' @param bootsplits rsplits dataset from \code{rsample::bootstrap()}
-#' @param index index for subsetting
 #' @param m nm object
+#' @param index index for subsetting
 #' @param data_folder folder to store datasets
 #' @param overwrite overwrite or not
 #' @param ... arguments passed to fill_input
 #' 
 #' @export
-make_boot_datasets <- function(bootsplits,
+make_boot_datasets <- function(m,
                                index = 1:10,
-                               m,
                                data_folder = "DerivedData/bootstrap_datasets", 
                                overwrite = FALSE,
                                ...){
+  
+  bootsplits <- readRDS(paste0("DerivedData/bootsplit_", basename(data_path(m)), ".RData"))
   
   dboots <- bootsplits[index,] # datasets created
   dboots$run_id <- 1:nrow(dboots)

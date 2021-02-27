@@ -5,20 +5,17 @@
 \title{add/write bootstrap datasets}
 \usage{
 make_boot_datasets(
-  bootsplits,
-  index = 1:10,
   m,
+  index = 1:10,
   data_folder = "DerivedData/bootstrap_datasets",
   overwrite = FALSE,
   ...
 )
 }
 \arguments{
-\item{bootsplits}{rsplits dataset from \code{rsample::bootstrap()}}
+\item{m}{nm object}
 
 \item{index}{index for subsetting}
-
-\item{m}{nm object}
 
 \item{data_folder}{folder to store datasets}
 
