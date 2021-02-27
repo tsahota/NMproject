@@ -569,15 +569,15 @@ new_ctl_extra <- function(m, ctl, dir = getOption("models.dir")){
 #' Normally used by other functions
 #' 
 #' @param m nm object
-#' @param prompt logical (default = TRUE), should prompt if overwriting?
+#' @param force logical (default = FALSE), force write, don't ask (ignore behaviour)
 #' 
 #' @export
-write_ctl <- function(m, prompt = TRUE){
+write_ctl <- function(m, force = FALSE){
   UseMethod("write_ctl")
 }
 
 #' @export
-write_ctl.nm_generic <- function(m, prompt = TRUE){
+write_ctl.nm_generic <- function(m, force = FALSE){
 
   ctl_name <- ctl_path(m)
   ctl_ob <- ctl_contents(m) %>% ctl_character()
@@ -586,7 +586,7 @@ write_ctl.nm_generic <- function(m, prompt = TRUE){
   if(!file.exists(dir_name)) 
     dir.create(dir_name, showWarnings = FALSE, recursive = TRUE)
   
-  if(file.exists(ctl_name)){
+  if(file.exists(ctl_name) & !force){
     behaviour <- overwrite_behaviour()
     old_contents <- readLines(ctl_name)
     new_contents <- ctl_ob
@@ -595,7 +595,7 @@ write_ctl.nm_generic <- function(m, prompt = TRUE){
     if(overwrite_required){
       if("stop" %in% behaviour)
         stop("stopping because overwrite required: change behaviour in overwrite_behaviour()")
-      if("ask" %in% behaviour & prompt)
+      if("ask" %in% behaviour)
         prompt_overwrite(ctl_name, new_path_contents = ctl_ob)
       if("skip" %in% behaviour)
         return(invisible(m))
@@ -1414,7 +1414,7 @@ result_file.nm_list <- Vectorize_nm_list(result_file.nm_generic)
 #' @export
 nm_tran.nm_generic <- function(x){
   xtmp <- x %>% run_in(file.path(run_in(x), "temp"))
-  xtmp %>% write_ctl(prompt = FALSE)
+  xtmp %>% write_ctl(force = TRUE)
   nm_tran.default(ctl_path(xtmp))
   invisible(x)
 }
@@ -1908,7 +1908,7 @@ show_ctl <- function(r) {
 #' @export
 show_ctl.nm_generic <- function(r) {
   rtmp <- r %>% run_in(file.path(run_in(r), "temp"))
-  r %>% write_ctl(prompt = FALSE)
+  r %>% write_ctl(force = TRUE)
   file.show(ctl_path(r))
 }
 #' @export
@@ -4098,7 +4098,7 @@ nm_output.nm_list <- nm_output.nm_generic
 run_checksums <- function(m){  ## only works on single m
   ## information determinative to whether run should be rerun
   mtmp <- m %>% run_in(file.path(run_in(m), "temp"))
-  mtmp %>% write_ctl(prompt = FALSE)
+  mtmp %>% write_ctl(force = TRUE)
   files <- c(ctl_path(mtmp), data_path(mtmp))
   
   checksums <- tools::md5sum(files)

@@ -92,7 +92,7 @@ start_manual_edit_unix <- function(m, combine_patch = NA_character_){
   ## this isn't used - delete
   
   temp_ctl_path <- file.path(run_in(m), paste0("manual_", ctl_name(m)))
-  mnew <- m %>% ctl_path(temp_ctl_path) %>% write_ctl(prompt = FALSE)
+  mnew <- m %>% ctl_path(temp_ctl_path) %>% write_ctl(force = TRUE)
 
   ## soft unstage all first, then add only the file
   if(!git_cmd_available) stop("need git available from system() for this to work")
@@ -155,7 +155,7 @@ apply_manual_edit.nm_generic <- function(m, patch_name){
   patch_text <- readLines(patch_path)
   
   temp_ctl_path <- file.path(run_in(m), paste0("manual_", ctl_name(m)))
-  mnew <- m %>% ctl_path(temp_ctl_path) %>% write_ctl(prompt = FALSE)
+  mnew <- m %>% ctl_path(temp_ctl_path) %>% write_ctl(force = TRUE)
   
   ## edit and save temporary patch
   patch_text <- gsub("(a/).*?manual_\\S+", paste0("\\1", temp_ctl_path), patch_text, perl = TRUE)
