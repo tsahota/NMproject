@@ -4413,7 +4413,7 @@ nm_render.nm_generic <- function(m,
   } else {
     rmarkdown::render(input = input,
                       output_file = output_file,
-                      output_dir = results_dir(m),
+                      output_dir = output_dir,
                       params = args,
                       envir = new.env(),
                       ...)
@@ -4467,22 +4467,24 @@ nm_list_render <- function(m,
   output_dir <- parent_results_dir(m[1])
   output_path <- file.path(output_dir, output_file)
   
+  m_parent <- as_nm_generic(parent_run(m[1]))
+  
   ## if force is TRUE skip caching and run
   if(!force){
     ## if output_path doesn't exist skip caching and run
     ##if(file.exists(output_path)){
     ## pull existing checksum info
-    render_cache_disk <- lapply(render_cache_paths(m, input), readRDS)
+    render_cache_disk <- lapply(render_cache_paths(m_parent, input), readRDS)
     if(length(render_cache_disk) > 0){
       ## get current checksum
-      current_checksums <- render_checksums(m, input)
+      current_checksums <- render_checksums(m_parent, input)
       ## determine matches
       matches <- sapply(render_cache_disk, function(i) {
         identical(i$checksums, current_checksums)
       })
       if(any(matches)){
-        message("nm_render cache found, skipping... use nm_render(force = TRUE) to override")
-        m <- m %>% result_files(output_file)
+        message("nm_list_render cache found, skipping... use nm_list_render(force = TRUE) to override")
+        #m <- m_parent %>% result_files(output_file)
         return(invisible(m))    ## if up to date, skip
       }
     } 
@@ -4511,7 +4513,7 @@ nm_list_render <- function(m,
   ## use as_nm_generic incase m is redefined in rmd
   #m <- m %>% result_files(output_file)
   
-  as_nm_generic(parent_run(m[1])) %>% save_render_cache(input)
+  m_parent %>% save_render_cache(input)
   
   invisible(m)
 }

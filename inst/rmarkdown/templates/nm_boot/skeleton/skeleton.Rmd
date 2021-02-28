@@ -41,9 +41,10 @@ if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
 ```{r}
 library(NMproject)
 library(dplyr)
+library(ggplot2)
 ```
 
-## model object
+## completion summary
 
 ```{r wait_for_run_finish}
 #wait_finish(.m)
@@ -57,7 +58,17 @@ m_parent <- parent_run(m_finished[1])
 
 ```
 
-## parent results for context
+```{r}
+
+m_finished_summary <- m_finished %>% summary_wide()
+
+m_finished_summary %>%
+  ggplot(aes(x = ofv)) + theme_bw() +
+  geom_histogram()
+
+```
+
+## original parent result for context
 
 This can be made better later
 
@@ -78,7 +89,23 @@ m_finished %>%
   group_by(parameter) %>%
   summarise(low=quantile(FINAL,probs=0.025),
             med=median(FINAL),
-            upp=quantile(FINAL,probs=0.975))
+            upp=quantile(FINAL,probs=0.975),
+            mean = mean(FINAL),
+            se = sd(FINAL),
+            rse = 100*sd(FINAL)/mean(FINAL))
+
+```
+
+### stability plot with worst replicate (by ofv)
+
+```{r}
+
+try({
+  m_finished_summary %>%
+    arrange(desc(ofv)) %>%
+    {.$m[1]} %>%
+    plot_iter()
+})
 
 ```
 
@@ -90,7 +117,7 @@ m_finished %>%
 m_parent %>% text() %>% dplyr::first()
 ```
 
-### control file diff
+### original control file diff
 
 ```{r}
 m_parent %>% nm_diff()

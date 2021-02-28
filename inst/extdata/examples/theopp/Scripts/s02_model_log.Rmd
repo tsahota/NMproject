@@ -103,7 +103,7 @@ m1_boot$m %>% nm_list_render("Scripts/basic_boot.Rmd")
 
 ```
 
-### example cross-validation
+### example bootstrap cross-validation
 
 ```{r}
 
