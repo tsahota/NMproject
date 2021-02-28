@@ -92,6 +92,11 @@ parent_ctl_name <- function(m, text) {
 }
 
 #' @export
+parent_results_dir <- function(m, text) {
+  if(missing(text)) custom_1d_field(m, "parent_results_dir") else custom_1d_field(m, "parent_results_dir", as.character(text))
+}
+
+#' @export
 unique_id <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "unique_id") else custom_1d_field(m, "unique_id", text, glue = TRUE)
 }

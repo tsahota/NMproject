@@ -6,7 +6,7 @@
 \usage{
 make_boot_datasets(
   m,
-  index = 1:10,
+  samples = 10,
   data_folder = "DerivedData/bootstrap_datasets",
   overwrite = FALSE,
   ...
@@ -15,7 +15,7 @@ make_boot_datasets(
 \arguments{
 \item{m}{nm object}
 
-\item{index}{index for subsetting}
+\item{samples}{number of samples}
 
 \item{data_folder}{folder to store datasets}
 

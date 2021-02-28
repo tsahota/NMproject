@@ -1,0 +1,99 @@
+---
+title: "`r paste0(ctl_path(params$m[1]), ': Bootstrap')`"
+author: "`r Sys.info()['user']`"
+date: "`r Sys.time()`"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+params:
+  m: NA
+---
+
+<!-- To run as a notebook: -->
+<!--   1. define .m to be your nm_list in your workspace (e.g. .m <- m1boot$m) -->
+<!--   2. run as normal notebook -->
+
+<!-- To run as a report: -->
+<!--   1. Use the nm_list_render() on your object -->
+<!--   (e.g. m1 <- m1 %>% nm_render("path/to/this/report")) -->
+<!--   2. see ?nm_render for additional information including results location -->
+
+<!-- To make your own report (this is only a bare template) -->
+<!--   1. start with an already run model object (e.g. m1) -->
+<!--   2. add code and run as a notebook (see above) to see results -->
+<!--   3. when finished, run as a report (see above) to see report -->
+<!--   4. use nm_render() to run on other model objects -->
+
+
+```{r setup, include=F}
+## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
+library(rprojroot)
+library(knitr)
+opts_knit$set(root.dir=find_root(has_file(".Rprofile")))
+opts_chunk$set(echo = FALSE)
+opts_chunk$set(message = FALSE)
+if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
+  .m <- params$m  
+}
+```
+
+```{r}
+library(NMproject)
+library(dplyr)
+```
+
+## model object
+
+```{r wait_for_run_finish}
+#wait_finish(.m)
+
+.m %>% status_table()
+
+m_finished <- .m %>%
+  subset(status(.) %in% "finished")
+
+m_parent <- parent_run(m_finished[1])
+
+```
+
+## parent results for context
+
+This can be made better later
+
+```{r}
+
+m_parent %>% rr()
+
+```
+
+
+## results
+
+```{r}
+
+m_finished %>%
+  coef() %>%
+  bind_rows() %>%
+  group_by(parameter) %>%
+  summarise(low=quantile(FINAL,probs=0.025),
+            med=median(FINAL),
+            upp=quantile(FINAL,probs=0.975))
+
+```
+
+## Appendix
+
+### original control file
+
+```{r}
+m_parent %>% text() %>% dplyr::first()
+```
+
+### control file diff
+
+```{r}
+m_parent %>% nm_diff()
+```
+
+

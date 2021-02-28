@@ -6,6 +6,7 @@ nm_generic <- function(run_id = NA_character_,
                        parent_run_id = NA_character_,
                        parent_run_in = NA_character_,
                        parent_ctl_name = NA_character_,
+                       parent_results_dir = NA_character_,
                        ctl_name = "run{run_id}.mod",
                        type = "execute",
                        run_dir = "{run_id}",
@@ -37,6 +38,7 @@ To use the alpha interface, install NMproject 0.3.2",
   m[["parent_run_id"]] <- as.character(parent_run_id)
   m[["parent_run_in"]] <- as.character(parent_run_in)
   m[["parent_ctl_name"]] <- as.character(parent_ctl_name)
+  m[["parent_results_dir"]] <- as.character(parent_results_dir)
   m[["job_info"]] <- NA_character_
   m$target <- NA_character_
   m$executed <- FALSE
@@ -70,6 +72,7 @@ To use the alpha interface, install NMproject 0.3.2",
 #' @param parent_run_id character vector (optional). Run identifier of previous run 
 #' @param parent_run_in character vector (optional). Run location of previous run 
 #' @param parent_ctl_name character vector (optional). Ctl name of previous run 
+#' @param parent_results_dir character vector (optional). results_dir of previous run 
 #' @param ctl_name character. Name of control file
 #' @param type character (default = "execute").  Type of run to run
 #' @param run_dir character (default = "{run_id}").  Subdirectory where PsN wll run NONMEM
@@ -162,6 +165,7 @@ child.nm_generic <- function(m, run_id = NA_character_, type = "execute", silent
   m <- m %>% parent_run_id(run_id(m))
   m <- m %>% parent_run_in(run_in(m))
   m <- m %>% parent_ctl_name(ctl_name(m))
+  m <- m %>% parent_results_dir(results_dir(m))
   
   ## if missing increment run_id
   if(is.na(run_id)) {
@@ -4426,16 +4430,18 @@ nm_render.nm_list <- Vectorize_nm_list(nm_render.nm_generic, SIMPLIFY = FALSE, i
 #' @export
 nm_list_render <- function(m, 
                            input, 
-                           name,
                            output_file = NA,
                            args = list(),
                            force = FALSE,
                            async = FALSE,
                            ...){
+  
+  m <- m$m
+  
   if(is.na(output_file))
     output_file <- paste0(
       basename(tools::file_path_sans_ext(input)),
-      ".", name, ".nb.html"
+      ".", parent_run_id(m[1]), ".nb.html"
     )
   
   if("m" %in% names(args))
@@ -4443,27 +4449,29 @@ nm_list_render <- function(m,
   
   args <- c(args, list(m = as_nm_list(m)))
   
-  output_dir <- "Results"
+  output_dir <- parent_results_dir(m[1])
   output_path <- file.path(output_dir, output_file)
   
   ## if force is TRUE skip caching and run
   if(!force){
     ## if output_path doesn't exist skip caching and run
-    # render_cache_disk <- lapply(render_cache_paths(m, input), readRDS)
-    # if(length(render_cache_disk) > 0){
-    #   ## get current checksum
-    #   current_checksums <- render_checksums(m, input)
-    #   ## determine matches
-    #   matches <- sapply(render_cache_disk, function(i) {
-    #     identical(i$checksums, current_checksums)
-    #   })
-    #   if(any(matches)){
-    #     message("nm_render cache found, skipping... use nm_render(force = TRUE) to override")
-    #     ## pick highest available version
-    #     m <- m %>% result_files(output_file)
-    #     return(invisible(m))    ## if up to date, skip
-    #   }
-    # } 
+    ##if(file.exists(output_path)){
+    ## pull existing checksum info
+    render_cache_disk <- lapply(render_cache_paths(m, input), readRDS)
+    if(length(render_cache_disk) > 0){
+      ## get current checksum
+      current_checksums <- render_checksums(m, input)
+      ## determine matches
+      matches <- sapply(render_cache_disk, function(i) {
+        identical(i$checksums, current_checksums)
+      })
+      if(any(matches)){
+        message("nm_render cache found, skipping... use nm_render(force = TRUE) to override")
+        m <- m %>% result_files(output_file)
+        return(invisible(m))    ## if up to date, skip
+      }
+    } 
+    #}
   }
   
   if(async){
@@ -4486,8 +4494,9 @@ nm_list_render <- function(m,
   }
   
   ## use as_nm_generic incase m is redefined in rmd
+  #m <- m %>% result_files(output_file)
   
-  #m <- m %>% save_render_cache(input)
+  as_nm_generic(parent_run(m[1])) %>% save_render_cache(input)
   
   invisible(m)
 }
@@ -6143,19 +6152,21 @@ job_stats <- function(m){
 
 #' save bootstrap datasets to disk
 #' 
-#' intended to be used in a mutate statement from rsample::bootstrap output
+#' Internal function used by \code{make_boot_datasets()}, 
+#'   run once per bootstrap sample
 #' 
 #' @param d dataset to merge
 #' @param rsplit splits object from rsample
 #' @param data_name name of dataset
 #' @param data_folder path to bootstrap datasets
+#' @param id_var character (default = "ID"). Name of ID column
 #' @param overwrite should datasets be overwritten
 #' 
-#' @export
 boot_to_csv <- function(d,
                         rsplit, 
                         data_name,
                         data_folder = "DerivedData/bootstrap_datasets", 
+                        id_var = "ID",
                         overwrite = FALSE){
 
   if(!requireNamespace("rsample")) stop("install rsample")
@@ -6165,13 +6176,15 @@ boot_to_csv <- function(d,
   csv_name <- file.path(data_folder, paste0(data_name, ".csv"))
   if(file.exists(csv_name) & !overwrite) return(csv_name)
 
-  suppressMessages(
+  suppressMessages({
     dd_boot <- rsample::analysis(rsplit) %>%
+      dplyr::ungroup() %>%
+      dplyr::select(id_var) %>% 
       dplyr::mutate(NEWID = 1:nrow(.)) %>%
-      dplyr::inner_join(d) %>%
-      dplyr::mutate(OLDID = ID,
-                    ID = NEWID)
-  )
+      dplyr::inner_join(d)
+  })
+  dd_boot$OLDID <- dd_boot[[id_var]]
+  dd_boot[[id_var]] <- dd_boot$NEWID
   dd_boot$NEWID <- NULL
   
   dir.create(data_folder, showWarnings = FALSE, recursive = TRUE)
@@ -6186,21 +6199,21 @@ boot_to_csv <- function(d,
 #' preparation step before creating nm models
 #' 
 #' @param m nm object
-#' @param index index for subsetting
+#' @param samples number of samples
 #' @param data_folder folder to store datasets
 #' @param overwrite overwrite or not
 #' @param ... arguments passed to fill_input
 #' 
 #' @export
 make_boot_datasets <- function(m,
-                               index = 1:10,
+                               samples = 10,
                                data_folder = "DerivedData/bootstrap_datasets", 
                                overwrite = FALSE,
                                ...){
   
   bootsplits <- readRDS(paste0("DerivedData/bootsplit_", basename(data_path(m)), ".RData"))
   
-  dboots <- bootsplits[index,] # datasets created
+  dboots <- bootsplits[seq_len(samples), ] # datasets created
   dboots$run_id <- 1:nrow(dboots)
   
   d <- input_data(m)
@@ -6217,12 +6230,14 @@ make_boot_datasets <- function(m,
   
   dboots <- dboots %>% mutate(
     m = m %>%
+      ## the following run_in will screw up parent_run_in, fix later
       run_in(file.path(run_in(.), paste0(run_id(.), "_boot"))) %>%
       data_path(csv_name[1]) %>%
-      results_dir(file.path(run_in(.), "Results")) %>%
-      fill_input(...) %>%
+      fill_input(...) %>% ## doing this before child() speeds up execution
       child(run_id) %>% ## expand to fill dboots
-      data_path(csv_name) ## set data_paths
+      data_path(csv_name) %>% ## set data_paths
+      parent_run_in(run_in(m)) %>% ## fix run_in
+      results_dir(run_in(.))
   )
   
   dboots

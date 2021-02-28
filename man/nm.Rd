@@ -10,6 +10,7 @@ nm(
   parent_run_id = NA_character_,
   parent_run_in = NA_character_,
   parent_ctl_name = NA_character_,
+  parent_results_dir = NA_character_,
   ctl_name = "run{run_id}.mod",
   type = "execute",
   run_dir = "{run_id}",
@@ -27,6 +28,8 @@ nm(
 \item{parent_run_in}{character vector (optional). Run location of previous run}
 
 \item{parent_ctl_name}{character vector (optional). Ctl name of previous run}
+
+\item{parent_results_dir}{character vector (optional). results_dir of previous run}
 
 \item{ctl_name}{character. Name of control file}
 

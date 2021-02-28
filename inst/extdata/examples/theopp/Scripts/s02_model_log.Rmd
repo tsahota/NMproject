@@ -90,3 +90,15 @@ kable(summary_long(c(m2, m2WT), parameters = "all"))
 kable(rr(c(m2, m2WT)))
 
 ```
+
+```{r}
+m1_boot <- m1 %>% 
+  make_boot_datasets(samples = 10, overwrite = TRUE)
+
+m1_boot$m <- m1_boot$m %>% run_nm()
+
+m1_boot %>% nm_list_render("Scripts/basic_boot.Rmd")
+
+```
+
+

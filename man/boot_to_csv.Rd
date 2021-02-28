@@ -9,6 +9,7 @@ boot_to_csv(
   rsplit,
   data_name,
   data_folder = "DerivedData/bootstrap_datasets",
+  id_var = "ID",
   overwrite = FALSE
 )
 }
@@ -21,8 +22,11 @@ boot_to_csv(
 
 \item{data_folder}{path to bootstrap datasets}
 
+\item{id_var}{character (default = "ID"). Name of ID column}
+
 \item{overwrite}{should datasets be overwritten}
 }
 \description{
-intended to be used in a mutate statement from rsample::bootstrap output
+Internal function used by \code{make_boot_datasets()}, 
+  run once per bootstrap sample
 }
