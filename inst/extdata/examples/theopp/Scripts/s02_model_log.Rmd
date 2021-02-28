@@ -97,7 +97,7 @@ m1_boot <- m1 %>%
 
 m1_boot$m <- m1_boot$m %>% run_nm()
 
-m1_boot %>% nm_list_render("Scripts/basic_boot.Rmd")
+m1_boot$m %>% nm_list_render("Scripts/basic_boot.Rmd")
 
 ```
 

@@ -10,6 +10,7 @@ boot_to_csv(
   data_name,
   data_folder = "DerivedData/bootstrap_datasets",
   id_var = "ID",
+  oob = FALSE,
   overwrite = FALSE
 )
 }
