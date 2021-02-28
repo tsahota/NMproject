@@ -1,5 +1,5 @@
 ---
-title: "`r paste0(ctl_path(params$m[1]), ': Bootstrap')`"
+title: "`r paste0(ctl_path(params$m[1]), ': bootstrap')`"
 author: "`r Sys.info()['user']`"
 date: "`r Sys.time()`"
 output:
