@@ -1925,7 +1925,11 @@ show_ctl.nm_list <- show_ctl.nm_generic
 #' @param ... arguments to be passed to text()
 #' @export
 dollar <- function(m, dollar, ..., add_dollar_text = TRUE) {
-  m %>% target(dollar) %>% text(..., add_dollar_text = add_dollar_text)
+  orig_target <- m %>% target()
+  ans <- m %>% target(dollar) %>% 
+    text(..., add_dollar_text = add_dollar_text)
+  if(is_nm_list(ans)) ans <- ans %>% target(orig_target)
+  ans
 }
 
 ## pipe for string functions
@@ -4427,6 +4431,17 @@ nm_render.nm_generic <- function(m,
 #' @export
 nm_render.nm_list <- Vectorize_nm_list(nm_render.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
+#' render function for child nm_lists
+#' 
+#' Mostly used for bootstraps, and other routines where
+#'   a parent run spawns multiple children in the form of an nm_list
+#' 
+#' @param m nm object
+#' @param input character. Same as rmarkdown::render() arg
+#' @param output_file character. Same as rmarkdown::render() arg
+#' @param args list. Same as "params" arg in rmarkdown::render()
+#' @param force logical (default = FALSE). will force execution
+#' 
 #' @export
 nm_list_render <- function(m, 
                            input, 
@@ -4436,7 +4451,7 @@ nm_list_render <- function(m,
                            async = FALSE,
                            ...){
   
-  m <- m$m
+  #m <- m$m
   
   if(is.na(output_file))
     output_file <- paste0(
@@ -6167,17 +6182,23 @@ boot_to_csv <- function(d,
                         data_name,
                         data_folder = "DerivedData/bootstrap_datasets", 
                         id_var = "ID",
+                        oob = FALSE,
                         overwrite = FALSE){
 
   if(!requireNamespace("rsample")) stop("install rsample")
   
   data_name <- tools::file_path_sans_ext(basename(as.character(data_name)))
+  if(oob) data_folder <- file.path(data_folder, "oob")
   
   csv_name <- file.path(data_folder, paste0(data_name, ".csv"))
+
   if(file.exists(csv_name) & !overwrite) return(csv_name)
+  
+  rsample_fun <- rsample::analysis
+  if(oob) rsample_fun <- rsample::assessment
 
   suppressMessages({
-    dd_boot <- rsample::analysis(rsplit) %>%
+    dd_boot <- rsample_fun(rsplit) %>%
       dplyr::ungroup() %>%
       dplyr::select(id_var) %>% 
       dplyr::mutate(NEWID = 1:nrow(.)) %>%
@@ -6196,12 +6217,11 @@ boot_to_csv <- function(d,
 
 #' add/write bootstrap datasets
 #' 
-#' preparation step before creating nm models
-#' 
 #' @param m nm object
 #' @param samples number of samples
 #' @param data_folder folder to store datasets
 #' @param overwrite overwrite or not
+#' @param id_var character (default = "ID"). Name of ID column
 #' @param ... arguments passed to fill_input
 #' 
 #' @export
@@ -6209,6 +6229,7 @@ make_boot_datasets <- function(m,
                                samples = 10,
                                data_folder = "DerivedData/bootstrap_datasets", 
                                overwrite = FALSE,
+                               id_var = "ID",
                                ...){
   
   bootsplits <- readRDS(paste0("DerivedData/bootsplit_", basename(data_path(m)), ".RData"))
@@ -6223,7 +6244,8 @@ make_boot_datasets <- function(m,
     dplyr::mutate(
       csv_name = purrr::map2_chr(
         splits, run_id,
-        ~boot_to_csv(d = d, rsplit = .x, data_name = .y, overwrite = overwrite)
+        ~boot_to_csv(d = d, rsplit = .x, data_name = .y, 
+                     overwrite = overwrite, id_var = id_var)
       )
     ) %>%
     dplyr::ungroup()
@@ -6243,6 +6265,36 @@ make_boot_datasets <- function(m,
   dboots
 }
 
+#' add/write xv datasets
+#' 
+#' @param dboot output from make_boot_dataset()
+#' @param data_folder folder to store datasets
+#' @param overwrite overwrite or not
+#' @param id_var character (default = "ID"). Name of ID column
+#' 
+#' @export
+make_xv_datasets <- function(dboot,
+                             data_folder = "DerivedData/bootstrap_datasets", 
+                             overwrite = FALSE,
+                             id_var = "ID"){
+  
+  d <- input_data(parent_run(dboot$m[1])) ## originally input_data(m)
+
+  dboot <- dboot %>%
+    dplyr::group_by(run_id) %>%
+    dplyr::mutate(
+      oob_csv_name = purrr::map2_chr(
+        splits, run_id,
+        ~boot_to_csv(d = d, rsplit = .x, data_name = .y, 
+                     overwrite = overwrite, id_var = id_var, oob = TRUE)
+      )
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(
+      m_xv = m %>% child(paste0(run_id(.), "eval")) %>%
+        data_path(oob_csv_name)
+    )
+}
 
 ## TODO: no_rerun()
 ##  stops instead of rerunning.
