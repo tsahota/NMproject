@@ -120,7 +120,7 @@ stats::coef
 stats::AIC
 
 #' @export
-AIC.nmcoef <- function(object, ..., k = 2){
+AIC.data.frame <- function(object, ..., k = 2){
   if(is_single_na(object)) return(NA)
   params <- object
   params <- params[grepl("THETA|OMEGA|SIGMA", params$type), ]

@@ -736,8 +736,9 @@ ofv.default <- function(r){
 }
 
 #' @export
-ofv.nmcoef <- function(r){
-  if(is_empty_nmcoef(r)) return(NA)
+ofv.data.frame <- function(r){
+  #if(is_empty_nmcoef(r)) return(NA)
+  if(nrow(r) == 0) return(NA)
   r$FINAL[r$parameter %in% "OBJ"]
 }
 
