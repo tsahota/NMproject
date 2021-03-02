@@ -119,7 +119,7 @@ m1_xv$m_xv %>% run_nm()
 m1_xv$m_xv %>% 
   subset(status(.) %in% "finished") %>% 
   ofv() %>% 
-  median() ## xv-ofv - to be used for xv model selection
+  mean() ## xv-ofv - to be used for xv model selection
 
 ```
 

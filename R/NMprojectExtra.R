@@ -138,7 +138,7 @@ is.na.nm_list <- function(x) is.na(run_id(x))
 #' @param m parent nm object
 #' @param run_id character.  New run id to assign to child object
 #' @param type character (default = "execute"). type of child object
-#' @param silent logical (default = FALSE)
+#' @param silent logical (default = FALSE). Should warn if conflicts detected
 #' 
 #' @examples 
 #' \dontrun{
@@ -239,6 +239,41 @@ overlapping_outputs <- function(m){
     dplyr::filter(.data$conflicts > 0)
 }
 
+#' Change parent object
+#' 
+#' Useful when create a \code{child()} of a modified run
+#' 
+#' @param m nm object
+#' @param mparent new parent object to child
+#' @param silent logical (default = TRUE). Should warn if conflicts detected
+#' @export
+change_parent <- function(m, mparent, silent = TRUE){
+  UseMethod("change_parent")
+}
+#' @export
+change_parent.nm_generic <- function(m, mparent, silent = TRUE){
+
+  m <- m %>% parent_run_id(run_id(mparent))
+  m <- m %>% parent_run_in(run_in(mparent))
+  m <- m %>% parent_ctl_name(ctl_name(mparent))
+  m <- m %>% parent_results_dir(results_dir(mparent))
+  
+  m[["ctl_orig"]] <- mparent[["ctl_contents"]]  ## reset ctl_orig
+  
+  ## check for file conficts
+  if(!is_single_na(m[["ctl_contents"]])){
+    file_conflicts <- intersect(psn_exported_files(mparent), psn_exported_files(m))
+    if(length(file_conflicts) > 0){
+      if(!silent) warning("new parent file(s) currently in conflict with parent:\n",
+                          paste(paste0(" ",file_conflicts),collapse="\n"),
+                          "\nYou will overwrite parent object outputs if you run now", call. = FALSE)
+    }
+  }
+
+  m
+}
+#' @export
+change_parent.nm_list <- Vectorize_nm_list(change_parent.nm_generic, SIMPLIFY = FALSE)
 
 #' @export
 print.nm_generic <- function(x, ...){
@@ -1843,12 +1878,12 @@ psn_exported_files.nm_list <- Vectorize_nm_list(psn_exported_files.nm_generic, S
 #' @param initial_timeout numeric. time in seconds.
 #' time period to give up on a run if directory hasn't been created.
 #' @export
-is_finished <- function(r,initial_timeout=NA){
+is_finished <- function(r, initial_timeout=NA){
   UseMethod("is_finished")
 }
 
 #' @export
-is_finished.nm_generic <- function(r,initial_timeout=NA){
+is_finished.nm_generic <- function(r, initial_timeout=NA){
   
   ## first check if meta.yaml is there, if so, just use that
   ## otherwise do a basic check.
@@ -1871,6 +1906,14 @@ is_finished.nm_generic <- function(r,initial_timeout=NA){
 
 #' @export
 is_finished.nm_list <- Vectorize_nm_list(is_finished.nm_generic)
+
+#' @export
+is_successful <- function(r, initial_timeout=NA, na = FALSE) {
+  res <- all(status(r) %in% "finished")
+  res[is.na(res)] <- FALSE
+  res
+}
+
 
 #' @export
 wait_finish <- function(r, timeout=NA, force = FALSE){
@@ -6260,7 +6303,8 @@ make_boot_datasets <- function(m,
       fill_input(...) %>% ## doing this before child() speeds up execution
       child(run_id) %>% ## expand to fill dboots
       data_path(csv_name) %>% ## set data_paths
-      parent_run_in(run_in(m)) %>% ## fix run_in
+      change_parent(m) %>%
+      #parent_run_in(run_in(m)) %>% ## fix run_in
       results_dir(run_in(.))
   )
   
@@ -6293,9 +6337,12 @@ make_xv_datasets <- function(dboot,
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
-      m_xv = m %>% child(paste0(run_id(.), "eval")) %>%
-        data_path(oob_csv_name)
-    )
+      m_xv = #ifelse(is_successful(m), 
+                    m %>% 
+                      child(paste0(run_id(.), "eval")) %>%
+                      data_path(oob_csv_name)#,
+              #      nm(NA))
+      )
 }
 
 ## TODO: no_rerun()

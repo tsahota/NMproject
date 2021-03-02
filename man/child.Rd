@@ -13,7 +13,7 @@ child(m, run_id = NA_character_, type = "execute", silent = FALSE)
 
 \item{type}{character (default = "execute"). type of child object}
 
-\item{silent}{logical (default = FALSE)}
+\item{silent}{logical (default = FALSE). Should warn if conflicts detected}
 }
 \description{
 Child objects inherit attributes of parent but with a new run_id.
