@@ -39,17 +39,18 @@ by_row_df <- function(.data, .f, .apply_fun=lapply, ...) {
   d
 }
 
+#' @export
 run_nm_batch <- function(m, threads = 10, ...){
   runs_remaining <- seq_along(m)
   while(length(runs_remaining) > 0){
     n_to_take <- min(threads, length(runs_remaining))
     runs_to_run <- runs_remaining[seq_len(n_to_take)]
-    sub_m <- lapply(runs_to_run, function(x) m[[x]])
-    run_nm(sub_m, ...)
+    m_sub <- m[runs_to_run]
+    run_nm(m_sub, ...)
     runs_remaining <- setdiff(runs_remaining, runs_to_run)
-    do.call(wait_for_finished, sub_m)
+    if(length(runs_remaining) > 0) wait_finish(m_sub)
   }
-  Sys.sleep(10) ## this shouldn't be needed, soemthing weird going on with wait_for_finished?
+  m
 }
 
 #' Prepare forward covariate step

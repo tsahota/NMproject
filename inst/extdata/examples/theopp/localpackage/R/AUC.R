@@ -1,4 +1,6 @@
 ## Copied from staging/localpackage/R/AUC.R
+##  (2021-03-02 13:53:56) by tarjinde
+## Copied from staging/localpackage/R/AUC.R
 ##  (2020-04-03 18:18:14) by klgk669
 ## Copied from /home/klgk669/poppk_20180926_pk-eff-ae-interim2/Scripts/AUC.R
 ##  (2019-01-23 14:32:02) by klgk669

@@ -344,6 +344,28 @@ setup_nm_demo <- function(demo_name="theopp",
 
 }
 
+#' @export
+run_all_scripts <- function(){
+  #browser()
+  script_files <- dir(scripts_dir(), "s[0-9]+_.*?\\.R(md)?$", full.names = TRUE)
+  
+  dplan <- tibble::tibble(script_files) %>%
+    dplyr::mutate(rmd = grepl("\\.Rmd", .data$script_files))
+  
+  dplan <- dplan %>%
+    dplyr::mutate(
+      cmd = ifelse(rmd, 
+                   paste0("rmarkdown::render(\"",script_files,"\")"),
+                   paste0("source(\"",script_files,"\")"))
+    )
+  
+  exprs <- rlang::parse_exprs(dplan$cmd)
+  
+  res <- lapply(exprs, rlang::eval_tidy)
+  
+}
+
+
 #' Get NONMEM output tables
 #'
 #' This combines $TABLE output with the input data, allowing text columns to be retained for plotting/summaries.

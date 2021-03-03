@@ -24,7 +24,7 @@ date: "`r Sys.time()`"
 <!--   4. use nm_render() to run on other model objects -->
 
 
-```{r setup, include=F}
+```{r setup2, include=F}
 ## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
 library(rprojroot)
 library(knitr)
@@ -36,7 +36,7 @@ if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
 }
 ```
 
-```{r echo=FALSE,message=FALSE}
+```{r lib_load, echo=FALSE,message=FALSE}
 ## LOAD PACKAGES HERE
 
 library(dplyr)
@@ -55,7 +55,7 @@ wait_finish(.m)
 
 ## VPC
 
-```{r}
+```{r vpc_data}
 
 library(vpc)
 
@@ -89,7 +89,7 @@ sim$DV <- sim$DV_OUT  ## needed because output_table puts DV in DV_OUT
 ```
 
 
-```{r}
+```{r vpc_basic}
 
 vpc(
   sim = sim,
@@ -101,7 +101,7 @@ vpc(
 
 ## prediction corrected
 
-```{r}
+```{r pred_corr}
 
 vpc(
   sim = sim,
@@ -115,7 +115,7 @@ vpc(
 
 ## stratified by bodyweight
 
-```{r}
+```{r bwt_strat}
 
 sim$WT_c = Hmisc::cut2(sim$WT, g = 2)
 obs$WT_c = Hmisc::cut2(obs$WT, g = 2)
@@ -133,7 +133,7 @@ vpc(
 
 ### control file
 
-```{r}
+```{r txt}
 .m %>% text() %>% dplyr::first()
 ```
 

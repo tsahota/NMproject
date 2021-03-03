@@ -91,21 +91,14 @@ kable(rr(c(m2, m2WT)))
 
 ```
 
-### example bootstrap
-
 ```{r}
 m1_boot <- m1 %>% 
-  make_boot_datasets(samples = 10, overwrite = TRUE)
+  make_boot_datasets(samples = 5, overwrite = TRUE)
 
 m1_boot$m <- m1_boot$m %>% run_nm()
+wait_finish(m1_boot$m)
 
 m1_boot$m %>% nm_list_render("Scripts/basic_boot.Rmd")
-
-```
-
-### example bootstrap cross-validation
-
-```{r}
 
 m1_xv <- m1_boot %>% 
   make_xv_datasets() %>%
@@ -114,7 +107,8 @@ m1_xv <- m1_boot %>%
            dollar("EST",
                   "$EST METHOD=IMP INTER EONLY= 1 MAPITER=0 ISAMPLE = 2000 NITER = 10 RANMETHOD=3S2 NOABORT PRINT=1 NSIG=3 SIGL=9"))
 
-m1_xv$m_xv %>% run_nm()
+m1_xv$m_xv <- m1_xv$m_xv %>% run_nm()
+wait_finish(m1_xv$m_xv)
 
 m1_xv$m_xv %>% 
   subset(status(.) %in% "finished") %>% 
@@ -122,4 +116,5 @@ m1_xv$m_xv %>%
   mean() ## xv-ofv - to be used for xv model selection
 
 ```
+
 

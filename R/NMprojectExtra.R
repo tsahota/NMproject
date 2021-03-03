@@ -1915,19 +1915,40 @@ is_successful <- function(r, initial_timeout=NA, na = FALSE) {
 }
 
 
+#' wait for runs to finish
+#' 
+#' blocks subsequent r execution until run(s) are finished
+#' 
+#' @param r nm object
+#' @param timeout numeric seconds to wait before timeout
 #' @export
 wait_finish <- function(r, timeout=NA, force = FALSE){
   UseMethod("wait_finish")
 }
 #' @export
-wait_finish.nm_generic <- function(r, timeout=NA, force = FALSE){
-  if(!executed(r) & !force) stop("run ", unique_id(r), " not executed. will not wait.\nuse force=TRUE to override")
+wait_finish.nm_list <- function(r, timeout=NA, force = FALSE){
+  r_orig <- r
+  r <- r[!is_finished(r)]
+  #r <- r[]
+  
+  #if(!force) {
+  #  if(!executed(r)) warning("run ", unique_id(r), "not executed, will not wait, use force=TRUE to override") 
+  #}
   if(is.na(timeout)) wait_for(all(is_finished(r))) else
     wait_for(all(is_finished(r)), timeout = timeout)
-  invisible(r)
+  invisible(r_orig)
 }
+
 #' @export
-wait_finish.nm_list <- wait_finish.nm_generic
+wait_finish.nm_generic <- function(r, timeout=NA, force = FALSE){
+  wait_finish.nm_list(as_nm_list(r), timeout = timeout, force = force)
+}
+
+# wait_finish.nm_list <- function(r, timeout=NA, force = FALSE){
+#   for(ri in r){
+#     wait_finish(ri, timeout = timeout, force = force)
+#   }
+# }
 
 
 #' Show lst file
@@ -5250,12 +5271,12 @@ cov_forest_data <- function(m, covariate_scenarios){
     #   levs <- signif(levs, 2)
     #   lev_text <- paste0(cov,"_",c("low5","mid","upp95"),"_",levs)
     # }
-    
+
     levs <- dd_first[[cov]]
     if(!"text" %in% names(covariate_scenarios)){
       lev_text <- paste0(cov, "_", levs) 
     } else {
-      if(is.na(dcov_sc$text)) lev_text <- paste0(cov, "_", levs) else
+      if("text" %in% names(dcov_sc)) lev_text <- paste0(cov, "_", levs) else
         lev_text <- dcov_sc$text
     }
 
@@ -6021,7 +6042,9 @@ decision <- function(inputs = c(),
     pause = wait_input(!!decision_inputs_exp)
   )
   
-  outdated <- drake::outdated(drake::drake_config(drpl))
+  drconfig <- drake::drake_config(drpl)
+  
+  outdated <- drake::outdated(drconfig)
 
   ## if up-to-date and pause/outcome is TRUE  
   previous_outcome <- try(drake::readd("pause"), silent = TRUE)
@@ -6132,7 +6155,7 @@ nm_boot <- function(m, replicates, dboot_rds = "dboots_big.RDS"){
 #' 
 #' @export
 
-covariance_result <- function(r,trans=TRUE){
+covariance_plot <- function(r,trans=TRUE){
   
   dc <- nm_output_path(r, extn = "cor") %>%
     nm_read_table(header = TRUE, skip=1)

@@ -1,4 +1,6 @@
 ## Copied from staging/Scripts/starter_ewf.R
+##  (2021-03-02 13:53:56) by tarjinde
+## Copied from staging/Scripts/starter_ewf.R
 ##  (2020-04-22 19:23:42) by klgk669
 #  set up .libPaths() to find the PoC version of the ewfutils library
 .libPaths( c( "/opt/scp/services/ewfscp/software/ewfutils-2.0-poc/libraries/R", .libPaths()) )

@@ -26,7 +26,7 @@ params:
 <!--   4. use nm_render() to run on other model objects -->
 
 
-```{r setup, include=F}
+```{r setup2, include=F}
 ## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
 library(rprojroot)
 library(knitr)
@@ -38,13 +38,12 @@ if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
 }
 ```
 
-```{r}
+```{r lib_load}
 library(NMproject)
 library(dplyr)
-library(ggplot2)
 ```
 
-## completion summary
+## model object
 
 ```{r wait_for_run_finish}
 #wait_finish(.m)
@@ -58,21 +57,11 @@ m_parent <- parent_run(m_finished[1])
 
 ```
 
-```{r}
-
-m_finished_summary <- m_finished %>% summary_wide()
-
-m_finished_summary %>%
-  ggplot(aes(x = ofv)) + theme_bw() +
-  geom_histogram()
-
-```
-
-## original parent result for context
+## parent results for context
 
 This can be made better later
 
-```{r}
+```{r rr}
 
 m_parent %>% rr()
 
@@ -81,7 +70,7 @@ m_parent %>% rr()
 
 ## results
 
-```{r}
+```{r boot_basic_summary}
 
 m_finished %>%
   coef() %>%
@@ -89,23 +78,7 @@ m_finished %>%
   group_by(parameter) %>%
   summarise(low=quantile(FINAL,probs=0.025),
             med=median(FINAL),
-            upp=quantile(FINAL,probs=0.975),
-            mean = mean(FINAL),
-            se = sd(FINAL),
-            rse = 100*sd(FINAL)/mean(FINAL))
-
-```
-
-### stability plot with worst replicate (by ofv)
-
-```{r}
-
-try({
-  m_finished_summary %>%
-    arrange(desc(ofv)) %>%
-    {.$m[1]} %>%
-    plot_iter()
-})
+            upp=quantile(FINAL,probs=0.975))
 
 ```
 
@@ -113,13 +86,13 @@ try({
 
 ### original control file
 
-```{r}
+```{r txt}
 m_parent %>% text() %>% dplyr::first()
 ```
 
-### original control file diff
+### control file diff
 
-```{r}
+```{r diff}
 m_parent %>% nm_diff()
 ```
 

@@ -24,7 +24,7 @@ date: "`r Sys.time()`"
 <!--   4. use nm_render() to run on other model objects -->
 
 
-```{r setup, include=F}
+```{r setup2, include=F}
 ## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
 library(rprojroot)
 library(knitr)
@@ -36,7 +36,7 @@ if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
 }
 ```
 
-```{r echo=FALSE,message=FALSE}
+```{r lib_load, echo=FALSE,message=FALSE}
 ## LOAD PACKAGES HERE
 
 library(dplyr)
@@ -53,7 +53,7 @@ wait_finish(.m)
 .m
 ```
 
-```{r}
+```{r fun_def}
 
 idEXPstat <- function(d, ...){ ## example statistic function
   ## arg = nonmem dataset data.frame
@@ -85,7 +85,7 @@ EXPstat <- function(d, ...){ ## example statistic function
 
 ## plot profile of this subset
 
-```{r}
+```{r plot_profile}
 
 d <- .m %>%
   input_data(filter = TRUE)
@@ -97,7 +97,7 @@ d %>% mutate(id_period = paste(ID, TIME)) %>%
 ```
 
 
-```{r}
+```{r ppc_plot_basic}
 
 ppc_data0 <- .m %>% ppc_data(EXPstat)
 
@@ -115,7 +115,7 @@ ppc_data0 %>%
 
 ```
 
-```{r}
+```{r ppc_plot_strat}
 
 addWT_c <- . %>% mutate(
   WT_c = Hmisc::cut2(WT, g = 2)
@@ -148,7 +148,7 @@ ppc_data0 %>%
 
 ```
 
-```{r}
+```{r ppc_plot_ind}
 
 ppc_data0 <- .m %>% ppc_data(idEXPstat)
 

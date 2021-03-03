@@ -1,0 +1,95 @@
+#' Copy diagnostic funs to templates
+#' 
+#' Internal function (non exported)
+#'   Use within a demo directory (e.g. after \code{run_all_scripts())})
+
+copy_demo_to_templates <- function(){
+
+  script_files <- dir(scripts_dir(), "basic_", full.names = TRUE)
+  
+  template_folder <- tools::file_path_sans_ext(basename(script_files))
+  
+  skeleton_loc <- system.file("rmarkdown", "templates", template_folder, "skeleton", package = "NMproject")
+
+  unlink(skeleton_loc, recursive = TRUE, force = TRUE)
+  for(path in skeleton_loc){
+    dir.create(path, recursive = TRUE, showWarnings = FALSE)
+  }
+
+  ## copy script files into template
+  res <- file.copy(script_files, file.path(skeleton_loc, "skeleton.Rmd"),
+                   overwrite = TRUE)
+  
+  names(res) <- basename(script_files)
+  res
+  
+}
+
+#' Copy demo source files to package
+#' 
+#' Internal function (non exported)
+#'   Use within a demo directory
+
+copy_demo_to_demo <- function(demo = "theopp"){
+  
+  ## 3 things to handle
+  ##  easy directories - directories that can be copied one to one
+  ##  script directories - only want source scripts (no htmls etc.) transferred
+  ##  staging models - this needs to go to the Models directory in example
+
+   
+  ## non script directories can be copied as is
+  easy_directories <- c("localpackage",
+                        "SourceData")
+  
+  models_dir <- "staging/Models"
+  
+  script_files <- dir(scripts_dir())
+  
+  script_files <- script_files[grepl("\\.R|r(md)?$", script_files) |
+                                 grepl("(R|r)eadme", script_files)]
+  
+  script_files <- file.path(scripts_dir(), script_files)
+  script_files <- relative_path(script_files,
+                                rprojroot::find_root(has_file(".Rprofile")))
+  
+  destination <- system.file("extdata", "examples", demo, package = "NMproject")
+  unlink(destination, recursive = TRUE, force = TRUE)
+  dir.create(destination, recursive = TRUE, showWarnings = FALSE)
+  
+  ####
+  ## easy directories
+  
+  res1 <- file.copy(easy_directories, destination, recursive = TRUE, overwrite = TRUE)
+  names(res1) <- easy_directories
+  
+  ####
+  ## script directories
+
+  destination_files <- file.path(destination, script_files)
+  
+  dir.create(file.path(destination, "Scripts"), recursive = TRUE, showWarnings = FALSE)
+  res2 <- file.copy(script_files, destination_files, overwrite = TRUE)
+  names(res2) <- script_files
+  
+  ####
+  ## staging/Models
+  dir.create(file.path(destination, "Models"), recursive = TRUE, showWarnings = FALSE)
+  res3 <- file.copy("staging/Models", destination, recursive = TRUE, overwrite = TRUE)
+  names(res3) <- "staging/Models"
+  
+  c(res1, res2, res3)
+}
+
+#' Copy demo source files + relevant NM outputs to package testfiles
+#' 
+#' Internal function (non exported)
+#'   Use within a demo directory
+
+copy_demo_to_test <- function(){
+  
+  ## copy staging as is (i.e. to staging)
+  ## 
+  
+  browser()
+}

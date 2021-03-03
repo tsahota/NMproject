@@ -24,7 +24,7 @@ date: "`r Sys.time()`"
 <!--   4. use nm_render() to run on other model objects -->
 
 
-```{r setup, include=F}
+```{r setup2, include=F}
 ## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
 library(rprojroot)
 library(knitr)
@@ -36,7 +36,7 @@ if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
 }
 ```
 
-```{r echo=FALSE,message=FALSE}
+```{r lib_load, echo=FALSE,message=FALSE}
 ## LOAD PACKAGES HERE
 
 library(dplyr)
@@ -55,19 +55,26 @@ wait_finish(.m)
 
 ## convergence
 
-```{r}
+```{r plot_iter}
 plot_iter(.m)
 ```
 
 ## outputs
 
-```{r}
+```{r rr}
 rr(.m)
 ```
 
 ## Diagnostics
 
-```{r}
+```{r cov_plot}
+
+covariance_plot(.m)
+
+```
+
+
+```{r ggplot}
 
 ## simple ggplot example
 
@@ -82,7 +89,7 @@ library(ggplot2)
 
 ```
 
-```{r, warning=FALSE}
+```{r xpose_plot, warning=FALSE}
 
 ## simple xpose example
 
@@ -98,13 +105,13 @@ dv_vs_pred(xpdb)
 
 ### control file
 
-```{r}
+```{r txt}
 .m %>% text() %>% dplyr::first()
 ```
 
 ### control file diff
 
-```{r}
+```{r diff}
 .m %>% nm_diff()
 ```
 
