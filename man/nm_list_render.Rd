@@ -9,7 +9,7 @@ nm_list_render(
   input,
   output_file = NA,
   args = list(),
-  force = FALSE,
+  force = getOption("nm.force_render"),
   async = FALSE,
   ...
 )

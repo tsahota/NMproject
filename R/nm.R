@@ -362,6 +362,7 @@ run_all_scripts <- function(){
   exprs <- rlang::parse_exprs(dplan$cmd)
   
   res <- lapply(exprs, rlang::eval_tidy)
+  return(invisible(TRUE))
   
 }
 

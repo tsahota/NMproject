@@ -4,7 +4,7 @@
 \alias{copy_demo_to_test}
 \title{Copy demo source files + relevant NM outputs to package testfiles}
 \usage{
-copy_demo_to_test()
+copy_demo_to_test(demo = "theopp")
 }
 \description{
 Internal function (non exported)

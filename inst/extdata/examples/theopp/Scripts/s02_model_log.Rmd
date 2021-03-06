@@ -3,10 +3,10 @@ title: "model development"
 author: "`r Sys.info()['user']`"
 date: "`r Sys.time()`"
 output:
-  pdf_document: default
-  html_notebook: default
   html_document:
     df_print: paged
+  html_notebook: default
+  pdf_document: default
 ---
 
 
@@ -78,7 +78,8 @@ m2WT <- m2 %>% child("m2WT") %>%
   add_cov(param = "CL", cov = "WT", state = "linear") %>%
   run_nm()
 
-c(m2, m2WT) %>% nm_render("Scripts/basic_gof.Rmd")
+# # uncomment following to do basic gofs for these too
+# c(m2, m2WT) %>% nm_render("Scripts/basic_gof.Rmd")
 
 ```
 
@@ -86,8 +87,8 @@ Body weight not signficant.  K parameterisation better than CL in terms of OFV
 
 ```{r}
 
-kable(summary_long(c(m2, m2WT), parameters = "all"))
-kable(rr(c(m2, m2WT)))
+summary_long(c(m2, m2WT), parameters = "all")
+rr(c(m2, m2WT))
 
 ```
 

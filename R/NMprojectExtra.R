@@ -1746,16 +1746,14 @@ clean_run.nm_list <- function(m, output_loc = c("run_dir", "base"), include_grid
 #' @param run_files optional character with NM_run* file paths
 #' @param include_grid_files logical (default = TRUE) should slurm files be included
 #'
-#' @export
-ls_tempfiles <- function(object = ".", output_loc = c("run_dir", "base"),
+ls_tempfiles_old <- function(object = ".", output_loc = c("run_dir", "base"),
                          run_files = NA_character_, include_grid_files = TRUE){
   
-  UseMethod("ls_tempfiles")
+  UseMethod("ls_tempfiles_old")
   
 }
 
-#' @export
-ls_tempfiles.default <- function(object = ".", output_loc = c("run_dir", "base"),
+ls_tempfiles_old.default <- function(object = ".", output_loc = c("run_dir", "base"),
                                  run_files = NA_character_, include_grid_files = TRUE){
   
   output_loc <- match.arg(output_loc)
@@ -1765,7 +1763,7 @@ ls_tempfiles.default <- function(object = ".", output_loc = c("run_dir", "base")
     all_run_dirs <- list_dirs(
       object, 
       pattern = "NM_run[0-9]+", 
-      recursive = TRUE, full.names = TRUE, maxdepth = 10
+      recursive = TRUE, full.names = TRUE, maxdepth = Inf
     )
     
     all_run_files <- dir(all_run_dirs, full.names = TRUE)
@@ -1829,9 +1827,7 @@ ls_tempfiles.default <- function(object = ".", output_loc = c("run_dir", "base")
   
 }
 
-
-#' @export
-ls_tempfiles.nm_list <- function(object = ".", output_loc = c("run_dir", "base"),
+ls_tempfiles_old.nm_list <- function(object = ".", output_loc = c("run_dir", "base"),
                                  run_files = NA_character_, include_grid_files = TRUE){
   
   all_run_dirs <- list_dirs(
@@ -1841,8 +1837,152 @@ ls_tempfiles.nm_list <- function(object = ".", output_loc = c("run_dir", "base")
   
   all_run_files <- dir(all_run_dirs, full.names = TRUE)
   
-  ls_tempfiles(run_files = all_run_files, output_loc = output_loc)
+  ls_tempfiles_old(run_files = all_run_files, output_loc = output_loc)
 }
+
+
+#' get all temp files
+#'
+#' list all tempfiles (normally for deletion)
+#'
+#' @param object nm object or path to project (default = ".")
+#' @param output_loc character either "run_dir" or "base
+#' @param run_files optional character with NM_run* file paths
+#' @param include_grid_files logical (default = TRUE) should slurm files be included
+#'
+#' @export
+ls_tempfiles <- function(object = ".", output_loc = c("run_dir", "base"),
+                         run_files = NA_character_, include_grid_files = TRUE,
+                         ctl_extension = "mod",
+                         remove_psn_exports = FALSE){
+  
+  UseMethod("ls_tempfiles")
+  
+}
+
+#' @export
+ls_tempfiles.default <- function(object = ".", output_loc = c("run_dir", "base"),
+                                 run_files = NA_character_, include_grid_files = TRUE,
+                                 ctl_extension = "mod",
+                                 remove_psn_exports = FALSE){
+  
+  output_loc <- match.arg(output_loc)
+  
+  ## get all_run_files (in NM_run1 dir)
+  if(identical(run_files, NA_character_)){
+    all_run_dirs <- list_dirs(
+      object, 
+      pattern = "NM_run[0-9]+", 
+      recursive = TRUE, full.names = TRUE, maxdepth = Inf
+    )
+    
+    all_run_files <- dir(all_run_dirs, full.names = TRUE)
+    
+    all_outside_run_dirs <- file.path(all_run_dirs, "..")
+    all_outside_run_files <- dir(all_outside_run_dirs, full.names = TRUE)
+    
+    all_run_files <- c(all_run_files, all_outside_run_files)
+    
+  } else {
+    all_run_files <- run_files 
+  }
+  
+  ## eliminate files we don't want
+  
+  temp_files <- c()
+  non_temp_files <- c()
+  
+  all_psn.mod <- all_run_files[basename(all_run_files) == "psn.mod"]
+  non_temp_files <- c(non_temp_files, all_psn.mod)
+  
+  all_run_dir_table_files <- 
+    lapply(all_psn.mod, function(psn.mod){
+      file.path(dirname(psn.mod), ctl_table_files(psn.mod))
+    })
+  all_run_dir_table_files <- unlist(all_run_dir_table_files)
+  non_temp_files <- c(non_temp_files, all_run_dir_table_files)
+  
+  all_base_tables <- all_run_dir_table_files
+  all_base_table_dir <- dirname(all_base_tables)
+  all_base_table_dir <- file.path(all_base_table_dir, "..", "..")
+  all_base_table_dir <- normalizePath(all_base_table_dir)
+  
+  if(output_loc == "run_dir"){ ## add base tables to temp files
+    all_base_tables <- file.path(all_base_table_dir, basename(all_run_dir_table_files))
+    all_base_tables <- all_base_tables[file.exists(all_base_tables)]
+    if(remove_psn_exports) temp_files <- c(temp_files, all_base_tables)
+    
+    all_base_mod_files <- dir(unique(all_base_table_dir),
+                              pattern = paste0("\\.", ctl_extension, "$"),
+                              full.names = TRUE)
+    
+    all_base_stubs <- tools::file_path_sans_ext(all_base_mod_files)
+    
+    all_base_psn_files <- lapply(all_base_stubs, function(base_mod_stub){
+      base_dir <- dirname(base_mod_stub)
+      stub <- basename(base_mod_stub)
+      dir(base_dir, pattern = paste0("^", stub, "\\..*"), full.names = TRUE)
+    })
+    all_base_psn_files <- unlist(all_base_psn_files)
+    
+    all_base_psn_files <- all_base_psn_files[
+      ## exclude mod and lst files
+      !tools::file_ext(all_base_psn_files) %in% c("mod", "lst")
+    ]
+    if(remove_psn_exports) temp_files <- c(temp_files, all_base_psn_files)
+    
+  }
+  
+  ## temp_dir is temp
+  temp_files <- c(temp_files, all_run_files[grepl("temp_dir", all_run_files)])
+  
+  ## .o, .f90, Rmd, csv
+  temp_files <- c(temp_files, all_run_files[tools::file_ext(basename(all_run_files)) %in% c("o", "f90", "Rmd", "csv")])
+
+  ## specific name exclusions:
+  temp_files <- c(temp_files, 
+                  all_run_files[basename(all_run_files) %in% 
+                                  c("INTER", 
+                                    "fort.2002",
+                                    "model_NMrun_translation.txt",
+                                    "modelfit.log",
+                                    "raw_results_structure",
+                                    "version_and_option_info.txt")])
+
+  #####
+  temp_files <- setdiff(temp_files, non_temp_files)
+  
+  ## expand the directories into files
+  
+  temp_dirs <- temp_files[file.info(temp_files)$isdir]
+  
+  temp_dir_files <- dir(temp_dirs, full.names = TRUE, recursive = TRUE)
+  
+  temp_files <- c(temp_files[!temp_files %in% temp_dirs],
+                  temp_dir_files)
+  
+  tidyproject::relative_path(temp_files, getwd())
+
+  
+}
+
+#' @export
+ls_tempfiles.nm_list <- function(object = ".", output_loc = c("run_dir", "base"),
+                                 run_files = NA_character_, include_grid_files = TRUE,
+                                 ctl_extension = "mod"){
+  
+  all_run_dirs <- list_dirs(
+    run_dir_path(object), 
+    pattern = "NM_run[0-9]+", 
+    full.names = TRUE)
+  
+  all_run_files <- dir(all_run_dirs, full.names = TRUE)
+  
+  ls_tempfiles(run_files = all_run_files, output_loc = output_loc, 
+               ctl_extension = tools::file_ext(ctl_name(object)))
+  
+}
+
 
 psn_exported_files <- function(r, minimal = FALSE){
   UseMethod("psn_exported_files")
@@ -4388,7 +4528,7 @@ nmsave_multiplot.nm_list <- Vectorize_nm_list(nmsave_multiplot.nm_generic, SIMPL
 #' @param input character. Same as rmarkdown::render() arg
 #' @param output_file character. Same as rmarkdown::render() arg
 #' @param args list. Same as "params" arg in rmarkdown::render()
-#' @param force logical (default = FALSE). will force execution
+#' @param force logical (default = \code{getOption("nm.force_render")}). will force execution
 #' 
 #' @details 
 #' \code{input} must refer to a properly specified Rmd document.
@@ -4413,7 +4553,7 @@ nm_render <- function(m,
                       input, 
                       output_file = NA,
                       args = list(),
-                      force = FALSE,
+                      force = getOption("nm.force_render"),
                       async = FALSE,
                       ...){
   UseMethod("nm_render")
@@ -4424,7 +4564,7 @@ nm_render.nm_generic <- function(m,
                                  input, 
                                  output_file = NA,
                                  args = list(),
-                                 force = FALSE,
+                                 force = getOption("nm.force_render"),
                                  async = FALSE,
                                  ...){
   
@@ -4483,7 +4623,6 @@ nm_render.nm_generic <- function(m,
                       ...)
   }
   
-  ## use as_nm_generic incase m is redefined in rmd
   m <- m %>% result_files(output_file)
 
   m <- m %>% save_render_cache(input)
@@ -4511,7 +4650,7 @@ nm_list_render <- function(m,
                            input, 
                            output_file = NA,
                            args = list(),
-                           force = FALSE,
+                           force = getOption("nm.force_render"),
                            async = FALSE,
                            ...){
   

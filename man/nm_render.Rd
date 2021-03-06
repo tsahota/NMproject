@@ -9,7 +9,7 @@ nm_render(
   input,
   output_file = NA,
   args = list(),
-  force = FALSE,
+  force = getOption("nm.force_render"),
   async = FALSE,
   ...
 )
@@ -23,7 +23,7 @@ nm_render(
 
 \item{args}{list. Same as "params" arg in rmarkdown::render()}
 
-\item{force}{logical (default = FALSE). will force execution}
+\item{force}{logical (default = \code{getOption("nm.force_render")}). will force execution}
 }
 \description{
 render function for nm objects

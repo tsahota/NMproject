@@ -51,7 +51,7 @@ copy_demo_to_demo <- function(demo = "theopp"){
   
   script_files <- file.path(scripts_dir(), script_files)
   script_files <- relative_path(script_files,
-                                rprojroot::find_root(has_file(".Rprofile")))
+                                rprojroot::find_root(rprojroot::has_file(".Rprofile")))
   
   destination <- system.file("extdata", "examples", demo, package = "NMproject")
   unlink(destination, recursive = TRUE, force = TRUE)
@@ -86,10 +86,108 @@ copy_demo_to_demo <- function(demo = "theopp"){
 #' Internal function (non exported)
 #'   Use within a demo directory
 
-copy_demo_to_test <- function(){
+copy_demo_to_test <- function(demo = "theopp"){
   
-  ## copy staging as is (i.e. to staging)
-  ## 
+  easy_directories <- c("localpackage",
+                        "SourceData",
+                        "staging")
   
-  browser()
+  script_files <- dir(scripts_dir())
+  
+  script_files <- script_files[grepl("\\.R|r(md)?$", script_files) |
+                                 grepl("(R|r)eadme", script_files)]
+  
+  script_files <- file.path(scripts_dir(), script_files)
+  script_files <- relative_path(script_files,
+                                rprojroot::find_root(rprojroot::has_file(".Rprofile")))
+  
+  destination <- system.file("..", "tests", "testthat", package = "NMproject")
+  destination <- file.path(destination, demo)
+  
+  unlink(destination, recursive = TRUE, force = TRUE)
+  dir.create(destination, recursive = TRUE, showWarnings = FALSE)
+ 
+  ####
+  ## easy directories
+  
+  res1 <- file.copy(easy_directories, destination, recursive = TRUE, overwrite = TRUE)
+  names(res1) <- easy_directories
+  
+  ####
+  ## .cache -> cache
+  #dir.create(file.path(destination, "cache"), recursive = TRUE, showWarnings = FALSE)
+  res1b <- file.copy(".cache", destination, recursive = TRUE)
+  res1c <- file.rename(file.path(destination, ".cache"), file.path(destination, "cache"))
+  
+  ####
+  ## script directories
+  
+  destination_files <- file.path(destination, script_files)
+  
+  dir.create(file.path(destination, "Scripts"), recursive = TRUE, showWarnings = FALSE)
+  res2 <- file.copy(script_files, destination_files, overwrite = TRUE)
+  names(res2) <- script_files
+  
+  ####
+  ## models directories 
+  
+  all_model_files <- dir("Models", all.files = TRUE, recursive = TRUE, full.names = TRUE)
+  
+  all_model_files <- all_model_files[!grepl(".html", all_model_files)]
+  
+  all_model_files <- all_model_files[!all_model_files %in% ls_tempfiles()]
+  
+  ## specific for demo
+  
+  keep_m1_outs <- all_model_files[grepl("sdtabm1\\b", basename(all_model_files)) |
+                                    grepl("patabm1\\b", basename(all_model_files)) |
+                                    grepl("cotabm1\\b", basename(all_model_files)) |
+                                    grepl("catabm1\\b", basename(all_model_files))]
+  
+  all_model_files <- all_model_files[!grepl("sdtab", basename(all_model_files))]
+  all_model_files <- all_model_files[!grepl("patab", basename(all_model_files))]
+  all_model_files <- all_model_files[!grepl("cotab", basename(all_model_files))]
+  all_model_files <- all_model_files[!grepl("catab", basename(all_model_files))]
+  
+  all_model_files <- c(all_model_files, keep_m1_outs)
+  
+  all_model_files <- all_model_files[!tools::file_ext(all_model_files) %in% 
+                                       c("xml")]
+  
+  all_model_files <- all_model_files[!basename(all_model_files) %in% 
+                                       c("command.txt")]
+  
+  all_model_files <- all_model_files[!grepl("temp", dirname(all_model_files))]
+  
+  # all_model_files %>%
+  #   file.info() %>%
+  #   arrange(desc(size)) %>%
+  #   mutate(file_name = row.names(.)) %>%
+  #   select(file_name, size) %>%
+  #   head(10)
+  
+  dirs <- unique(dirname(all_model_files))
+  destination_dirs <- file.path(destination, dirs)
+  for(dirname in destination_dirs) dir.create(dirname, recursive = TRUE, showWarnings = FALSE)
+  
+  destination_files <- file.path(destination, all_model_files)
+  #dir.create(file.path(destination, "Scripts"), recursive = TRUE, showWarnings = FALSE)
+  
+  res3 <- file.copy(all_model_files, destination_files, overwrite = TRUE)
+  names(res3) <- script_files
+  
+  zip_file <- paste0(destination, ".zip")
+  orig_dir <- getwd()
+  on.exit(setwd(orig_dir))
+  setwd(dirname(zip_file))
+  unlink(zip_file)
+  utils::zip(basename(zip_file), demo)
+  setwd(orig_dir)
+  
+  unlink(destination, recursive = TRUE)
+  
+  #message("size of test dir: ", system(paste("du -sh", destination), intern = TRUE))
+  
+  message("size of ", basename(zip_file), ": ", system(paste("du -sh", zip_file), intern = TRUE))
+  
 }
