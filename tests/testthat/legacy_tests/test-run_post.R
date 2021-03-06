@@ -17,11 +17,13 @@ test_that("run and post",{
     cleanup(proj_name)
   })
 
-  testfilesloc <- file.path(currentwd,"testfiles")
+  testfilesloc <- file.path(currentwd, "testfiles")
   setwd(proj_name)
 
   file.copy(file.path(testfilesloc,"."),".",recursive = TRUE)
   file.rename("cache", ".cache")
+  
+  overwrite_behaviour("skip")
   
   ## end boiler plate
   ############################
@@ -29,13 +31,11 @@ test_that("run and post",{
   #m1 <- nm("qpsn -m -c auto -t 60 -- execute run1.mod -dir=1")
   
   ## dataset procesing
-  
+  browser()
   m1 <- nm(run_id = "m1") %>%
     based_on("staging/Models/run1.mod") %>%
     cmd("execute {ctl_name} -dir={run_dir}")
 
-  stopifnot(in_cache(m1))  ## no point in continue if cache broken
-  
   m1 <- m1 %>% run_nm()
   
   m2 <- m1 %>% child(run_id = "m2") %>%
@@ -90,12 +90,11 @@ test_that("run and post",{
   itheta1 <- init_theta(m1)
   
   expect_true(!identical(itheta0, itheta1))
-  expect_false(in_cache(m1))
   
   ## last thing to do: clean up run
-  expect_true(all(file.exists(psn_exported_files(m1)[[1]])))
+  expect_true(all(file.exists(NMproject:::psn_exported_files(m1)[[1]])))
   wipe_run(m1)
-  expect_true(all(!file.exists(psn_exported_files(m1)[[1]])))
+  expect_true(all(!file.exists(NMproject:::psn_exported_files(m1)[[1]])))
 
 
 })
