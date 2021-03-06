@@ -374,22 +374,6 @@ update_dollar_data <- function(ctl_name,new_data_name){
   ctl
 }
 
-#' update dollar inpute in NONMEM control stream
-#'
-#' Generic function
-#' @param ctl object coercible into ctl_lst
-#' @param ... arguments to be passed to dollar_input
-#' @export
-
-update_dollar_input <- function(ctl, ...){
-  if(is_single_na(ctl)) return(NA)
-  ctl <- ctl_list(ctl)
-  d <- suppressMessages(get_data(ctl))
-  replace_with <- suppressMessages(dollar_input(d, ...))
-  ctl$INPUT <- c("$INPUT", replace_with, "")
-  ctl
-}
-
 #' Check tidyproject for best practice compliance
 #'
 #' @param proj_name character. default = current working directory. path to directory.

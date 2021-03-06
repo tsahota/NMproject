@@ -244,47 +244,6 @@ bind_covariate_results <- function(dsc, nm_col = "m", parameters = "new"){
     dplyr::arrange(.data$p_chisq)
 }
 
-covariates_define_old <- function(dcov, cov, continuous){
-  
-  if(missing(cov)) return(tibble::tibble())
-  if(length(continuous) > 1) stop("continous can only be TRUE/FALSE")
-  dcov_new <- tibble::tibble(cov, continuous)
-  if(!missing(dcov)) dcov_new <- dplyr::bind_rows(dcov, dcov_new)
-  return(dcov_new)
-  
-}
-
-#' @export
-covariates_define <- function(d, continuous, categorical, log_transform_plot = c()){
-
-  if(!inherits(d, "grouped_df"))
-    stop("d must be data.frame grouped_by ID using dplyr::group_by()")
-  
-  by <- attributes(d)$vars
-  
-  if(missing(continuous) & missing(categorical)) 
-    return(tibble::tibble())
-  
-  cov <- c(continuous, categorical)
-  continuous <- cov %in% continuous
-  
-  dcov <- tibble::tibble(cov, continuous)
-  ## gather information on these covariates
-  
-  dtemp <- d[, c(by, dcov$cov)] %>%
-    dplyr::group_by_(by) %>% 
-    dplyr::summarise_all(function(i)length(unique(i)))
-  
-  static <- sapply(dcov$cov, function(i) all(dtemp[[i]] %in% 1))
-  
-  dcov$static <- static
-  dcov$log_transform_plot <- dcov$cov %in% log_transform_plot
-  dcov$by <- by
-  
-  return(dcov)
-  
-}
-
 #' Generate tibble of relations to test
 #'
 #' @param dtest (optional) existing dtest to append (from an previous use test_relations())
@@ -343,28 +302,6 @@ test_relations <- function(dtest, param, cov, state, continuous){
   dtest_new$continuous <- continuous
   if(!missing(dtest)) dtest_new <- dplyr::bind_rows(dtest, dtest_new)
   return(dtest_new)
-  
-}
-
-identify_cov_relations <- function(r){
-  ctl <- ctl_list(r)
-  pk_block <- ctl$PK
-  
-  cov_relations <- pk_block[grepl("^;;;\\s*\\S+-DEFINITION START", pk_block)]
-  
-  cov_relations <- gsub("^;;;\\s*(\\S+)-DEFINITION.*","\\1",cov_relations)
-  
-  pars <- pk_block[grepl("^\\s*\\S+\\s=", pk_block)]
-  
-  pars <- gsub("^\\s*(\\S+)\\s=.*","\\1",pars)
-  
-  #d <- get_data(r)
-  d <- input_data(r)
-  
-  dcomb <- expand.grid(param = pars, cov=names(d))
-  possible_cov_relations <- paste0(dcomb$param,dcomb$cov)
-  
-  dcomb[possible_cov_relations %in% cov_relations, ]
   
 }
 

@@ -1664,7 +1664,7 @@ wipe_run.nm_generic <- function(r){
   behaviour <- overwrite_behaviour()
   if("stop" %in% behaviour & length(existing_ctl_out_files) > 0)
     stop("no overwriting allowed, stopping due to following files/directories:\n ",
-         paste(paste(paths, collapse = "\n ")))
+         paste(paste(existing_ctl_out_files, collapse = "\n ")))
   prompt_overwrite(rev(existing_ctl_out_files))
   
   unlink(ctl_out_files, recursive = TRUE, force = TRUE)
@@ -1742,113 +1742,15 @@ clean_run.nm_list <- function(m, output_loc = c("run_dir", "base"), include_grid
 #' list all tempfiles (normally for deletion)
 #'
 #' @param object nm object or path to project (default = ".")
-#' @param output_loc character either "run_dir" or "base
+#' @param output_loc character either "run_dir" (default) for psn runs or "base" for nmfe runs
 #' @param run_files optional character with NM_run* file paths
 #' @param include_grid_files logical (default = TRUE) should slurm files be included
+#' @param ctl_extension character. Extension of control file (default = "mod")
+#' @param remove_psn_exports logical (default = FALSE). should psn exports be considered temporary
 #'
-ls_tempfiles_old <- function(object = ".", output_loc = c("run_dir", "base"),
-                         run_files = NA_character_, include_grid_files = TRUE){
-  
-  UseMethod("ls_tempfiles_old")
-  
-}
-
-ls_tempfiles_old.default <- function(object = ".", output_loc = c("run_dir", "base"),
-                                 run_files = NA_character_, include_grid_files = TRUE){
-  
-  output_loc <- match.arg(output_loc)
-
-  ## get all_run_files (in NM_run1 dir)
-  if(identical(run_files, NA_character_)){
-    all_run_dirs <- list_dirs(
-      object, 
-      pattern = "NM_run[0-9]+", 
-      recursive = TRUE, full.names = TRUE, maxdepth = Inf
-    )
-    
-    all_run_files <- dir(all_run_dirs, full.names = TRUE)
-  } else {
-    all_run_files <- run_files 
-  }
-  
-  all_psn.mod <- all_run_files[basename(all_run_files) == "psn.mod"]
-  
-  all_run_dir_table_files <- 
-    lapply(all_psn.mod, function(psn.mod){
-      file.path(dirname(psn.mod), ctl_table_files(psn.mod))
-    })
-  all_run_dir_table_files <- unlist(all_run_dir_table_files)
-
-  all_base_tables <- all_run_dir_table_files
-  all_base_table_dir <- dirname(all_base_tables)
-  all_base_table_dir <- file.path(all_base_table_dir, "..", "..")
-  all_base_table_dir <- normalizePath(all_base_table_dir)
-  
-  if(output_loc == "run_dir"){ ## add base tables to temp files
-    all_base_tables <- file.path(all_base_table_dir, basename(all_run_dir_table_files))
-    all_base_tables <- all_base_tables[file.exists(all_base_tables)]
-    
-    all_base_mod_files <- dir(unique(all_base_table_dir),
-                              pattern = "\\.mod$",
-                              full.names = TRUE)
-    
-    all_base_stubs <- tools::file_path_sans_ext(all_base_mod_files)
-    
-    all_base_psn_files <- lapply(all_base_stubs, function(base_mod_stub){
-      base_dir <- dirname(base_mod_stub)
-      stub <- basename(base_mod_stub)
-      dir(base_dir, pattern = paste0("^", stub, "\\..*"), full.names = TRUE)
-    })
-    all_base_psn_files <- unlist(all_base_psn_files)
-    
-    all_base_psn_files <- all_base_psn_files[
-      ## exclude mod and lst files
-      !tools::file_ext(all_base_psn_files) %in% c("mod", "lst")
-    ]
-  }
-  
-  temp_files <- all_run_files
-  ## exclude all_run_dir_table_files
-  if(output_loc == "run_dir")
-    temp_files <- temp_files[!temp_files %in% all_run_dir_table_files]
-  ## exclude csvs (psns intermediate results)
-  temp_files <- temp_files[!tools::file_ext(temp_files) == "csv"]
-  ## exclude psn.something (psns intermediate results)
-  temp_files <- temp_files[!grepl("psn-?[0-9]?", tools::file_path_sans_ext(basename(temp_files)))]
-  
-  if(output_loc == "run_dir")
-    temp_files <- c(temp_files, all_base_tables, all_base_psn_files)
-  
-  if(length(temp_files) == 0) return(character())
-  
-  temp_files <- tidyproject::relative_path(temp_files, getwd())
-  
-  return(temp_files)
-  
-}
-
-ls_tempfiles_old.nm_list <- function(object = ".", output_loc = c("run_dir", "base"),
-                                 run_files = NA_character_, include_grid_files = TRUE){
-  
-  all_run_dirs <- list_dirs(
-    run_dir_path(object), 
-    pattern = "NM_run[0-9]+", 
-    full.names = TRUE)
-  
-  all_run_files <- dir(all_run_dirs, full.names = TRUE)
-  
-  ls_tempfiles_old(run_files = all_run_files, output_loc = output_loc)
-}
-
-
-#' get all temp files
-#'
-#' list all tempfiles (normally for deletion)
-#'
-#' @param object nm object or path to project (default = ".")
-#' @param output_loc character either "run_dir" or "base
-#' @param run_files optional character with NM_run* file paths
-#' @param include_grid_files logical (default = TRUE) should slurm files be included
+#' @details
+#' Having \code{remove_psn_exposure = TRUE} will break pirana and xpose capability
+#'   as these software use exported files 
 #'
 #' @export
 ls_tempfiles <- function(object = ".", output_loc = c("run_dir", "base"),
@@ -1969,7 +1871,8 @@ ls_tempfiles.default <- function(object = ".", output_loc = c("run_dir", "base")
 #' @export
 ls_tempfiles.nm_list <- function(object = ".", output_loc = c("run_dir", "base"),
                                  run_files = NA_character_, include_grid_files = TRUE,
-                                 ctl_extension = "mod"){
+                                 ctl_extension = "mod",
+                                 remove_psn_exports = FALSE){
   
   all_run_dirs <- list_dirs(
     run_dir_path(object), 
@@ -1979,7 +1882,8 @@ ls_tempfiles.nm_list <- function(object = ".", output_loc = c("run_dir", "base")
   all_run_files <- dir(all_run_dirs, full.names = TRUE)
   
   ls_tempfiles(run_files = all_run_files, output_loc = output_loc, 
-               ctl_extension = tools::file_ext(ctl_name(object)))
+               ctl_extension = tools::file_ext(ctl_name(object)),
+               remove_psn_exports = remove_psn_exports)
   
 }
 
@@ -2135,59 +2039,6 @@ dollar <- function(m, dollar, ..., add_dollar_text = TRUE) {
   if(is_nm_list(ans)) ans <- ans %>% target(orig_target)
   ans
 }
-
-## pipe for string functions
-
-#' @export
-'%ns>%' <- function(m, expr){
-  UseMethod('%ns>%')
-}
-#' @export
-'%ns>%.nm_generic' <- function(m, expr){
-  if(!requireNamespace("stringr")) stop("install stringr to use this pipe")
-  string <- m %>% text
-  expr <- substitute(expr)
-  list_expr <- as.list(expr)
-  list_expr <- append(list_expr, list(string), after = 1)
-  list_expr <- as.call(list_expr)
-  string <- eval(list_expr)
-  m %>% text(string)
-}
-
-#' @export
-'%ns>%.nm_list' <- function(m, expr){
-  if(!requireNamespace("stringr")) stop("install stringr to use this pipe")
-  strings <- m %>% text ## list of chars
-  
-  expr <- substitute(expr)
-  list_expr <- as.list(expr)
-  
-  ## vectorize the stringr function
-  stringr_fun <- list_expr[[1]]
-  stringr_fun <- eval(stringr_fun) 
-  stringr_fun_vec <- Vectorize(stringr_fun, SIMPLIFY = FALSE)
-  
-  ## evaluate args
-  args <- list_expr
-  args[[1]] <- strings  ## only args remaining
-  args <- lapply(args, eval) ## evaluate them
-  
-  ## make new call with vectorized stringr fun
-  ##  and pre-evaluated args
-  new_call <- rlang::call2("stringr_fun_vec", !!!args)
-  strings_new <- eval(new_call)
-  
-  ## text() isn't vectorized for lists of characters
-  ## need to loop
-  m <- lapply(seq_along(strings_new), function(i){
-    mi <- m[[i]] ## nm_generic
-    string_new <- strings_new[[i]]
-    mi %>% text(string_new)
-  })
-  
-  as_nm_list(m)
-}
-
 
 #' @export
 n_thetas <- function(m){
@@ -3878,13 +3729,13 @@ perturb_inits.nm_generic <- function(m, theta_log, omega_diag){
   it <- m %>% init_theta()
   is_log <- which(it$trans %in% "LOG")
   it$init[is_log] <- 
-    rnorm(length(is_log), mean = it$init[is_log], sd = theta_log)
+    stats::rnorm(length(is_log), mean = it$init[is_log], sd = theta_log)
   
   io <- m %>% init_omega()
   is_diag <- which(io$omega1 == io$omega2)
   io$init[is_diag] <- 
-    rlnorm(length(is_diag), meanlog = log(io$init[is_diag]),
-           sdlog = omega_diag)
+    stats::rlnorm(length(is_diag), meanlog = log(io$init[is_diag]),
+                  sdlog = omega_diag)
   
   m %>% init_theta(it) %>% init_omega(io)
 }
@@ -4224,27 +4075,19 @@ nm_output.nm_generic <- function(r,dorig,...){
   r <- as_nm_generic(r)  ## because nm_list method is identical
   wait_finish(r)
   
-  # if(requireNamespace("xpose4", quietly = TRUE)) {
-  #   xpdb <- xpose4::xpose.data(run_id(r), directory=paste0(run_in(r),"/"))
-  #   d <- xpdb@Data
-  # } else 
-    d <- data.frame()
+  ctl_out_files <- ctl_table_paths(as_nm_generic(r))
   
-  if(nrow(d) == 0){
-    ctl_out_files <- ctl_table_paths(as_nm_generic(r))
-    
-    d <- lapply(ctl_out_files, function(out_file){
-      d <- nm_read_table(out_file, skip = 1, header = TRUE)
-    })
-    
-    ## TODO: this will break if some tables have FIRSTONLY
-    nrows <- sapply(d, nrow)
-    if(length(unique(nrows[!nrows %in% 0])) > 1)
-      stop("output tables are different sizes")
-    
-    d <- do.call(cbind,d)
-    d <- d[,!duplicated(names(d))]
-  }
+  d <- lapply(ctl_out_files, function(out_file){
+    d <- nm_read_table(out_file, skip = 1, header = TRUE)
+  })
+  
+  ## TODO: this will break if some tables have FIRSTONLY
+  nrows <- sapply(d, nrow)
+  if(length(unique(nrows[!nrows %in% 0])) > 1)
+    stop("output tables are different sizes")
+  
+  d <- do.call(cbind,d)
+  d <- d[,!duplicated(names(d))]
   
   if(missing(dorig)) dorig <- input_data(r,...)
   
@@ -4877,8 +4720,8 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
     ## nm_lists screw up in dplyr...
     ds <- lapply(ds, function(x) {
       x %>% 
-        mutate(m = nm_list2list(m),
-               parent = nm_list2list(parent))
+        dplyr::mutate(m = nm_list2list(.data$m),
+                      parent = nm_list2list(.data$parent))
     })
     
     d <- suppressWarnings(dplyr::bind_rows(ds))
@@ -6305,10 +6148,10 @@ covariance_plot <- function(r,trans=TRUE){
   n_ests <- nrow(dc)/length(unique(dc$Var1))
   
   dc$EST.NO <- rep(1:n_ests,each=length(unique(dc$Var1)))
-  dc <- dc %>% dplyr::filter(EST.NO == max(EST.NO))
+  dc <- dc %>% dplyr::filter(EST.NO == max(.data$EST.NO))
   dc$EST.NO <- NULL
   
-  dc <- dc %>% tidyr::gather(key = "Var2", value="value",-Var1)
+  dc <- dc %>% tidyr::gather(key = "Var2", value="value",-.data$Var1)
   
   dc$Var1 <- factor(dc$Var1)
   dc$Var2 <- factor(dc$Var2)
@@ -6329,10 +6172,11 @@ covariance_plot <- function(r,trans=TRUE){
     
   }
   
-  dc <- dc %>% dplyr::filter(!value %in% 0)
-  dc <- dc %>% dplyr::filter(as.numeric(Var1) > as.numeric(Var2)) ## lower corner
+  dc <- dc %>% dplyr::filter(!.data$value %in% 0)
+  dc <- dc %>% dplyr::filter(as.numeric(.data$Var1) > as.numeric(.data$Var2)) ## lower corner
+  dc$label <- round(dc$value, 2)
   
-  p <- ggplot2::ggplot(dc, ggplot2::aes(x= Var1, y= Var2, fill = value)) + 
+  p <- ggplot2::ggplot(dc, ggplot2::aes_string(x= "Var1", y= "Var2", fill = "value")) + 
     ggplot2::theme_bw() +
     ggplot2::geom_tile() + 
     ggplot2::scale_fill_gradient2(
@@ -6340,7 +6184,7 @@ covariance_plot <- function(r,trans=TRUE){
       midpoint = 0, limit = c(-1,1), space = "Lab", 
       name="Correlation"
     ) +
-    ggplot2::geom_text(ggplot2::aes(label = round(value,2))) +
+    ggplot2::geom_text(ggplot2::aes_string(label = "label")) +
     ggplot2::theme(axis.text.x  = ggplot2::element_text(angle=90,vjust=0))
   
   p
@@ -6354,20 +6198,25 @@ job_stats <- function(m){
   if(!requireNamespace("pmxTools"))
     stop("install pmxTools", call. = FALSE)
   
+  if(!requireNamespace("lubridate"))
+    stop("install lubridate", call. = FALSE)
+  
   d <- m %>% nm_row()
   
   d <- d %>% ungroup() %>%
-    mutate(xml_path = nm_output_path(m, "xml"),
-           xml = purrr::map(xml_path, pmxTools::read_nm))
+    dplyr::mutate(xml_path = nm_output_path(.data$m, "xml"),
+                  xml = purrr::map(.data$xml_path, pmxTools::read_nm))
   
-  d %>% mutate(starttime = purrr::map_chr(xml, ~.x$start_datetime),
-               stoptime = purrr::map_chr(xml, ~.x$stop_datetime),
-               starttime = lubridate::ymd_hms(starttime),
-               stoptime = lubridate::ymd_hms(stoptime),
-               Rtime = difftime(stoptime, starttime, units = "mins"), 
-               launchtime = m %>% run_dir(full_path = TRUE) %>% file.path("command.txt") %>% file.info() %>% .$mtime %>% lubridate::ymd_hms(),
-               Qtime = difftime(starttime, launchtime, units = "mins"),
-               Ttime = difftime(stoptime, launchtime, units = "mins"))
+  d %>% dplyr::mutate(
+    starttime = purrr::map_chr(.data$xml, ~.x$start_datetime),
+    stoptime = purrr::map_chr(xml, ~.x$stop_datetime),
+    starttime = lubridate::ymd_hms(.data$starttime),
+    stoptime = lubridate::ymd_hms(.data$stoptime),
+    Rtime = difftime(.data$stoptime, .data$starttime, units = "mins"), 
+    launchtime = .data$m %>% run_dir(full_path = TRUE) %>% file.path("command.txt") %>% file.info() %>% .$mtime %>% lubridate::ymd_hms(),
+    Qtime = difftime(.data$starttime, .data$launchtime, units = "mins"),
+    Ttime = difftime(.data$stoptime, .data$launchtime, units = "mins")
+  )
   
 }
 
@@ -6407,8 +6256,9 @@ boot_to_csv <- function(d,
   suppressMessages({
     dd_boot <- rsample_fun(rsplit) %>%
       dplyr::ungroup() %>%
-      dplyr::select(id_var) %>% 
-      dplyr::mutate(NEWID = 1:nrow(.)) %>%
+      dplyr::select(id_var)
+    dd_boot <- dd_boot %>%
+      dplyr::mutate(NEWID = 1:nrow(dd_boot)) %>%
       dplyr::inner_join(d)
   })
   dd_boot$OLDID <- dd_boot[[id_var]]
@@ -6417,7 +6267,7 @@ boot_to_csv <- function(d,
   
   dir.create(data_folder, showWarnings = FALSE, recursive = TRUE)
   
-  write.csv(dd_boot, file = csv_name, quote = FALSE, row.names = FALSE, na = ".")
+  utils::write.csv(dd_boot, file = csv_name, quote = FALSE, row.names = FALSE, na = ".")
   
   return(csv_name)
 }

@@ -788,36 +788,6 @@ change_seed <- function(ctl,new_seed){
   gsub("(^\\$SIM\\S*\\s+\\()[0-9]+(\\).*$)",paste0("\\1",new_seed,"\\2"),ctl)
 }
 
-#' get data set
-#'
-#' @param r object coercible into ctl_character
-#' @param filter logical (default = FALSE). Should NONMEM ignore filter be applied
-#' @param ... additional arguments for read.csv
-#' @export
-get_data <- function(r, filter = FALSE, ...){
-  .Deprecated("input_data")
-  ## doesn't rely on data base or r object contents
-  if(inherits(r, "nm")) {
-    file_name <- file.path(run_in(r), get_data_name(ctl_character(r)))
-  } else {
-    from <- dirname(attr(r, "file_name"))
-    file_name <- file.path(from, get_data_name(ctl_character(r)))
-  }
-  if(!grepl("[a-zA-Z0-9]",basename(file_name))) stop("$DATA doesn't look like it refers to a file. Is this correct?")
-
-  if(normalizePath(dirname(file_name), mustWork = FALSE) == normalizePath("DerivedData")){
-    d <- read_derived_data(basename(get_stub_name(file_name)),...)
-  } else {
-    d <- utils::read.csv(file_name, ...)
-  }
-
-  if(filter) {
-    data_filter <- parse(text = data_filter_char(r, data = d))
-    d <- subset(d, eval(data_filter))
-  }
-  d
-}
-
 #' convert nonmem code to R ready
 #' 
 #' This is a developer function
@@ -859,81 +829,4 @@ nonmem_code_to_r <- function(code, eta_to_0 = TRUE){
   pk_block
   
   
-}
-
-#' set parameter value
-#' 
-#' @param ctl object coercible into ctl_list
-#' @param param character, name of paramater
-#' @param to character/numeric, number to fix to 
-#' @export
-
-ctl_param_set <- function(ctl, param, to){
-  ctl <- ctl_character(ctl)
-  d <- data.frame(param, to)
-  for(i in 1:nrow(d)){
-    match_txt_nofix <- paste0("(\\s*)(\\S+)()(\\s*;\\s*", d$param[i],")")
-    match_txt_fix <- paste0("(\\s*)(\\S+)(\\s+FIX)(\\s*;\\s*", d$param[i],")")
-    match_index_nofix <- grep(match_txt_nofix, ctl)
-    match_index_fix <- grep(match_txt_fix, ctl)
-    
-    fixed_param <- FALSE
-    if(length(match_index_nofix) == 1 & length(match_index_fix) == 0) {
-      
-    } else if(length(match_index_nofix) == 0 & length(match_index_fix) == 1){
-      fixed_param <- TRUE
-    } else {
-      if(length(match_index_nofix) +  length(match_index_fix) > 1) warning("more than one line matched for ",d$param[i]," in ",file_name(ctl),", check control stream")
-      if(length(match_index_nofix) +  length(match_index_fix) < 1) warning("no matches for ",d$param[i]," in ",file_name(ctl),", no change will take place")
-    }
-    
-    match_txt <- ifelse(fixed_param, match_txt_fix, match_txt_nofix)
-    match_index <- ifelse(fixed_param, match_index_fix, match_index_nofix)
-    
-    replace_txt <- paste0("\\1",d$to[i]," \\4")
-    ctl <- gsub_ctl(ctl, match_txt, replace_txt)
-  }
-  ctl
-}
-
-#' fix etas
-#' 
-#' @param ctl object coercible into ctl_list
-#' @param param character, name of paramater
-#' @param to optional character/numeric, number to fix to 
-#' @export
-
-ctl_fix_eta <- function(ctl, param, to){
-  ctl <- ctl_character(ctl)
-  if(missing(to)) to <- "\\2"  ## current parameter
-  d <- data.frame(param, to)
-  for(i in 1:nrow(d)){
-    match_txt <- paste0("(\\s*)(\\S+)(\\s*; IIV_", d$param[i],")")
-    match_index <- grep(match_txt, ctl)
-    if(length(match_index) > 1) warning("more than one line matched for ",d$param[i]," in ",file_name(ctl),", check control stream")
-    if(length(match_index) < 1) warning("no matches for ",d$param[i]," in ",file_name(ctl),", no change will take place")
-    replace_txt <- paste0("\\1",d$to[i]," FIX\\3")
-    ctl <- gsub_ctl(ctl, match_txt, replace_txt)
-  }
-  ctl
-}
-
-#' unfix etas
-#' 
-#' @param ctl object coercible into ctl_list
-#' @param param character, name of paramater
-#' @export
-
-ctl_unfix_eta <- function(ctl, param){
-  ctl <- ctl_character(ctl)
-  d <- data.frame(param)
-  for(i in 1:nrow(d)){
-    match_txt <- paste0("(\\s*)(\\S+)(\\s+FIX)(\\s*; IIV_", d$param[i],")")
-    match_index <- grep(match_txt, ctl)
-    if(length(match_index) > 1) warning("more than one line matched for ",d$param[i]," in ",file_name(ctl),", check control stream")
-    if(length(match_index) < 1) warning("no matches for ",d$param[i]," in ",file_name(ctl),", no change will take place")
-    replace_txt <- paste0("\\1\\2    \\4")
-    ctl <- gsub_ctl(ctl, match_txt, replace_txt)
-  }
-  ctl
 }

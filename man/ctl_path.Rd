@@ -28,7 +28,7 @@ ctl_name(m0)
 
 m0 <- m0 \%>\% ctl_name("run{run_id}.mod")
 ctl_name(m0)
-## warning: this has make the run identifier in old xpose4 "_m0" not "m0"! ## deleteme
+## warning: this makes the run identifier in old xpose4 "_m0" not "m0"! ## deleteme
 
 m0 <- m0 \%>\% ctl_path("Models/run_{run_id}.mod")
 ctl_path(m0)

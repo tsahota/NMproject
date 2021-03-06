@@ -158,60 +158,6 @@ wait_default <- function(x) options("wait"=x)
 
 overwrite_default <- function(x) options("run_overwrite"=x)
 
-#' Should run() work in non interactive mode
-#'
-#' Depreciated
-#'
-#' @export
-non_interactive_mode <- function() {
-  .Deprecated("interactive_mode")
-}
-
-#' Should run() work in interactive mode
-#'
-#' @param value logical. TRUE = use interactive mode. FALSE = use non-interactive mode
-#' @export
-interactive_mode <- function(value) {
-  if(missing(value)) stop("expecting TRUE/FALSE argument")
-  if(!is.logical(value)) stop("expecting TRUE/FALSE argument")
-  if(value){
-    overwrite_default(FALSE)
-    wait_default(FALSE)
-  } else {
-    overwrite_default(TRUE)
-    wait_default(TRUE)
-  }
-}
-
-#' @export
-nm_tran.nm <- function(x){
-  tidyproject::check_if_tidyproject()
-  nm_tran.default(x$ctl)
-}
-
-#' List files to be cleaned up
-#' 
-#' @param r object class nm
-#' @export
-#' @examples 
-#' \dontrun{
-#' mod1 %>% extra_files
-#' mod1 %>% extra_files %>% cleanup
-#' }
-
-extra_files <- function(r){
-  tidyproject::check_if_tidyproject()
-  if(r$type %in% "execute"){
-    table_files <- ctl_table_files(r)
-    files <- file.path(r$run_dir, "NM_run1", table_files)
-  }
-  if(r$type %in% "vpc"){
-    print("TBD")
-    files <- character()
-  }
-  return(files)
-}
-
 
 ctl_table_files <- function(ctl){
   UseMethod("ctl_table_files") 
@@ -246,32 +192,6 @@ ctl_out_files.default <- function(ctl_file){ ## will get vector of $TABLE file n
 
   out.files <- c(table.files,out.files)
   out.files
-}
-
-input_files <- function(run_in,run_type,ctl_name){
-  r <- list()
-  r$ctl <- ctl_name
-  if(run_type %in% "execute"){
-    r$data_name <- data_name(ctl_name)
-    r$data_loc <- file.path(run_in,r$data_name)
-  }
-  return(r)
-}
-
-output_files <- function(run_in,run_type,run_dir,ctl_name){
-  r <- list()
-  if(run_type %in% "execute"){
-    extn <- tools::file_ext(ctl_name)
-    r$lst <- paste0(get_stub_name(ctl_name),".lst")
-    r$psn.mod <- file.path(run_dir,"NM_run1","psn.mod")
-    r$psn.lst <- file.path(run_dir,"NM_run1","psn.lst")
-    r$psn.ext <- file.path(run_dir,"NM_run1","psn.ext")
-    r$psn.cov <- file.path(run_dir,"NM_run1","psn.cov")
-    r$psn.cor <- file.path(run_dir,"NM_run1","psn.cor")
-    r$psn.xml <- file.path(run_dir,"NM_run1","psn.xml")
-    r$ctl_out_files <- file.path(run_in,ctl_out_files(ctl_name))
-  }
-  return(r)
 }
 
 #' write csv for NONMEM control files
@@ -410,69 +330,7 @@ output_table.default <- function(r, ...){
 data_ignore_char <- function(r, data){
   UseMethod("data_ignore_char")
 }
-#' @export
-data_ignore_char.default <- function(r, data){
-  dol_data <- ctl_list(r)$DATA
-  dol_data <- dol_data[!dol_data %in% ""]
-  dol_data <- rem_comment(dol_data)
-  dol_data <- unlist(strsplit(dol_data, split = "\\s"))
-  
-  ignore_present <- any(grepl(".*IGNORE\\s*=\\s*\\(",dol_data))
-  accept_present <- any(grepl(".*ACCEPT\\s*=\\s*\\(",dol_data))
-  
-  type <- NA
-  if(ignore_present & accept_present) stop("cannot identify ignore columns")
-  if(ignore_present) type <- "IGNORE"
-  if(accept_present) type <- "ACCEPT"
-  no_filter <- is.na(type)
-  
-  ## get nonmem names and input names
-  ## read in the data - need only header though
-  if(missing(data)) data <- input_data(r, filter = FALSE, silent = TRUE)
-  
-  r_data_names <- names(data)
-  ## now get nonmem names
-  dollar_input <- ctl_list(r)$INPUT
-  nonmem_data_names <- gsub("\\$\\w+", "", dollar_input)
-  nonmem_data_names <- unlist(strsplit(nonmem_data_names, split = "\\s"))
-  nonmem_data_names <- nonmem_data_names[!nonmem_data_names %in% ""]
-  nonmem_data_names <- gsub("\\w+=(\\w+)", "\\1", nonmem_data_names)
-  #if(length(r_data_names) != length(nonmem_data_names))
-  #  stop("length of items in $INPUT doesn't match dataset")
-  name_chart <- data.frame(r_data_names, nonmem_data_names, stringsAsFactors = FALSE)
-  name_chart <- name_chart[name_chart$r_data_names != name_chart$nonmem_data_names,]
-  
-  if(!no_filter){
-    filter_statements <- paste0(".*",type,"\\s*=\\s*\\((\\S[^\\)]+)\\)*.*")
-    dol_data <- dol_data[grepl(filter_statements, dol_data)]
-    filter_statements <- gsub(filter_statements,"\\1",dol_data)
-    filter_statements <- unlist(strsplit(filter_statements,","))
-    filter_statements <- gsub("\\.EQ\\.","==",filter_statements)
-    filter_statements <- gsub("\\.NE\\.","!=",filter_statements)
-    filter_statements <- gsub("\\.EQN\\.","==",filter_statements)
-    filter_statements <- gsub("\\.NEN\\.","!=",filter_statements)
-    filter_statements <- gsub("\\./E\\.","!=",filter_statements)
-    filter_statements <- gsub("\\.GT\\.",">",filter_statements)
-    filter_statements <- gsub("\\.LT\\.","<",filter_statements)
-    filter_statements <- gsub("\\.GE\\.",">=",filter_statements)
-    filter_statements <- gsub("\\.LE\\.","<=",filter_statements)
-    
-    ## substitute names from 
-    for(i in seq_len(nrow(name_chart))){
-      nonmem_data_name <- paste0("\\b", name_chart$nonmem_data_names[i], "\\b")
-      r_data_name <- name_chart$r_data_names[i]
-      filter_statements <- gsub(nonmem_data_name,
-                                r_data_name,
-                                filter_statements)
-    }
-    
-    filter_statements <- paste(filter_statements, collapse= " | ")
-    if("ACCEPT" %in% type) filter_statements <- paste0("!(",filter_statements,")")
-  } else {
-    filter_statements <- "FALSE"
-  }
-  filter_statements
-}
+
 
 #' Get filter statement
 #' 

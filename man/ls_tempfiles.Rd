@@ -16,12 +16,20 @@ ls_tempfiles(
 \arguments{
 \item{object}{nm object or path to project (default = ".")}
 
-\item{output_loc}{character either "run_dir" or "base}
+\item{output_loc}{character either "run_dir" (default) for psn runs or "base" for nmfe runs}
 
 \item{run_files}{optional character with NM_run* file paths}
 
 \item{include_grid_files}{logical (default = TRUE) should slurm files be included}
+
+\item{ctl_extension}{character. Extension of control file (default = "mod")}
+
+\item{remove_psn_exports}{logical (default = FALSE). should psn exports be considered temporary}
 }
 \description{
 list all tempfiles (normally for deletion)
+}
+\details{
+Having \code{remove_psn_exposure = TRUE} will break pirana and xpose capability
+  as these software use exported files
 }
