@@ -25,11 +25,6 @@ copy_demo_to_templates <- function(){
   
 }
 
-#' Copy demo source files to package
-#' 
-#' Internal function (non exported)
-#'   Use within a demo directory
-
 copy_demo_to_demo <- function(demo = "theopp"){
   
   ## 3 things to handle
@@ -80,11 +75,6 @@ copy_demo_to_demo <- function(demo = "theopp"){
   
   c(res1, res2, res3)
 }
-
-#' Copy demo source files + relevant NM outputs to package testfiles
-#' 
-#' Internal function (non exported)
-#'   Use within a demo directory
 
 copy_demo_to_test <- function(demo = "theopp"){
   

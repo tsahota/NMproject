@@ -12,7 +12,32 @@ dollar(m, dollar, ..., add_dollar_text = TRUE)
 \item{dollar}{character.  Subroutine to target}
 
 \item{...}{arguments to be passed to text()}
+
+\item{add_dollar_text}{logical (default = TRUE). Should the $XXXX be added to
+text}
 }
 \description{
-Get/set existing subroutine
+The fast way to see the contents of a particular subroutine. This can be used
+in place of manual edits to (re)write the contents of a NONMEM subroutine
+from within R
+}
+\examples{
+\dontrun{
+
+m1 \%>\% dollar("PK")  ## displays existing $PK
+
+m1 <- m1 \%>\% dollar("DES",
+"
+DADT(1) = -K*A(1)
+"
+)  
+## This will rewrite an existing $DES
+## if control file doesn't already have a $DES
+## use insert_dollar() instead
+
+}
+
+}
+\seealso{
+\code{\link{insert_dollar}}
 }

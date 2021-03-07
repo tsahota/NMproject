@@ -25,6 +25,8 @@ boot_to_csv(
 
 \item{id_var}{character (default = "ID"). Name of ID column}
 
+\item{oob}{logical.  Should out of bag dataset be written (default = FALSE)}
+
 \item{overwrite}{should datasets be overwritten}
 }
 \description{

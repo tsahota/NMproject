@@ -2027,10 +2027,35 @@ show_ctl.nm_generic <- function(r) {
 show_ctl.nm_list <- show_ctl.nm_generic
 
 #' Get/set existing subroutine
-#' 
+#'
+#' The fast way to see the contents of a particular subroutine. This can be used
+#' in place of manual edits to (re)write the contents of a NONMEM subroutine
+#' from within R
+#'
 #' @param m nm object
 #' @param dollar character.  Subroutine to target
 #' @param ... arguments to be passed to text()
+#' @param add_dollar_text logical (default = TRUE). Should the $XXXX be added to
+#'   text
+#'
+#' @seealso \code{\link{insert_dollar}}
+#'
+#' @examples
+#' \dontrun{
+#'
+#' m1 %>% dollar("PK")  ## displays existing $PK
+#'
+#' m1 <- m1 %>% dollar("DES",
+#' "
+#' DADT(1) = -K*A(1)
+#' "
+#' )  
+#' ## This will rewrite an existing $DES
+#' ## if control file doesn't already have a $DES
+#' ## use insert_dollar() instead
+#'
+#' }
+#'
 #' @export
 dollar <- function(m, dollar, ..., add_dollar_text = TRUE) {
   orig_target <- m %>% target()
@@ -2643,6 +2668,18 @@ remove_parameter <- function(m, name){
 }
 
 
+#' add a mixed effect parameter to $PK (or $PRED)
+#' 
+#' This will (by default) add a parameter (mixed effect) to your code
+#' 
+#' @param m nm object
+#' @param name character. name of NONMEM variable to create
+#' @param init numeric. initial value of fixed effect
+#' @param unit character. unit of variable
+#' @param trans character. tranformation to log scale?
+#' @param position integer. not used
+#' @param after character. patter to match and include the mixed effect after
+#' 
 #' @export
 add_mixed_param <- function(m, name, 
                             init = 1, unit ="", trans = c("LOG"),
@@ -6050,86 +6087,6 @@ decision <- function(inputs = c(),
   }
 }
 
-#' Write bootstrap dataset
-#'
-#' @param m nm object
-#' @param replicates numeric vector of bootstrap replicate numbers
-#' @param dboot_rds path to bootstrap RDS file
-#' @export
-nm_boot <- function(m, replicates, dboot_rds = "dboots_big.RDS"){
-  
-  dboot_rds <- file.path(
-    tools::file_path_sans_ext(data_path(m)), dboot_rds
-  )
-  
-  if(!requireNamespace("rsample"))
-    stop("install rsample", call. = FALSE)
-  
-  write_boot_replicate <- function(rsplit, dbase, csv_name, id = "ID"){
-    
-    ## need an orginal dataset.
-    dd_boot <- rsample::analysis(rsplit)
-    dd_boot[[id]] <- 1:nrow(dd_boot)
-    
-    dd_boot <- dd_boot %>%
-      dplyr::inner_join(dbase)
-    
-    dd_boot %>%
-      write_derived_data(csv_name)
-    
-    return(csv_name)
-    
-  }
-  
-  
-  drpl <- suppressWarnings(
-    drake::drake_plan(
-      base_data = data_path(m1),
-      base_data_dir = tools::file_path_sans_ext(base_data),
-      dboots_big = readRDS(drake::file_in(!!dboot_rds)),
-      dboot = dboots_big[replicates, ],
-      dbase = input_data(m1, filter = TRUE),
-      csv_name = file.path(base_data_dir, paste0("boot", 1:nrow(dboot), ".csv")),
-      csv_name2 = write_boot_replicate(dboot$splits[[1]], 
-                                       dbase, 
-                                       drake::file_out(csv_name[1]),
-                                       id = "ID")
-    )
-  )
-  
-  ## get csv_names as own variable for later
-  csv_names <- file.path(tools::file_path_sans_ext(data_path(m1)),
-                         paste0("boot",replicates, ".csv"))
-  
-  drpl_add <- drpl %>% dplyr::filter(target == "csv_name2")
-  
-  drpl_repl <- tibble::tibble(target = paste0("csv_name", replicates),
-                              command = drpl_add$command)
-  
-  drpl_repl$command <- sapply(seq_along(replicates), function(i){
-    command <- drpl_repl$command[i]
-    command <- gsub("\\[\\[1\\]\\]",paste0("[[",replicates[i],"]]"), command) 
-    command <- gsub("csv_name\\[1\\]",paste0("'",csv_names[i],"'"), command) 
-  })
-  
-  drpl <- dplyr::anti_join(drpl, drpl_add)
-  drpl <- dplyr::bind_rows(drpl, drpl_repl)
-  
-  suppressMessages(suppressWarnings({
-    drake::make(drpl)    
-  }))
-  
-  dboot <- tibble::tibble(data_path = csv_names, rep = replicates)
-  dboot <- dboot %>%
-    dplyr::mutate(
-      m = m %>% child(.data$rep) %>%
-        data_path(.data$data_path)
-    )
-  
-  return(dboot$m)  ## only return the nm_list
-  
-}
-
 #' Plot covariance matrix
 #' 
 #' @param r nm object
@@ -6231,6 +6188,7 @@ job_stats <- function(m){
 #' @param data_name name of dataset
 #' @param data_folder path to bootstrap datasets
 #' @param id_var character (default = "ID"). Name of ID column
+#' @param oob logical.  Should out of bag dataset be written (default = FALSE)
 #' @param overwrite should datasets be overwritten
 #' 
 boot_to_csv <- function(d,
@@ -6300,7 +6258,7 @@ make_boot_datasets <- function(m,
     dplyr::group_by(run_id) %>%
     dplyr::mutate(
       csv_name = purrr::map2_chr(
-        splits, run_id,
+        .data$splits, .data$run_id,
         ~boot_to_csv(d = d, rsplit = .x, data_name = .y, 
                      overwrite = overwrite, id_var = id_var)
       )

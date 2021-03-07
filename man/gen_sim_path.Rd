@@ -10,6 +10,8 @@ gen_sim_path(dsc, start_dir, include_names = TRUE)
 \item{dsc}{tibble::tibble with experimental factors to vary}
 
 \item{start_dir}{directory name within which all runs should take place.}
+
+\item{include_names}{logical (default = TRUE).}
 }
 \description{
 generate paths for simulation runs

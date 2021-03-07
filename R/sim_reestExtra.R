@@ -2,8 +2,9 @@
 #' 
 #' @param dsc tibble::tibble with experimental factors to vary
 #' @param start_dir directory name within which all runs should take place.
+#' @param include_names logical (default = TRUE). 
 
-gen_sim_path <- function(dsc,start_dir,include_names = TRUE){
+gen_sim_path <- function(dsc, start_dir, include_names = TRUE){
   
   ## run as dsc$location <- gen_sim_path(dsc, ...)
   
