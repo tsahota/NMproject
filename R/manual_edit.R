@@ -48,33 +48,6 @@ stop_manual_edit <- function(m){
 }
 
 #' @export
-manual_patch <- function(m){
-  
-  res <- start_manual_edit_unix(m)
-  
-  message(
-    "---Manual edit---
-    Instructions:
-    1) edit control file
-    2) save & close
-    Press ENTER when done...")
-  readline()
-  
-  ## now diff ctl_path(m) and old_file_path
-  
-  diff_manual_edit(m, res)
-  
-  message("patch created:\n ", res$patch_path, "\n")
-  
-  message("copy-paste the following into your script to apply:\n
-  [nm_object] %>%
-  apply_manual_edit(\"", res$patch_name,"\")
-
-(dont forget to comment your code)")
-  
-}
-
-#' @export
 start_manual_edit_unix <- function(m, combine_patch = NA_character_){
   # if(.Platform$OS.type != "unix") 
   #   stop("patching functionality only implemented for linux/unix systems\n consider manual_edit() instead",

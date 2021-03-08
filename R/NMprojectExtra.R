@@ -1001,7 +1001,6 @@ coef.nm_generic <- function(object,trans=TRUE,...){
   }
   
   ext_file_path <- object %>% nm_output_path("ext")
-  #ext_file_path <- file.path(run_dir(object, full_path = TRUE), "NM_run1","psn.ext")
   
   d <- coef_ext0(ext_file_path)
   if(nrow(d) == 0) {
@@ -1405,7 +1404,7 @@ status.nm_generic <- function(x, simple = TRUE){
     contents[file.info(contents)$isdir]
   }
   
-  execution_dirs <- get_sub_dirs(run_dir(m, full_path = TRUE))
+  execution_dirs <- get_sub_dirs(run_dir_path(m))
   
   ##############################
   ## for bootstraps, etc. go to modelfit_dir1
@@ -1451,6 +1450,10 @@ status.nm_generic <- function(x, simple = TRUE){
 #' @export
 status.nm_list <- Vectorize_nm_list(status.nm_generic)
 
+#' get status of multiple runs in form of table
+#' 
+#' @param m nm objects
+#' 
 #' @export
 status_table <- function(m){
   tab <- m %>% status %>% 
@@ -2574,12 +2577,11 @@ _NEWPARAM_ = EXP(MU__MU_PARAM_+ETA(_MU_PARAM_))
   m %>% target(old_target)
 }
 
-#' @export
+
 rename_parameter_ <- function(m, new_name, name){
   UseMethod("rename_parameter_")
 }
 
-#' @export
 rename_parameter_.nm_generic <- function(m, new_name, name){
   
   ## comment out "new_param =" rows
@@ -2605,9 +2607,20 @@ rename_parameter_.nm_generic <- function(m, new_name, name){
   
 }
 
-#' @export
 rename_parameter_.nm_list <- Vectorize_nm_list(rename_parameter_.nm_generic, SIMPLIFY = FALSE)
 
+#' rename a parameter in NONMEM control stream
+#' 
+#' @param m nm object
+#' @param ... renaming arguments
+#' 
+#' @examples 
+#' \dontrun{
+#' 
+#' m1 %>% rename_parameter(CL = KE)
+#' ## renames KE to CL
+#' 
+#' }
 #' @export
 rename_parameter <- function(m, ...){
   rename_list <- list(...)
@@ -6067,7 +6080,7 @@ job_stats <- function(m){
     starttime = lubridate::ymd_hms(.data$starttime),
     stoptime = lubridate::ymd_hms(.data$stoptime),
     Rtime = difftime(.data$stoptime, .data$starttime, units = "mins"), 
-    launchtime = m %>% run_dir(full_path = TRUE) %>% file.path("command.txt") %>% m_time_f(),
+    launchtime = m %>% run_dir_path() %>% file.path("command.txt") %>% m_time_f(),
     Qtime = difftime(.data$starttime, .data$launchtime, units = "mins"),
     Ttime = difftime(.data$stoptime, .data$launchtime, units = "mins")
   )

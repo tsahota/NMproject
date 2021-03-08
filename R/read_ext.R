@@ -44,7 +44,7 @@ read_ext <- function(r,trans=FALSE){
 
 read_ext.default <- function(r,trans=FALSE){
   
-  base_nm_run_path <- file.path(run_dir(r, full_path = TRUE), "NM_run1")
+  base_nm_run_path <- file.path(run_dir_path(r), "NM_run1")
   
   #d <- read_ext0(r$output$psn.ext)
   d <- read_ext0(file.path(base_nm_run_path, "psn.ext"))

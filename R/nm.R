@@ -315,7 +315,7 @@ output_table <- function(r, ...){
 
 #' @export
 output_table.default <- function(r, ...){
-  out_path <- file.path(run_dir(r, full_path = TRUE), "NMout.RDS")
+  out_path <- file.path(run_dir_path(r), "NMout.RDS")
   if(!file.exists(out_path)) {
     do <- nm_output(r, ...)
     saveRDS(do, file = out_path)

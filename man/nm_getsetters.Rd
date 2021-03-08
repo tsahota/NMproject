@@ -2,6 +2,7 @@
 % Please edit documentation in R/nm_gettersetters.R
 \name{nm_getsetters}
 \alias{nm_getsetters}
+\alias{run_dir}
 \alias{cmd}
 \alias{type}
 \alias{parent_run_id}
@@ -20,6 +21,8 @@
 \alias{result_files}
 \title{functions to access and modify fields of nm objects}
 \usage{
+run_dir(m, text)
+
 cmd(m, text)
 
 type(m, text)
@@ -58,6 +61,8 @@ result_files(m, text)
 \item{text}{optional character for replacing field. If present function will
 modify field (of same name as function) otherwise will return value of
 field (of same name as function)}
+
+\item{full_path}{logical (default = FALSE) used in run_dir()}
 }
 \description{
 functions to access and modify fields of nm objects

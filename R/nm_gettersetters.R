@@ -38,23 +38,6 @@ ctl_path <- function(m, text) {
   }
 }
 
-#' @export
-run_dir <- function(m, text, full_path = FALSE) {
-  UseMethod("run_dir")
-}
-#' @export
-run_dir.nm <- function(m, text, full_path = FALSE) m$run_dir
-#' @export
-run_dir.nm_generic <- function(m, text, full_path = FALSE) {
-  if(missing(text)) {
-    if(!full_path) custom_1d_field(m, "run_dir") else
-      file.path(run_in(m), custom_1d_field(m, "run_dir"))
-  } else custom_1d_field(m, "run_dir", text, glue = TRUE)
-}
-#' @export
-run_dir.nm_list <- run_dir.nm_generic
-#run_dir.nm_list <- Vectorize_nm_list(run_dir.nm_generic, SIMPLIFY = TRUE)
-
 #' @name nm_getsetters
 #' @rdname nm_getsetters
 #'
@@ -64,6 +47,7 @@ run_dir.nm_list <- run_dir.nm_generic
 #' @param text optional character for replacing field. If present function will
 #'   modify field (of same name as function) otherwise will return value of
 #'   field (of same name as function)
+#' @param full_path logical (default = FALSE) used in run_dir()
 #'
 #' @details Easiest way to see all fields of an object is to type the object
 #'   into the console and hit enter. This will display the value of each field.
@@ -71,6 +55,23 @@ run_dir.nm_list <- run_dir.nm_generic
 #'   expressions inside braces in \code{text} will evaluate the expression
 
 NULL
+
+#' @rdname nm_getsetters
+#' @export
+run_dir <- function(m, text) {
+  UseMethod("run_dir")
+}
+
+#' @export
+run_dir.nm_generic <- function(m, text) {
+  if(missing(text)) {
+    custom_1d_field(m, "run_dir")
+  } else custom_1d_field(m, "run_dir", text, glue = TRUE)
+}
+#' @export
+run_dir.nm_list <- run_dir.nm_generic
+
+
 
 #' @rdname nm_getsetters
 #' @examples 
