@@ -4124,6 +4124,11 @@ save_render_cache <- function(m, input) {
   invisible(m)
 }
 
+#' get parent object of nm object
+#' 
+#' @param m nm object
+#' @param n numeric. generation of parent (default = 1)
+#'  
 #' @export
 parent_run <- function(m, n = 1L){
   UseMethod("parent_run")
@@ -5254,6 +5259,18 @@ append_nonmem_var <- function(output_table, r, var){
   do
 }
 
+
+#' plot relationship between a parameter and covariate
+#' 
+#' @param r nm object
+#' @param param character. Name of parameter
+#' @param cov character. Name of covariate
+#' @param ... additional arguments passed to dplyr::mutate()
+#' @param categorical logical (default = FALSE)
+#' @param plot_tv logical
+#' 
+#' @details the mutate statement is to add variables not included in original $TABLE
+#' 
 #' @export
 param_cov_diag <- function(r, param, cov, ..., categorical = FALSE, plot_tv = TRUE){
 
@@ -6188,16 +6205,13 @@ make_xv_datasets <- function(dboot,
     dplyr::ungroup() %>%
     dplyr::mutate(
       m_xv = #ifelse(is_successful(m), 
-                    m %>% 
+                    dboot$m %>% 
                       child(paste0(run_id(dboot$m), "eval")) %>%
                       data_path(.data$oob_csv_name)#,
               #      nm(NA))
       )
 }
 
-## TODO: no_rerun()
-##  stops instead of rerunning.
-##  traceability check
 
 ## TODO: nm_render use drake instead
 ##  it will work better probably (evaluate this)
@@ -6206,7 +6220,6 @@ make_xv_datasets <- function(dboot,
 ## TODO: decision stopping even selected y in a script
 ##         maybe drake doesn't work with environments?
 
-## TODO: ignore split between getter and setter
 ## TODO: ignore -> fill_ignore (name conflict with drake)
 ## TODO: fill_ignore() should eliminate all ignores
 
