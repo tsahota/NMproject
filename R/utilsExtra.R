@@ -86,6 +86,11 @@ Vectorize_nm_list <- function (FUN, vectorize.args = arg.names, SIMPLIFY = FALSE
   FUNV
 }
 
+
+#' test if object is an nm_list object
+#' 
+#' @param x object
+#' 
 #' @export
 is_nm_list <- function(x){
   if(inherits(x, "nm_list")) return(TRUE)
@@ -105,6 +110,9 @@ run_id0 <- function(m){
   val
 }
 
+#' coerce object into nm_list
+#' 
+#' @param m nm object
 #' @export
 as_nm_list <- function(m){
   UseMethod("as_nm_list")
@@ -133,7 +141,12 @@ as_nm_list.nm_generic <- function(m){
   as_nm_list.list(m)
 }
 
+#' test if object is an nm_generic object
+#' 
+#' @param x object
+#' 
 #' @export
+
 is_nm_generic <- function(x){
   inherits(x, "nm_generic")
 }

@@ -24,6 +24,10 @@ nm_list_render(
 \item{args}{list. Same as "params" arg in rmarkdown::render()}
 
 \item{force}{logical (default = FALSE). will force execution}
+
+\item{async}{experiment - should future be used to run asynchronously}
+
+\item{...}{additional arguments passed to rmarkdown::render()}
 }
 \description{
 Mostly used for bootstraps, and other routines where

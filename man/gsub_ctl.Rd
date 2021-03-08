@@ -13,6 +13,8 @@ gsub_ctl(ctl, pattern, replacement, ..., dollar = NA_character_)
 
 \item{replacement}{argument passed to gsub}
 
+\item{...}{additional arguments passed to gsub}
+
 \item{dollar}{character name of subroutine}
 }
 \description{

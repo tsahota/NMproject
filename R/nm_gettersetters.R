@@ -185,18 +185,18 @@ job_info.nm_list <- Vectorize_nm_list(job_info.nm_generic)
 
 #' @rdname nm_getsetters
 #' @export
-run_in <- function(x, text)
+run_in <- function(m, text)
   UseMethod("run_in")
 
 #' @export
-run_in.nm_generic <- function(x, text){
-  if(missing(text)) custom_1d_field(x, "run_in") else {
-    x <- custom_1d_field(x, "run_in", text)
+run_in.nm_generic <- function(m, text){
+  if(missing(text)) custom_1d_field(m, "run_in") else {
+    m <- custom_1d_field(m, "run_in", text)
     
     ## additional code to ensure data_path is redone
-    data_path <- data_path(x)
-    x <- x %>% data_path(data_path) ## reset data path
-    x
+    data_path <- data_path(m)
+    m <- m %>% data_path(data_path) ## reset data path
+    m
   }
 }
 #' @export
@@ -232,18 +232,23 @@ run_id.nm_list <- Vectorize_nm_list(run_id.nm_generic)
 
 #' @rdname nm_getsetters
 #' @export
-result_files <- function(r, text){
+result_files <- function(m, text){
   UseMethod("result_files")
 }
 #' @export
-result_files.nm_generic <- function(r, text){
-  if(missing(text)) return(r[["result_files"]])
-  r[["result_files"]] <- unique(c(r[["result_files"]], text))
-  r
+result_files.nm_generic <- function(m, text){
+  if(missing(text)) return(m[["result_files"]])
+  m[["result_files"]] <- unique(c(m[["result_files"]], text))
+  m
 }
 #' @export
 result_files.nm_list <- Vectorize_nm_list(result_files.nm_generic, SIMPLIFY = FALSE)
 
+#' get paths of results files 
+#' 
+#' @param r nm object
+#' @param pattern grep matching pattern
+#' 
 #' @export
 find_result_files <- function(r, pattern = "."){
   UseMethod("find_result_files")

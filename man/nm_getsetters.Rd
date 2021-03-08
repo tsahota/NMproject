@@ -46,11 +46,11 @@ executed(m, text)
 
 lst_path(m, text)
 
-run_in(x, text)
+run_in(m, text)
 
 run_id(m, text)
 
-result_files(r, text)
+result_files(m, text)
 }
 \arguments{
 \item{m}{nm object}

@@ -345,11 +345,12 @@ psn_style_scm <- function(base, run_in, dtest,
 #'   returns data.frame with a column "statistic"
 #' @param ... additional arguments for FUN
 #' @param pre_proc function to mutate dataset prior to compute statistics
-#' @param max_mod_mo integer. Maximum model number to read (set low for debugging)
+#' @param max_mod_no integer. Maximum model number to read (set low for debugging)
 #' @param DV character (default = "DV")
 #' @param statistic character (default = "statistic") name of statistic column
 #'   returned by FUN
 #' @param group,var1,var2 grouping variables for plotting
+#' @param d dataset
 #'   
 #' @seealso \code{\link{nm_render}}
 #' @examples 

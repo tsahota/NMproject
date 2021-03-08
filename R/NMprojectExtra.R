@@ -79,7 +79,6 @@ To use the alpha interface, install NMproject 0.3.2",
 #' @param results_dir character (default = "Results").
 #'    Directory to store results of this run
 #' @param lst_path character (default = "{run_dir}/NM_run1/psn.lst") expected location of lst file
-#' @param data_path character (default = NA) expected location of dataset file
 #' 
 #' @return An object of class nm_list.  Object is concatenatable.
 #'    Length of object corresponds to length of run_id
@@ -408,11 +407,6 @@ custom_1d_field.nm_generic <- function(m, field, replace, glue = FALSE){
   m
 }
 custom_1d_field.nm_list <- Vectorize_nm_list(custom_1d_field.nm_generic, replace_arg = "replace")
-
-#' @export
-set_simple_field <- function(m, ...){
-  UseMethod("set_simple_field")  
-}
 
 set_simple_field <- function(m, ...){
 
@@ -804,7 +798,6 @@ data_path.nm_generic <- function(m, text){
 #' @export
 data_path.nm_list <- Vectorize_nm_list(data_path.nm_generic)
 
-#' @export
 fill_dollar_data <- function(m, data_name){
   old_target <- m %>% target()
   m <- m %>% target("$DATA")
@@ -1378,15 +1371,15 @@ nm_tran.nm_generic <- function(x){
 #' @export
 nm_tran.nm_list <- Vectorize_nm_list(nm_tran.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
-#' @export
+
 cache_history <- function(r){
   UseMethod("cache_history")
 }
-#' @export
+
 cache_history.nm_generic <- function(r){
   lapply(run_cache_paths(r), readRDS)
 }
-#' @export
+
 cache_history.nm_list <- Vectorize_nm_list(cache_history.nm_generic, SIMPLIFY = FALSE)
 
 cache_current <- function(m) run_checksums(m)
@@ -1800,8 +1793,12 @@ is_finished.nm_generic <- function(r, initial_timeout=NA){
 #' @export
 is_finished.nm_list <- Vectorize_nm_list(is_finished.nm_generic)
 
+#' test if NONMEM ran without errors
+#' 
+#' @param r nm object
+#' 
 #' @export
-is_successful <- function(r, initial_timeout=NA, na = FALSE) {
+is_successful <- function(r) {
   res <- all(status(r) %in% "finished")
   res[is.na(res)] <- FALSE
   res
@@ -1815,11 +1812,11 @@ is_successful <- function(r, initial_timeout=NA, na = FALSE) {
 #' @param r nm object
 #' @param timeout numeric seconds to wait before timeout
 #' @export
-wait_finish <- function(r, timeout=NA, force = FALSE){
+wait_finish <- function(r, timeout=NA){
   UseMethod("wait_finish")
 }
 #' @export
-wait_finish.nm_list <- function(r, timeout=NA, force = FALSE){
+wait_finish.nm_list <- function(r, timeout=NA){
   r_orig <- r
   r <- r[!is_finished(r)]
   #r <- r[]
@@ -1833,8 +1830,8 @@ wait_finish.nm_list <- function(r, timeout=NA, force = FALSE){
 }
 
 #' @export
-wait_finish.nm_generic <- function(r, timeout=NA, force = FALSE){
-  wait_finish.nm_list(as_nm_list(r), timeout = timeout, force = force)
+wait_finish.nm_generic <- function(r, timeout=NA){
+  wait_finish.nm_list(as_nm_list(r), timeout = timeout)
 }
 
 # wait_finish.nm_list <- function(r, timeout=NA, force = FALSE){
@@ -3370,7 +3367,6 @@ nm_output_path.nm_list <- Vectorize_nm_list(nm_output_path.nm_generic, SIMPLIFY 
 #' @export
 output_location <- function(m) file.path(run_in(m), dirname(lst_path(m)))
 
-#' @export
 ls_output <- function(m, pattern = ".", recursive = TRUE) {
   output <- dir(output_location(m), recursive = recursive, full.names = TRUE, pattern = pattern)
   return(normalizePath(output, winslash = "/"))
@@ -3942,17 +3938,16 @@ new_function_template <- function(function_name, overwrite = FALSE, open_file = 
 }
 
 
-#' @export
 ctl_table_paths <- function(ctl) {
   UseMethod("ctl_table_paths")
 }
-#' @export
+
 ctl_table_paths.nm_generic <- function(ctl) {
   ## path should go from base directory
   ## in psn directory
   file.path(output_location(ctl), ctl_table_files(ctl_contents(ctl)))
 }
-#' @export
+
 ctl_table_paths.nm_list <- Vectorize_nm_list(ctl_table_paths.nm_generic, SIMPLIFY = FALSE)
 
 
@@ -4073,17 +4068,16 @@ run_cache_paths <- function(m){
   
 }
 
-#' @export
 cached_object <- function(m){
   UseMethod("cached_object")
 }
-#' @export
+
 cached_object.nm_generic <- function(m){
   path <- unique_run_cache_path(m)
   if(!file.exists(path)) return(nm(NA))
   readRDS(path)$object
 }
-#' @export
+
 cached_object.nm_list <- Vectorize_nm_list(cached_object.nm_generic, SIMPLIFY = FALSE)
 
 
@@ -4373,6 +4367,8 @@ nm_render.nm_list <- Vectorize_nm_list(nm_render.nm_generic, SIMPLIFY = FALSE, i
 #' @param output_file character. Same as rmarkdown::render() arg
 #' @param args list. Same as "params" arg in rmarkdown::render()
 #' @param force logical (default = FALSE). will force execution
+#' @param async experiment - should future be used to run asynchronously
+#' @param ... additional arguments passed to rmarkdown::render()
 #' 
 #' @export
 nm_list_render <- function(m, 
@@ -5402,13 +5398,16 @@ ppc_histogram_plot <- function(d, var1, var2, statistic = "statistic"){
 
 }
 
+#' Plot correlation between two covariates
+#' 
+#' @param d dataset with covariates
+#' @param cov vector of length 2 for covariate names
+#' @param continuous logical vector of length 2 for whether cov is continuous or not
+#' @param log_transform_plot should plot be log transformed or not
+#' @param dcov_info option dataframe with covariate information
+#' @param by character (default = "ID") variable to split over
+#' 
 #' @export
-#cov_cov_plot <- function(d,
-#                         cov1, cov2,
-#                         continuous1, continuous2,
-#                         log_transform_plot1 = FALSE, log_transform_plot2 = FALSE,
-#                         dcov_info,
-#                         by = "ID"){
 cov_cov_plot <- function(d,
                          cov,
                          continuous,
@@ -6023,6 +6022,9 @@ covariance_plot <- function(r,trans=TRUE){
 }
 
 #' get job stats
+#' 
+#' @param m nm object
+#' 
 #' @export
 job_stats <- function(m){
   
@@ -6146,14 +6148,14 @@ make_boot_datasets <- function(m,
   dboots <- dboots %>% mutate(
     m = m %>%
       ## the following run_in will screw up parent_run_in, fix later
-      run_in(file.path(run_in(.), paste0(run_id(.), "_boot"))) %>%
-      data_path(csv_name[1]) %>%
+      run_in(file.path(run_in(m), paste0(run_id(m), "_boot"))) %>%
+      data_path(.data$csv_name[1]) %>%
       fill_input(...) %>% ## doing this before child() speeds up execution
       child(run_id) %>% ## expand to fill dboots
-      data_path(csv_name) %>% ## set data_paths
+      data_path(.data$csv_name) %>% ## set data_paths
       change_parent(m) %>%
       #parent_run_in(run_in(m)) %>% ## fix run_in
-      results_dir(run_in(.))
+      results_dir(run_in(m))
   )
   
   dboots
@@ -6178,7 +6180,7 @@ make_xv_datasets <- function(dboot,
     dplyr::group_by(run_id) %>%
     dplyr::mutate(
       oob_csv_name = purrr::map2_chr(
-        splits, run_id,
+        .data$splits, .data$run_id,
         ~boot_to_csv(d = d, rsplit = .x, data_name = .y, 
                      overwrite = overwrite, id_var = id_var, oob = TRUE)
       )
@@ -6187,8 +6189,8 @@ make_xv_datasets <- function(dboot,
     dplyr::mutate(
       m_xv = #ifelse(is_successful(m), 
                     m %>% 
-                      child(paste0(run_id(.), "eval")) %>%
-                      data_path(oob_csv_name)#,
+                      child(paste0(run_id(dboot$m), "eval")) %>%
+                      data_path(.data$oob_csv_name)#,
               #      nm(NA))
       )
 }

@@ -41,8 +41,6 @@ nm(
 Directory to store results of this run}
 
 \item{lst_path}{character (default = "{run_dir}/NM_run1/psn.lst") expected location of lst file}
-
-\item{data_path}{character (default = NA) expected location of dataset file}
 }
 \value{
 An object of class nm_list.  Object is concatenatable.

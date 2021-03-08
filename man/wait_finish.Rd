@@ -4,7 +4,7 @@
 \alias{wait_finish}
 \title{wait for runs to finish}
 \usage{
-wait_finish(r, timeout = NA, force = FALSE)
+wait_finish(r, timeout = NA)
 }
 \arguments{
 \item{r}{nm object}

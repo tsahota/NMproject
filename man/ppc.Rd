@@ -22,6 +22,8 @@ ppc_data(
 )
 }
 \arguments{
+\item{d}{dataset}
+
 \item{group, var1, var2}{grouping variables for plotting}
 
 \item{statistic}{character (default = "statistic") name of statistic column
@@ -36,9 +38,9 @@ returns data.frame with a column "statistic"}
 
 \item{pre_proc}{function to mutate dataset prior to compute statistics}
 
-\item{DV}{character (default = "DV")}
+\item{max_mod_no}{integer. Maximum model number to read (set low for debugging)}
 
-\item{max_mod_mo}{integer. Maximum model number to read (set low for debugging)}
+\item{DV}{character (default = "DV")}
 }
 \description{
 PPC functions: process data from simulation and plot

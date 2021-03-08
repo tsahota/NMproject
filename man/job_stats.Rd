@@ -6,6 +6,9 @@
 \usage{
 job_stats(m)
 }
+\arguments{
+\item{m}{nm object}
+}
 \description{
 get job stats
 }

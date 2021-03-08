@@ -421,6 +421,7 @@ update_parameters0 <- function(ctl,coef_from,type = c("THETA","OMEGA","SIGMA")){
 #' @param ctl object coercible into ctl_character
 #' @param pattern argument passed to gsub
 #' @param replacement argument passed to gsub
+#' @param ... additional arguments passed to gsub
 #' @param dollar character name of subroutine
 #' @export
 

@@ -113,7 +113,6 @@ start_manual_edit_unix <- function(m, combine_patch = NA_character_){
   res
 }
 
-#' @export
 diff_manual_edit <- function(m, res){
   git2r::add(path = res$new_ctl_path)
   git2r::diff(git2r::repository(), index = TRUE, as_char = TRUE, filename = res$patch_path)

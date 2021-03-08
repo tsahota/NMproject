@@ -195,11 +195,14 @@ ctl_out_files.default <- function(ctl_file){ ## will get vector of $TABLE file n
 }
 
 #' write csv for NONMEM control files
+#' 
+#' Internal function 
+#' 
+#' @param d dataset to be saved
 #' @param ... arguments for write.csv
 #' @param na character. Default changed to ".".
 #' @param row.names logical. Default changed to FALSE.
 #' @param quote logical. Fefault changed to FALSE
-#' @export
 
 write.csv.nm <- function(d, ...,na=".",
                          row.names=FALSE,
@@ -274,7 +277,7 @@ run_all_scripts <- function(){
   
   dplan <- dplan %>%
     dplyr::mutate(
-      cmd = ifelse(rmd, 
+      cmd = ifelse(.data$rmd, 
                    paste0("rmarkdown::render(\"",script_files,"\")"),
                    paste0("source(\"",script_files,"\")"))
     )

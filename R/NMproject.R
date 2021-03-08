@@ -116,6 +116,11 @@ set_nm_opts <- function(){
 #' @export
 sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_flags='-pe orte {cores} -V' {ctl_name} -dir={run_dir} -nodes={cores}"
 
+
+#' Find location of NONMEM
+#' 
+#' @param name character name of nonmem installation (according PsN)
+#' 
 #' @export
 find_nm_install_path <- function(name = "default"){
 
@@ -257,16 +262,6 @@ new_jobs <- function(txt = c("ask", "overwrite", "stop new", "skip")){
   .Deprecated(overwrite_behaviour)
   overwrite_behaviour(match.arg(txt))
 }
-
-#' Get run id
-#'
-#' @param m character or nm or ctl_list/ctl_character
-#' @param text optional character to set run_id 
-#' @param ... additional arguments
-#' @export
-run_id <- function(m, text, ...)
-  UseMethod("run_id")
-
 
 #' path of directory from models dir
 #'
