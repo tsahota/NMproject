@@ -414,22 +414,6 @@ set_simple_field <- function(m, ...){
   UseMethod("set_simple_field")  
 }
 
-#' Add a simple field to nm object
-#' 
-#' @param m nm object
-#' @param ... arguments to set fields
-#' 
-#' @examples 
-#' \dontrun{
-#' 
-#' core_list <- c(1,4,12)
-#' 
-#' mc <- m1 %>% child(run_id = paste0(corelist)) %>%
-#'   set_simple_field(cores = corelist) %>%
-#'   cmd("qpsn -c {cores} -t 59 -- execute {ctl_name} -dir={run_dir}")
-#' 
-#' }
-#' @export
 set_simple_field <- function(m, ...){
 
   dots <- list(...)
@@ -442,7 +426,6 @@ set_simple_field <- function(m, ...){
 }
 
 
-#' @export
 get_simple_field <- function(m, field){
 
   field <- rlang::enquo(field)
@@ -481,37 +464,6 @@ simple_field <- function(m, ...){
   } else {
     set_simple_field(m, ...) 
   }
-}
-
-#' @importFrom dplyr mutate
-#' @export
-dplyr::mutate
-
-#' @export
-mutate.nm_list <- function(.data, ...){
-  dots_exp <- rlang::enexprs(...)
-  data_extra <- dplyr::mutate(nm_row(.data), ...)
-  
-  for(name in names(dots_exp)){
-    .data <- .data %>% custom_1d_field(field = name, replace = data_extra[[name]])
-  }
-  .data
-  
-}
-
-#' @importFrom dplyr filter
-#' @export
-dplyr::filter
-
-#' @export
-filter.nm_list <- function(.data, ...){
-  dots_exp <- rlang::enexprs(...)
-  object <- .data
-  .data <- nm_row(object)
-  .data$m <- object
-
-  data_extra <- dplyr::filter(.data, ...)
-  data_extra$m
 }
 
 glue_text_nm <- function(m, text){
@@ -592,17 +544,6 @@ ctl_list2.nm_generic <- function(r) r[["ctl_contents"]]
 
 ctl_list2.nm_list <- Vectorize_nm_list(ctl_list2.nm_generic, SIMPLIFY = FALSE)
 
-
-
-new_ctl_extra <- function(m, ctl, dir = getOption("models.dir")){
-  
-  ctl$TABLE <- gsub(paste0("(FILE\\s*=\\s*\\S*tab)\\S*\\b"),paste0("\\1",run_id(m)),ctl$TABLE)
-  ctl[[1]] <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",parent_run_id(m)),ctl[[1]])
-  ctl[[1]] <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*",paste("\\1",Sys.info()["user"]),ctl[[1]])
-  
-  ctl
-}
-
 #' Write control file to disk
 #' 
 #' Normally used by other functions
@@ -646,15 +587,6 @@ write_ctl.nm_generic <- function(m, force = FALSE){
 }
 #' @export
 write_ctl.nm_list <- Vectorize_nm_list(write_ctl.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
-
-delete_ctl <- function(m){
-  UseMethod("delete_ctl")
-}
-delete_ctl.nm_generic <- function(m){
-  unlink(ctl_path(m))
-  invisible(m)
-}
-delete_ctl.nm_list <- Vectorize_nm_list(delete_ctl.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
 #' @include ctl_handling.R
 #' @export
@@ -953,30 +885,6 @@ input_data.nm_list <- function(m, filter = FALSE, na = ".", ...){
   if(length(unique(data_paths)) != 1) stop("multiple data files detected. Aborting...")
   m <- as_nm_generic(m[[1]])
   d <- input_data(m, filter = filter, na = na, ...)
-  d
-}
-
-#' @export
-input_data.default <- function(m, filter = FALSE, na = ".", ...){   ## old get_data
-  ## doesn't rely on data base or r object contents
-  if(inherits(m, "nm")) {
-    file_name <- file.path(run_in(m), get_data_name(ctl_character(m)))
-  } else {
-    from <- dirname(attr(m, "file_name"))
-    file_name <- file.path(from, get_data_name(ctl_character(m)))
-  }
-  if(!grepl("[a-zA-Z0-9]",basename(file_name))) stop("$DATA doesn't look like it refers to a file. Is this correct?")
-  
-  if(normalizePath(dirname(file_name), mustWork = FALSE) == normalizePath("DerivedData")){
-    d <- read_derived_data(basename(tools::file_path_sans_ext(file_name)),...)
-  } else {
-    d <- utils::read.csv(file_name, ...)
-  }
-  
-  if(filter) {
-    data_filter <- parse(text = data_filter_char(m, data = d))
-    d <- subset(d, eval(data_filter))
-  }
   d
 }
 
@@ -1469,71 +1377,6 @@ nm_tran.nm_generic <- function(x){
 }
 #' @export
 nm_tran.nm_list <- Vectorize_nm_list(nm_tran.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
-
-
-in_cache <- function(r,
-                     cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE,
-                     return_checksums = FALSE){
-  UseMethod("in_cache")
-}
-
-in_cache.nm_generic <- function(r,
-                                cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE,
-                                return_checksums = FALSE){
-  
-  .Deprecated("overwrite_behaviour", 
-              msg = "this function is no longer needed with overwrite_behaviour (see app) and will probably be removed")
-  r %>% write_ctl()
-  ## get all md5_files
-  
-  run_cache_disk <- lapply(run_cache_paths(r), readRDS)
-  if(length(run_cache_disk) > 0){
-    current_checksums <- run_checksums(r)
-    checksums_reduced <- lapply(run_cache_disk, function(i) {
-      
-      if(cache_ignore_cmd){  ## remove cmd check
-        keep <- !names(current_checksums) %in% "cmd"
-        i$checksums <- i$checksums[keep]
-        current_checksums <- current_checksums[keep]
-      }
-      
-      if(cache_ignore_ctl){  ## remove cmd check
-        keep <- !names(current_checksums) %in% "ctl"
-        i$checksums <- i$checksums[keep]
-        current_checksums <- current_checksums[keep]
-      }        
-      
-      if(cache_ignore_data){  ## remove cmd check
-        keep <- !names(current_checksums) %in% "data"
-        i$checksums <- i$checksums[keep]
-        current_checksums <- current_checksums[keep]
-      }
-      
-      ## ignore names
-      #names(current_checksums) <- NULL
-      #names(i$checksums) <- NULL
-
-      list(
-        checksums = current_checksums,
-        stored_checksums = i$checksums
-        )
-      
-      #identical(i$checksums, current_checksums)
-    })
-
-    matches <- sapply(checksums_reduced,
-                      function(i) identical(i$checksums, 
-                                            i$stored_checksums))
-    
-    if(any(matches)){
-      return(TRUE)    ## if up to date, skip
-    }
-  }
-  if(return_checksums) return(checksums_reduced)
-  return(FALSE)
-}
-
-in_cache.nm_list <- Vectorize_nm_list(in_cache.nm_generic)
 
 #' @export
 cache_history <- function(r){

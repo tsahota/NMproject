@@ -61,6 +61,7 @@ Collate:
     'nm_data.R'
     'nm_gettersetters.R'
     'plot_iter.R'
+    'potential_deletion.R'
     'read.table.nm.R'
     'read_ext.R'
     'run_nm.R'
