@@ -268,15 +268,6 @@ run_id <- function(m, text, ...)
   UseMethod("run_id")
 
 
-#' Get run in
-#'
-#' @param x character or nm or ctl_list/ctl_character
-#' @param text optional character to set directory to run in
-#' @export
-run_in <- function(x, text)
-  UseMethod("run_in")
-
-
 #' path of directory from models dir
 #'
 #' @param x character vector. Relative path from models.dir

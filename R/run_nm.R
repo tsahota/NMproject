@@ -144,3 +144,29 @@ run <- function(...){
   .Deprecated("run_nm", msg = "run() will soon be deprecated, use run_nm() instead")
   run_nm(...)
 }
+
+#' run_nm in batches
+#' 
+#' a variant of \code{run_nm()} that will submit run_nm's in batches and wait for them to complete
+#' 
+#' @param m nm object
+#' @param threads numeric.  Number of threads to un
+#' @param ... additional arguments passed to run_nm()
+#' 
+#' @details if you need all the runs to complete ensure you use a \code{\link{wait_finish}} statement afterwards as R console will only be blocked for until the last batch has been submitted which will be before all runs have completed 
+#' 
+#' @seealso \code{\link{run_nm}}
+#' @export
+
+run_nm_batch <- function(m, threads = 10, ...){
+  runs_remaining <- seq_along(m)
+  while(length(runs_remaining) > 0){
+    n_to_take <- min(threads, length(runs_remaining))
+    runs_to_run <- runs_remaining[seq_len(n_to_take)]
+    m_sub <- m[runs_to_run]
+    run_nm(m_sub, ...)
+    runs_remaining <- setdiff(runs_remaining, runs_to_run)
+    if(length(runs_remaining) > 0) wait_finish(m_sub)
+  }
+  m
+}

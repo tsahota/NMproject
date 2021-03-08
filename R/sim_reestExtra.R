@@ -20,13 +20,11 @@ gen_sim_path <- function(dsc, start_dir, include_names = TRUE){
 
 split_by_row <- function(data) split(data, row.names(data))
 
-#' @export
 by_row <- function(.data,...,.apply_fun=lapply) {
   ## added dots to prevent partial argument matching. Not perfect.
   split_by_row(.data) %>% .apply_fun(...)
 }
 
-#' @export
 by_row_df <- function(.data, .f, .apply_fun=lapply, ...) {
   ## added dots to prevent partial argument matching. Not perfect.
   .f <- purrr::as_mapper(.f)
@@ -38,20 +36,6 @@ by_row_df <- function(.data, .f, .apply_fun=lapply, ...) {
     d[[nm_col]] <- as_nm_list(d[[nm_col]])    
   }
   d
-}
-
-#' @export
-run_nm_batch <- function(m, threads = 10, ...){
-  runs_remaining <- seq_along(m)
-  while(length(runs_remaining) > 0){
-    n_to_take <- min(threads, length(runs_remaining))
-    runs_to_run <- runs_remaining[seq_len(n_to_take)]
-    m_sub <- m[runs_to_run]
-    run_nm(m_sub, ...)
-    runs_remaining <- setdiff(runs_remaining, runs_to_run)
-    if(length(runs_remaining) > 0) wait_finish(m_sub)
-  }
-  m
 }
 
 #' Prepare forward covariate step

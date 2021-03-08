@@ -1,9 +1,11 @@
 ---
-output:
-  html_notebook: default
 title: "data processing"
 author: "`r Sys.info()['user']`"
 date: "`r Sys.time()`"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
 ---
 
 
@@ -20,10 +22,7 @@ opts_chunk$set(message = TRUE)
 ## LOAD PACKAGES HERE
 library(NMproject)
 library(dplyr)
-library(future)
-future::plan("future::multiprocess", workers = 2)
 
-load_localpackage()
 ```
 
 - Read THEOPP.csv from SourceData
@@ -61,7 +60,7 @@ d_id <- d %>% distinct(ID, STRATA)
 set.seed(123)
 
 ## create large set of resamples (to enable simulation to grow without ruining seed)
-bootsplits <- rsample::bootstraps(d_id, 1000, strata = "STRATA")
+bootsplits <- rsample::bootstraps(d_id, 100, strata = "STRATA")
 
 bootsplits %>% saveRDS("DerivedData/bootsplit_data.csv.RData")
 

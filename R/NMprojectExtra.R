@@ -1296,6 +1296,11 @@ rr.nm_generic <- function(m, trans = TRUE){
   rr(as_nm_list(m), trans = trans)
 }
 
+#' coef (in wide format)
+#' 
+#' @param m nm object
+#' @param trans logical (default = TRUE) should transform parameters?
+#' 
 #' @export
 coef_wide <- function(m, trans = TRUE){
   
@@ -1329,6 +1334,11 @@ coef_wide <- function(m, trans = TRUE){
   
 }
 
+#' coef (in long format)
+#' 
+#' @param m nm object
+#' @param trans logical (default = TRUE) should transform parameters?
+#' 
 #' @export
 coef_long <- function(m, trans = TRUE){
   d <- coef(m, trans = trans)
@@ -1461,20 +1471,18 @@ nm_tran.nm_generic <- function(x){
 nm_tran.nm_list <- Vectorize_nm_list(nm_tran.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
 
-#' Test whether object is in cache or not
-#' 
-#' If TRUE run_nm() will skip model.  If FALSE run_nm() will run model
-#' 
-#' @export
 in_cache <- function(r,
                      cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE,
                      return_checksums = FALSE){
   UseMethod("in_cache")
 }
-#' @export
+
 in_cache.nm_generic <- function(r,
                                 cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE,
                                 return_checksums = FALSE){
+  
+  .Deprecated("overwrite_behaviour", 
+              msg = "this function is no longer needed with overwrite_behaviour (see app) and will probably be removed")
   r %>% write_ctl()
   ## get all md5_files
   
@@ -1524,7 +1532,7 @@ in_cache.nm_generic <- function(r,
   if(return_checksums) return(checksums_reduced)
   return(FALSE)
 }
-#' @export
+
 in_cache.nm_list <- Vectorize_nm_list(in_cache.nm_generic)
 
 #' @export
@@ -1538,10 +1546,8 @@ cache_history.nm_generic <- function(r){
 #' @export
 cache_history.nm_list <- Vectorize_nm_list(cache_history.nm_generic, SIMPLIFY = FALSE)
 
-#' @export
 cache_current <- function(m) run_checksums(m)
 
-#' @export
 clear_cache <- function() unlink(".cache", recursive = TRUE)
 
 #' get status of a run
@@ -4794,7 +4800,13 @@ summary.nm_generic <- function(object, ref_model = NA, parameters = c("none", "n
   summary(object = as_nm_list(object), ref_model = ref_model, parameters = parameters, keep_m = keep_m, ...)
 }
 
-
+#' Generate a wide summary of NONMEM results
+#' 
+#' @param ... arguments passed to summary(), usually a vector of nm object + options
+#' @param include_fields character
+#' @param parameters character. either \"none\" (default), \"new\", or \"all\"
+#' @param m logical (default = TRUE). should model object be included as m column
+#' @param trans logical (default = TRUE). should parameters be transformed 
 #' @export
 summary_wide <- function(..., include_fields = character(), parameters = c("none", "new", "all"), m = TRUE, trans = TRUE){
   parameters <- match.arg(parameters)
@@ -5360,7 +5372,17 @@ cov_forest_plot <- function(d){
 }
 
 
-
+#' Include NONMEM variables in output table
+#'
+#' Experimental function - designed to be used in situation where you don't want
+#' to rerun NONMEM, but need a variable in the dataset that wasn't specified in
+#' $TABLE
+#'
+#' @param output_table output from output_table()
+#' @param r nm object
+#' @param var character. name of variable to compute (needs to be defined in
+#'   $PK/$PRED)
+#'
 #' @export
 append_nonmem_var <- function(output_table, r, var){
   r <- as_nm_generic(r)
@@ -5458,6 +5480,15 @@ param_cov_diag <- function(r, param, cov, ..., categorical = FALSE, plot_tv = TR
 }
 
 
+#' convert a NONMEM run to a simulation
+#' 
+#' replaces $EST with $SIM
+#' 
+#' @param m nm object
+#' @param seed numeric (default = 12345). seed value to include in $SIM
+#' @param subpr numeric (default = 1). SUBPR value to include in $SIM
+#' 
+#' @details will only change $EST/$SIM, therefore it will not be sufficient to change a categorical estimation control file to simulation 
 #' @export
 convert_to_simulation <- function(m, seed = 12345, subpr = 1){
   UseMethod("convert_to_simulation")

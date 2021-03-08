@@ -55,6 +55,35 @@ run_dir.nm_generic <- function(m, text, full_path = FALSE) {
 run_dir.nm_list <- run_dir.nm_generic
 #run_dir.nm_list <- Vectorize_nm_list(run_dir.nm_generic, SIMPLIFY = TRUE)
 
+#' @name nm_getsetters
+#' @rdname nm_getsetters
+#'
+#' @title functions to access and modify fields of nm objects
+#'
+#' @param m nm object
+#' @param text optional character for replacing field. If present function will
+#'   modify field (of same name as function) otherwise will return value of
+#'   field (of same name as function)
+#'
+#' @details Easiest way to see all fields of an object is to type the object
+#'   into the console and hit enter. This will display the value of each field.
+#'   some fields like \code{cmd} are glue fields.  In these cases inserting
+#'   expressions inside braces in \code{text} will evaluate the expression
+
+NULL
+
+#' @rdname nm_getsetters
+#' @examples 
+#' \dontrun{
+#' 
+#' ## set cmd field of m1
+#' m1 <- m1 %>% cmd("execute {ctl_name} -dir={run_dir}")
+#' 
+#' m1 %>% cmd() ## display command
+#' ## can also view field when viewing object
+#' m1
+#' 
+#' }
 #' @export
 cmd <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "cmd") else {
@@ -71,51 +100,61 @@ see ?ls_tempfiles for post run clean up options")
   }
 }
 
+#' @rdname nm_getsetters
 #' @export
 type <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "type") else custom_1d_field(m, "type", text)
 }
 
+#' @rdname nm_getsetters
 #' @export
 parent_run_id <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "parent_run_id") else custom_1d_field(m, "parent_run_id", as.character(text))
 }
 
+#' @rdname nm_getsetters
 #' @export
 parent_run_in <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "parent_run_in") else custom_1d_field(m, "parent_run_in", as.character(text))
 }
 
+#' @rdname nm_getsetters
 #' @export
 parent_ctl_name <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "parent_ctl_name") else custom_1d_field(m, "parent_ctl_name", as.character(text))
 }
 
+#' @rdname nm_getsetters
 #' @export
 parent_results_dir <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "parent_results_dir") else custom_1d_field(m, "parent_results_dir", as.character(text))
 }
 
+#' @rdname nm_getsetters
 #' @export
 unique_id <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "unique_id") else custom_1d_field(m, "unique_id", text, glue = TRUE)
 }
 
+#' @rdname nm_getsetters
 #' @export
 ctl_name <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "ctl_name") else custom_1d_field(m, "ctl_name", text, glue = TRUE)
 }
 
+#' @rdname nm_getsetters
 #' @export
 results_dir <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "results_dir") else custom_1d_field(m, "results_dir", text, glue = TRUE)
 }
 
+#' @rdname nm_getsetters
 #' @export
 cores <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "cores") else custom_1d_field(m, "cores", text)
 }
 
+#' @rdname nm_getsetters
 #' @export
 parafile <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "parafile") else {
@@ -123,11 +162,13 @@ parafile <- function(m, text) {
   }
 }
 
+#' @rdname nm_getsetters
 #' @export
 executed <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "executed") else custom_1d_field(m, "executed", text)
 }
 
+#' @rdname nm_getsetters
 #' @export
 lst_path <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "lst_path") else custom_1d_field(m, "lst_path", text, glue = TRUE)
@@ -137,10 +178,16 @@ lst_path <- function(m, text) {
 job_info.nm_generic <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "job_info") else custom_1d_field(m, "job_info", as.character(text))
 }
+
 #' @export
 job_info.nm_list <- Vectorize_nm_list(job_info.nm_generic)
 
-## run_in UseMethod already defined
+
+#' @rdname nm_getsetters
+#' @export
+run_in <- function(x, text)
+  UseMethod("run_in")
+
 #' @export
 run_in.nm_generic <- function(x, text){
   if(missing(text)) custom_1d_field(x, "run_in") else {
@@ -155,9 +202,13 @@ run_in.nm_generic <- function(x, text){
 #' @export
 run_in.nm_list <- Vectorize_nm_list(run_in.nm_generic, pre_glue = TRUE)
 
-## run_id UseMethod already definied
+#' @rdname nm_getsetters
 #' @export
-run_id.nm_generic <- function(m, text, ...){
+run_id <- function(m, text)
+  UseMethod("run_id")
+
+#' @export
+run_id.nm_generic <- function(m, text){
   if(missing(text)) {
     #if(is_single_na(m)) return(NA_character_)
     if(length(m[["run_id"]]) > 0) return(m[["run_id"]]) else return(NA_character_)
@@ -179,6 +230,7 @@ run_id.nm_generic <- function(m, text, ...){
 #' @export
 run_id.nm_list <- Vectorize_nm_list(run_id.nm_generic)
 
+#' @rdname nm_getsetters
 #' @export
 result_files <- function(r, text){
   UseMethod("result_files")

@@ -16,11 +16,8 @@
 ########################################
 ## load packages and source functions here
 
-library(future)
-future::plan("future::multiprocess", workers = 2)
 library(NMproject)
 library(dplyr)
-load_localpackage()
 
 ########################################
 ## main script here

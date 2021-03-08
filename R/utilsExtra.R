@@ -138,6 +138,13 @@ is_nm_generic <- function(x){
   inherits(x, "nm_generic")
 }
 
+#' convert nm object to nm_generic
+#'
+#' mainly an internal function to be used where methods for nm_list don't exist
+#' or aren't appropriate
+#'
+#' @param m nm object
+#'
 #' @export
 as_nm_generic <- function(m){
   UseMethod("as_nm_generic")

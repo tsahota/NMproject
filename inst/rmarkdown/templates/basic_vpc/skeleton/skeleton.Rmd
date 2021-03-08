@@ -42,8 +42,6 @@ if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
 library(dplyr)
 library(ggplot2)
 
-load_localpackage()
-
 ```
 
 ## model object
