@@ -3505,7 +3505,7 @@ init_omega.nm_generic <- function(m, replace, ...){
   if(missing(replace)){  ## get
     if(length(mutate_args) > 0){
       current_init <- init_omega(m)
-      replace <- current_init %>% mutate_cond(!is.na(name), !!!mutate_args)
+      replace <- current_init %>% mutate_cond(!is.na(.data$name), !!!mutate_args)
       replace <- replace %>% dplyr::mutate_if(is.numeric, ~signif(., 5))
     } else {
       d$value <- NULL
@@ -3560,7 +3560,7 @@ init_sigma.nm_generic <- function(m, replace, ...){
   if(missing(replace)){  ## get
     if(length(mutate_args) > 0){
       current_init <- init_sigma(m)
-      replace <- current_init %>% mutate_cond(!is.na(name), !!!mutate_args)
+      replace <- current_init %>% mutate_cond(!is.na(.data$name), !!!mutate_args)
       replace <- replace %>% dplyr::mutate_if(is.numeric, ~signif(., 5))
     } else {
       d$value <- NULL
@@ -5979,7 +5979,7 @@ covariance_plot <- function(r,trans=TRUE){
   n_ests <- nrow(dc)/length(unique(dc$Var1))
   
   dc$EST.NO <- rep(1:n_ests,each=length(unique(dc$Var1)))
-  dc <- dc %>% dplyr::filter(EST.NO == max(.data$EST.NO))
+  dc <- dc %>% dplyr::filter(.data$EST.NO == max(.data$EST.NO))
   dc$EST.NO <- NULL
   
   dc <- dc %>% tidyr::gather(key = "Var2", value="value",-.data$Var1)
@@ -6033,18 +6033,22 @@ job_stats <- function(m){
     stop("install lubridate", call. = FALSE)
   
   d <- m %>% nm_row()
-  
-  d <- d %>% ungroup() %>%
-    dplyr::mutate(xml_path = nm_output_path(.data$m, "xml"),
+
+  d <- d %>% dplyr::ungroup() %>%
+    dplyr::mutate(xml_path = nm_output_path(m, "xml"),
                   xml = purrr::map(.data$xml_path, pmxTools::read_nm))
+  
+
+  ## this is to avoid CRAN error below - before it was inline
+  m_time_f <- function(path) lubridate::ymd_hms(file.info(path)$mtime)
   
   d %>% dplyr::mutate(
     starttime = purrr::map_chr(.data$xml, ~.x$start_datetime),
-    stoptime = purrr::map_chr(xml, ~.x$stop_datetime),
+    stoptime = purrr::map_chr(.data$xml, ~.x$stop_datetime),
     starttime = lubridate::ymd_hms(.data$starttime),
     stoptime = lubridate::ymd_hms(.data$stoptime),
     Rtime = difftime(.data$stoptime, .data$starttime, units = "mins"), 
-    launchtime = .data$m %>% run_dir(full_path = TRUE) %>% file.path("command.txt") %>% file.info() %>% .$mtime %>% lubridate::ymd_hms(),
+    launchtime = m %>% run_dir(full_path = TRUE) %>% file.path("command.txt") %>% m_time_f(),
     Qtime = difftime(.data$starttime, .data$launchtime, units = "mins"),
     Ttime = difftime(.data$stoptime, .data$launchtime, units = "mins")
   )
