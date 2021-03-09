@@ -24,6 +24,10 @@ nm_render(
 \item{args}{list. Same as "params" arg in rmarkdown::render()}
 
 \item{force}{logical (default = \code{getOption("nm.force_render")}). will force execution}
+
+\item{async}{experimental option to use future package}
+
+\item{...}{additional argument passed to rmarkdown::render()}
 }
 \description{
 render function for nm objects

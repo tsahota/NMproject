@@ -3244,6 +3244,13 @@ param_r2nm_extra <- function(d){
   
 }
 
+
+#' convert nm objects to a rowwise tibble/data.frame
+#'
+#' used mainly internally, but this could find use with advanced users
+#'
+#' @param m nm object
+#'
 #' @export
 nm_row <- function(m){
   UseMethod("nm_row")
@@ -4270,6 +4277,8 @@ nmsave_multiplot.nm_list <- Vectorize_nm_list(nmsave_multiplot.nm_generic, SIMPL
 #' @param output_file character. Same as rmarkdown::render() arg
 #' @param args list. Same as "params" arg in rmarkdown::render()
 #' @param force logical (default = \code{getOption("nm.force_render")}). will force execution
+#' @param async experimental option to use future package
+#' @param ... additional argument passed to rmarkdown::render()
 #' 
 #' @details 
 #' \code{input} must refer to a properly specified Rmd document.
@@ -4676,6 +4685,10 @@ summary_wide <- function(..., include_fields = character(), parameters = c("none
   d
 }
 
+#' Generate a long summary of NONMEM results
+#' 
+#' @param ... arguments passed to summary(), usually a vector of nm object + options
+#' @param parameters character. either \"none\" (default), \"new\", or \"all\"
 #' @export
 summary_long <- function(..., parameters = c("none", "new", "all")){
   parameters <- match.arg(parameters)
@@ -4692,11 +4705,47 @@ summary_long <- function(..., parameters = c("none", "new", "all")){
   d
 }
 
+#' @name output_table
+#' @rdname output_table
+#' @title Get processed output table
+#' 
+#' @param r object of class nm
+#' @param ... optional additional arguments to pass on to read.csv of orig data
+
+NULL
+
+#' @rdname output_table
+#' @return \code{output_table} will return a list of tibbles with merged version
+#'   of all output $TABLEs and the input data.  Additional columns will be
+#'   \code{INNONMEM} which will be TRUE for rows that were not ignored by
+#'   NONMEM.  For simulation control files there is also \code{DV_OUT} which
+#'   will contain simulated \code{DV} values. \code{DV} will always be
+#'   unmodified from the input dataset
+#' @export
+output_table <- function(r, ...){
+  UseMethod("output_table") 
+}
+
+#' @export
+output_table.default <- function(r, ...){
+  out_path <- file.path(run_dir_path(r), "NMout.RDS")
+  if(!file.exists(out_path)) {
+    do <- nm_output(r, ...)
+    saveRDS(do, file = out_path)
+  } else {
+    do <- readRDS(out_path)
+  }
+  return(do)
+}
+
 #' @export
 output_table.nm_generic <- output_table.default
 #' @export
 output_table.nm_list <- Vectorize_nm_list(output_table.nm_generic, SIMPLIFY = FALSE)
 
+#' @rdname output_table
+#'
+#' @return \code{output_table_first} will return a tibble with a single run.
 #' @export
 output_table_first <- function(r, ...){
   UseMethod("output_table_first")

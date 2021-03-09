@@ -267,9 +267,17 @@ setup_nm_demo <- function(demo_name="theopp",
 
 }
 
+
+#' Run all scripts sequentially
+#'
+#' Runs all scripts s01_..., s02_...
+#'
+#' @details works with .R and .Rmd extensions.  Behaviour is to \link{source} .R
+#'   files and use \link{rmarkdown::render} on .Rmd files
+#'
 #' @export
 run_all_scripts <- function(){
-  #browser()
+
   script_files <- dir(scripts_dir(), "s[0-9]+_.*?\\.R(md)?$", full.names = TRUE)
   
   dplan <- tibble::tibble(script_files) %>%
@@ -302,29 +310,6 @@ run_all_scripts <- function(){
 nm_output <- function(r,dorig,...){
   UseMethod("nm_output")  
 }
-
-#' Get processed output table
-#' 
-#' @param r object of class nm
-#' @param ... optional additional arguments to pass on to read.csv of orig data
-#' @export
-
-output_table <- function(r, ...){
-  UseMethod("output_table") 
-}
-
-#' @export
-output_table.default <- function(r, ...){
-  out_path <- file.path(run_dir_path(r), "NMout.RDS")
-  if(!file.exists(out_path)) {
-    do <- nm_output(r, ...)
-    saveRDS(do, file = out_path)
-  } else {
-    do <- readRDS(out_path)
-  }
-  return(do)
-}
-
 
 #' Get ignore statement
 #' @param r object coercible into ctl_list

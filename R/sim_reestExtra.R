@@ -290,8 +290,21 @@ test_relations <- function(dtest, param, cov, state, continuous){
   
 }
 
-## given param and cov
 
+#' PsN style stepwise covariate method
+#'
+#' Intent is not to replicate PsN SCM.  This is mainly here for comparison
+#' purposes. Should replicate the model selection in PsN's SCM functionality
+#' with greedy setting.
+#'
+#' @param base nm object (base model)
+#' @param run_in directory to run in
+#' @param dtest output of test_relations
+#' @param alpha_forward numeric (default = 0.05). alpha level for forward
+#'   inclusion
+#' @param alpha_backward numeric (default = 0.01). alpha level for backward
+#'   deletion
+#'
 #' @export
 psn_style_scm <- function(base, run_in, dtest,
                           alpha_forward = 0.05, alpha_backward = 0.01){

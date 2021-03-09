@@ -113,6 +113,11 @@ set_nm_opts <- function(){
   
 }
 
+#' Generic execute command for SGE grids
+#' 
+#' @details requires \code{cores} and \code{parafile} fields to be set
+#' @seealso \code{\link{nm_getsetters}}
+#' 
 #' @export
 sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_flags='-pe orte {cores} -V' {ctl_name} -dir={run_dir} -nodes={cores}"
 

@@ -47,6 +47,13 @@ stop_manual_edit <- function(m){
   invisible(m)
 }
 
+#' internal function: start manual edit
+#' 
+#' Needed for addin functionality
+#' 
+#' @param m nm object
+#' @param combine_path logical. should patch be added first before edit
+#' 
 #' @export
 start_manual_edit_unix <- function(m, combine_patch = NA_character_){
   # if(.Platform$OS.type != "unix") 
@@ -95,6 +102,12 @@ diff_manual_edit <- function(m, res){
 }
 
 
+#' internal function: view a patch
+#' 
+#' Use the addin for viewing patches instead
+#' 
+#' @param patch_name character. name of patch
+#' 
 #' @export
 view_patch <- function(patch_name){
   patch_path <- file.path(getOption("models.dir"), "patches", patch_name)  

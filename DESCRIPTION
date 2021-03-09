@@ -69,6 +69,5 @@ Collate:
     'sim_reestExtra.R'
     'status.R'
     'utils.R'
-    'vctrs.R'
     'zzz.R'
 VignetteBuilder: knitr
