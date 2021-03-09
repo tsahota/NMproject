@@ -9,7 +9,9 @@ Description: A light interface between R and NONMEM for script based model devel
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-Remotes: tsahota/tidyproject@newinterface
+Remotes: 
+    tsahota/tidyproject@newinterface,
+    gluc/data.tree
 Imports:
     tidyproject (>= 0.5.0),
     shiny,
@@ -28,8 +30,6 @@ Imports:
     miniUI (>= 0.1.1),
     rstudioapi (>= 0.7),
     crayon (>= 1.3.4),
-    drake (>= 5.3.0),
-    rsample,
     devtools,
     rprojroot,
     htmltools
@@ -44,7 +44,9 @@ Suggests:
     xpose,
     lubridate,
     pmxTools,
-    Hmisc
+    Hmisc,
+    drake (>= 5.3.0),
+    rsample,
 Collate: 
     'NMproject.R'
     'nm.R'

@@ -1352,7 +1352,6 @@ result_file <- function(m, name){
 #' @export
 result_file.nm_generic <- function(m, name){
   name <- glue_text_nm(m, name)
-  #name <- stringr::str_glue(name, .envir = m)
   file.path(results_dir(m), name)
 }
 #' @export

@@ -99,9 +99,8 @@ plot_iter <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
 #' @param trans logical. should parameter transformations be performed
 #' @export
 plot_iter_dygraph <- function(m, trans = TRUE){
-  requireNamespace("dygraphs")
+  if(!requireNamespace("dygraphs")) stop("install dygraphs")
   psn_ext_path <- m %>% nm_output_path("ext")
-  #if(is.null(m$output$psn.ext)) return(dygraphs::dygraph(data.frame(x=0,y=0)))
   if(!file.exists(psn_ext_path)) return(dygraphs::dygraph(data.frame(x=0,y=0)))
   d <- try(plot_iter_data(m,trans = trans, skip = 0),silent=TRUE)
   if(inherits(d,"try-error")) return(dygraphs::dygraph(data.frame(x=0,y=0)))
@@ -114,7 +113,6 @@ plot_iter_dygraph <- function(m, trans = TRUE){
       dygraphs::dyRangeSelector()
   }
   #htmltools::browsable(htmltools::tagList(p))
-  
   #get_plot_bootstrapjs_div(p)
   htmltools::browsable(get_plot_bootstrapjs_div(p))
 }
