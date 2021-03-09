@@ -23,8 +23,4 @@ Description: run nm_diff on selected object
 Binding: nm_diff_app
 Interactive: true
 
-Name: test if run_nm will skip
-Description: if TRUE, run_nm will skip
-Binding: in_cache_app
-Interactive: true
 

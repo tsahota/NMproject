@@ -52,7 +52,7 @@ stop_manual_edit <- function(m){
 #' Needed for addin functionality
 #' 
 #' @param m nm object
-#' @param combine_path logical. should patch be added first before edit
+#' @param combine_patch logical. should patch be added first before edit
 #' 
 #' @export
 start_manual_edit_unix <- function(m, combine_patch = NA_character_){
@@ -267,11 +267,6 @@ nm_tran_app <- function(){
 nm_diff_app <- function(){
   m <- get_single_object_for_app()
   nm_diff(m)
-}
-
-in_cache_app <- function(){
-  m <- get_single_object_for_app()
-  in_cache(m)
 }
 
 new_patch_app <- function(){

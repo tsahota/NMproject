@@ -10,6 +10,6 @@ run_all_scripts()
 Runs all scripts s01_..., s02_...
 }
 \details{
-works with .R and .Rmd extensions.  Behaviour is to \link{source} .R
-  files and use \link{rmarkdown::render} on .Rmd files
+works with .R and .Rmd extensions.  Behaviour is to \code{source} .R
+  files and use \code{rmarkdown::render} on .Rmd files
 }

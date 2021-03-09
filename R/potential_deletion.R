@@ -142,6 +142,33 @@ if(0){
     
   }
   
+  in_cache_app <- function(){
+    m <- get_single_object_for_app()
+    in_cache(m)
+  }
+  
+  nmsave_multiplot <- function(r, plot_ob, plot_name, plot_dir = results_dir(r), 
+                               width = 7, height = 5, dpi = 300, ...){
+    UseMethod("nmsave_multiplot")
+  }
+  
+  nmsave_multiplot.nm_generic <- function(r, plot_ob, plot_name, plot_dir = results_dir(r), 
+                                          width = 7, height = 5, ...){
     
+    plot_name <- glue_text_nm(r, plot_name)
+    plot_name <- unique(plot_name)
+    if(length(plot_name) > 1) stop("multiple plot names", call. = FALSE)
+    dir.create(unique(plot_dir), showWarnings = FALSE, recursive = TRUE)
+    
+    grDevices::pdf(file.path(unique(plot_dir), plot_name), ...)
+    print(plot_ob)
+    grDevices::dev.off()
+    r <- r %>% result_files(plot_name)
+    invisible(r)
+    
+  }
+  
+  nmsave_multiplot.nm_list <- Vectorize_nm_list(nmsave_multiplot.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
+  
 }
 

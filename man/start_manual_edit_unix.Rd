@@ -9,7 +9,7 @@ start_manual_edit_unix(m, combine_patch = NA_character_)
 \arguments{
 \item{m}{nm object}
 
-\item{combine_path}{logical. should patch be added first before edit}
+\item{combine_patch}{logical. should patch be added first before edit}
 }
 \description{
 Needed for addin functionality

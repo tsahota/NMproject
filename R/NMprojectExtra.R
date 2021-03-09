@@ -1914,7 +1914,6 @@ dollar <- function(m, dollar, ..., add_dollar_text = TRUE) {
   ans
 }
 
-#' @export
 n_thetas <- function(m){
   param_info <- param_info(m)
   nrow(param_info[grepl("THETA", param_info$parameter),])
@@ -2506,6 +2505,10 @@ nm_diff <- function(m, ref_m, format = "raw"){
   dff
 }
 
+#' remove parameter from NONMEM control file
+#' 
+#' @param m nm object
+#' @param name character. Parameter to remove
 #' @export
 remove_parameter <- function(m, name){
   old_target <- target(m)
@@ -2745,12 +2748,15 @@ tol.nm_generic <- function(m, text){
 #' @export
 tol.nm_list <- Vectorize_nm_list(tol.nm_generic)
 
+#' Get/set TOL value in NONMEM control file
+#' 
+#' @param m nm object
+#' @param text optional character. value of TOL to set
 #' @export
 tol <- function(m, text){
   UseMethod("tol")
 }
 
-#' @export
 raw_init_theta <- function(m, replace){
 
   if(missing(replace)){
@@ -3343,10 +3349,10 @@ nm_object_exists <- function(object_name, env){
   object_exists & object_is_nm_list 
 }
 
-
-
-## functions to locate output files 
-
+#' get path to run_dir
+#' 
+#' @param m nm object
+#' @seealso \code{\link{nm_getsetters}}
 #' @export
 run_dir_path <- function(m) file.path(run_in(m), run_dir(m))
 #nm_run_dir_path <- function(m, subdir = "NM_run1") file.path(run_dir_path(m), subdir)
@@ -3383,8 +3389,6 @@ nm_output_path.nm_generic <- function(m, extn, file_name) {
 #' @export
 nm_output_path.nm_list <- Vectorize_nm_list(nm_output_path.nm_generic, SIMPLIFY = TRUE)
 
-
-#' @export
 output_location <- function(m) file.path(run_in(m), dirname(lst_path(m)))
 
 ls_output <- function(m, pattern = ".", recursive = TRUE) {
@@ -4224,6 +4228,13 @@ nmsave_plot.nm_generic <- function(r, plot_ob, plot_name, plot_dir = results_dir
 #' @export
 nmsave_plot.nm_list <- Vectorize_nm_list(nmsave_plot.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
+#' Save plots in results_dir
+#' 
+#' @param r nm object
+#' @param table_ob a list of table objects
+#' @param table_name character. Name of results file
+#' @param table_dir character (default = results_dir(r)). Where to save.
+#' @param ... passed to ggsave
 #' @export
 nmsave_table <- function(r, table_ob, table_name, table_dir = results_dir(r), ...){
   UseMethod("nmsave_table")
@@ -4242,33 +4253,6 @@ nmsave_table.nm_generic <- function(r, table_ob, table_name, table_dir = results
 }
 #' @export
 nmsave_table.nm_list <- Vectorize_nm_list(nmsave_table.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
-
-#' @export
-nmsave_multiplot <- function(r, plot_ob, plot_name, plot_dir = results_dir(r), 
-                             width = 7, height = 5, dpi = 300, ...){
-  UseMethod("nmsave_multiplot")
-}
-
-#' @export
-nmsave_multiplot.nm_generic <- function(r, plot_ob, plot_name, plot_dir = results_dir(r), 
-                             width = 7, height = 5, ...){
-  
-  plot_name <- glue_text_nm(r, plot_name)
-  plot_name <- unique(plot_name)
-  if(length(plot_name) > 1) stop("multiple plot names", call. = FALSE)
-  dir.create(unique(plot_dir), showWarnings = FALSE, recursive = TRUE)
-  
-  grDevices::pdf(file.path(unique(plot_dir), plot_name), ...)
-  print(plot_ob)
-  grDevices::dev.off()
-  r <- r %>% result_files(plot_name)
-  invisible(r)
-  
-}
-
-#' @export
-nmsave_multiplot.nm_list <- Vectorize_nm_list(nmsave_multiplot.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
-
 
 #' render function for nm objects
 #' 
@@ -5696,8 +5680,15 @@ if(0){
 
 }
 
+#' Experiment - make an OCC column for NONMEM in dataset
+#' 
+#' To be used in a \code{mutate()} statement \code{group_by}'d by "ID"
+#' 
+#' @param d data.frame. NONMEM input dataset
+#' @param dose_trigger logical expression for defining a dosing row
+#' @param new_OCC_trigger logical expression for defining when OCC should increment
 #' @export
-make_OCC_every_dose <- function(dose_trigger, new_OCC_trigger){
+make_OCC_every_dose <- function(d, dose_trigger, new_OCC_trigger){
   # Rule for when new occasion is happening
   # whenever we have a dose, if there is a sample after it and before next dose, that dose is considered a new OCC
 

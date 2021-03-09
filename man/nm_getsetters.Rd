@@ -61,8 +61,6 @@ result_files(m, text)
 \item{text}{optional character for replacing field. If present function will
 modify field (of same name as function) otherwise will return value of
 field (of same name as function)}
-
-\item{full_path}{logical (default = FALSE) used in run_dir()}
 }
 \description{
 functions to access and modify fields of nm objects

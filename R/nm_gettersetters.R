@@ -47,7 +47,6 @@ ctl_path <- function(m, text) {
 #' @param text optional character for replacing field. If present function will
 #'   modify field (of same name as function) otherwise will return value of
 #'   field (of same name as function)
-#' @param full_path logical (default = FALSE) used in run_dir()
 #'
 #' @details Easiest way to see all fields of an object is to type the object
 #'   into the console and hit enter. This will display the value of each field.
