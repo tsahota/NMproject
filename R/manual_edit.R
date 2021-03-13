@@ -255,6 +255,10 @@ get_single_object_for_app <- function(){
       stop("couldn't find object in selected line")
   }
   
+  old_behaviour <- overwrite_behaviour()
+  overwrite_behaviour("skip")
+  on.exit(overwrite_behaviour(old_behaviour))
+  
   m <- eval(parse(text = selected_text))  
   m
 }
