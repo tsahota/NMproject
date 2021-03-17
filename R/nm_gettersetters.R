@@ -103,7 +103,15 @@ see ?ls_tempfiles for post run clean up options")
 #' @rdname nm_getsetters
 #' @export
 type <- function(m, text) {
-  if(missing(text)) custom_1d_field(m, "type") else custom_1d_field(m, "type", text)
+  if(missing(text)) custom_1d_field(m, "type") else {
+    m <- custom_1d_field(m, "type", text)
+    if(text %in% "nmfe"){
+      m <- m %>% 
+        run_in(file.path(run_in(m), "{run_dir}")) %>%
+        lst_path("{gsub(\"mod\", \"lst\", ctl_name)}")
+    }
+    m
+  }
 }
 
 #' @rdname nm_getsetters

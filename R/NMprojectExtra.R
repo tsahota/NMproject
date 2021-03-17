@@ -1718,10 +1718,18 @@ ls_tempfiles.nm_list <- function(object = ".", output_loc = c("run_dir", "base")
                                  ctl_extension = "mod",
                                  remove_psn_exports = FALSE){
   
-  all_run_dirs <- list_dirs(
-    run_dir_path(object), 
-    pattern = "NM_run[0-9]+", 
-    full.names = TRUE)
+  output_loc <- match.arg(output_loc)
+  
+  if(output_loc %in% "run_dir"){
+    all_run_dirs <- list_dirs(
+      run_dir_path(object), 
+      pattern = "NM_run[0-9]+", 
+      full.names = TRUE) 
+  } else {
+    all_run_dirs <- list_dirs(
+      run_in(object),
+      full.names = TRUE) 
+  }
   
   all_run_files <- dir(all_run_dirs, full.names = TRUE)
   
