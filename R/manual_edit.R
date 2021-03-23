@@ -149,8 +149,8 @@ apply_manual_edit.nm_generic <- function(m, patch_name){
   patch_path_tmp <- paste0(patch_path, ".tmp")
   writeLines(patch_text, patch_path_tmp)
   
-  patch_cmd <- paste("git apply", patch_path_tmp, "-C1 --inaccurate-eof")
-
+  patch_cmd <- paste("git apply", patch_path_tmp, "-C1")
+  
   if(!git_cmd_available) stop("need git available from system() for this to work")  
   res <- system(patch_cmd, intern = TRUE)  ## win = no need to use system_nm, no file sync issues
 
