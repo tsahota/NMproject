@@ -2862,26 +2862,29 @@ raw_init_theta <- function(m, replace){
     d$FIX <- grepl("FIX", d$value)
     d$value <- gsub("FIX", "", d$value)
     
-    d$init[d$format %in% "single_number"] <- 
-      as.numeric(grep(single_number_regex,
-                      d$value[d$format %in% "single_number"], value = TRUE))
-    
-    d$lower[d$format %in% "lower_init"] <- 
-      as.numeric(gsub(lower_init_regex,"\\1",d$value[d$format %in% "lower_init"]))
-    d$init[d$format %in% "lower_init"] <- 
-      as.numeric(gsub(lower_init_regex,"\\2",d$value[d$format %in% "lower_init"]))
-    
-    d$lower[d$format %in% "lower_init_upper"] <- 
-      as.numeric(gsub(lower_init_upper_regex,"\\1",d$value[d$format %in% "lower_init_upper"]))
-    d$init[d$format %in% "lower_init_upper"] <- 
-      as.numeric(gsub(lower_init_upper_regex,"\\2",d$value[d$format %in% "lower_init_upper"]))
-    d$upper[d$format %in% "lower_init_upper"] <- 
-      as.numeric(gsub(lower_init_upper_regex,"\\3",d$value[d$format %in% "lower_init_upper"]))
-    
-    d$lower[d$format %in% "lower_upper"] <- 
-      as.numeric(gsub(lower_upper_regex,"\\1",d$value[d$format %in% "lower_upper"]))
-    d$upper[d$format %in% "lower_upper"] <- 
-      as.numeric(gsub(lower_upper_regex,"\\2",d$value[d$format %in% "lower_upper"]))
+    suppressWarnings({ ## ignore as.numeric("...") warnings
+      d$init[d$format %in% "single_number"] <- 
+        as.numeric(grep(single_number_regex,
+                        d$value[d$format %in% "single_number"], value = TRUE))
+      
+      d$lower[d$format %in% "lower_init"] <- 
+        as.numeric(gsub(lower_init_regex,"\\1",d$value[d$format %in% "lower_init"]))
+      d$init[d$format %in% "lower_init"] <- 
+        as.numeric(gsub(lower_init_regex,"\\2",d$value[d$format %in% "lower_init"]))
+      
+      d$lower[d$format %in% "lower_init_upper"] <- 
+        as.numeric(gsub(lower_init_upper_regex,"\\1",d$value[d$format %in% "lower_init_upper"]))
+      d$init[d$format %in% "lower_init_upper"] <- 
+        as.numeric(gsub(lower_init_upper_regex,"\\2",d$value[d$format %in% "lower_init_upper"]))
+      d$upper[d$format %in% "lower_init_upper"] <- 
+        as.numeric(gsub(lower_init_upper_regex,"\\3",d$value[d$format %in% "lower_init_upper"]))
+      
+      d$lower[d$format %in% "lower_upper"] <- 
+        as.numeric(gsub(lower_upper_regex,"\\1",d$value[d$format %in% "lower_upper"]))
+      d$upper[d$format %in% "lower_upper"] <- 
+        as.numeric(gsub(lower_upper_regex,"\\2",d$value[d$format %in% "lower_upper"]))      
+    })
+
     
     d$format <- NULL
     
@@ -3532,7 +3535,7 @@ init_omega.nm_generic <- function(m, replace, ...){
   if(missing(replace)){  ## get
     if(length(mutate_args) > 0){
       current_init <- init_omega(m)
-      replace <- current_init %>% mutate_cond(!is.na(.data$name), !!!mutate_args)
+      replace <- current_init %>% mutate_cond(!is.na(current_init$name), !!!mutate_args)
       replace <- replace %>% dplyr::mutate_if(is.numeric, ~signif(., 5))
     } else {
       d$value <- NULL
@@ -3587,7 +3590,7 @@ init_sigma.nm_generic <- function(m, replace, ...){
   if(missing(replace)){  ## get
     if(length(mutate_args) > 0){
       current_init <- init_sigma(m)
-      replace <- current_init %>% mutate_cond(!is.na(.data$name), !!!mutate_args)
+      replace <- current_init %>% mutate_cond(!is.na(current_init$name), !!!mutate_args)
       replace <- replace %>% dplyr::mutate_if(is.numeric, ~signif(., 5))
     } else {
       d$value <- NULL
