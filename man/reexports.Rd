@@ -18,6 +18,6 @@ below to see their documentation.
 \describe{
   \item{dplyr}{\code{\link[dplyr]{filter}}, \code{\link[dplyr]{mutate}}}
 
-  \item{stats}{\code{\link[stats]{AIC}}, \code{\link[stats]{BIC}}, \code{\link[stats]{coef}}, \code{\link[stats]{nobs}}}
+  \item{stats}{\code{\link[stats]{AIC}}, \code{\link[stats:AIC]{BIC}}, \code{\link[stats]{coef}}, \code{\link[stats]{nobs}}}
 }}
 
