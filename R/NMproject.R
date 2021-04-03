@@ -106,7 +106,7 @@ set_nm_opts <- function(){
   if(is.null(getOption("nm.overwrite_behaviour"))) options(nm.overwrite_behaviour="ask")
   if(is.null(getOption("nm.force_render"))) options(nm.force_render=FALSE)
   
-  if(is.null(getOption("nmtran_exe_path"))) options(nmtran_exe_path=find_nm_tran_path())
+  if(is.null(getOption("nmtran_exe_path"))) options(nmtran_exe_path=find_nm_tran_path(warn = FALSE))
   
   if(is.null(getOption("code_library_path"))) 
     options(code_library_path=system.file("extdata", "CodeLibrary", package = "NMproject"))
@@ -146,18 +146,18 @@ find_nm_install_path <- function(name = "default"){
   path
 }
 
-find_nm_tran_path <- function(name = "default"){
+find_nm_tran_path <- function(name = "default", warn = TRUE){
 
   nm_versions <- try(system_nm("psn -nm_versions", intern = TRUE, ignore.stderr = TRUE), 
                      silent = TRUE)
   
   warn_func <- function(){
-    warning("Could not determine path to nmtran from psn -nm_versions.\n",
-            "To set manually add the following command:\n",
-            "  options(nmtran_exe_path=\"path/to/nmtran\")\n",
-            "     1. (for this session only) in the console\n",
-            "     2. (for this user) to ~/.Rprofile\n",
-            paste0("     3. (for all users) to ",file.path(R.home(component = "home"), "etc", "Rprofile.site")))
+    if(warn) warning("Could not determine path to nmtran from psn -nm_versions.\n",
+                     "To set manually add the following command:\n",
+                     "  options(nmtran_exe_path=\"path/to/nmtran\")\n",
+                     "     1. (for this session only) in the console\n",
+                     "     2. (for this user) to ~/.Rprofile\n",
+                     paste0("     3. (for all users) to ",file.path(R.home(component = "home"), "etc", "Rprofile.site")))
   }
   
   if(inherits(nm_versions, "try-error")) {
