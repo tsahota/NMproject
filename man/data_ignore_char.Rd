@@ -4,12 +4,10 @@
 \alias{data_ignore_char}
 \title{Get ignore statement}
 \usage{
-data_ignore_char(r, data)
+data_ignore_char(r)
 }
 \arguments{
 \item{r}{object coercible into ctl_list}
-
-\item{data}{data.frame (default = missing) optional input dataset from r}
 }
 \description{
 Get ignore statement

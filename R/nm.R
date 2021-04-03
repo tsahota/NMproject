@@ -1391,47 +1391,47 @@ setup_nm_demo <- function(demo_name="theopp",
 #' @param dorig data.frame. optional NONMEM input dataset.
 #' @param ... additional arguments to pass on to read.csv
 #' @export
-nm_output <- function(r,dorig, ...){
+nm_output <- function(r,dorig,...){
   
-  # if(requireNamespace("xpose4")) {
-  #   xpdb <- xpose4::xpose.data(run_id(r), directory=paste0(run_in(r),"/"))
-  #   d <- xpdb@Data
-  # } else 
-  d <- data.frame()
+  if(requireNamespace("xpose4")) {
+    xpdb <- xpose4::xpose.data(r$run_id,directory=paste0(r$run_in,"/"))
+    d <- xpdb@Data
+  } else d <- data.frame()
   
   if(nrow(d) == 0){
-    ctl_out_files <- file.path(run_in(r), ctl_table_files(r))
-    #ctl_out_files <- ctl_out_files[grepl("tab", ctl_out_files)]
+    ctl_out_files <- r$output$ctl_out_files
+    ctl_out_files <- ctl_out_files[grepl("tab", ctl_out_files)]
     
     d <- lapply(ctl_out_files, function(out_file){
-      d <- nm_read_table(out_file, skip = 1, header = TRUE)
+      d <- utils::read.table(out_file, skip = 1, header = TRUE)
     })
-    
-    ## TODO: this will break if some tables have FIRSTONLY
-    nrows <- sapply(d, nrow)
-    if(length(unique(nrows[!nrows %in% 0])) > 1)
-      stop("output tables are different sizes")
     
     d <- do.call(cbind,d)
     d <- d[,!duplicated(names(d))]
   }
   
-  if(missing(dorig)) dorig <- get_data(r, ...)
+  if(missing(dorig)) dorig <- get_data(r,...)
   
   filter_statements <- data_filter_char(r)
   if(identical(filter_statements, "TRUE")){
     dORD <- seq_len(nrow(dorig))
   } else {
     expre <- parse(text=filter_statements)
-    dorig[is.na(dorig)] <- 0
     dORD <- which(with(dorig,eval(expre)))    
   }
+  #if(length(filter_statements) > 0){
+
+  #if("IGNORE" %in% type) dORD <- which(with(dorig,eval(expre)))
+  #if("ACCEPT" %in% type) dORD <- which(!with(dorig,eval(expre)))
   
   if(nrow(d) %% length(dORD) != 0) {
     stop("something wrong... when R reads in original dataset
-         and applies filter ",filter_statements,",
-         there's ",length(dORD),"rows, but NONMEM output has ", nrow(d), " rows")
+and applies filter ",filter_statements,",
+there's ",length(dORD),"rows, but NONMEM output has ", nrow(d), " rows")
   }    
+  #} else {
+  #  dORD <- seq_len(nrow(dorig))
+  #}
   
   ctl_contents <- ctl_character(r)
   sim_ctl <- any(grepl("^\\s*\\$SIM",rem_comment(ctl_contents)))
@@ -1440,7 +1440,7 @@ nm_output <- function(r,dorig, ...){
   
   if("PRKEY" %in% names(d)) stop("name conflict with PRKEY in xpose table. aborting...")
   if("PRKEY" %in% names(dorig)) stop("name conflict with PRKEY in original data. aborting...")
-  
+
   d$PRKEY <- dORD
   dorig$PRKEY <- 1:nrow(dorig)
   if(sim_ctl){
@@ -1449,31 +1449,27 @@ nm_output <- function(r,dorig, ...){
     d$SIM <- rep(1:nreps,each=length(dORD))
     message("Adding column: SIM")
   }
-  
+
   d$INNONMEM <- TRUE
-  
+
   ## want a DV_OUT columsn
   if("DV_OUT" %in% names(d)) warning("name conflict with DV_OUT in xpose table. replacing...")
   d$DV_OUT <- d$DV
   d$DV <- NULL
   d <- d[,c(setdiff(names(d),names(dorig)[!names(dorig) %in% c("PRKEY")]))]
   #dorig <- dorig[,names(dorig)[!names(dorig) %in% c("DV")]]
-  
-  #d$.tempORD <- 1:nrow(d) ## to preserve order (old code merge())
-  d2 <- dplyr::full_join(d, dorig, by = "PRKEY")
-  #d2 <- d2[order(d2$.tempORD), ]
-  #d2$.tempORD <- NULL
-  
+
+  d2 <- merge(dorig, d, all.x = TRUE, by = "PRKEY")
+
   d2$INNONMEM <- d2$INNONMEM %in% TRUE
   if(nreps > 1) d2$SIM[is.na(d2$SIM)] <- 0
-  
+
   ## row number check
   if(nrow(d2) != nrow(d)*(nreps-1)/nreps + nrow(dorig)) stop("merge went wrong. debug")
-  
+
   message("Adding column: PRKEY")
-  
+
   return(d2)
-  
 }
 
 process_output <- function(r, ...){
@@ -1501,13 +1497,11 @@ output_table <- function(r, ...){
 
 #' Get ignore statement
 #' @param r object coercible into ctl_list
-#' @param data data.frame (default = missing) optional input dataset from r
 #' @export
-data_ignore_char <- function(r, data){
+data_ignore_char <- function(r){
   dol_data <- ctl_list(r)$DATA
   dol_data <- dol_data[!dol_data %in% ""]
   dol_data <- rem_comment(dol_data)
-  dol_data <- unlist(strsplit(dol_data, split = "\\s"))
   
   ignore_present <- any(grepl(".*IGNORE\\s*=\\s*\\(",dol_data))
   accept_present <- any(grepl(".*ACCEPT\\s*=\\s*\\(",dol_data))
@@ -1517,21 +1511,6 @@ data_ignore_char <- function(r, data){
   if(ignore_present) type <- "IGNORE"
   if(accept_present) type <- "ACCEPT"
   no_filter <- is.na(type)
-  
-  ## get nonmem names and input names
-  if(missing(data)) data <- get_data(r, filter = FALSE) ## read in the data
-  
-  r_data_names <- names(data)
-  ## now get nonmem names
-  dollar_input <- ctl_list(r)$INPUT
-  nonmem_data_names <- gsub("\\$\\w+", "", dollar_input)
-  nonmem_data_names <- unlist(strsplit(nonmem_data_names, split = "\\s"))
-  nonmem_data_names <- nonmem_data_names[!nonmem_data_names %in% ""]
-  nonmem_data_names <- gsub("\\w+=(\\w+)", "\\1", nonmem_data_names)
-  #if(length(r_data_names) != length(nonmem_data_names))
-  #  stop("length of items in $INPUT doesn't match dataset")
-  name_chart <- data.frame(r_data_names, nonmem_data_names, stringsAsFactors = FALSE)
-  name_chart <- name_chart[name_chart$r_data_names != name_chart$nonmem_data_names,]
   
   if(!no_filter){
     filter_statements <- paste0(".*",type,"\\s*=\\s*\\((\\S[^\\)]+)\\)*.*")
@@ -1547,16 +1526,6 @@ data_ignore_char <- function(r, data){
     filter_statements <- gsub("\\.LT\\.","<",filter_statements)
     filter_statements <- gsub("\\.GE\\.",">=",filter_statements)
     filter_statements <- gsub("\\.LE\\.","<=",filter_statements)
-    
-    ## substitute names from 
-    for(i in seq_len(nrow(name_chart))){
-      nonmem_data_name <- paste0("\\b", name_chart$nonmem_data_names[i], "\\b")
-      r_data_name <- name_chart$r_data_names[i]
-      filter_statements <- gsub(nonmem_data_name,
-                                r_data_name,
-                                filter_statements)
-    }
-    
     filter_statements <- paste(filter_statements, collapse= " | ")
     if("ACCEPT" %in% type) filter_statements <- paste0("!(",filter_statements,")")
   } else {
@@ -1570,10 +1539,9 @@ data_ignore_char <- function(r, data){
 #' Opposite of data_ignore_char 
 #' 
 #' @param r object coercible into ctl_list
-#' @param ... arguments passed to data_ignore_char
 #' @export
-data_filter_char <- function(r, ...){
-  ignore_char <- data_ignore_char(r, ...)
+data_filter_char <- function(r){
+  ignore_char <- data_ignore_char(r)
   if(ignore_char == "FALSE") return("TRUE")
   ignored <- !grepl("^!\\((.*)\\)", ignore_char)
   accepted <- !ignored
@@ -1679,220 +1647,3 @@ exclude_rows <- function(d, dexcl, exclude_col = "EXCL"){
   d
 }
 
-#' produce dataset for covariate forest plotting
-#'
-#' @param m nm object
-#' @param covariate_scenarios data.frame. need names "cov", "value" and (optional) "text"
-#' 
-#' @examples 
-#' \dontrun{
-#' 
-#' dcov <- get_data(m1, filter = TRUE)
-#' dcov <- dcov[!duplicated(dcov$NMSEQSID), ]
-#' covariate_scenarios <- bind_rows(
-#'   tibble(cov = "HEALTHGP", value = c(0, 1)),
-#'   tibble(cov = "HEPATIC", value = unique(dcov$HEPATIC[dcov$HEPATIC > -99])),
-#'   tibble(cov = "BWTIMP", value = c(50, 80, 120)),
-#'   tibble(cov = "ECOG", value = c(0,1,2,3)),
-#'   tibble(cov = "BEGFRIMP", value = quantile(dcov$BEGFR[dcov$BEGFR > -99])),
-#'   tibble(cov = "RACE", value = c(1,2),text=c("white","black")),
-#'   tibble(cov = "PPI", value = c(0,1)),
-#'   tibble(cov = "H2RA", value = c(0,1))
-#' )
-#' 
-#' dplot <- cov_forest_data(m1, covariate_scenarios = covariate_scenarios)
-#' cov_forest_plot(dplot)
-#' 
-#' }
-#' 
-#' @export
-cov_forest_data <- function(m, covariate_scenarios){
-  if(!is_finished(m)) stop("run not finished yet")#wait_for_finish(m)
-  # d <- nm_output(m) ## read in combined output 
-  
-  ###############
-  ## include plotting code here
-  dpar <- coef(m, trans = FALSE) 
-  dpar$name <- coef(m)$Parameter
-  
-  dpar$SE[is.na(dpar$SE)] <- 0
-  
-  dpar$lower <- dpar$FINAL - 1.96*dpar$SE
-  dpar$upper <- dpar$FINAL + 1.96*dpar$SE
-  
-  PK_text <- ctl_list(m)$PK
-  PK_text_R <- nonmem_code_to_r(PK_text)
-
-  par_covs <- PK_text[grepl(";;; .*-DEFINITION START", PK_text)]
-  par_covs <- gsub(";;; (.*)-.*", "\\1", par_covs)
-  
-  pars <- PK_text[grepl(";;; .*-RELATION START", PK_text)]
-  pars <- gsub(";;; (.*)-.*", "\\1", pars)
-
-  dd <- get_data(m, filter = TRUE)
-  
-  ## to be used later in evaluation of R expressions  
-  dpar_mid <- dpar$FINAL
-  names(dpar_mid) <- dpar$Parameter
-  
-  dpar_low <- dpar$lower
-  names(dpar_low) <- dpar$Parameter
-  
-  dpar_upp <- dpar$upper
-  names(dpar_upp) <- dpar$Parameter
-  
-  dd[is.na(dd)] <- 0
-  dd_first <- dd[1,]
-  
-  dpar_df <- as.data.frame(as.list(dpar_mid))
-  dd_first <- cbind(dd_first, dpar_df)
-  
-  d <- lapply(seq_along(par_covs), function(i){
-    
-    par_cov <- par_covs[i]
-    
-    potential_pars <- sapply(pars, function(par) grepl(par, par_cov))
-    potential_pars <- pars[potential_pars]
-    
-    matches <- unlist(lapply(potential_pars, function(potential_par){
-      grep(paste0(potential_par, "COV = .*", par_cov), PK_text_R)
-    }))
-    
-    if(length(matches) != 1) stop("can't get param value for ", par_cov, call. = FALSE)
-    
-    PK_matched_row <- PK_text_R[matches]
-    par <- gsub("^(.*)COV .*$", "\\1", PK_matched_row)
-    
-    #par <- sapply(pars, function(par) grepl(paste0("^", par), par_cov))
-    #par <- pars[par]
-    #if(length(par) != 1) stop("can't get param value for ", par_cov, call. = FALSE)
-    
-    cov <- gsub(paste0(par,"(.*)"), "\\1", par_cov)
-    
-    if(!any(grepl(paste0(par_cov, "\\s*\\="), PK_text_R)))
-      stop("can't find TVPARCOV= rows")
-    
-    # ## use code before TVPARCOV lines to compute derived covariates
-    # prior_indicies <- seq_len(min(grep(paste0(par_cov, "\\s*\\="), PK_text_R))-1)
-    # prior_code <- PK_text_R[prior_indicies]
-    # prior_code <- c(prior_code, cov)
-    # prior_exprs <- parse(text = prior_code)
-
-    
-    #theta_lines <- PK_text_R[seq_len(max(grep(paste0(par_cov, "\\s*\\="), PK_text_R)))]
-    theta_lines <- PK_text_R[grepl(paste0(par_cov, "\\s*\\="), PK_text_R)]
-    theta_lines <- c(theta_lines, par_cov)
-    exprs <- parse(text = theta_lines)
-
-    
-    ## redefine data covariates with 
-    ##browser()
-    dcov_sc <- covariate_scenarios[covariate_scenarios$cov %in% cov, ]
-    if(nrow(dcov_sc) == 0)
-      stop("couldn't find covariate ", cov, " in covariate scenarios")
-    
-    dcov_sc_simple <- tibble::tibble(dcov_sc$value)
-    names(dcov_sc_simple) <- cov
-    
-    dd_first[[cov]] <- NULL
-    dd_first <- merge(dd_first, dcov_sc_simple)
-    
-    #dd_first[[cov]] <- with(dd_first, eval(prior_exprs))
-    
-    # cov_col <- sapply(seq_len(nrow(dd)), function(j) {
-    #   with(dd[j,], eval(prior_exprs))
-    # })     
-
-    #dd[[cov]] <- cov_col
-    #browser()
-    #cov_col <- dd[[cov]]
-    #cov_col[is.na(cov_col)] <- 0 #stats::na.omit(cov_col)
-    
-    # categorical <- TRUE
-    # if(length(unique(dd[[cov]])) > 10) categorical <- FALSE  ## too many levels = FALSE
-    # 
-    # if(!all(stats::na.omit(floor(dd[[cov]]) == dd[[cov]]))) categorical <- FALSE  ## not round = FALSE
-    
-    # print(cov)
-    # if(cov=="BWTIMP") browser()
-    ### Need to change it to generate quantile based on original BWT
-      # without accounting the imputed BWT to the median value
-    
-    # if(categorical) {
-    #   levs <- unique(cov_col) 
-    #   lev_text <- paste0(cov,"_",levs)
-    # } else {
-    #   levs <- stats::quantile(cov_col, probs = c(0.05, 0.5, 0.95))
-    #   levs <- signif(levs, 2)
-    #   lev_text <- paste0(cov,"_",c("low5","mid","upp95"),"_",levs)
-    # }
-    
-    levs <- dd_first[[cov]]
-    if(!"text" %in% names(covariate_scenarios)){
-      lev_text <- paste0(cov, "_", levs) 
-    } else {
-      if(is.na(dcov_sc$text)) lev_text <- paste0(cov, "_", levs) else
-        lev_text <- dcov_sc$text
-    }
-    
-    # print(cov)
-    # if(cov == "BWT") browser()
-    d <- tibble::tibble(par, cov, levs, lev_text)
-    
-    d$mask_mid <- lapply(levs, function(lev){
-      d <- tibble::tibble(lev)
-      names(d) <- cov
-      cbind(d, as.data.frame(as.list(dpar_mid)))
-    })
-    
-    d$mask_low <- lapply(levs, function(lev){
-      d <- tibble::tibble(lev)
-      names(d) <- cov
-      cbind(d, as.data.frame(as.list(dpar_low)))
-    })
-    
-    d$mask_upp <- lapply(levs, function(lev){
-      d <- tibble::tibble(lev)
-      names(d) <- cov
-      cbind(d, as.data.frame(as.list(dpar_upp)))
-    })
-    
-    d$mid <- sapply(seq_along(levs), function(i){
-      with(d$mask_mid[[i]], eval(exprs))
-    })
-    
-    d$low <- sapply(seq_along(levs), function(i){
-      with(d$mask_low[[i]], eval(exprs))
-    })
-    
-    d$upp <- sapply(seq_along(levs), function(i){
-      with(d$mask_upp[[i]], eval(exprs))
-    })
-    
-    return(d)
-    
-  })
-  
-  d <- dplyr::bind_rows(d)
-  d
-
-}
-
-#' plotting covariate forest plots
-#'
-#' @param d data.frame from cov_forest_data
-#' @export
-
-cov_forest_plot <- function(d){
-  requireNamespace("ggplot2")
-  
-  ggplot2::ggplot(d, ggplot2::aes_string(x = "mid", y = "lev_text")) + ggplot2::theme_bw() +
-    ggplot2::geom_rect(ggplot2::aes(ymin = -Inf, ymax = Inf, xmin = 1-0.2, xmax = 1+0.2), 
-                       colour = "grey100") +
-    ggplot2::geom_point() +
-    ggplot2::geom_errorbarh(ggplot2::aes_string(xmin = "low", xmax = "upp"), height = 0.1) + 
-    ggplot2::geom_vline(xintercept = 1, color='black', linetype='dashed') +
-    ggplot2::facet_grid(par~., scales = "free_y", space = "free") +
-    ggplot2::scale_y_discrete("") +
-    ggplot2::scale_x_continuous("effect size \n (bars: 95% CI)", breaks = seq(floor(min(d$low)), ceiling(max(d$upp)), 0.1))
-}
