@@ -129,14 +129,14 @@ sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_f
 #' @export
 find_nm_install_path <- function(name = "default"){
 
-  nm_versions <- try(system_nm("psn -nm_versions", intern = TRUE),
+  nm_versions <- try(system_nm("psn -nm_versions", intern = TRUE, ignore.stderr = TRUE),
                      silent = TRUE)
   if(inherits(nm_versions, "try-error")) stop("can't find nonmem installation")
   
   nm_version <- nm_versions[grepl(paste0("^", name), nm_versions)]
   
   if(length(nm_version) != 1){
-    message("Could not determine path to nonmem from psn -nm_versions.")
+    warning("Could not determine path to nonmem from psn -nm_versions.")
     return(NULL)
   }
   
@@ -148,27 +148,27 @@ find_nm_install_path <- function(name = "default"){
 
 find_nm_tran_path <- function(name = "default"){
 
-  nm_versions <- try(system_nm("psn -nm_versions", intern = TRUE), 
+  nm_versions <- try(system_nm("psn -nm_versions", intern = TRUE, ignore.stderr = TRUE), 
                      silent = TRUE)
+  
+  warn_func <- function(){
+    warning("Could not determine path to nmtran from psn -nm_versions.\n",
+            "To set manually add the following command:\n",
+            "  options(nmtran_exe_path=\"path/to/nmtran\")\n",
+            "     1. (for this session only) in the console\n",
+            "     2. (for this user) to ~/.Rprofile\n",
+            paste0("     3. (for all users) to ",file.path(R.home(component = "home"), "etc", "Rprofile.site")))
+  }
+  
   if(inherits(nm_versions, "try-error")) {
-    message("Could not determine path to nmtran from psn -nm_versions.")
-    message("To set manually add the following command:")
-    message("  options(nmtran_exe_path=\"path/to/nmtran\")")
-    message("     1. (for this session only) in the console")
-    message("     2. (for this user) to ~/.Rprofile")
-    message(paste0("     3. (for all users) to ",file.path(R.home(component = "home"), "etc", "Rprofile.site")))
+    warn_func()
     return(NULL)
   }
   
   nm_version <- nm_versions[grepl(paste0("^", name), nm_versions)]
   
   if(length(nm_version) != 1){
-    message("Could not determine path to nmtran from psn -nm_versions.")
-    message("To set manually add the following command:")
-    message("  options(nmtran_exe_path=\"path/to/nmtran\")")
-    message("     1. (for this session only) in the console")
-    message("     2. (for this user) to ~/.Rprofile")
-    message(paste0("     3. (for all users) to ",file.path(R.home(component = "home"), "etc", "Rprofile.site")))
+    warn_func()
     return(NULL)
   }
   
@@ -303,13 +303,13 @@ nm_tran <- function(x) UseMethod("nm_tran")
 
 #' @export
 nm_tran.default <- function(x){
-
+  
   if(is.null(getOption("nmtran_exe_path"))){
-    message("Path to nmtran not set properly. To set add the following command:")
-    message("  options(nmtran_exe_path=\"path/to/nmtran\")")
-    message("     1. (for this session only) in the console")
-    message("     2. (for this user) to ~/.Rprofile")
-    message(paste0("     3. (for all users) to ",file.path(R.home(component = "home"), "etc", "Rprofile.site")))
+    warning("Path to nmtran not set properly. To set add the following command:\n",
+            "  options(nmtran_exe_path=\"path/to/nmtran\")\n",
+            "     1. (for this session only) in the console\n",
+            "     2. (for this user) to ~/.Rprofile\n",
+            paste0("     3. (for all users) to ",file.path(R.home(component = "home"), "etc", "Rprofile.site")))
     stop("nm_tran failed")
   }
   nm_tran_command <- getOption("nmtran_exe_path")
