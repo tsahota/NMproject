@@ -236,8 +236,6 @@ setup_nm_demo <- function(demo_name="theopp",
     setwd(new_project)
   }
   
-  tidyproject::check_if_tidyproject()
-  
   examples_dir <- character()
   examples_dirs <- character()
 

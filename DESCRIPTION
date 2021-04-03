@@ -1,11 +1,11 @@
 Package: NMproject
 Type: Package
-Title: NONMEM interface in tidyproject
+Title: Script Based Interface To NONMEM
 Version: 0.5.2.9000
 Authors@R: person("Tarj", "Sahota", email =
     "t.sahota0@gmail.com", role = c("aut", "cre"))
 Maintainer: Tarj Sahota <t.sahota0@gmail.com>
-Description: A light interface between R and NONMEM for script based model development.
+Description: Script based model development in NONMEM.
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true

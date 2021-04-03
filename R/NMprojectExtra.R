@@ -4466,21 +4466,6 @@ nm_list_render <- function(m,
   
   invisible(m)
 }
-  
-
-#' Create new R notebook
-#' @param script_name character
-#' @param overwrite logical. Whether to overwrite existing file (default = FALSE)
-#' @param open_file logical. Whether function should open script (default = TRUE)
-#' @param libs character. What libraries to add.
-#' @export
-new_notebook_template <- function(script_name, overwrite = FALSE, open_file = TRUE, libs=c("NMproject")) {
-  tidyproject::new_notebook_template(script_name = script_name,
-                                     overwrite = overwrite,
-                                     open_file = open_file,
-                                     libs = libs)
-}
-
 
 nm_list2list <- function(m){
   class(m) <- "list"
