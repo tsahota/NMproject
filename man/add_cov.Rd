@@ -4,9 +4,21 @@
 \alias{add_cov}
 \title{Add a covariate to a NONMEM model}
 \usage{
-add_cov(ctl, param, cov, state = 2, continuous = TRUE, time_varying,
-  additional_state_text, id_var = "ID", force = FALSE,
-  force_TV_var = FALSE, init, lower, upper)
+add_cov(
+  ctl,
+  param,
+  cov,
+  state = 2,
+  continuous = TRUE,
+  time_varying,
+  additional_state_text,
+  id_var = "ID",
+  force = FALSE,
+  force_TV_var = FALSE,
+  init,
+  lower,
+  upper
+)
 }
 \arguments{
 \item{ctl}{object coercible to ctl_list}
@@ -15,7 +27,7 @@ add_cov(ctl, param, cov, state = 2, continuous = TRUE, time_varying,
 
 \item{cov}{character. Name of covariate}
 
-\item{state}{numeric. Number of state}
+\item{state}{numeric or character. Number/name of state (see details)}
 
 \item{continuous}{logical (default = TRUE). is covariate continuous?}
 
@@ -37,4 +49,44 @@ add_cov(ctl, param, cov, state = 2, continuous = TRUE, time_varying,
 }
 \description{
 Add a covariate to a NONMEM model
+}
+\details{
+available states:
+"2" or "linear":
+  PARCOV= ( 1 + THETA(1)*(COV - median))
+
+"3" or "hockey-stick":
+  IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))
+  IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))
+                    
+"4" or "exponential":
+   PARCOV= EXP(THETA(1)*(COV - median))
+
+"5" or "power":
+   PARCOV= ((COV/median)**THETA(1))
+   
+"power1":
+   PARCOV= ((COV/median))
+   
+"power0.75":
+   PARCOV= ((COV/median)**0.75)
+
+"6" or "log-linear":
+   PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
+}
+\examples{
+\dontrun{
+
+m1WT <- m1 \%>\% child("m1WT") \%>\%
+  add_cov(param = "CL", cov = "WT", state = "power") \%>\% 
+  run_nm()
+  
+## compare results
+
+rr(c(m1, m1WT))
+summary_wide(c(m1, m1WT))
+  
+}
+
+
 }

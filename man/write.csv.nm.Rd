@@ -4,9 +4,11 @@
 \alias{write.csv.nm}
 \title{write csv for NONMEM control files}
 \usage{
-write.csv.nm(..., na = ".", row.names = FALSE, quote = FALSE)
+write.csv.nm(d, ..., na = ".", row.names = FALSE, quote = FALSE)
 }
 \arguments{
+\item{d}{dataset to be saved}
+
 \item{...}{arguments for write.csv}
 
 \item{na}{character. Default changed to ".".}
@@ -16,5 +18,5 @@ write.csv.nm(..., na = ".", row.names = FALSE, quote = FALSE)
 \item{quote}{logical. Fefault changed to FALSE}
 }
 \description{
-write csv for NONMEM control files
+Internal function
 }

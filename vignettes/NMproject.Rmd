@@ -1,0 +1,16 @@
+---
+title: "NMproject"
+author: "Tarj Sahota"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{NMproject}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This vignette is a placeholder for the beta release of NMproject.
+
+## Vignette Info
+
+Under construction.  See github in mean time.

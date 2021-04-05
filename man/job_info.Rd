@@ -4,10 +4,12 @@
 \alias{job_info}
 \title{Get job information (if it exists)}
 \usage{
-job_info(r)
+job_info(m, text)
 }
 \arguments{
-\item{r}{object class nm}
+\item{m}{object class nm}
+
+\item{text}{optional character to set job_info}
 }
 \description{
 Requires 'get_job_info' to be defined as an option - function that takes stdout console output

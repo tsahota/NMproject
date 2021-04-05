@@ -7,8 +7,13 @@
 nm_tran(x)
 }
 \arguments{
-\item{x}{character. file name of NONMEM control stream}
+\item{x}{nm object}
 }
 \description{
-Requires options("path/to/nmtran") to be set up.
+Runs initial part of NONMEM where control file and dataset checks are performed.
+Stops before running NONMEM.  Useful especially on grid infrastructures where 
+it may take a while for NONMEM to start return ctl/dataset errors
+}
+\details{
+Requires \code{options("nmtran_exe_path")} to be set.
 }

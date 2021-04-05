@@ -1,0 +1,26 @@
+Name: manual edit
+Description: create patch to apply with apply_manual_edit()
+Binding: make_patch_app
+Interactive: true
+
+Name: overwrite behaviour
+Description: modify overwrite behaviour
+Binding: overwrite_behaviour_app
+Interactive: true
+
+Name: view patch
+Description: run view_patch on selected string
+Binding: view_patch_app
+Interactive: true
+
+Name: nm_tran
+Description: run nm_tran on selected object
+Binding: nm_tran_app
+Interactive: true
+
+Name: view diff
+Description: run nm_diff on selected object
+Binding: nm_diff_app
+Interactive: true
+
+

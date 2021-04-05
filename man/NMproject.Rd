@@ -3,7 +3,6 @@
 \docType{package}
 \name{NMproject}
 \alias{NMproject}
-\alias{NMproject-package}
 \title{NONMEM interface with code management}
 \description{
 The NMproject an inteface to NONMEM (via PsN) and a package to manage code in a modelling project

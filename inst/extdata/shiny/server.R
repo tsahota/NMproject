@@ -2,13 +2,20 @@ library(shiny)
 library(dygraphs)
 
 .currentwd <- get(".currentwd", envir = NMproject:::.sso_env)
-.db_name <- get(".db_name", envir = NMproject:::.sso_env)
+.m <- get(".m", envir = NMproject:::.sso_env)
+
+setwd(.currentwd)
 
 options(warn =-1)
 
 gen_run_table <- function(){
-  orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-  run_table(.db_name)
+  d <- nm_row(.m)
+  d$target <- NULL
+  d$run_dir <- NULL
+  d$results_dir <- NULL
+  d$unique_id <- NULL
+  d$output_location <- NULL
+  d
 }
 
 get_plot_bootstrapjs_div <- function(plot_object_list) {
@@ -45,37 +52,31 @@ get_plot_bootstrapjs_div <- function(plot_object_list) {
 function(input, output, session) {
   session$onSessionEnded(stopApp)
   ## run table
-  new_table <- eventReactive(input$refresh_db,gen_run_table(),ignoreNULL = FALSE)
+  new_table <- eventReactive(input$refresh_db,
+                             gen_run_table(),
+                             ignoreNULL = FALSE)
+  
   output$run_table <- DT::renderDataTable({
     new_table()
-  }, server = FALSE, rownames = FALSE,
-  options = list(paging=TRUE,
-                 searching=TRUE,
-                 filtering=TRUE,
-                 ordering=TRUE))
-
+  }, server = FALSE, rownames = FALSE, options = list(paging=TRUE,
+                                                      searching=TRUE,
+                                                      filtering=TRUE,
+                                                      ordering=TRUE)
+  )
+  
   objects <- eventReactive(input$run_table_rows_selected,{
-    orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-    row <- input$run_table_rows_selected
-    lapply(new_table()$entry[row],function(...)extract_nm(...,.db_name))
+    #row <- input$run_table_rows_selected
+    .m[input$run_table_rows_selected]
+    #lapply(new_table()$entry[row],function(...)extract_nm(...,.db_name))
   })
-
+  # 
   output$runs_selected_info <- renderTable({
     if(length(input$run_table_rows_selected)==0) return(data.frame())
-    new_table()[input$run_table_rows_selected,c("entry","type","ctl")]
+    new_table()[input$run_table_rows_selected,c("run_id","type","ctl_name")]
   })
   output$runs_selected_info2 <- renderTable({
     if(length(input$run_table_rows_selected)==0) return(data.frame())
-    new_table()[input$run_table_rows_selected,c("entry","type","ctl")]
-  })
-
-  observe({
-    output$selected_runs <- renderText({
-      pretext <- "Select run(s):"
-      if(length(input$run_table_rows_selected)==0) entries <- "None" else
-        entries <- isolate(new_table()$entry[input$run_table_rows_selected])
-      paste(pretext,paste(entries,collapse = ","))
-    })
+    new_table()[input$run_table_rows_selected,c("run_id","type","ctl_name")]
   })
 
   observeEvent(input$go_to_monitor, {
@@ -104,30 +105,8 @@ function(input, output, session) {
     updateNavbarPage(session, "mainPanel", selected = "database")
   })
 
-  observeEvent(input$run_job, {
-    if(length(input$run_table_rows_selected)==0)
-      return(showModal(modalDialog(
-        title = "Error",
-        "Select run(s) first"
-      )))
-    orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-    res <- try(do.call(run_nm,c(objects(),overwrite=TRUE,wait=FALSE)),silent = TRUE)
-    if(inherits(res,"try-error"))
-      showModal(modalDialog(
-        title = "Error from run()",
-        res
-      ))
-    withProgress(message = 'running', value = 0, {
-      n <- 10
-      for (i in 1:n) {
-        incProgress(1/n)
-        Sys.sleep(0.1)
-      }
-    })
-  })
-
-  ## run monitor
-
+  # ## run monitor
+  # 
   output$monitor_select_warning <- renderText({
     if(length(input$run_table_rows_selected)>1) return("Warning: will only monitor first")
     if(length(input$run_table_rows_selected)==0) return("Warning: no runs selected")
@@ -140,12 +119,14 @@ function(input, output, session) {
   status_ob <- eventReactive(
     list(input$refresh_status,
          input$run_table_rows_selected,
-         plot_iter_ob),{
-           orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-           object <- objects()[[1]]
-           status(object)$status
-         })
-
+         plot_iter_ob
+         ),
+    {
+      object <- objects()[[1]]
+      status(object)
+    }
+  )
+  
   output$status <- renderText({
     status_ob()
   })
@@ -153,15 +134,12 @@ function(input, output, session) {
   tail_ob <- reactivePoll(1000, session,
                           # This function returns the time that log_file was last modified
                           checkFunc = function(){
-                            if(length(input$run_table_rows_selected)==0)
-                              return("")
-                            orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
+                            if(length(input$run_table_rows_selected)==0) return("")
                             object <- isolate(objects())[[1]]
                             tail_lst(object)
                           },
                           # This function returns the content of log_file
                           valueFunc = function() {
-                            orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
                             object <- isolate(objects())[[1]]
                             tail_lst(object)
                           }
@@ -176,10 +154,10 @@ function(input, output, session) {
   plot_iter_ob <- eventReactive(
     list(input$refresh_plot,
          input$run_table_rows_selected),{
-           orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
            object <- objects()[[1]]
-           if(is.null(object$output$psn.ext)) return(dygraph(data.frame(x=0,y=0)))
-           if(!file.exists(object$output$psn.ext)) return(dygraph(data.frame(x=0,y=0)))
+           psn_ext_path <- object %>% nm_output_path("ext")
+           #if(is.null(object$output$psn.ext)) return(dygraph(data.frame(x=0,y=0)))
+           if(!file.exists(psn_ext_path)) return(dygraph(data.frame(x=0,y=0)))
            d <- try(plot_iter_data(object,trans = input$trans, skip = 0),silent=TRUE)
            if(inherits(d,"try-error")) return(dygraph(data.frame(x=0,y=0)))
            p <- list()
@@ -193,7 +171,7 @@ function(input, output, session) {
            p
          }
   )
-
+  # 
   output$distPlot <- renderUI({
     get_plot_bootstrapjs_div(plot_iter_ob())
   })
@@ -209,18 +187,19 @@ function(input, output, session) {
       })
     }
   )
-
-  ## run record
+  # 
+  # ## run record
   run_record_ob <- eventReactive(
     list(input$refresh_run_record,
          input$run_table_rows_selected),{
-           orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
-           tryCatch(do.call(run_record,objects()),
-                    error=function(e){
-                      data.frame()
-                    })
+           #orig.dir <- getwd();  setwd(.currentwd) ; on.exit(setwd(orig.dir))
+           tryCatch(#do.call(run_record,objects()),
+             rr(objects()),
+             error=function(e){
+               data.frame()
+             })
          })
-
+  
   output$run_record <- DT::renderDataTable({
     run_record_ob()
   },rownames = FALSE,options = list(paging=FALSE,

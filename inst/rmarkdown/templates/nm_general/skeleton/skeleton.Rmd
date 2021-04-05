@@ -1,0 +1,27 @@
+---
+output:
+  html_notebook: default
+title: "title"
+author: "`r Sys.info()['user']`"
+date: "`r Sys.time()`"
+---
+
+
+```{r setup, include=F}
+## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
+library(rprojroot)
+library(knitr)
+opts_knit$set(root.dir=find_root(has_file('.Rprofile')))
+opts_chunk$set(echo = TRUE)
+opts_chunk$set(message = TRUE)
+```
+
+```{r echo=FALSE,message=FALSE}
+## LOAD PACKAGES HERE
+library(NMproject)
+library(future)
+future::plan("future::multiprocess", workers = 2)
+
+load_localpackage()
+```
+

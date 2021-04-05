@@ -1,0 +1,68 @@
+---
+title: "data processing"
+author: "`r Sys.info()['user']`"
+date: "`r Sys.time()`"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+---
+
+
+```{r setup, include=F}
+## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
+library(rprojroot)
+library(knitr)
+opts_knit$set(root.dir=find_root(has_file('.Rprofile')))
+opts_chunk$set(echo = TRUE)
+opts_chunk$set(message = TRUE)
+```
+
+```{r echo=FALSE,message=FALSE}
+## LOAD PACKAGES HERE
+library(NMproject)
+library(dplyr)
+
+```
+
+- Read THEOPP.csv from SourceData
+- modify WT column so it's filled in for obs rows
+- save into DerivedData
+
+```{r}
+
+d <- read.csv("SourceData/THEOPP.csv", na = ".")
+kable(head(d, 20))
+
+```
+
+```{r}
+
+d <- d %>%
+  group_by(ID) %>%
+  mutate(WT = na.omit(WT))
+
+d %>% write_derived_data("data") ## DerivedData/data.csv
+
+```
+
+
+```{r}
+## Define STRATA (no spaces)
+d <-d %>%
+  mutate(IDGRP = ID <= 6,
+         WT_C = cut(WT, breaks = 2, labels = FALSE),
+         STRATA = paste(IDGRP, WT_C, sep = "_"))
+
+d_id <- d %>% distinct(ID, STRATA)
+
+set.seed(123)
+
+## create large set of resamples (to enable simulation to grow without ruining seed)
+bootsplits <- rsample::bootstraps(d_id, 100, strata = "STRATA")
+
+bootsplits %>% saveRDS("DerivedData/bootsplit_data.csv.RData")
+
+```
+
+

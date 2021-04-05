@@ -4,17 +4,19 @@ rem_dollars <- function(s) gsub("\\s*\\$\\S*\\s*","",s)
 rem_comment <- function(s,char=";") gsub(paste0("^([^",char,"]*)",char,"*.*$"),"\\1",s)
 get_comment <- function(s,char=";") gsub(paste0("^[^",char,"]*",char,"*(.*)$"),"\\1",s)
 
-setup_dollar <- function(x,type){
+setup_dollar <- function(x, type, add_dollar_text = TRUE){
   ## if $TYPE isn't in x, add it
-  if(!grepl(paste0("\\s*\\",type),x[1])){
-    if(grepl("THETA|OMEGA|SIGMA|PK|PRED|ERROR|DES", type)){
-      x <- c(type, x)
-    } else {
-      x[1] <- paste(type,x[1]) 
-    }
+  if(add_dollar_text){
+    if(!grepl(paste0("\\s*\\",type),x[1], ignore.case = TRUE)){
+      if(grepl("THETA|OMEGA|SIGMA|PK|PRED|ERROR|DES", type)){
+        x <- c(type, x)
+      } else {
+        x[1] <- paste(type,x[1]) 
+      }
+    }    
   }
   names(x) <- NULL
-  class(x) <- paste0("nm.",tolower(gsub("^\\$","",type)))
+  class(x) <- c(paste0("nm.",tolower(gsub("^\\$","",type))),"nm_subroutine")
   x
 }
 
@@ -118,35 +120,6 @@ ctl_list.character <- function(r){
   } else stop("cannot coerce to ctl_list")
 }
 
-ctl_list_old <- function(r){
-  if(inherits(r, "ctl_character")) {
-    ctl <- ctl_nm2r(r)
-    attr(ctl, "file_name") <- attributes(r)$file_name
-    return(ctl)
-  }
-  if(inherits(r, "nmexecute")) {
-    ctl <- ctl_character(r)
-    file_name <- attributes(ctl)$file_name
-    ctl <- ctl_nm2r(ctl)
-    attr(ctl, "file_name") <- file_name
-    return(ctl)
-  }
-  if(inherits(r, "ctl_list")) {
-    return(r)
-  }
-  if(inherits(r, "character")){
-    if(length(r) == 1){
-      ctl <- ctl_character(r)
-      file_name <- attributes(ctl)$file_name
-      ctl <- ctl_nm2r(ctl)
-      attr(ctl, "file_name") <- file_name
-      return(ctl)
-    } else stop("cannot coerce to ctl_list")
-  }
-  stop("cannot coerce to ctl_list")
-}
-
-
 #' Convert controls stream to first abstraction layer
 #' @param ctl character vector with NONMEM control stream contents
 #' @return object of class r.ctl
@@ -191,25 +164,26 @@ ctl_nm2r <- function(ctl){
     tmp <- ctl[start:finish]
     type <- dol.type(tmp)
     if(is.na(type)) type <- paste0("UNKNOWN",i)
-    class(tmp) <- paste0("nm.",tolower(type))
+    class(tmp) <- c(paste0("nm.",tolower(gsub("^\\$","",type))),"nm_subroutine")
+    #class(tmp) <- c(paste0("nm.",tolower(type)),"nm_subroutine")
     ctl2[[i]] <- tmp
   }
   ctl <- ctl2
 
-  x <- sapply(ctl,function(s)class(s))
+  x <- lapply(ctl,function(s) class(s))
 
   ## find consecutive statements and combine them
   ## can use a for loop
 
   for(i in rev(seq_along(x))){
     if(i==1) break
-    if(x[i]==x[i-1]) {
-      ctl[[i-1]] <- c(ctl[[i-1]],ctl[[i]])
+    if(identical(x[i],x[i-1])) {
+      ctl[[i-1]] <- c(ctl[[i-1]], ctl[[i]])
       class(ctl[[i-1]]) <- class(ctl[[i]])
       ctl[[i]] <- NULL
     }
   }
-  names(ctl) <- sapply(ctl,function(s)gsub("NM\\.","",toupper(class(s))))
+  names(ctl) <- sapply(ctl,function(s) gsub("NM\\.","",toupper(class(s)[1])))
   class(ctl) <- "ctl_list"
   ctl
 }
@@ -231,9 +205,9 @@ ctl_r2nm <- function(x) {
 theta_nm2r <- function(x){
   x <- rem_dollars(x)
   x <- gsub("FIX","",x) ## ignore FIX for now
-  x <- x[!grepl("^\\s*$",x)]
-  x <- gsub("\\t"," ",x)
-  x <- x[!grepl("^\\s*;.*",x)]
+  x <- x[!grepl("^\\s*$",x)] ## remove $THETA
+  x <- gsub("\\t"," ",x)     ## change tabs to spaces
+  x <- x[!grepl("^\\s*;.*",x)]  ## remove comment only rows
   x0 <- x
   x <- rem_comment(x,";")
   x <- paste(x,collapse = " ")
@@ -272,14 +246,14 @@ theta_nm2r <- function(x){
   }
 
   tmp <- strsplit(comments,";")
-  x$Name <- sapply(tmp,"[",1)
-  x$Name <- rem_trailing_spaces(x$Name)
-  x$Unit <- sapply(tmp,"[",2)
-  x$Unit <- rem_trailing_spaces(x$Unit)
+  x$name <- sapply(tmp,"[",1)
+  x$name <- rem_trailing_spaces(x$name)
+  x$unit <- sapply(tmp,"[",2)
+  x$unit <- rem_trailing_spaces(x$unit)
   x$trans <- sapply(tmp,"[",3)
   x$trans <- rem_trailing_spaces(x$trans)
   x$trans[is.na(x$trans) & x$lower %in% 0] <- "RATIO"
-  x$Parameter <- paste0("THETA",x$N)
+  x$parameter <- paste0("THETA",x$N)
   x
 }
 
@@ -297,12 +271,12 @@ rem_trailing_spaces <- function(x){
 
 theta_r2nm <- function(x){
   x0 <- x
-  x0$Name[is.na(x0$Name)] <- paste0("THETA",x0$N[is.na(x0$Name)])
-  x0$Unit[!is.na(x0$Unit)] <- paste(";",x0$Unit[!is.na(x0$Unit)])
-  x0$Unit[is.na(x0$Unit)] <- ""
+  x0$name[is.na(x0$name)] <- paste0("THETA",x0$N[is.na(x0$name)])
+  x0$unit[!is.na(x0$unit)] <- paste(";",x0$unit[!is.na(x0$unit)])
+  x0$unit[is.na(x0$unit)] <- ""
   x0$trans[!is.na(x0$trans)] <- paste(";",x0$trans[!is.na(x0$trans)])
   x0$trans[is.na(x0$trans)] <- ""
-  x0$COM <- paste(x0$Name,x0$Unit,x0$trans)
+  x0$COM <- paste(x0$name,x0$unit,x0$trans)
   x0$COM <- rem_trailing_spaces(x0$COM)
   x <- by(x,x$N,function(d){
     if(!is.na(d$lower)) paste0("(",d$lower,",",d$init,")") else d$init
@@ -317,6 +291,7 @@ theta_r2nm <- function(x){
 #' @param ctl object coercible to ctl_list
 #' @param ... named replacement argument of class character
 #' @param which_dollar (default = 1) which subroutine if multiple matches
+#' @param append logical (default = FALSE).  Should results be appended to subroutine
 #' @examples
 #' \dontrun{
 #' m1 %>% update_dollar(THETA=c("1             	; KA ; h-1 ; LOG
@@ -325,8 +300,12 @@ theta_r2nm <- function(x){
 #'        write_ctl()
 #' }
 #' @export
+update_dollar <- function(ctl,..., which_dollar = 1, append = FALSE){
+  UseMethod("update_dollar")
+}
 
-update_dollar <- function(ctl,..., which_dollar = 1){
+#' @export
+update_dollar.default <- function(ctl,..., which_dollar = 1, append = FALSE){
   ctl <- ctl_list(ctl)
   arg <- list(...)
   if(length(arg) != 1) stop("need argument")
@@ -339,15 +318,21 @@ update_dollar <- function(ctl,..., which_dollar = 1){
   dollar_match <- dollar_matches[which_dollar]
   dollar_name <- names(ctl)[dollar_match]
   
+  if(append) replace <- c(ctl[[dollar_name]], replace)
+  
   ctl[[dollar_name]] <- setup_dollar(replace,paste0("$",dollar_name))
   ctl
 }
+
 
 #' Get parameter information
 #'
 #' @param ctl character. Path to control file
 #' @export
 param_info <- function(ctl){
+  UseMethod("param_info")
+}
+param_info.default <- function(ctl){
   ctl <- ctl_list(ctl)
   if("THETA" %in% names(ctl)) return(theta_nm2r(ctl$THETA)) else
     return(data.frame())
@@ -364,17 +349,17 @@ update_parameters0 <- function(ctl,coef_from,type = c("THETA","OMEGA","SIGMA")){
   comments[!grepl("^\\s*$",comments)] <- paste0(";",comments[!grepl("^\\s*$",comments)])
 
   final_params <- coef_from
-  final_params <- final_params[,c("Parameter", "FINAL")]
-  final_params <- final_params[grepl(type,final_params$Parameter),]
+  final_params <- final_params[,c("parameter", "FINAL")]
+  final_params <- final_params[grepl(type,final_params$parameter),]
 
   if(type %in% c("OMEGA","SIGMA")){
-    final_params$ROW <- as.numeric(gsub(paste0(type,"\\.([0-9]+)\\..*"),"\\1",final_params$Parameter))
-    final_params$COL <- as.numeric(gsub(paste0(type,"\\.[0-9]+\\.([0-9]+).*"),"\\1",final_params$Parameter))
+    final_params$ROW <- as.numeric(gsub(paste0(type,"\\.([0-9]+)\\..*"),"\\1",final_params$parameter))
+    final_params$COL <- as.numeric(gsub(paste0(type,"\\.[0-9]+\\.([0-9]+).*"),"\\1",final_params$parameter))
     final_params <- final_params[order(final_params$ROW, final_params$COL), ]
   }
 
   if(type %in% c("THETA")){
-    final_params$ROW <- as.numeric(gsub(paste0(type,"([0-9]+)"),"\\1",final_params$Parameter))
+    final_params$ROW <- as.numeric(gsub(paste0(type,"([0-9]+)"),"\\1",final_params$parameter))
     final_params <- final_params[order(final_params$ROW), ]
   }
 
@@ -431,37 +416,27 @@ update_parameters0 <- function(ctl,coef_from,type = c("THETA","OMEGA","SIGMA")){
   ctl_lines
 }
 
-#' update parameters from a control stream
-#'
-#' @param ctl object coercible into ctl_list
-#' @param from class nm. object from which to extract results
-#' @export
-
-update_parameters <- function(ctl, from){
-  if(is_single_na(ctl)) return(NA)
-  if(missing(from) & inherits(ctl, "nmexecute")) from <- ctl
-  ctl_lines <- ctl_list(ctl)
-  coef_from <- coef.nm(from, trans=FALSE)
-  ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "THETA")
-  ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "OMEGA")
-  ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "SIGMA")
-  ctl_lines
-}
-
 #' gsub for ctl file
 #' 
 #' @param ctl object coercible into ctl_character
-#' @param ... arguments passed to gsub
+#' @param pattern argument passed to gsub
+#' @param replacement argument passed to gsub
+#' @param ... additional arguments passed to gsub
 #' @param dollar character name of subroutine
 #' @export
 
-gsub_ctl <- function(ctl, ..., dollar = NA){
+gsub_ctl <- function(ctl, pattern, replacement, ..., dollar = NA_character_){
+  UseMethod("gsub_ctl")
+}
+
+#' @export
+gsub_ctl.default <- function(ctl, pattern, replacement, ..., dollar = NA_character_){
   if(is.na(dollar)){
     ctl <- ctl_character(ctl)
-    ctl <- gsub(..., x = ctl)    
+    ctl <- gsub(pattern, replacement, x = ctl, ...)    
   } else {
     ctl <- ctl_list(ctl)
-    ctl[[dollar]] <- gsub(..., x = ctl[[dollar]])    
+    ctl[[dollar]] <- gsub(pattern, replacement, x = ctl[[dollar]], ...)    
   }
   ctl_list(ctl)
 }
@@ -528,7 +503,7 @@ change_to_sim <- function(ctl_lines,subpr=1,seed=1){
 #' @param ctl object coercible to ctl_list
 #' @param param character. Name of parameter
 #' @param cov character. Name of covariate
-#' @param state numeric. Number of state
+#' @param state numeric or character. Number/name of state (see details)
 #' @param continuous logical (default = TRUE). is covariate continuous?
 #' @param time_varying optional logical. is the covariate time varying?
 #' @param additional_state_text optional character. custom state variable to be passed to param_cov_text
@@ -538,162 +513,53 @@ change_to_sim <- function(ctl_lines,subpr=1,seed=1){
 #' @param init optional numeric/character vector.  Initial estimate of additional parameters
 #' @param lower optional numeric/character vector.  lower bound of additional parameters
 #' @param upper optional numeric/character vector.  Upper bound of additional parameters
+#' 
+#' @details 
+#' available states:
+#' "2" or "linear":
+#'   PARCOV= ( 1 + THETA(1)*(COV - median))
+#' 
+#' "3" or "hockey-stick":
+#'   IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))
+#'   IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))
+#'                     
+#' "4" or "exponential":
+#'    PARCOV= EXP(THETA(1)*(COV - median))
+#' 
+#' "5" or "power":
+#'    PARCOV= ((COV/median)**THETA(1))
+#'    
+#' "power1":
+#'    PARCOV= ((COV/median))
+#'    
+#' "power0.75":
+#'    PARCOV= ((COV/median)**0.75)
+#' 
+#' "6" or "log-linear":
+#'    PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
+#' 
+#' @examples 
+#' \dontrun{
+#' 
+#' m1WT <- m1 %>% child("m1WT") %>%
+#'   add_cov(param = "CL", cov = "WT", state = "power") %>% 
+#'   run_nm()
+#'   
+#' ## compare results
+#' 
+#' rr(c(m1, m1WT))
+#' summary_wide(c(m1, m1WT))
+#'   
+#' }
+#' 
+#' 
 #' @export
 
 add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
                     time_varying, additional_state_text, id_var = "ID",
                     force = FALSE, force_TV_var = FALSE, 
                     init, lower, upper){
-
-  ctl <- ctl_list(ctl)
-  param <- as.character(param)
-  cov <- as.character(cov)
-  state <- as.character(state)
-  continuous <- as.logical(continuous)
-
-  if("PK" %in% names(ctl)) dol_PK <- "PK" else dol_PK <- "PRED"
-
-  PK_section <- rem_comment(ctl[[dol_PK]])
-
-  data <- suppressMessages(get_data(ctl, filter = TRUE))
-
-  if(!cov %in% names(data)) {
-    if(force) {
-      warning("can't find ",cov," in data", call. = FALSE)
-    } else {
-      stop("can't find ",cov," in data", call. = FALSE)
-    }
-  }
-  
-  if(any(is.na(data[[cov]]))) {
-    if(force) {
-      warning("missing values in ",cov," detected", call. = FALSE)
-    } else {
-      stop("missing values in ",cov," detected", call. = FALSE)
-    }
-  }
-  
-  if(length(unique(data[[cov]])) > 5 & !continuous)
-    warning(length(unique(data[[cov]])), " unique values for ", cov, " found. are you sure it's categorical?",
-            call. = FALSE)
-  
-  if(length(unique(data[[cov]])) <= 1)
-    warning(length(unique(data[[cov]])), " unique values for ", cov, " found. are you sure about this?",
-            call. = FALSE)
-
-  if(missing(time_varying)){
-    max_levels <- max(tapply(data[[cov]], data[[id_var]], function(x) length(unique(x))), na.rm = TRUE)
-    if(max_levels > 1) time_varying <- TRUE else time_varying <- FALSE
-  }
-
-  if(force_TV_var){
-    tvparam <- paste0("TV",param)
-  } else {
-    if(time_varying){
-      tvparam <- param
-    } else {
-      ## try TV param if exists
-      if(any(grepl(paste0("\\bTV",param,"\\b"), PK_section)))
-        tvparam <- paste0("TV",param)
-    }    
-  }
-
-  if(!any(grepl(paste0("\\bTV",param,"\\b"), PK_section)))
-    stop("cant find parameter in control file", call. = FALSE)
-
-  existing_param_rel <- any(grepl(paste0("\\b",tvparam,"COV"), PK_section))
-  existing_param_cov_rel <- any(grepl(paste0("\\b",tvparam,cov), PK_section))
-  if(existing_param_cov_rel) stop("covariate relation already exists, cannot add", call. = FALSE)
-
-  param_info <- param_info(ctl)
-  theta_n_start <- max(param_info$N) + 1
-
-  relation_start_txt <- paste0(";;; ",tvparam,"-RELATION START")
-  relation_end_txt <- paste0(";;; ",tvparam,"-RELATION END")
-
-  definition_start_txt <- paste0(";;; ",tvparam,cov,"-DEFINITION START")
-  definition_end_txt <- paste0(";;; ",tvparam,cov,"-DEFINITION END")
-
-  if(!existing_param_rel){
-    par_relation_text <- paste0(tvparam,"COV=",tvparam,cov)
-
-    ## insert at beginning
-    ctl[[dol_PK]] <- c(ctl[[dol_PK]][1],"",
-                relation_start_txt,
-                par_relation_text,
-                relation_end_txt,
-                ctl[[dol_PK]][-1])
-
-    tv_definition_row <- which(grepl(paste0("^\\s*",tvparam,"\\s*="), rem_comment(ctl[[dol_PK]])))
-    dont_count <- which(grepl(paste0("^\\s*",tvparam,"\\s*=.*",tvparam), rem_comment(ctl[[dol_PK]])))
-    tv_definition_row <- setdiff(tv_definition_row, dont_count)
-    if(length(tv_definition_row) > 1) stop("can't find unique TV parameter definition in $PK")
-    if(length(tv_definition_row) == 0) stop("can't find TV parameter definition in $PK")
-
-    ctl[[dol_PK]] <- c(ctl[[dol_PK]][1:tv_definition_row],"",
-                paste0(tvparam," = ", tvparam,"COV*",tvparam),
-                ctl[[dol_PK]][(tv_definition_row+1):length(ctl[[dol_PK]])])
-
-  }
-
-  if(existing_param_rel){
-    ctl[[dol_PK]] <- gsub(paste0(tvparam,"COV="),
-                   paste0(tvparam,"COV=",tvparam,cov,"*"),ctl[[dol_PK]])
-  }
-
-  ## use state to get the relationship in there.
-  if(!missing(additional_state_text)) {
-    param_cov_text <- param_cov_text(param=tvparam,cov=cov,state = state,
-                                     data = data,
-                                     theta_n_start = theta_n_start,
-                                     continuous = continuous,
-                                     additional_state_text = additional_state_text)
-  } else {
-    param_cov_text <- param_cov_text(param=tvparam,cov=cov,state = state,
-                                     data = data,
-                                     theta_n_start = theta_n_start,
-                                     continuous = continuous)
-  }
-
-  ctl[[dol_PK]] <- c(ctl[[dol_PK]][1],"",
-              definition_start_txt,
-              param_cov_text,
-              definition_end_txt,
-              ctl[[dol_PK]][-1])
-
-  ## add thetas
-  n_add_thetas <- attr(param_cov_text, "n")
-  if(n_add_thetas > 0){
-    
-    if(missing(init)){
-      init <- rep("0.0001", n_add_thetas)
-      if(state == 3 | state == "power") {
-        init <- rep(0.8, n_add_thetas)
-      }
-    }
-    
-    if(missing(lower)){
-      lower <- rep(-1, n_add_thetas)
-    }
-    
-    if(missing(upper)){
-      upper <- rep(5, n_add_thetas)
-    }
-    
-    
-    if(any(lower > init)) stop("lower bound > initial estimate")
-    if(any(upper < init)) stop("upper bound < initial estimate")
-    
-    if(n_add_thetas == 1) {
-      theta_lines <- paste0("$THETA  (",lower,",",init,",",upper,") ; ",tvparam, cov, state)
-    } else {
-      theta_lines <- paste0("$THETA  (",lower,",",init,",",upper,") ; ",tvparam, cov, state,"_",seq_len(n_add_thetas))
-    }
-    ctl$THETA <- c(ctl$THETA,theta_lines)
-  }
-
-  ctl
-
+  UseMethod("add_cov")
 }
 
 #' Remove a covariate to a NONMEM model
@@ -703,137 +569,56 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
 #' @param ctl object coercible to ctl_list
 #' @param param character. Name of parameter
 #' @param cov character. Name of covariate
-#' @param state numeric. Number of state
+#' @param state numeric or character. Number/name of state (see details)
 #' @param continuous logical (default = TRUE). is covariate continuous?
 #' @param time_varying optional logical. is the covariate time varying?
 #' @param additional_state_text optional character. custom state variable to be passed to param_cov_text
 #' @param id_var character (default = "ID"). Needed if time_varying is missing.
+#' 
+#' @details 
+#' available states:
+#' "2" or "linear":
+#'   PARCOV= ( 1 + THETA(1)*(COV - median))
+#' 
+#' "3" or "hockey-stick":
+#'   IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))
+#'   IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))
+#'                     
+#' "4" or "exponential":
+#'    PARCOV= EXP(THETA(1)*(COV - median))
+#' 
+#' "5" or "power":
+#'    PARCOV= ((COV/median)**THETA(1))
+#'    
+#' "power1":
+#'    PARCOV= ((COV/median))
+#'    
+#' "power0.75":
+#'    PARCOV= ((COV/median)**0.75)
+#' 
+#' "6" or "log-linear":
+#'    PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
+#' 
+#' @examples 
+#' \dontrun{
+#' 
+#' m1noWT <- m1 %>% child("m1noWT") %>%
+#'   remove_cov(param = "CL", cov = "WT") %>% 
+#'   run_nm()
+#'   
+#' ## compare results
+#' 
+#' rr(c(m1, m1noWT))
+#' summary_wide(c(m1, m1noWT))
+#'   
+#' }
+#' 
 #' @export
 
 remove_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
                        time_varying, additional_state_text, id_var = "ID"){
-  
-  ctl <- ctl_list(ctl)
-
-  if("PK" %in% names(ctl)) dol_PK <- "PK" else dol_PK <- "PRED"
-
-  PK_section <- rem_comment(ctl[[dol_PK]])
-
-  data <- suppressMessages(get_data(ctl, filter = TRUE))
-
-  if(any(is.na(data[[cov]]))) warning("missing values in ",cov," detected")
-
-  if(missing(time_varying)){
-    max_levels <- max(tapply(data[[cov]], data[[id_var]], function(x) length(unique(x))), na.rm = TRUE)
-    if(max_levels > 1) time_varying <- TRUE else time_varying <- FALSE
-  }
-
-  if(time_varying){
-    tvparam <- param
-  } else {
-    tvparam <- paste0("TV",param)
-  }
-
-  existing_param_rel <- which(grepl(paste0("\\b",tvparam,"COV"), PK_section))
-  existing_param_cov_rel <- which(grepl(paste0("\\b",tvparam,cov), PK_section))
-
-  ## remove parm vs specific cov code
-  match_start <- grep(paste0(";;; ",tvparam,cov,"-DEFINITION START"),ctl[[dol_PK]])
-  match_end <- grep(paste0(";;; ",tvparam,cov,"-DEFINITION END"),ctl[[dol_PK]])
-  if(length(match_start) == 0 | length(match_end) == 0)
-    stop("can't find cov definition code - did you add with add_cov()?")
-
-  ctl_matched <- ctl[[dol_PK]][match_start:match_end]
-  theta_match <- gregexpr("THETA\\([0-9]+\\)", ctl_matched)
-
-  thetas <- lapply(seq_along(theta_match), function(i){
-    matchi <- theta_match[[i]]
-    ctl_matchedi <- ctl_matched[i]
-    if(length(matchi) == 1)
-      if(matchi %in% -1)
-        return(NULL)
-    sapply(seq_along(matchi), function(j){
-      matchij <- matchi[j]
-      len <- attr(matchi, "match.length")[j]
-      return(substr(ctl_matchedi, matchij, matchij+len-1))
-    })
-  })
-  thetas <- unlist(thetas)
-  theta_n <- gsub("THETA\\(([0-9]+)\\)","\\1", thetas)
-  theta_n <- sort(as.numeric(theta_n))
-  reduce_thetas <- length(theta_n)
-  if(reduce_thetas > 0){
-    ctl_char <- ctl_character(ctl)
-
-    next_theta <- max(theta_n)+1
-    keep_going <- TRUE
-    while(keep_going){
-      next_text_to_match <- paste0("THETA\\(",next_theta,"\\)")
-      next_text_to_replace <- paste0("THETA\\(",next_theta-reduce_thetas,"\\)")
-      if(!any(grepl(next_text_to_match, ctl_char))){
-        keep_going <- FALSE
-      } else {
-        ctl_char <- gsub(next_text_to_match, next_text_to_replace, ctl_char)
-        next_theta <- next_theta + 1
-      }
-    }
-    ctl <- ctl_list(ctl_char)
-  }
-
-  ctl[[dol_PK]] <- ctl[[dol_PK]][setdiff(seq_along(ctl[[dol_PK]]), match_start:match_end)]
-
-  ## adjust/remove parm vs any cov code
-
-  match_start <- grep(paste0(";;; ",tvparam,"-RELATION START"),ctl[[dol_PK]])
-  match_end <- grep(paste0(";;; ",tvparam,"-RELATION END"),ctl[[dol_PK]])
-  if(length(match_start) == 0 | length(match_end) == 0)
-    stop("can't find cov relation code - did you add with add_cov()?")
-
-  rel_section <- ctl[[dol_PK]][match_start:match_end]
-
-  rel_index_all <- grep(paste0(tvparam,"COV=",tvparam,cov), rel_section)
-  unique_rel_match <- grep(paste0(tvparam,"COV=",tvparam,cov,"$"), rel_section)
-  if(length(unique_rel_match) > 1)
-    stop("can't identify unique cov relation code line- did you add with add_cov()?")
-  if(length(unique_rel_match) == 1){ ## only covariate on this param
-    ctl[[dol_PK]] <- ctl[[dol_PK]][setdiff(seq_along(ctl[[dol_PK]]), match_start:match_end)]
-    match_param_rel <- grep(paste0("\\b",tvparam, "COV\\b"), rem_comment(ctl[[dol_PK]]))
-    if(length(match_param_rel) != 1)
-      stop("can't identify parameter modification line- did you add with add_cov()?")
-    ctl[[dol_PK]] <- ctl[[dol_PK]][setdiff(seq_along(ctl[[dol_PK]]), match_param_rel)]
-  }
-  if(length(unique_rel_match) == 0){ ## (maybe - test this) other covariates
-    if(length(rel_index_all) > 1)
-      stop("can't identify unique cov relation code line- did you add with add_cov()?")
-
-    text_match_at_start <- paste0("^(",tvparam,"COV=)",tvparam,cov,"\\*(.+)")
-    match_at_start <- grep(text_match_at_start,ctl[[dol_PK]])
-
-    text_match_after_start <- paste0("^(",tvparam,"COV=.+)\\*",tvparam,cov,"(.*)")
-    match_after_start <- grep(text_match_after_start,ctl[[dol_PK]])
-
-    if(length(match_at_start) + length(match_after_start) != 1)
-      stop("couldn't identify cov relation in relation code line- did you add with add_cov()?")
-
-    if(length(match_at_start)){
-      ctl[[dol_PK]] <- gsub(text_match_at_start,"\\1\\2",ctl[[dol_PK]])
-    }
-
-    if(length(match_after_start)){
-      ctl[[dol_PK]] <- gsub(text_match_after_start,"\\1\\2",ctl[[dol_PK]])
-    }
-
-  }
-
-  matched_theta <- grep(paste0("\\$THETA\\s.*;.*",tvparam, cov), ctl$THETA)
-  if(length(matched_theta) == 0)
-    stop("can't find $THETA entry to remove- did you add with add_cov()?")
-
-  ctl$THETA <- ctl$THETA[setdiff(seq_along(ctl$THETA), matched_theta)]
-
-  ctl
+  UseMethod("remove_cov")
 }
-
 
 param_cov_text <- function(param,cov,state,data,theta_n_start,continuous = TRUE,
                            state_text = list(
@@ -952,16 +737,10 @@ ofv.default <- function(r){
 }
 
 #' @export
-ofv.nm <- function(r){
-  dc <- try(coef_nm(r, trans = FALSE), silent = TRUE)
-  if(inherits(dc, "try-error")) return(NA)
-  dc$FINAL[dc$Parameter %in% "OBJ"]
-}
-
-#' @export
-ofv.nmcoef <- function(r){
-  if(is_empty_nmcoef(r)) return(NA)
-  r$FINAL[r$Parameter %in% "OBJ"]
+ofv.data.frame <- function(r){
+  #if(is_empty_nmcoef(r)) return(NA)
+  if(nrow(r) == 0) return(NA)
+  r$FINAL[r$parameter %in% "OBJ"]
 }
 
 #' @export
@@ -977,62 +756,7 @@ is_empty_nmcoef <- function(r){
   return(TRUE)
 }
 
-write_ctl0 <- function(ctl, dest, dir = getOption("models.dir"), ...){
-  
-  if(!any(c("ctl_list", "ctl_character", "character", "nmexecute") %in% class(ctl)))
-    stop("ctl needs to be class nmexecute, character, ctl_character, or ctl_list")
-  
-  ctl <- ctl_character(ctl)
-  ctl_name <- attr(ctl, "file_name")
-  
-  if(!missing(dest)){  ## dest could be nm, file name, or run identifier
-    if(inherits(dest, "nmexecute")) {
-      run_id <- run_id$run_id
-      ctl_name <- model_file_name(run_id, dir = dir)
-    } else {
-      if(length(dest) == 1){
-        if(is.numeric(dest)) { ## numeric run_id
-          ctl_name <- model_file_name(dest, dir = dir)
-        } else {
-          if(grepl(paste0("\\.|",.Platform$file.sep), dest)){ ## path
-            if(!file.exists(dirname(dest))) stop("destination directory does not exist")
-            ctl_name <- dest
-          } else {  ## character (probably) run_id
-            ctl_name <- model_file_name(dest, dir = dir)
-          }
-        }
-      } else stop("dest should either an nm object or a path or run_id")
-    }
-    attr(ctl, "file_name") <- ctl_name
-  }
-  
-  if(!file.exists(dirname(ctl_name)))
-    dir.create(dirname(ctl_name), showWarnings = FALSE, recursive = TRUE)
-  writeLines(ctl, ctl_name)
-  #suppressMessages(tidyproject::setup_file(ctl_name))
-  #message("written: ", ctl_name)
-  invisible(ctl)
-  
-}
 
-#' write control file
-#'
-#' @param ctl object of class character, ctl_character, or ctl_list
-#' @param dest character or numeric. new run_id
-#' @param dir character. Directory to place file. Default = getOption("models.dir")
-#' @param ... additional arguments
-#' @export
-write_ctl <- function(ctl, dest, dir = getOption("models.dir"), ...){
-  UseMethod("write_ctl")
-}
-#' @export
-write_ctl.character <- write_ctl0
-#' @export
-write_ctl.ctl_character <- write_ctl0
-#' @export
-write_ctl.ctl_list <- write_ctl0
-#' @export
-write_ctl.nmexecute <- write_ctl0
 
 update_table_numbers <- function(ctl, run_id){
   if(is_single_na(ctl)) return(NA)
@@ -1042,73 +766,6 @@ update_table_numbers <- function(ctl, run_id){
   ctl
 }
 
-#' make new control file based on previous
-#'
-#' @param r object coercible into ctl_list
-#' @param run_id character or numeric. new run_id
-#' @param based_on optional character new run_id
-#' @param dir character. default "Models" dir
-#' @examples 
-#' \dontrun{
-#' new_ctl(m1, "m2")  ## "models/runm2.mod"
-#' new_ctl(m1, "models/runm2.mod") ## "models/runm2.mod"
-#' new_ctl(m1, "runm2.mod")  ## "models/runm2.mod"
-#' new_ctl(m1, "models/a/b/runm2.mod")  ## "models/a/b/runm2.mod"
-#' }
-#' @export
-
-new_ctl <- function(r, run_id, based_on, dir = getOption("models.dir")){
-  ctl <- ctl_list(r)
-
-  orig_data_name <- get_data_name(ctl)
-  data_full_path <- normalizePath(file.path(dirname(attr(ctl, "file_name")), orig_data_name), mustWork = FALSE)
-    
-  if(missing(based_on)){
-    if(inherits(r, "nm")){
-      based_on <- r$run_id
-    } else {
-      ## get "tab" lines
-      temp <- ctl$TABLE[grepl("FILE\\s*=\\s*\\S*tab",ctl$TABLE)]
-      if(length(temp) == 0) stop("specify based_on argument")
-      ## get unique
-      temp <- unique(gsub(".*FILE\\s*=\\s*\\S*tab(\\S*)\\b.*","\\1",temp))
-      if(length(temp) != 1) stop("specify based_on argument")
-      if(nchar(temp) == 0) stop("specify based_on argument")
-      based_on <- temp
-    }
-  }
-  
-  file_name <- coerce_to_ctl_name(run_id, dir = dir)
-  run_id <- run_id(file_name)
-  
-  attr(ctl, "file_name") <- file_name
-  
-  new_relative_data_name <- relative_path(data_full_path, dirname(file_name))
-  
-  if(normalizePath(new_relative_data_name, mustWork = FALSE) != normalizePath(orig_data_name, mustWork = FALSE)){
-    ctl <- update_dollar_data(ctl, new_relative_data_name)
-  }
-  
-  ctl <- update_table_numbers(ctl, run_id)
-  ctl[[1]] <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",based_on),ctl[[1]])
-  ctl[[1]] <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*",paste("\\1",Sys.info()["user"]),ctl[[1]])
-  
-  ctl
-}
-
-
-#' Generate model file name
-#' 
-#' @param run_id run identifier
-#' @param dir directory to work in
-#' @param mustWork same as normalizePath argument
-#' 
-#' @export
-model_file_name <- function(run_id, dir = getOption("models.dir"), mustWork = FALSE){
-  path <- file.path(dir, 
-                    paste0(getOption("model_file_stub"),run_id,".",getOption("model_file_extn")))
-  normalizePath(path, mustWork = mustWork)
-}
 
 #' get file name
 #' 
@@ -1118,21 +775,6 @@ model_file_name <- function(run_id, dir = getOption("models.dir"), mustWork = FA
 file_name <- function(ctl){
   ctl <- ctl_list(ctl)
   attr(ctl, "file_name")
-}
-
-coerce_to_ctl_name <- function(x, dir = getOption("models.dir")){
-  if(normalizePath(dirname(x), mustWork = FALSE) == normalizePath(getOption("models.dir"), mustWork = FALSE)){
-    file_name <- x
-  } else {
-    ## if it's a file name
-    is_file_name <- grepl(paste0("\\.|",.Platform$file.sep), x)
-    if(is_file_name) file_name <- x else {  ## x = non Models path
-      file_name <- model_file_name(x, dir = dir)  ## x = run_id
-    }
-  }
-  ## check file name for convention 
-  if(!is_nm_file_name(file_name)) warning("file name doesn't match model_file_stub, model_file_extn convention")
-  file_name
 }
 
 #' make new control file based on previous
@@ -1147,57 +789,35 @@ change_seed <- function(ctl,new_seed){
   gsub("(^\\$SIM\\S*\\s+\\()[0-9]+(\\).*$)",paste0("\\1",new_seed,"\\2"),ctl)
 }
 
-#' get data set
-#'
-#' @param r object coercible into ctl_character
-#' @param filter logical (default = FALSE). Should NONMEM ignore filter be applied
-#' @param ... additional arguments for read.csv
-#' @export
-get_data <- function(r, filter = FALSE, ...){
-  ## doesn't rely on data base or r object contents
-  if(inherits(r, "nm")) {
-    file_name <- file.path(r$run_in,get_data_name(ctl_character(r)))
-  } else {
-    from <- dirname(attr(r, "file_name"))
-    file_name <- file.path(from, get_data_name(ctl_character(r)))
-  }
-  if(!grepl("[a-zA-Z0-9]",basename(file_name))) stop("$DATA doesn't look like it refers to a file. Is this correct?")
-
-  if(normalizePath(dirname(file_name), mustWork = FALSE) == normalizePath("DerivedData")){
-    d <- read_derived_data(basename(get_stub_name(file_name)),...)
-  } else {
-    d <- utils::read.csv(file_name, ...)
-  }
-
-  if(filter) {
-    data_filter <- parse(text = data_filter_char(r))
-    d <- subset(d, eval(data_filter))
-  }
-  d
-}
-
 #' convert nonmem code to R ready
 #' 
 #' This is a developer function
 #' 
 #' @param code character vector of NONMEM code block
+#' @param eta_to_0 logical (default = TRUE) set all etas to 0
 #' @export
 
-nonmem_code_to_r <- function(code){
+nonmem_code_to_r <- function(code, eta_to_0 = TRUE){
   pk_block <- rem_comment(code)
   
   pk_block <- pk_block[!grepl("^\\s*\\$.*", pk_block)]
+
+  if(eta_to_0){
+    pk_block <- gsub("\\bETA\\(([0-9]+)\\)","0", pk_block)
+  }
   
-  pk_block <- gsub("ETA\\(([0-9]+)\\)","ETA\\1", pk_block)
+  ## will replace both THETA and ETA
+  pk_block <- gsub("ETA\\(([0-9]+)\\)","ETA\\1", pk_block) 
   
-  pk_block <- gsub("LOG","log", pk_block)
-  pk_block <- gsub("EXP","exp", pk_block)
-  pk_block <- gsub("IF","if", pk_block)
+  pk_block <- gsub("\\bLOG\\b","log", pk_block)
+  pk_block <- gsub("\\bEXP\\b","exp", pk_block)
+  pk_block <- gsub("\\bIF\\b","if", pk_block)
   
-  ## TODO: handle IF ELSE ENDIF blocks
-  ##  strategy: 
-  ##   put all on single string, gsub IF ELSE ENDIF to use curly braces
-  
+  pk_block <- gsub("\\bTHEN\\b","{", pk_block)
+  pk_block <- gsub("\\bENDIF\\b","}", pk_block)
+  pk_block <- gsub("\\bELSE\\b","} else {", pk_block)
+  ## TODO: handle IF THEN (no ENDIF) blocks
+
   pk_block <- gsub("\\.EQ\\.","==",pk_block)
   pk_block <- gsub("\\.NE\\.","!=",pk_block)
   pk_block <- gsub("\\.EQN\\.","==",pk_block)
@@ -1210,81 +830,4 @@ nonmem_code_to_r <- function(code){
   pk_block
   
   
-}
-
-#' set parameter value
-#' 
-#' @param ctl object coercible into ctl_list
-#' @param param character, name of paramater
-#' @param to character/numeric, number to fix to 
-#' @export
-
-ctl_param_set <- function(ctl, param, to){
-  ctl <- ctl_character(ctl)
-  d <- data.frame(param, to)
-  for(i in 1:nrow(d)){
-    match_txt_nofix <- paste0("(\\s*)(\\S+)()(\\s*;\\s*", d$param[i],")")
-    match_txt_fix <- paste0("(\\s*)(\\S+)(\\s+FIX)(\\s*;\\s*", d$param[i],")")
-    match_index_nofix <- grep(match_txt_nofix, ctl)
-    match_index_fix <- grep(match_txt_fix, ctl)
-    
-    fixed_param <- FALSE
-    if(length(match_index_nofix) == 1 & length(match_index_fix) == 0) {
-      
-    } else if(length(match_index_nofix) == 0 & length(match_index_fix) == 1){
-      fixed_param <- TRUE
-    } else {
-      if(length(match_index_nofix) +  length(match_index_fix) > 1) warning("more than one line matched for ",d$param[i]," in ",file_name(ctl),", check control stream")
-      if(length(match_index_nofix) +  length(match_index_fix) < 1) warning("no matches for ",d$param[i]," in ",file_name(ctl),", no change will take place")
-    }
-    
-    match_txt <- ifelse(fixed_param, match_txt_fix, match_txt_nofix)
-    match_index <- ifelse(fixed_param, match_index_fix, match_index_nofix)
-    
-    replace_txt <- paste0("\\1",d$to[i]," \\4")
-    ctl <- gsub_ctl(ctl, match_txt, replace_txt)
-  }
-  ctl
-}
-
-#' fix etas
-#' 
-#' @param ctl object coercible into ctl_list
-#' @param param character, name of paramater
-#' @param to optional character/numeric, number to fix to 
-#' @export
-
-ctl_fix_eta <- function(ctl, param, to){
-  ctl <- ctl_character(ctl)
-  if(missing(to)) to <- "\\2"  ## current parameter
-  d <- data.frame(param, to)
-  for(i in 1:nrow(d)){
-    match_txt <- paste0("(\\s*)(\\S+)(\\s*; IIV_", d$param[i],")")
-    match_index <- grep(match_txt, ctl)
-    if(length(match_index) > 1) warning("more than one line matched for ",d$param[i]," in ",file_name(ctl),", check control stream")
-    if(length(match_index) < 1) warning("no matches for ",d$param[i]," in ",file_name(ctl),", no change will take place")
-    replace_txt <- paste0("\\1",d$to[i]," FIX\\3")
-    ctl <- gsub_ctl(ctl, match_txt, replace_txt)
-  }
-  ctl
-}
-
-#' unfix etas
-#' 
-#' @param ctl object coercible into ctl_list
-#' @param param character, name of paramater
-#' @export
-
-ctl_unfix_eta <- function(ctl, param){
-  ctl <- ctl_character(ctl)
-  d <- data.frame(param)
-  for(i in 1:nrow(d)){
-    match_txt <- paste0("(\\s*)(\\S+)(\\s+FIX)(\\s*; IIV_", d$param[i],")")
-    match_index <- grep(match_txt, ctl)
-    if(length(match_index) > 1) warning("more than one line matched for ",d$param[i]," in ",file_name(ctl),", check control stream")
-    if(length(match_index) < 1) warning("no matches for ",d$param[i]," in ",file_name(ctl),", no change will take place")
-    replace_txt <- paste0("\\1\\2    \\4")
-    ctl <- gsub_ctl(ctl, match_txt, replace_txt)
-  }
-  ctl
 }

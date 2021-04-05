@@ -19,8 +19,8 @@ test_that("Project has basic functionality",{
   })
 
   setwd(proj_name)
-  
-  set_nm_opts()
+
+  NMproject:::set_nm_opts()
   
   cmd_test <- system_nm("echo test", intern = TRUE)
   
@@ -28,46 +28,9 @@ test_that("Project has basic functionality",{
 
   options(code_library_path=c(system.file("extdata/CodeLibrary",package="NMproject")))
   expect_true(length(getOption("code_library_path"))>0)
-
-  clib <- code_library(viewer=FALSE,silent=TRUE)
-  expect_true("character" %in% class(clib))
-
-  expect_true(any(grepl("ADVAN2.mod",clib)))
-
-  preview("NONMEM/ADVAN2.mod")
-
-  info <- info_scripts(code_library(viewer=FALSE,silent=TRUE),viewer = FALSE)
-  expect_true("data.frame" %in% class(info))
-
-  copy_control("NONMEM/ADVAN2.mod","run1.mod")
-
-  expect_true("run1.mod" %in% dir(getOption("models.dir")))
-
-  copy_control("run1.mod","run2.mod")
-
-  expect_true("run2.mod" %in% dir(getOption("models.dir")))
-
-  dn <- data_name("Models/run1.mod")
-
-  expect_true(length(dn)==1)
-  expect_true(class(dn)=="character")
-
-  update_dollar_data("Models/run1.mod","new.data.csv") %>% write_ctl("1")
-
-  dn <- data_name("Models/run1.mod")
-  expect_true(dn=="new.data.csv")
-
-  setup_nm_demo(overwrite = TRUE)
-  expect_true(file.exists("DerivedData/THEOPP.csv"))
-  expect_true(file.exists(file.path(getOption("scripts.dir"),"theopp-demo.R")))
-
-
-  opts <- options()
-  interactive_mode(TRUE)
-  expect_true(!getOption("run_overwrite"))
-  interactive_mode(FALSE)
-  expect_true(getOption("run_overwrite"))
-  options(opts)
+  
+  setup_nm_demo()
+  expect_true(file.exists("SourceData/THEOPP.csv"))
 
 })
 
@@ -83,8 +46,7 @@ test_that("set up",{
 
   setwd(proj_name)
 
-  set_nm_opts()
-  expect_true(getOption("model_file_stub")=="run")
+  NMproject:::set_nm_opts()
 
   tmp <- system_nm("echo test",intern=TRUE, wait=TRUE)
   expect_true(length(tmp)>0 & "character" %in% class(tmp))

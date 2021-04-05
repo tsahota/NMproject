@@ -6,54 +6,9 @@
 ##  type = "execute"    ## default =  "execute"
 ##  run_in = "Models"   ## default =  "Models"
 
-## instead, specify run_id, type, run_in and create "execute ..."
-
-m0 <- nm(run_id = "m0") %>%
-  cmd("qpsn -c auto -t 10 -- execute run_{run_id}.mod -dir={run_id}")
-  # run_in("Models") %>% 
-  # ctl("run_{run_id}.mod") %>%   ## current ctl -> show_ctl, show_run_dir, show_lst, ... same help
-  # type("execute") %>% ## default from cmd
-  # db("runs.sqlite")  ## default (saved to db at run time by run process)
-
-## ctl derived data is read "just in time" - e.g. data name, params, table names, ... need functions
-
-m1 <- nm(run_id = "m1") %>% parent(m0)
-build_ctl({  ## segment for ctl file manipulation
-  m1 %>% 
-    ctl_update_parameters(m0) %>%  ## if m0 is running, wait.
-    ctl_manual_edit("KEFF log-normal -> normal")
-  ## all ctl functions prefixed with ctl - easy to remember to include in build_ctl
-  ##   easy to check.
-  ## single help for all of them
-})
-
-m1 %>% nm_tran  ## can be interactive
-m1 %>% nm_check  ## can be interactive
-m1 <- run_nm(m1, db = "runs.sqlite",       ## default
-             check_for_conflicts = TRUE)   ## default
-               ## (this saves m1 to db,
-               ##  records SHA of ctl/data)
-               ##   this will help determine if run is invalidated
-               ## do nothing if SHA matches
-               ##   (force rerun with force arg)
-               ## only run/post process can write to db  - this will speed up nmproject a lot
-               ##   but it will hamper the "safety" bits of overlapping file names
-   ## adds m1$promise = the promise of the run
-
 # r asynchronous queue
 #http://jaehyeon-kim.github.io/2016/05/Asynchronous-Processing-Using-Job-Queue.html
 
-## how to use future.  Maybe future only for post()
-
-## database (need concurrency):
-##  minimise functions that use it - only run/post
-##  spread out database
-##    one for run status
-##    one for other stuff
-##    this will only reduce - not eliminate it.
-##  only have workers = 2
-##    can't make really big routines - maybe good on multiuser system
-##  can I use promises?
 
 m1 <- m1 %>% post(gof_xpose)
 ## m1$promise %>% then(gof_xpose(m1))
@@ -70,7 +25,10 @@ m1vpc <- nm("m1boot", parent = m1) %>%
 
 ## need database for run management.
 
-
+## better detection of completed runs
+## https://stackoverflow.com/questions/23456170/get-the-number-of-lines-in-a-text-file-using-r
+## possibly useful
+## https://www.rdocumentation.org/packages/R.utils/versions/2.8.0/topics/countLines
 
 
 ###############################
@@ -79,21 +37,6 @@ m1vpc <- nm("m1boot", parent = m1) %>%
 resolved.nm <- function(x, ...) is_finished(x, ...)
 value.nm <- function(...) identity(...)
 
-post <- function(r, f, ...){
-  promise <- future({
-    wait_for_finished(r)
-    outputs <- f(r, ...)
-    ## save outputs to db
-  })
-  invisible(promise)
-}
-
-after_results <- function(r, expr){
-  
-  expr <- c(wait_for_finished(r),expr)
-  f1 %<-% future(expr)
-  
-}
 
 ############################
 ## I'm using S3 classes more - so need unified strategy on different classes
@@ -112,127 +55,6 @@ after_results <- function(r, expr){
 
 ############################
 
-
-## want makefile like functionality (can't use future)
-
-## want a separate process to offload computation and waiting (future)
-
-## https://ropenscilabs.github.io/drake-manual/index.html  ## this looks like the tool to do both
-
-## drake centres around PLANS - can combine plans with bind_rows
-## phew it's difficult to imagine how I can get drake to work in the background.
-
-## would need a master plan and mini-plans one per function.  And a way of connecting mini-plans
-##  where would these be stored?
-##  global workspace is a bit...
-##  
-
-## need to look at more examples - get more familiarity around drake
-
-m0 = nm(run_id = "m0") %>%
-  cmd("qpsn -c auto -t 10 -- execute run_{run_id}.mod -dir={run_id}")
-
-m0 %>% run_nm()
-
-m1 <- nm(run_id = "m1") %>% parent(m0)
-build_ctl({  ## segment for ctl file manipulation
-  m1 %>% update_parameters(m0) %>%  ## if m0 is running, wait.
-    manual_edit("KEFF log-normal -> normal")
-})
-
-
-##or
-
-m1 <- nm(parent = "m0")
-
-## why do we need a run id?  Why not just the object?
-## it's a short hand 
-
-
-nm <- function(r){
-  plan <- drake_plan(...)
-  
-  ## where do I store plan?
-  
-  
-  
-}
-
-
-
-plan <- drake_plan()
-
-plan_tmp <- drake_plan(
-  m0 = nm(run_id = "m0") %>% 
-    cmd("qpsn -c auto -t 10 -- execute run_{run_id}.mod -dir={run_id}")
-)
-plan <- bind_rows(plan, plan_tmp)
-make(plan)
-
-plan_tmp <- drake_plan(
-  res = run_nm(m0)
-)
-plan <- bind_rows(plan, plan_tmp)
-make(plan)
-
-
-plan_m1 <- drake_plan(m1 = nm(run_id = "m1") %>% parent(m0),
-  temp = build_ctl({  ## segment for ctl file manipulation
-    m1 %>% update_parameters(m0) %>%  ## if m0 is running, wait.
-      manual_edit("KEFF log-normal -> normal")
-  }),
-  res = run_nm(m1))
-
-plan <- rbind(plan_m0, plan_m1)
-
-make(plan)   ## this will build and run m1
-
-## example dependencies
-
-## a build_ctl depends on results of m0
-
-
-
-## how to do sets of runs?
-dm <- tibble(run_id = c("m1", "m2"))
-
-## why do I need specification of run_id?
-
-## Object option 1 (db based):
-##   row identifier of db
-## pros: no need for run_id, neater
-## cons:
-##  system becomes dependent on db (need it to be bulletproof)
-##   concurrency and 
-##  possibly slower, more dependent of file.system
-
-## Object option 2 (hybrid object-db based):
-##   row identifier of db + immutable fields
-##   ob fields subset of db fields
-## pros: no need for run_id, neater
-## cons:
-##  system as dependent on db as now
-##   concurrency and speed still need fixing
-
-## Object option 3 (object based):
-##   all fields
-## pros: simple fast, 
-## cons:
-##  how to handle concurrency
-##   one process might change an object.
-
-## DB
-## pros: persistence (multiple read processes)
-## cons: slower more complicated
-
-
-#m1$cmd("qpsn -c 1 -t 9999 -- execute run_{run_id}.mod -dir={run_id}")
-
-## want to be able to refer to objects.
-## need to recreate objects with ctrl+alt+b
-
-rerun(FALSE) ## means run_nm(),nm_tran(),post(),build_ctl() does nothing
-## make all object creation/db access much faster
 
 ## link outputs to runs
 ##   Have: a function that goes "r -> output file names"
@@ -324,6 +146,27 @@ post(m1, gof_xpose)  ## will write to db
 ## import_project()
 ## import_code()
 ## import_file() - straight foward copy - this is just file.copy
+
+# "/project/qcp/..../azd6094/poppksdfklkj/DerivedData/data.csv"
+# "/project/qcp/..../azd6094/poppksdfklkj/DerivedData/data2.csv"
+#->
+#  detect analysis directory "/project/qcp/..../azd6094/poppksdfklkj"
+#   "DerivedData/data.csv"
+#   "DerivedData/data2.csv"
+
+file_mapping <- function(files){
+  d <- data.frame(files, analysis_dir)
+  dest_path <- sapply(seq_len(nrow(d)), function(i) relative_path(d$files[i], d$analysis_dir[i]))
+  tibble::tibble(from = files, to = dest_path)
+}
+
+
+import_file <- function(files, analysis_dir, overwrite){
+  d <- data.frame(files, analysis_dir)
+  dest_path <- sapply(seq_len(nrow(d)), function(i) relative_path(d$files[i], d$analysis_dir[i]))
+  file.copy(files, dest_path, overwrite = overwrite)
+}
+
 
 ##      find_code("script.R") %>% import_code
 

@@ -8,11 +8,6 @@
 status <- function(x, simple = TRUE) UseMethod("status",x)
 
 #' @export
-status.nm <- function(x, simple = TRUE) {
-  if(simple) run_status(x)$status else run_status(x)
-}
-
-#' @export
 status.default <- function(x, simple = TRUE) {
   if(length(x) == 1) if(is.na(x)) return(NA)
   stop("don't know how to handle this")
@@ -39,9 +34,9 @@ status.list <- function(x, simple = TRUE) {
 #' @param r nm object
 #' @export
 tail_lst <- function(r){
-  if(r$type == "execute"){
-    lst_name <- r$output$psn.lst
-    out_name <- file.path(dirname(r$output$psn.lst),"OUTPUT")
+  if(type(r) == "execute"){
+    lst_name <- r %>% nm_output_path("ext") #r$output$psn.lst
+    out_name <- file.path(dirname(lst_name),"OUTPUT")
     if(file.exists(out_name)) lst_name <- out_name
     lst <- try(readLines(lst_name),silent = TRUE)
     if(inherits(lst,"try-error")) return("no output")

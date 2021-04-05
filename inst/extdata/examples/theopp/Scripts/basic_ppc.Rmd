@@ -1,0 +1,158 @@
+---
+output:
+  html_notebook: default
+params:
+  m: NA
+title: "`r paste0(ctl_path(params$m), ': PPC')`"
+author: "`r Sys.info()['user']`"
+date: "`r Sys.time()`"
+---
+
+<!-- To run as a notebook: -->
+<!--   1. define .m to be your model in your workspace (e.g. .m <- m1) -->
+<!--   2. run as normal notebook -->
+
+<!-- To run as a report: -->
+<!--   1. Use the nm_render() on your object -->
+<!--   (e.g. m1 <- m1 %>% nm_render("path/to/this/report")) -->
+<!--   2. see ?nm_render for additional information including results location -->
+
+<!-- To make your own report (this is only a bare template) -->
+<!--   1. start with an already run model object (e.g. m1) -->
+<!--   2. add code and run as a notebook (see above) to see results -->
+<!--   3. when finished, run as a report (see above) to see report -->
+<!--   4. use nm_render() to run on other model objects -->
+
+
+```{r setup2, include=F}
+## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
+library(rprojroot)
+library(knitr)
+opts_knit$set(root.dir=find_root(has_file(".Rprofile")))
+opts_chunk$set(echo = FALSE)
+opts_chunk$set(message = FALSE)
+if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
+  .m <- params$m  
+}
+```
+
+```{r lib_load, echo=FALSE,message=FALSE}
+## LOAD PACKAGES HERE
+
+library(dplyr)
+library(ggplot2)
+
+load_localpackage()
+
+```
+
+## model object
+
+```{r wait_for_run_finish}
+wait_finish(.m)
+.m
+```
+
+```{r fun_def}
+
+idEXPstat <- function(d, ...){ ## example statistic function
+  ## arg = nonmem dataset data.frame
+  ## return data.frame with statistic column
+  d %>% group_by(ID, ...) %>% filter(is.na(AMT)) %>%
+    summarise(
+      AUC = AUC(time = TIME, conc = DV),
+      CMAX = max(DV, na.rm = TRUE),
+      TMAX = TIME[which.max(DV)]
+    ) %>%
+    tidyr::gather(key = "exposure", value = "statistic", AUC:TMAX) %>%
+    ungroup()
+}
+
+EXPstat <- function(d, ...){ ## example statistic function
+  ## arg = nonmem dataset data.frame
+  ## return data.frame with statistic column
+  d %>% idEXPstat(...) %>%  ## reuse idEXPstat for individual stats
+    ## summarise over study and any other variables (...)
+    group_by(exposure, ...) %>%
+    summarise(
+      median = median(statistic, na.rm = TRUE),
+      cv = 100*sd(statistic, na.rm = TRUE)/mean(statistic, na.rm = TRUE)
+    ) %>%
+    tidyr::gather(key = "type", value = "statistic", median:cv)
+}
+
+```
+
+## plot profile of this subset
+
+```{r plot_profile}
+
+d <- .m %>%
+  input_data(filter = TRUE)
+
+d %>% mutate(id_period = paste(ID, TIME)) %>%
+  ggplot(aes(x = TIME, y = DV, group = ID)) + theme_bw() +
+  geom_line()
+
+```
+
+
+```{r ppc_plot_basic}
+
+ppc_data0 <- .m %>% ppc_data(EXPstat)
+
+ppc_data0 %>%
+  filter(type %in% "median") %>%
+  ## redefine exposure to include the type of summary
+  mutate(exposure = paste(type, exposure, sep = "_")) %>%
+  ppc_histogram_plot(exposure)
+
+ppc_data0 %>%
+  filter(type %in% "cv") %>%
+  ## redefine exposure to include the type of summary
+  mutate(exposure = paste(type, exposure, sep = "_")) %>%
+  ppc_histogram_plot(exposure)
+
+```
+
+```{r ppc_plot_strat}
+
+addWT_c <- . %>% mutate(
+  WT_c = Hmisc::cut2(WT, g = 2)
+)
+
+ppc_data0 <- .m %>% ppc_data(EXPstat, WT_c, pre_proc = addWT_c)
+
+ppc_data0 %>%
+  filter(type %in% "median") %>%
+  ## redefine exposure to include the type of summary
+  mutate(exposure = paste(type, exposure, sep = "_")) %>%
+  ppc_histogram_plot(WT_c, exposure)
+
+ppc_data0 %>%
+  filter(type %in% "cv") %>%
+  ## redefine exposure to include the type of summary
+  mutate(exposure = paste(type, exposure, sep = "_")) %>%
+  ppc_histogram_plot(WT_c, exposure)
+
+ppc_data0 %>%
+  filter(type %in% "median") %>%
+  ## redefine exposure to include the type of summary
+  mutate(exposure = paste(type, exposure, sep = "_")) %>%
+  ppc_whisker_plot(WT_c, exposure)
+
+ppc_data0 %>%
+  ppc_whisker_plot(WT_c, type) + 
+  facet_wrap(~type+exposure, scales = "free")
+
+
+```
+
+```{r ppc_plot_ind}
+
+ppc_data0 <- .m %>% ppc_data(idEXPstat)
+
+ppc_data0 %>%
+  ppc_whisker_plot(factor(ID), exposure)
+
+```

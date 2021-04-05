@@ -1,8 +1,11 @@
+#' @importFrom tidyproject relative_path
+
 ## used create nm_list methods
 ## rule = if single arg, it will simplify (unlist) output i.e. get
 ##  otherwise it will set
 Vectorize_nm_list <- function (FUN, vectorize.args = arg.names, SIMPLIFY = FALSE, USE.NAMES = TRUE, 
-                               invisible = FALSE, replace_arg = "text")
+                               invisible = FALSE, replace_arg = "text", pre_glue = FALSE,
+                               exclude_classes = c("ggplot"))
 {
   missing_SIMPLIFY <- missing(SIMPLIFY)
   arg.names <- as.list(formals(FUN))
@@ -26,7 +29,37 @@ Vectorize_nm_list <- function (FUN, vectorize.args = arg.names, SIMPLIFY = FALSE
       character(length(args))
     else names(args)
     dovec <- names %in% vectorize.args
+    ## added following to exclude certain classes from vectorisation
+    skip <- sapply(args, function(arg) any(class(arg) %in% exclude_classes))
+    names(skip) <- NULL
+    dovec <- dovec & !skip
+    ## glue replace arg
+    if(pre_glue & length(args[dovec]) > 0 & replace_arg %in% names(args[dovec])){
+      
+      ## create an index data.frame to get replace_arg the right length
+      di <- data.frame(
+        i_1 = seq_along(args[dovec][[1]]),
+        i_replace = seq_along(args[dovec][[replace_arg]])
+      )
+      
+      ## fill replace_arg
+      args[dovec][[replace_arg]] <- args[dovec][[replace_arg]][di$i_replace]
+      
+      for(i in seq_along(args[dovec][[replace_arg]])){
+        replace_arg_value <- args[dovec][[replace_arg]][i]
+        m <- args[dovec][[1]][[i]] ## nm_generic
+        if (is.character(replace_arg_value)) {
+          args[dovec][[replace_arg]][i] <- stringr::str_glue(replace_arg_value, 
+                                                             .envir = m)
+        }
+      }
+    }
     ## added m assignment for later, changed SIMPLIFY to false always
+    # if(one_d_if_single_nm_list & 
+    #    is_nm_list(args[dovec][[1]]) & length(args[dovec][[1]]) == 1){ ## if just a single run, just run FUN
+    #   dovec <- rep(FALSE, length = length(dovec))
+    #   dovec[1] <- TRUE ## make first one (nm object) true
+    # }
     m <- do.call("mapply", c(FUN = FUN, args[dovec], MoreArgs = list(args[!dovec]), 
                              SIMPLIFY = FALSE, USE.NAMES = USE.NAMES))
     ## modified rest of this (inner) function
@@ -41,7 +74,8 @@ Vectorize_nm_list <- function (FUN, vectorize.args = arg.names, SIMPLIFY = FALSE
     if(SIMPLIFY) {
       m <- unlist(m)
       names(m) <- NULL
-      if(invisible) return(invisible(m)) else return(m)
+      return(m)
+      #if(invisible) return(invisible(m)) else return(m)
     }
     if(is_nm_list(m)) { 
       m <- as_nm_list(m)
@@ -52,8 +86,15 @@ Vectorize_nm_list <- function (FUN, vectorize.args = arg.names, SIMPLIFY = FALSE
   FUNV
 }
 
+
+#' test if object is an nm_list object
+#' 
+#' @param x object
+#' 
+#' @export
 is_nm_list <- function(x){
-  if(!inherits(x, "list")) return(FALSE)
+  if(inherits(x, "nm_list")) return(TRUE)
+  if(!inherits(x, "list") & !inherits(x, "environment")) return(FALSE)
   
   is_valid_subobject <- function(x){
     #if(is_single_na(x)) return(TRUE) ## na's allowed
@@ -69,33 +110,61 @@ run_id0 <- function(m){
   val
 }
 
+#' coerce object into nm_list
+#' 
+#' @param m nm object
+#' @export
 as_nm_list <- function(m){
   UseMethod("as_nm_list")
 }
+#' @export
 as_nm_list.default <- function(m){
   stop("don't know how to handle type")
 }
+#' @export
 as_nm_list.nm_list <- function(m){
   m
 }
+#' @export
 as_nm_list.list <- function(m){
   if(is_nm_list(m)){
-    names(m) <- run_id0(m)
     class(m) <- c("nm_list", "list")
+    names(m) <- unique_id(m)
     return(m)
   } else {
     stop("list not coercible to nm_list")
   }
 }
+#' @export
 as_nm_list.nm_generic <- function(m){
   m <- list(m)
   as_nm_list.list(m)
 }
 
+#' test if object is an nm_generic object
+#' 
+#' @param x object
+#' 
+#' @export
+
+is_nm_generic <- function(x){
+  inherits(x, "nm_generic")
+}
+
+#' convert nm object to nm_generic
+#'
+#' mainly an internal function to be used where methods for nm_list don't exist
+#' or aren't appropriate
+#'
+#' @param m nm object
+#'
+#' @export
 as_nm_generic <- function(m){
   UseMethod("as_nm_generic")
 }
+#' @export
 as_nm_generic.nm_generic <- function(m) m
+#' @export
 as_nm_generic.nm_list <- function(m){
   if(length(m)>1) stop("cannot coerce more than one object to nm_generic")
   m <- m[[1]]
@@ -103,20 +172,46 @@ as_nm_generic.nm_list <- function(m){
   m
 }
 
+#' @export
 c.nm_list <- function(...){
-  basic_list <- lapply(list(...), '[[', i = 1)
+  ## try append
+  basic_list <- lapply(list(...), function(ob){
+    class(ob) <- "list"
+    ob
+  })
+  basic_list <- do.call(c, basic_list)
   as_nm_list(basic_list)
+  # 
+  # basic_list <- lapply(list(...), '[[', i = 1)
+  # as_nm_list(basic_list)
 }
 
+#' @export
 c.nm_generic <- function(...){
   basic_list <- list(...)
-  as_nm_list(basic_list)
+  class(basic_list) <- c("nm_list", "list")
+  #as_nm_list(basic_list)
+  basic_list
 }
 
+#' @export
 '[.nm_list' <- function(x, i, j, ...) {
   class(x) <- "list"
   val <- NextMethod()
-  as_nm_list(val)
+  class(val) <- c("nm_list", "list")
+  #val <- as_nm_list(val)
+  val
+}
+
+
+
+#' @export
+unique.nm_list <- function(x, incomparables = FALSE, ...) {
+  class(x) <- "list"
+  val <- NextMethod()
+  class(val) <- c("nm_list", "list")
+  #val <- as_nm_list(val)
+  val
 }
 
 ## experimental - goes against dplyr, maybe delete if not useful
@@ -126,3 +221,37 @@ mutate_cond <- function(.data, condition, ..., envir = parent.frame()) {
   .data[condition, ] <- .data[condition, ] %>% dplyr::mutate(...)
   .data
 }
+
+gsub_in_brackets <- function(pattern, replacement, x){
+  x <- gsub("\\(", "~(", x)
+  x <- gsub("\\)", ")~", x)
+  x <- paste0(x, collapse = "\n")
+  x <- strsplit(x, split = "~")[[1]]
+  x[grepl("^\\(.*\\)",x)] <- 
+    gsub(pattern, replacement, x[grepl("^\\(.*\\)",x)])
+  x <- paste(x, collapse = "")
+  x <- paste(x, " ")  ## added to make sure final \n doesn't shorten vector
+  x <- strsplit(x, split = "\n")[[1]]
+  x[length(x)] <- trimws(x[length(x)])
+  x
+}
+
+gsub_out_brackets <- function(pattern, replacement, x){
+  x <- gsub("\\(", "~(", x)
+  x <- gsub("\\)", ")~", x)
+  x <- paste0(x, collapse = "\n")
+  x <- strsplit(x, split = "~")[[1]]
+  x[!grepl("^\\(.*\\)",x)] <- 
+    gsub(pattern, replacement, x[!grepl("^\\(.*\\)",x)])
+  x <- paste(x, collapse = "")
+  x <- paste(x, " ")  ## added to make sure final \n doesn't shorten vector
+  x <- strsplit(x, split = "\n")[[1]]
+  x[length(x)] <- trimws(x[length(x)])
+  x
+}
+
+na.locf <- function(x) {
+  v <- !is.na(x)
+  c(NA, x[v])[cumsum(v)+1]
+}
+

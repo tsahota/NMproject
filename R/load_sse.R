@@ -14,9 +14,9 @@ load_sse <- function(x, parr=F, nodes=1) {
 ## create list of paths for the tables
   # If you're not using NMprojects, you can skip this part
   dir <- "/m1" # Path to simulated data
-  full_dir <- paste(x$run_dir, dir, sep = "")
+  full_dir <- paste(run_dir(x), dir, sep = "")
   
-  cmd <- as.vector(strsplit(x$cmd, " "), mode = 'list')
+  cmd <- as.vector(strsplit(cmd(x), " "), mode = 'list')
   
   if (!'sse' %in% cmd[[1]])
     stop("Object not an SSE PsN object")

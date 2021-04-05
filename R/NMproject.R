@@ -101,7 +101,87 @@ set_nm_opts <- function(){
 
   if(is.null(getOption("run_overwrite"))) options(run_overwrite=FALSE)
   if(is.null(getOption("wait"))) options(wait=FALSE)
+  if(is.null(getOption("kill_job"))) options(kill_job=identity)
 
+  if(is.null(getOption("nm.overwrite_behaviour"))) options(nm.overwrite_behaviour="ask")
+  if(is.null(getOption("nm.force_render"))) options(nm.force_render=FALSE)
+  
+  if(is.null(getOption("nmtran_exe_path"))) options(nmtran_exe_path=find_nm_tran_path(warn = FALSE))
+  
+  if(is.null(getOption("code_library_path"))) 
+    options(code_library_path=system.file("extdata", "CodeLibrary", package = "NMproject"))
+  
+}
+
+#' Generic execute command for SGE grids
+#' 
+#' @details requires \code{cores} and \code{parafile} fields to be set
+#' @seealso \code{\link{nm_getsetters}}
+#' 
+#' @export
+sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_flags='-pe orte {cores} -V' {ctl_name} -dir={run_dir} -nodes={cores}"
+
+
+#' Find location of NONMEM
+#' 
+#' @param name character name of nonmem installation (according PsN)
+#' 
+#' @export
+find_nm_install_path <- function(name = "default"){
+
+  nm_versions <- try(system_nm("psn -nm_versions", intern = TRUE, ignore.stderr = TRUE),
+                     silent = TRUE)
+  if(inherits(nm_versions, "try-error")) stop("can't find nonmem installation")
+  
+  nm_version <- nm_versions[grepl(paste0("^", name), nm_versions)]
+  
+  if(length(nm_version) != 1){
+    warning("Could not determine path to nonmem from psn -nm_versions.")
+    return(NULL)
+  }
+  
+  ## can now assume version is unique
+  path <- gsub(".*\\((.*),.*\\)", "\\1", nm_version)
+  if(!file.exists(path)) warning("directory ", path, "doesn't exist")
+  path
+}
+
+find_nm_tran_path <- function(name = "default", warn = TRUE){
+
+  nm_versions <- try(system_nm("psn -nm_versions", intern = TRUE, ignore.stderr = TRUE), 
+                     silent = TRUE)
+  
+  warn_func <- function(){
+    if(warn) warning("Could not determine path to nmtran from psn -nm_versions.\n",
+                     "To set manually add the following command:\n",
+                     "  options(nmtran_exe_path=\"path/to/nmtran\")\n",
+                     "     1. (for this session only) in the console\n",
+                     "     2. (for this user) to ~/.Rprofile\n",
+                     paste0("     3. (for all users) to ",file.path(R.home(component = "home"), "etc", "Rprofile.site")))
+  }
+  
+  if(inherits(nm_versions, "try-error")) {
+    warn_func()
+    return(NULL)
+  }
+  
+  nm_version <- nm_versions[grepl(paste0("^", name), nm_versions)]
+  
+  if(length(nm_version) != 1){
+    warn_func()
+    return(NULL)
+  }
+  
+  ## can now assume version is unique
+  path <- gsub(".*\\((.*),.*\\)", "\\1", nm_version)
+  tr_path <- file.path(path, "tr")
+  if(file.exists(path)){
+    path <- dir(tr_path, pattern = "NMTRAN.exe", ignore.case = TRUE, full.names = TRUE)
+  } else { ## guess NMTRAN.exe
+    path <- file.path(tr_path, "NMTRAN.exe")    
+  }
+  path
+  
 }
 
 #' default system_nm
@@ -146,183 +226,60 @@ system_nm <- function(cmd,dir=getOption("models.dir"),...){
   getOption("system_nm")(cmd,...)
 }
 
-copy_control0 <- function(from, to, overwrite=FALSE, alt_paths, dest_dir = getOption("models.dir")){
-  ## if from = NONMEM control in current directory, it will copy and update $TABLE numbers
-  ## if from = control file code_library(), it will copy it.
-  ## First it will look for "from" in current directory, then it will look in code_library()
-  
-  to <- file.path(dest_dir, to)
-  if(any(file.exists(to)) & !overwrite) stop("file already exists. Rerun with overwrite = TRUE")
 
-  use_code_library <- missing(alt_paths)
-  from_path <- tidyproject::locate_file(from,search_path = NULL)
-  if(length(from_path)==0) from_path <- tidyproject::locate_file(from,getOption("models.dir"))
-  using_code_library <- length(from_path)==0
-
-  if(length(from_path)==0){ ## if file is not found directory or in scripts.dir
-    if(use_code_library) alt_paths <- getOption("code_library_path")
-    from_path <- tidyproject::locate_file(from,search_path = alt_paths,recursive = TRUE)
-    if(length(from_path)==0) stop(paste(from,"not found"))
-    if(length(from_path)>1 & use_code_library)
-      stop("Matched more than one file with that name in code library.\n Try:\n  1) specifying full path OR\n  2) ensuring getOption(\"code_library_path\") points to non-overlapping directories")
-    if(length(from_path)>1 & !use_code_library)
-      stop("Matched more than one file with that name in alt_paths.\n Try specifying full path")
-  }
-
-  is_project_file <- normalizePath(dirname(from_path))==normalizePath(getOption("models.dir"))
-
-  #is_nm_file_name(to,error_if_false = TRUE)
-  ctl <- ctl_list(from_path)
-  ## Modify the file here.
-  if(is_nm_file_name(from_path))
-    run_id_from <- run_id(from_path) else
-      run_id_from <- basename(from_path)
-  
-  #lapply(to, function(to){
-    run_id <- run_id(to)
-    
-    ctl <- ctl %>% new_ctl(to)
-    attr(ctl, "file_name") <- to
-    #ctl <- gsub(paste0("(FILE\\s*=\\s*\\S*)",run_id_from,"\\b"),paste0("\\1",run_id),ctl)
-    if(!is_project_file) ctl[[1]] <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",from_path),ctl[[1]])
-    #  ctl <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",run_id_from),ctl) else
-    #    ctl <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",from_path),ctl)
-    ctl[[1]] <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*",paste("\\1",Sys.info()["user"]),ctl[[1]])
-    
-    dir.create(dirname(to), recursive = TRUE, showWarnings = FALSE)
-    write_ctl(ctl)
-    if(!requireNamespace("git2r", quietly = TRUE))
-      warning("git2r is recommended for this function. Please install it.")
-    git2r::repository
-    #tidyproject::setup_file(to)    
-  #})
-  return()
-}
-
-Vectorize_invisible <- function (FUN, vectorize.args = arg.names, SIMPLIFY = TRUE, USE.NAMES = TRUE) 
-{
-  arg.names <- as.list(formals(FUN))
-  arg.names[["..."]] <- NULL
-  arg.names <- names(arg.names)
-  vectorize.args <- as.character(vectorize.args)
-  if (!length(vectorize.args)) 
-    return(FUN)
-  if (!all(vectorize.args %in% arg.names)) 
-    stop("must specify names of formal arguments for 'vectorize'")
-  collisions <- arg.names %in% c("FUN", "SIMPLIFY", "USE.NAMES", 
-                                 "vectorize.args")
-  if (any(collisions)) 
-    stop(sQuote("FUN"), " may not have argument(s) named ", 
-         paste(sQuote(arg.names[collisions]), collapse = ", "))
-  FUNV <- function() {
-    args <- lapply(as.list(match.call())[-1L], eval, parent.frame())
-    names <- if (is.null(names(args))) 
-      character(length(args))
-    else names(args)
-    dovec <- names %in% vectorize.args
-    invisible(do.call("mapply", c(FUN = FUN, args[dovec], MoreArgs = list(args[!dovec]), 
-                        SIMPLIFY = SIMPLIFY, USE.NAMES = USE.NAMES)))
-  }
-  formals(FUNV) <- formals(FUN)
-  FUNV
-}
-
-#' Copy NONMEM control stream
+#' kill cluster job
+#' 
+#' Requires setting "kill_job" \code{option()}
 #'
-#' @param from character. File to copy from
-#' @param to character. File to copy to
-#' @param overwrite logical. Should to file be overwritten? Default = FALSE.
-#' @param alt_paths character vector. paths to other candidate files to search
-#' @param dest_dir character. default "Models" dir
+#' @param m nm object 
+#' @export
+kill_job <- function(m){
+  getOption("kill_job")(m)
+}
+
+#' overwrite behaviour of NMproject
+#' 
+#' Requires setting "nm.overwrite_behaviour" \code{option()}
 #'
+#' @param txt character either "run", "stop", "skip" 
 #' @export
-copy_control <- Vectorize_invisible(copy_control0)
+overwrite_behaviour <- function(txt = c("ask", 
+                                        "overwrite", 
+                                        "stop", 
+                                        "skip")){
+  if(missing(txt)){
+    return(getOption("nm.overwrite_behaviour"))
+  }
+  txt <- match.arg(txt)
+  options(nm.overwrite_behaviour = txt)
+  
+  # if(txt %in% "ask") message("ask: NMproject will ask before overwriting old files")
+  # if(txt %in% "overwrite") message("overwrite: NMproject will overwrite previous runs without prompt")
+  # if(txt %in% "stop") message("stop: NMproject will stop R execution with an error instead of running NONMEM")
+  # if(txt %in% "skip") message("skip: NMproject will not run NONMEM")
+  return(invisible())
+}
 
-#' Get run id
+#' @export
+.overwrite_behaviour <- tibble::tibble(
+  txt = c("ask", "overwrite", "stop", "skip"),
+  description =   c("ask before overwrite (default)",
+                    "overwrite all",
+                    "no overwriting (stop with error)",
+                    "no overwriting (skip, no error)")
+)
+
+#' get/set new_jobs
+#' 
+#' Requires setting "nm.overwrite_behaviour" \code{option()}
 #'
-#' @param m character or nm or ctl_list/ctl_character
-#' @param text optional character to set run_id 
-#' @param ... additional arguments
+#' @param txt character either "run", "stop", "skip" 
 #' @export
-run_id <- function(m, text, ...)
-  UseMethod("run_id")
-
-#' @export
-run_id.default <- function(m, text, ...) {
-  if(is_single_na(m)) return(NA) else stop("don't know how to handle this")
+new_jobs <- function(txt = c("ask", "overwrite", "stop new", "skip")){
+  .Deprecated(overwrite_behaviour)
+  overwrite_behaviour(match.arg(txt))
 }
 
-#' @export
-run_id.nm <- function(m, text, ...) m[["run_id"]]
-
-#' @export
-run_id.ctl_list <- function(m, text, ...){
-  file_name <- attr(m, "file_name")
-  run_id(file_name)
-}
-
-#' @export
-run_id.character <- function(m, text, ...){
-  if(is.null(attr(m, "file_name"))){
-    file.regex <- paste0("^.*",getOption("model_file_stub"),"(.*)\\.",getOption("model_file_extn"),"$")
-    run_id <- gsub(file.regex,"\\1",m)
-  } else {
-    file_name <- attr(m, "file_name")
-    if(!is.null(file_name)) run_id <- run_id(file_name) else run_id <- m
-  }
-  run_id
-}
-
-#' @export
-run_id.list <- function(m, text, ...){
-  args <- as.list(match.call()[-1])
-  
-  call_f <- function(m, args){
-    args[["m"]] <- m
-    do.call(run_id, args)
-  }
-  
-  sapply(m, call_f, args = args)
-}
- 
-
-#' Get run in
-#'
-#' @param x character or nm or ctl_list/ctl_character
-#' @export
-run_in <- function(x)
-  UseMethod("run_in")
-
-#' @export
-run_in.default <- function(x) {
-  if(is_single_na(x)) return(NA) else stop("don't know how to handle this")
-}
-
-#' @export
-run_in.nm <- function(x) x$run_in
-
-#' @export
-run_in.ctl_list <- function(x){
-  file_name <- attr(x, "file_name")
-  dirname(file_name)
-}
-
-#' @export
-run_in.character <- function(x) dirname(x)
-
-#' @export
-run_in.list <- function(x){
-  args <- as.list(match.call()[-1])
-  
-  call_f <- function(x, args){
-    args[["x"]] <- x
-    do.call(run_in, args)
-  }
-  
-  sapply(x, call_f, args = args)
-}
-
- 
 #' path of directory from models dir
 #'
 #' @param x character vector. Relative path from models.dir
@@ -332,35 +289,27 @@ from_models <- function(x, models_dir=getOption("models.dir")) {
   file.path(models_dir,x)
 }
 
-#' test if NONMEM file name conforms to convention
-#'
-#' @param x character vector. file name or path
-#' @param error_if_false logical. Default=FALSE. If true, will make an error if test fails
-is_nm_file_name <- function(x,error_if_false=FALSE){
-  file.regex <- paste0("^.*",getOption("model_file_stub"),"(.*)\\.",getOption("model_file_extn"),"$")
-  out <- grepl(file.regex,x)
-  if(error_if_false & any(!out))
-    stop(paste0("file.name doesn't match ",getOption("model_file_stub"),"XX.",getOption("model_file_extn")," convention")) else
-      return(out)
-}
-
 #' Run NMTRAN step only
 #'
-#' Requires options("path/to/nmtran") to be set up.
+#' Runs initial part of NONMEM where control file and dataset checks are performed.
+#' Stops before running NONMEM.  Useful especially on grid infrastructures where 
+#' it may take a while for NONMEM to start return ctl/dataset errors
 #'
-#' @param x character. file name of NONMEM control stream
+#' @param x nm object
+#' @details
+#' Requires \code{options("nmtran_exe_path")} to be set.
 #' @export
 nm_tran <- function(x) UseMethod("nm_tran")
 
 #' @export
 nm_tran.default <- function(x){
-
+  
   if(is.null(getOption("nmtran_exe_path"))){
-    message("Path to nmtran not set properly. To set add the following command:")
-    message("  options(nmtran_exe_path=\"path/to/nmtran\")")
-    message("     1. (for this session only) in the console")
-    message("     2. (for this user) to ~/.Rprofile")
-    message(paste0("     3. (for all users) to ",file.path(R.home(component = "home"), "etc", "Rprofile.site")))
+    warning("Path to nmtran not set properly. To set add the following command:\n",
+            "  options(nmtran_exe_path=\"path/to/nmtran\")\n",
+            "     1. (for this session only) in the console\n",
+            "     2. (for this user) to ~/.Rprofile\n",
+            paste0("     3. (for all users) to ",file.path(R.home(component = "home"), "etc", "Rprofile.site")))
     stop("nm_tran failed")
   }
   nm_tran_command <- getOption("nmtran_exe_path")
@@ -372,9 +321,10 @@ nm_tran.default <- function(x){
   file.copy(data_path,tempdir0) ## copy dataset
   dataset.name <- basename(data_path)
   suppressMessages({
-    update_dollar_data(file.path(tempdir0,basename(x)),dataset.name) %>% 
-      write_ctl(file.path(tempdir0,basename(x)))
+    ctl_text <- update_dollar_data(file.path(tempdir0,basename(x)),dataset.name)
+    write(ctl_text, file.path(tempdir0,basename(x)))
   })
+  message("running NMTRAN on ", x)
   system_nm(paste(nm_tran_command,"<",basename(x)),dir=tempdir0,wait=TRUE) ## run nmtran in tempdir0
 }
 
@@ -427,54 +377,6 @@ update_dollar_data <- function(ctl_name,new_data_name){
   ctl
 }
 
-#' update dollar inpute in NONMEM control stream
-#'
-#' Generic function
-#' @param ctl object coercible into ctl_lst
-#' @param ... arguments to be passed to dollar_data
-#' @export
-
-update_dollar_input <- function(ctl, ...){
-  if(is_single_na(ctl)) return(NA)
-  ctl <- ctl_list(ctl)
-  d <- suppressMessages(get_data(ctl))
-  replace_with <- suppressMessages(dollar_data(d, ...))
-  ctl$INPUT <- c("$INPUT", replace_with, "")
-  ctl
-}
-
-add_pop_param <- function(ctl, param, unit, trans){
-
-  ctl <- ctl_list(ctl)
-  browser()
-
-
-}
-
-
-#' Shiny view of NMproject
-#' @param db_name character. Name of db
-#' @export
-shiny_nm <- function(db_name="runs.sqlite"){
-  if(!requireNamespace("DT", quietly = TRUE))
-    stop("DT needed for this function to work. Please install it.",
-         call. = FALSE)
-  if(!requireNamespace("dygraphs", quietly = TRUE))
-    stop("dygraphs needed for this function to work. Please install it.",
-         call. = FALSE)
-  dygraphs::dygraph
-  DT::datatable
-  shiny_dir <- system.file("extdata/shiny",package="NMproject")
-  .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env
-  .sso_env$.db_name <- db_name  # see zzz.R for .sso_env
-  on.exit({
-    .sso_env$.currentwd <- NULL
-    .sso_env$.db_name <- NULL
-  }, add = TRUE)
-  shiny::runApp(shiny_dir,launch.browser = TRUE)
-}
-
-
 #' Check tidyproject for best practice compliance
 #'
 #' @param proj_name character. default = current working directory. path to directory.
@@ -526,11 +428,11 @@ get_PMX_code_library <- function(local_path,
 #' @param r object of class nm
 #' @export
 omega_matrix <- function(r){
-  dc <- coef.nm(r,trans=FALSE)
-  dc <- dc[dc$Type %in% c("OMEGAVAR","OMEGACOV"),]
-  dc <- dc[,c("Parameter","FINAL")]
-  dc$ROW <- as.numeric(gsub("OMEGA\\.([0-9]+)\\..*","\\1",dc$Parameter))
-  dc$COL <- as.numeric(gsub("OMEGA\\.[0-9]+\\.([0-9]+).*","\\1",dc$Parameter))
+  dc <- coef(r,trans=FALSE)
+  dc <- dc[dc$type %in% c("OMEGAVAR","OMEGACOV"),]
+  dc <- dc[,c("parameter","FINAL")]
+  dc$ROW <- as.numeric(gsub("OMEGA\\.([0-9]+)\\..*","\\1",dc$parameter))
+  dc$COL <- as.numeric(gsub("OMEGA\\.[0-9]+\\.([0-9]+).*","\\1",dc$parameter))
   dc <- dc[order(dc$ROW,dc$COL),]
   max_size <- max(c(dc$ROW,dc$COL))
   dc <- dc[,c("FINAL","ROW","COL")]
@@ -553,170 +455,6 @@ omega_matrix <- function(r){
   matrix(d_all$FINAL,nrow=max_size)
 }
 
-#' Document manual edit
-#'
-#' @param ctl object coercible into ctl_list
-#' @param comment character. Description of change
-#' @return error with comment name
-#' @export
-manual_edit <- function(ctl, comment){
-  if(missing(comment)) stop("needs two arguments, see ?manual_edit for help")
-  ctl <- ctl_list(ctl)
-  ctl_name <- attr(ctl, "file_name")
-  write_ctl(ctl)
-  message("perform manual edit: ", comment)
-  show_ctl(ctl_name)
-  message("(Recommended) after edit, save and use commit_file(\"",ctl_name,"\")")
-}
-
-
-#' Document manual steps for traceability
-#'
-#' This function will not execute to prevent accidental partial execution
-#'
-#' @param code_section code section. A potential mix of R code and manual_edit() statements
-#' @return message to user
-#' @examples
-#' \dontrun{
-#' build_ctl({
-#'   m16 %>% new_ctl("17") %>%  ## changes sdtab16 to sdtab17 and updated "based on: 16"
-#'   update_parameters(m16) %>% ## update parameter with final estimates from run 16
-#'   write_ctl() %>%            ## save results to file
-#'   manual_edit("reparameterised CL -> K")  ## manual edit. Save afterwards
-#'   commit_file("17")          ## (optional) snapshot file in version control system
-#' })
-#'
-#' ## or equivalently:
-#'
-#' build_ctl({
-#'   m16 %>% new_ctl("17") %>%
-#'   update_parameters(m16) %>%
-#'   write_ctl()
-#'   manual_edit("17", "reparameterised CL -> K")
-#'   commit_file("17")
-#' })
-#'
-#' }
-#' @export
-build_ctl <- function(code_section){
-  code_section <- substitute(code_section)
-  code_section_text <- deparse(code_section)
-
-  if(find_ast_name(code_section, "manual_edit")){
-    message("  ------------- MANUAL CODE SEGMENT -------------
-manual_steps() detected, skipping code segment to prevent partial building of modfile,
-run line by line and follow instructions in manual_step() to build modfile")
-  } else {
-    eval(code_section, envir = parent.frame(n=1))
-  }
-  return(invisible())
-}
-
-find_ast_name <- function(object, find){
-  tests <- sapply(object, function(obj) identical(deparse(obj), find))
-  if(any(tests)) return(TRUE)
-  lengths <- sapply(object, length) > 1
-  if(!any(lengths)) return(FALSE)
-  any(sapply(object[sapply(object, length) > 1], find_ast_name, find = find))
-}
-
-#' Write derived data file.
-#'
-#' @param d data.frame. Data frame to be saved
-#' @param name name of file (without extension)
-#' @param ...  additional arguments to be passed dto write.csv
-#' @export
-
-write_derived_data <- function(d, name, ...){
-  if(grepl("\\.", name)) stop("name should be extensionless")
-
-  RData_name <- file.path("DerivedData",paste0(name,".RData"))
-  csv_name <- file.path("DerivedData",paste0(name,".csv"))
-
-  d <- as.data.frame(d)
-  if(!inherits(d, "data.frame")) stop("d needs to be a data.frame or coercible into one")
-
-  save(d, file = RData_name)
-  write.csv.nm(d, file = csv_name, ...)
-
-  message("written: ")
-  message(RData_name)
-  message(csv_name)
-}
-
-#' Read derived data
-#'
-#' @param name name of file (without extension)
-#' @param na character to be passed to read.csv
-#' @param ...  additional arguments to be passed to read.csv
-#' @export
-
-read_derived_data <- function(name, na = ".", ...){
-
-  ## TODO: expand to other types of argument
-  if(length(name) != 1) stop("name should have length 1", call. = FALSE)
-
-  if(file.exists(name)){
-    if(grepl("\\.RData", name)) {
-      message("loading: ", name)
-      load(file = name)
-    }
-    if(grepl("\\.csv", name)) {
-      message("loading: ", name)
-      d <- utils::read.csv(name, na = na, ...)
-    }
-    return(d)
-  }
-
-  if(grepl("\\.", name)) stop("name should be extensionless")
-
-  RData_name <- file.path("DerivedData",paste0(name,".RData"))
-  csv_name <- file.path("DerivedData",paste0(name,".csv"))
-
-  if(file.exists(RData_name)){
-    message("loading: ", RData_name)
-    load(file = RData_name)
-  } else {
-    if(!file.exists(csv_name)) stop("looking for ", csv_name, " but it doesn't exist. stopping...")
-    d <- utils::read.csv(csv_name, na = na, ...)
-  }
-  return(d)
-}
-
-
-load_models <- function (x){
-  if (is.name(x) || is.atomic(x)) {
-    return(NULL)
-  }
-  else if (is.call(x)) {
-    if (identical(x[[1]], quote(`<-`))){
-      if(is.call(x[[3]])){
-        if(identical(x[[3]][[1]], quote(nm))){
-          message("\nrunning: ", deparse(x))
-          return(eval(x, envir = .GlobalEnv))
-        }
-      }
-    }
-    return(NULL)
-  }
-}
-
-#' load all model objects defined in a script
-#'
-#' Will rerun all '<- nm()' definitions
-#' Only remakes top level definitions.
-#' Programmatic use of nm() (e.g. in a for loop or using paste with other objects) will generally not work.
-#' Sorry!
-#'
-#' @param script_name path to script file
-#' @export
-
-load_top_level_models <- function(script_name){
-  text <- parse(script_name)
-  unlist(lapply(text, load_models))
-  invisible()
-}
-
 #' commit individual file(s)
 #'
 #' Has side effect that staged changed will be updated to working tree
@@ -732,81 +470,6 @@ commit_file <- function(file_name){
   file_name <- search_ctl_name(file_name)
   tidyproject::commit_file(file_name)
 }
-
-#' Git commit of ctl files, SourceData and Scripts
-#'
-#' @param message character. Description to be added to commit
-#' @param session logical. Should sessionInfo be included in commit message
-#' @param db_name character. Name of database
-#' @param ... additional arguments for git2r::commit
-#' @export
-
-snapshot <- function(message = "created automatic snapshot", session = TRUE, db_name = "runs.sqlite", ...){
-  current_runs <- show_runs(db_name = db_name)
-
-  files_to_stage <- c(file.path(getOption("scripts.dir"),"*"),
-                      current_runs$ctl,
-                      file.path("SourceData","*"),
-                      db_name)
-
-  tidyproject::code_snapshot_files(message = message, session = session, files_to_stage = files_to_stage, ...)
-
-}
-
-
-#' Posterior predictive check computations
-#' 
-#' Experimental function. Computes statistic on DV and DV_OUT for observed
-#' and simulated datasets prospectively
-#' 
-#' @param d data.frame (normally output of nm_output())
-#' @param stat_fun function to compute statistic.
-#'   Requirements:
-#'   1) First argument = data frame upon which to compute statistic.
-#'   2) Function must compute statistic on DV.
-#'   3) Function must return a data frame.
-#' @param sim_col character (default = "SIM"). name of subproblem number column 
-#' @param ... additional arguments to be passed to stat_fun
-#' 
-#' @export
-#' @examples 
-#' \dontrun{
-#' do <- nm_output(m1)
-#' cmax <- function(d){
-#'   d %>% group_by(DOSE) %>% 
-#'   summarise(Cmax = max(DV, na.rm = TRUE))
-#' }
-#' dppc <- process_ppc(d, cmax)
-#' ## then plot dppc$obs and dppc$sim
-#' }
-
-process_ppc <- function (d, stat_fun, sim_col = "SIM", ...) 
-{
-  if (!sim_col %in% names(d)) stop("Need sim_col column in dataset")
-  if(!1 %in% d[[sim_col]]) stop("sim_col does not contain a 1 in dataset")
-
-  dobs <- stat_fun(d[d[[sim_col]] %in% 1, ], ...)
-  if(!inherits(dobs, "data.frame")) stop("output of stat_fun should be a data.frame")
-  dobs <- as.data.frame(dobs)
-  dobs$SIM <- NA
-  
-  stat_fun_sim <- stat_fun
-  stat_fun_sim_body <- body(stat_fun_sim)
-  stat_fun_sim_body <- replace_DV_with_DV_OUT(stat_fun_sim_body)
-  body(stat_fun_sim) <- stat_fun_sim_body
-  
-  dsim <- by(d, d[[sim_col]], function(d) {
-    sim <- unique(d[[sim_col]])
-    d <- stat_fun_sim(d, ...)
-    d$SIM <- sim
-    d
-  })
-  dsim <- do.call(rbind, as.data.frame(dsim))
-  
-  list(obs = dobs, sim = dsim)
-}
-
-
 
 replace_DV_with_DV_OUT <- function(x){
   if(identical(x, quote(DV))){

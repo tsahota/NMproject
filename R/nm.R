@@ -1,581 +1,15 @@
-nm0 <- function(cmd,
-                parent = NULL,
-                description = "",
-                psn_command = NULL,
-                shell_script_name = NULL,shell_script_extn="sh",
-                ctl_name = NULL,run_id = NULL,run_dir = NULL,
-                run_in=getOption("models.dir"),
-                db_name = "runs.sqlite",
-                scm_config_name = NULL){
-  tidyproject::check_if_tidyproject()
-  if(!is.null(parent)) if(!identical(parent.frame(),.GlobalEnv)) stop("parent_ob can only be used if this function is called from the global environment")
-
-  r <- list()
-  class(r) <- "nm"
-
-  r$db_name <- db_name
-  if(is.null(run_in)) run_in <- "."
-  r$run_in <- run_in
-  r$cmd <- cmd
-  r$description <- description
-
-  if(!is.null(shell_script_name)){
-    if(!file.exists(file.path(r$run_in,shell_script_name)))
-      stop("cannot find shell script in ",r$run_in," directory",call. = FALSE)
-    ss_contents <- readLines(file.path(r$run_in,shell_script_name))
-    message("reading shell script: ",shell_script_name)
-    if(length(ss_contents)==0) stop(shell_script_name," is empty",call. = FALSE)
-    cmd <- c(cmd,ss_contents)
-  } else {
-    match_string <- paste0("^.*\\b(.+\\.",shell_script_extn,")\\b.*")
-    ss_file_name_detected <- grepl(match_string,cmd)
-    if(ss_file_name_detected){
-      shell_script_name <- gsub(match_string,"\\1",cmd)
-      if(file.exists(file.path(r$run_in,shell_script_name))){
-        message("reading shell script: ",shell_script_name)
-        ss_contents <- readLines(file.path(r$run_in,shell_script_name))
-        if(length(ss_contents)==0) stop(shell_script_name," is empty",call. = FALSE)
-        cmd <- c(cmd,ss_contents)
-      }
-    }
-  }
-  ## cmd is now set
-  cmd <- paste(cmd,collapse = " ")
-
-  if(!is.null(psn_command)) r$type <- psn_command
-  if(!is.null(ctl_name)) {
-    if(any(!file.exists(file.path(r$run_in,ctl_name))))
-      stop(paste(ctl_name,collapse = ",")," do(es) not exist",call. = FALSE)
-    r$ctl <- file.path(r$run_in,ctl_name)
-  }
-
-  if(is.null(r$type)){
-    matched_psn_commands <- unlist(sapply(getOption("psn.commands"),
-                                          function(i) gsub2(paste0("^.*(",i,")\\b\\s.+$"),"\\1",cmd)))
-    matched_psn_commands <- as.character(matched_psn_commands)
-    error_msg <- "\nRerun with psn_command argument\n e.g. for a bootstrap you can do:
-nm(\"bootstrap run1.mod -threads=4\",psn_command=\"bootstrap\")"
-    if(length(matched_psn_commands)==0)
-      stop(paste0("couldn't infer psn command type.",error_msg),call. = FALSE)
-    if(length(matched_psn_commands)>1)
-      stop(paste0("couldn't infer unique psn command type.",error_msg),call. = FALSE)
-    message(paste("inferring run type :",matched_psn_commands))
-    r$type <- matched_psn_commands
-  }
-
-  if(is.null(r$ctl)){
-    subcmd <- gsub(paste0("^.*(\\s|^)(",r$type,".+)$"),"\\2",cmd)
-    matched_ctl <- gsub2(paste0("^.*(",getOption("model_file_stub"),"\\S+",getOption("model_file_extn"),")\\s*.*$"),"\\1",subcmd)
-    if(length(matched_ctl)==0) {
-      if(r$type %in% "scm") {
-        if(is.null(scm_config_name)){
-          config_file <- gsub2(".*-config\\S*=(\\S*)\\s*.*$","\\1",cmd)
-          if(length(config_file)==0) stop("cannot infer scm file")
-          message("inferring scm config file : ",config_file)
-        } else config_file <- scm_config_name
-        scm_config_contents <- readLines(file.path(run_in,config_file))
-        scm_config_contents <- scm_config_contents[grepl("\\s*model=(.*)",scm_config_contents)]
-        matched_ctl <- gsub("\\s*model=(.*)","\\1",scm_config_contents)
-      }
-    }
-    if(length(matched_ctl)==0) stop("cannot infer model file.\nRerun with ctl_name argument",call. = FALSE)
-    message(paste("inferring ctl file :",matched_ctl))
-    r$ctl <- file.path(r$run_in,matched_ctl)
-  }
-
-  if(is.null(run_dir)){
-    matched_run_dir <-
-      gsub2(paste0("^.*-dir[a-z]*=\\s*(\\S*)\\s*.*$"),"\\1",cmd)
-    if(length(matched_run_dir)==0)
-      stop("couldn't infer run directory type.\nRerun with run_dir argument",call. = FALSE)
-    if(length(matched_run_dir)>1)
-      stop("couldn't infer unique run directory type.\nRerun with run_dir argument",call. = FALSE)
-    message(paste("inferring run directory :",matched_run_dir))
-    r$run_dir <- file.path(r$run_in,matched_run_dir)
-  } else r$run_dir <- run_dir
-
-  if(is.null(run_id)){
-    matched_run_id <- get_run_id(r$ctl[1])
-    r$run_id <- matched_run_id
-  } else r$run_id <- run_id
-
-  if(length(r$ctl)==0) stop("cannot infer model file.\nRerun with ctl_name argument",call. = FALSE)
-  if(!file.exists(r$ctl)) {
-    if(is.null(parent)) stop("cannot find model file",call. = FALSE)
-    ## assume parent exists
-    if(!identical(normalizePath(run_in),normalizePath(getOption("models.dir"))))
-      stop("the functionality to create the control stream does not yet exist when the run is not in Models dir",call. = FALSE)
-    message("creating control stream from parent...")
-    copy_control(parent$ctl,basename(r$ctl))
-    if(!getOption("wait")) get("file.edit")(r$ctl)
-  }
-
-  if(!is.null(parent)) {
-    r$parent_entry <- nmdb_match_entry(parent)
-  } else {
-    r$parent_entry <- NA
-  }
-
-  ## class for execute runs
-  class(r) <- c(paste0("nm",r$type),class(r))
-
-  r$input <- input_files(run_in = r$run_in,
-                         run_type = r$type,
-                         ctl_name = r$ctl)
-  r$output <- output_files(run_in = r$run_in,
-                           run_type = r$type,
-                           run_dir = r$run_dir,
-                           ctl_name = r$ctl)
-
-  r$description <- tidyproject::get_script_field(r$ctl,"Description")
-
-  ####
-
-  if(!is.null(db_name)){
-
-    match_info <- nmdb_match_info(r)
-    if(r$type %in% "execute") {
-      matched_entry <- match_info$entry[match_info$match_type &
-                                          match_info$match_run_in &
-                                          match_info$match_ctl]
-    } else {
-      matched_entry <- match_info$entry[match_info$match_type &
-                                          match_info$match_run_in &
-                                          match_info$match_ctl &
-                                          match_info$match_run_dir]
-    }
-
-    overlapped_output_entries <-
-      match_info$entry[match_info$overlap_outputs &
-                         !(match_info$entry %in% matched_entry)]
-
-    overlapped_output_files <-
-      match_info$overlap_outputs_char[match_info$overlap_outputs &
-                                        !(match_info$entry %in% matched_entry)]
-
-    overlapped_run_dir_entries <-
-      match_info$entry[match_info$match_run_dir & match_info$match_run_in &
-                         !(match_info$entry %in% matched_entry)]
-
-    if(length(overlapped_run_dir_entries)>0)
-      stop("\nThis run has the same run_dir as entry: ",overlapped_run_dir_entries,
-           "\nFix command and try again",call. = FALSE)
-
-    if(length(overlapped_output_entries)>0){
-      stop("\nThe following outputs would overwrite those from entry ",overlapped_output_entries,
-           ":\n    ",overlapped_output_files,
-           "\nFix control stream and try again",
-           "\n--View runs with: show_runs()",
-           "\n--Delete old runs with: delete_nm(entry)",call. = FALSE)
-    }
-
-    if(length(matched_entry)==0) {
-      nmdb_add_entry(r)
-    } else if(length(matched_entry)==1) {
-      ## database fields to preserve
-      status_ob <- get_object_field(db_name = r$db_name, entry = matched_entry, field = "run_status_ob")
-      #status_ob$status <- get_char_field(r$db_name,matched_entry,"run_status") ## done by previous line
-      job_info <- get_char_field(r$db_name,matched_entry,"job_info")
-
-      delete_nm(db_name,matched_entry)
-      message("Rewriting database entry: ",matched_entry)
-      nmdb_add_entry(r,matched_entry,silent=TRUE)
-
-      update_object_field(r$db_name,matched_entry,run_status_ob=status_ob)
-      update_char_field(r$db_name,matched_entry,run_status=status_ob$status)
-      update_char_field(r$db_name,matched_entry,job_info=job_info)
-
-    } else stop("Matched more than one database entry. Debug")
-
-    ## last step: update run_status in db
-    run_status(r)
-
-  }
-
-  union_write(".gitignore",getOption("nmproj_gitignore"))
-  return(r)
-}
-
-#' Make object of class nm
-#'
-#' @param cmd character. system command to launch NONMEM (PsN)
-#' @param parent object of class nm. Parent object to create (optional)
-#' @param description character. Description of model (optional)
-#' @param psn_command character. Name of PsN command (optional)
-#' @param shell_script_name character. Name of shell script for grid submission (optional)
-#' @param shell_script_extn character. File extension shell script for grid submission (optional)
-#' @param ctl_name character. Name of control file (optional)
-#' @param run_id character or numeric. Run identifier (optional)
-#' @param run_dir character or numeric. Run directory (optional)
-#' @param run_in character. Directory to execute. Default = getOption("models.dir")
-#' @param db_name character. Name of db. NULL = don't put in database
-#' @param scm_config_name character. Name of scm config file (optional)
-#' @return object of class nm
-#' @export
-
-nm <- function(cmd,
-               parent = NULL,
-               description = "",
-               psn_command = NULL,
-               shell_script_name = NULL,shell_script_extn="sh",
-               ctl_name = NULL,run_id = NULL,run_dir = NULL,
-               run_in=getOption("models.dir"),
-               db_name = "runs.sqlite",
-               scm_config_name = NULL){
-
-  nm0(cmd = cmd,
-      parent = parent,
-      description = description,
-      psn_command = psn_command,
-      shell_script_name = shell_script_name,
-      shell_script_extn = shell_script_extn,
-      ctl_name = ctl_name,
-      run_id = run_id,
-      run_dir = run_dir,
-      run_in = run_in,
-      db_name = db_name,
-      scm_config_name = scm_config_name)
-}
-
-Vectorize_nm <- function (FUN, vectorize.args = arg.names, SIMPLIFY = FALSE, USE.NAMES = TRUE) 
-{
-  arg.names <- as.list(formals(FUN))
-  arg.names[["..."]] <- NULL
-  arg.names <- names(arg.names)
-  vectorize.args <- as.character(vectorize.args)
-  if (!length(vectorize.args)) 
-    return(FUN)
-  if (!all(vectorize.args %in% arg.names)) 
-    stop("must specify names of formal arguments for 'vectorize'")
-  collisions <- arg.names %in% c("FUN", "SIMPLIFY", "USE.NAMES", 
-                                 "vectorize.args")
-  if (any(collisions)) 
-    stop(sQuote("FUN"), " may not have argument(s) named ", 
-         paste(sQuote(arg.names[collisions]), collapse = ", "))
-  FUNV <- function() {
-    args <- lapply(as.list(match.call())[-1L], eval, parent.frame())
-    ###############################
-    ## MODIFIED CODE FOR NMPROJECT
-    args <- lapply(args, function(arg){
-      if(inherits(arg, "nm")) return(list(arg)) else return(arg)
-    })
-    ################################
-    names <- if (is.null(names(args))) 
-      character(length(args))
-    else names(args)
-    dovec <- names %in% vectorize.args
-    ans <- do.call("mapply", c(FUN = FUN, args[dovec], MoreArgs = list(args[!dovec]), 
-                               SIMPLIFY = SIMPLIFY, USE.NAMES = USE.NAMES))
-    ###############################
-    ## MODIFIED CODE FOR NMPROJECT
-    if(is.list(ans) & length(ans) == 1) ans[[1]] else {
-      names(ans) <- NULL
-      ans
-    }
-    ###############################
-  }
-  formals(FUNV) <- formals(FUN)
-  FUNV
-}
-
-nm <- Vectorize_nm(nm, vectorize.args = names(formals(nm))[!names(formals(nm)) %in% "db_name"])
-
-is_nm <- function(x) inherits(x, "nm")
-
-#' is nm list
-#' 
-#' @param x object
-#' @export
-
-is_list_nm <- function(x) {
-  if(!inherits(x, "list")) return(FALSE)
-  
-  is_valid_subobject <- function(x){
-    if(is_nm(x)) return(TRUE)
-    if(length(x) == 1) if(is.na(x)) return(TRUE) ## na's allowed
-    return(FALSE)
-  }
-  
-  all(sapply(x, is_valid_subobject))
-}
-
-
-nmdb_match_entry <- function(r,db=NULL){
-  match_info <- nmdb_match_info(r,db=db)
-  if(r$type %in% "execute") {
-    matched_entry <- match_info$entry[match_info$match_type &
-                                        match_info$match_run_in &
-                                        match_info$match_ctl]
-  } else {
-    matched_entry <- match_info$entry[match_info$match_type &
-                                        match_info$match_run_in &
-                                        match_info$match_ctl &
-                                        match_info$match_run_dir]
-  }
-  if(length(matched_entry)>1) stop("Can't identify unique database entry. Something wrong. Debug")
-  matched_entry
-}
-
-union_write <- function (path, new_lines){
-  if (file.exists(path))
-    lines <- readLines(path, warn = FALSE) else
-      lines <- character()
-    all <- union(lines, new_lines)
-    writeLines(all, path)
-}
-
-#' Delete run from database
-#'
-#' @param db_name character. Name of db
-#' @param entry numeric. entry name to delete
-#'
-#' @export
-delete_nm <- function(db_name = "runs.sqlite",entry){
-  query <- paste('DELETE FROM runs WHERE entry ==',entry)
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), db_name)
-  RSQLite::dbClearResult(RSQLite::dbSendQuery(my_db, "PRAGMA busy_timeout=5000;"));
-  DBI::dbExecute(my_db, query)
-  DBI::dbDisconnect(my_db)
-}
-
-update_object_field <- function(db_name = "runs.sqlite",entry,...){
-  args <- list(...)
-
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), db_name)
-  RSQLite::dbClearResult(RSQLite::dbSendQuery(my_db, "PRAGMA busy_timeout=5000;"));
-  #RSQLite::dbClearResult(RSQLite::dbSendQuery(my_db, "PRAGMA journal_mode=WAL;"));
-  d <- DBI::dbGetQuery(my_db, 'SELECT * FROM runs')
-
-  for(i in seq_along(args)){
-    arg_name <- names(args)[i]
-    arg_val <- args[[i]]
-    d[d$entry %in% entry,][[arg_name]] <- I(list(serialize(arg_val,NULL)))
-  }
-
-  DBI::dbWriteTable(my_db, "runs", d,overwrite=TRUE)
-  DBI::dbDisconnect(my_db)
-  return()
-}
-
-get_object_field <- function(db_name = "runs.sqlite",db,entry,field){
-  if(missing(db)){
-    my_db <- DBI::dbConnect(RSQLite::SQLite(), db_name)
-    d <- DBI::dbGetQuery(my_db, paste('SELECT * FROM runs WHERE entry ==',entry))
-    DBI::dbDisconnect(my_db)
-    unserialize(d[d$entry %in% entry,][[field]][[1]]) 
-  } else {
-    d <- db
-    unserialize(d[d$entry %in% entry,][[field]][[1]])
-  }
-}
-
-update_char_field <- function(db_name="runs.sqlite",entry,...){
-  args <- list(...)
-  repl <- paste(paste0(names(args)," = '",args,"'"),collapse = ", ")
-  query <- paste("UPDATE runs SET",repl,"WHERE entry ==",entry)
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), db_name)
-  RSQLite::dbClearResult(RSQLite::dbSendQuery(my_db, "PRAGMA busy_timeout=5000;"));
-  DBI::dbExecute(my_db, query)
-  DBI::dbDisconnect(my_db)
-}
-
-get_char_field <- function(db_name="runs.sqlite",entry,field){
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), db_name)
-  d <- DBI::dbGetQuery(my_db, paste('SELECT * FROM runs WHERE entry ==',entry))
-  DBI::dbDisconnect(my_db)
-  d[d$entry %in% entry,][[field]]
-}
 
 #' Get job information (if it exists)
 #'
 #' Requires 'get_job_info' to be defined as an option - function that takes stdout console output
 #' from a job and returns a character
 #'
-#' @param r object class nm
+#' @param m object class nm
+#' @param text optional character to set job_info
 #' @export
-job_info <- function(r){
-  if("job_info" %in% names(r)) return(r$job_info)
-  if(is.null(r$db_name)) return(NA)
-  matched_entry <- nmdb_match_entry(r)
-  get_char_field(r$db_name,matched_entry,"job_info")
+job_info <- function(m, text){
+  UseMethod("job_info")  
 }
-
-nmdb_match_info <- function(r,db=NULL){
-  if(!file.exists(r$db_name))
-    return(data.frame(entry=numeric(),
-                      match_type=logical(),
-                      match_run_in=logical(),
-                      match_run_dir=logical(),
-                      match_ctl = logical(),
-                      overlap_outputs=logical(),
-                      overlap_outputs_char=character()))
-
-  if(is.null(db)) d <- nmdb_get(r$db_name) else d <- db
-
-  #dproposal <- nmdb_make_db_row(r)
-
-  ans <- list()
-  ans$entry <- d$entry
-  ans$match_type <- d$type %in% r$type
-  ans$match_run_dir <- d$run_dir %in% r$run_dir
-  ans$match_run_in <- d$run_in %in% r$run_in
-  ans$match_ctl <- d$ctl %in% r$ctl
-
-  dependent_run_dir <- sapply(d$run_dir,function(i)grepl(paste0("^",i,"$"),r$run_dir))
-  ans$dependent_run_dir <- as.logical(dependent_run_dir) & !ans$match_run_dir
-
-  overlap_outputs <- sapply(strsplit(d$output_files,","),function(out_filesi){
-    length(intersect(out_filesi,unlist(r$output)))>0
-  })
-
-  overlap_outputs_char <- sapply(strsplit(d$output_files,","),function(out_filesi){
-    paste(intersect(out_filesi,unlist(r$output)),collapse = ", ")
-  })
-
-  ans$overlap_outputs <- as.logical(overlap_outputs)
-  ans$overlap_outputs_char <- overlap_outputs_char
-
-  ans <- as.data.frame(ans)
-  return(ans)
-
-}
-
-nmdb_make_db_row <- function(r,add_cols=list()){
-  if(r$type %in% "execute") r$input$data <- NULL
-  d <- data.frame(entry=as.numeric(NA),
-                  object=I(list(serialize(r,NULL))),
-                  ctl = r$ctl,
-                  description=r$description,
-                  type=r$type,
-                  input_files=paste(unlist(r$input),collapse=","),
-                  output_files=paste(unlist(r$output),collapse=","),
-                  run_in=r$run_in,
-                  run_dir=r$run_dir,
-                  cmd = r$cmd,
-                  job_info = as.character(NA))
-  if(file.exists(r$run_dir))
-    d$run_status <- "dir exists" else
-      d$run_status <- "not run"
-  status_ob <- list()
-  status_ob$status <- d$run_status
-  if(d$run_status %in% "dir exists") status_ob$seen_at <- Sys.time()
-  d$run_status_ob <- I(list(serialize(status_ob,NULL)))
-  name_order <- names(d)
-  if(length(add_cols)>0){
-    d <- merge(d[,names(d)[!names(d) %in% names(add_cols)]],as.data.frame(add_cols))
-    d <- d[,name_order]
-  }
-  d
-}
-
-nmdb_printable_db <- function(d){
-  d$object <- NULL
-  d$output_files <- NULL
-  d$lst_exists <- NULL
-  d$stop_time_reached <- NULL
-  d$run_status <- NULL
-  d$run_status_ob <- NULL
-  d$input_files <- lapply(strsplit(d$input_files,","),function(char_vec){
-    paste(unique(basename(char_vec)),collapse=" ")
-  })
-  d$run_in <- NULL
-  ## include if statements for columns no in the db
-  if("outputs_present" %in% names(d))
-    d$outputs_present <- signif(d$outputs_present,2)
-  for(i in names(d)[!names(d) %in% "entry"]) d[,i] <- as.character(d[,i]) ## convert everything to characters
-  names(d) <- gsub("_"," ",names(d))
-  d
-}
-
-nmdb_add_entry <- function(r,entry=NULL,silent=FALSE,...){
-  new_db_flag <- !file.exists(r$db_name)
-  dnew <- nmdb_make_db_row(r,...)
-
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), r$db_name)
-  RSQLite::dbClearResult(RSQLite::dbSendQuery(my_db, "PRAGMA busy_timeout=5000;"));
-  RSQLite::dbClearResult(RSQLite::dbSendQuery(my_db, "PRAGMA journal_mode=WAL;"));
-  tryCatch({
-    if(new_db_flag) {
-      dempty <- dnew[c(),]
-      #dempty <- cbind(data.frame(entry=numeric()),dempty)
-      DBI::dbWriteTable(my_db, "runs", dempty)
-    }
-    d <- DBI::dbGetQuery(my_db, 'SELECT * FROM runs')
-
-    if(nrow(d)==0) new_entry <- 1 else
-      if(!is.null(entry)) new_entry <- entry else
-        new_entry <- max(d$entry) + 1
-
-    #dnew <- cbind(data.frame(entry=new_entry),dnew)
-    dnew$entry <- new_entry
-
-    if(!silent) message("Creating database entry: ",new_entry)
-    #res <- DBI::dbSendQuery(my_db, "PRAGMA busy_timeout=5000;")
-    #res <- DBI::dbSendQuery(my_db, "PRAGMA journal_mode=WAL;")
-    DBI::dbWriteTable(my_db, "runs", dnew, append=TRUE)
-    DBI::dbDisconnect(my_db)
-
-    invisible(new_entry)
-  },
-  error=function(e){
-    if(DBI::dbIsValid(my_db)) DBI::dbDisconnect(my_db)
-    if(new_db_flag) {
-      unlink(r$db_name,force = TRUE)
-      error_msg <- e
-    } else {
-      error_msg <- paste0(e,"\n",r$db_name," may be corrupted.
-This may be due to a backwards incompatible change in NMproject.
-Consider rebuilding. Instructions to rebuild:
-1. Delete the file: ",normalizePath(r$db_name,mustWork = FALSE),"
-2. Rebuild database by running nm() statements again")
-    }
-    stop(error_msg)
-  })
-}
-
-nmdb_get <- function(db_name="runs.sqlite",readable=FALSE){
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), db_name)
-  tryCatch({
-    d <- DBI::dbGetQuery(my_db, 'SELECT * FROM runs')
-    if(readable) d <- nmdb_printable_db(d)
-    DBI::dbDisconnect(my_db)
-    d <- d[order(d$entry),]
-    return(d)
-  },
-  error=function(e) {
-    if(DBI::dbIsValid(my_db)) DBI::dbDisconnect(my_db)
-    stop(paste0(e,"\n",db_name," may be corrupted.
-This may be due to a backwards incompatible change in NMproject.
-Consider rebuilding. Instructions to rebuild:
-1. Delete the file: ",normalizePath(db_name,mustWork = FALSE),"
-2. Rebuild database by running nm() statements again"),call. = FALSE)
-  })
-}
-
-#' Show table of runs in database
-#'
-#' @param db_name character. Name of db
-#' @param ... arguments to pass to nmdb_get
-#' @export
-show_runs <- function(db_name="runs.sqlite",...) nmdb_get(db_name=db_name,readable = TRUE,...)
-
-#' Extract nm object from data.base
-#' @param entry numeric. Database ID of nm object
-#' @param db_name character. Name of db
-#' @export
-
-extract_nm <- function(entry,db_name="runs.sqlite"){
-  my_db <- DBI::dbConnect(RSQLite::SQLite(), db_name)
-  d <- DBI::dbGetQuery(my_db, paste('SELECT * FROM runs WHERE entry ==',entry))
-  DBI::dbDisconnect(my_db)
-  if(nrow(d)>1) stop("More than one entry found",call. = FALSE)
-  if(nrow(d)==0) stop("No entry found",call. = FALSE)
-  r <- unserialize(d$object[[1]])
-  return(r)
-}
-
-#' @export
-print.nm <- function(x,...) utils::str(x)
 
 #' Show lst file
 #'
@@ -596,22 +30,6 @@ edit_file <- function(file_name){
   if(.Platform$OS.type=="windows")
     file.show(file_name) else
       get("file.edit")(file_name)
-}
-
-#' Edit control file
-#'
-#' @param r object of class nm, a file name, or a run_id
-#' @export
-show_ctl <- function(r) {
-  edit_file(search_ctl_name(r))
-}
-
-#' Show lst file
-#'
-#' @param r object of class nm
-#' @export
-show_out <- function(r) {
-  show_file(r$output$psn.lst)
 }
 
 
@@ -653,451 +71,7 @@ get_run_id <- function(ctl_name){
   ans
 }
 
-call_fun_on_nm_data_frame <- function(x, fun){
-  is_nm <- sapply(x, is_list_nm)
-  if(length(which(is_nm)) == 1) return(fun(x[is_nm])) else {
-    if(length(which(is_nm)) == 0) stop("can't find column of nm objects")
-    if(length(which(is_nm)) > 1) stop("can't find unique column of nm objects")
-  }
-}
 
-#' Run NONMEM
-#' 
-#' Run nm objects.  Uses system_nm() to submit the "cmd" value of object 
-#' 
-#' @param r objects of class nm/or list of objects class nm/or data.frame with column of nm objects
-#' @param overwrite logical. Should run directory be overwritten (default=FALSE)
-#' @param delete_dir logical. NA (default - directory will be deleted if no dependencies exists)
-#' TRUE or FALSE. Should run_dir be deleted.
-#' @param wait logical (default=FALSE). Should R wait for run to finish.
-#' Default can be changed with  wait_by_default() function
-#' @param update_db logical (default=TRUE). Should run_status be updated
-#' @param ignore.stdout logical (default=TRUE). Parameter passed to system()
-#' @param ignore.stderr logical (default=TRUE). Parameter passed to system()
-#' @param initial_timeout numeric. time in seconds.
-#' time period to give up on a run if directory hasn't been created.
-#' @param quiet logical (default=FALSE). should system_nm output be piped to screen
-#' @param intern logical. intern arg to be passed to system
-#'
-#' @return If only one object of class nm was specified, silently returns object.
-#' Otherwise returns nothing.
-#'
-#' @export
-run_nm <- function(r, overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
-                      update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
-                      initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern"))
-  UseMethod("run_nm")
-
-#' @export
-run_nm.default <- function(r, overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
-                           update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
-                           initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern")){
-  invisible(r)
-}
-
-#' @export
-run_nm.nm <- function(r, overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
-                      update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
-                      initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern")){
-  tidyproject::check_if_tidyproject()
-  #if(!quiet & !wait) stop("quiet=FALSE requires wait=TRUE")
-  
-  if(is.null(r$db_name)) update_db <- FALSE
-  ## if directory exists, and if it's definately a directory stop
-  if(file.exists(r$run_dir) & !overwrite)if(file.info(r$run_dir)$isdir %in% TRUE) stop("run already exists. To rerun select overwrite=TRUE\n  or use the switch overwrite_default(TRUE)",call.=FALSE)
-  if(!is.null(getOption("kill_run"))) getOption("kill_run")(r)
-  clean_run(r,delete_dir=delete_dir[1],update_db = update_db)
-  wait_arg <- FALSE
-  if(!quiet) {
-    #if(.Platform$OS.type == "windows") wait_arg <- TRUE
-    ignore.stdout = FALSE
-    ignore.stderr = FALSE
-  }
-  message(paste0("Running: ",r$type,":",r$ctl))
-  stdout0 <- system_nm(cmd = r$cmd, dir = r$run_in, wait = wait_arg,
-                       ignore.stdout = ignore.stdout, ignore.stderr = ignore.stderr, intern=intern)
-  if(intern) {
-    cat(stdout0,sep = "\n")
-    job_info <- getOption("get_job_info")(stdout0)
-    if(is.null(job_info)) job_info <- NA
-  } else job_info <- NA
-  
-  if(update_db){
-    matched_entry <- nmdb_match_entry(r)
-    status_ob <- list(status="submitted",run_at=Sys.time(),job_info=job_info)
-    update_object_field(r$db_name,matched_entry,run_status_ob=status_ob)
-    update_char_field(r$db_name,matched_entry,run_status=status_ob$status)
-    update_char_field(r$db_name,matched_entry,job_info=job_info)
-  }
-  r$job_info <- job_info
-  
-  if(wait) wait_for_finished(r, initial_timeout=initial_timeout)
-  invisible(r)
-}
-
-#' @export
-run_nm.list <- function(r, overwrite=getOption("run_overwrite"),delete_dir=c(NA,TRUE,FALSE),wait=getOption("wait"),
-                        update_db=TRUE,ignore.stdout = TRUE, ignore.stderr = TRUE,
-                        initial_timeout=NA, quiet = getOption("quiet_run"),intern=getOption("intern")){
-  
-  args <- as.list(match.call()[-1])
-  
-  call_f <- function(r, args){
-    args[["r"]] <- r
-    args[["wait"]] <- FALSE
-    do.call(run_nm, args)
-  }
-  
-  r <- lapply(r, call_f, args = args)
-
-  if(wait) wait_for_finished(r, initial_timeout=initial_timeout)
-  invisible(r)
-  
-}
-
-#' experimental fast version of run (only tested in linux)
-#' @param r objects of class nm/or list of objects class nm/or data.frame with column of nm objects
-#' @param wait logical (default=FALSE). Should R wait for run to finish.
-#' Default can be changed with  wait_by_default() function
-#' @param ignore.stdout logical (default=TRUE). Parameter passed to system()
-#' @param ignore.stderr logical (default=TRUE). Parameter passed to system()
-#' @param intern logical. intern arg to be passed to system
-#'
-#' @return If only one object of class nm was specified, silently returns object.
-#' Otherwise returns nothing.
-#'
-#' @export
-
-run_nm_fast_linux <- function(r, wait=getOption("wait"),
-                              ignore.stdout = TRUE,
-                              ignore.stderr = TRUE,
-                              intern=getOption("intern")){
-  
-  if(inherits(r, "nm")) r <- list(r)
-  
-  cmd <- sapply(r, function(r) {
-    if(is_single_na(r)) return(NA)
-    r$cmd
-  })
-  
-  run_in <- run_in(r)
-  
-  cmd <- paste0("cd $(pwd); cd ", run_in, "; echo ",seq_along(run_in)," ; ", cmd)
-  
-  cmd <- cmd[!is.na(r)]
-  
-  cmd <- paste(cmd, collapse = "; ")
-  
-  for(ri in r[!is.na(r)]){
-    message(paste0("Running: ",ri$type,":",ri$ctl))
-    clean_run(ri, delete_dir=NA,update_db = FALSE)
-  }
-
-  stdout0 <- system_nm(cmd = cmd, dir = ".", wait = FALSE,
-                       ignore.stdout = FALSE, 
-                       ignore.stderr = FALSE, 
-                       intern=TRUE)
-  cat(stdout0,sep = "\n")
-  
-  index <- cumsum(grepl("^[0-9]+$", stdout0))
-  
-  job_info <- sapply(seq_along(run_in), function(i){
-    getOption("get_job_info")(stdout0[index %in% i])
-  })
-  
-  for (i in seq_along(r)){
-    if(!is_single_na(r[[i]])) r[[i]]$job_info <- job_info[i] 
-  }
-  
-  return(r)
-}
-  
-#' Run NONMEM
-#' 
-#' Use run_nm instead. run was deprecated due to naming conflict with future package's run() function
-#' 
-#' @param ... objects
-#' @export
-
-run <- function(...){
-  .Deprecated("run_nm", msg = "run() will soon be deprecated, use run_nm() instead")
-  run_nm(...)
-}
-
-#' wait for a run to finish
-#'
-#' @param r objects of class nm/or list of objects class nm
-#' @param initial_timeout numeric. time in seconds.
-#' time period to give up on a run if directory hasn't been created.
-#' @export
-wait_for_finished <- function(r, initial_timeout=NA){
-  rl <- r
-  if(inherits(rl, "nm")) rl <- list(rl)
-  
-  rl <- rl[!sapply(rl, is.null)] ## remove nulls
-  
-  is_single_na <- function(x) if(length(x) == 1) is.na(x) else FALSE
-  rl <- rl[!sapply(rl, is_single_na)] ## remove nas
-  
-  message("Waiting for jobs:\n",paste(sapply(rl,function(i)paste0(" ",i$type,":",i$ctl)),collapse = "\n"))
-
-  i <- 0
-  while(length(rl)>0){
-    j <- (i %% length(rl))+1
-    r <- rl[[j]]
-    status_ob <- run_status(r,initial_timeout=initial_timeout)
-
-    ######################################
-    ## apply finishing test(s) here
-
-    finished <- is_status_finished(status_ob)
-
-    if(finished){ ## check again in 5 seconds
-      if(r$type != "execute") Sys.sleep(5) else Sys.sleep(1)
-
-      status_ob_new <- run_status(r,initial_timeout=initial_timeout)
-
-      finished <- identical(status_ob,status_ob_new)
-    }
-
-    ######################################
-    if(finished){
-      rl[[j]] <- NULL
-      message(paste0("Finished: ",r$type,":",r$ctl))
-    }
-    i <- i + 1
-    Sys.sleep(1)
-  }
-  
-  return(invisible(r))
-}
-
-#' run status
-#'
-#' @param r object class nm
-#' @param db data.frame. Output of nmdb_get() (optional)
-#' @param entry numeric. db entry number(optional)
-#' @param initial_timeout numeric (default = NA).
-#' Time to wait for directory creation before concluding error
-#' @export
-run_status <- function(r, db, entry, initial_timeout=NA){
-  ## logic:
-  ## if file.mtime(r$run_dir) ==  same use status_prev
-  ## if file.mtime(r$run_dir) !=  same
-  ##    and if lst_names %in% prev & existing_lsts %in% prev
-  ##       check new lsts add them to db
-  ##    else
-  ##       check all directories
-  
-  ## sometimes status_prev needs to be completely up to date.
-  ##  e.g. in wait_for.
-  ##  other times it doesn't matter and will update itself
-  
-  status_ob <- list()
-  status_ob_prev <- list()
-  if(!is.null(r$db_name)) {
-    missing_db <- missing(db)
-    if(missing_db) db <- nmdb_get(r$db_name)
-    if(missing(entry)) matched_entry <- nmdb_match_entry(r,db = db) else
-      matched_entry <- entry
-      status_ob_prev <- get_object_field(db_name = r$db_name, db = db, entry = matched_entry, field = "run_status_ob") 
-
-
-    if(!file.exists(r$run_dir)) {
-      if(status_ob_prev$status %in% c("not run","error")) {
-        return(status_ob_prev)
-      }
-      if(status_ob_prev$status %in% c("submitted")) {
-        test_timeout <- FALSE
-        if(!is.na(initial_timeout)){
-          timediff <- difftime(Sys.time(),status_ob_prev$run_at,units = "secs")
-          if(timediff > initial_timeout)
-            test_timeout <- TRUE
-        }
-        if(test_timeout) {
-          status_ob <- status_ob_prev
-          status_ob$status <- "error"
-          update_object_field(r$db_name,matched_entry,run_status_ob=status_ob)
-          update_char_field(r$db_name,matched_entry,run_status=status_ob$status)
-          return(status_ob)
-        } else {
-          return(status_ob_prev)
-        }
-      }
-      status_ob$status <- "not run"
-      update_object_field(r$db_name,matched_entry,run_status_ob=status_ob)
-      update_char_field(r$db_name,matched_entry,run_status=status_ob$status)
-      return(status_ob)
-    }
-
-  }
-
-  #####
-  ## assume directory exists and there is something new
-  ## get sub run info
-
-  get_sub_dirs <- function(path){
-    ## only checks 1 level deep - good enough for boostrap/sse
-    contents <- dir(path,full.names = TRUE)
-    contents[file.info(contents)$isdir]
-  }
-
-  if(r$type %in% c("execute")){
-    execution_dirs <- get_sub_dirs(r$run_dir)
-  } else if(r$type %in% c("bootstrap","sse","vpc")){
-    ## assume relevant directories end in _dir[0-9]+
-    first_level <- get_sub_dirs(r$run_dir)
-    first_level <- first_level[grepl("_dir[0-9]+",first_level)]
-    execution_dirs <- sapply(first_level,get_sub_dirs)
-  } else { ## warning: this is slow, but will work for all psn run types
-    execution_dirs <- dirname(dir(r$run_dir,
-                                  pattern = "psn\\.mod$",
-                                  recursive = TRUE,
-                                  full.names = TRUE))
-  }
-
-  execution_dirs <- unique(execution_dirs)
-
-  if(length(execution_dirs) == 0) {
-    if(is.null(r$db_name)) {
-      status_ob$status <- "not run"
-      return(status_ob)
-    }
-    if(status_ob_prev$status %in% c("error")) {
-      return(status_ob_prev)
-    }
-    if(status_ob_prev$status %in% c("dir exists")) {
-      test_timeout <- FALSE
-      if(!is.na(initial_timeout)){
-        timediff <- difftime(Sys.time(),status_ob_prev$seen_at,units = "secs")
-        if(timediff > initial_timeout)
-          test_timeout <- TRUE
-      }
-      if(test_timeout) {
-        status_ob <- status_ob_prev
-        status_ob$status <- "error"
-        update_object_field(r$db_name,matched_entry,run_status_ob=status_ob)
-        update_char_field(r$db_name,matched_entry,run_status=status_ob$status)
-        return(status_ob)
-      } else {
-        return(status_ob_prev)
-      }
-    }
-    status_ob$status <- "dir exists"
-    status_ob$seen_at <- Sys.time()
-    update_object_field(r$db_name,matched_entry,run_status_ob=status_ob)
-    update_char_field(r$db_name,matched_entry,run_status=status_ob$status)
-    return(status_ob)
-  }
-
-  lst_names <- file.path(execution_dirs,"psn.lst")
-  lst_mtimes <- file.mtime(lst_names)
-  names(lst_mtimes) <- lst_names
-  lst_mtimes <- sort(lst_mtimes)
-  lst_names <- names(lst_mtimes)
-
-  if("sub_run_mtimes" %in% names(status_ob_prev)){
-    sub_run_mtimes_prev <- status_ob_prev$sub_run_mtimes
-  } else sub_run_mtimes_prev <- character()
-  sub_run_mtimes_prev <- sort(sub_run_mtimes_prev)
-  sub_run_name_order <- names(sub_run_mtimes_prev)
-
-  if("sub_run_status" %in% names(status_ob_prev)){
-    sub_run_status_prev <- status_ob_prev$sub_run_status
-  } else sub_run_status_prev <- character()
-  sub_run_status_prev <- status_ob_prev$sub_run_status
-  sub_run_status_prev <- sub_run_status_prev[sub_run_name_order]
-
-  ## go through lst_mtimes, and check if there needs to be an update
-  name_checked_before <- lst_names %in% names(sub_run_mtimes_prev)
-  #mtime_updated <- !lst_mtimes %in% sub_run_mtimes_prev[]
-
-  recheck_lst <- sapply(seq_along(lst_mtimes),function(i){
-    if(!lst_names[i] %in% names(sub_run_mtimes_prev)) return(TRUE)
-    if(lst_mtimes[i]!=sub_run_mtimes_prev[lst_names[i]]) return(TRUE)
-    return(FALSE)
-  })
-  names(recheck_lst) <- lst_names
-
-  if(!any(recheck_lst)) {
-    return(status_ob_prev)
-  }
-
-  ## can assume some lst_mtimes need checking
-  lst_status <- rep(NA,length=length(recheck_lst))
-  names(lst_status) <- lst_names
-
-  for(i in seq_along(lst_mtimes)){
-    lst_name <- lst_names[i]
-    if(!recheck_lst[i]) lst_status[i] <- sub_run_status_prev[lst_name] else
-    {
-      #print(paste("checking",lst_name))
-      ## can assume lst_name needs checking now
-      psn_error <- file.exists(file.path(dirname(lst_name),"psn_nonmem_error_messages.txt"))
-      lst_mtimes[i] <- file.mtime(lst_name)
-      if(psn_error){
-        lst_status[i] <- "error"
-      } else { ## no psn error, read lst
-        lst <- try(readLines(lst_name),silent = TRUE)
-        if(inherits(lst,"try-error")) {
-          lst_status[i] <- "running"
-        } else { ## no error reading, see if stop time
-          lst <- lst[max(1,(length(lst)-5)):length(lst)]
-          stopped <- any(grepl("Stop Time:",lst))
-          if(stopped) lst_status[i] <- "finished" else lst_status[i] <- "running"
-        }
-      }
-    }
-  }
-
-  ## lst_status & lst_mtimes are up to date.
-  running <- length(which(lst_status %in% "running"))
-  finished <- length(which(lst_status %in% "finished"))
-  error <- length(which(lst_status %in% "error"))
-  status <- paste0("running:",running," finished:",finished," errors:",error)
-
-  status_ob$status <- status
-  status_ob$sub_run_mtimes <- lst_mtimes
-  status_ob$sub_run_status <- lst_status
-  status_ob$run_dir_mtime <- file.mtime(r$run_dir)
-  if(!is.null(r$db_name)){
-    update_object_field(r$db_name,matched_entry,run_status_ob=status_ob)
-    update_char_field(r$db_name,matched_entry,run_status=status_ob$status)
-  }
-  return(status_ob)
-}
-
-#' tests if job is finished
-#'
-#' @param status_ob output from run_status
-is_status_finished <- function(status_ob){
-
-  finished <- FALSE
-  #if("status" %in% names(status_ob))
-  #  if(status_ob$status %in% c("error","finished")) {
-  #    finished <- TRUE
-  #  }
-  if("sub_run_status" %in% names(status_ob)) {
-    sub_finished <- status_ob$sub_run_status %in% c("finished","error")
-    finished <- length(sub_finished)>0 & all(sub_finished)
-  }
-  finished
-}
-
-
-
-#' tests if job is finished
-#'
-#' @param r object class nm
-#' @param initial_timeout numeric. time in seconds.
-#' time period to give up on a run if directory hasn't been created.
-#' @export
-is_finished <- function(r,initial_timeout=NA){
-  if(is_single_na(r)) return(FALSE)
-  status_ob <- run_status(r,initial_timeout=initial_timeout)
-  is_status_finished(status_ob)
-}
-is_finished <- Vectorize_nm(is_finished, vectorize.args = "r", SIMPLIFY = TRUE)
 
 #' Condition number of run
 #' 
@@ -1111,21 +85,20 @@ cond_num <- function(r){
 #' @export
 cond_num.default <- function(r){
   if(is_single_na(r)) return(as.numeric(NA))
+  if(is.data.frame(r)){
+    dc <- r
+    ans <- as.numeric(dc$FINAL[dc$parameter %in% "CONDNUM"])
+    if(length(ans) == 0) ans <- as.numeric(NA)
+    return(ans)
+  }
   stop("don't know how to get cond_num of this")
-}
-
-#' @export
-cond_num.nm <- function(r){
-  dc <- try(coef_nm(r, trans = FALSE), silent = TRUE)
-  if(inherits(dc, "try-error")) return(as.numeric(NA))
-  cond_num(dc)
 }
 
 #' @export
 cond_num.nmcoef <- function(r){
   if(is_empty_nmcoef(r)) return(as.numeric(NA))
   dc <- r
-  ans <- as.numeric(dc$FINAL[dc$Parameter %in% "CONDNUM"])
+  ans <- as.numeric(dc$FINAL[dc$parameter %in% "CONDNUM"])
   if(length(ans) == 0) as.numeric(NA) else ans
 }
 
@@ -1185,93 +158,12 @@ wait_default <- function(x) options("wait"=x)
 
 overwrite_default <- function(x) options("run_overwrite"=x)
 
-#' Should run() work in non interactive mode
-#'
-#' Depreciated
-#'
-#' @export
-non_interactive_mode <- function() {
-  .Deprecated("interactive_mode")
+
+ctl_table_files <- function(ctl){
+  UseMethod("ctl_table_files") 
 }
 
-#' Should run() work in interactive mode
-#'
-#' @param value logical. TRUE = use interactive mode. FALSE = use non-interactive mode
-#' @export
-interactive_mode <- function(value) {
-  if(missing(value)) stop("expecting TRUE/FALSE argument")
-  if(!is.logical(value)) stop("expecting TRUE/FALSE argument")
-  if(value){
-    overwrite_default(FALSE)
-    wait_default(FALSE)
-  } else {
-    overwrite_default(TRUE)
-    wait_default(TRUE)
-  }
-}
-
-#' @export
-nm_tran.nm <- function(x){
-  tidyproject::check_if_tidyproject()
-  nm_tran.default(x$ctl)
-}
-
-#' List files to be cleaned up
-#' 
-#' @param r object class nm
-#' @export
-#' @examples 
-#' \dontrun{
-#' mod1 %>% extra_files
-#' mod1 %>% extra_files %>% cleanup
-#' }
-
-extra_files <- function(r){
-  tidyproject::check_if_tidyproject()
-  if(r$type %in% "execute"){
-    table_files <- ctl_table_files(r)
-    files <- file.path(r$run_dir, "NM_run1", table_files)
-  }
-  if(r$type %in% "vpc"){
-    print("TBD")
-    files <- character()
-  }
-  return(files)
-}
-
-#' clean_run files
-#'
-#' @param r object class nm
-#' @param delete_dir logical. NA (default), TRUE or FALSE. Should run_dir be deleted.
-#' @param update_db logical (default=TRUE). Should run_status be updated
-#' @export
-clean_run <- function(r,delete_dir=c(NA,TRUE,FALSE),update_db=!is.null(r$db_name)){
-  ## assumes ctrl file is run[run_id].mod and -dir=[run_id] was used
-  tidyproject::check_if_tidyproject()
-  unlink(r$output$ctl_out_files)
-  delete_dir <- delete_dir[1]
-  if(is.na(delete_dir)){
-    if(update_db){
-      match_info <- nmdb_match_info(r)
-      matched_entry <- match_info$entry[match_info$dependent_run_dir]
-      if(length(matched_entry)>0) {
-        stop("Dependent run(s) found: ",paste(matched_entry,collapse=","),
-             "\nRerun with delete_dir=TRUE or delete_dir=FALSE or remove dependent run")
-      }
-    }
-    unlink(r$run_dir,recursive=TRUE,force = TRUE)
-  }
-  if(TRUE %in% delete_dir) unlink(r$run_dir,recursive=TRUE,force = TRUE) ## delete run directory
-  if(update_db){
-    matched_entry <- nmdb_match_entry(r)
-    status_ob <- list(status="not run")
-    update_object_field(r$db_name,matched_entry,run_status_ob=status_ob)
-    update_char_field(r$db_name,matched_entry,run_status=status_ob$status)
-  }
-  invisible()
-}
-
-ctl_table_files <- function(ctl){ 
+ctl_table_files.default <- function(ctl){ 
   ctl <- ctl_character(ctl)
   s0 <- rem_comment(ctl)
   s <- grep("FILE\\s*=\\s*(\\S+)",s0,value=TRUE)
@@ -1279,7 +171,11 @@ ctl_table_files <- function(ctl){
   table_files
 }
 
-ctl_out_files <- function(ctl_file){ ## will get vector of $TABLE file names from control file.
+ctl_out_files <- function(ctl_file){
+  UseMethod("ctl_out_files")  
+}
+
+ctl_out_files.default <- function(ctl_file){ ## will get vector of $TABLE file names from control file.
   if(!file.exists(ctl_file)) stop(paste(ctl_file, "doesn't exist"))
   dir0 <- dir(dirname(ctl_file))
   
@@ -1298,48 +194,27 @@ ctl_out_files <- function(ctl_file){ ## will get vector of $TABLE file names fro
   out.files
 }
 
-input_files <- function(run_in,run_type,ctl_name){
-  r <- list()
-  r$ctl <- ctl_name
-  if(run_type %in% "execute"){
-    r$data_name <- data_name(ctl_name)
-    r$data_loc <- file.path(run_in,r$data_name)
-  }
-  return(r)
-}
-
-output_files <- function(run_in,run_type,run_dir,ctl_name){
-  r <- list()
-  if(run_type %in% "execute"){
-    extn <- tools::file_ext(ctl_name)
-    r$lst <- paste0(get_stub_name(ctl_name),".lst")
-    r$psn.mod <- file.path(run_dir,"NM_run1","psn.mod")
-    r$psn.lst <- file.path(run_dir,"NM_run1","psn.lst")
-    r$psn.ext <- file.path(run_dir,"NM_run1","psn.ext")
-    r$psn.cov <- file.path(run_dir,"NM_run1","psn.cov")
-    r$psn.cor <- file.path(run_dir,"NM_run1","psn.cor")
-    r$psn.xml <- file.path(run_dir,"NM_run1","psn.xml")
-    r$ctl_out_files <- file.path(run_in,ctl_out_files(ctl_name))
-  }
-  return(r)
-}
-
 #' write csv for NONMEM control files
+#' 
+#' Internal function 
+#' 
+#' @param d dataset to be saved
 #' @param ... arguments for write.csv
 #' @param na character. Default changed to ".".
 #' @param row.names logical. Default changed to FALSE.
 #' @param quote logical. Fefault changed to FALSE
-#' @export
 
-write.csv.nm <- function(...,na=".",
+write.csv.nm <- function(d, ...,na=".",
                          row.names=FALSE,
                          quote=FALSE){
-  utils::write.csv(...,na=na,row.names=row.names,quote=quote)
+  
+  utils::write.csv(d, ...,na=na,row.names=row.names,quote=quote)
 }
 
 #' Setup demo files
 #'
 #' @param demo_name character. Name of demo. Default = "theopp"
+#' @param new_project character. To set up demo in a separate (new) project
 #' @param file_stub character. Default = "run1". Stub to some file names
 #' @param overwrite logical. Default changed to FALSE.
 #' @param exclude character. Name of extension to exclude from copying
@@ -1348,40 +223,78 @@ write.csv.nm <- function(...,na=".",
 #' @export
 
 setup_nm_demo <- function(demo_name="theopp",
+                          new_project = NA,
                           file_stub = paste0(getOption("model_file_stub"),1),
                           overwrite=FALSE,
                           exclude=NULL,
                           additional_demo_locations = NULL){
-  tidyproject::check_if_tidyproject()
+  
+  if(!is.na(new_project)){
+    cwd <- getwd()
+    on.exit(setwd(cwd))
+    tidyproject::make_project(proj_name = new_project)
+    setwd(new_project)
+  }
   
   examples_dir <- character()
+  examples_dirs <- character()
+
   if(length(additional_demo_locations) > 0) {
     examples_dir <- normalizePath(additional_demo_locations, mustWork = FALSE)
-    examples_dir <- list.files(examples_dir, full.names = TRUE, recursive = FALSE)
-    examples_dir <- examples_dir[grepl(paste0(.Platform$file.sep, demo_name,"$"), examples_dir)]
+    examples_dirs <- list.files(examples_dir, full.names = TRUE, recursive = FALSE)
+    #examples_dir <- examples_dirs[grepl(paste0(.Platform$file.sep, demo_name,"$"), examples_dirs)]
   }
-  examples_dir <- append(examples_dir, system.file("extdata","examples",demo_name,package = "NMproject"))
-  examples_dir <- examples_dir[1]
+  ## TODO: rename examples to demos
+  examples_dirs <- append(examples_dirs, 
+                          list.files(system.file("extdata","examples",package = "NMproject"),
+                                     full.names = TRUE, recursive = FALSE))
+  matched_examples_dirs <- examples_dirs[grepl(paste0(.Platform$file.sep, demo_name,"$"), examples_dirs)]
+  
+  if(length(matched_examples_dirs) == 0)
+    stop("demo not found.\nAvailable demos:\n ",
+         paste(unique(basename(examples_dirs)), collapse = "\n "), call. = FALSE)
+  
+  #examples_dir <- append(examples_dir, system.file("extdata","examples",demo_name,package = "NMproject"))
+  examples_dir <- matched_examples_dirs[1]
 
-  files_to_copy <- dir(examples_dir,all.files = TRUE,recursive = TRUE)
-  dest_names <- files_to_copy
-  dest_names <- gsub("^Models/",paste0(getOption("models.dir"),"/"),dest_names)
-  dest_names <- gsub("^Scripts/",paste0(getOption("scripts.dir"),"/"),dest_names)
-  dest_names <- gsub("run1\\.",paste0(file_stub,"."),dest_names)
+  files_to_copy <- dir(examples_dir, all.files = TRUE, full.names = TRUE, recursive = TRUE)
+  
+  stage_info <- tidyproject::stage(files_to_copy, overwrite = overwrite, silent = TRUE)
+  
+  tidyproject::import(stage_info, overwrite = overwrite)
 
-  already_there <- file.exists(dest_names)
-  if(any(already_there) & !overwrite)
-    stop("File(s) already exist:\n",paste(paste0("  ",dest_names[already_there]),collapse="\n"),"\nRename or rerun with overwrite=TRUE",call. = FALSE)
-
-  for(i in seq_along(files_to_copy)){
-    if(is.null(exclude)) do_copy <- TRUE else {
-      if(grepl(paste0("\\.",exclude,"$"),files_to_copy[i]))
-        do_copy <- FALSE else do_copy <- TRUE
-    }
-    if(do_copy) copy_file(file.path(examples_dir,files_to_copy[i]),
-                          dest_names[i],version_control=TRUE,overwrite = TRUE)
-  }
 }
+
+
+#' Run all scripts sequentially
+#'
+#' Runs all scripts s01_..., s02_...
+#'
+#' @details works with .R and .Rmd extensions.  Behaviour is to \code{source} .R
+#'   files and use \code{rmarkdown::render} on .Rmd files
+#'
+#' @export
+run_all_scripts <- function(){
+
+  script_files <- dir(scripts_dir(), "s[0-9]+_.*?\\.R(md)?$", full.names = TRUE)
+  
+  dplan <- tibble::tibble(script_files) %>%
+    dplyr::mutate(rmd = grepl("\\.Rmd", .data$script_files))
+  
+  dplan <- dplan %>%
+    dplyr::mutate(
+      cmd = ifelse(.data$rmd, 
+                   paste0("rmarkdown::render(\"",script_files,"\")"),
+                   paste0("source(\"",script_files,"\")"))
+    )
+  
+  exprs <- rlang::parse_exprs(dplan$cmd)
+  
+  res <- lapply(exprs, rlang::eval_tidy)
+  return(invisible(TRUE))
+  
+}
+
 
 #' Get NONMEM output tables
 #'
@@ -1391,157 +304,29 @@ setup_nm_demo <- function(demo_name="theopp",
 #' @param dorig data.frame. optional NONMEM input dataset.
 #' @param ... additional arguments to pass on to read.csv
 #' @export
+
 nm_output <- function(r,dorig,...){
-  
-  if(requireNamespace("xpose4")) {
-    xpdb <- xpose4::xpose.data(r$run_id,directory=paste0(r$run_in,"/"))
-    d <- xpdb@Data
-  } else d <- data.frame()
-  
-  if(nrow(d) == 0){
-    ctl_out_files <- r$output$ctl_out_files
-    ctl_out_files <- ctl_out_files[grepl("tab", ctl_out_files)]
-    
-    d <- lapply(ctl_out_files, function(out_file){
-      d <- utils::read.table(out_file, skip = 1, header = TRUE)
-    })
-    
-    d <- do.call(cbind,d)
-    d <- d[,!duplicated(names(d))]
-  }
-  
-  if(missing(dorig)) dorig <- get_data(r,...)
-  
-  filter_statements <- data_filter_char(r)
-  if(identical(filter_statements, "TRUE")){
-    dORD <- seq_len(nrow(dorig))
-  } else {
-    expre <- parse(text=filter_statements)
-    dORD <- which(with(dorig,eval(expre)))    
-  }
-  #if(length(filter_statements) > 0){
-
-  #if("IGNORE" %in% type) dORD <- which(with(dorig,eval(expre)))
-  #if("ACCEPT" %in% type) dORD <- which(!with(dorig,eval(expre)))
-  
-  if(nrow(d) %% length(dORD) != 0) {
-    stop("something wrong... when R reads in original dataset
-and applies filter ",filter_statements,",
-there's ",length(dORD),"rows, but NONMEM output has ", nrow(d), " rows")
-  }    
-  #} else {
-  #  dORD <- seq_len(nrow(dorig))
-  #}
-  
-  ctl_contents <- ctl_character(r)
-  sim_ctl <- any(grepl("^\\s*\\$SIM",rem_comment(ctl_contents)))
-  
-  nreps <- nrow(d) / length(dORD)
-  
-  if("PRKEY" %in% names(d)) stop("name conflict with PRKEY in xpose table. aborting...")
-  if("PRKEY" %in% names(dorig)) stop("name conflict with PRKEY in original data. aborting...")
-
-  d$PRKEY <- dORD
-  dorig$PRKEY <- 1:nrow(dorig)
-  if(sim_ctl){
-    if("SIM" %in% names(d)) stop("name conflict with SIM in xpose table. aborting...")
-    if("SIM" %in% names(dorig)) stop("name conflict with SIM in original data. aborting...")
-    d$SIM <- rep(1:nreps,each=length(dORD))
-    message("Adding column: SIM")
-  }
-
-  d$INNONMEM <- TRUE
-
-  ## want a DV_OUT columsn
-  if("DV_OUT" %in% names(d)) warning("name conflict with DV_OUT in xpose table. replacing...")
-  d$DV_OUT <- d$DV
-  d$DV <- NULL
-  d <- d[,c(setdiff(names(d),names(dorig)[!names(dorig) %in% c("PRKEY")]))]
-  #dorig <- dorig[,names(dorig)[!names(dorig) %in% c("DV")]]
-
-  d2 <- merge(dorig, d, all.x = TRUE, by = "PRKEY")
-
-  d2$INNONMEM <- d2$INNONMEM %in% TRUE
-  if(nreps > 1) d2$SIM[is.na(d2$SIM)] <- 0
-
-  ## row number check
-  if(nrow(d2) != nrow(d)*(nreps-1)/nreps + nrow(dorig)) stop("merge went wrong. debug")
-
-  message("Adding column: PRKEY")
-
-  return(d2)
-}
-
-process_output <- function(r, ...){
-  if(!inherits(r, "nmexecute")) stop("can only currently process outputs for execute runs")
-  do <- nm_output(r, ...)
-  save(do, file = file.path(r$run_dir, "NMout.RData"))
-  invisible(do)
-}
-
-#' Get processed output table
-#' 
-#' @param r object of class nm
-#' @param ... optional additional arguments to pass on to read.csv of orig data
-#' @export
-
-output_table <- function(r, ...){
-  out_path <- file.path(r$run_dir, "NMout.RData")
-  if(!file.exists(out_path)) {
-    do <- process_output(r, ...)
-  } else {
-    load(out_path)
-  }
-  return(do)
+  UseMethod("nm_output")  
 }
 
 #' Get ignore statement
 #' @param r object coercible into ctl_list
+#' @param data data.frame (default = missing) optional input dataset from r
 #' @export
-data_ignore_char <- function(r){
-  dol_data <- ctl_list(r)$DATA
-  dol_data <- dol_data[!dol_data %in% ""]
-  dol_data <- rem_comment(dol_data)
-  
-  ignore_present <- any(grepl(".*IGNORE\\s*=\\s*\\(",dol_data))
-  accept_present <- any(grepl(".*ACCEPT\\s*=\\s*\\(",dol_data))
-  
-  type <- NA
-  if(ignore_present & accept_present) stop("cannot identify ignore columns")
-  if(ignore_present) type <- "IGNORE"
-  if(accept_present) type <- "ACCEPT"
-  no_filter <- is.na(type)
-  
-  if(!no_filter){
-    filter_statements <- paste0(".*",type,"\\s*=\\s*\\((\\S[^\\)]+)\\)*.*")
-    dol_data <- dol_data[grepl(filter_statements, dol_data)]
-    filter_statements <- gsub(filter_statements,"\\1",dol_data)
-    filter_statements <- unlist(strsplit(filter_statements,","))
-    filter_statements <- gsub("\\.EQ\\.","==",filter_statements)
-    filter_statements <- gsub("\\.NE\\.","!=",filter_statements)
-    filter_statements <- gsub("\\.EQN\\.","==",filter_statements)
-    filter_statements <- gsub("\\.NEN\\.","!=",filter_statements)
-    filter_statements <- gsub("\\./E\\.","!=",filter_statements)
-    filter_statements <- gsub("\\.GT\\.",">",filter_statements)
-    filter_statements <- gsub("\\.LT\\.","<",filter_statements)
-    filter_statements <- gsub("\\.GE\\.",">=",filter_statements)
-    filter_statements <- gsub("\\.LE\\.","<=",filter_statements)
-    filter_statements <- paste(filter_statements, collapse= " | ")
-    if("ACCEPT" %in% type) filter_statements <- paste0("!(",filter_statements,")")
-  } else {
-    filter_statements <- "FALSE"
-  }
-  filter_statements
+data_ignore_char <- function(r, data){
+  UseMethod("data_ignore_char")
 }
+
 
 #' Get filter statement
 #' 
 #' Opposite of data_ignore_char 
 #' 
 #' @param r object coercible into ctl_list
+#' @param ... arguments passed to data_ignore_char
 #' @export
-data_filter_char <- function(r){
-  ignore_char <- data_ignore_char(r)
+data_filter_char <- function(r, ...){
+  ignore_char <- data_ignore_char(r, ...)
   if(ignore_char == "FALSE") return("TRUE")
   ignored <- !grepl("^!\\((.*)\\)", ignore_char)
   accepted <- !ignored
@@ -1556,9 +341,12 @@ data_filter_char <- function(r){
 #' @param ctl object coercible into ctl_list
 #' @param ignore_char character. replacement statement
 #' @export
-
 update_ignore <- function(ctl, ignore_char){
+  UseMethod("update_ignore")
+}
 
+#' @export
+update_ignore.default <- function(ctl, ignore_char){
   ctl <- ctl_list(ctl)
   
   ignore_present <- any(grepl(".*IGNORE\\s*=\\s*\\(",ctl$DATA))

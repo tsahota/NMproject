@@ -4,7 +4,7 @@
 \alias{update_dollar}
 \title{Update subroutine}
 \usage{
-update_dollar(ctl, ..., which_dollar = 1)
+update_dollar(ctl, ..., which_dollar = 1, append = FALSE)
 }
 \arguments{
 \item{ctl}{object coercible to ctl_list}
@@ -12,6 +12,8 @@ update_dollar(ctl, ..., which_dollar = 1)
 \item{...}{named replacement argument of class character}
 
 \item{which_dollar}{(default = 1) which subroutine if multiple matches}
+
+\item{append}{logical (default = FALSE).  Should results be appended to subroutine}
 }
 \description{
 Update subroutine
