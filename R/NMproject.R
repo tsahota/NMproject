@@ -146,6 +146,7 @@ find_nm_install_path <- function(name = "default"){
   path
 }
 
+
 find_nm_tran_path <- function(name = "default", warn = TRUE){
 
   nm_versions <- try(system_nm("psn -nm_versions", intern = TRUE, ignore.stderr = TRUE), 
@@ -182,6 +183,22 @@ find_nm_tran_path <- function(name = "default", warn = TRUE){
   }
   path
   
+}
+
+#' get/set nm_tran_command
+#' 
+#' @param text optional character. If specified will set nm_tran_command
+#' 
+#' @export
+nm_tran_command <- function(text){
+  if(missing(text)){
+    if(!is.null(getOption("nmtran_command"))) return(getOption("nmtran_command"))
+    if(!is.null(getOption("nmtran_exe_path"))) return(paste(getOption("nmtran_exe_path"),"< {ctl_name}"))
+    return(NULL)
+  }
+  ## set text
+  options(nmtran_command = text)
+  invisible()
 }
 
 #' default system_nm
@@ -304,9 +321,9 @@ nm_tran <- function(x) UseMethod("nm_tran")
 #' @export
 nm_tran.default <- function(x){
   
-  if(is.null(getOption("nmtran_exe_path"))){
-    warning("Path to nmtran not set properly. To set add the following command:\n",
-            "  options(nmtran_exe_path=\"path/to/nmtran\")\n",
+  if(is.null(nm_tran_command())){
+    warning("Set nm_tran_command() not set. For example :\n",
+            "  nm_tran_command(\"path/to/nmtran\")\n",
             "     1. (for this session only) in the console\n",
             "     2. (for this user) to ~/.Rprofile\n",
             paste0("     3. (for all users) to ",file.path(R.home(component = "home"), "etc", "Rprofile.site")))
@@ -325,7 +342,13 @@ nm_tran.default <- function(x){
     write(ctl_text, file.path(tempdir0,basename(x)))
   })
   message("running NMTRAN on ", x)
-  system_nm(paste(nm_tran_command,"<",basename(x)),dir=tempdir0,wait=TRUE) ## run nmtran in tempdir0
+  
+  nm_tran_command <- nm_tran_command()
+  cmd <- stringr::str_glue(nm_tran_command, .envir = list(ctl_name= basename(x)), .na = NULL)
+  ## if non-glue - append the control file name
+  if(cmd == nm_tran_command) cmd <- paste(cmd, basename(x))
+  
+  system_nm(cmd, dir=tempdir0, wait=TRUE)
 }
 
 #' Get NONMEM dataset name from control stream
