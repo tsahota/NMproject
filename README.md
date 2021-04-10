@@ -37,7 +37,7 @@ if(!require("devtools")) install.packages("devtools")
 devtools::install_github("tsahota/NMproject@v0.5.1")
 ```
 
-To install the latests developmental version:
+To install the latest developmental version:
 
 ```R
 devtools::install_github("tsahota/NMproject")
@@ -221,7 +221,42 @@ Log in to github (create an account if necessary).  Fork the repository `tsahota
 
 ### + How do I run this on SGE?
 
-There is a built in `sge_command` that's part of NMproject.  Use this to set your `cmd()` field of the nm object 
+There is a pre-prepared built in `sge_parallel_execute` character object that's part of NMproject.  This uses the grid functionality built into PsN and has been tested to work within the Metworx platform.  Simply type it in the console to see the contents.  Required fields are `parafile`, `cores`.  Ensure these are set for your parent object like so.
+
+```{r}
+m1 <- m1 %>% 
+  cmd(sge_parallel_execute) %>%
+  parafile("/opt/NONMEM/nm750/run/mpilinux8.pnm") %>%
+  cores(8)
+```
+
+Note that child object will inherit the same `cmd` structure
+
+### + How do I run this on other clusters like Slurm, LSF, Torque
+
+The workflow is similar to above where PsN handles the grid submission. You will need to create your own analog character to `sge_parallel_execute` for your respective cluster.  It is recommended to consult PsN documentation to "gridify" your PsN command.  Once you have this, it's just a simple matter of replacing your control file name, run directory, parafile and desired number of cores with the relevant glue field (e.g. `{parafile}`) and then putting it into your parent `cmd()` command to get it running through NMproject.
+
+Feel free to contact me if you need help
+
+### + How do I run NONMEM via a PsN/NONMEM docker container
+
+This requires setting `cmd()` field of the first (parent) nm object and also setting `nm_tran_command()` once in your script.
+
+Easiest way to understand this is via an example: The following assumes the docker container has been set as shown in the fabulous `https://github.com/billdenney/Pharmacometrics-Docker` repository:
+
+Set cmd for an `execute` command like so:
+
+```{r}
+m1 %>% 
+  cmd("docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}")
+```
+
+`run_nm()` will then execute NONMEM via the docker container.  All subsequent child objects will inherit the same command structure.  Note the use the glueing object fields `ctl_name` and `run_dir` so child objects can inherit the same command structure to save the command being rewritten for each run)
+
+Set up dockerized NMTRAN checking with:
+
+`nm_tran_command("docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn /bin/bash -c '/opt/NONMEM/nm_current/tr/NMTRAN.exe < {ctl_name}'")`
+
 
 ### + My Rstudio Server is on a different linux server to my NONMEM cluster.  How can I set up NMproject to work with this?
 
