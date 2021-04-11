@@ -1,16 +1,6 @@
-## Copied from staging/Scripts/s03_cov_demo_prep.R
-##  (2021-03-02 13:53:56) by tarjinde
-## Copied from staging/Scripts/s03_cov_demo_prep.R
-##  (2020-12-12 14:44:54) by tarjinde
-## Copied from staging/Scripts/prep_cov_test.R
-##  (2020-04-22 19:27:40) by klgk669
-## Copied from staging/Scripts/cov_test.R
-##  (2020-01-07 19:55:27) by klgk669
-## Copied from staging/Scripts/nm.log2.R
-##  (2019-12-30 21:25:32) by klgk669
-## Author: klgk669
+## Author: Tarj Sahota
 ## First created: 2019-12-10
-## Description: Model development script
+## Description: Generate fake covariates and put into dataset
 ## Keywords:
 
 ########################################

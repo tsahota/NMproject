@@ -28,9 +28,8 @@ params:
 
 ```{r setup2, include=F}
 ## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
-library(rprojroot)
 library(knitr)
-opts_knit$set(root.dir=find_root(has_file(".Rprofile")))
+opts_knit$set(root.dir=rstudioapi::getActiveProject())
 opts_chunk$set(echo = FALSE)
 opts_chunk$set(message = FALSE)
 if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){

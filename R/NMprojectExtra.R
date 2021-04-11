@@ -5553,6 +5553,7 @@ cov_cov_plot <- function(d,
 write_derived_data <- function(d, name, ...){
 
   name <- tools::file_path_sans_ext(name)
+
   if(dirname(name) %in% "."){
     RDS_name <- file.path("DerivedData",paste0(name,".RDS"))
     csv_name <- file.path("DerivedData",paste0(name,".csv"))
@@ -5564,6 +5565,7 @@ write_derived_data <- function(d, name, ...){
   d <- as.data.frame(d)
   if(!inherits(d, "data.frame")) stop("d needs to be a data.frame or coercible into one")
 
+  dir.create(dirname(RDS_name), showWarnings = FALSE, recursive = TRUE)
   saveRDS(d, file = RDS_name)
   write.csv.nm(d, file = csv_name, ...)
 
