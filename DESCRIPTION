@@ -10,7 +10,7 @@ License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
 Remotes: 
-    tsahota/tidyproject@newinterface,
+    tsahota/tidyproject@v0.5.2,
     gluc/data.tree
 Imports:
     tidyproject (>= 0.5.0),

@@ -1,8 +1,8 @@
 # NMproject
 
-[![Travis-CI Build Status](https://travis-ci.org/tsahota/NMproject.svg?branch=newinterface)](https://travis-ci.org/tsahota/NMproject)
-[![Coverage Status](https://coveralls.io/repos/github/tsahota/NMproject/badge.svg?branch=newinterface)](https://coveralls.io/github/tsahota/NMproject?branch=newinterface)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/tsahota/NMproject?branch=newinterface&svg=true)](https://ci.appveyor.com/project/tsahota/NMproject)
+[![Travis-CI Build Status](https://travis-ci.org/tsahota/NMproject.svg?branch=develop)](https://travis-ci.org/tsahota/NMproject)
+[![Coverage Status](https://coveralls.io/repos/github/tsahota/NMproject/badge.svg?branch=develop)](https://coveralls.io/github/tsahota/NMproject?branch=newinterface)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/tsahota/NMproject?branch=develop&svg=true)](https://ci.appveyor.com/project/tsahota/NMproject)
 
 This is the newer beta interface.  To use the older interface, install v0.3.2 (see releases)
 
