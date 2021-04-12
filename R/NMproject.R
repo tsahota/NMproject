@@ -74,7 +74,7 @@ set_nm_opts <- function(){
                 "lasso","llp","mcmp","mimp","nca","npc","parallel_retries","pvar","randtest","rawresults","runrecord",
                 "scm","se_of_eta","sir","sse","sumo","update","update_inits","vpc","xv_scm"))
 
-  if(is.null(getOption("system_nm"))) options(system_nm=system_nm_default)
+  if(is.null(getOption("system_nm"))) options(system_nm=function(cmd, ...) system_nm_default(cmd, ...))
   if(is.null(getOption("quiet_run"))) options(quiet_run=TRUE)
   if(is.null(getOption("intern"))) options(intern=FALSE)
 
