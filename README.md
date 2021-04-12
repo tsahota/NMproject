@@ -255,7 +255,9 @@ m1 %>%
 
 Set up dockerized NMTRAN checking with:
 
-`nm_tran_command("docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn /bin/bash -c '/opt/NONMEM/nm_current/tr/NMTRAN.exe < {ctl_name}'")`
+```R
+nm_tran_command("docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn /bin/bash -c '/opt/NONMEM/nm_current/tr/NMTRAN.exe < {ctl_name}'")
+```
 
 
 ### + My Rstudio Server is on a different linux server to my NONMEM cluster.  How can I set up NMproject to work with this?
