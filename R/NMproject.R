@@ -129,7 +129,7 @@ sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_f
 #' @export
 find_nm_install_path <- function(name = "default"){
 
-  nm_versions <- try(system_nm("psn -nm_versions", intern = TRUE, ignore.stderr = TRUE),
+  nm_versions <- try(system_nm("psn -nm_versions", intern = TRUE, ignore.stderr = TRUE, wait = TRUE),
                      silent = TRUE)
   if(inherits(nm_versions, "try-error")) stop("can't find nonmem installation")
   
@@ -149,7 +149,7 @@ find_nm_install_path <- function(name = "default"){
 
 find_nm_tran_path <- function(name = "default", warn = TRUE){
 
-  nm_versions <- try(system_nm("psn -nm_versions", intern = TRUE, ignore.stderr = TRUE), 
+  nm_versions <- try(system_nm("psn -nm_versions", intern = TRUE, ignore.stderr = TRUE, wait = TRUE), 
                      silent = TRUE)
   
   warn_func <- function(){
@@ -346,7 +346,7 @@ nm_tran.default <- function(x){
   nm_tran_command <- nm_tran_command()
   cmd <- stringr::str_glue(nm_tran_command, .envir = list(ctl_name= basename(x)), .na = NULL)
   ## if non-glue - append the control file name
-  if(cmd == nm_tran_command) cmd <- paste(cmd, basename(x))
+  if(cmd == nm_tran_command) cmd <- paste(cmd, "<", basename(x))
   
   system_nm(cmd, dir=tempdir0, wait=TRUE)
 }
