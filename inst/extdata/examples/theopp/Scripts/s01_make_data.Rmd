@@ -24,9 +24,7 @@ library(dplyr)
 
 ```
 
-- Read THEOPP.csv from SourceData
-- modify WT column so it's filled in for obs rows
-- save into DerivedData
+Read THEOPP.csv from SourceData
 
 ```{r}
 
@@ -35,16 +33,25 @@ kable(head(d, 20))
 
 ```
 
+Modify WT column so it's filled in for obs rows.
+
 ```{r}
 
 d <- d %>%
   group_by(ID) %>%
   mutate(WT = na.omit(WT))
 
-d %>% write_derived_data("data") ## DerivedData/data.csv
+```
+
+Save the dataset into DerivedData
+
+```{r}
+
+d %>% write_derived_data("DerivedData/data")
 
 ```
 
+Additional step - create bootstrap datasets.  Why do these here before we've even created the run?  By creating them, we make it easy to run bootstraps (and other advanced techniques like bootstrap cross-validation) for model evaluation and model selection throughout the entirety of the model development.  The same bootstrapped datasets will be used whenever we have bootstrap guaranteeing that our results will be comparible.  Here we use the `rsample` package (part of the `tidyverse`) to create our bootstrapped datasets and store them `bootsplit_data.csv.RData`.  Latter scripts will use this to for bootstrapping and cross-validation.
 
 ```{r}
 ## Define STRATA (no spaces)
