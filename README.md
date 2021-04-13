@@ -173,13 +173,14 @@ Evaluate and compare runs on the fly with the following commands
 rr(m2)
 rr(c(m2, m3))
 plot_iter(m2)
-covariance_results(m2)
+covariance_plot(m2)
 ```
 
 To create a simulation:
 
 ```r
 m2s <- m2 %>% child(run_id = "m2s") %>%
+              update_parameter(m2) %>%
               convert_to_simulation(subpr = 50) %>%
               run_nm()
 
