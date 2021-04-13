@@ -14,3 +14,8 @@ This vignette is a placeholder for the beta release of NMproject.
 ## Vignette Info
 
 Under construction.  See github in mean time.
+
+Manual edits
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/HyCHeAAiwy4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
