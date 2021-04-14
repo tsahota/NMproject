@@ -9,8 +9,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This vignette is a placeholder for the beta release of NMproject.
-
 ## Vignette Info
 
 The intent of NMproject is to allow for fully script based NONMEM model development:
@@ -28,6 +26,37 @@ The intent of NMproject is to allow for fully script based NONMEM model developm
   * Shiny interface for real time run tracking in grid environments
 
 History: NMproject was previously an AstraZeneca project.  It is being reimplemented here as a community version to be compatible with a variety of architectures (standalone NONMEM and a variety of grid submission systems)
+
+```{r setup, include=FALSE}
+library(knitr)
+library(NMproject)
+extdata_path <- system.file("extdata", package = "NMproject")
+
+testfilesloc <- file.path(extdata_path, "theopp")
+zip_file <- file.path(extdata_path, "theopp.zip")
+
+files_to_unzip <- unzip(zip_file, list = TRUE)
+
+unzip(zip_file)
+
+dir(all.files = TRUE)
+extracted_folders <- dir("theopp", full.names = TRUE)
+
+for(extracted_folder in extracted_folders){
+  file.copy(extracted_folder, ".", recursive = TRUE)
+}
+
+file.rename("cache", ".cache")
+dir(all.files = TRUE)
+
+copied_folders <- basename(gsub("cache", ".cache", extracted_folders))
+
+unlink("theopp", recursive = TRUE)
+
+orig_dir <- getwd()
+
+```
+
 
 ## Demo
 
@@ -80,6 +109,10 @@ code_library()
 
 ```
 
+#```{r echo=FALSE, fig.cap="code_library()", out.width = '100%'}
+#knitr::include_graphics("man/figures/logo.png")
+#```
+
 One of the templates is `Models/ADVAN2.mod`.  Preview it with:
 
 ```{r eval = FALSE}
@@ -90,31 +123,34 @@ preview("Models/ADVAN2.mod")
 
 Use `ls_code_library()` to get the full path of this file and `stage()` to bring it into your project.
 
-```{r eval=FALSE}
-#code_library() to view code
+```{r}
+
 ls_code_library("Models/ADVAN2.mod") %>%
   stage()
+
 ```
 
 The model will be in the staging area: `staging/Models/ADVAN2.mod`, not `Models/ADVAN2.mod`.  This because we want it to remain an unchanged version of our imported template so that subsequent alteration retains long term reproducibility.
 
 Let's create our first parent NONMEM object with `new_nm()`.  This will require the most set up, subsequent child objects will inherits characterists of the parent.  Three arguments are required to create the parent, a run identifier, `run_id`, a control file it's based on, `based_on`, and a (relative) dataset path `data_path`:
 
-```{r eval=FALSE}
+```{r}
 
-m1 <- nm(run_id = "m1",
-         based_on = "staging/Models/ADVAN2.mod",
-         data_path = "DerivedData/data.csv")
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv")
+
+m1
 
 ```
 
 Display the object by typing `m1` in the console.  Notice that the `run_in` field is point to `Models`.  This can be changed by piping the function of the same name e.g. 
 
-```{r eval=FALSE}
+```{r}
 
-m1 <- nm(run_id = "m1",
-         based_on = "staging/Models/ADVAN2.mod",
-         data_path = "DerivedData/data.csv") %>%
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv") %>%
   run_in("NONMEM/base_model")
 
 ```
@@ -123,7 +159,7 @@ will run all models in a subdirectory of a subdirectory `NONMEM/base_model` inst
 
 To extract a field (rather than set a field) use the same function without additional arguments:
 
-```{r eval = FALSE}
+```{r}
 
 m1 %>% run_in()
 
@@ -133,16 +169,20 @@ For now though, lets stay with the default `run_in` location.
 
 *NOTE:* the field `ctl_name` refers to the name of the control that will be created.  This will only be created when it the model is run with the `run_nm()` function (described later).  For now, the control file contents reside inside the object.  To view these you can use `show_ctl(m1)`, or `text(m1)`.
 
-A few automatic edits from the staged control file and a compact representation of these changes can be shown by highlighting the above code and selecting the `nm_diff` addin which show what has been changed.  Learning how to read to diffs will be an important skill in NMproject you will pick up over time.  Notice how the `$DATA` has been updated to refer to the new location.
+A few automatic edits from the staged control file and a compact representation of these changes can be shown by highlighting the above code and selecting the `nm_diff` addin which show what has been changed.
 
-The default `cmd()` field of the object is `execute {ctl_name} dir={run_dir}`.  The braces are referred to as `glue` fields using the `glue` package.  These refer to field names of the object that will be substituted in.  For completeness on the next step we will explicitly set this to ensure our model development is easy to read.
+<iframe width="560" height="315" src="https://www.youtube.com/embed/mYUaKrj0-YE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+Learning how to read to diffs will be an important skill in NMproject you will pick up over time.  Notice how the `$DATA` has been updated to refer to the new location.
+
+The default `cmd()` field of the object is `execute {ctl_name} -dir={run_dir}`.  The braces are referred to as `glue` fields using the `glue` package.  These refer to field names of the object that will be substituted in.  For completeness on the next step we will explicitly set this to ensure our model development is easy to read.
 
 ```{r eval=FALSE}
 
-m1 <- nm(run_id = "m1",
-         based_on = "staging/Models/ADVAN2.mod",
-         data_path = "DerivedData/data.csv") %>%
-  cmd("execute {ctl_name} dir={run_dir}")
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv") %>%
+  cmd("execute {ctl_name} -dir={run_dir}")
 
 ```
 
@@ -150,10 +190,10 @@ The final steps to gets the NONMEM model ready is to fill in the remaining blank
 
 ```{r eval=FALSE}
 
-m1 <- nm(run_id = "m1",
-         based_on = "staging/Models/ADVAN2.mod",
-         data_path = "DerivedData/data.csv") %>%
-  cmd("execute {ctl_name} dir={run_dir}") %>%
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv") %>%
+  cmd("execute {ctl_name} -dir={run_dir}") %>%
   fill_input() %>%
   init_theta(init = c(-2, 0.5, 1)) %>%
   init_sigma(init = c(0.1, 0.1)) %>%
@@ -189,10 +229,31 @@ It will create the output in `Results` (or results_dir(m1))
 
 If we already have a parent run `m1` using `ADVAN2 TRANS1`, we can create a `child()` run that uses `TRANS2` using `subroutine()`:
 
+```{r include=FALSE}
+
+m1 <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m1$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m2 <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m2$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m2WT <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m2WT$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m1orig <- m1
+
+## need to skip overwrite because new user will mean directory gets overwriten
+overwrite_behaviour("skip") 
+
+```
+
 ```{r eval=FALSE}
 
 m2 <- m1 %>% child() %>%
-  subroutine(trans = 2) %>%
+  subroutine(trans = 2) %>% 
   run_nm()
 
 ```
@@ -203,7 +264,7 @@ To add a covariate using PsN coding conventions use `add_cov()`:
 
 ```{r eval=FALSE}
 
-m3 <- m2 %>% child() %>%
+m2WT <- m2 %>% child(run_id = "m2WT") %>%
   add_cov(param = "CL", cov = "WT", state = "linear") %>%
   run_nm()
 
@@ -220,14 +281,15 @@ c(m2, m3) %>% nm_render("Scripts/basic_gof.Rmd")
 
 `c(m1, m3)` is a vector object of 2 NONMEM runs.  It can be embedded into data.frames/tibbles.  
 
-Evaluate and compare runs on the fly with the following commands 
+Evaluate and compare runs on the fly with the following commands
 
-```{r eval=FALSE}
-rr(m2)
-rr(c(m2, m3))
-plot_iter(m2)
+```{r}
+rr(c(m2, m2WT))
+plot_iter(m2, skip = 30) ## skip first 30 interations 
 covariance_plot(m2)
 ```
+
+However these are better placed inside templates to enable rapid and consistent re-use.
 
 Create a simulation run using `update_parameters()` and `convert_to_simulation()`.  Apply vpc and ppc diagnostics
   
@@ -243,6 +305,96 @@ m2s %>% nm_render("Scripts/basic_ppc.Rmd")
 ```
 
 Don't forget to comment your code with your decision making.
+
+### Clean up runs
+
+```{r eval=FALSE}
+
+m1 %>% ls_tempfiles() ## will list all temporary files associate with run m1
+
+## remove all temporary files associated with m1
+m1 %>% ls_tempfiles() %>% unlink()
+
+## Not specifying an argument will list temporary files of all runs
+ls_tempfiles()
+
+```
+
+### Running NONMEM in parallel
+
+Two fields `parafile` and `cores` when combined with a suitable `cmd` can enable runs to be executed in parallel using PsN.
+
+```{r eval=FALSE}
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv") %>%
+  cmd("execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}") %>%
+  parafile("/opt/NONMEM/nm750/run/mpilinux8.pnm") %>%
+  cores(4) %>%
+  run_nm()
+
+```
+
+```{r include = FALSE}
+m1 <- m1 %>%
+  cmd("execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}") %>%
+  parafile("/opt/NONMEM/nm750/run/mpilinux8.pnm") %>%
+  cores(4)
+```
+
+*ADVANCED* You can make use of the vectorized objects to run multiple levels of parallelisation to invest which is the best for your particular model.  Here is sample code for that uses `m1` as a parent
+
+```{r eval=FALSE}
+dc <- tibble(cores = c(1, 3, 10, 30)) %>%
+  mutate(m = m1 %>% 
+           child(run_id = cores) %>%
+           cores(cores) %>%
+           run_in("Models/m1_coretest"))
+
+dc
+
+dc$m %>% cmd()
+
+# dc$m %>% run_nm()  ## command to run
+
+```
+
+
+### Bootstraps
+
+The package `rsample` can be used to create bootstrap datasets in your initial data manipulation scripts.  The following is an example bootstrap dataset being prepared with stratification on `SEX` and bodyweight `WTC` categorised in two categories  
+
+```{r eval = FALSE}
+
+d <- d %>%
+  mutate(WT_C = cut(WT, breaks = 2, labels = FALSE),
+         STRATA = paste(SEX, WT_C, sep = "_"))
+
+d_id <- d %>% distinct(ID, STRATA)
+
+set.seed(123)
+
+## create large set of resamples (to enable simulation to grow without ruining seed)
+bootsplits <- rsample::bootstraps(d_id, 100, strata = "STRATA")
+
+dir.create("DerivedData", showWarnings = FALSE)
+bootsplits %>% saveRDS("DerivedData/bootsplit_data.csv.RData")
+
+```
+
+In a model development script, the following, performs a 100 sample bootstrap of model `m1`
+
+```{r eval=FALSE}
+
+m1_boot <- m1 %>% make_boot_datasets(samples = 100, overwrite = TRUE)
+
+m1_boot$m <- m1_boot$m %>% run_nm()
+
+m1_boot$m %>% nm_list_render("Scripts/basic_boot.Rmd")
+
+```
+
+Results can be viewed in `Results/basic_boot.m1.html`.
 
 ## FAQ
 
@@ -277,10 +429,11 @@ There is a pre-prepared built in `sge_parallel_execute` character object that's 
 m1 <- m1 %>% 
   cmd(sge_parallel_execute) %>%
   parafile("/opt/NONMEM/nm750/run/mpilinux8.pnm") %>%
-  cores(8)
+  cores(8) %>%
+  run_nm()
 ```
 
-Note that child object will inherit the same `cmd` structure
+Note that child object will inherit the same `cmd` structure, `cores` and `parafile`.
 
 ### + How do I run this on other clusters like Slurm, LSF, Torque
 
@@ -326,13 +479,11 @@ This is not recommended as it requires R working directory being set to a networ
 
 ### + My organisation has a different control file convention to the runXX.mod convention.  Can I change this?
 
-Yes, you can specify the convention with the ctl_path() e.g. to change the convention to nm.XX.con
+Yes, you can specify the convention with the ctl_path() on your parent object e.g. to change the convention to nm.XX.con
 
 ```{r eval=FALSE}
 m %>% ctl_path("Models/nm.{run_id}.com")
 ```
-
-Consider making a wrapper function around nm() and ctl_path() and distributing to your users
 
 ### + How do I submit a command directly to the NONMEM server?
 
@@ -355,3 +506,12 @@ Yes, NMproject doesn't change PsN's default directory structure, so you can go b
 NMproject doesn't change PsN's default directory structure, and everything will work for them as long as their version of R (and package versions) are compatible.  It is recommended to run Renvironment_info() as a last step before sending the analysis directory so they can see the package versions you used.
 
 Obviously they will not be able to run code that is dependent on NMproject unless they install it.  But your model development script can still serve as a helpful, human readable process description of your model development steps.
+
+
+```{r include=FALSE}
+## clean up 
+getwd()
+unlink(copied_folders, recursive = TRUE)
+dir(all.files = TRUE)
+```
+
