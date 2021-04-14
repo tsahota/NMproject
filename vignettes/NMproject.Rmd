@@ -30,6 +30,7 @@ History: NMproject was previously an AstraZeneca project.  It is being reimpleme
 ```{r setup, include=FALSE}
 library(knitr)
 library(NMproject)
+library(dplyr)
 extdata_path <- system.file("extdata", package = "NMproject")
 
 testfilesloc <- file.path(extdata_path, "theopp")
@@ -344,7 +345,7 @@ m1 <- m1 %>%
 
 *ADVANCED* You can make use of the vectorized objects to run multiple levels of parallelisation to invest which is the best for your particular model.  Here is sample code for that uses `m1` as a parent
 
-```{r eval=FALSE}
+```{r}
 dc <- tibble(cores = c(1, 3, 10, 30)) %>%
   mutate(m = m1 %>% 
            child(run_id = cores) %>%
