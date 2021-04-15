@@ -1,52 +1,3 @@
-start_manual_edit <- function(m, name){
-  m %>% write_ctl()            ## update file
-  edit_file(ctl_path(m))
-  invisible(m)
-}
-
-#' Perform manual edit of control file
-#' 
-#' @param m nm object
-#' @param description character. Description of edit for documentation purposes
-#' @export
-manual_edit <- function(m, description){
-  
-  .Deprecated("manual_edit() is old. Use the make manual edit patch addin instead")
-  
-  m %>% start_manual_edit()
-  message(
-    "---Manual edit---
-    Instructions:
-    1) edit control file
-    2) save & close
-    Press ENTER when done...")
-  readline()
-  m %>% stop_manual_edit()
-}
-
-stop_manual_edit <- function(m){
-  old_m <- m
-  #old_target <- target(m)
-  m <- m %>% ctl_contents(ctl_path(m), update_ctl = FALSE)  ## update object
-  
-  old_ctl <- as.character(ctl_character(ctl_contents(as_nm_generic(old_m))))
-  new_ctl <- as.character(ctl_character(ctl_contents(as_nm_generic(m))))
-  
-  if(requireNamespace("diffobj", quietly = TRUE)){
-    dff <- diffobj::diffChr(new_ctl, old_ctl, format = "ansi256")
-    #dff <- diffobj::diffChr(new_ctl, old_ctl, format = "html")
-    
-    ## TODO: store patch in object for later retrieval
-    ## learn how git2r calls libgit - maybe something useful there
-    
-    message("--- file diff: new_ctl and old_ctl colours show additions/deletions---")
-    print(dff)
-    #m <- m %>% target(old_target)
-  }
-  
-  invisible(m)
-}
-
 #' internal function: start manual edit
 #' 
 #' Needed for addin functionality
@@ -55,7 +6,7 @@ stop_manual_edit <- function(m){
 #' @param combine_patch logical. should patch be added first before edit
 #' 
 #' @export
-start_manual_edit_unix <- function(m, combine_patch = NA_character_){
+start_manual_edit <- function(m, combine_patch = NA_character_){
   # if(.Platform$OS.type != "unix") 
   #   stop("patching functionality only implemented for linux/unix systems\n consider manual_edit() instead",
   #        call. = FALSE)
@@ -160,55 +111,6 @@ apply_manual_edit.nm_generic <- function(m, patch_name){
   
   out_file <- readLines(temp_ctl_path)
   
-  if(0){  ## delete this if working in AZ
-    ctl_paths <- ctl_path(m)
-    patch_cmd <- paste("patch -i", patch_path, ctl_paths)
-    patch_cmd <- paste(patch_cmd, collapse = " ; ")
-    
-    ## for some reason no "patch" on AZ rstudio server :(
-    ## use system_nm instead
-    
-    ## 1.save the file via ssh  
-    ## remove from orig and rej files in system_nm instead of R
-    ##  because sometimes delay
-    ## also get modified file via the command (to avoid file sync issue)
-    
-    patch_cmd <- paste0(
-      ## save the file via ssh  
-      paste0("echo ", 
-             shQuote(gsub("\\$", "\\\\$", paste(text(as_nm_generic(m)), collapse = "\n"))),
-             " > ", ctl_paths), ";",
-      ## remove orig and rej files
-      paste0("rm -f ", paste0(ctl_paths, ".orig")), ";",
-      paste0("rm -f ", paste0(ctl_paths, ".rej")), ";",
-      #    paste0("ls ", paste0(ctl_paths), "*;"),
-      #    paste0("md5sum ", paste0(ctl_paths), ";"),
-      patch_cmd, ";",
-      #    paste0("rm -f ", paste0(ctl_paths, ".orig")), ";",
-      #    paste0("rm -f ", paste0(ctl_paths, ".rej")), ";",
-      #    paste0("ls ", paste0(ctl_paths), "*;"),
-      #    paste0("md5sum ", paste0(ctl_paths), ";"),
-      "echo patched file below ;",
-      paste0("cat ", ctl_paths)
-    )
-    
-    out <- system_nm(patch_cmd, dir = getwd(), intern = TRUE)
-    
-    out_file <- out[seq_along(out) > match("patched file below" , out)]
-    preamble <- out[seq_along(out) < match("patched file below" , out)]
-    cat(preamble, sep = "\n")
-    
-    was_nm_list <- inherits(m, "nm_list")
-    
-    m <- as_nm_generic(m) %>% 
-      ctl_contents_simple(out_file)
-    
-    if(was_nm_list) m <- as_nm_list(m)
-    
-    
-  }
-  
-
   m <- m %>% ctl_contents_simple(out_file)
   
   invisible(m)
@@ -217,22 +119,6 @@ apply_manual_edit.nm_generic <- function(m, patch_name){
 
 #' @export
 apply_manual_edit.nm_list <- Vectorize_nm_list(apply_manual_edit.nm_generic, SIMPLIFY = FALSE)
-
-manual_patch_app <- function() {
-  
-  ## have base object
-  
-  ## include a patch to modify
-  
-  shiny_dir <- system.file("extdata/manual_patch",package="NMproject")
-  .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env
-  on.exit({
-    .sso_env$.currentwd <- NULL
-  }, add = TRUE)
-  viewer <- shiny::paneViewer(300)
-  shiny::runGadget(shiny::shinyAppDir(shiny_dir), viewer = viewer)
-  
-}
 
 get_single_object_for_app <- function(){
   ctx <- rstudioapi::getActiveDocumentContext()
@@ -280,7 +166,7 @@ new_patch_app <- function(){
   
   m <- get_single_object_for_app()
   
-  res <- start_manual_edit_unix(m)
+  res <- start_manual_edit(m)
   
   message(
     "---Manual edit---
@@ -302,10 +188,7 @@ new_patch_app <- function(){
                          id = ctx$id)
   
   message("apply_manual_edit() statement added to script")
-  if(!is.na(parent_run_id(m)))
-    warning("manual edits are subject to breakage if parent control files
-are changed.  It is recommended to use dollar() for custom edits of downstream (child) runs")
-  
+
 }
 
 modify_patch_app <- function(){
@@ -319,7 +202,7 @@ modify_patch_app <- function(){
   
   m <- eval(parse(text = before_edit))  
   
-  res <- start_manual_edit_unix(m, combine_patch = patch_name)
+  res <- start_manual_edit(m, combine_patch = patch_name)
   
   message(
     "---Manual edit---
@@ -340,10 +223,6 @@ modify_patch_app <- function(){
                          id = ctx$id)
   
   message("apply_manual_edit() statement modified in script")
-  
-  if(!is.na(parent_run_id(m)))
-    warning("manual edits are subject to breakage if parent control files
-are changed.  It is recommended to use dollar() for custom edits of downstream (child) runs")
   
 }
 

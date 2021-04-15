@@ -220,24 +220,6 @@ increment_run_id <- function(run_id){
   paste0(prefix_part, numeric_part + 1)
 }
 
-
-#' Determine if runs are expected to have overlapping output files (from PsN)
-#' 
-#' @param m nm_list object
-#' @export 
-overlapping_outputs <- function(m){
-  ## count number of times each appears
-  files <- psn_exported_files(m)
-  #files[[3]] <- c(files[[3]], files[[1]][1]) ## for testing only
-  tibble::tibble(uid = names(files), files = files) %>%
-    tidyr::unnest(files) %>%
-    dplyr::group_by(files) %>%
-    dplyr::summarise(conflicts = length(unique(.data$uid))-1,
-              runs = paste(.data$uid, collapse = ", ")) %>% #add
-    dplyr::arrange(dplyr::desc(.data$conflicts)) %>%
-    dplyr::filter(.data$conflicts > 0)
-}
-
 #' Change parent object
 #' 
 #' Useful when create a \code{child()} of a modified run
@@ -581,20 +563,6 @@ write_ctl.nm_generic <- function(m, force = FALSE){
 }
 #' @export
 write_ctl.nm_list <- Vectorize_nm_list(write_ctl.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
-
-#' @include ctl_handling.R
-#' @export
-update_dollar.nm_generic <- function(ctl,..., which_dollar = 1, append = FALSE){
-  dots <- list(...)
-  m <- ctl
-  ctl <- ctl_contents(m)
-  ctl_new <- update_dollar(ctl, ..., which_dollar = which_dollar, append = append)
-  m <- m %>% ctl_contents_simple(ctl_new)
-  m
-}
-#' @export
-update_dollar.nm_list <- Vectorize_nm_list(update_dollar.nm_generic, SIMPLIFY = FALSE)
-
   
 #' Target part of control object for further modification
 #' 
@@ -1706,6 +1674,8 @@ ls_tempfiles.default <- function(object = ".", output_loc = c("run_dir", "base")
   
   temp_files <- c(temp_files[!temp_files %in% temp_dirs],
                   temp_dir_files)
+  
+  if(length(temp_files) == 0) return(character()) ## if none return empty
   
   tidyproject::relative_path(temp_files, getwd())
 
@@ -3343,22 +3313,6 @@ rr_row <- function(m){
   d
 }
 
-is_try_nm_list <- function(m){
-  if(inherits(m, "try-error")) ob_exists <- FALSE else {
-    ob_exists <- is_nm_list(m)
-  }
-  ob_exists
-}
-
-nm_object_exists <- function(object_name, env){
-  object_exists <- exists(object_name, envir = env)
-  object_is_nm_list <- try(is_nm_list(get(object_name, envir = env)),
-                           silent = TRUE)
-  if(inherits(object_is_nm_list, "try-error"))
-    object_is_nm_list <- FALSE
-  object_exists & object_is_nm_list 
-}
-
 #' get path to run_dir
 #' 
 #' @param m nm object
@@ -3400,12 +3354,6 @@ nm_output_path.nm_generic <- function(m, extn, file_name) {
 nm_output_path.nm_list <- Vectorize_nm_list(nm_output_path.nm_generic, SIMPLIFY = TRUE)
 
 output_location <- function(m) file.path(run_in(m), dirname(lst_path(m)))
-
-ls_output <- function(m, pattern = ".", recursive = TRUE) {
-  output <- dir(output_location(m), recursive = recursive, full.names = TRUE, pattern = pattern)
-  return(normalizePath(output, winslash = "/"))
-}
-
 
 read_ext.nm_list <- function(r,trans=FALSE){
   exts <- lapply(r, read_ext)
@@ -3925,52 +3873,6 @@ unblock <- function(iomega, eta_numbers){
   suppressWarnings(dplyr::bind_rows(iomega_pre, iomega_block, iomega_post))  
   
 }
-
-#' Create new R function template
-#' @param function_name character indicating name of function
-#' @param overwrite logical. Whether to overwrite existing file (default = FALSE)
-#' @param open_file logical. Whether function should open script (default = TRUE)
-#' @param libs character. What libraries to add.
-#' @export
-new_function_template <- function(function_name, overwrite = FALSE, open_file = TRUE, libs=c("NMproject")) {
-  ## create black script with comment fields. Add new_script to git
-  check_if_tidyproject()
-  file_name <- paste0(function_name, ".R")
-  if (file_name != basename(file_name))
-    stop("name must not be a path")
-  to_path <- file.path("localpackage", "R", file_name)  ## destination path
-  if (file.exists(to_path) & !overwrite)
-    stop(paste(to_path, "already exists. Rerun with overwrite = TRUE"))
-  s <- c(paste0("## ", "Author: ", Sys.info()["user"]),
-         paste0("## ", "First created: ", Sys.Date()),
-         paste0("## ", "Description: "),
-         paste0("## ", "Keywords: "),
-         "",
-         "########################################",
-         "## load packages and source functions here", 
-         "", paste0("library(",libs,")"),
-         "",
-         "########################################", 
-         "## main script here", "",
-         "",
-         paste0(function_name, " <- Vectorize(function(m){"),
-         "  wait_finish(m)",
-         "  # d <- output_table(m) ## read in combined output ",
-         "  ",
-         "  ###############",
-         "  ## include plotting code here",
-         "  ",
-         "  ",
-         "  ###############",
-         "  ## return plotting object here",
-         "  ",
-         "})")
-  writeLines(s, to_path)
-  setup_file(to_path)
-  if (open_file) 
-    get("file.edit")(to_path)
-}
-
 
 ctl_table_paths <- function(ctl) {
   UseMethod("ctl_table_paths")
@@ -5567,8 +5469,8 @@ write_derived_data <- function(d, name, ...){
 
   dir.create(dirname(RDS_name), showWarnings = FALSE, recursive = TRUE)
   saveRDS(d, file = RDS_name)
-  write.csv.nm(d, file = csv_name, ...)
-
+  utils::write.csv(d, file = csv_name, na = ".", row.names=FALSE, quote=FALSE)
+  
   message("written: ")
   message(RDS_name)
   message(csv_name)

@@ -37,7 +37,7 @@ search_ctl_name <- function(r, models_dir=getOption("models.dir")){
   if(inherits(r,"nm")) ctl_name <- r$ctl
   if(inherits(r,"numeric") | inherits(r,"character")) {
     r <- as.character(r)
-    rtemp <- normalizePath(r,mustWork = FALSE)
+    rtemp <- normalizePath(r, mustWork = FALSE)
     if(file.exists2(rtemp)) ctl_name <- rtemp else {
       rtemp <- from_models(normalizePath(r,mustWork = FALSE), models_dir = models_dir)
       if(file.exists2(rtemp)) ctl_name <- rtemp else {
@@ -52,26 +52,6 @@ file.exists2 <- function(x){ ## only true is file exists and is not a directory
   if(!file.exists(x)) return(FALSE)
   !file.info(x)$isdir
 }
-
-
-
-gsub2 <- function(pattern,replacement,x,...){
-  match <- grepl(pattern,x,...)
-  if(!match) return(character())
-  gsub(pattern,replacement,x,...)
-}
-
-get_stub_name <- function(file_name) gsub("(.*)\\..*","\\1",file_name)
-
-get_run_id <- function(ctl_name){
-  stub_name <- get_stub_name(ctl_name)
-  match <- paste0("^.*",getOption("model_file_stub"),"(.*).*$")
-  ans <- gsub2(match,"\\1",stub_name)
-  if(length(ans)==0) ans <- NA
-  ans
-}
-
-
 
 #' Condition number of run
 #' 
@@ -107,58 +87,6 @@ cond_num.list <- function(r){
   sapply(r, cond_num)
 }
 
-#cond_num <- Vectorize_nm(cond_num, vectorize.args = "r", SIMPLIFY = TRUE, USE.NAMES = FALSE)
-
-
-nm_steps_finished <- function(r){ # for waiting
-  execution_dirs <- dirname(dir(r$run_dir,
-                                pattern = "psn\\.mod$",
-                                recursive = TRUE,
-                                full.names = TRUE))
-  execution_dirs <- unique(execution_dirs)
-  lst_names <- file.path(execution_dirs,"psn.lst")
-
-  if(length(execution_dirs) > 0){
-    ## check these all exist
-    finished <- sapply(lst_names,function(lst_name){
-      if(!file.exists(lst_name)) return(FALSE)
-      lst <- try(readLines(lst_name),silent = TRUE)
-      if(inherits(lst,"try-error")) return(FALSE)
-      lst <- lst[max(1,(length(lst)-5)):length(lst)]
-      stopped <- any(grepl("Stop Time:",lst))
-      psn_error <- file.exists(file.path(dirname(lst_name),"psn_nonmem_error_messages.txt"))
-      return(stopped | psn_error)
-    })
-    finished <- all(finished)
-  } else finished <- FALSE ## if no execution_dirs
-  return(finished)
-}
-
-last_modified <- function(r){
-  directory <- r$run_dir
-  d <- file.info(directory)
-  if(nrow(d)==0) return("")
-  d <- data.frame(file=rownames(d),mtime=d$mtime)
-  if(nrow(d)==0) return(as.character(NA))
-  d <- d[d$mtime %in% max(d$mtime), ]
-  as.character(unique(d$mtime))
-}
-
-#' Should run() wait for job to finish
-#'
-#' @param x logical. TRUE means run() will wait, FALSE = asynchronous execution
-#' @export
-
-wait_default <- function(x) options("wait"=x)
-
-#' Should run() overwrite previously run jobs
-#'
-#' @param x logical. TRUE means run() will overwrite previous runs by default,
-#' @export
-
-overwrite_default <- function(x) options("run_overwrite"=x)
-
-
 ctl_table_files <- function(ctl){
   UseMethod("ctl_table_files") 
 }
@@ -192,23 +120,6 @@ ctl_out_files.default <- function(ctl_file){ ## will get vector of $TABLE file n
 
   out.files <- c(table.files,out.files)
   out.files
-}
-
-#' write csv for NONMEM control files
-#' 
-#' Internal function 
-#' 
-#' @param d dataset to be saved
-#' @param ... arguments for write.csv
-#' @param na character. Default changed to ".".
-#' @param row.names logical. Default changed to FALSE.
-#' @param quote logical. Fefault changed to FALSE
-
-write.csv.nm <- function(d, ...,na=".",
-                         row.names=FALSE,
-                         quote=FALSE){
-  
-  utils::write.csv(d, ...,na=na,row.names=row.names,quote=quote)
 }
 
 #' Setup demo files

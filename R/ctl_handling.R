@@ -286,45 +286,6 @@ theta_r2nm <- function(x){
   setup_dollar(x,"$THETA")
 }
 
-#' Update subroutine
-#' 
-#' @param ctl object coercible to ctl_list
-#' @param ... named replacement argument of class character
-#' @param which_dollar (default = 1) which subroutine if multiple matches
-#' @param append logical (default = FALSE).  Should results be appended to subroutine
-#' @examples
-#' \dontrun{
-#' m1 %>% update_dollar(THETA=c("1             	; KA ; h-1 ; LOG
-#'                              -2.5            ; K  ; h-1 ; LOG
-#'                              -0.5          	; V  ; L ; LOG")) %>%
-#'        write_ctl()
-#' }
-#' @export
-update_dollar <- function(ctl,..., which_dollar = 1, append = FALSE){
-  UseMethod("update_dollar")
-}
-
-#' @export
-update_dollar.default <- function(ctl,..., which_dollar = 1, append = FALSE){
-  ctl <- ctl_list(ctl)
-  arg <- list(...)
-  if(length(arg) != 1) stop("need argument")
-  
-  dollar_name <- names(arg)
-  replace <- arg[[1]]
-  replace <- strsplit(replace, "\n")[[1]]
-  replace <- trimws(replace)
-  dollar_matches <- which(names(ctl) %in% dollar_name)
-  dollar_match <- dollar_matches[which_dollar]
-  dollar_name <- names(ctl)[dollar_match]
-  
-  if(append) replace <- c(ctl[[dollar_name]], replace)
-  
-  ctl[[dollar_name]] <- setup_dollar(replace,paste0("$",dollar_name))
-  ctl
-}
-
-
 #' Get parameter information
 #'
 #' @param ctl character. Path to control file
@@ -754,16 +715,6 @@ is_empty_nmcoef <- function(r){
   if(nrow(r) > 0) return(FALSE)
   if(ncol(r) > 0) return(FALSE)
   return(TRUE)
-}
-
-
-
-update_table_numbers <- function(ctl, run_id){
-  if(is_single_na(ctl)) return(NA)
-  ctl <- ctl_list(ctl)
-  if(missing(run_id)) run_id <- get_run_id(attributes(ctl)$file_name)
-  ctl$TABLE <- gsub(paste0("(FILE\\s*=\\s*\\S*tab)\\S*\\b"),paste0("\\1",run_id),ctl$TABLE)
-  ctl
 }
 
 

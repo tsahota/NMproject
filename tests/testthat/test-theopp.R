@@ -45,5 +45,7 @@ test_that("run and post",{
   expect_true(length(script_res_files) > 0)
   expect_true(min(file.info(script_res_files)$size) > 1e5)
   
-
+  all_temp_files <- ls_tempfiles()
+  expect_true(length(all_temp_files) == 0) ## shouldn't be any tempfiles in zip
+  
 })

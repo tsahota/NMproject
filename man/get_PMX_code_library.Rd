@@ -2,7 +2,7 @@
 % Please edit documentation in R/NMproject.R
 \name{get_PMX_code_library}
 \alias{get_PMX_code_library}
-\title{Download code repositor from github}
+\title{Download code repository from github}
 \usage{
 get_PMX_code_library(
   local_path,
@@ -18,5 +18,5 @@ get_PMX_code_library(
 \item{config_file}{character. Name of config file (e.g. "~/.Rprofile")}
 }
 \description{
-Download code repositor from github
+This function shouldn't be needed as the code library ships with NMproject.
 }

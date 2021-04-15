@@ -286,17 +286,6 @@ overwrite_behaviour <- function(txt = c("ask",
                     "no overwriting (skip, no error)")
 )
 
-#' get/set new_jobs
-#' 
-#' Requires setting "nm.overwrite_behaviour" \code{option()}
-#'
-#' @param txt character either "run", "stop", "skip" 
-#' @export
-new_jobs <- function(txt = c("ask", "overwrite", "stop new", "skip")){
-  .Deprecated(overwrite_behaviour)
-  overwrite_behaviour(match.arg(txt))
-}
-
 #' path of directory from models dir
 #'
 #' @param x character vector. Relative path from models.dir
@@ -334,7 +323,7 @@ nm_tran.default <- function(x){
   tempdir0 <- basename(tempdir()) ## make temporary directory in current directory
   dir.create(tempdir0) ; on.exit(unlink(tempdir0,recursive=TRUE,force = TRUE))
   file.copy(x,tempdir0) ## copy_control file
-  data_path <- file.path(dirname(x),data_name(x))
+  data_path <- file.path(dirname(x), data_name(x))
   file.copy(data_path,tempdir0) ## copy dataset
   dataset.name <- basename(data_path)
   suppressMessages({
@@ -376,17 +365,6 @@ data_name.default <- function(x){
   }))
 }
 
-
-#' get data name
-#'
-#' @param ctl object of class coercible into ctl_list
-#' @export
-get_data_name <- function(ctl){
-  ctl <- ctl_list(ctl)
-  data_name <- gsub("^ *\\$DATA\\s*([^ ]+).*$","\\1",ctl$DATA)[1]
-  return(data_name)
-}
-
 #' update dollar data (name of dataset) in NONMEM control stream
 #'
 #' Generic function
@@ -400,28 +378,6 @@ update_dollar_data <- function(ctl_name,new_data_name){
   ctl
 }
 
-#' Check tidyproject for best practice compliance
-#'
-#' @param proj_name character. default = current working directory. path to directory.
-#' @param silent logical. default = FALSE. suppress messages or not
-#' @param check_rstudio logical (default = FALSE). Check rstudio studio project directory
-#' @export
-
-check_session <- function(proj_name = getwd(), silent = FALSE, check_rstudio = TRUE) {
-  dtidy <- tidyproject::check_session(proj_name = proj_name,
-                                      silent = silent,
-                                      check_rstudio = check_rstudio)
-
-  d <- tidyproject::do_test(
-    "NM run database present" = {
-      file.exists("runs.sqlite")
-    },
-    silent = silent)
-
-  d <- rbind(dtidy,d)
-  invisible(d)
-}
-
 #' Create new R script
 #' @param name character indicating name of script to create
 #' @param overwrite logical. Whether to overwrite existing file (default = FALSE)
@@ -432,7 +388,9 @@ new_script <- function(name, overwrite = FALSE, open_file = TRUE, libs=c("NMproj
   tidyproject::new_script(name=name,overwrite = overwrite,open_file = open_file,libs = libs)
 }
 
-#' Download code repositor from github
+#' Download code repository from github
+#'
+#' This function shouldn't be needed as the code library ships with NMproject.
 #'
 #' @param local_path character. Path to install repository
 #' @param giturl character. URL to github repository
@@ -494,21 +452,6 @@ commit_file <- function(file_name){
   tidyproject::commit_file(file_name)
 }
 
-replace_DV_with_DV_OUT <- function(x){
-  if(identical(x, quote(DV))){
-    x <- quote(DV_OUT) 
-  }
-  if(identical(x, quote("DV"))){
-    x <- quote("DV_OUT") 
-  }
-  else if (is.call(x) | is.pairlist(x)) {
-    for(i in seq_along(x)){
-      x[[i]] <- replace_DV_with_DV_OUT(x[[i]])
-    }
-  }
-  return(x)
-}
-
 #' Get NONMEM version info
 #' 
 #' @return returns list with version info for NONMEM, PsN, perl and
@@ -519,7 +462,10 @@ replace_DV_with_DV_OUT <- function(x){
 NONMEM_version <- function(){
   
   ## scrape version info
-  psn_nm_versions <- system_nm("psn --nm_versions", intern = TRUE)
+  psn_nm_versions <- try(system_nm("psn -nm_versions", intern = TRUE, ignore.stderr = TRUE, wait = TRUE),
+                     silent = TRUE)
+  if(inherits(psn_nm_versions, "try-error")) stop("can't find nonmem installation")
+  
   psn_nm_version <- psn_nm_versions[grepl("default is", psn_nm_versions)]
   psn_nm_version <- basename(gsub("^.* (/.*)$","\\1", psn_nm_version))
   

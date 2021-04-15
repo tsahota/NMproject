@@ -49,12 +49,11 @@ Suggests:
     rsample,
 Collate: 
     'NMproject.R'
-    'nm.R'
-    'ctl_handling.R'
     'utilsExtra.R'
     'NMprojectExtra.R'
-    'NMprojectExtraDB.R'
     'NMprojectExtraTest.R'
+    'nm.R'
+    'ctl_handling.R'
     'developer_funs.R'
     'dollar_input.R'
     'insert_addin.R'
