@@ -5767,6 +5767,11 @@ shiny_nm <- function(m, envir = .GlobalEnv){
   shiny::runApp(shiny_dir,launch.browser = TRUE)
 }
 
+#' Code library
+#' 
+#' Shiny app to search code library and stage code into R package
+#' 
+#' @export
 code_library_app <- function(){
   shiny_dir <- system.file("extdata/code_library_shiny", package="NMproject")
   .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env
