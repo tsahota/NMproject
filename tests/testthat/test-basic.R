@@ -56,4 +56,6 @@ test_that("set up",{
   expect_error(nm_tran("run1.mod"))
   options(nmtran_exe_path=old.opt)
 
+  find_nm_install_path()
+  
 })

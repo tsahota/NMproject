@@ -131,7 +131,9 @@ find_nm_install_path <- function(name = "default"){
 
   nm_versions <- try(system_nm("psn -nm_versions", intern = TRUE, ignore.stderr = TRUE, wait = TRUE),
                      silent = TRUE)
-  if(inherits(nm_versions, "try-error")) stop("can't find nonmem installation")
+  if(inherits(nm_versions, "try-error")) {
+    return(NULL)
+  }
   
   nm_version <- nm_versions[grepl(paste0("^", name), nm_versions)]
   
@@ -464,7 +466,10 @@ NONMEM_version <- function(){
   ## scrape version info
   psn_nm_versions <- try(system_nm("psn -nm_versions", intern = TRUE, ignore.stderr = TRUE, wait = TRUE),
                      silent = TRUE)
-  if(inherits(psn_nm_versions, "try-error")) stop("can't find nonmem installation")
+  if(inherits(psn_nm_versions, "try-error")) {
+    warning("can't find nonmem installation")
+    return(NULL)
+  }
   
   psn_nm_version <- psn_nm_versions[grepl("default is", psn_nm_versions)]
   psn_nm_version <- basename(gsub("^.* (/.*)$","\\1", psn_nm_version))
