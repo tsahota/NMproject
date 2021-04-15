@@ -102,38 +102,27 @@ See the demo for how/why to create bootstrapped datasets before beginning model 
 
 `New Rmarkdown` -> `From Template` -> `Model development` will get you started with a model development log file.
 
-It's always best to start with NONMEM template too.  View the code library with:
+It's always best to start with NONMEM template too.  Search the code library and bring into staging area of analysis project using the `code_library` addin:
 
-```{r eval = FALSE}
+One of the templates is `Models/ADVAN2.mod`.  Select it, `preview()` it and then `stage()` by clicking the buttons and then closing the app.
 
-code_library()
+<iframe width="560" height="315" src="https://www.youtube.com/embed/nTixZB9tfgk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-```
+The model will be in the staging area: `staging/Models/ADVAN2.mod`, not `Models/ADVAN2.mod`.  Files in the staging area are not to be modified. It's similar to the `SourceData` directory in that sense.  This is to ensure that we can make changes to `ADVAN2.mod` in the code library without breaking old analyses that depended on it.
 
-#```{r echo=FALSE, fig.cap="code_library()", out.width = '100%'}
-#knitr::include_graphics("man/figures/logo.png")
-#```
+The other important component to understand is that control files are only written to the `Models` subdirectory just before running nonmem via the `run_nm()` command.  Prior to this, control file information is stored within the object itself.
 
-One of the templates is `Models/ADVAN2.mod`.  Preview it with:
+Let's create our first NONMEM object with `new_nm()`.  This will be a parent run to all other runs and thus requires more set up than other runs. Subsequent child objects will inherits characteristics of the parent.
 
-```{r eval = FALSE}
+Three arguments are required to create the parent, a run identifier, `run_id`, a control file it's based on, `based_on`, and a (relative) dataset path `data_path`:
 
-preview("Models/ADVAN2.mod")
-
-```
-
-Use `ls_code_library()` to get the full path of this file and `stage()` to bring it into your project.
-
-```{r}
+```{r include=FALSE}
 
 ls_code_library("Models/ADVAN2.mod") %>%
   stage()
 
 ```
 
-The model will be in the staging area: `staging/Models/ADVAN2.mod`, not `Models/ADVAN2.mod`.  This because we want it to remain an unchanged version of our imported template so that subsequent alteration retains long term reproducibility.
-
-Let's create our first parent NONMEM object with `new_nm()`.  This will require the most set up, subsequent child objects will inherits characterists of the parent.  Three arguments are required to create the parent, a run identifier, `run_id`, a control file it's based on, `based_on`, and a (relative) dataset path `data_path`:
 
 ```{r}
 
