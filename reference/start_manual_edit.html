@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Download code repository from github — get_PMX_code_library • NMproject</title>
+<title>internal function: start manual edit — start_manual_edit • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Download code repository from github — get_PMX_code_library" />
-<meta property="og:description" content="This function shouldn't be needed as the code library ships with NMproject." />
+<meta property="og:title" content="internal function: start manual edit — start_manual_edit" />
+<meta property="og:description" content="Needed for addin functionality" />
 
 
 
@@ -109,35 +109,27 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Download code repository from github</h1>
+    <h1>internal function: start manual edit</h1>
     
-    <div class="hidden name"><code>get_PMX_code_library.Rd</code></div>
+    <div class="hidden name"><code>start_manual_edit.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function shouldn't be needed as the code library ships with NMproject.</p>
+    <p>Needed for addin functionality</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_PMX_code_library</span><span class='op'>(</span>
-  <span class='va'>local_path</span>,
-  giturl <span class='op'>=</span> <span class='st'>"https://github.com/tsahota/PMXcodelibrary"</span>,
-  <span class='va'>config_file</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>start_manual_edit</span><span class='op'>(</span><span class='va'>m</span>, combine_patch <span class='op'>=</span> <span class='cn'>NA_character_</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>local_path</th>
-      <td><p>character. Path to install repository</p></td>
+      <th>m</th>
+      <td><p>nm object</p></td>
     </tr>
     <tr>
-      <th>giturl</th>
-      <td><p>character. URL to github repository</p></td>
-    </tr>
-    <tr>
-      <th>config_file</th>
-      <td><p>character. Name of config file (e.g. "~/.Rprofile")</p></td>
+      <th>combine_patch</th>
+      <td><p>logical. should patch be added first before edit</p></td>
     </tr>
     </table>
 
