@@ -69,7 +69,7 @@
       <h1 data-toc-skip>NMproject</h1>
                         <h4 class="author">Tarj Sahota</h4>
             
-            <h4 class="date">2021-04-14</h4>
+            <h4 class="date">2021-04-15</h4>
       
       
       <div class="hidden name"><code>NMproject.Rmd</code></div>
@@ -137,23 +137,15 @@
 <h3 class="hasAnchor">
 <a href="#model-development" class="anchor"></a>Model development</h3>
 <p><code>New Rmarkdown</code> -&gt; <code>From Template</code> -&gt; <code>Model development</code> will get you started with a model development log file.</p>
-<p>It’s always best to start with NONMEM template too. View the code library with:</p>
+<p>It’s always best to start with NONMEM template too. Search the code library and bring into staging area of analysis project using the <code>code_library</code> addin:</p>
+<p>One of the templates is <code>Models/ADVAN2.mod</code>. Select it, <code>preview()</code> it and then <code>stage()</code> by clicking the buttons and then closing the app.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/nTixZB9tfgk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+<p>The model will be in the staging area: <code>staging/Models/ADVAN2.mod</code>, not <code>Models/ADVAN2.mod</code>. Files in the staging area are not to be modified. It’s similar to the <code>SourceData</code> directory in that sense. This is to ensure that we can make changes to <code>ADVAN2.mod</code> in the code library without breaking old analyses that depended on it.</p>
+<p>The other important component to understand is that control files are only written to the <code>Models</code> subdirectory just before running nonmem via the <code><a href="../reference/run_nm.html">run_nm()</a></code> command. Prior to this, control file information is stored within the object itself.</p>
+<p>Let’s create our first NONMEM object with <code><a href="../reference/new_nm.html">new_nm()</a></code>. This will be a parent run to all other runs and thus requires more set up than other runs. Subsequent child objects will inherits characteristics of the parent.</p>
+<p>Three arguments are required to create the parent, a run identifier, <code>run_id</code>, a control file it’s based on, <code>based_on</code>, and a (relative) dataset path <code>data_path</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">code_library</span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>#<code>{r echo=FALSE, fig.cap="code_library()", out.width = '100%'} #knitr::include_graphics("man/figures/logo.png") #</code></p>
-<p>One of the templates is <code>Models/ADVAN2.mod</code>. Preview it with:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">preview</span><span class="op">(</span><span class="st">"Models/ADVAN2.mod"</span><span class="op">)</span></code></pre></div>
-<p>Use <code>ls_code_library()</code> to get the full path of this file and <code>stage()</code> to bring it into your project.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">ls_code_library</span><span class="op">(</span><span class="st">"Models/ADVAN2.mod"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">stage</span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## File(s) staged in project:
-##  staging/Models/ADVAN2.mod
-## To import use import()</code></pre>
-<p>The model will be in the staging area: <code>staging/Models/ADVAN2.mod</code>, not <code>Models/ADVAN2.mod</code>. This because we want it to remain an unchanged version of our imported template so that subsequent alteration retains long term reproducibility.</p>
-<p>Let’s create our first parent NONMEM object with <code><a href="../reference/new_nm.html">new_nm()</a></code>. This will require the most set up, subsequent child objects will inherits characterists of the parent. Three arguments are required to create the parent, a run identifier, <code>run_id</code>, a control file it’s based on, <code>based_on</code>, and a (relative) dataset path <code>data_path</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>,
              based_on <span class="op">=</span> <span class="st">"staging/Models/ADVAN2.mod"</span>,
              data_path <span class="op">=</span> <span class="st">"DerivedData/data.csv"</span><span class="op">)</span>
@@ -178,14 +170,14 @@
 ##   ..- attr(*, "class")= chr [1:3] "nm_execute" "nm_generic" "list"
 ##  - attr(*, "class")= chr [1:2] "nm_list" "list"</code></pre>
 <p>Display the object by typing <code>m1</code> in the console. Notice that the <code>run_in</code> field is point to <code>Models</code>. This can be changed by piping the function of the same name e.g. </p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>,
              based_on <span class="op">=</span> <span class="st">"staging/Models/ADVAN2.mod"</span>,
              data_path <span class="op">=</span> <span class="st">"DerivedData/data.csv"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/nm_getsetters.html">run_in</a></span><span class="op">(</span><span class="st">"NONMEM/base_model"</span><span class="op">)</span></code></pre></div>
 <p>will run all models in a subdirectory of a subdirectory <code>NONMEM/base_model</code> instead. Any field can by modified using a similar heuristic.</p>
 <p>To extract a field (rather than set a field) use the same function without additional arguments:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/nm_getsetters.html">run_in</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "NONMEM/base_model"</code></pre>
 <p>For now though, lets stay with the default <code>run_in</code> location.</p>
@@ -195,13 +187,13 @@
 </iframe>
 <p>Learning how to read to diffs will be an important skill in NMproject you will pick up over time. Notice how the <code>$DATA</code> has been updated to refer to the new location.</p>
 <p>The default <code><a href="../reference/nm_getsetters.html">cmd()</a></code> field of the object is <code>execute {ctl_name} -dir={run_dir}</code>. The braces are referred to as <code>glue</code> fields using the <code>glue</code> package. These refer to field names of the object that will be substituted in. For completeness on the next step we will explicitly set this to ensure our model development is easy to read.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>,
              based_on <span class="op">=</span> <span class="st">"staging/Models/ADVAN2.mod"</span>,
              data_path <span class="op">=</span> <span class="st">"DerivedData/data.csv"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"execute {ctl_name} -dir={run_dir}"</span><span class="op">)</span></code></pre></div>
 <p>The final steps to gets the NONMEM model ready is to fill in the remaining blanks in the template. They are the <code>$INPUT</code> and <code>$THETA</code>, <code>$OMEGA</code>. For this we will use the <code><a href="../reference/fill_input.html">fill_input()</a></code> and <code><a href="../reference/init_theta.html">init_theta()</a></code> and <code><a href="../reference/init_theta.html">init_omega()</a></code> before piping into our <code><a href="../reference/run_nm.html">run_nm()</a></code> command.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>,
              based_on <span class="op">=</span> <span class="st">"staging/Models/ADVAN2.mod"</span>,
              data_path <span class="op">=</span> <span class="st">"DerivedData/data.csv"</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -227,30 +219,30 @@
 <h3 class="hasAnchor">
 <a href="#shiny-run-monitor" class="anchor"></a>Shiny run monitor</h3>
 <p>To view all runs in the workspace and track progress:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/shiny_nm.html">shiny_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>To do basic goodness of fit open the post processing Rmarkdown template, follow instructions, customise your template save it (e.g. as <code>Scripts/basic_gof.Rmd</code>) and run in your log script with</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_gof.Rmd"</span><span class="op">)</span></code></pre></div>
 <p>It will create the output in <code>Results</code> (or results_dir(m1))</p>
 <p>If we already have a parent run <code>m1</code> using <code>ADVAN2 TRANS1</code>, we can create a <code><a href="../reference/child.html">child()</a></code> run that uses <code>TRANS2</code> using <code><a href="../reference/subroutine.html">subroutine()</a></code>:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/subroutine.html">subroutine</a></span><span class="op">(</span>trans <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>View exactly what’s been changed by highlighting the above code in RStudio and clicking the <code>nm_diff</code> addin to see what’s been changed before running. Here, changes will be in the <code>$SUB</code>, <code>$PK</code> and <code>$THETA</code>.</p>
 <p>To add a covariate using PsN coding conventions use <code><a href="../reference/add_cov.html">add_cov()</a></code>:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2WT</span> <span class="op">&lt;-</span> <span class="va">m2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m2WT"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/add_cov.html">add_cov</a></span><span class="op">(</span>param <span class="op">=</span> <span class="st">"CL"</span>, cov <span class="op">=</span> <span class="st">"WT"</span>, state <span class="op">=</span> <span class="st">"linear"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>Apply a fully editable goodness of fit R markdown template to both runs <code>m2</code> and <code>m3</code>:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">m2</span>, <span class="va">m3</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_gof.Rmd"</span><span class="op">)</span>
 <span class="co">## will produce two run specific html reports in the "Results" directory for run evaluation</span></code></pre></div>
 <p><code><a href="https://rdrr.io/r/base/c.html">c(m1, m3)</a></code> is a vector object of 2 NONMEM runs. It can be embedded into data.frames/tibbles.</p>
 <p>Evaluate and compare runs on the fly with the following commands</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/rr.html">rr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">m2</span>, <span class="va">m2WT</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##       parameter     type unit trans     Models/m2      Models/m2WT
 ## 1            KA    THETA  h-1   LOG   1.5 (20.4%)     1.51 (20.2%)
@@ -265,15 +257,15 @@
 ## 9    SIGMA.1.1.    SIGMA   SD  &lt;NA&gt;        1 (0%)           1 (0%)
 ## 10          OBJ      OBJ       &lt;NA&gt;       104.422          102.725
 ## 11      CONDNUM  CONDNUM       &lt;NA&gt;      1640 (0)          918 (0)</code></pre>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_iter.html">plot_iter</a></span><span class="op">(</span><span class="va">m2</span>, skip <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> <span class="co">## skip first 30 interations </span></code></pre></div>
-<p><img src="NMproject_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<p><img src="NMproject_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/covariance_plot.html">covariance_plot</a></span><span class="op">(</span><span class="va">m2</span><span class="op">)</span></code></pre></div>
-<p><img src="NMproject_files/figure-html/unnamed-chunk-17-2.png" width="700"></p>
+<p><img src="NMproject_files/figure-html/unnamed-chunk-15-2.png" width="700"></p>
 <p>However these are better placed inside templates to enable rapid and consistent re-use.</p>
 <p>Create a simulation run using <code><a href="../reference/update_parameters.html">update_parameters()</a></code> and <code><a href="../reference/convert_to_simulation.html">convert_to_simulation()</a></code>. Apply vpc and ppc diagnostics</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2s</span> <span class="op">&lt;-</span> <span class="va">m2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m2s"</span><span class="op">)</span> <span class="op">%&gt;%</span>
               <span class="fu">update_parameter</span><span class="op">(</span><span class="va">m2</span><span class="op">)</span> <span class="op">%&gt;%</span>
               <span class="fu"><a href="../reference/convert_to_simulation.html">convert_to_simulation</a></span><span class="op">(</span>subpr <span class="op">=</span> <span class="fl">50</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -286,7 +278,7 @@
 <div id="clean-up-runs" class="section level3">
 <h3 class="hasAnchor">
 <a href="#clean-up-runs" class="anchor"></a>Clean up runs</h3>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/ls_tempfiles.html">ls_tempfiles</a></span><span class="op">(</span><span class="op">)</span> <span class="co">## will list all temporary files associate with run m1</span>
 
 <span class="co">## remove all temporary files associated with m1</span>
@@ -299,7 +291,7 @@
 <h3 class="hasAnchor">
 <a href="#running-nonmem-in-parallel" class="anchor"></a>Running NONMEM in parallel</h3>
 <p>Two fields <code>parafile</code> and <code>cores</code> when combined with a suitable <code>cmd</code> can enable runs to be executed in parallel using PsN.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>,
              based_on <span class="op">=</span> <span class="st">"staging/Models/ADVAN2.mod"</span>,
              data_path <span class="op">=</span> <span class="st">"DerivedData/data.csv"</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -308,7 +300,7 @@
   <span class="fu"><a href="../reference/nm_getsetters.html">cores</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><em>ADVANCED</em> You can make use of the vectorized objects to run multiple levels of parallelisation to invest which is the best for your particular model. Here is sample code for that uses <code>m1</code> as a parent</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dc</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>cores <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">10</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m1</span> <span class="op">%&gt;%</span> 
            <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="va">cores</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -323,20 +315,20 @@
 ## 2     3 &lt;nm_exect [22]&gt;
 ## 3    10 &lt;nm_exect [22]&gt;
 ## 4    30 &lt;nm_exect [22]&gt;</code></pre>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dc</span><span class="op">$</span><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "execute run1.mod -parafile=/opt/NONMEM/nm750/run/mpilinux8.pnm -dir=1 -nodes=1"   
 ## [2] "execute run3.mod -parafile=/opt/NONMEM/nm750/run/mpilinux8.pnm -dir=3 -nodes=3"   
 ## [3] "execute run10.mod -parafile=/opt/NONMEM/nm750/run/mpilinux8.pnm -dir=10 -nodes=10"
 ## [4] "execute run30.mod -parafile=/opt/NONMEM/nm750/run/mpilinux8.pnm -dir=30 -nodes=30"</code></pre>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># dc$m %&gt;% run_nm()  ## command to run</span></code></pre></div>
 </div>
 <div id="bootstraps" class="section level3">
 <h3 class="hasAnchor">
 <a href="#bootstraps" class="anchor"></a>Bootstraps</h3>
 <p>The package <code>rsample</code> can be used to create bootstrap datasets in your initial data manipulation scripts. The following is an example bootstrap dataset being prepared with stratification on <code>SEX</code> and bodyweight <code>WTC</code> categorised in two categories</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>WT_C <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="va">WT</span>, breaks <span class="op">=</span> <span class="fl">2</span>, labels <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
          STRATA <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">SEX</span>, <span class="va">WT_C</span>, sep <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span><span class="op">)</span>
@@ -351,7 +343,7 @@
 <span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="st">"DerivedData"</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="va">bootsplits</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="st">"DerivedData/bootsplit_data.csv.RData"</span><span class="op">)</span></code></pre></div>
 <p>In a model development script, the following, performs a 100 sample bootstrap of model <code>m1</code></p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1_boot</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/make_boot_datasets.html">make_boot_datasets</a></span><span class="op">(</span>samples <span class="op">=</span> <span class="fl">100</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="va">m1_boot</span><span class="op">$</span><span class="va">m</span> <span class="op">&lt;-</span> <span class="va">m1_boot</span><span class="op">$</span><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span>
@@ -378,7 +370,7 @@
 <h3 class="hasAnchor">
 <a href="#we-already-have-directory-of-rnonmem-scriptstemplates-how-can-we-also-use-these" class="anchor"></a>+ We already have directory of R/NONMEM scripts/templates, how can we also use these?</h3>
 <p>Append your directory location to the <code>code_library_path</code> option. To do this add the following command to your <code>~/.Rprofile</code> (or <code>$R_HOME/etc/Rprofile.site</code>) configuration file:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>code_library_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"/path/to/PMXcodelibrary/"</span>,<span class="st">"path/to/existing/repository"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="how-can-i-contribute-to-the-pmx-code-library" class="section level3">
@@ -390,7 +382,7 @@
 <h3 class="hasAnchor">
 <a href="#how-do-i-run-this-on-sge" class="anchor"></a>+ How do I run this on SGE?</h3>
 <p>There is a pre-prepared built in <code>sge_parallel_execute</code> character object that’s part of NMproject. This uses the grid functionality built into PsN and has been tested to work within the Metworx platform. Simply type it in the console to see the contents. Required fields are <code>parafile</code>, <code>cores</code>. Ensure these are set for your parent object like so.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="va">sge_parallel_execute</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/nm_getsetters.html">parafile</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm750/run/mpilinux8.pnm"</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -410,19 +402,19 @@
 <p>This requires setting <code><a href="../reference/nm_getsetters.html">cmd()</a></code> field of the first (parent) nm object and also setting <code><a href="../reference/nm_tran_command.html">nm_tran_command()</a></code> once in your script.</p>
 <p>Easiest way to understand this is via an example: The following assumes the docker container has been set as shown in the fabulous <code>https://github.com/billdenney/Pharmacometrics-Docker</code> repository:</p>
 <p>Set cmd for an <code>execute</code> command like so:</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}"</span><span class="op">)</span></code></pre></div>
 <p><code><a href="../reference/run_nm.html">run_nm()</a></code> will then execute NONMEM via the docker container. All subsequent child objects will inherit the same command structure. Note the use the glueing object fields <code>ctl_name</code> and <code>run_dir</code> so child objects can inherit the same command structure to save the command being rewritten for each run)</p>
 <p>Set up dockerized NMTRAN checking with:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/nm_tran_command.html">nm_tran_command</a></span><span class="op">(</span><span class="st">"docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn /bin/bash -c '/opt/NONMEM/nm_current/tr/NMTRAN.exe &lt; {ctl_name}'"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="my-rstudio-server-is-on-a-different-linux-server-to-my-nonmem-cluster--how-can-i-set-up-nmproject-to-work-with-this" class="section level3">
 <h3 class="hasAnchor">
 <a href="#my-rstudio-server-is-on-a-different-linux-server-to-my-nonmem-cluster--how-can-i-set-up-nmproject-to-work-with-this" class="anchor"></a>+ My Rstudio Server is on a different linux server to my NONMEM cluster. How can I set up NMproject to work with this?</h3>
 <p>You need to ensure your account has passwordless ssh set up. Then create a <code><a href="../reference/system_nm.html">system_nm()</a></code> option in your <code>~/.Rprofile</code> configuration file which appends an ssh statement to the system call e.g. the following will set you up to connect to the host <code>clustername</code>:</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>system_nm<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">cmd</span>,<span class="va">...</span><span class="op">)</span> <span class="op">{</span>
         <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"ssh -q clustername \"cd $(pwd); "</span>,<span class="va">cmd</span>,<span class="st">"\""</span><span class="op">)</span>,<span class="va">...</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span></code></pre></div>
@@ -436,13 +428,13 @@
 <h3 class="hasAnchor">
 <a href="#my-organisation-has-a-different-control-file-convention-to-the-runxx-mod-convention--can-i-change-this" class="anchor"></a>+ My organisation has a different control file convention to the runXX.mod convention. Can I change this?</h3>
 <p>Yes, you can specify the convention with the ctl_path() on your parent object e.g. to change the convention to nm.XX.con</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/ctl_path.html">ctl_path</a></span><span class="op">(</span><span class="st">"Models/nm.{run_id}.com"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="how-do-i-submit-a-command-directly-to-the-nonmem-server" class="section level3">
 <h3 class="hasAnchor">
 <a href="#how-do-i-submit-a-command-directly-to-the-nonmem-server" class="anchor"></a>+ How do I submit a command directly to the NONMEM server?</h3>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/system_nm.html">system_nm</a></span><span class="op">(</span><span class="st">"command_to_run"</span>, dir<span class="op">=</span><span class="st">"path/to/dir"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="there-is-functionality-in-psns-runrecord-sumo-or-pirana-that-i-would-like-but-is-not-currently-available-in-nmproject-" class="section level3">
