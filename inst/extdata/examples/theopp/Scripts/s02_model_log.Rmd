@@ -13,7 +13,7 @@ output:
 ```{r setup, include=F}
 ## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
 library(knitr)
-opts_knit$set(root.dir=rstudioapi::getActiveProject())
+opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 opts_chunk$set(echo = TRUE)
 opts_chunk$set(message = TRUE)
 ```
@@ -26,127 +26,160 @@ library(NMproject)
 # future::plan("future::multiprocess", workers = 2)
 library(dplyr)
 
-#load_localpackage()
+# load_localpackage()
 
 ```
 
 ## model development
 
-```{r}
+Demo has already copied a control file "ADVAN2.mod" from code library into staging area.
 
-## demo has already copied a control file "run1.mod" into staging area
-##  in place of this it is recommended to use the code_library
+First parent object takes the most effort to get right. Subsequent child runs will inherit characteristics of parents
 
-## The following sets up the parent run for all/most subsequent runs
-## child runs inherits characteristics of parents
+```{r parent_ob}
 
 m1 <- new_nm(run_id = "m1",
-             based_on = "staging/Models/run1.mod",
+             based_on = "staging/Models/ADVAN2.mod",
              data_path = "DerivedData/data.csv") %>%
-  ## cmd sets the psn command that will be used to run NONMEM (i.e. when we run
-  ## run_nm()).  Note that the command uses {ctl_name} and {run_dir} are
-  ## placeholders for the control file name and the run directory.
-  ##
-  ## See all fields by sending the new_nm() command to the console to see all
-  ## fields. You'll see that ctl_name is "Models/runm1.mod".  Note that ctl file
-  ## will not be written to disk until nonmem is ready to run (the run_nm()
-  ## step). Using object fields in this way means we don't have to respecify the
-  ## cmd for child runs
+  # See all fields by highlighting the command so far (not including the pipe
+  # %>% ) and send it to the console. You can then display m1 so far and see
+  # that the field "ctl_name" is "Models/runm1.mod".  Note that the control file
+  # will not be written to disk until nonmem is ready to run (the run_nm() step
+  # at the end).
+  
+  # cmd sets the psn command that will be used to run NONMEM (i.e. when we run
+  # run_nm()).  Note that the command uses {ctl_name} and {run_dir} which are
+  # placeholders for the ctl_name and run_dir fields of the object (can be
+  # viewed by print the object so far and by using ctl_name(m1) and run_dir(m1)
+  # respectively.
   cmd("execute {ctl_name} -dir={run_dir}") %>%
-  ## fill out $INPUT automatically based on dataset (here also renaming DATE to
-  ## be DAT0) with fill_input()
-  fill_input(rename = c("DAT0" = "DATE")) %>%
-  ## to check fill_input() worked as intended, highlight this code segment and
-  ## addins -> nm_diff.  This is sensible for all automatic edits and will
-  ## display the unix file diff.  Get used to reading these for a concise
-  ## description of file changes.
-  ##
-  ## Final step is to run nonmem - however before doing this, perform an nm tran
-  ## check by  highlight the entire code segment and clicking addins -> nm_tran
-  run_nm()
+  # view the control file using show_ctl(m1) and note that $DATA has already
+  # been set to the right location, and that $INPUT, $THETA and $SIGMA need
+  # filling in.  We could manually edit this (manual_edit addin), but instead
+  # we'll do this automatically using three functions fill_input(), init_theta()
+  # and init_sigma()
+  fill_input() %>%
+  init_theta(init = c(0.5, -2.5, -0.5)) %>%
+  init_sigma(init = c(0.1, 0.1)) %>%
+  # to check fill_input() and init_*() worked as intended, highlight this entire
+  # code segment and select addins -> nm_diff.  This is sensible practice after
+  # all automatic edits and will display the unix file diff.  Get used to
+  # reading these for a concise description of file changes. Then run nm_tran()
+  # in a similar way via the addins -> nm_tran().
+  run_nm()  # last step is usually to run nonmem.  only at this point will the control file be written to disk.
 
 ```
 
-```{r}
+the demo contains a simple post processing template. Generate this from
+scratch by clicking New File -> R markdown -> From template -> basic gof. the
+default template is very minimal but can be customised and reused by following
+instructions
 
-## the demo contains a simple post processing template. Generate this from
-## scratch by clicking New File -> R markdown -> From template -> basic gof. the
-## default template is very minimal but can be customised and reused by
-## following instructions
+```{r basic_gof}
 
 m1 %>% nm_render("Scripts/basic_gof.Rmd")
 
-## See the html generated in the "Results" directory (the location can be changed and extracted using results_dir())
-
 ```
 
-```{r}
+See the html generated in the "Results" directory (the location can be changed
+and extracted using `results_dir()`)
 
-## Let's generate a custom VPC and PPC diagnostic for this run using NMproject's built in markdown templates.  These just require a simulation control file of the model to be run. 
+Let's generate a custom VPC and PPC diagnostic for this run using NMproject's
+built in markdown templates.  These just require a simulation control file of
+the model to be run.
 
-## we can do this using the child functionality
+We can do this using the child functionality. We create a new object m1s.
+Start with `m1` and pipe into `child()` function specifying a new run identifier
+(here we use the same "m1s" identifier)
 
-## we create a new object m1s.
-## Start with m1 and pipe into child() function specifying a new run identifier (here we use the same "m1s" identifier)
+```{r sim}
+
 m1s <- m1 %>% child("m1s") %>%  
-  ## update the $THETA/$OMEGA/$SIGMA values using m1
+  # update the $THETA/$OMEGA/$SIGMA values using m1
   update_parameters(m1) %>%
-  ## use the convert_to_simulation() function to remove $EST and replace with $SIM
-  convert_to_simulation(subpr = 20) %>%
-  ## before running, check the nm_diff (highlight this entire segment, addins -> nm_diff) to ensure automatic control file changes modified m1 in the way intended.
+  # use the convert_to_simulation() function to remove $EST and replace with
+  # $SIM
+  convert_to_simulation(subpr = 10) %>%
+  # before running, check the nm_diff (highlight this entire segment, addins ->
+  # nm_diff) to ensure automatic control file changes modified m1 in the way
+  # intended.
   run_nm()
 
 ```
 
-```{r}
+the following templates come are already save in "Scripts" for the demo, but
+they are available as templates in `new file` -> `R markdown` -> `from templates`
 
-## the following templates come are already save in "Scripts" for the demo, but they are available as templates in new file -> R markdown -> from templates
+```{r sim_diags}
  
 m1s %>% nm_render("Scripts/basic_ppc.Rmd")
 m1s %>% nm_render("Scripts/basic_vpc.Rmd")
 
-## check "Results to view" and it's good to document your thoughts about how well the model evalation is so others (including your future self) may follow your thinking
+```
+
+check "Results to view" and it's good to document your thoughts about how well
+the model evalation is so others (including your future self) may follow your
+thinking
+
+```{r manual_edit}
+# example manual_edit - no run_nm() because will not run this, it's just to
+# illustrate how code looks after using the manual_edit addin
+
+m1s_temp <- m1 %>% child("m1s_temp") %>%  
+  update_parameters(m1) %>%
+  apply_manual_edit("patch-tarjinde-2021-04-16-12-05-10")
+
+# try using nm_diff(m1s_temp, m1s) to see the difference between the two
+# approaches.  Note that since we didn't run_nm(), runm1s_temp.mod was never
+# written to disk. The control file exists only inside the object
 
 ```
 
 
-```{r}
-
-## m1 will be used in a future script, so we are saving the object in the "Results" directory.  This way it can be reused in other scripts with m1 <- readRDS("Results/m1.RDS") without having to rerun this script.
+```{r child_obs}
+# m1 will be used in a future script, so we are saving the object in the
+# "Results" directory.  This way it can be reused in other scripts with m1 <-
+# readRDS("Results/m1.RDS") without having to rerun this script.
 
 m1 %>% saveRDS("Results/m1.RDS")
 
-## create a child run where we investigate a different TRANS subroutine
+# create a child run where we investigate a different TRANS subroutine
 m2 <- m1 %>% child("m2") %>%
   subroutine(trans = 2) %>% 
-  ## see nm_diff app to see if you're happy with the changes being made
+  # see nm_diff app to see if you're happy with the changes being made
   run_nm()
 
 
-## similarly, we can add coviarates and do many more types of manipulation
+# similarly, we can add coviarates and do many more types of manipulation
 m2WT <- m2 %>% child("m2WT") %>%
   add_cov(param = "CL", cov = "WT", state = "linear") %>%
   run_nm()
 
-## ?see manual_edits to see how the manual_edit app works - it can track and apply manual control files changes you want to make for when wanting to make changes that I haven't made an R function for.  Also check out ?dollar and ?text for how to view and write control file control files as segment or in their entirety.  ?show_ctl is another way.
+# ?see manual_edits to see how the manual_edit app works - it can track and
+# apply manual control files changes you want to make for when wanting to make
+# changes that I haven't made an R function for.  Also check out ?dollar and
+# ?text for how to view and write control file control files as segment or in
+# their entirety.  ?show_ctl is another way.
 
-# # uncomment following to do basic gofs for these too
+# uncomment following to do basic gofs for these too:
+
 # c(m2, m2WT) %>% nm_render("Scripts/basic_gof.Rmd")
 
 ```
 
 Body weight not signficant.  K parameterisation better than CL in terms of OFV
 
-```{r}
+```{r summary_rr}
 
 summary_long(c(m2, m2WT), parameters = "all")
 rr(c(m2, m2WT))
 
 ```
 
-```{r}
+```{r boot}
 
-## here we do a bootstrap. This relies of bootstrap splits being already calculated - see the s01 script for how to make them
+# here we do a bootstrap. This relies of bootstrap splits being already
+# calculated - see the s01 script for how to make them
 
 m1_boot <- m1 %>% 
   make_boot_datasets(samples = 5, overwrite = TRUE)
@@ -156,7 +189,11 @@ wait_finish(m1_boot$m)
 
 m1_boot$m %>% nm_list_render("Scripts/basic_boot.Rmd")
 
-## can also do bootstrap cross validation as follows
+
+```
+
+```{r xv, eval=FALSE}
+# can also do bootstrap cross validation as follows
 
 m1_xv <- m1_boot %>% 
   make_xv_datasets() %>%

@@ -1,9 +1,12 @@
 ---
-output:
-  html_notebook: default
 title: "model development"
 author: "`r Sys.info()['user']`"
 date: "`r Sys.time()`"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
 ---
 
 <!-- Instructions: -->
@@ -22,7 +25,7 @@ date: "`r Sys.time()`"
 ```{r setup, include=F}
 ## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
 library(knitr)
-opts_knit$set(root.dir=rstudioapi::getActiveProject())
+opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
 opts_chunk$set(echo = TRUE)
 opts_chunk$set(message = TRUE)
 ```

@@ -9,6 +9,31 @@ nm_tran_command(text)
 \arguments{
 \item{text}{optional character. If specified will set nm_tran_command}
 }
+\value{
+if `text` is missing will get and return the current NMTRAN command
+}
 \description{
-get/set nm_tran_command
+`nm_tran` needs the location of NMTRAN.exe on your system.  This
+is guessed on package load, assuming PsN is on the $PATH environmental
+variable, if this is not the case, then you can manually set the path and
+command used
+}
+\details{
+`text` can just be the path to NMTRAN.exe.  In this case
+  `nm_tran_command` will use the format `/path/to/NMTRAN.exe < {ctl_name}` to
+  launch NMTRAN.exe where `{ctl_name}` is the name of the control file `text`
+  can use the `{ctl_name}` glue field however for more complicated commands.
+  See examples
+
+  Set this up either at the beginning of your script, in your `.Rprofile` or
+  for all users in `Rprofile.site`
+}
+\examples{
+\dontrun{
+
+  # the following two are equivalent
+  nm_tran_command("/opt/NONMEM/nm75/tr/NMTRAN.exe")
+  nm_tran_command("/opt/NONMEM/nm75/tr/NMTRAN.exe < {ctl_name}")
+
+}
 }

@@ -1,20 +1,38 @@
-## Author: Tarj Sahota
-## First created: 2019-12-10
-## Description: Generate fake covariates and put into dataset
-## Keywords:
+---
+title: "subsequent data manipulation: generate fake covariates"
+author: "`r Sys.info()['user']`"
+date: "`r Sys.time()`"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
 
-########################################
-## load packages and source functions here
 
+```{r setup, include=F}
+## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
+library(knitr)
+opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+opts_chunk$set(echo = TRUE)
+opts_chunk$set(message = TRUE)
+```
+
+```{r echo=FALSE,message=FALSE}
+## LOAD PACKAGES HERE
 library(NMproject)
 library(dplyr)
 
-########################################
-## main script here
+# library(future)
+# future::plan("future::multiprocess", workers = 2)
 
-## Use existing model to generate ETAs - produce fake covariates that are
-##  correlated and then try to recapitulate them
+# load_localpackage()
+```
 
+Use existing model to generate ETAs - produce fake covariates that are correlated and then try to recapitulate them
+
+
+```{r}
 c0 <- readRDS("Results/m1.RDS")
 
 ## read in the outputs
@@ -82,10 +100,16 @@ dc3 <- dc %>% select(ETA3, LIN3, PW3) %>%
 ggplot(dc3, aes(x = ETA3, y = value)) + theme_bw() +
   geom_point(aes(colour = cov))
 
-## happy with plots, select final covs
+```
+
+happy with plots, select final covs
+
+```{r}
 dcf <- dc %>% select(ID, LIN1:BN1)
 
 ## merge with data and create new dataset
 input_data(c0) %>% merge(dcf) %>%
-  write_derived_data("THEOPcov1")
+  write_derived_data("DerivedData/THEOPcov1")
+
+```
 

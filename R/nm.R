@@ -110,14 +110,14 @@ ctl_out_files.default <- function(ctl_file){ ## will get vector of $TABLE file n
   ctl <- readLines(ctl_file,warn = FALSE)
   
   table.files <- ctl_table_files(ctl)
-
+  
   stub <- basename(ctl_file)
   stub <- gsub("(.+)\\.\\w+$","\\1",stub)
-
+  
   out.files <- dir0[grepl(paste(stub,"\\.",sep=""),dir0)]
   out.files <- out.files[!grepl("scm",out.files)]
   out.files <- out.files[!out.files%in%basename(ctl_file)]
-
+  
   out.files <- c(table.files,out.files)
   out.files
 }
@@ -149,7 +149,7 @@ setup_nm_demo <- function(demo_name="theopp",
   
   examples_dir <- character()
   examples_dirs <- character()
-
+  
   if(length(additional_demo_locations) > 0) {
     examples_dir <- normalizePath(additional_demo_locations, mustWork = FALSE)
     examples_dirs <- list.files(examples_dir, full.names = TRUE, recursive = FALSE)
@@ -167,13 +167,13 @@ setup_nm_demo <- function(demo_name="theopp",
   
   #examples_dir <- append(examples_dir, system.file("extdata","examples",demo_name,package = "NMproject"))
   examples_dir <- matched_examples_dirs[1]
-
+  
   files_to_copy <- dir(examples_dir, all.files = TRUE, full.names = TRUE, recursive = TRUE)
   
   stage_info <- tidyproject::stage(files_to_copy, overwrite = overwrite, silent = TRUE)
   
   tidyproject::import(stage_info, overwrite = overwrite)
-
+  
 }
 
 
@@ -186,7 +186,7 @@ setup_nm_demo <- function(demo_name="theopp",
 #'
 #' @export
 run_all_scripts <- function(){
-
+  
   script_files <- dir(scripts_dir(), "s[0-9]+_.*?\\.R(md)?$", full.names = TRUE)
   
   dplan <- tibble::tibble(script_files) %>%
@@ -266,7 +266,7 @@ update_ignore.default <- function(ctl, ignore_char){
     ctl$DATA <- ctl$DATA[!grepl("^(\\s*)IGNORE\\s*=\\s*\\(*\\S[^\\)]+\\)*(\\s*)$",ctl$DATA)]
     ## remove only bracketed IGNORE statement if other things are on the line.
     ctl$DATA <- gsub("(.*)IGNORE\\s*=\\s*\\(+\\S[^\\)]+\\)+(.*)",
-         "\\1\\2", ctl$DATA)
+                     "\\1\\2", ctl$DATA)
   }
   
   ignore_char <- gsub("\\s*\\|\\s*", ", ", ignore_char)
@@ -290,7 +290,7 @@ update_ignore.default <- function(ctl, ignore_char){
   }
   ctl$DATA <- append(ctl$DATA, "")
   ctl
-
+  
 }
 
 #' update sizes statement
@@ -315,8 +315,8 @@ update_sizes <- function(ctl, sizes_char){
     }
     save_attr <- attributes(ctl)
     ctl <- c(before,
-      paste("$SIZES", sizes_char),
-      after)
+             paste("$SIZES", sizes_char),
+             after)
     attributes(ctl) <- save_attr
   }
   ctl_list(ctl)

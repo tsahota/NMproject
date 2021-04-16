@@ -188,9 +188,32 @@ find_nm_tran_path <- function(name = "default", warn = TRUE){
 }
 
 #' get/set nm_tran_command
-#' 
+#'
+#' `nm_tran` needs the location of NMTRAN.exe on your system.  This
+#' is guessed on package load, assuming PsN is on the $PATH environmental
+#' variable, if this is not the case, then you can manually set the path and
+#' command used
+#'
 #' @param text optional character. If specified will set nm_tran_command
-#' 
+#'
+#' @details `text` can just be the path to NMTRAN.exe.  In this case
+#'   `nm_tran_command` will use the format `/path/to/NMTRAN.exe < {ctl_name}` to
+#'   launch NMTRAN.exe where `{ctl_name}` is the name of the control file `text`
+#'   can use the `{ctl_name}` glue field however for more complicated commands.
+#'   See examples
+#'
+#'   Set this up either at the beginning of your script, in your `.Rprofile` or
+#'   for all users in `Rprofile.site`
+#'
+#' @return if `text` is missing will get and return the current NMTRAN command
+#' @examples
+#' \dontrun{
+#'
+#'   # the following two are equivalent
+#'   nm_tran_command("/opt/NONMEM/nm75/tr/NMTRAN.exe")
+#'   nm_tran_command("/opt/NONMEM/nm75/tr/NMTRAN.exe < {ctl_name}")
+#'
+#' }
 #' @export
 nm_tran_command <- function(text){
   if(missing(text)){
@@ -312,15 +335,7 @@ nm_tran <- function(x) UseMethod("nm_tran")
 #' @export
 nm_tran.default <- function(x){
   
-  if(is.null(nm_tran_command())){
-    warning("Set nm_tran_command() not set. For example :\n",
-            "  nm_tran_command(\"path/to/nmtran\")\n",
-            "     1. (for this session only) in the console\n",
-            "     2. (for this user) to ~/.Rprofile\n",
-            paste0("     3. (for all users) to ",file.path(R.home(component = "home"), "etc", "Rprofile.site")))
-    stop("nm_tran failed")
-  }
-  nm_tran_command <- getOption("nmtran_exe_path")
+  if(is.null(nm_tran_command())) stop("nm_tran not set up, see ?nm_tran_command")
 
   tempdir0 <- basename(tempdir()) ## make temporary directory in current directory
   dir.create(tempdir0) ; on.exit(unlink(tempdir0,recursive=TRUE,force = TRUE))

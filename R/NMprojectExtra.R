@@ -157,7 +157,7 @@ child.nm_generic <- function(m, run_id = NA_character_, type = "execute", silent
     m <- as.environment(as.list(m, all.names=TRUE))
     class(m) <- old_classes 
   }
-
+  
   m <- m %>% executed(FALSE)
   m <- m %>% job_info(NA_character_)
   m[["result_files"]] <- c()
@@ -233,7 +233,7 @@ change_parent <- function(m, mparent, silent = TRUE){
 }
 #' @export
 change_parent.nm_generic <- function(m, mparent, silent = TRUE){
-
+  
   m <- m %>% parent_run_id(run_id(mparent))
   m <- m %>% parent_run_in(run_in(mparent))
   m <- m %>% parent_ctl_name(ctl_name(mparent))
@@ -250,7 +250,7 @@ change_parent.nm_generic <- function(m, mparent, silent = TRUE){
                           "\nYou will overwrite parent object outputs if you run now", call. = FALSE)
     }
   }
-
+  
   m
 }
 #' @export
@@ -327,9 +327,9 @@ printable_nm_generic <- function(x){
 
 #' @export
 print.nm_generic <- function(x, ...){
-
+  
   x <- printable_nm_generic(x)
-
+  
   str_ob <- utils::capture.output(utils::str(x, ...))
   str_ob <- gsub("(.*?)\"\\.{3}\\[(NA.*)\\].*", 
                  paste0("\\1",crayon::underline("\\2")), str_ob)
@@ -345,7 +345,7 @@ print.nm_list <- function(x, ...){
   for(i in seq_along(x)) {
     x[[i]] <- printable_nm_generic(x[[i]])
   }
-
+  
   str_ob <- utils::capture.output(utils::str(x, ...))
   ## post str modification
   str_ob <- gsub(":List of.*", "", str_ob)
@@ -372,7 +372,7 @@ custom_1d_field.nm_generic <- function(m, field, replace, glue = FALSE){
     if(glue) old_glue_field <- m$glue_fields[[field]] else old_glue_field <- m[[field]]
     if(identical(replace, old_glue_field)) return(m)
   }
-
+  
   if(glue){
     m$glue_fields[[field]] <- replace
     m[[field]] <- replace
@@ -385,16 +385,16 @@ custom_1d_field.nm_generic <- function(m, field, replace, glue = FALSE){
   for(other_col in names(m$glue_fields)[!names(m$glue_fields) %in% field]) {
     m <- replace_tags(m, other_col)
   }
-
+  
   m
 }
 custom_1d_field.nm_list <- Vectorize_nm_list(custom_1d_field.nm_generic, replace_arg = "replace")
 
 set_simple_field <- function(m, ...){
-
+  
   dots <- list(...)
   fields <- names(dots)
-
+  
   for(i in seq_along(dots)){
     m <- m %>% custom_1d_field(field = fields[i], replace = dots[[i]])
   }
@@ -403,7 +403,7 @@ set_simple_field <- function(m, ...){
 
 
 get_simple_field <- function(m, field){
-
+  
   field <- rlang::enquo(field)
   field <- rlang::quo_name(field)
   
@@ -534,7 +534,7 @@ write_ctl <- function(m, force = FALSE){
 
 #' @export
 write_ctl.nm_generic <- function(m, force = FALSE){
-
+  
   ctl_name <- ctl_path(m)
   ctl_ob <- ctl_contents(m) %>% ctl_character()
   dir_name <- run_in(m)
@@ -563,7 +563,7 @@ write_ctl.nm_generic <- function(m, force = FALSE){
 }
 #' @export
 write_ctl.nm_list <- Vectorize_nm_list(write_ctl.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
-  
+
 #' Target part of control object for further modification
 #' 
 #' @param m nm object
@@ -682,7 +682,7 @@ text.nm_generic <- function(x, text, append = FALSE, after = character(), add_do
     }
     
   }
-    
+  
   
   if(is.na(target(m))) {
     #stop("not developed yet")
@@ -754,7 +754,7 @@ data_path.nm_generic <- function(m, text){
     }
   }
   m <- m %>% custom_1d_field(field = "data_path", replace = text, glue = TRUE)
-
+  
   if(!is.na(data_path(m))){
     ## update ctl contents (if it exists)
     if(!is_single_na(ctl_contents(m)))
@@ -1002,7 +1002,7 @@ coef.nm_generic <- function(object,trans=TRUE,...){
   th <- d$type %in% "THETA"
   om <- d$type %in% "OMEGAVAR"
   sg <- d$type %in% "SIGMA"
-    
+  
   ## RATIO data
   d$SE.TRANS[d$trans %in% "RATIO" & th] <- 100*d$SE[d$trans %in% "RATIO" & th]/d$FINAL[d$trans %in% "RATIO" & th]
   d$transSEunit[d$trans %in% "RATIO" & th] <- "%"
@@ -1023,7 +1023,7 @@ coef.nm_generic <- function(object,trans=TRUE,...){
     # d$SE.TRANS[d$trans %in% "LOGIT"] <- 100*delt$SE
   }
   ## OMEGA
-
+  
   ## https://www.cognigen.com/nmusers/2008-February/0811.html
   ## delta method:
   ## FINAL = E[OM^2]
@@ -1126,7 +1126,7 @@ cond_num.nm_list <- function(r){
 rr <- function(m, trans = TRUE){
   UseMethod("rr")
 }
-  
+
 #' @export
 rr.nm_list <- function(m, trans = TRUE){
   d <- coef(m, trans = trans)
@@ -1249,7 +1249,7 @@ coef_long <- function(m, trans = TRUE){
 #' @export
 rr2 <- function(m, trans = TRUE){
   d <- coef_long(m, trans = trans)
-
+  
   if(nrow(d) == 0) return(data.frame())
   
   index <- !d$unit %in% "" & !is.na(d$unit)
@@ -1265,7 +1265,7 @@ rr2 <- function(m, trans = TRUE){
   d$parameter[d$key %in% "SE"] <- paste0("se_", d$parameter[d$key %in% "SE"])
   d <- d %>% dplyr::group_by(.data$parameter) %>% 
     dplyr::mutate(par_no = max(.data$par_no))
-
+  
   m_names <- unique(d$run_name)  
   d <- d %>% tidyr::spread(key = "run_name", value = "estimate")
   names1 <- names(d)[!names(d) %in% m_names]
@@ -1412,7 +1412,7 @@ status.nm_generic <- function(x, simple = TRUE){
   }
   
   statuses
-    
+  
 }
 #' @export
 status.nm_list <- Vectorize_nm_list(status.nm_generic)
@@ -1470,7 +1470,7 @@ wipe_run.nm_generic <- function(r){
   
   #ctl_out_files <- c(lst_path, output_files, ctl_table_files, run_dir_to_delete)
   ctl_out_files <- c(lst_path, psn_exported_files, run_dir_to_delete)
-
+  
   ## before deleting files, check
   existing_ctl_out_files <- ctl_out_files[file.exists(ctl_out_files)]
   behaviour <- overwrite_behaviour()
@@ -1543,7 +1543,7 @@ clean_run <- function(m, output_loc = c("run_dir", "base"), include_grid_files =
 }
 #' @export
 clean_run.nm_list <- function(m, output_loc = c("run_dir", "base"), include_grid_files = TRUE){
-
+  
   ls_tempfiles(m, output_loc = output_loc) %>%
     unlink(force = TRUE)
   
@@ -1652,7 +1652,7 @@ ls_tempfiles.default <- function(object = ".", output_loc = c("run_dir", "base")
   
   ## .o, .f90, Rmd, csv
   temp_files <- c(temp_files, all_run_files[tools::file_ext(basename(all_run_files)) %in% c("o", "f90", "Rmd", "csv")])
-
+  
   ## specific name exclusions:
   temp_files <- c(temp_files, 
                   all_run_files[basename(all_run_files) %in% 
@@ -1662,7 +1662,7 @@ ls_tempfiles.default <- function(object = ".", output_loc = c("run_dir", "base")
                                     "modelfit.log",
                                     "raw_results_structure",
                                     "version_and_option_info.txt")])
-
+  
   #####
   temp_files <- setdiff(temp_files, non_temp_files)
   
@@ -1678,7 +1678,7 @@ ls_tempfiles.default <- function(object = ".", output_loc = c("run_dir", "base")
   if(length(temp_files) == 0) return(character()) ## if none return empty
   
   tidyproject::relative_path(temp_files, getwd())
-
+  
   
 }
 
@@ -1735,7 +1735,7 @@ psn_exported_files.nm_generic <- function(r, minimal = FALSE){
 }
 
 psn_exported_files.nm_list <- Vectorize_nm_list(psn_exported_files.nm_generic, SIMPLIFY = FALSE)
-  
+
 
 
 #' tests if job is finished
@@ -1912,125 +1912,125 @@ grab_variables <- function(m, pattern){
 
 dp <- dplyr::bind_rows(
   tibble::tibble(advan = 1,trans = 1,
-             base_name = c("R2T0","V2"),
-             nm_name = c("K","V"),
-             cmt = 1,
-             oral = FALSE),
+                 base_name = c("R2T0","V2"),
+                 nm_name = c("K","V"),
+                 cmt = 1,
+                 oral = FALSE),
   tibble::tibble(advan = 1,trans = 2,
-             base_name = c("R2T0","V2"),
-             relation = c("R2T0*V2", NA),
-             inv_relation = c("R2T0/V2", NA),
-             nm_name = c("CL","V"),
-             cmt = 1,
-             oral = FALSE),
+                 base_name = c("R2T0","V2"),
+                 relation = c("R2T0*V2", NA),
+                 inv_relation = c("R2T0/V2", NA),
+                 nm_name = c("CL","V"),
+                 cmt = 1,
+                 oral = FALSE),
   tibble::tibble(advan = 2,trans = 1,
-             base_name = c("R1T2","R2T0","V2"),
-             nm_name = c("KA","K","V"),
-             cmt = 1,
-             oral = TRUE),
+                 base_name = c("R1T2","R2T0","V2"),
+                 nm_name = c("KA","K","V"),
+                 cmt = 1,
+                 oral = TRUE),
   tibble::tibble(advan = 2,trans = 2,
-             base_name = c("R1T2","R2T0","V2"),
-             relation = c(NA, "R2T0*V2", NA),
-             inv_relation = c(NA, "R2T0/V2", NA),
-             nm_name = c("KA","CL","V"),
-             cmt = 1,
-             oral = TRUE),
+                 base_name = c("R1T2","R2T0","V2"),
+                 relation = c(NA, "R2T0*V2", NA),
+                 inv_relation = c(NA, "R2T0/V2", NA),
+                 nm_name = c("KA","CL","V"),
+                 cmt = 1,
+                 oral = TRUE),
   tibble::tibble(advan = 3,trans = 1,
-             base_name = c("R2T0","R2T3","R3T2","V2"),
-             nm_name = c("K","K12","K21","V"),
-             cmt = 2,
-             oral = FALSE),
+                 base_name = c("R2T0","R2T3","R3T2","V2"),
+                 nm_name = c("K","K12","K21","V"),
+                 cmt = 2,
+                 oral = FALSE),
   tibble::tibble(advan = 3,trans = 3,
-             base_name = c("R2T0","R2T3","V2","V3"),
-             relation = c("R2T0*V2", "R2T3*V2", NA , "V3+V2"),
-             inv_relation = c("R2T0/V2", "R2T3/V2", NA , "V3-V2"),
-             nm_name = c("CL","Q","V","VSS"),
-             cmt = 2,
-             oral = FALSE),
+                 base_name = c("R2T0","R2T3","V2","V3"),
+                 relation = c("R2T0*V2", "R2T3*V2", NA , "V3+V2"),
+                 inv_relation = c("R2T0/V2", "R2T3/V2", NA , "V3-V2"),
+                 nm_name = c("CL","Q","V","VSS"),
+                 cmt = 2,
+                 oral = FALSE),
   tibble::tibble(advan = 3,trans = 4,
-             base_name = c("R2T0","R2T3","V2","V3"),
-             relation = c("R2T0*V2", "R2T3*V2", NA , NA),
-             inv_relation = c("R2T0/V2", "R2T3/V2", NA , NA),
-             nm_name = c("CL","Q","V1","V2"),
-             cmt = 2,
-             oral = FALSE),
+                 base_name = c("R2T0","R2T3","V2","V3"),
+                 relation = c("R2T0*V2", "R2T3*V2", NA , NA),
+                 inv_relation = c("R2T0/V2", "R2T3/V2", NA , NA),
+                 nm_name = c("CL","Q","V1","V2"),
+                 cmt = 2,
+                 oral = FALSE),
   ## skip advan 3 trans 5/6
   tibble::tibble(advan = 4,trans = 1,
-             base_name = c("R1T2","R2T0","R2T3","R3T2","V2"),
-             nm_name = c("KA","K","K23","K32","V2"),
-             cmt = 2,
-             oral = TRUE),
+                 base_name = c("R1T2","R2T0","R2T3","R3T2","V2"),
+                 nm_name = c("KA","K","K23","K32","V2"),
+                 cmt = 2,
+                 oral = TRUE),
   tibble::tibble(advan = 4,trans = 3,
-             base_name = c("R1T2","R2T0","R2T3","V2","V3"),
-             relation = c(NA, "R2T0*V2", "R2T3*V2", NA , "V3+V2"),
-             inv_relation = c(NA, "R2T0/V2", "R2T3/V2", NA , "V3-V2"),
-             nm_name = c("KA","CL","Q","V","VSS"),
-             cmt = 2,
-             oral = TRUE),
+                 base_name = c("R1T2","R2T0","R2T3","V2","V3"),
+                 relation = c(NA, "R2T0*V2", "R2T3*V2", NA , "V3+V2"),
+                 inv_relation = c(NA, "R2T0/V2", "R2T3/V2", NA , "V3-V2"),
+                 nm_name = c("KA","CL","Q","V","VSS"),
+                 cmt = 2,
+                 oral = TRUE),
   tibble::tibble(advan = 4,trans = 4,
-             base_name = c("R1T2","R2T0","R2T3","V2","V3"),
-             relation = c(NA, "R2T0*V2", "R2T3*V2", NA , NA),               
-             inv_relation = c(NA, "R2T0/V2", "R2T3/V2", NA , NA),               
-             nm_name = c("KA","CL","Q","V2","V3"),
-             cmt = 2,
-             oral = TRUE),
+                 base_name = c("R1T2","R2T0","R2T3","V2","V3"),
+                 relation = c(NA, "R2T0*V2", "R2T3*V2", NA , NA),               
+                 inv_relation = c(NA, "R2T0/V2", "R2T3/V2", NA , NA),               
+                 nm_name = c("KA","CL","Q","V2","V3"),
+                 cmt = 2,
+                 oral = TRUE),
   ## add advan 11
   tibble::tibble(advan = 11,trans = 1,
-             base_name = c("R2T0","R2T3","R3T2","R2T4","R4T2","V2"),
-             nm_name = c("K","K12","K21","K13","K31","V"),
-             cmt = 3,
-             oral = FALSE),
+                 base_name = c("R2T0","R2T3","R3T2","R2T4","R4T2","V2"),
+                 nm_name = c("K","K12","K21","K13","K31","V"),
+                 cmt = 3,
+                 oral = FALSE),
   tibble::tibble(advan = 11,trans = 4,
-             base_name = c("R2T0","R2T3","V2","V3","R2T4","V4"),
-             relation = c("R2T0*V2", "R2T3*V2", NA , NA, "R2T4*V2", NA),
-             inv_relation = c("R2T0/V2", "R2T3/V2", NA , NA, "R2T4/V2", NA),
-             nm_name = c("CL","Q2","V1","V2","Q3","V3"),
-             cmt = 3,
-             oral = FALSE),
+                 base_name = c("R2T0","R2T3","V2","V3","R2T4","V4"),
+                 relation = c("R2T0*V2", "R2T3*V2", NA , NA, "R2T4*V2", NA),
+                 inv_relation = c("R2T0/V2", "R2T3/V2", NA , NA, "R2T4/V2", NA),
+                 nm_name = c("CL","Q2","V1","V2","Q3","V3"),
+                 cmt = 3,
+                 oral = FALSE),
   ## add advan 12
   tibble::tibble(advan = 12,trans = 1,
-             base_name = c("R1T2","R2T0","R2T3","R3T2","R2T4","R4T2","V2"),
-             nm_name = c("KA","K","K23","K32","K24","K42","V2"),
-             cmt = 3,
-             oral = TRUE),
+                 base_name = c("R1T2","R2T0","R2T3","R3T2","R2T4","R4T2","V2"),
+                 nm_name = c("KA","K","K23","K32","K24","K42","V2"),
+                 cmt = 3,
+                 oral = TRUE),
   tibble::tibble(advan = 12,trans = 4,
-             base_name = c("R1T2","R2T0","R2T3","V2","V3","R2T4","V4"),
-             relation = c(NA,"R2T0*V2", "R2T3*V2", NA , NA, "R2T4*V2", NA),
-             inv_relation = c(NA,"R2T0/V2", "R2T3/V2", NA , NA, "R2T4/V2", NA),
-             nm_name = c("KA","CL","Q3","V2","V3","Q4","V4"),
-             cmt = 3,
-             oral = TRUE),
+                 base_name = c("R1T2","R2T0","R2T3","V2","V3","R2T4","V4"),
+                 relation = c(NA,"R2T0*V2", "R2T3*V2", NA , NA, "R2T4*V2", NA),
+                 inv_relation = c(NA,"R2T0/V2", "R2T3/V2", NA , NA, "R2T4/V2", NA),
+                 nm_name = c("KA","CL","Q3","V2","V3","Q4","V4"),
+                 cmt = 3,
+                 oral = TRUE),
   ## non closed form advans
   tibble::tibble(advan = 5, trans = 1,
-             base_name = c("RXTY","VX"),
-             nm_name = c("KXY","VX"),
-             cmt = NA,
-             oral = NA),
+                 base_name = c("RXTY","VX"),
+                 nm_name = c("KXY","VX"),
+                 cmt = NA,
+                 oral = NA),
   tibble::tibble(advan = 6, trans = 1,
-             base_name = c("RXTY","VX"),
-             nm_name = c("KXY","VX"),
-             cmt = NA,
-             oral = NA),
+                 base_name = c("RXTY","VX"),
+                 nm_name = c("KXY","VX"),
+                 cmt = NA,
+                 oral = NA),
   tibble::tibble(advan = 7, trans = 1,
-             base_name = c("RXTY","VX"),
-             nm_name = c("KXY","VX"),
-             cmt = NA,
-             oral = NA),
+                 base_name = c("RXTY","VX"),
+                 nm_name = c("KXY","VX"),
+                 cmt = NA,
+                 oral = NA),
   tibble::tibble(advan = 8, trans = 1,
-             base_name = c("RXTY","VX"),
-             nm_name = c("KXY","VX"),
-             cmt = NA,
-             oral = NA),
+                 base_name = c("RXTY","VX"),
+                 nm_name = c("KXY","VX"),
+                 cmt = NA,
+                 oral = NA),
   tibble::tibble(advan = 9, trans = 1,
-             base_name = c("RXTY","VX"),
-             nm_name = c("KXY","VX"),
-             cmt = NA,
-             oral = NA),
+                 base_name = c("RXTY","VX"),
+                 nm_name = c("KXY","VX"),
+                 cmt = NA,
+                 oral = NA),
   tibble::tibble(advan = 13, trans = 1,
-             base_name = c("RXTY","VX"),
-             nm_name = c("KXY","VX"),
-             cmt = NA,
-             oral = NA)
+                 base_name = c("RXTY","VX"),
+                 nm_name = c("KXY","VX"),
+                 cmt = NA,
+                 oral = NA)
 )
 dp <- tibble::as_tibble(dp)
 
@@ -2360,7 +2360,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE){
   ##########################
   
   if(new_advan %in% c(5, 6, 7, 8, 9, 13)){
-
+    
     R_regex <- "R([0-9]+)T([0-9]+)"
     R_names <- dnew$base_name[grepl(R_regex, dnew$base_name)]
     
@@ -2525,7 +2525,7 @@ add_mixed_param <- function(m, name,
   if("PRED" %in% sub_names) PK_PRED <- "PRED"
   
   m <- m %>% target(PK_PRED)
-
+  
   etas <- m %>% grab_variables("\\bETA\\([0-9]+\\)") %>% sort
   max_etas_in_pk <- 1
   if(length(etas) > 0){
@@ -2570,12 +2570,12 @@ rename_parameter_.nm_generic <- function(m, new_name, name){
   text <- get_target_text(m)
   
   commented <- grepl("^\\s*;", text)
-
+  
   text[!commented] <- text[!commented] %>% 
     stringr::str_replace_all(paste0("\\b",name,"\\b"), paste0(new_name)) %>% 
     stringr::str_replace_all(paste0("\\bTV",name,"\\b"), paste0("TV",new_name)) %>% 
     stringr::str_replace_all(paste0("\\bIIV_",name,"\\b"), paste0("IIV_",new_name)) 
-
+  
   m <- m %>% set_target_text(text)
   m
   
@@ -2735,7 +2735,7 @@ tol <- function(m, text){
 }
 
 raw_init_theta <- function(m, replace){
-
+  
   if(missing(replace)){
     m <- as_nm_generic(m)
     
@@ -2854,7 +2854,7 @@ raw_init_theta <- function(m, replace){
       d$upper[d$format %in% "lower_upper"] <- 
         as.numeric(gsub(lower_upper_regex,"\\2",d$value[d$format %in% "lower_upper"]))      
     })
-
+    
     
     d$format <- NULL
     
@@ -2908,7 +2908,7 @@ raw_init_theta <- function(m, replace){
     m
   }
 }
-  
+
 raw_init_random <- function(m, replace, dollar = "OMEGA"){
   
   if(missing(replace)){
@@ -3012,7 +3012,7 @@ raw_init_random <- function(m, replace, dollar = "OMEGA"){
     
     ##########################
     ## label parameters
-
+    
     d$block <- NA
     get_block_size <- FALSE
     current_block_size <- 1
@@ -3208,7 +3208,7 @@ param_r2nm_extra <- function(d){
   name <- !is.na(d$name) & is.na(d$unit) & is.na(d$trans)
   name_unit <- !is.na(d$name) & !is.na(d$unit) & is.na(d$trans)
   name_unit_trans <- !is.na(d$name) & !is.na(d$unit) & !is.na(d$trans)
-    
+  
   d$comment[name_unit_trans] <- 
     paste(d$name[name_unit_trans], d$unit[name_unit_trans], d$trans[name_unit_trans],
           sep = " ; ")
@@ -3649,7 +3649,7 @@ insert_theta <- function(itheta,
   itheta_post$theta[(itheta_post$theta >= theta_number) %in% TRUE] <- 
     itheta_post$theta[(itheta_post$theta >= theta_number) %in% TRUE] + 1
   
-
+  
   dinsert <- data.frame(theta = theta_number,
                         init = init, 
                         name = name,
@@ -3697,7 +3697,7 @@ insert_omega <- function(iomega,
   iomega_post$block <- iomega_post$block + 1
   
   insert_block <- max(c(0, stats::na.omit(iomega$block[iomega$omega1 %in% (omega_number-1)]))) + 1
-
+  
   insert_mblock <- max(c(0, stats::na.omit(iomega$mblock[iomega$omega1 %in% (omega_number-1)])))
   if(length(which(iomega$omega1 %in% (omega_number-1))) > 1)
     insert_mblock <- insert_mblock + 1
@@ -3739,13 +3739,13 @@ block <- function(iomega,
   
   omega_counts <- iomega$omega1[!is.na(iomega$omega1)]
   omega_counts <- table(omega_counts)[eta_numbers]
-
+  
   if(any(omega_counts > 1)) stop("etas cannot already be a block", call. = FALSE)
-
+  
   start_block <- iomega$block[iomega$omega1 %in% start_eta]
   iomega$remove <- FALSE
   iomega$remove[iomega$block %in% start_block & is.na(iomega$omega1)] <- TRUE
-    
+  
   iomega_block <- iomega[start_index:end_index, ]
   
   all_indexes <- seq_len(nrow(iomega))  ## defined to save code
@@ -3756,7 +3756,7 @@ block <- function(iomega,
   
   ################################
   ## insert rows for covariances - match what raw_init_omega does
-
+  
   ## add diagonals:
   
   ddiag <- expand.grid(omega1 = stats::na.omit(iomega_block$omega1),
@@ -3768,9 +3768,9 @@ block <- function(iomega,
   
   iomega_block$init[diag_index] <- diag_init
   iomega_block$block <- new_block
-
+  
   block_text_rows <- data.frame(new_value = c("$OMEGA", "BLOCK", 
-                                         paste0("(",length(eta_numbers),")")),
+                                              paste0("(",length(eta_numbers),")")),
                                 block = new_block,
                                 line = min(iomega_block$line, na.rm = TRUE),
                                 pos = 1:3)
@@ -3787,10 +3787,10 @@ block <- function(iomega,
   })
   
   iomega_block <- suppressWarnings(dplyr::bind_rows(block_text_rows, iomega_block))
-
+  
   ## post will also be one line shifted
   iomega_post$line <- iomega_post$line + 1
-
+  
   suppressWarnings({
     should_be <- unique(stats::na.omit(iomega_block$mblock))+1
     iomega_post$mblock[!is.na(iomega_post$mblock)] <- 
@@ -3812,7 +3812,7 @@ block <- function(iomega,
 }
 
 unblock <- function(iomega, eta_numbers){
-
+  
   eta_numbers <- sort(eta_numbers)
   
   if(!all(diff(eta_numbers) == 1)) stop("etas must be adjacent", call. = FALSE)
@@ -3847,7 +3847,7 @@ unblock <- function(iomega, eta_numbers){
   })
   
   iomega_block$mblock <- max(c(1, iomega_pre$mblock), na.rm = TRUE)
-    
+  
   if(any(!is.na(iomega_pre$line))){
     iomega_block$line <- iomega_block$line + 
       max(iomega_pre$line) + 1 - min(iomega_block$line)
@@ -3999,7 +3999,7 @@ run_cache_paths <- function(m){
     unique_run_cache_path() %>%
     basename()
   pattern <- paste0("^",pattern,"$")
-
+  
   dir(".cache", pattern = pattern, full.names = TRUE)
   
 }
@@ -4077,14 +4077,14 @@ parent_run.nm_generic <- function(m, n = 1L){
   hack_m <- m %>% 
     run_id(parent_run_id(m)) %>% 
     run_in(parent_run_in(m))
-
+  
   pattern <- hack_m %>%
     unique_run_cache_path() %>%
     basename()
   pattern <- paste0("^",pattern,"$")
   
   ## sort by most recent
-
+  
   dir_list <- dir(".cache", pattern = pattern, full.names = TRUE)
   
   file_info <- file.info(dir_list)
@@ -4093,10 +4093,10 @@ parent_run.nm_generic <- function(m, n = 1L){
   
   ## get proposed parent objects and update
   if(length(md5_files) == 0) return(as_nm_generic(nm(NA)))
-
+  
   md5_file <- md5_files[1]
   parent_ob <- readRDS(md5_file)$object
-
+  
   if(n > 1) return(parent_run(parent_ob, n = n - 1))
   parent_ob
   
@@ -4232,24 +4232,24 @@ nm_render.nm_generic <- function(m,
   if(!force){
     ## if output_path doesn't exist skip caching and run
     ##if(file.exists(output_path)){
-      ## pull existing checksum info
-      render_cache_disk <- lapply(render_cache_paths(m, input), readRDS)
-      if(length(render_cache_disk) > 0){
-        ## get current checksum
-        current_checksums <- render_checksums(m, input)
-        ## determine matches
-        matches <- sapply(render_cache_disk, function(i) {
-          identical(i$checksums, current_checksums)
-        })
-        if(any(matches)){
-          message("nm_render cache found, skipping... use nm_render(force = TRUE) to override")
-          m <- m %>% result_files(output_file)
-          return(invisible(m))    ## if up to date, skip
-        }
-      } 
+    ## pull existing checksum info
+    render_cache_disk <- lapply(render_cache_paths(m, input), readRDS)
+    if(length(render_cache_disk) > 0){
+      ## get current checksum
+      current_checksums <- render_checksums(m, input)
+      ## determine matches
+      matches <- sapply(render_cache_disk, function(i) {
+        identical(i$checksums, current_checksums)
+      })
+      if(any(matches)){
+        message("nm_render cache found, skipping... use nm_render(force = TRUE) to override")
+        m <- m %>% result_files(output_file)
+        return(invisible(m))    ## if up to date, skip
+      }
+    } 
     #}
   }
-
+  
   if(async){
     f0 <- future::future({
       rmarkdown::render(input = input,
@@ -4270,11 +4270,11 @@ nm_render.nm_generic <- function(m,
   }
   
   m <- m %>% result_files(output_file)
-
+  
   m <- m %>% save_render_cache(input)
   
   invisible(m)
-
+  
 }
 
 #' @export
@@ -4377,7 +4377,7 @@ nm_list2list <- function(m){
 
 #' @export
 summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new", "all"), keep_m = FALSE, ...){
-
+  
   d <- rr_row(object)
   d <- d %>% dplyr::select(.data$run_id,
                            .data$m,
@@ -4389,13 +4389,13 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
   cat("done\n", append = TRUE)
   cat("summarising...")
   d$status <- status(d$m)
-
+  
   n_parameters_fun <- function(coef){
     if(!"type" %in% names(coef)) return(NA)
     coef <- coef[grepl("THETA|OMEGA|SIGMA", coef$type), ]
     nrow(coef)
   }
-
+  
   # browser()
   # 
   # f <- function(x) {
@@ -4415,7 +4415,7 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
       parent_coef_obs = coef.nm_list(.data$parent[1]),
       n_params = sapply(.data$coef_obs, n_parameters_fun),
       parent_n_params = n_parameters_fun(.data$parent_coef_obs[[1]])
-      ) %>%
+    ) %>%
     dplyr::group_by(.data$data_path) %>% ## nobs reads data - only once per data_path
     dplyr::mutate(nobs = nobs(.data$m[1])) %>%
     dplyr::group_by(.data$parent_run_id, .data$parent_run_in) %>%
@@ -4432,20 +4432,20 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
       BIC = .data$ofv + log(.data$nobs)*.data$n_params,
       ref_cn = cond_num(.data$parent_coef_obs[[1]]),
       cond_num = cond_num(.data$coef_obs)
-      )
+    )
   d$coef_obs <- NULL
   d$parent_coef_obs <- NULL
   d$parent <- as_nm_list(d$parent)
-
+  
   parameters <- match.arg(parameters)
   if(parameters != "none"){
     ## for each row, compute rr(d$m[i]) and rr(d$parent[i])
     ## remove nm_list classes - they screw up in dplyr
-
+    
     ds <- split(d, seq_len(nrow(d)))
-
+    
     ds <- lapply(ds, function(d){
-
+      
       # rri <- rr(c(d$parent,d$m), ...)
       # rri <- rri[grepl("THETA|OMEGA|SIGMA", rri$type), ]
       #
@@ -4458,7 +4458,7 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
       #   rri$parameter[index] <-
       #     paste0(rri$parameter[index], " (", rri$trans[index],")")
       # }
-
+      
       rri <- rr2(c(d$parent,d$m), ...)
       rri$type <- NULL
       rri$unit <- NULL
@@ -4466,7 +4466,7 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
       rri$trans <- NULL
       rri$par_no <- NULL
       rri$key <- NULL
-
+      
       if(ncol(rri) < 2) return(d)
       if(ncol(rri) == 2) {
         names(rri)[-1] <- c("m")
@@ -4475,36 +4475,36 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
         names(rri)[-1] <- c("parent", "m")
       }
       if(ncol(rri) > 3) browser()#stop("stop something wrong, debug")
-
+      
       if(parameters == "new") {
-
+        
         param_names <- rri$parameter[!grepl("se_", rri$parameter) &
-                                      !is.na(rri$m)]
-
+                                       !is.na(rri$m)]
+        
         parent_param_names <- rri$parameter[!grepl("se_", rri$parameter) &
                                               !is.na(rri$parent)]
-
+        
         new_param_names <- param_names[!param_names %in% parent_param_names]
-
+        
         se_param_names <- paste0("se_", new_param_names)
-
+        
         rri <- rri[rri$parameter %in% c(new_param_names, se_param_names), ]
         if(nrow(rri) == 0) return(d)
-
+        
         # rri$parameter[is.na(rri$parent)]
         #
         # rri <- rri[is.na(rri$parent), ]
         # rri <- rri[!is.na(rri$m), ]
       }
-
+      
       if(inherits(try(t(rri$m)), "try-error")) browser()
-
+      
       pars_to_add <- tibble::as_tibble(t(rri$m))
       names(pars_to_add) <- rri$parameter
-
+      
       dplyr::bind_cols(d, pars_to_add) #%>%
-        # mutate(m = nm_list2list(m),
-        #        parent = nm_list2list(parent))
+      # mutate(m = nm_list2list(m),
+      #        parent = nm_list2list(parent))
     })
     
     ## nm_lists screw up in dplyr...
@@ -4518,11 +4518,11 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
     d$m <- as_nm_list(d$m)
     d$parent <- as_nm_list(d$parent)
   }
-
+  
   #############################
   ## remove columns that we dont want
   ##  Note: may need reinsert them if they ever are needed in reverse dependencies
-
+  
   d <- d %>%
     dplyr::ungroup() %>%
     dplyr::select(-.data$data_path,
@@ -4531,12 +4531,12 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
                   -.data$parent_run_in,
                   -.data$parent_n_params,
                   -.data$n_params)
-
+  
   if(!keep_m) d$m <- NULL
-
+  
   #############################
-
-
+  
+  
   cat("done", append = TRUE)
   d <- d %>% dplyr::ungroup()
   d
@@ -4642,23 +4642,23 @@ output_table_first.nm_list <- function(r, ...){
 
 #' @export
 add_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
-                    time_varying, additional_state_text, id_var = "ID",
-                    force = FALSE, force_TV_var = FALSE,
-                    init, lower, upper){
-
+                               time_varying, additional_state_text, id_var = "ID",
+                               force = FALSE, force_TV_var = FALSE,
+                               init, lower, upper){
+  
   m <- ctl
   ctl <- ctl_contents(m)
   param <- as.character(param)
   cov <- as.character(cov)
   state <- as.character(state)
   continuous <- as.logical(continuous)
-
+  
   if("PK" %in% names(ctl)) dol_PK <- "PK" else dol_PK <- "PRED"
-
+  
   PK_section <- rem_comment(ctl[[dol_PK]])
-
+  
   data <- suppressMessages(input_data(m, filter = TRUE))
-
+  
   if(!cov %in% names(data)) {
     if(force) {
       warning("can't find ",cov," in data", call. = FALSE)
@@ -4666,7 +4666,7 @@ add_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
       stop("can't find ",cov," in data", call. = FALSE)
     }
   }
-
+  
   if(any(is.na(data[[cov]]))) {
     if(force) {
       warning("missing values in ",cov," detected", call. = FALSE)
@@ -4674,20 +4674,20 @@ add_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
       stop("missing values in ",cov," detected", call. = FALSE)
     }
   }
-
+  
   if(length(unique(data[[cov]])) > 5 & !continuous)
     warning(length(unique(data[[cov]])), " unique values for ", cov, " found. are you sure it's categorical?",
             call. = FALSE)
-
+  
   if(length(unique(data[[cov]])) <= 1)
     warning(length(unique(data[[cov]])), " unique values for ", cov, " found. are you sure about this?",
             call. = FALSE)
-
+  
   if(missing(time_varying)){
     max_levels <- max(tapply(data[[cov]], data[[id_var]], function(x) length(unique(x))), na.rm = TRUE)
     if(max_levels > 1) time_varying <- TRUE else time_varying <- FALSE
   }
-
+  
   if(force_TV_var){
     tvparam <- paste0("TV",param)
   } else {
@@ -4699,53 +4699,53 @@ add_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
         tvparam <- paste0("TV",param)
     }
   }
-
+  
   if(!any(grepl(paste0("\\bTV",param,"\\b"), PK_section)))
     stop("cant find parameter in control file", call. = FALSE)
-
+  
   existing_param_rel <- any(grepl(paste0("\\b",tvparam,"COV"), PK_section))
   existing_param_cov_rel <- any(grepl(paste0("\\b",tvparam,cov), PK_section))
   if(existing_param_cov_rel) {
     return(as_nm_generic(nm(NA)))
     #stop("covariate relation already exists, cannot add", call. = FALSE)
   }
-
+  
   param_info <- param_info(ctl)
   theta_n_start <- max(param_info$N) + 1
-
+  
   relation_start_txt <- paste0(";;; ",tvparam,"-RELATION START")
   relation_end_txt <- paste0(";;; ",tvparam,"-RELATION END")
-
+  
   definition_start_txt <- paste0(";;; ",tvparam,cov,"-DEFINITION START")
   definition_end_txt <- paste0(";;; ",tvparam,cov,"-DEFINITION END")
-
+  
   if(!existing_param_rel){
     par_relation_text <- paste0(tvparam,"COV=",tvparam,cov)
-
+    
     ## insert at beginning
     ctl[[dol_PK]] <- c(ctl[[dol_PK]][1],"",
                        relation_start_txt,
                        par_relation_text,
                        relation_end_txt,
                        ctl[[dol_PK]][-1])
-
+    
     tv_definition_row <- which(grepl(paste0("^\\s*",tvparam,"\\s*="), rem_comment(ctl[[dol_PK]])))
     dont_count <- which(grepl(paste0("^\\s*",tvparam,"\\s*=.*\\b",tvparam), rem_comment(ctl[[dol_PK]])))
     tv_definition_row <- setdiff(tv_definition_row, dont_count)
     if(length(tv_definition_row) > 1) stop("can't find unique TV parameter definition in $PK")
     if(length(tv_definition_row) == 0) stop("can't find TV parameter definition in $PK")
-
+    
     ctl[[dol_PK]] <- c(ctl[[dol_PK]][1:tv_definition_row],"",
                        paste0(tvparam," = ", tvparam,"COV*",tvparam),
                        ctl[[dol_PK]][(tv_definition_row+1):length(ctl[[dol_PK]])])
-
+    
   }
-
+  
   if(existing_param_rel){
     ctl[[dol_PK]] <- gsub(paste0(tvparam,"COV="),
                           paste0(tvparam,"COV=",tvparam,cov,"*"),ctl[[dol_PK]])
   }
-
+  
   ## use state to get the relationship in there.
   if(!missing(additional_state_text)) {
     param_cov_text <- param_cov_text(param=tvparam,cov=cov,state = state,
@@ -4759,36 +4759,36 @@ add_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
                                      theta_n_start = theta_n_start,
                                      continuous = continuous)
   }
-
+  
   ctl[[dol_PK]] <- c(ctl[[dol_PK]][1],"",
                      definition_start_txt,
                      param_cov_text,
                      definition_end_txt,
                      ctl[[dol_PK]][-1])
-
+  
   ## add thetas
   n_add_thetas <- attr(param_cov_text, "n")
   if(n_add_thetas > 0){
-
+    
     if(missing(init)){
       init <- rep("0.0001", n_add_thetas)
       if(state == 3 | state == "power") {
         init <- rep(0.8, n_add_thetas)
       }
     }
-
+    
     if(missing(lower)){
       lower <- rep(-1, n_add_thetas)
     }
-
+    
     if(missing(upper)){
       upper <- rep(5, n_add_thetas)
     }
-
-
+    
+    
     if(any(lower > init)) stop("lower bound > initial estimate")
     if(any(upper < init)) stop("upper bound < initial estimate")
-
+    
     if(n_add_thetas == 1) {
       theta_lines <- paste0("$THETA  (",lower,",",init,",",upper,") ; ",tvparam, cov, state)
     } else {
@@ -4796,9 +4796,9 @@ add_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
     }
     ctl$THETA <- c(ctl$THETA,theta_lines)
   }
-
+  
   m <- m %>% ctl_contents_simple(ctl)
-
+  
 }
 
 #' @export
@@ -4807,36 +4807,36 @@ add_cov.nm_list <- Vectorize_nm_list(add_cov.nm_generic, SIMPLIFY = FALSE)
 #' @export
 remove_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
                                   time_varying, additional_state_text, id_var = "ID"){
-
+  
   m <- ctl
   ctl <- ctl_contents(m)
   param <- as.character(param)
   cov <- as.character(cov)
   state <- as.character(state)
   continuous <- as.logical(continuous)
-
+  
   if("PK" %in% names(ctl)) dol_PK <- "PK" else dol_PK <- "PRED"
-
+  
   PK_section <- rem_comment(ctl[[dol_PK]])
-
+  
   data <- suppressMessages(input_data(m, filter = TRUE))
-
+  
   if(any(is.na(data[[cov]]))) warning("missing values in ",cov," detected")
-
+  
   if(missing(time_varying)){
     max_levels <- max(tapply(data[[cov]], data[[id_var]], function(x) length(unique(x))), na.rm = TRUE)
     if(max_levels > 1) time_varying <- TRUE else time_varying <- FALSE
   }
-
+  
   if(time_varying){
     tvparam <- param
   } else {
     tvparam <- paste0("TV",param)
   }
-
+  
   existing_param_rel <- which(grepl(paste0("\\b",tvparam,"COV"), PK_section))
   existing_param_cov_rel <- which(grepl(paste0("\\b",tvparam,cov), PK_section))
-
+  
   ## remove parm vs specific cov code
   match_start <- grep(paste0(";;; ",tvparam,cov,"-DEFINITION START"),ctl[[dol_PK]])
   match_end <- grep(paste0(";;; ",tvparam,cov,"-DEFINITION END"),ctl[[dol_PK]])
@@ -4844,10 +4844,10 @@ remove_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
     return(as_nm_generic(nm(NA)))
     #stop("can't find cov definition code - did you add with add_cov()?")
   }
-
+  
   ctl_matched <- ctl[[dol_PK]][match_start:match_end]
   theta_match <- gregexpr("THETA\\([0-9]+\\)", ctl_matched)
-
+  
   thetas <- lapply(seq_along(theta_match), function(i){
     matchi <- theta_match[[i]]
     ctl_matchedi <- ctl_matched[i]
@@ -4866,7 +4866,7 @@ remove_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
   reduce_thetas <- length(theta_n)
   if(reduce_thetas > 0){
     ctl_char <- ctl_character(ctl)
-
+    
     next_theta <- max(theta_n)+1
     keep_going <- TRUE
     while(keep_going){
@@ -4881,18 +4881,18 @@ remove_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
     }
     ctl <- ctl_list(ctl_char)
   }
-
+  
   ctl[[dol_PK]] <- ctl[[dol_PK]][setdiff(seq_along(ctl[[dol_PK]]), match_start:match_end)]
-
+  
   ## adjust/remove parm vs any cov code
-
+  
   match_start <- grep(paste0(";;; ",tvparam,"-RELATION START"),ctl[[dol_PK]])
   match_end <- grep(paste0(";;; ",tvparam,"-RELATION END"),ctl[[dol_PK]])
   if(length(match_start) == 0 | length(match_end) == 0)
     stop("can't find cov relation code - did you add with add_cov()?")
-
+  
   rel_section <- ctl[[dol_PK]][match_start:match_end]
-
+  
   rel_index_all <- grep(paste0(tvparam,"COV=",tvparam,cov), rel_section)
   unique_rel_match <- grep(paste0(tvparam,"COV=",tvparam,cov,"$"), rel_section)
   if(length(unique_rel_match) > 1)
@@ -4907,32 +4907,32 @@ remove_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
   if(length(unique_rel_match) == 0){ ## (maybe - test this) other covariates
     if(length(rel_index_all) > 1)
       stop("can't identify unique cov relation code line- did you add with add_cov()?")
-
+    
     text_match_at_start <- paste0("^(",tvparam,"COV=)",tvparam,cov,"\\*(.+)")
     match_at_start <- grep(text_match_at_start,ctl[[dol_PK]])
-
+    
     text_match_after_start <- paste0("^(",tvparam,"COV=.+)\\*",tvparam,cov,"(.*)")
     match_after_start <- grep(text_match_after_start,ctl[[dol_PK]])
-
+    
     if(length(match_at_start) + length(match_after_start) != 1)
       stop("couldn't identify cov relation in relation code line- did you add with add_cov()?")
-
+    
     if(length(match_at_start)){
       ctl[[dol_PK]] <- gsub(text_match_at_start,"\\1\\2",ctl[[dol_PK]])
     }
-
+    
     if(length(match_after_start)){
       ctl[[dol_PK]] <- gsub(text_match_after_start,"\\1\\2",ctl[[dol_PK]])
     }
-
+    
   }
-
+  
   matched_theta <- grep(paste0("\\$THETA\\s.*;.*",tvparam, cov), ctl$THETA)
   #if(length(matched_theta) == 0)
   #  stop("can't find $THETA entry to remove- did you add with add_cov()?")
-
+  
   ctl$THETA <- ctl$THETA[setdiff(seq_along(ctl$THETA), matched_theta)]
-
+  
   m <- m %>% ctl_contents_simple(ctl)
 }
 
@@ -4970,48 +4970,48 @@ remove_cov.nm_list <- Vectorize_nm_list(remove_cov.nm_generic, SIMPLIFY = FALSE)
 cov_forest_data <- function(m, covariate_scenarios){
   if(!is_finished(m)) wait_finish(m)
   # d <- nm_output(m) ## read in combined output
-
+  
   ## assume m is nm_list
   m <- as_nm_generic(m)
-
+  
   ###############
   ## include plotting code here
   dpar <- coef(m, trans = FALSE)
   dpar$name <- coef(m)$parameter
-
+  
   dpar$SE[is.na(dpar$SE)] <- 0
-
+  
   dpar$lower <- dpar$FINAL - 1.96*dpar$SE
   dpar$upper <- dpar$FINAL + 1.96*dpar$SE
-
+  
   PK_text <- ctl_contents(m)$PK
   PK_text_R <- nonmem_code_to_r(PK_text)
-
+  
   par_covs <- PK_text[grepl(";;; .*-DEFINITION START", PK_text)]
   par_covs <- gsub(";;; (.*)-.*", "\\1", par_covs)
-
+  
   pars <- PK_text[grepl(";;; .*-RELATION START", PK_text)]
   pars <- gsub(";;; (.*)-.*", "\\1", pars)
-
+  
   dd <- input_data(m, filter = TRUE)
-
+  
   ## to be used later in evaluation of R expressions
   dpar_mid <- dpar$FINAL
   names(dpar_mid) <- dpar$parameter
-
+  
   dpar_low <- dpar$lower
   names(dpar_low) <- dpar$parameter
-
+  
   dpar_upp <- dpar$upper
   names(dpar_upp) <- dpar$parameter
-
+  
   dd[is.na(dd)] <- 0
   dd_first <- dd[1,]
   
   dpar_df <- as.data.frame(as.list(dpar_mid))
   dd_first <- cbind(dd_first, dpar_df)
   d <- lapply(seq_along(par_covs), function(i){
-
+    
     par_cov <- par_covs[i]
     
     potential_pars <- sapply(pars, function(par) grepl(par, par_cov))
@@ -5089,7 +5089,7 @@ cov_forest_data <- function(m, covariate_scenarios){
     #   levs <- signif(levs, 2)
     #   lev_text <- paste0(cov,"_",c("low5","mid","upp95"),"_",levs)
     # }
-
+    
     levs <- dd_first[[cov]]
     if(!"text" %in% names(covariate_scenarios)){
       lev_text <- paste0(cov, "_", levs) 
@@ -5097,43 +5097,43 @@ cov_forest_data <- function(m, covariate_scenarios){
       if("text" %in% names(dcov_sc)) lev_text <- paste0(cov, "_", levs) else
         lev_text <- dcov_sc$text
     }
-
+    
     d <- tibble::tibble(par, cov, levs, lev_text)
-
+    
     d$mask_mid <- lapply(levs, function(lev){
       d <- tibble::tibble(lev)
       names(d) <- cov
       cbind(d, as.data.frame(as.list(dpar_mid)))
     })
-
+    
     d$mask_low <- lapply(levs, function(lev){
       d <- tibble::tibble(lev)
       names(d) <- cov
       cbind(d, as.data.frame(as.list(dpar_low)))
     })
-
+    
     d$mask_upp <- lapply(levs, function(lev){
       d <- tibble::tibble(lev)
       names(d) <- cov
       cbind(d, as.data.frame(as.list(dpar_upp)))
     })
-
+    
     d$mid <- sapply(seq_along(levs), function(i){
       with(d$mask_mid[[i]], eval(exprs))
     })
-
+    
     d$low <- sapply(seq_along(levs), function(i){
       with(d$mask_low[[i]], eval(exprs))
     })
-
+    
     d$upp <- sapply(seq_along(levs), function(i){
       with(d$mask_upp[[i]], eval(exprs))
     })
-
+    
     return(d)
-
+    
   })
-
+  
   d <- dplyr::bind_rows(d)
   d
   
@@ -5174,31 +5174,31 @@ cov_forest_plot <- function(d){
 append_nonmem_var <- function(output_table, r, var){
   r <- as_nm_generic(r)
   do <- output_table#(r)
-
+  
   dc <- coef(r, trans = FALSE)
-
+  
   ctl <- ctl_contents(r)
-
+  
   pk_dollar <- ifelse("PK" %in% names(ctl), "PK", "PRED")
-
+  
   pk_block <- ctl[[pk_dollar]]
-
+  
   pk_block <- nonmem_code_to_r(pk_block)
-
+  
   pk_block_param <- parse(text = c(pk_block, var))
-
+  
   wide_coef <- dc %>%
     dplyr::select(.data$parameter, .data$FINAL) %>%
     tidyr::spread(key = "parameter", value = "FINAL")
-
+  
   #dos <- do[!duplicated(paste(do$ID, do[[cov]])), ]
-
+  
   varcol <- try(with(wide_coef,
                      sapply(1:nrow(do), function(i){
                        with(do[i,], eval(pk_block_param))})), silent = TRUE)
-
+  
   if(!inherits(varcol, "try-error")) do[[var]] <- varcol
-
+  
   do
 }
 
@@ -5216,53 +5216,53 @@ append_nonmem_var <- function(output_table, r, var){
 #' 
 #' @export
 param_cov_diag <- function(r, param, cov, ..., categorical = FALSE, plot_tv = TRUE){
-
+  
   requireNamespace("ggplot2")
   r <- as_nm_generic(r)
-
+  
   tvparam <- paste0("TV",param)
   do <- output_table(r)
-
+  
   ## want scatter of posthoc values
   ## + pred line from formula
-
+  
   ## want pred values on there too
-
+  
   dc <- coef(r, trans = FALSE)
-
+  
   ctl <- ctl_contents(r)
-
+  
   pk_dollar <- ifelse("PK" %in% names(ctl), "PK", "PRED")
-
+  
   pk_block <- ctl[[pk_dollar]]
-
+  
   pk_block <- nonmem_code_to_r(pk_block, eta_to_0 = FALSE)
-
+  
   pk_block_param <- parse(text = c(pk_block, param))
   pk_block_tvparam <- parse(text = c(pk_block,tvparam))
-
+  
   wide_coef <- dc %>% dplyr::select(.data$parameter, .data$FINAL) %>%
     tidyr::spread(key = "parameter", value = "FINAL")
-
+  
   dos <- do[!duplicated(paste(do$ID, do[[cov]])), ]
-
+  
   parcol <- try(with(wide_coef,
                      sapply(1:nrow(dos), function(i){
                        with(dos[i,], eval(pk_block_param))})), silent = TRUE)
-
+  
   if(!inherits(parcol, "try-error")) dos[[param]] <- parcol
-
+  
   tvcol <- try(with(wide_coef,
                     sapply(1:nrow(dos), function(i){
                       with(dos[i,], eval(pk_block_tvparam))})), silent = TRUE)
-
+  
   if(!inherits(tvcol, "try-error")) dos[[tvparam]] <- tvcol else
     plot_tv <- FALSE
-
+  
   if(categorical) dos[[cov]] <- factor(dos[[cov]])
-
+  
   dos <- substitute(dos %>% dplyr::mutate(...)) %>% eval
-
+  
   p <- ggplot2::ggplot(dos, ggplot2::aes_string(x = cov, y = param)) + ggplot2::theme_bw()
   if(!categorical){
     p <- p + ggplot2::geom_point()
@@ -5272,10 +5272,10 @@ param_cov_diag <- function(r, param, cov, ..., categorical = FALSE, plot_tv = TR
     p <- p + ggplot2::coord_flip()
     if(plot_tv) p <- p + ggplot2::geom_point(ggplot2::aes_string(y = tvparam), colour = "red", size = 2)
   }
-
+  
   #if(!missing(facet)) p <- p + facet_wrap(facet)
   p
-
+  
 }
 
 
@@ -5318,7 +5318,7 @@ convert_to_simulation.nm_list <- Vectorize_nm_list(convert_to_simulation.nm_gene
 ppc_whisker_plot <- function(d, group, var1, var2, statistic = "statistic"){
   requireNamespace("ggplot2")
   requireNamespace("rlang")
-
+  
   do_facet_wrap <- xor(!missing(var1), !missing(var2))
   do_facet_grid <- !missing(var1) & !missing(var2)
   var1 <- rlang::enquo(var1)
@@ -5326,13 +5326,13 @@ ppc_whisker_plot <- function(d, group, var1, var2, statistic = "statistic"){
   group <- rlang::enquo(group)
   p <- ggplot2::ggplot(d, ggplot2::aes_string(y = statistic)) + ggplot2::aes(x = !!group) + ggplot2::theme_bw() +
     ggplot2::stat_summary(fun.ymin = function(x) stats::quantile(x, 0.025, na.rm = TRUE),
-                 fun.ymax = function(x) stats::quantile(x, 0.975, na.rm = TRUE),
-                 geom = "errorbar") +
+                          fun.ymax = function(x) stats::quantile(x, 0.975, na.rm = TRUE),
+                          geom = "errorbar") +
     ggplot2::geom_point(ggplot2::aes_string(y = paste0(statistic, "_true")), colour = "red")
-
+  
   if(do_facet_wrap) p <- p + ggplot2::facet_wrap(dplyr::vars(!!var1), scales = "free")
   if(do_facet_grid) p <- p + ggplot2::facet_grid(dplyr::vars(!!var1), dplyr::vars(!!var2), scales = "free")
-
+  
   p
 }
 
@@ -5341,21 +5341,21 @@ ppc_whisker_plot <- function(d, group, var1, var2, statistic = "statistic"){
 ppc_histogram_plot <- function(d, var1, var2, statistic = "statistic"){
   requireNamespace("ggplot2")
   requireNamespace("rlang")
-
+  
   do_facet_wrap <- xor(!missing(var1), !missing(var2))
   do_facet_grid <- !missing(var1) & !missing(var2)
   var1 <- rlang::enquo(var1)
   var2 <- rlang::enquo(var2)
-
+  
   p <- ggplot2::ggplot(d, ggplot2::aes_string(x = statistic)) + ggplot2::theme_bw() +
     ggplot2::geom_histogram() +
     ggplot2::geom_vline(ggplot2::aes_string(xintercept = paste0(statistic, "_true")), colour = "red")
-
+  
   if(do_facet_wrap) p <- p + ggplot2::facet_wrap(dplyr::vars(!!var1), scales = "free")
   if(do_facet_grid) p <- p + ggplot2::facet_grid(dplyr::vars(!!var1), dplyr::vars(!!var2), scales = "free")
-
+  
   p
-
+  
 }
 
 #' Plot correlation between two covariates
@@ -5374,10 +5374,10 @@ cov_cov_plot <- function(d,
                          log_transform_plot = rep(FALSE, length(cov)),
                          dcov_info,
                          by = "ID"){
-
+  
   cov1 <- cov[1]
   cov2 <- cov[2]
-
+  
   if(!missing(dcov_info)){
     dcov <- rbind(
       dcov_info[dcov_info$cov %in% cov1, ],
@@ -5392,32 +5392,32 @@ cov_cov_plot <- function(d,
                            continuous = c(continuous1, continuous2),
                            log_transform_plot = c(log_transform_plot1, log_transform_plot2))
   }
-
+  
   important_row_contents <-
     do.call(paste, d[, c(by, dcov$cov)])
-
+  
   dplot <- d[!duplicated(important_row_contents), ]
-
+  
   #dplot <- d[, c(by, dcov$cov)] %>% unique()
-
+  
   if(max(table(dplot[[by]])) > 1)
     warning("time varying cov detected, taking first only")
-
+  
   dplot <- dplot[!duplicated(dplot[[by]]), ]
-
+  
   if(all(dcov$continuous)){
     p <- ggplot2::ggplot(dplot, ggplot2::aes_string(x = cov1, y = cov2))
     p <- p + ggplot2::theme_bw()
     p <- p + ggplot2::geom_point()
     p <- p + ggplot2::geom_smooth(method = "lm")
-
+    
     if(dcov$log_transform_plot[dcov$cov %in% cov1])
       p <- p + ggplot2::scale_x_log10()
-
+    
     if(dcov$log_transform_plot[dcov$cov %in% cov2])
       p <- p + ggplot2::scale_y_log10()
   }
-
+  
   if(xor(dcov$continuous[1], dcov$continuous[2])){
     cov1 <- dcov$cov[!dcov$continuous]
     cov2 <- dcov$cov[dcov$continuous]
@@ -5425,20 +5425,20 @@ cov_cov_plot <- function(d,
     p <- ggplot2::ggplot(dplot, ggplot2::aes_string(x = cov1, y = cov2))
     p <- p + ggplot2::theme_bw()
     p <- p + ggplot2::geom_boxplot()
-
+    
     if(dcov$log_transform_plot[dcov$cov %in% cov2])
       p <- p + ggplot2::scale_y_log10()
   }
-
+  
   if(all(!dcov$continuous)){
     p <- ggplot2::ggplot(dplot, ggplot2::aes_string(x = cov1))
     p <- p + ggplot2::theme_bw()
     p <- p + ggplot2::geom_bar()
     p <- p + ggplot2::facet_wrap(cov2)
   }
-
+  
   p
-
+  
 }
 
 
@@ -5453,20 +5453,20 @@ cov_cov_plot <- function(d,
 #' @export
 
 write_derived_data <- function(d, name, ...){
-
+  
   name <- tools::file_path_sans_ext(name)
-
+  
   if(dirname(name) %in% "."){
     RDS_name <- file.path("DerivedData",paste0(name,".RDS"))
     csv_name <- file.path("DerivedData",paste0(name,".csv"))
   } else {  ## directory is specified
-      RDS_name <- paste0(name,".RDS")
-      csv_name <- paste0(name,".csv")
+    RDS_name <- paste0(name,".RDS")
+    csv_name <- paste0(name,".csv")
   }
-
+  
   d <- as.data.frame(d)
   if(!inherits(d, "data.frame")) stop("d needs to be a data.frame or coercible into one")
-
+  
   dir.create(dirname(RDS_name), showWarnings = FALSE, recursive = TRUE)
   saveRDS(d, file = RDS_name)
   utils::write.csv(d, file = csv_name, na = ".", row.names=FALSE, quote=FALSE)
@@ -5485,11 +5485,11 @@ write_derived_data <- function(d, name, ...){
 #' @export
 
 read_derived_data <- function(name, na = ".", silent = FALSE, ...){
-
+  
   if(length(name) != 1) stop("name should have length 1", call. = FALSE)
-
+  
   load_file <- NA
-
+  
   if(file.exists(name)){
     if(grepl("\\.RDS", name)) load_file <- "RDS" else
       if(grepl("\\.csv", name)) load_file <- "csv" else
@@ -5503,10 +5503,10 @@ read_derived_data <- function(name, na = ".", silent = FALSE, ...){
         stop("file is not RDS or csv")
     }
   }
-
+  
   ## load_file should be set now
   if(is.na(load_file)) stop("debug") ## unneccesary with stop()s
-
+  
   if(identical(load_file, "RDS")){
     if(!silent) message("loading: ", name)
     d <- readRDS(file = name)
@@ -5523,42 +5523,42 @@ read_derived_data <- function(name, na = ".", silent = FALSE, ...){
 
 
 if(0){
-
+  
   ## specify project
   proj_name <- "/projects/qcp/QCP_MODELING/ONC/azd6094/poppk_20190326_tatton_interim3/"
   ## find files to copy
   found_files <- dir(proj_name, all.files = TRUE, recursive = TRUE, full.names = TRUE)
-
+  
   ## stage unmodified files
   stage_info <- stage(found_files)
   ## import from staging area
   import(stage_info)
-
+  
   ## need to import
-
-
+  
+  
   found_files %>% stage %>% import
-
-
-
-
+  
+  
+  
+  
   itheta <- init_theta(m1)
-
+  
   ## modify one parameter
   itheta$init[itheta$name == "KA"] <- 3
   itheta$FIX[itheta$name == "KA"] <- TRUE
-
+  
   itheta <- itheta %>% insert_theta(theta_number = 2,
                                     init = 0.2,
                                     unit = "u",
                                     trans = "LOG",
                                     name = "CL")
-
+  
   m1 %>% init_theta(itheta) %>% dollar("THETA")
-
+  
   iomega <- init_omega(m1)
   iomega$init[iomega$name %in% "IIV_KA"] <- 0.2
-
+  
   iomega <- iomega %>% insert_omega(omega_number = 2,
                                     name = "IIV_sdf",
                                     unit = "mg/ml",
@@ -5572,11 +5572,11 @@ if(0){
   iomega <- iomega %>% block(eta_numbers = c(1,2))  ##error
   iomega <- iomega %>% unblock(eta_numbers = c(1,2))
   iomega <- iomega %>% block(eta_numbers = c(2,3))
-
+  
   m1 %>% init_omega(iomega) %>% dollar("OMEGA")
-
+  
   m1 <- m1 %>% init_omega(iomega)
-
+  
 }
 
 #' Experiment - make an OCC column for NONMEM in dataset
@@ -5590,36 +5590,36 @@ if(0){
 make_OCC_every_dose <- function(d, dose_trigger, new_OCC_trigger){
   # Rule for when new occasion is happening
   # whenever we have a dose, if there is a sample after it and before next dose, that dose is considered a new OCC
-
+  
   ## TODO: walk the ast of new_OCC_trigger
   ## pull out variables, evaluate them to create a mini d
-
-
+  
+  
   new_OCC_trigger <- rlang::enquo(new_OCC_trigger)
   id_group <- rlang::enquo(id_group)
   dose_trigger <- rlang::enquo(dose_trigger)
-
+  
   d <- d %>% dplyr::group_by(!!id_group) %>%
     dplyr::mutate(DPERIOD = cumsum(!!dose_trigger)) %>%
     dplyr::group_by(!!id_group, .data$DPERIOD) %>%
     dplyr::mutate(new_OCC = !!new_OCC_trigger)
-
+  
   ## select temporarly unique DPERIOD and HAS PK SAMPLE for each ID
   tmp <- d %>%
     dplyr::ungroup() %>%
     dplyr::distinct(!!id_group, .data$DPERIOD,.data$new_OCC)
-
+  
   tmp <- tmp %>%
     dplyr::group_by(!!id_group) %>%
     dplyr::mutate(OCC = cumsum(.data$new_OCC))
-
+  
   d$ROW <- seq_len(nrow(d))
   d <- merge(d,tmp)
   d <- d[order(d$ROW), ]
-
+  
   ## normalise to start at 1
   d$OCC <- d$OCC - min(d$OCC) + 1
-
+  
   d$OCC
 }
 
@@ -5694,11 +5694,11 @@ nm_list_gather <- function(x = .GlobalEnv){
 
 #' @export
 nm_list_gather.default <- function(x = .GlobalEnv){
-
+  
   m <- lapply(x, function(object){
     if(inherits(object, "nm_list")) object else NA
   })
-
+  
   m <- m[!is.na(m)]
   m <- do.call(c, m)
   m
@@ -5817,14 +5817,14 @@ nm_tree <- function(..., summary = FALSE){
   if(summary){
     sink(file="/dev/null")
     m_row <- m %>% 
-    {suppressMessages(
-      dplyr::right_join(nm_row(.data), summary_wide(.data)) 
-    )}
+      {suppressMessages(
+        dplyr::right_join(nm_row(.data), summary_wide(.data)) 
+      )}
     sink()
   } else {
     m_row <- m %>% nm_row()
   }
-
+  
   network <- m_row %>%
     dplyr::mutate(
       parent_run_id = ifelse(is.na(.data$parent_run_id), 
@@ -5833,7 +5833,7 @@ nm_tree <- function(..., summary = FALSE){
       parent_run_id = ifelse(is.na(.data$parent_run_in),
                              .data$parent_run_id,
                              file.path(.data$parent_run_in, .data$parent_run_id)
-                             ),
+      ),
       run_id = file.path(.data$run_in, .data$run_id)
     ) %>%
     dplyr::select(.data$parent_run_id, .data$run_id, dplyr::everything())
@@ -5864,11 +5864,11 @@ decision <- function(inputs = c(),
     stop("install drake")
   
   error_msg <- "decision needs revisiting"
-
+  
   if(!auto_decision){
     stop("auto-decision failed - ", error_msg, call. =  FALSE)
   }
-    
+  
   wait_input <- function(inputs){
     inputs  ## create inputs dependency
     cat(crayon::underline("manual decision check\n"))
@@ -5891,7 +5891,7 @@ decision <- function(inputs = c(),
     }
     stop("invalid response", call. = FALSE)
   }
-
+  
   if(!length(inputs)) inputs <- c()
   
   if(length(files)){
@@ -5900,7 +5900,7 @@ decision <- function(inputs = c(),
     }
     inputs <- c(inputs, tools::md5sum(files))
   }
-
+  
   decision_inputs_exp <- rlang::parse_expr("decision_inputs")
   ## that was just to avoid CRAN error with using decision_inputs below
   drpl <- drake::drake_plan(
@@ -5911,7 +5911,7 @@ decision <- function(inputs = c(),
   drconfig <- drake::drake_config(drpl)
   
   outdated <- drake::outdated(drconfig)
-
+  
   ## if up-to-date and pause/outcome is TRUE  
   previous_outcome <- try(drake::readd("pause"), silent = TRUE)
   if(inherits(previous_outcome, "try-error")) previous_outcome <- FALSE
@@ -6009,12 +6009,12 @@ job_stats <- function(m){
     stop("install lubridate", call. = FALSE)
   
   d <- m %>% nm_row()
-
+  
   d <- d %>% dplyr::ungroup() %>%
     dplyr::mutate(xml_path = nm_output_path(m, "xml"),
                   xml = purrr::map(.data$xml_path, pmxTools::read_nm))
   
-
+  
   ## this is to avoid CRAN error below - before it was inline
   m_time_f <- function(path) lubridate::ymd_hms(file.info(path)$mtime)
   
@@ -6052,19 +6052,19 @@ boot_to_csv <- function(d,
                         id_var = "ID",
                         oob = FALSE,
                         overwrite = FALSE){
-
+  
   if(!requireNamespace("rsample")) stop("install rsample")
   
   data_name <- tools::file_path_sans_ext(basename(as.character(data_name)))
   if(oob) data_folder <- file.path(data_folder, "oob")
   
   csv_name <- file.path(data_folder, paste0(data_name, ".csv"))
-
+  
   if(file.exists(csv_name) & !overwrite) return(csv_name)
   
   rsample_fun <- rsample::analysis
   if(oob) rsample_fun <- rsample::assessment
-
+  
   suppressMessages({
     dd_boot <- rsample_fun(rsplit) %>%
       dplyr::ungroup() %>%
@@ -6149,7 +6149,7 @@ make_xv_datasets <- function(dboot,
                              id_var = "ID"){
   
   d <- input_data(parent_run(dboot$m[1])) ## originally input_data(m)
-
+  
   dboot <- dboot %>%
     dplyr::group_by(run_id) %>%
     dplyr::mutate(
@@ -6162,11 +6162,11 @@ make_xv_datasets <- function(dboot,
     dplyr::ungroup() %>%
     dplyr::mutate(
       m_xv = #ifelse(is_successful(m), 
-                    dboot$m %>% 
-                      child(paste0(run_id(dboot$m), "eval")) %>%
-                      data_path(.data$oob_csv_name)#,
-              #      nm(NA))
-      )
+        dboot$m %>% 
+        child(paste0(run_id(dboot$m), "eval")) %>%
+        data_path(.data$oob_csv_name)#,
+      #      nm(NA))
+    )
 }
 
 

@@ -1,8 +1,8 @@
-;; 1. Based on: 
+;; 1. Based on: run1
 ;; 2. Description: 1CMT+oral
-;; x1. Author: klgk669
+;; x1. Author: John Smith
 
-$PROBLEM THEOPP example
+$PROBLEM ...
 
 ;; 4. Date: 01.01.2011
 ;; 5. Version: 1
@@ -21,8 +21,8 @@ $PROBLEM THEOPP example
 ;; 12. Estimation:
 ;; IMP
 
-$INPUT ID AMT TIME DV WT
-$DATA ../DerivedData/THEOPP.csv IGNORE=@ 
+$INPUT ...
+$DATA ... IGNORE=@ 
 $SUB ADVAN2
 
 $PK
@@ -46,27 +46,26 @@ S2 = V
 $ERROR 
 
 IPRED=F
-W=SQRT(THETA(4)**2+THETA(5)**2*IPRED*IPRED)  ; proportional + additive error
+W=SQRT(SIGMA(1,1)*IPRED**2 + SIGMA(2,2))  ; proportional + additive error
 IRES=DV-IPRED
 IWRES=IRES/W
-Y=IPRED+W*EPS(1)
+Y=IPRED + IPRED*EPS(1) + EPS(2)
 
 
 $THETA
-1             	; KA ; h-1 ; LOG
--2.5            ; K  ; h-1 ; LOG
--0.5          	; V  ; L ; LOG
-0.1           	; add error
-0.1           	; prop error
+.....          	; KA ; h-1 ; LOG
+.....          	; K  ; h-1 ; LOG
+.....          	; V  ; L ; LOG
 
-$OMEGA
-0.1			; IIV_KA ; LOG
-0.1			; IIV_K ; LOG
-0.1			; IIV_V ; LOG
-
+$OMEGA 
+0.1			          ; IIV_KA ; LOG
+0.1			          ; IIV_K ; LOG
+0.1			          ; IIV_V ; LOG
 
 $SIGMA
-1 FIX
+0.1           	; prop error
+.....          	; add error
+
 
 ; Parameter estimation - FOCE
 ;$EST METHOD=1 INTER NOABORT MAXEVAL=9999 PRINT=1 NSIG=3 SIGL=9
@@ -74,17 +73,19 @@ $SIGMA
 ; Parameter estimation - IMP
 $EST METHOD=IMP ISAMPLE=300 NITER=300 RANMETHOD=3S2
 CTYPE=3 CITER=10 CALPHA=0.05 CINTERVAL=3
-PRINT=1 NOABORT INTERACTION GRD=DDDSS
+PRINT=1 NOABORT INTERACTION
 
 ; Parameer estimation - SAEM
 ;$EST METHOD=SAEM ISAMPLE=2 NBURN=1000 NITER=500 RANMETHOD=3S2
 ;CTYPE=3 CITER=10 CALPHA=0.05 CINTERVAL=10
-;PRINT=1 NOABORT INTERACTION GRD=DDDSS
+;PRINT=1 NOABORT INTERACTION
 
 ; Objective function and covariance evaluation
-$EST METHOD=IMP INTER EONLY= 1 MAPITER=0 ISAMPLE = 2000 NITER = 10 RANMETHOD=3S2 NOABORT PRINT=1 NSIG=3 SIGL=9 GRD=DDDSS
+$EST METHOD=IMP INTER EONLY= 1 MAPITER=0 ISAMPLE = 2000 NITER = 10 RANMETHOD=3S2 NOABORT PRINT=1 NSIG=3 SIGL=9
 
-$COV PRINT=E UNCONDITIONAL SIGL=10
+$COV MATRIX=R PRINT=E UNCONDITIONAL SIGL=10
+
+;$SIM (1234) ONLYSIM SUBPR=1
 
 $TABLE ID TIME IPRED IWRES IRES CWRES NPDE
 FILE=sdtab1 NOPRINT ONEHEADER

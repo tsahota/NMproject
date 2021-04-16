@@ -275,7 +275,7 @@ Evaluate and compare runs on the fly with the following commands
 
 ```{r}
 rr(c(m2, m2WT))
-plot_iter(m2, skip = 30) ## skip first 30 interations 
+plot_iter(m2, skip = 10) ## skip first 10 interations 
 covariance_plot(m2)
 ```
 
@@ -285,7 +285,7 @@ Create a simulation run using `update_parameters()` and `convert_to_simulation()
   
 ```{r eval=FALSE}
 m2s <- m2 %>% child(run_id = "m2s") %>%
-              update_parameter(m2) %>%
+              update_parameters(m2) %>%
               convert_to_simulation(subpr = 50) %>%
               run_nm()
 

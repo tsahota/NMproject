@@ -89,9 +89,9 @@ copy_demo_to_test <- function(demo = "theopp"){
   
   script_files <- file.path(scripts_dir(), script_files)
   script_files <- relative_path(script_files,
-                                rprojroot::find_root(rprojroot::has_file(".Rprofile")))
+                                rstudioapi::getActiveProject())
   
-  destination <- system.file("..", "tests", "testthat", package = "NMproject")
+  destination <- system.file("tests", "testthat", package = "NMproject")
   destination <- file.path(destination, demo)
   
   unlink(destination, recursive = TRUE, force = TRUE)
@@ -102,6 +102,10 @@ copy_demo_to_test <- function(demo = "theopp"){
   
   res1 <- file.copy(easy_directories, destination, recursive = TRUE, overwrite = TRUE)
   names(res1) <- easy_directories
+  
+  ### remove unneeded staging files - not so easy
+  unlink(file.path(destination, "staging", "Scripts"), recursive = TRUE)
+  unlink(file.path(destination, "staging", "SourceData"), recursive = TRUE)  
   
   ####
   ## .cache -> cache
@@ -138,6 +142,8 @@ copy_demo_to_test <- function(demo = "theopp"){
   all_model_files <- all_model_files[!grepl("patab", basename(all_model_files))]
   all_model_files <- all_model_files[!grepl("cotab", basename(all_model_files))]
   all_model_files <- all_model_files[!grepl("catab", basename(all_model_files))]
+  #all_model_files <- all_model_files[!tools::file_ext(all_model_files) %in% 
+  #                                     c("lst")]
   
   all_model_files <- c(all_model_files, keep_m1_outs)
   
@@ -155,7 +161,7 @@ copy_demo_to_test <- function(demo = "theopp"){
   #   mutate(file_name = row.names(.)) %>%
   #   select(file_name, size) %>%
   #   head(10)
-  
+
   dirs <- unique(dirname(all_model_files))
   destination_dirs <- file.path(destination, dirs)
   for(dirname in destination_dirs) dir.create(dirname, recursive = TRUE, showWarnings = FALSE)
@@ -174,9 +180,23 @@ copy_demo_to_test <- function(demo = "theopp"){
   utils::zip(basename(zip_file), demo)
   setwd(orig_dir)
   
-  unlink(destination, recursive = TRUE)
+  ## maybe make destination and repeat zip
+  file.rename(zip_file, paste0(zip_file, ".bak"))
   
-  #message("size of test dir: ", system(paste("du -sh", destination), intern = TRUE))
+  unlink(file.path(destination, "Models/c1_f2", recursive = TRUE))
+  
+  orig_dir <- getwd()
+  on.exit(setwd(orig_dir))
+  setwd(dirname(zip_file))
+  unlink(zip_file)
+  utils::zip(basename(zip_file), demo)
+  setwd(orig_dir)
+  
+  extdata_loc <- system.file("extdata", package = "NMproject")
+  file.copy(zip_file, extdata_loc, overwrite = TRUE)
+  
+  file.rename(paste0(zip_file, ".bak"), zip_file)
+  unlink(destination, recursive = TRUE)
   
   message("size of ", basename(zip_file), ": ", system(paste("du -sh", zip_file), intern = TRUE))
   
