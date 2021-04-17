@@ -35,6 +35,10 @@ test_that("run and post",{
 
   ## run all scripts
   overwrite_behaviour("skip")
+  
+  if(!all(c(".Rprofile", "OpenProject.Rproj") %in% dir(all.files = TRUE)))
+    stop(paste("files missing: ", paste(dir(all.files = TRUE), collapse = ",")))
+  
   expect_true(run_all_scripts())
   
   res_files <- dir("Results", pattern = "\\.html", full.names = TRUE)
