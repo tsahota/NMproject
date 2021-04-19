@@ -97,14 +97,12 @@ stage <- function(files, destination, additional_sub_dirs = nm_dirs(),
   ##########################
   sub_dirs <- c("SourceData",
                 "DerivedData",
-                "localpackage",
+                "R",
                 "Scripts",
                 "Models",
                 models_dir(),
                 "Results",
                 unlist(additional_sub_dirs))
-  
-  sub_dirs <- unique(sub_dirs)
   
   sub_dirs <- basename(sub_dirs)
   
