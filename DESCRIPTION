@@ -1,7 +1,7 @@
 Package: NMproject
 Type: Package
 Title: Script Based Interface To NONMEM
-Version: 0.5.2.9000
+Version: 0.5.9.9000
 Authors@R: person("Tarj", "Sahota", email =
     "t.sahota0@gmail.com", role = c("aut", "cre"))
 Maintainer: Tarj Sahota <t.sahota0@gmail.com>
