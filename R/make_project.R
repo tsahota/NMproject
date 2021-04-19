@@ -48,21 +48,15 @@ nm_create_analysis_project <- function(path, dirs = nm_dirs(),
     for(dir_name in dirs) usethis::use_directory(dir_name, ignore = TRUE)
 
     tryCatch({
-      usethis::use_description()
+      usethis::use_description(check_name = FALSE)
       desc::desc_set_dep(package = "renv", type = "Imports", 
                          file = usethis::proj_get())
-      }, error = function(e){
-      usethis::ui_info("skipping creation of {usethis::ui_path('DESCRIPTION')}")
+      usethis::use_namespace()
+      usethis::use_vignette(name = name)
+    }, error = function(e){
+      usethis::ui_info("skipping creation of {usethis::ui_path('DESCRIPTION')}, {usethis::ui_path('NAMESPACE')}, {usethis::ui_path('vignettes/')}")
     })
     
-    tryCatch(usethis::use_namespace(), error = function(e){
-      usethis::ui_info("skipping creation of {usethis::ui_path('NAMESPACE')}")
-    })
-    
-    tryCatch(usethis::use_vignette(name = name), error = function(e){
-      usethis::ui_info("skipping creation of {usethis::ui_path('vignette/')}")
-    })
-
   }
   
   if(style %in% "starters"){
