@@ -74,6 +74,9 @@ set_nm_opts <- function(){
                 "lasso","llp","mcmp","mimp","nca","npc","parallel_retries","pvar","randtest","rawresults","runrecord",
                 "scm","se_of_eta","sir","sse","sumo","update","update_inits","vpc","xv_scm"))
 
+  if(is.null(getOption("system_cmd"))) options(system_cmd=function(cmd,...) {
+    if(.Platform$OS.type == "windows") shell(cmd,...) else system(cmd,...)
+  })
   if(is.null(getOption("system_nm"))) options(system_nm=function(cmd, ...) system_nm_default(cmd, ...))
   if(is.null(getOption("quiet_run"))) options(quiet_run=TRUE)
   if(is.null(getOption("intern"))) options(intern=FALSE)
@@ -84,18 +87,23 @@ set_nm_opts <- function(){
     options(available_nm_types = c("SIZES","PROB","INPUT","DATA","SUB","MODEL","PK","DES","PRED","ERROR",
                                    "THETA","OMEGA","SIGMA","EST","SIM","COV","TABLE"))
 
-
-  models.ignore <- file.path(getOption("models.dir"),c("*tab*",
-                                                       "*.phi",
-                                                       "*.ext",
-                                                       "*.cov",
-                                                       "*.coi",
-                                                       "*.cov",
-                                                       "*.cor",
-                                                       "*.lst",
-                                                       "*/",
-                                                       "parafile*"))
-
+  if(is.null(getOption("nm_dirs"))) options(nm_dirs = list(models_dir = "Models", 
+                                                           scripts_dir = "Scripts",
+                                                           results_dir = "Results",
+                                                           "SourceData",
+                                                           "Data"))
+  
+  models.ignore <- file.path(models_dir(),c("*tab*",
+                                            "*.phi",
+                                            "*.ext",
+                                            "*.cov",
+                                            "*.coi",
+                                            "*.cov",
+                                            "*.cor",
+                                            "*.lst",
+                                            "*/",
+                                            "parafile*"))
+  
   if(is.null(getOption("nmproj_gitignore"))) options(nmproj_gitignore=c(models.ignore,
                                                                         "Results"))
 
@@ -111,6 +119,58 @@ set_nm_opts <- function(){
   if(is.null(getOption("code_library_path"))) 
     options(code_library_path=system.file("extdata", "CodeLibrary", package = "NMproject"))
   
+  
+}
+
+
+#' setup analysis subdirectories
+#' 
+#' This allows organisations/individuals with their own directory to customize their directory structure
+#' 
+#' @param dir_list optional named list or vector. Names "scripts_dir" and "models_dir" must be present.  Rest can be unnamed
+#' 
+#' @return
+#' if `dir_list` is missing, will return value of `getOption("nm_dirs")` otherwise will set option `nm_dirs`
+#' @examples
+#' \dontrun{
+#' 
+#' nm_dirs()
+#' nm_dirs(list(models_dir = "Models", 
+#'              scripts_dir = "Scripts",
+#'              results_dir = "Results",
+#'              "SourceData",
+#'              "Data"))
+#' }
+#' @export
+nm_dirs <- function(dir_list){
+  if(missing(dir_list)) return(getOption("nm_dirs"))
+  ## now assume we're setting
+  ## validate input
+  if(!"scripts_dir" %in% names(dir_list)) 
+    stop("one entry of the directory needs the name \"scripts_dir\"")
+  if(!"models_dir" %in% names(dir_list)) 
+    stop("one entry of the directory needs the name \"models_dir\"")
+  options(nm_dirs = dir_list)
+}
+
+#' Shortcut to Scripts directory
+#' 
+#' @export
+scripts_dir <- function() {
+  nm_dirs()$scripts_dir
+  # normalizePath(file.path(proj_name, nm_dirs()$scripts_dir), 
+  #               winslash = "/", 
+  #               mustWork = FALSE)
+}
+
+#' Shortcut to Models directory
+#' 
+#' @export
+models_dir <- function() {
+  nm_dirs()$models_dir
+  # normalizePath(file.path(proj_name, nm_dirs()$models_dir),
+  #               winslash = "/", 
+  #               mustWork = FALSE)
 }
 
 #' Generic execute command for SGE grids
@@ -261,7 +321,7 @@ system_nm_default <- function(cmd, ...) {
 #' @param dir character. directory to run command in
 #' @param ... other arguments passed to system command
 #' @export
-system_nm <- function(cmd,dir=getOption("models.dir"),...){
+system_nm <- function(cmd,dir=models_dir(),...){
   if(is.null(dir) | !file.exists(dir)) dir <- "."
   if(file.exists(dir)) {currentwd <- getwd(); setwd(dir) ; on.exit(setwd(currentwd))} else
     stop(paste0("Directory \"",dir,"\" doesn't exist."))
@@ -316,7 +376,7 @@ overwrite_behaviour <- function(txt = c("ask",
 #' @param x character vector. Relative path from models.dir
 #' @param models_dir character. Models directory
 #' @export
-from_models <- function(x, models_dir=getOption("models.dir")) {
+from_models <- function(x, models_dir=models_dir()) {
   file.path(models_dir,x)
 }
 
@@ -402,23 +462,32 @@ update_dollar_data <- function(ctl_name,new_data_name){
 #' @param libs character. What libraries to add.
 #' @export
 new_script <- function(name, overwrite = FALSE, open_file = TRUE, libs=c("NMproject")) {
-  tidyproject::new_script(name=name,overwrite = overwrite,open_file = open_file,libs = libs)
-}
-
-#' Download code repository from github
-#'
-#' This function shouldn't be needed as the code library ships with NMproject.
-#'
-#' @param local_path character. Path to install repository
-#' @param giturl character. URL to github repository
-#' @param config_file character. Name of config file (e.g. "~/.Rprofile")
-#' @export
-get_PMX_code_library <- function(local_path,
-                                 giturl="https://github.com/tsahota/PMXcodelibrary",
-                                 config_file){
-  tidyproject::get_github_code_library(local_path=local_path,
-                                       giturl=giturl,
-                                       config_file=config_file)
+  ## create black script with comment fields. Add new_script to git
+  # if (name != basename(name)) 
+  #   stop("name must not be a path")
+  if (name == basename(name)) {
+    to_path <- file.path(scripts_dir(), name)  ## destination path
+  } else {
+    to_path <- name
+  }
+  if (file.exists(to_path) & !overwrite) 
+    stop(paste(to_path, "already exists. Rerun with overwrite = TRUE"))
+  s <- c(paste0("## ", "Author: ", Sys.info()["user"]),
+         paste0("## ", "First created: ", Sys.Date()),
+         paste0("## ", "Description: "),
+         paste0("## ", "Keywords: "),
+         "",
+         "########################################",
+         "## load packages and source functions here",
+         "",
+         paste0("library(",libs,")"),
+         "",
+         "########################################",
+         "## main script here", 
+         "")
+  writeLines(s, to_path)
+  if (open_file) 
+    get("file.edit")(to_path)
 }
 
 #' Get Omega matrix from run
@@ -451,22 +520,6 @@ omega_matrix <- function(r){
   d_all <- d_all[order(d_all$ROW,d_all$COL), ]
 
   matrix(d_all$FINAL,nrow=max_size)
-}
-
-#' commit individual file(s)
-#'
-#' Has side effect that staged changed will be updated to working tree
-#'
-#' @param file_name character vector. File(s) to be committed
-#' @export
-#' @examples
-#' \dontrun{
-#' commit_file("Scripts/script1.R")
-#' commit_file(18)  # will commit Models/run18.mod - if it exists
-#' }
-commit_file <- function(file_name){
-  file_name <- search_ctl_name(file_name)
-  tidyproject::commit_file(file_name)
 }
 
 #' Get NONMEM version info
@@ -508,39 +561,6 @@ NONMEM_version <- function(){
     compiler = nm_compiler_version,
     psn = psn_version,
     perl = perl_version)
-  
-}
-
-#' Make R session record
-#'
-#' Create a record of the R version and package versions used in a particular NMproject
-#'
-#' @export
-
-
-environment_info <- function() {
-  txt <- tidyproject::environment_info0()
-  
-  NONMEM_version <- NONMEM_version()
-  NONMEM_version <- paste(names(NONMEM_version), NONMEM_version, sep = ": ")
-  
-  txt <- c(txt, 
-           "\nNONMEM version info (see NONMEM_version()):\n",
-           NONMEM_version)
-  
-  uname <- Sys.info()["user"]
-  if(length(uname) == 1){
-    uname <- as.character(uname)
-    uname <- gsub("\\s", "", uname)
-    if(nchar(uname) > 0) uname <- paste0("_", uname)
-  } else uname <- ""
-  
-  
-  log_file_name <- paste0("environment_info",uname,".txt")
-  
-  writeLines(txt, log_file_name)
-  tidyproject::setup_file(log_file_name)
-  message(paste0("Environment info produced: ",log_file_name))
   
 }
 

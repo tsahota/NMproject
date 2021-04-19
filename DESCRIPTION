@@ -10,10 +10,9 @@ License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
 Remotes: 
-    tsahota/tidyproject@v0.5.2,
+    lockedata/starters
     gluc/data.tree
 Imports:
-    tidyproject (>= 0.5.0),
     shiny,
     reshape2,
     dygraphs,
@@ -33,7 +32,11 @@ Imports:
     devtools,
     rprojroot,
     htmltools,
-    rmarkdown
+    rmarkdown,
+    magrittr,
+    renv,
+    usethis,
+    desc
 RoxygenNote: 7.1.1
 Suggests:
     testthat,
@@ -47,8 +50,10 @@ Suggests:
     Hmisc,
     drake (>= 5.3.0),
     rsample,
+    starters
 Collate: 
     'NMproject.R'
+    'utils.R'
     'utilsExtra.R'
     'NMprojectExtra.R'
     'NMprojectExtraTest.R'
@@ -58,6 +63,7 @@ Collate:
     'dollar_input.R'
     'insert_addin.R'
     'load_sse.R'
+    'make_project.R'
     'manual_edit.R'
     'nm_data.R'
     'nm_gettersetters.R'
@@ -69,6 +75,5 @@ Collate:
     'run_record.R'
     'sim_reestExtra.R'
     'status.R'
-    'utils.R'
     'zzz.R'
 VignetteBuilder: knitr

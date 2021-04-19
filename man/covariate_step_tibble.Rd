@@ -7,7 +7,7 @@
 covariate_step_tibble(
   base,
   run_id,
-  run_in = getOption("models.dir"),
+  run_in = models_dir(),
   dtest,
   direction = c("forward", "backward"),
   ...

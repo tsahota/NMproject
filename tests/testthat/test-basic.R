@@ -1,24 +1,17 @@
 context("basic NM project setup")
 
 proj_name <- "test_nmproject"
-require(tidyproject)
-
-cleanup <- function(proj_name){
-  if(file.exists(proj_name)) unlink(proj_name,recursive = TRUE,force = TRUE)
-  base_proj_name <- paste0(proj_name,".git")
-  if(file.exists(base_proj_name)) unlink(base_proj_name,recursive = TRUE,force = TRUE)
-}
+proj_path <- file.path(tempdir(), proj_name)
 
 test_that("Project has basic functionality",{
 
   currentwd <- getwd()
-  make_project(proj_name)
+  nm_create_analysis_project(proj_path)
   on.exit({
     setwd(currentwd)
-    cleanup(proj_name)
+    unlink(proj_path, recursive = TRUE, force = TRUE)
   })
-
-  setwd(proj_name)
+  setwd(proj_path)
 
   NMproject:::set_nm_opts()
   
@@ -38,13 +31,12 @@ test_that("Project has basic functionality",{
 test_that("set up",{
 
   currentwd <- getwd()
-  make_project(proj_name)
+  nm_create_analysis_project(proj_path)
   on.exit({
     setwd(currentwd)
-    cleanup(proj_name)
+    unlink(proj_path, recursive = TRUE, force = TRUE)
   })
-
-  setwd(proj_name)
+  setwd(proj_path)
 
   NMproject:::set_nm_opts()
 

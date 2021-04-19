@@ -1,27 +1,23 @@
 context("run and post")
 
 proj_name <- "test_nmproject"
-require(tidyproject)
-
-cleanup <- function(proj_name){
-  if(file.exists(proj_name)) unlink(proj_name,recursive = TRUE,force = TRUE)
-  base_proj_name <- paste0(proj_name,".git")
-  if(file.exists(base_proj_name)) unlink(base_proj_name,recursive = TRUE,force = TRUE)
-}
+proj_path <- file.path(tempdir(), proj_name)
 
 test_that("run and post",{
+  
   currentwd <- getwd()
-  make_project(proj_name)
+  nm_create_analysis_project(proj_path)
   on.exit({
     setwd(currentwd)
-    cleanup(proj_name)
+    unlink(proj_path, recursive = TRUE, force = TRUE)
   })
 
+  
   testfilesloc <- file.path(currentwd, "theopp")
   zip_file <- file.path(currentwd, "theopp.zip")
   unzip(zip_file)
   
-  setwd(proj_name)
+  setwd(proj_path)
 
   file.copy(file.path(testfilesloc,"."), ".", recursive = TRUE)
   file.rename("cache", ".cache")
@@ -36,8 +32,8 @@ test_that("run and post",{
   ## run all scripts
   overwrite_behaviour("skip")
   
-  if(!all(c(".Rprofile", "OpenProject.Rproj") %in% dir(all.files = TRUE)))
-    stop(paste("files missing: ", paste(dir(all.files = TRUE), collapse = ",")))
+  # if(!all(c(".Rprofile", "OpenProject.Rproj") %in% dir(all.files = TRUE)))
+  #   stop(paste("files missing: ", paste(dir(all.files = TRUE), collapse = ",")))
   
   expect_true(run_all_scripts())
   

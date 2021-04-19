@@ -1,4 +1,5 @@
 #' @include utilsExtra.R
+#' @include make_project.R
 
 NULL
 

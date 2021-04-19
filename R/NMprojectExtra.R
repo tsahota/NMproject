@@ -2,7 +2,7 @@
 
 ## internal function
 nm_generic <- function(run_id = NA_character_,
-                       run_in = getOption("models.dir"),
+                       run_in = models_dir(),
                        parent_run_id = NA_character_,
                        parent_run_in = NA_character_,
                        parent_ctl_name = NA_character_,
@@ -1677,7 +1677,7 @@ ls_tempfiles.default <- function(object = ".", output_loc = c("run_dir", "base")
   
   if(length(temp_files) == 0) return(character()) ## if none return empty
   
-  tidyproject::relative_path(temp_files, getwd())
+  relative_path(temp_files, getwd())
   
   
 }

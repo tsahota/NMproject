@@ -1,3 +1,5 @@
+#' @include utils.R
+
 #' Copy diagnostic funs to templates
 #' 
 #' Internal function (non exported)

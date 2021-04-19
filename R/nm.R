@@ -33,7 +33,7 @@ edit_file <- function(file_name){
 }
 
 
-search_ctl_name <- function(r, models_dir=getOption("models.dir")){
+search_ctl_name <- function(r, models_dir=models_dir()){
   if(inherits(r,"nm")) ctl_name <- r$ctl
   if(inherits(r,"numeric") | inherits(r,"character")) {
     r <- as.character(r)
@@ -143,7 +143,8 @@ setup_nm_demo <- function(demo_name="theopp",
   if(!is.na(new_project)){
     cwd <- getwd()
     on.exit(setwd(cwd))
-    tidyproject::make_project(proj_name = new_project)
+    stop("under contruction")
+    #tidyproject::make_project(proj_name = new_project)
     setwd(new_project)
   }
   
@@ -170,9 +171,9 @@ setup_nm_demo <- function(demo_name="theopp",
   
   files_to_copy <- dir(examples_dir, all.files = TRUE, full.names = TRUE, recursive = TRUE)
   
-  stage_info <- tidyproject::stage(files_to_copy, overwrite = overwrite, silent = TRUE)
+  stage_info <- stage(files_to_copy, overwrite = overwrite, silent = TRUE)
   
-  tidyproject::import(stage_info, overwrite = overwrite)
+  import(stage_info, overwrite = overwrite)
   
 }
 

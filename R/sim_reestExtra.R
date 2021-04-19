@@ -106,7 +106,7 @@ by_row_df <- function(.data, .f, .apply_fun=lapply, ...) {
 #' }
 #' @export
 
-covariate_step_tibble <- function(base, run_id, run_in = getOption("models.dir"), dtest, direction = c("forward", "backward"), ...){
+covariate_step_tibble <- function(base, run_id, run_in = models_dir(), dtest, direction = c("forward", "backward"), ...){
   
   direction <- match.arg(direction)
   
@@ -146,7 +146,7 @@ covariate_step_tibble <- function(base, run_id, run_in = getOption("models.dir")
   
   dsc <- dtest
   
-  #start_dir <- file.path(getOption("models.dir"), paste0(run_id(base),"_",label))
+  #start_dir <- file.path(models_dir(), paste0(run_id(base),"_",label))
   # start_dir <- run_in(base)
   # if(length(start_dir) > 1) stop("non unique parents", call. = FALSE)
   # if(length(start_dir) < 1) stop("can't find parent run in location", call. = FALSE)

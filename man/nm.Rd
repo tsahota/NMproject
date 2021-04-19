@@ -6,7 +6,7 @@
 \usage{
 nm(
   run_id = NA_character_,
-  run_in = getOption("models.dir"),
+  run_in = models_dir(),
   parent_run_id = NA_character_,
   parent_run_in = NA_character_,
   parent_ctl_name = NA_character_,

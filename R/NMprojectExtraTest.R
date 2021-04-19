@@ -304,9 +304,6 @@ if(0){
   d$m[run_id(d$m) %in% "m4"]
   
   
-  ## TODO: code library (tidyproject)
-  ##    organisation
-  ##    funs to extract files + projects
-  
+
 }
 
