@@ -5,3 +5,6 @@
 .Ruserdata
 inst/doc
 docs
+.Rdata
+.httr-oauth
+.DS_Store

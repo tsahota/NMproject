@@ -6,3 +6,6 @@
 ^docs$
 ^pkgdown$
 ^README\.Rmd$
+^Models$
+^Scripts$
+^Results$
