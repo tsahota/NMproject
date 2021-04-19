@@ -4,22 +4,14 @@
 \alias{stage}
 \title{stage files in project staging area ready for import}
 \usage{
-stage(
-  files,
-  destination,
-  additional_sub_dirs = nm_dirs(),
-  overwrite = FALSE,
-  silent = FALSE
-)
+stage(files, root_dir, overwrite = FALSE, silent = FALSE)
 }
 \arguments{
 \item{files}{character vector. path of files to stage}
 
-\item{destination}{default empty.  Optional destination directory
-by default will be equivalent location in staging/}
-
-\item{additional_sub_dirs}{character vector. additional subdirectories
-not in standard tidyproject structure}
+\item{root_dir}{character path to root directory of `files`. Staged files
+relative to `staging` directory will be same as `files` to `root_dir`. If
+this is not specified, will guess based on presense of `nm_default_dirs`}
 
 \item{overwrite}{logical (default = FALSE).}
 

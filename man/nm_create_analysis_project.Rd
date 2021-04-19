@@ -6,7 +6,7 @@
 \usage{
 nm_create_analysis_project(
   path,
-  dirs = nm_dirs(),
+  dirs = nm_default_dirs(),
   style = c("simple", "starters"),
   ...
 )
@@ -14,7 +14,7 @@ nm_create_analysis_project(
 \arguments{
 \item{path}{character path (relative or absolute) to project.  If just specifying a name, this will create the analysis project in the current working directory}
 
-\item{dirs}{character list or vector.  Default = `nm_dirs()`}
+\item{dirs}{character list or vector.  Default = `nm_default_dirs()`}
 
 \item{style}{character. Either "simple" (default) or "starters".  See details}
 

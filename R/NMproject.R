@@ -87,13 +87,13 @@ set_nm_opts <- function(){
     options(available_nm_types = c("SIZES","PROB","INPUT","DATA","SUB","MODEL","PK","DES","PRED","ERROR",
                                    "THETA","OMEGA","SIGMA","EST","SIM","COV","TABLE"))
 
-  if(is.null(getOption("nm_dirs"))) options(nm_dirs = list(models_dir = "Models", 
-                                                           scripts_dir = "Scripts",
-                                                           results_dir = "Results",
-                                                           "SourceData",
-                                                           "Data"))
+  if(is.null(getOption("nm_default_dirs"))) options(nm_default_dirs = list(models = "Models", 
+                                                                           scripts = "Scripts",
+                                                                           results = "Results",
+                                                                           "SourceData",
+                                                                           "DerivedData"))
   
-  models.ignore <- file.path(models_dir(),c("*tab*",
+  models.ignore <- file.path(nm_default_dir("models"),c("*tab*",
                                             "*.phi",
                                             "*.ext",
                                             "*.cov",
@@ -130,47 +130,87 @@ set_nm_opts <- function(){
 #' @param dir_list optional named list or vector. Names "scripts_dir" and "models_dir" must be present.  Rest can be unnamed
 #' 
 #' @return
-#' if `dir_list` is missing, will return value of `getOption("nm_dirs")` otherwise will set option `nm_dirs`
+#' if `dir_list` is missing, will return value of `getOption("nm_default_dirs")` otherwise will set option `nm_default_dirs`
 #' @examples
 #' \dontrun{
 #' 
-#' nm_dirs()
-#' nm_dirs(list(models_dir = "Models", 
-#'              scripts_dir = "Scripts",
-#'              results_dir = "Results",
-#'              "SourceData",
-#'              "Data"))
+#' nm_default_dirs()
+#' nm_default_dirs(list(models = "Models", 
+#'                      scripts = "Scripts",
+#'                      results = "Results",
+#'                      "SourceData",
+#'                      "Data"))
 #' }
 #' @export
-nm_dirs <- function(dir_list){
-  if(missing(dir_list)) return(getOption("nm_dirs"))
-  ## now assume we're setting
-  ## validate input
-  if(!"scripts_dir" %in% names(dir_list)) 
-    stop("one entry of the directory needs the name \"scripts_dir\"")
-  if(!"models_dir" %in% names(dir_list)) 
-    stop("one entry of the directory needs the name \"models_dir\"")
-  options(nm_dirs = dir_list)
+nm_default_dirs <- function(dir_list){
+  if(missing(dir_list)) return(getOption("nm_default_dirs"))
+  if(!missing(dir_list)){
+    ## now assume we're setting
+    validate_dir_list(dir_list)
+    options(nm_default_dirs = dir_list)
+  }
 }
 
-#' Shortcut to Scripts directory
-#' 
-#' @export
-scripts_dir <- function() {
-  nm_dirs()$scripts_dir
-  # normalizePath(file.path(proj_name, nm_dirs()$scripts_dir), 
-  #               winslash = "/", 
-  #               mustWork = FALSE)
+validate_dir_list <- function(dir_list){
+  if(!"scripts" %in% names(dir_list)) 
+    stop("one entry of the directory needs the name \"scripts\"", call. = FALSE)
+  if(!"models" %in% names(dir_list)) 
+    stop("one entry of the directory needs the name \"models\"", call. = FALSE)  
 }
 
-#' Shortcut to Models directory
+set_default_dirs_in_rprofile <- function(path = ".Rprofile", dir_list = nm_default_dirs()){
+  
+  validate_dir_list(dir_list)
+  if(!file.exists(path)) file.create(path)
+  
+  start_flag <- "# nm_default_dir modify - start"
+  end_flag <- "# nm_default_dir modify - end"
+  
+  current_lines <- readLines(path)
+  
+  start_flag_hit <- grep(start_flag, current_lines)
+  end_flag_hit <- grep(end_flag, current_lines)
+  
+  error_msg <- "something wrong with .Rprofile, remove previous nm_default_dir lines and try again"
+  
+  if(!length(start_flag_hit) %in% c(0,1)) stop(error_msg, call. = FALSE)
+  if(!length(end_flag_hit) %in% c(0,1)) stop(error_msg, call. = FALSE)
+  total_hits <- length(start_flag_hit) + length(start_flag_hit)
+  if(!total_hits %in% c(0,2)) stop(error_msg, call. = FALSE)
+  ## hits validated
+
+  if(total_hits == 2){  ## existing statement detected
+    ## remove lines
+    remove_lines <- start_flag_hit:(end_flag_hit +1)
+    current_lines <- current_lines[!seq_along(current_lines) %in% remove_lines]
+    writeLines(current_lines, path)
+    return(set_default_dirs_in_rprofile(path = path, dir_list = dir_list))
+  }  
+  # now can just set
+  
+  txt <- paste0("options(nm_default_dirs=", paste(deparse(dir_list), collapse = ""), ")")
+  txt <- gsub("\\s+", " ", txt)
+  txt <- c(start_flag, txt, end_flag, "", current_lines)
+  writeLines(txt, path)
+  usethis::ui_done("setting {usethis::ui_path('nm_default_dirs')} in {usethis::ui_path('.Rprofile')}")
+  
+}
+
+#' get a default directory
 #' 
+#' @param name character. Directory type
+#' @param ... not used yet
+#' 
+#' @examples 
+#' nm_default_dir("scripts")
+#' nm_default_dir("models")
+#' nm_default_dir("results")
 #' @export
-models_dir <- function() {
-  nm_dirs()$models_dir
-  # normalizePath(file.path(proj_name, nm_dirs()$models_dir),
-  #               winslash = "/", 
-  #               mustWork = FALSE)
+
+nm_default_dir <- function(name = c("scripts", "models", "results"), ...){
+  if(missing(name)) stop("need argument")
+  name < match.arg(name)
+  nm_default_dirs()[[name]]
 }
 
 #' Generic execute command for SGE grids
@@ -321,7 +361,7 @@ system_nm_default <- function(cmd, ...) {
 #' @param dir character. directory to run command in
 #' @param ... other arguments passed to system command
 #' @export
-system_nm <- function(cmd,dir=models_dir(),...){
+system_nm <- function(cmd,dir=nm_default_dir("models"),...){
   if(is.null(dir) | !file.exists(dir)) dir <- "."
   if(file.exists(dir)) {currentwd <- getwd(); setwd(dir) ; on.exit(setwd(currentwd))} else
     stop(paste0("Directory \"",dir,"\" doesn't exist."))
@@ -376,7 +416,7 @@ overwrite_behaviour <- function(txt = c("ask",
 #' @param x character vector. Relative path from models.dir
 #' @param models_dir character. Models directory
 #' @export
-from_models <- function(x, models_dir=models_dir()) {
+from_models <- function(x, models_dir=nm_default_dir("models")) {
   file.path(models_dir,x)
 }
 
@@ -466,7 +506,7 @@ new_script <- function(name, overwrite = FALSE, open_file = TRUE, libs=c("NMproj
   # if (name != basename(name)) 
   #   stop("name must not be a path")
   if (name == basename(name)) {
-    to_path <- file.path(scripts_dir(), name)  ## destination path
+    to_path <- file.path(nm_default_dir("scripts"), name)  ## destination path
   } else {
     to_path <- name
   }

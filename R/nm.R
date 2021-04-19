@@ -33,7 +33,7 @@ edit_file <- function(file_name){
 }
 
 
-search_ctl_name <- function(r, models_dir=models_dir()){
+search_ctl_name <- function(r, models_dir=nm_default_dir("models")){
   if(inherits(r,"nm")) ctl_name <- r$ctl
   if(inherits(r,"numeric") | inherits(r,"character")) {
     r <- as.character(r)
@@ -188,7 +188,7 @@ setup_nm_demo <- function(demo_name="theopp",
 #' @export
 run_all_scripts <- function(){
   
-  script_files <- dir(scripts_dir(), "s[0-9]+_.*?\\.R(md)?$", full.names = TRUE)
+  script_files <- dir(nm_default_dir("scripts"), "s[0-9]+_.*?\\.R(md)?$", full.names = TRUE)
   
   dplan <- tibble::tibble(script_files) %>%
     dplyr::mutate(rmd = grepl("\\.Rmd", .data$script_files))

@@ -17,7 +17,7 @@ start_manual_edit <- function(m, combine_patch = NA_character_){
   time_stamp <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S")
   
   patch_name <- paste0("patch-", Sys.info()["user"], "-", time_stamp)
-  patch_path <- file.path(models_dir(), "patches", patch_name)
+  patch_path <- file.path(nm_default_dir("models"), "patches", patch_name)
   dir.create(dirname(patch_path), showWarnings = FALSE, recursive = TRUE)
   
   ## this isn't used - delete
@@ -61,7 +61,7 @@ diff_manual_edit <- function(m, res){
 #' 
 #' @export
 view_patch <- function(patch_name){
-  patch_path <- file.path(models_dir(), "patches", patch_name)  
+  patch_path <- file.path(nm_default_dir("models"), "patches", patch_name)  
   file.show(patch_path)
 }
 
@@ -83,7 +83,7 @@ apply_manual_edit <- function(m, patch_name){
 #' @export
 apply_manual_edit.nm_generic <- function(m, patch_name){
   
-  patch_path <- file.path(models_dir(), 
+  patch_path <- file.path(nm_default_dir("models"), 
                           "patches", 
                           patch_name)
   if(!file.exists(patch_path)) stop("patch file doesn't exist")

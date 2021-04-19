@@ -6,7 +6,7 @@
 \usage{
 copy_script2(
   from,
-  to = file.path(scripts_dir(), basename(from)),
+  to = file.path(nm_default_dir("scripts"), basename(from)),
   stamp_copy = TRUE,
   overwrite = FALSE,
   comment_char = "#"

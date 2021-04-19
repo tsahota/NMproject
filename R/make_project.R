@@ -1,7 +1,7 @@
 #' Create analysis project
 #'
 #' @param path character path (relative or absolute) to project.  If just specifying a name, this will create the analysis project in the current working directory
-#' @param dirs character list or vector.  Default = `nm_dirs()`
+#' @param dirs character list or vector.  Default = `nm_default_dirs()`
 #' @param style character. Either "simple" (default) or "starters".  See details
 #' @param ... arguments passted to `starters::create_analysis_package`
 #'
@@ -13,9 +13,11 @@
 #'   used.
 #' @export
 
-nm_create_analysis_project <- function(path, dirs = nm_dirs(), 
+nm_create_analysis_project <- function(path, dirs = nm_default_dirs(), 
                                        style = c("simple",
                                                  "starters"), ...){
+  
+  validate_dir_list(dirs)
   
   style <- match.arg(style)
   name <- basename(path)
@@ -51,10 +53,14 @@ nm_create_analysis_project <- function(path, dirs = nm_dirs(),
       usethis::use_description(check_name = FALSE)
       desc::desc_set_dep(package = "renv", type = "Imports", 
                          file = usethis::proj_get())
-      usethis::use_namespace()
-      usethis::use_vignette(name = name)
     }, error = function(e){
-      usethis::ui_info("skipping creation of {usethis::ui_path('DESCRIPTION')}, {usethis::ui_path('NAMESPACE')}, {usethis::ui_path('vignettes/')}")
+      usethis::ui_info("skipping creation of {usethis::ui_path('DESCRIPTION')}")
+    })
+    
+    tryCatch({
+      usethis::use_namespace()
+    }, error = function(e){
+      usethis::ui_info("skipping creation of {usethis::ui_path('NAMESPACE')}")
     })
     
   }
@@ -68,20 +74,23 @@ nm_create_analysis_project <- function(path, dirs = nm_dirs(),
                                       external_setup = NULL, ...)    
   }
   
+  browser()
+  set_default_dirs_in_rprofile(file.path(folder, name, ".Rprofile"), dirs)
   return(invisible(path))
 }
+
+
 
 #' stage files in project staging area ready for import
 #'
 #' @param files character vector. path of files to stage
-#' @param destination default empty.  Optional destination directory
-#'  by default will be equivalent location in staging/
-#' @param additional_sub_dirs character vector. additional subdirectories
-#'  not in standard tidyproject structure
+#' @param root_dir character path to root directory of `files`. Staged files
+#'   relative to `staging` directory will be same as `files` to `root_dir`. If
+#'   this is not specified, will guess based on presense of `nm_default_dirs`
 #' @param overwrite logical (default = FALSE).
 #' @param silent logical (default = FALSE)
 #' @export
-stage <- function(files, destination, additional_sub_dirs = nm_dirs(),
+stage <- function(files, root_dir,
                   overwrite = FALSE, silent = FALSE){
   
   ## send unmodified files into staging area for importation
@@ -89,40 +98,27 @@ stage <- function(files, destination, additional_sub_dirs = nm_dirs(),
   files <- normalizePath(files, winslash = "/")
   
   ##########################
-  sub_dirs <- c("SourceData",
-                "DerivedData",
-                "R",
-                "Scripts",
-                "Models",
-                models_dir(),
-                "Results",
-                unlist(additional_sub_dirs))
-  
-  sub_dirs <- basename(sub_dirs)
-  
-  sub_dirs <- unique(sub_dirs)
-  
-  key_dirs <- sub_dirs
-  
-  regex_key_dirs <- paste0("\\b", key_dirs, "\\b")
-  
-  files_sep <- strsplit(files, .Platform$file.sep)
-  
-  if(!missing(destination)){
-    if(!grepl("staging", destination))
-      stop("destination should be in staging area", call. = FALSE)
-    destination <- file.path(destination, basename(files))
-    destination <- relative_path(destination, "staging")
-  } else {
-    destination <- sapply(files_sep, function(file_sep){
-      file_sep <- rev(file_sep)
-      matches <- match(key_dirs, file_sep)
-      if(all(is.na(matches))) return(NA_character_)
-      matched_dir <- key_dirs[which.min(matches)]
-      file_sep <- file_sep[seq_len(match(matched_dir, file_sep))]
-      do.call(file.path, as.list(rev(file_sep)))
+  if(missing(root_dir)){
+    roots <- sapply(files, function(file) {
+      rprojroot::find_root(rprojroot::has_dir(nm_default_dir("scripts")) |
+                             rprojroot::has_dir(nm_default_dir("models")) |
+                             rprojroot::has_dir("Scripts") |
+                             rprojroot::has_dir("Models"), 
+                           path = file)
     })
+    names(roots) <- NULL
+    unique_roots <- unique(roots)
+    if(length(unique_roots) == 1) root_dir <- unique_roots
+    if(length(unique_roots) == 0) stop("cannot determine root directory.  Specify root_dir argument")
+    if(length(unique_roots) > 1){
+      stop("can't guess root_dir, multiple candidates: \n  ", paste0(unique_roots, collapse = "\n  "), "specify root_dir argument in stage()")
+    }
   }
+  
+  destination <- relative_path(files, root_dir)
+  destination <- gsub("^Scripts/", paste0(nm_default_dir("scripts"), "/"), destination)
+  destination <- gsub("^Models/", paste0(nm_default_dir("models"), "/"), destination)
+  destination <- gsub("^Results/", paste0(nm_default_dir("results"), "/"), destination)
   
   d <- tibble::tibble(from = files, destination)
   d$staging <- file.path("staging", d$destination)
@@ -134,9 +130,7 @@ stage <- function(files, destination, additional_sub_dirs = nm_dirs(),
   existing_files <- d$staging[file.exists(d$staging)]
   do_copy <- rep(TRUE, nrow(d))  ## default = copy
   if(!overwrite & length(existing_files)){
-    #stop("File(s) already exist:\n",paste(paste0(" ",existing_files),collapse="\n"), "\nRename existing staged files or use overwrite=TRUE", call. = FALSE)
     if(!silent) message("File(s) not to be overwritten:\n",paste(paste0(" ",existing_files),collapse="\n"), "\nRename existing staged files or use overwrite=TRUE")
-    #d <- d[!d$staging %in% existing_files, ]
     do_copy[file.exists(d$staging)] <- FALSE
   }
   
@@ -195,8 +189,8 @@ import <- function(copy_table, overwrite = FALSE, silent = FALSE,
   dirs <- unique(dirs)
   for(path in dirs) dir.create(path, recursive = TRUE, showWarnings = FALSE)
   
-  copy_script2(d_R$staging, d_R$destination, overwrite = overwrite)
-  file.copy(d_other$staging, d_other$destination, overwrite = overwrite)  ## use copy_file instead?
+  file.copy(d_R$staging, d_R$destination, overwrite = overwrite)
+  file.copy(d_other$staging, d_other$destination, overwrite = overwrite)
   
   message("Files imported:\n ",
           paste(copy_table$destination, collapse = "\n "))
@@ -562,7 +556,7 @@ system_cmd <- function(cmd,dir=".",...){
 #' @param overwrite logical. Overwrite 'to' file if exists?
 #' @param comment_char character. Comment character
 #' @export
-copy_script2 <- function(from, to = file.path(scripts_dir(), basename(from)), 
+copy_script2 <- function(from, to = file.path(nm_default_dir("scripts"), basename(from)), 
                          stamp_copy = TRUE, overwrite = FALSE, comment_char = "#") {
   ## User function: copies script from one location (e.g. code_library) to project
   ## scripts directory

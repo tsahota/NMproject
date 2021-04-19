@@ -4,7 +4,7 @@
 \alias{system_nm}
 \title{system command for NONMEM execution}
 \usage{
-system_nm(cmd, dir = models_dir(), ...)
+system_nm(cmd, dir = nm_default_dir("models"), ...)
 }
 \arguments{
 \item{cmd}{character. command to send to shell}

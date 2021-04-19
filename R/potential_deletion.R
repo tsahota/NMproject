@@ -31,7 +31,7 @@ filter.nm_list <- function(.data, ...){
 
 if(0){
 
-  new_ctl_extra <- function(m, ctl, dir = models_dir()){
+  new_ctl_extra <- function(m, ctl, dir = nm_default_dir("models")){
     
     ctl$TABLE <- gsub(paste0("(FILE\\s*=\\s*\\S*tab)\\S*\\b"),paste0("\\1",run_id(m)),ctl$TABLE)
     ctl[[1]] <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*",paste("\\1",parent_run_id(m)),ctl[[1]])
