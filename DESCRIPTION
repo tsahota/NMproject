@@ -10,7 +10,7 @@ License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
 Remotes: 
-    lockedata/starters
+    lockedata/starters,
     gluc/data.tree
 Imports:
     shiny,
