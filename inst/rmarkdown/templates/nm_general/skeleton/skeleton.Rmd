@@ -12,7 +12,11 @@ output:
 ```{r setup, include=F}
 ## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
 library(knitr)
-opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+library(rprojroot)
+opts_knit$set(root.dir = find_root(has_file(".Rprofile") | 
+                                     is_rstudio_project | 
+                                     is_r_package | 
+                                     is_git_root))
 opts_chunk$set(echo = TRUE)
 opts_chunk$set(message = TRUE)
 ```
@@ -23,6 +27,7 @@ library(NMproject)
 library(future)
 future::plan("future::multiprocess", workers = 2)
 
-load_localpackage()
+devtools::load_all() ## for loading functions in R/
+
 ```
 

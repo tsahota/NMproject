@@ -13,7 +13,11 @@ This document was created by `r Sys.info()['user']` at `r Sys.time()` in `r getw
 ```{r setup, include=F}
 ## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
 library(knitr)
-opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+library(rprojroot)
+opts_knit$set(root.dir = find_root(has_file(".Rprofile") | 
+                                     is_rstudio_project | 
+                                     is_r_package | 
+                                     is_git_root))
 opts_chunk$set(echo = TRUE)
 opts_chunk$set(message = TRUE)
 ```
@@ -26,7 +30,7 @@ library(NMproject)
 # future::plan("future::multiprocess", workers = 2)
 library(dplyr)
 
-load_localpackage()
+devtools::load_all()
 
 ```
 

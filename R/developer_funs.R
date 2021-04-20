@@ -36,7 +36,7 @@ copy_demo_to_demo <- function(demo = "theopp"){
 
    
   ## non script directories can be copied as is
-  easy_directories <- c("localpackage",
+  easy_directories <- c("R",
                         "SourceData")
   
   models_dir <- "staging/Models"
@@ -75,12 +75,16 @@ copy_demo_to_demo <- function(demo = "theopp"){
   res3 <- file.copy("staging/Models", destination, recursive = TRUE, overwrite = TRUE)
   names(res3) <- "staging/Models"
   
-  c(res1, res2, res3)
+  ## Models/patches
+  res4 <- file.copy("Models/patches", file.path(destination, "Models"), recursive = TRUE)
+  names(res4) <- "Models/patches"
+  
+  c(res1, res2, res3, res4)
 }
 
 copy_demo_to_test <- function(demo = "theopp"){
   
-  easy_directories <- c("localpackage",
+  easy_directories <- c("R",
                         "SourceData",
                         "staging")
   

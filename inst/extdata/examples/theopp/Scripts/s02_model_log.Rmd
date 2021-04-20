@@ -13,7 +13,11 @@ output:
 ```{r setup, include=F}
 ## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
 library(knitr)
-opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+library(rprojroot)
+opts_knit$set(root.dir = find_root(has_file(".Rprofile") | 
+                                     is_rstudio_project | 
+                                     is_r_package | 
+                                     is_git_root))
 opts_chunk$set(echo = TRUE)
 opts_chunk$set(message = TRUE)
 ```
@@ -26,7 +30,7 @@ library(NMproject)
 # future::plan("future::multiprocess", workers = 2)
 library(dplyr)
 
-# load_localpackage()
+# devtools::load_all()
 
 ```
 
@@ -127,7 +131,7 @@ thinking
 
 m1s_temp <- m1 %>% child("m1s_temp") %>%  
   update_parameters(m1) %>%
-  apply_manual_edit("patch-tarjinde-2021-04-16-12-05-10")
+  apply_manual_edit("patch-tarjinde-2021-04-20-13-50-09")
 
 # try using nm_diff(m1s_temp, m1s) to see the difference between the two
 # approaches.  Note that since we didn't run_nm(), runm1s_temp.mod was never

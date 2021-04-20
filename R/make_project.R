@@ -36,9 +36,13 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
     usethis::proj_set(path)
     on.exit(usethis::proj_set(current_proj))
     
-    #usethis::use_readme_rmd(open = FALSE)
-    usethis::use_template("README.Rmd", data = list(Package = name), 
-                          package = "starters")
+    if(requireNamespace("starters", quietly = TRUE)){
+      usethis::use_template("README.Rmd", data = list(Package = name), 
+                            package = "starters")      
+    } else {
+      usethis::use_readme_rmd(open = FALSE) 
+    }
+
     usethis::use_build_ignore("README.Rmd")
     
     ## no badges - skip this part of starters for now
@@ -68,7 +72,8 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
   }
   
   if(style %in% "starters"){
-    if(!requireNamespace("starters")) stop("install package: starters", call. = FALSE)
+    if(!requireNamespace("starters", quietly = TRUE)) 
+      stop("install package: starters", call. = FALSE)
     starters::create_analysis_project(name = name, 
                                       folder = folder,
                                       dirs = dirs, 
@@ -417,8 +422,6 @@ code_library <- function(extn = NULL, fields = "Description", viewer = TRUE, sil
       e$message <- paste0(e$message, ".\n  Check getOption(\"code_library_path\") points to non-overlapping folders")
     stop(e)
   })
-  if (!silent) 
-    message("\nNOTE: Do not source scripts from the code library,\n copy them to your project with copy_script() or copy_file()")
   if (return_info) {
     if (silent) 
       return_ob <- invisible(info) else return_ob <- info

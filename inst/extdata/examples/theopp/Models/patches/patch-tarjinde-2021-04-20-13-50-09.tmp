@@ -1,0 +1,66 @@
+diff --git a/Models/manual_runm1s_temp.mod b/Models/manual_runm1s_temp.mod
+index 18bb6d1..32bd67d 100644
+--- a/Models/manual_runm1s_temp.mod
++++ b/Models/manual_runm1s_temp.mod
+@@ -23,7 +23,7 @@ $PROBLEM ...
+ 
+ $INPUT
+ ID AMT TIME DV WT
+-$DATA ../DerivedData/data.csv IGNORE=@ 
++$DATA ../DerivedData/data.csv IGNORE=@
+ $SUB ADVAN2
+ 
+ $PK
+@@ -44,7 +44,7 @@ CL = K*V
+ 
+ S2 = V
+ 
+-$ERROR 
++$ERROR
+ 
+ IPRED=F
+ W=SQRT(SIGMA(1,1)*IPRED**2 + SIGMA(2,2))  ; proportional + additive error
+@@ -53,38 +53,20 @@ IWRES=IRES/W
+ Y=IPRED + IPRED*EPS(1) + EPS(2)
+ 
+ 
+-$THETA   
++$THETA
+  0.41429    ; KA ; h-1 ; LOG
+  -2.4444    ; K ; h-1 ; LOG
+  -0.77189    ; V ; L ; LOG
+-$OMEGA    
++$OMEGA
+  0.49637			           ; IIV_KA ; LOG
+  0.030144			           ; IIV_K ; LOG
+  0.02156			           ; IIV_V ; LOG
+-  
+-$SIGMA 
++
++$SIGMA
+  0.019495    ; prop error
+  0.052308    ; add error
+-  
+-; Parameter estimation - FOCE
+-;$EST METHOD=1 INTER NOABORT MAXEVAL=9999 PRINT=1 NSIG=3 SIGL=9
+-
+-; Parameter estimation - IMP
+-$EST METHOD=IMP ISAMPLE=300 NITER=300 RANMETHOD=3S2
+-CTYPE=3 CITER=10 CALPHA=0.05 CINTERVAL=3
+-PRINT=1 NOABORT INTERACTION
+-
+-; Parameer estimation - SAEM
+-;$EST METHOD=SAEM ISAMPLE=2 NBURN=1000 NITER=500 RANMETHOD=3S2
+-;CTYPE=3 CITER=10 CALPHA=0.05 CINTERVAL=10
+-;PRINT=1 NOABORT INTERACTION
+-
+-; Objective function and covariance evaluation
+-$EST METHOD=IMP INTER EONLY= 1 MAPITER=0 ISAMPLE = 2000 NITER = 10 RANMETHOD=3S2 NOABORT PRINT=1 NSIG=3 SIGL=9
+-
+-$COV MATRIX=R PRINT=E UNCONDITIONAL SIGL=10
+ 
+-;$SIM (1234) ONLYSIM SUBPR=1
++$SIM (1234) ONLYSIM SUBPR=10
+ 
+ $TABLE ID TIME IPRED IWRES IRES CWRES NPDE
+ FILE=sdtabm1s_temp NOPRINT ONEHEADER
