@@ -3,6 +3,7 @@
 #' @param path character path (relative or absolute) to project.  If just specifying a name, this will create the analysis project in the current working directory
 #' @param dirs character list or vector.  Default = `nm_default_dirs()`
 #' @param style character. Either "simple" (default) or "starters".  See details
+#' @param use_renv logical (default = TRUE). should renv be used or not in project
 #' @param ... arguments passted to `starters::create_analysis_package`
 #'
 #' @details if `style = "starters"` the function works as light wrapper around
@@ -15,7 +16,8 @@
 
 nm_create_analysis_project <- function(path, dirs = nm_default_dirs(), 
                                        style = c("simple",
-                                                 "starters"), ...){
+                                                 "starters"), 
+                                       use_renv = TRUE, ...){
   
   validate_dir_list(dirs)
   
@@ -45,7 +47,7 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
     git2r::add(repo, path = "README.Rmd")
     git2r::commit(repo, message = "added README.Rmd", all = TRUE)
     
-    renv::scaffold(project = usethis::proj_get())
+    if(use_renv) renv::scaffold(project = usethis::proj_get())
 
     for(dir_name in dirs) usethis::use_directory(dir_name, ignore = TRUE)
 
@@ -74,7 +76,6 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
                                       external_setup = NULL, ...)    
   }
   
-  browser()
   set_default_dirs_in_rprofile(file.path(folder, name, ".Rprofile"), dirs)
   return(invisible(path))
 }

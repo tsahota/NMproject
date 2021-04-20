@@ -1,36 +1,36 @@
-#' @importFrom dplyr mutate
-#' @export
-dplyr::mutate
-
-#' @export
-mutate.nm_list <- function(.data, ...){
-  dots_exp <- rlang::enexprs(...)
-  data_extra <- dplyr::mutate(nm_row(.data), ...)
-  
-  for(name in names(dots_exp)){
-    .data <- .data %>% custom_1d_field(field = name, replace = data_extra[[name]])
-  }
-  .data
-  
-}
-
-#' @importFrom dplyr filter
-#' @export
-dplyr::filter
-
-#' @export
-filter.nm_list <- function(.data, ...){
-  dots_exp <- rlang::enexprs(...)
-  object <- .data
-  .data <- nm_row(object)
-  .data$m <- object
-  
-  data_extra <- dplyr::filter(.data, ...)
-  data_extra$m
-}
-
 if(0){
 
+  #' @importFrom dplyr mutate
+  #' @export
+  dplyr::mutate
+  
+  #' @export
+  mutate.nm_list <- function(.data, ...){
+    dots_exp <- rlang::enexprs(...)
+    data_extra <- dplyr::mutate(nm_row(.data), ...)
+    
+    for(name in names(dots_exp)){
+      .data <- .data %>% custom_1d_field(field = name, replace = data_extra[[name]])
+    }
+    .data
+    
+  }
+  
+  #' @importFrom dplyr filter
+  #' @export
+  dplyr::filter
+  
+  #' @export
+  filter.nm_list <- function(.data, ...){
+    dots_exp <- rlang::enexprs(...)
+    object <- .data
+    .data <- nm_row(object)
+    .data$m <- object
+    
+    data_extra <- dplyr::filter(.data, ...)
+    data_extra$m
+  }
+  
   new_ctl_extra <- function(m, ctl, dir = nm_default_dir("models")){
     
     ctl$TABLE <- gsub(paste0("(FILE\\s*=\\s*\\S*tab)\\S*\\b"),paste0("\\1",run_id(m)),ctl$TABLE)

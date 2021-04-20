@@ -8,6 +8,7 @@ nm_create_analysis_project(
   path,
   dirs = nm_default_dirs(),
   style = c("simple", "starters"),
+  use_renv = TRUE,
   ...
 )
 }
@@ -17,6 +18,8 @@ nm_create_analysis_project(
 \item{dirs}{character list or vector.  Default = `nm_default_dirs()`}
 
 \item{style}{character. Either "simple" (default) or "starters".  See details}
+
+\item{use_renv}{logical (default = TRUE). should renv be used or not in project}
 
 \item{...}{arguments passted to `starters::create_analysis_package`}
 }
