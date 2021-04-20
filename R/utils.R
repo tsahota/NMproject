@@ -72,10 +72,10 @@ relative_path <- function(path, relative_path){
   
   last_common_piece <- max(which(mainPieces[1:shorterLength] == refPieces[1:shorterLength]),1)
   
-  dots <- setdiff(refPieces,refPieces[1:last_common_piece])
+  dots <- refPieces[!seq_along(refPieces) %in% 1:last_common_piece]
   dots <- rep("..", length(dots))
   
-  mainPieces <- setdiff(mainPieces,mainPieces[1:last_common_piece])
+  mainPieces <- mainPieces[!seq_along(mainPieces) %in% 1:last_common_piece]
   
   relativePieces <- c(dots, mainPieces)
   do.call(file.path, as.list(relativePieces))
