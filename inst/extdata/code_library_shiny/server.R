@@ -7,7 +7,7 @@ setwd(.currentwd)
 options(warn =-1)
 
 gen_code_library <- function(){
-  code_library(viewer = FALSE, return_info = TRUE)
+  NMproject::code_library(viewer = FALSE, return_info = TRUE)
 }
 
 function(input, output, session) {
@@ -45,7 +45,7 @@ function(input, output, session) {
         title = "Error",
         "Select a row first"
       )))
-    stage(ls_code_library(objects()$NAME), overwrite = TRUE)
+    NMproject::stage(NMproject::ls_code_library(objects()$NAME), overwrite = TRUE)
     return(showModal(modalDialog(
       title = "file staged",
       "File is in \"staging\" directory. For scripts use import(\"staging/path/to/file\"). For nonmem code new_nm(.... , based_on = \"staging/path/to/file\", ....).  Close shiny app to go back to console."
