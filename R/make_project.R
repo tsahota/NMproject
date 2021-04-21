@@ -46,10 +46,14 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
     usethis::use_build_ignore("README.Rmd")
     
     ## no badges - skip this part of starters for now
-    
     repo <- git2r::init(usethis::proj_get())
     git2r::add(repo, path = "README.Rmd")
-    git2r::commit(repo, message = "added README.Rmd", all = TRUE)
+    
+    tryCatch({
+      git2r::commit(repo, message = "added README.Rmd", all = TRUE)
+    }, error = function(e){
+      usethis::ui_oops("cannot commit {usethis::ui_path('README.Rmd')}. Aborting...")
+    })
     
     if(use_renv) renv::scaffold(project = usethis::proj_get())
 
