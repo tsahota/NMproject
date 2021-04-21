@@ -18,26 +18,6 @@ gen_sim_path <- function(dsc, start_dir, include_names = TRUE){
   })
 }
 
-split_by_row <- function(data) split(data, row.names(data))
-
-by_row <- function(.data,...,.apply_fun=lapply) {
-  ## added dots to prevent partial argument matching. Not perfect.
-  split_by_row(.data) %>% .apply_fun(...)
-}
-
-by_row_df <- function(.data, .f, .apply_fun=lapply, ...) {
-  ## added dots to prevent partial argument matching. Not perfect.
-  .f <- purrr::as_mapper(.f)
-  d <- split_by_row(.data) %>% .apply_fun(.f, ...)
-  if(length(d) == 0) return(data.frame())
-  nm_cols <- names(d[[1]])[sapply(d[[1]], is_nm_list)]
-  d <- suppressWarnings(dplyr::bind_rows(d))
-  for(nm_col in nm_cols){
-    d[[nm_col]] <- as_nm_list(d[[nm_col]])    
-  }
-  d
-}
-
 #' Prepare forward covariate step
 #' 
 #' @param base nm object
@@ -454,29 +434,11 @@ ppc_data <- function(r,  FUN, ..., pre_proc = identity, max_mod_no = NA, DV = "D
   total_args <- names(formals(ppc_data))
   dots_present <- any(!supplied_args %in% total_args)
   
-  # if(dots_present){
-  #    dsims <- dsims %>% dplyr::mutate(...)    
-  #  }
-  
-  ## apply stat FUN to each sim
-  ## apply change to the dataset
-  # browser()
-  # stat_tmp <- FUN(dsims %>%
-  #                   filter(mod_no %in% 1), ...)
-  # 
-  # dtmp <- dsims %>%
-  #   filter(mod_no %in% 1) %>% 
-  #   dplyr::group_by(.data$mod_no) %>% 
-  #   pre_proc() %>%
-  #   tidyr::nest() %>%
-  #   dplyr::mutate(statistic = purrr::map(.data$data, FUN,...)) %>%
-  #   tidyr::unnest(statistic)
-  
-  
   stat_sim <- dsims %>% dplyr::group_by(.data$mod_no) %>% 
     pre_proc() %>%
     tidyr::nest() %>%
-    dplyr::mutate(statistic = purrr::map(.data$data, FUN,...)) %>%
+    dplyr::mutate(statistic = lapply(.data$data, FUN, ...)) %>%
+    #dplyr::mutate(statistic = purrr::map(.data$data, FUN, ...)) %>%
     tidyr::unnest(statistic)
   
   stat_sim$data <- NULL

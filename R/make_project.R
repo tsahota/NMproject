@@ -55,14 +55,21 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
       usethis::ui_oops("cannot commit {usethis::ui_path('README.Rmd')}. Aborting...")
     })
     
+    if(use_renv) {
+      if(!requireNamespace("renv", quietly = TRUE))
+        stop("install renv", call. = FALSE)
+      if(!requireNamespace("desc", quietly = TRUE))
+        stop("install desc", call. = FALSE)
+    }
+    
     if(use_renv) renv::scaffold(project = usethis::proj_get())
 
     for(dir_name in dirs) usethis::use_directory(dir_name, ignore = TRUE)
 
     tryCatch({
       usethis::use_description(check_name = FALSE)
-      desc::desc_set_dep(package = "renv", type = "Imports", 
-                         file = usethis::proj_get())
+      if(use_renv) desc::desc_set_dep(package = "renv", type = "Imports", 
+                                      file = usethis::proj_get())
     }, error = function(e){
       usethis::ui_info("skipping creation of {usethis::ui_path('DESCRIPTION')}")
     })

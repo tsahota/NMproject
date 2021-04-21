@@ -6002,11 +6002,14 @@ covariance_plot <- function(r,trans=TRUE){
 #' @export
 job_stats <- function(m){
   
-  if(!requireNamespace("pmxTools"))
+  if(!requireNamespace("pmxTools", quietly = TRUE))
     stop("install pmxTools", call. = FALSE)
   
-  if(!requireNamespace("lubridate"))
+  if(!requireNamespace("lubridate", quietly = TRUE))
     stop("install lubridate", call. = FALSE)
+  
+  if(!requireNamespace("purrr", quietly = TRUE))
+    stop("install purrr", call. = FALSE)
   
   d <- m %>% nm_row()
   
