@@ -95,7 +95,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/tsahota/NMproject/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -110,7 +115,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Path to NONMEM control file</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/nm_gettersetters.R'><code>R/nm_gettersetters.R</code></a></small>
     <div class="hidden name"><code>ctl_path.Rd</code></div>
     </div>
 
@@ -141,7 +146,7 @@ code for this run</p></td>
   will use the name "Models/runm1.mod" if run_id(m1) is "m1".</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples">ctl_path,Path to NONMEM control file,Path to NONMEM control file — ctl_path,Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/nm_gettersetters.R'><code>R/nm_gettersetters.R</code></a>,ctl_path.Rd,character(0),ctl_path,character(0),list(title = "Description", contents = "<p>Get and set path to control file.</p>"),list(description = "Get and set path to control file."),<span class='fu'>ctl_path</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>,list(list(name = "m", description = "<p>nm object</p>"), list(name = "text", description = "<p>optional character. Name of path to control file (see details).\nTypically, this file does not yet normally exist, but will house the code\ncode for this run</p>")),TRUE,<div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
 <span class='va'>m0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='nm.html'>nm</a></span><span class='op'>(</span>run_id <span class='op'>=</span> <span class='st'>"m0"</span><span class='op'>)</span>
 <span class='fu'><a href='nm_getsetters.html'>ctl_name</a></span><span class='op'>(</span><span class='va'>m0</span><span class='op'>)</span>
@@ -155,7 +160,7 @@ code for this run</p></td>
 
 
 <span class='op'>}</span>
-</div></pre>
+</div>,list(list(title = "Details", contents = "<p>\"text\" can contain \"run_id\" string.  E.g. \"Models/runrun_id.mod\"\n  will use the name \"Models/runm1.mod\" if run_id(m1) is \"m1\".</p>", slug = "details")),2021,list(name = "NMproject", version = "0.5.9.9000", authors = "Tarj Sahota"),list(destination = "dev", mode = "release", version_label = "default", version_tooltip = "Released version", in_dev = FALSE),list(root = "../", title = "NMproject"),list(),list(type = "default", left = "<li>\n  <a href=\"../index.html\">\n    <span class=\"fas fa-home fa-lg\"></span>\n     \n  </a>\n</li>\n<li>\n  <a href=\"../articles/NMproject.html\">Get started</a>\n</li>\n<li>\n  <a href=\"../reference/index.html\">Reference</a>\n</li>\n<li>\n  <a href=\"../news/index.html\">Changelog</a>\n</li>", right = "<li>\n  <a href=\"https://github.com/tsahota/NMproject/\">\n    <span class=\"fab fa-github fa-lg\"></span>\n     \n  </a>\n</li>"),list(.present = TRUE),list(version = "1.6.1"),FALSE</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

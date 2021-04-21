@@ -95,7 +95,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/tsahota/NMproject/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -110,7 +115,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Prepare forward covariate step</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/sim_reestExtra.R'><code>R/sim_reestExtra.R</code></a></small>
     <div class="hidden name"><code>covariate_step_tibble.Rd</code></div>
     </div>
 
@@ -164,7 +169,15 @@
     <div class='dont-index'><p><code><a href='test_relations.html'>test_relations</a></code>, <code>covariate_step_tibble</code>, <code><a href='bind_covariate_results.html'>bind_covariate_results</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples">covariate_step_tibble,Prepare forward covariate step,Prepare forward covariate step — covariate_step_tibble,Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/sim_reestExtra.R'><code>R/sim_reestExtra.R</code></a>,covariate_step_tibble.Rd,character(0),covariate_step_tibble,character(0),list(title = "Description", contents = "<p>Prepare forward covariate step</p>"),list(description = "Prepare forward covariate step"),<span class='fu'>covariate_step_tibble</span><span class='op'>(</span>
+  <span class='va'>base</span>,
+  <span class='va'>run_id</span>,
+  run_in <span class='op'>=</span> <span class='fu'><a href='nm_default_dir.html'>nm_default_dir</a></span><span class='op'>(</span><span class='st'>"models"</span><span class='op'>)</span>,
+  <span class='va'>dtest</span>,
+  direction <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"forward"</span>, <span class='st'>"backward"</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>,list(list(name = "base", description = "<p>nm object</p>"), list(name = "run_id", description = "<p>base run_id to construct run_ids of covariate runs</p>"), list(name = "run_in", description = "<p>character.  See <code><a href='nm_getsetters.html'>run_in</a></code></p>"), list(name = "dtest", description = "<p>tibble::tibble with testing relations (from <code><a href='test_relations.html'>test_relations</a></code>)</p>"), list(name = "direction", description = "<p>character. \"forward\" (default) or \"backward\"</p>"), 
+    list(name = "...", description = "<p>additional arguments passed to add_cov</p>")),TRUE,<div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
 <span class='va'>dtest</span> <span class='op'>&lt;-</span> <span class='fu'><a href='test_relations.html'>test_relations</a></span><span class='op'>(</span>param <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"KA"</span>, <span class='st'>"K"</span>, <span class='st'>"V"</span><span class='op'>)</span>,
                         cov <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"LIN1"</span>, <span class='st'>"LIN2"</span>, <span class='st'>"LIN3"</span>, <span class='st'>"RND1"</span>, <span class='st'>"RND2"</span>, <span class='st'>"RND3"</span><span class='op'>)</span>, 
@@ -215,7 +228,7 @@
 <span class='co'>## continue ...</span>
   
 <span class='op'>}</span>
-</div></pre>
+</div>,list(list(title = "Value", contents = "<p>tibble::tibble dtest with appended columns</p>", slug = "value"), list(title = "See also", contents = "<div class='dont-index'><p><code><a href='test_relations.html'>test_relations</a></code>, <code>covariate_step_tibble</code>, <code><a href='bind_covariate_results.html'>bind_covariate_results</a></code></p></div>", slug = "see-also")),2021,list(name = "NMproject", version = "0.5.9.9000", authors = "Tarj Sahota"),list(destination = "dev", mode = "release", version_label = "default", version_tooltip = "Released version", in_dev = FALSE),list(root = "../", title = "NMproject"),list(),list(type = "default", left = "<li>\n  <a href=\"../index.html\">\n    <span class=\"fas fa-home fa-lg\"></span>\n     \n  </a>\n</li>\n<li>\n  <a href=\"../articles/NMproject.html\">Get started</a>\n</li>\n<li>\n  <a href=\"../reference/index.html\">Reference</a>\n</li>\n<li>\n  <a href=\"../news/index.html\">Changelog</a>\n</li>", right = "<li>\n  <a href=\"https://github.com/tsahota/NMproject/\">\n    <span class=\"fab fa-github fa-lg\"></span>\n     \n  </a>\n</li>"),list(.present = TRUE),list(version = "1.6.1"),FALSE</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

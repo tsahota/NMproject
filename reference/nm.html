@@ -96,7 +96,12 @@
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/tsahota/NMproject/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -111,7 +116,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create core NM object</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/NMprojectExtra.R'><code>R/NMprojectExtra.R</code></a></small>
     <div class="hidden name"><code>nm.Rd</code></div>
     </div>
 
@@ -190,7 +195,21 @@ Directory to store results of this run</p></td>
    Length of object corresponds to length of run_id</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples">nm,Create core NM object,Create core NM object — nm,Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/NMprojectExtra.R'><code>R/NMprojectExtra.R</code></a>,nm.Rd,character(0),nm,character(0),list(title = "Description", contents = "<p>Experimental new nm object interface.  Not compatible with previous system.\n  The basic object this package centres around.  Most package functions act on this object.</p>"),list(description = "Experimental new nm object interface.  Not compatible with previous system.\n  The basic object this package centres around.  Most package functions act on this object."),<span class='fu'>nm</span><span class='op'>(</span>
+  run_id <span class='op'>=</span> <span class='cn'>NA_character_</span>,
+  run_in <span class='op'>=</span> <span class='fu'><a href='nm_default_dir.html'>nm_default_dir</a></span><span class='op'>(</span><span class='st'>"models"</span><span class='op'>)</span>,
+  parent_run_id <span class='op'>=</span> <span class='cn'>NA_character_</span>,
+  parent_run_in <span class='op'>=</span> <span class='cn'>NA_character_</span>,
+  parent_ctl_name <span class='op'>=</span> <span class='cn'>NA_character_</span>,
+  parent_results_dir <span class='op'>=</span> <span class='cn'>NA_character_</span>,
+  ctl_name <span class='op'>=</span> <span class='st'>"run{run_id}.mod"</span>,
+  type <span class='op'>=</span> <span class='st'>"execute"</span>,
+  run_dir <span class='op'>=</span> <span class='st'>"{run_id}"</span>,
+  results_dir <span class='op'>=</span> <span class='fu'><a href='nm_default_dir.html'>nm_default_dir</a></span><span class='op'>(</span><span class='st'>"results"</span><span class='op'>)</span>,
+  lst_path <span class='op'>=</span> <span class='st'>"{run_dir}/NM_run1/psn.lst"</span>
+<span class='op'>)</span>,list(list(name = "run_id", description = "<p>character vector. Run identifier</p>"), list(name = "run_in", description = "<p>character vector. ctl file and run location</p>"), list(name = "parent_run_id", description = "<p>character vector (optional). Run identifier of previous run</p>"), list(name = "parent_run_in", description = "<p>character vector (optional). Run location of previous run</p>"), list(name = "parent_ctl_name", description = "<p>character vector (optional). Ctl name of previous run</p>"), 
+    list(name = "parent_results_dir", description = "<p>character vector (optional). results_dir of previous run</p>"), list(name = "ctl_name", description = "<p>character. Name of control file</p>"), list(name = "type", description = "<p>character (default = \"execute\").  Type of run to run</p>"), list(name = "run_dir", description = "<p>character (default = \"run_id\").  Subdirectory where PsN wll run NONMEM</p>"), list(name = "results_dir", description = "<p>character (default = \"Results\").\nDirectory to store results of this run</p>"), 
+    list(name = "lst_path", description = "<p>character (default = \"run_dir/NM_run1/psn.lst\") expected location of lst file</p>")),TRUE,<div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
 <span class='va'>m0</span> <span class='op'>&lt;-</span> <span class='fu'>nm</span><span class='op'>(</span>run_id <span class='op'>=</span> <span class='st'>"m0"</span><span class='op'>)</span>
 <span class='va'>m0</span>  <span class='co'>## a human readable representation</span>
@@ -202,7 +221,7 @@ Directory to store results of this run</p></td>
 
 <span class='op'>}</span>
 
-</div></pre>
+</div>,list(list(title = "Value", contents = "<p>An object of class nm_list.  Object is concatenatable.\n   Length of object corresponds to length of run_id</p>", slug = "value")),2021,list(name = "NMproject", version = "0.5.9.9000", authors = "Tarj Sahota"),list(destination = "dev", mode = "release", version_label = "default", version_tooltip = "Released version", in_dev = FALSE),list(root = "../", title = "NMproject"),list(),list(type = "default", left = "<li>\n  <a href=\"../index.html\">\n    <span class=\"fas fa-home fa-lg\"></span>\n     \n  </a>\n</li>\n<li>\n  <a href=\"../articles/NMproject.html\">Get started</a>\n</li>\n<li>\n  <a href=\"../reference/index.html\">Reference</a>\n</li>\n<li>\n  <a href=\"../news/index.html\">Changelog</a>\n</li>", right = "<li>\n  <a href=\"https://github.com/tsahota/NMproject/\">\n    <span class=\"fab fa-github fa-lg\"></span>\n     \n  </a>\n</li>"),list(.present = TRUE),list(version = "1.6.1"),FALSE</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

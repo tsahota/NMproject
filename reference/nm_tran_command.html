@@ -98,7 +98,12 @@ command used" />
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/tsahota/NMproject/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -113,7 +118,7 @@ command used" />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>get/set nm_tran_command</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/NMproject.R'><code>R/NMproject.R</code></a></small>
     <div class="hidden name"><code>nm_tran_command.Rd</code></div>
     </div>
 
@@ -149,14 +154,15 @@ command used</p>
   for all users in `Rprofile.site`</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples">nm_tran_command,get/set nm_tran_command,get/set nm_tran_command — nm_tran_command,Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/NMproject.R'><code>R/NMproject.R</code></a>,nm_tran_command.Rd,character(0),nm_tran_command,character(0),list(title = "Description", contents = "<p>`nm_tran` needs the location of NMTRAN.exe on your system.  This\nis guessed on package load, assuming PsN is on the $PATH environmental\nvariable, if this is not the case, then you can manually set the path and\ncommand used</p>"),list(description = "`nm_tran` needs the location of NMTRAN.exe on your system.  This\nis guessed on package load, assuming PsN is on the $PATH environmental\nvariable, if this is not the case, then you can manually set the path and\ncommand used"),<span class='fu'>nm_tran_command</span><span class='op'>(</span><span class='va'>text</span><span class='op'>)</span>,list(list(name = "text", description = "<p>optional character. If specified will set nm_tran_command</p>")),TRUE,<div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
   <span class='co'># the following two are equivalent</span>
   <span class='fu'>nm_tran_command</span><span class='op'>(</span><span class='st'>"/opt/NONMEM/nm75/tr/NMTRAN.exe"</span><span class='op'>)</span>
   <span class='fu'>nm_tran_command</span><span class='op'>(</span><span class='st'>"/opt/NONMEM/nm75/tr/NMTRAN.exe &lt; {ctl_name}"</span><span class='op'>)</span>
 
 <span class='op'>}</span>
-</div></pre>
+</div>,list(list(title = "Value", contents = "<p>if `text` is missing will get and return the current NMTRAN command</p>", slug = "value"), list(title = "Details", contents = "<p>`text` can just be the path to NMTRAN.exe.  In this case\n  `nm_tran_command` will use the format `/path/to/NMTRAN.exe &lt; ctl_name` to\n  launch NMTRAN.exe where `ctl_name` is the name of the control file `text`\n  can use the `ctl_name` glue field however for more complicated commands.\n  See examples</p>\n<p>Set this up either at the beginning of your script, in your `.Rprofile` or\n  for all users in `Rprofile.site`</p>", 
+    slug = "details")),2021,list(name = "NMproject", version = "0.5.9.9000", authors = "Tarj Sahota"),list(destination = "dev", mode = "release", version_label = "default", version_tooltip = "Released version", in_dev = FALSE),list(root = "../", title = "NMproject"),list(),list(type = "default", left = "<li>\n  <a href=\"../index.html\">\n    <span class=\"fas fa-home fa-lg\"></span>\n     \n  </a>\n</li>\n<li>\n  <a href=\"../articles/NMproject.html\">Get started</a>\n</li>\n<li>\n  <a href=\"../reference/index.html\">Reference</a>\n</li>\n<li>\n  <a href=\"../news/index.html\">Changelog</a>\n</li>", right = "<li>\n  <a href=\"https://github.com/tsahota/NMproject/\">\n    <span class=\"fab fa-github fa-lg\"></span>\n     \n  </a>\n</li>"),list(.present = TRUE),list(version = "1.6.1"),FALSE</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

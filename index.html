@@ -53,7 +53,14 @@
   <a href="news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/tsahota/NMproject/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -154,7 +161,7 @@
 <p>Create a simulation run using <code><a href="reference/update_parameters.html">update_parameters()</a></code> and <code><a href="reference/convert_to_simulation.html">convert_to_simulation()</a></code>. Apply vpc and ppc diagnostics</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2s</span> <span class="op">&lt;-</span> <span class="va">m2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m2s"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-              <span class="fu">update_parameter</span><span class="op">(</span><span class="va">m2</span><span class="op">)</span> <span class="op">%&gt;%</span>
+              <span class="fu"><a href="reference/update_parameters.html">update_parameters</a></span><span class="op">(</span><span class="va">m2</span><span class="op">)</span> <span class="op">%&gt;%</span>
               <span class="fu"><a href="reference/convert_to_simulation.html">convert_to_simulation</a></span><span class="op">(</span>subpr <span class="op">=</span> <span class="fl">50</span><span class="op">)</span> <span class="op">%&gt;%</span>
               <span class="fu"><a href="reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span>
 
@@ -166,7 +173,14 @@
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
+    <div class="links">
+<h2>Links</h2>
+<ul class="list-unstyled">
+<li>Browse source code at <br><a href="https://github.com/tsahota/NMproject/">https://​github.com/​tsahota/​NMproject/​</a>
+</li>
+</ul>
+</div>
+<div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
 <li>
