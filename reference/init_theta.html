@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.9.9000</span>
       </span>
     </div>
 
@@ -158,7 +158,7 @@
   
  <span class='co'>## perturb all log transformed parameters by ~10%</span>
   <span class='va'>ip</span> <span class='op'>&lt;-</span> <span class='fu'>init_theta</span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span>
-  <span class='va'>ip</span> <span class='op'>&lt;-</span> <span class='va'>ip</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>
+  <span class='va'>ip</span> <span class='op'>&lt;-</span> <span class='va'>ip</span> <span class='op'>%&gt;%</span> <span class='fu'>mutate</span><span class='op'>(</span>
     init <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span>
       <span class='va'>trans</span> <span class='op'>%in%</span> <span class='st'>"LOG"</span>,
       <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>init</span><span class='op'>)</span>, mean <span class='op'>=</span> <span class='va'>init</span>, sd <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span>,

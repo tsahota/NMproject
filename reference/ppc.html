@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.9.9000</span>
       </span>
     </div>
 
@@ -185,7 +185,7 @@ returns data.frame with a column "statistic"</p></td>
 <span class='va'>idEXPstat</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>...</span><span class='op'>)</span><span class='op'>{</span> <span class='co'>## example individual statistic function</span>
  <span class='co'>## arg = nonmem dataset data.frame</span>
  <span class='co'>## return data.frame with statistic column</span>
-  <span class='va'>d</span> <span class='op'>%&gt;%</span> <span class='fu'>group_by</span><span class='op'>(</span><span class='va'>ID</span>, <span class='va'>...</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>AMT</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='va'>d</span> <span class='op'>%&gt;%</span> <span class='fu'>group_by</span><span class='op'>(</span><span class='va'>ID</span>, <span class='va'>...</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>AMT</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
     <span class='fu'>summarise</span><span class='op'>(</span>
       AUC <span class='op'>=</span> <span class='fu'>AUC</span><span class='op'>(</span>time <span class='op'>=</span> <span class='va'>TIME</span>, conc <span class='op'>=</span> <span class='va'>DV</span><span class='op'>)</span>,
       CMAX <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>DV</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,

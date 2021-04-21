@@ -73,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.9.9000</span>
       </span>
     </div>
 
@@ -122,7 +122,7 @@
 
     <pre class="usage"><span class='fu'>nm</span><span class='op'>(</span>
   run_id <span class='op'>=</span> <span class='cn'>NA_character_</span>,
-  run_in <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"models.dir"</span><span class='op'>)</span>,
+  run_in <span class='op'>=</span> <span class='fu'><a href='nm_default_dir.html'>nm_default_dir</a></span><span class='op'>(</span><span class='st'>"models"</span><span class='op'>)</span>,
   parent_run_id <span class='op'>=</span> <span class='cn'>NA_character_</span>,
   parent_run_in <span class='op'>=</span> <span class='cn'>NA_character_</span>,
   parent_ctl_name <span class='op'>=</span> <span class='cn'>NA_character_</span>,
@@ -130,7 +130,7 @@
   ctl_name <span class='op'>=</span> <span class='st'>"run{run_id}.mod"</span>,
   type <span class='op'>=</span> <span class='st'>"execute"</span>,
   run_dir <span class='op'>=</span> <span class='st'>"{run_id}"</span>,
-  results_dir <span class='op'>=</span> <span class='st'>"Results"</span>,
+  results_dir <span class='op'>=</span> <span class='fu'><a href='nm_default_dir.html'>nm_default_dir</a></span><span class='op'>(</span><span class='st'>"results"</span><span class='op'>)</span>,
   lst_path <span class='op'>=</span> <span class='st'>"{run_dir}/NM_run1/psn.lst"</span>
 <span class='op'>)</span></pre>
 

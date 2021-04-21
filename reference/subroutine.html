@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.9.9000</span>
       </span>
     </div>
 
@@ -157,8 +157,8 @@
 <span class='va'>m</span> <span class='op'>&lt;-</span> <span class='va'>m</span> <span class='op'>%&gt;%</span> <span class='fu'>subroutine</span><span class='op'>(</span>ADVAN <span class='op'>=</span> <span class='fl'>2</span>, TRANS <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
 
 <span class='va'>ds</span> <span class='op'>&lt;-</span> <span class='va'>.available_advans</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>oral</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>
+  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>oral</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>mutate</span><span class='op'>(</span>
       m <span class='op'>=</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='child.html'>child</a></span><span class='op'>(</span>run_id <span class='op'>=</span> <span class='va'>label</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
         <span class='fu'>subroutine</span><span class='op'>(</span>advan <span class='op'>=</span> <span class='va'>advan</span>, trans <span class='op'>=</span> <span class='va'>trans</span><span class='op'>)</span>
   <span class='op'>)</span>
