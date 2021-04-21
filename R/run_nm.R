@@ -132,19 +132,6 @@ run_nm.nm_generic <- function(m, wait=getOption("wait"),
 #' @export
 run_nm.nm_list <- Vectorize_nm_list(run_nm.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
-
-#' Run NONMEM
-#' 
-#' Use run_nm instead. run was deprecated due to naming conflict with future package's run() function
-#' 
-#' @param ... objects
-#' @export
-
-run <- function(...){
-  .Deprecated("run_nm", msg = "run() will soon be deprecated, use run_nm() instead")
-  run_nm(...)
-}
-
 #' run_nm in batches
 #' 
 #' a variant of \code{run_nm()} that will submit run_nm's in batches and wait for them to complete

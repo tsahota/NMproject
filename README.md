@@ -144,7 +144,7 @@ Create a simulation run using `update_parameters()` and
 
 ``` r
 m2s <- m2 %>% child(run_id = "m2s") %>%
-              update_parameter(m2) %>%
+              update_parameters(m2) %>%
               convert_to_simulation(subpr = 50) %>%
               run_nm()
 
