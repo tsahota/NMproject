@@ -185,20 +185,7 @@ returns data.frame with a column "statistic"</p></td>
     <div class='dont-index'><p><code><a href='nm_render.html'>nm_render</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples">ppc,PPC functions: process data from simulation and plot,PPC functions: process data from simulation and plot — ppc,Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/NMprojectExtra.R'><code>R/NMprojectExtra.R</code></a>, <a href='https://github.com/tsahota/NMproject/blob/master/R/sim_reestExtra.R'><code>R/sim_reestExtra.R</code></a>,ppc.Rd,character(0),c("ppc", "ppc_whisker_plot", "ppc_histogram_plot", "ppc_data"),character(0),list(title = "Description", contents = "<p>PPC functions: process data from simulation and plot</p>"),list(description = "PPC functions: process data from simulation and plot"),<span class='fu'>ppc_whisker_plot</span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>group</span>, <span class='va'>var1</span>, <span class='va'>var2</span>, statistic <span class='op'>=</span> <span class='st'>"statistic"</span><span class='op'>)</span>
-
-<span class='fu'>ppc_histogram_plot</span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>var1</span>, <span class='va'>var2</span>, statistic <span class='op'>=</span> <span class='st'>"statistic"</span><span class='op'>)</span>
-
-<span class='fu'>ppc_data</span><span class='op'>(</span>
-  <span class='va'>r</span>,
-  <span class='va'>FUN</span>,
-  <span class='va'>...</span>,
-  pre_proc <span class='op'>=</span> <span class='va'>identity</span>,
-  max_mod_no <span class='op'>=</span> <span class='cn'>NA</span>,
-  DV <span class='op'>=</span> <span class='st'>"DV"</span>,
-  statistic <span class='op'>=</span> <span class='st'>"statistic"</span>
-<span class='op'>)</span>,list(list(name = "d", description = "<p>dataset</p>"), list(name = "group, var1, var2", description = "<p>grouping variables for plotting</p>"), list(name = "statistic", description = "<p>character (default = \"statistic\") name of statistic column\nreturned by FUN</p>"), list(name = "r", description = "<p>nm object (simulation)</p>"), list(name = "FUN", description = "<p>statistic function with NONMEM dataset as arg and\nreturns data.frame with a column \"statistic\"</p>"), list(name = "...", description = "<p>additional arguments for FUN</p>"), 
-    list(name = "pre_proc", description = "<p>function to mutate dataset prior to compute statistics</p>"), list(name = "max_mod_no", description = "<p>integer. Maximum model number to read (set low for debugging)</p>"), list(name = "DV", description = "<p>character (default = \"DV\")</p>")),TRUE,<div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
 <span class='va'>idEXPstat</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>...</span><span class='op'>)</span><span class='op'>{</span> <span class='co'>## example individual statistic function</span>
  <span class='co'>## arg = nonmem dataset data.frame</span>
@@ -232,7 +219,7 @@ returns data.frame with a column "statistic"</p></td>
 <span class='va'>dppc</span> <span class='op'>%&gt;%</span> <span class='fu'>ppc_forest_plot</span><span class='op'>(</span><span class='op'>)</span>
 
 <span class='op'>}</span>
-</div>,list(list(title = "See also", contents = "<div class='dont-index'><p><code><a href='nm_render.html'>nm_render</a></code></p></div>", slug = "see-also")),2021,list(name = "NMproject", version = "0.5.9.9000", authors = "Tarj Sahota"),list(destination = "dev", mode = "release", version_label = "default", version_tooltip = "Released version", in_dev = FALSE),list(root = "../", title = "NMproject"),list(),list(type = "default", left = "<li>\n  <a href=\"../index.html\">\n    <span class=\"fas fa-home fa-lg\"></span>\n     \n  </a>\n</li>\n<li>\n  <a href=\"../articles/NMproject.html\">Get started</a>\n</li>\n<li>\n  <a href=\"../reference/index.html\">Reference</a>\n</li>\n<li>\n  <a href=\"../news/index.html\">Changelog</a>\n</li>", right = "<li>\n  <a href=\"https://github.com/tsahota/NMproject/\">\n    <span class=\"fab fa-github fa-lg\"></span>\n     \n  </a>\n</li>"),list(.present = TRUE),list(version = "1.6.1"),FALSE</pre>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

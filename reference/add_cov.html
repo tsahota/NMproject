@@ -216,23 +216,7 @@
    PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples">add_cov,Add a covariate to a NONMEM model,Add a covariate to a NONMEM model — add_cov,Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/ctl_handling.R'><code>R/ctl_handling.R</code></a>,add_cov.Rd,character(0),add_cov,character(0),list(title = "Description", contents = "<p>Add a covariate to a NONMEM model</p>"),list(description = "Add a covariate to a NONMEM model"),<span class='fu'>add_cov</span><span class='op'>(</span>
-  <span class='va'>ctl</span>,
-  <span class='va'>param</span>,
-  <span class='va'>cov</span>,
-  state <span class='op'>=</span> <span class='fl'>2</span>,
-  continuous <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  <span class='va'>time_varying</span>,
-  <span class='va'>additional_state_text</span>,
-  id_var <span class='op'>=</span> <span class='st'>"ID"</span>,
-  force <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  force_TV_var <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  <span class='va'>init</span>,
-  <span class='va'>lower</span>,
-  <span class='va'>upper</span>
-<span class='op'>)</span>,list(list(name = "ctl", description = "<p>object coercible to ctl_list</p>"), list(name = "param", description = "<p>character. Name of parameter</p>"), list(name = "cov", description = "<p>character. Name of covariate</p>"), list(name = "state", description = "<p>numeric or character. Number/name of state (see details)</p>"), list(name = "continuous", description = "<p>logical (default = TRUE). is covariate continuous?</p>"), list(name = "time_varying", description = "<p>optional logical. is the covariate time varying?</p>"), 
-    list(name = "additional_state_text", description = "<p>optional character. custom state variable to be passed to param_cov_text</p>"), list(name = "id_var", description = "<p>character (default = \"ID\"). Needed if time_varying is missing.</p>"), list(name = "force", description = "<p>logical (default = FALSE). Force covariate in even if missing values found</p>"), list(name = "force_TV_var", description = "<p>logical (default = FALSE). Force covariates only on TV notation parameters</p>"), list(
-        name = "init", description = "<p>optional numeric/character vector.  Initial estimate of additional parameters</p>"), list(name = "lower", description = "<p>optional numeric/character vector.  lower bound of additional parameters</p>"), list(name = "upper", description = "<p>optional numeric/character vector.  Upper bound of additional parameters</p>")),TRUE,<div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
 <span class='va'>m1WT</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='child.html'>child</a></span><span class='op'>(</span><span class='st'>"m1WT"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>add_cov</span><span class='op'>(</span>param <span class='op'>=</span> <span class='st'>"CL"</span>, cov <span class='op'>=</span> <span class='st'>"WT"</span>, state <span class='op'>=</span> <span class='st'>"power"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
@@ -246,8 +230,7 @@
 <span class='op'>}</span>
 
 
-</div>,list(list(title = "Details", contents = "<p>available states:\n\"2\" or \"linear\":\n  PARCOV= ( 1 + THETA(1)*(COV - median))</p>\n<p>\"3\" or \"hockey-stick\":\n  IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))\n  IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))</p>                    \n<p>\"4\" or \"exponential\":\n   PARCOV= EXP(THETA(1)*(COV - median))</p>\n<p>\"5\" or \"power\":\n   PARCOV= ((COV/median)**THETA(1))</p>   \n<p>\"power1\":\n   PARCOV= ((COV/median))</p>   \n<p>\"power0.75\":\n   PARCOV= ((COV/median)**0.75)</p>\n<p>\"6\" or \"log-linear\":\n   PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))</p>", 
-    slug = "details")),2021,list(name = "NMproject", version = "0.5.9.9000", authors = "Tarj Sahota"),list(destination = "dev", mode = "release", version_label = "default", version_tooltip = "Released version", in_dev = FALSE),list(root = "../", title = "NMproject"),list(),list(type = "default", left = "<li>\n  <a href=\"../index.html\">\n    <span class=\"fas fa-home fa-lg\"></span>\n     \n  </a>\n</li>\n<li>\n  <a href=\"../articles/NMproject.html\">Get started</a>\n</li>\n<li>\n  <a href=\"../reference/index.html\">Reference</a>\n</li>\n<li>\n  <a href=\"../news/index.html\">Changelog</a>\n</li>", right = "<li>\n  <a href=\"https://github.com/tsahota/NMproject/\">\n    <span class=\"fab fa-github fa-lg\"></span>\n     \n  </a>\n</li>"),list(.present = TRUE),list(version = "1.6.1"),FALSE</pre>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -176,16 +176,7 @@ development and debugging) if the object <code>.m</code> is defined in the
 global work space first.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples">nm_render,render function for nm objects,render function for nm objects — nm_render,Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/NMprojectExtra.R'><code>R/NMprojectExtra.R</code></a>,nm_render.Rd,character(0),nm_render,character(0),list(title = "Description", contents = "<p>render function for nm objects</p>"),list(description = "render function for nm objects"),<span class='fu'>nm_render</span><span class='op'>(</span>
-  <span class='va'>m</span>,
-  <span class='va'>input</span>,
-  output_file <span class='op'>=</span> <span class='cn'>NA</span>,
-  args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
-  force <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"nm.force_render"</span><span class='op'>)</span>,
-  async <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  <span class='va'>...</span>
-<span class='op'>)</span>,list(list(name = "m", description = "<p>nm object</p>"), list(name = "input", description = "<p>character. Same as rmarkdown::render() arg</p>"), list(name = "output_file", description = "<p>character. Same as rmarkdown::render() arg</p>"), list(name = "args", description = "<p>list. Same as \"params\" arg in rmarkdown::render()</p>"), list(name = "force", description = "<p>logical (default = <code><a href='https://rdrr.io/r/base/options.html'>getOption(\"nm.force_render\")</a></code>). will force execution</p>"), 
-    list(name = "async", description = "<p>experimental option to use future package</p>"), list(name = "...", description = "<p>additional argument passed to rmarkdown::render()</p>")),TRUE,<div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
   <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>nm_render</span><span class='op'>(</span><span class='st'>"Scripts/basic_gof.Rmd"</span><span class='op'>)</span>
 
   <span class='co'>## to run "Scripts/basic_gof.Rmd" as an R Notebook</span>
@@ -193,7 +184,7 @@ global work space first.</p>
   
   <span class='va'>.m</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='co'>## Now you can run "Scripts/basic_gof.Rmd" as a Notebook</span>
 <span class='op'>}</span>
-</div>,list(list(title = "Details", contents = "<p><code>input</code> must refer to a properly specified Rmd document.\nThe R markdown template \"model diagnostic\" in RStudio sets this up \nfor you.</p>\n<p>These R markdown templates are usable as R Notebooks (e.g. for code\ndevelopment and debugging) if the object <code>.m</code> is defined in the\nglobal work space first.</p>", slug = "details")),2021,list(name = "NMproject", version = "0.5.9.9000", authors = "Tarj Sahota"),list(destination = "dev", mode = "release", version_label = "default", version_tooltip = "Released version", in_dev = FALSE),list(root = "../", title = "NMproject"),list(),list(type = "default", left = "<li>\n  <a href=\"../index.html\">\n    <span class=\"fas fa-home fa-lg\"></span>\n     \n  </a>\n</li>\n<li>\n  <a href=\"../articles/NMproject.html\">Get started</a>\n</li>\n<li>\n  <a href=\"../reference/index.html\">Reference</a>\n</li>\n<li>\n  <a href=\"../news/index.html\">Changelog</a>\n</li>", right = "<li>\n  <a href=\"https://github.com/tsahota/NMproject/\">\n    <span class=\"fab fa-github fa-lg\"></span>\n     \n  </a>\n</li>"),list(.present = TRUE),list(version = "1.6.1"),FALSE</pre>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

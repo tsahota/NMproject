@@ -163,20 +163,12 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples">info_scripts,List information about scripts,List information about scripts — info_scripts,Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/make_project.R'><code>R/make_project.R</code></a>,info_scripts.Rd,character(0),info_scripts,character(0),list(title = "Description", contents = "<p>List information about scripts</p>"),list(description = "List information about scripts"),<span class='fu'>info_scripts</span><span class='op'>(</span>
-  <span class='va'>files</span>,
-  fields <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Description"</span><span class='op'>)</span>,
-  viewer <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  silent <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  base_dirs <span class='op'>=</span> <span class='cn'>NULL</span>,
-  shorten_paths <span class='op'>=</span> <span class='cn'>TRUE</span>
-<span class='op'>)</span>,list(list(name = "files", description = "<p>vector string of file names/paths</p>"), list(name = "fields", description = "<p>vector string of field tags to display</p>"), list(name = "viewer", description = "<p>logical indicating if Rstudio viewer should be used (default = TRUE)</p>"), list(name = "silent", description = "<p>run in quiet mode (default=FALSE)</p>"), list(name = "base_dirs", description = "<p>character vector. group files together that belong to these directory paths</p>"), list(name = "shorten_paths", 
-    description = "<p>logical. Default = TRUE. Long paths will be shortened if true in displayed output (not returned object)</p>")),TRUE,<div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='fu'><a href='ls_scripts.html'>ls_scripts</a></span><span class='op'>(</span><span class='st'>'~/AZD6094/PK_liver4/'</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>info_scripts</span><span class='op'>(</span><span class='st'>'Description'</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/grep.html'>grepl</a></span><span class='op'>(</span><span class='st'>'mod'</span>,<span class='va'>DESCRIPTION</span><span class='op'>)</span><span class='op'>)</span>
 <span class='op'>}</span>
-</div>,list(),2021,list(name = "NMproject", version = "0.5.9.9000", authors = "Tarj Sahota"),list(destination = "dev", mode = "release", version_label = "default", version_tooltip = "Released version", in_dev = FALSE),list(root = "../", title = "NMproject"),list(),list(type = "default", left = "<li>\n  <a href=\"../index.html\">\n    <span class=\"fas fa-home fa-lg\"></span>\n     \n  </a>\n</li>\n<li>\n  <a href=\"../articles/NMproject.html\">Get started</a>\n</li>\n<li>\n  <a href=\"../reference/index.html\">Reference</a>\n</li>\n<li>\n  <a href=\"../news/index.html\">Changelog</a>\n</li>", right = "<li>\n  <a href=\"https://github.com/tsahota/NMproject/\">\n    <span class=\"fab fa-github fa-lg\"></span>\n     \n  </a>\n</li>"),list(.present = TRUE),list(version = "1.6.1"),FALSE</pre>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

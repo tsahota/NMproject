@@ -180,39 +180,7 @@ field (of same name as function)</p></td>
   expressions inside braces in <code>text</code> will evaluate the expression</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples">nm_getsetters,functions to access and modify fields of nm objects,functions to access and modify fields of nm objects — nm_getsetters,Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/nm_gettersetters.R'><code>R/nm_gettersetters.R</code></a>,nm_getsetters.Rd,character(0),c("nm_getsetters", "run_dir", "cmd", "type", "parent_run_id", "parent_run_in", "parent_ctl_name", "parent_results_dir", "unique_id", "ctl_name", "results_dir", "cores", "parafile", "executed", "lst_path", "run_in", "run_id", "result_files"),character(0),list(title = "Description", contents = "<p>functions to access and modify fields of nm objects</p>"),list(description = "functions to access and modify fields of nm objects"),<span class='fu'>run_dir</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
-
-<span class='fu'>cmd</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
-
-<span class='fu'>type</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
-
-<span class='fu'>parent_run_id</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
-
-<span class='fu'>parent_run_in</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
-
-<span class='fu'>parent_ctl_name</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
-
-<span class='fu'>parent_results_dir</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
-
-<span class='fu'>unique_id</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
-
-<span class='fu'>ctl_name</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
-
-<span class='fu'>results_dir</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
-
-<span class='fu'>cores</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
-
-<span class='fu'>parafile</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
-
-<span class='fu'>executed</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
-
-<span class='fu'>lst_path</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
-
-<span class='fu'>run_in</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
-
-<span class='fu'>run_id</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
-
-<span class='fu'>result_files</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>,list(list(name = "m", description = "<p>nm object</p>"), list(name = "text", description = "<p>optional character for replacing field. If present function will\nmodify field (of same name as function) otherwise will return value of\nfield (of same name as function)</p>")),TRUE,<div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
 <span class='co'>## set cmd field of m1</span>
 <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>cmd</span><span class='op'>(</span><span class='st'>"execute {ctl_name} -dir={run_dir}"</span><span class='op'>)</span>
@@ -222,7 +190,7 @@ field (of same name as function)</p></td>
 <span class='va'>m1</span>
 
 <span class='op'>}</span>
-</div>,list(list(title = "Details", contents = "<p>Easiest way to see all fields of an object is to type the object\n  into the console and hit enter. This will display the value of each field.\n  some fields like <code>cmd</code> are glue fields.  In these cases inserting\n  expressions inside braces in <code>text</code> will evaluate the expression</p>", slug = "details")),2021,list(name = "NMproject", version = "0.5.9.9000", authors = "Tarj Sahota"),list(destination = "dev", mode = "release", version_label = "default", version_tooltip = "Released version", in_dev = FALSE),list(root = "../", title = "NMproject"),list(),list(type = "default", left = "<li>\n  <a href=\"../index.html\">\n    <span class=\"fas fa-home fa-lg\"></span>\n     \n  </a>\n</li>\n<li>\n  <a href=\"../articles/NMproject.html\">Get started</a>\n</li>\n<li>\n  <a href=\"../reference/index.html\">Reference</a>\n</li>\n<li>\n  <a href=\"../news/index.html\">Changelog</a>\n</li>", right = "<li>\n  <a href=\"https://github.com/tsahota/NMproject/\">\n    <span class=\"fab fa-github fa-lg\"></span>\n     \n  </a>\n</li>"),list(.present = TRUE),list(version = "1.6.1"),FALSE</pre>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
