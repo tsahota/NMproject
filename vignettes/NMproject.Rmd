@@ -9,23 +9,26 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-## Vignette Info
+## Why NMproject?
 
-The intent of NMproject is to allow for fully script based NONMEM model development:
+NMproject's initial outing (the alpha interface) was developed in AZ and internally had 83% voluntary user retention ("user" = someone with 5+ separate model development workflows).  NMproject's main objective is industrialisation via script based model development.
 
-* Code management:
-  * Code library: NONMEM template scripts to speed creation of NONMEM runs and facilitate adherence to best practices.
-  * Standardised, version controlled, directory structure for all NONMEM users.
-* Script based model development:
-  * Instead of command line interface (CLI) or graphical user interface (GUI) use a script based interface
-  * End-to-end R workflows that can be repeated, reused and documented in R markdown
-  * Convenience functions for routine NONMEM control file edits
-  * Tracked manual edits for everything else to ensure full flexibility
-  * Fully customizable r markdown templates for goodness of fits, vpcs, ppcs, bootstraps
-  * Vectorized model objects - interact with groups of NONMEM runs as if they were one (no loops needed)
-  * Shiny interface for real time run tracking in grid environments
+The beta interface is a completely new syntax that address several shortcoming of the previous syntax and expands functionality.
 
-History: NMproject was previously an AstraZeneca project.  It is being reimplemented here as a community version to be compatible with a variety of architectures (standalone NONMEM and a variety of grid submission systems)
+So why NMproject?
+
+- Go from code library templates (shiny interface) to a working parent NONMEM model quickly and entirely within R.  See demo.
+
+- Use R functions and tracked manual editing to create NONMEM runs.  NMproject is the only NONMEM interface (that I know of) that tracks manual edits to NONMEM code in the form of reusable patches.  It is also the only R package (that I know of) with a vectorized model object allowing single runs to be handled in the same way as groups of runs.
+
+- Create end-to-end model development workflows entirely within R without any additional effort. Run caching encourages you to re-execute scripts and rebuild objects frequently to ensure your workflow contains no reproduciblity breaks.  Use workflows to pre-program analyses for project decision points, and repeat workflows to greatly accelerate re-analysis with updated datasets.
+
+- See impactful oncology example where the commitment to pre-program in NMproject and deliver analysis in stats-like timelines got us onto formal go-nogo: https://youtu.be/QVw28Im3Zz0)
+
+- R markdown friendly. Pipe friendly. Create human readable model development logs for other people (or even yourself in 6 months) to read/refresh.
+
+Prerequisites: NMproject targetted towards mid to upper level R/NONMEM users. If you know what a pipe is, what knitr is, you should be good.  If you know dplyr you'll be able to use the advanced functionality to complex workflows
+
 
 ```{r setup, include=FALSE}
 library(knitr)
