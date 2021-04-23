@@ -34,7 +34,6 @@ test_that("run and post",{
   
   # if(!all(c(".Rprofile", "OpenProject.Rproj") %in% dir(all.files = TRUE)))
   #   stop(paste("files missing: ", paste(dir(all.files = TRUE), collapse = ",")))
-  
   expect_true(run_all_scripts())
   
   res_files <- dir("Results", pattern = "\\.html", full.names = TRUE)
@@ -78,11 +77,18 @@ test_that("run and post",{
   unlink(file.path(run_dir_path(m1), "NMout.RDS"))
   
   m1 <- readRDS("Results/m1.RDS")
+  expect_true(is_successful(m1))
   d <- output_table_first(m1)
   expect_true(nrow(d) > 0)
   
   d <- d %>% append_nonmem_var(m1, "K")
   expect_true(!is.null(d$K))
+  
+  ## shouldn't be any temp files for m1 in zip
+  expect_true(length(ls_tempfiles(m1)) == 0)
+  
+  wipe_run(m1)
+  expect_true(!file.exists(run_dir_path(m1)))
   
   ## can't test job_stats as xmls are removed
   #d <- job_stats(m1)

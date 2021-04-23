@@ -1,0 +1,136 @@
+---
+title: "Advanced usage"
+author: "`r Sys.info()['user']`"
+date: "`r Sys.time()`"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
+
+```{r setup, include=F}
+## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
+library(knitr)
+library(rprojroot)
+opts_knit$set(root.dir = find_root(has_file(".Rprofile") | 
+                                     is_rstudio_project | 
+                                     is_r_package | 
+                                     is_git_root))
+opts_chunk$set(echo = TRUE)
+opts_chunk$set(message = TRUE)
+```
+
+```{r echo=FALSE,message=FALSE}
+## LOAD PACKAGES HERE
+library(NMproject)
+# library(future)
+# future::plan("future::multiprocess", workers = 2)
+
+```
+
+```{r}
+
+m1 <- readRDS("Results/m1.RDS")
+
+```
+
+Test all oral advans on model.  Available advans shows all available advans.  Can use the `subroutine()` function within a mutate statement to create one nonmem run per advan combination
+
+```{r advan_test}
+
+.available_advans
+
+dt <- .available_advans %>%
+  ## filter only for oral dosing advans
+  filter(oral %in% TRUE) %>%
+  ## mutate state create a column vector m of nm objects
+  ## first step is to create children runs from the parent object m1
+  ## this is done by supplying a vector of run_ids to the child() function
+  mutate(m = m1 %>% child(run_id = label) %>%
+           ## then use the advan and trans columns of the tibble in the subroutine() function
+           subroutine(advan = advan, trans = trans))
+
+## view the $PK blocks of each
+dt$m %>% dollar("PK")
+
+## run them all and wait for them to finish
+dt$m %>% run_nm() %>% wait_finish()
+
+summary_wide(dt$m)
+
+```
+
+Often you'll want to know the right level of parallelisation to run your model to maximise speed without wasting too many resources.  The following uses the vectorized nm objects in a similar way with `dplyr::mutate()` to create multiple runes with different levels of parallelisation. For the demo we'll just test it across 1, 2 and 3 cores, but this can be an arbitrary vector.
+
+```{r core_test}
+
+dc <- tibble::tibble(cores = c(1, 2, 3)) %>%
+  mutate(m = m1 %>%
+           ## supply the "cores" vector (of the tibble) to child(), this will create 3 runs
+           child(run_id = cores) %>%
+           ## run them all in m1_coretest
+           run_in("Models/m1_coretest") %>%
+           ## run them all with the following execute command
+           cmd("execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}") %>%
+           ## and the following parafile
+           parafile("/opt/NONMEM/nm75/run/mpilinux8.pnm") %>%
+           ## and finally set the cores to the "cores" vector
+           cores(cores))
+
+## run them all and wait for them to finish
+dc$m %>% run_nm() %>% wait_finish()
+
+## following is disabled for the demo
+# job_info(dc$m)
+
+## plot cores vs Rtime or Ttime to get plots of run time and total time vs number of CPUs
+## This
+
+```
+You can also use the vectorized nature to create a simulation re-estimation routines from scratch.
+
+```{r sim_reest, eval = FALSE}
+
+n_sims <- 3
+
+dsr <- tibble(sim = 1:n_sims) %>%
+  mutate(
+    msim = m1 %>% 
+      update_parameters() %>%
+      child(run_id = sim) %>%
+      run_in("Models/m1_simest") %>%
+      convert_to_simulation(subpr = 1)
+  )
+
+## run, wait and then read results.  
+douts <- dsr$msim %>% run_nm() %>% 
+  wait_finish() %>%
+  output_table()
+
+## save the results files to the run directories of each simulation run
+douts %>% purrr::map2(
+  dsr$msim, 
+  ~write_derived_data(.x, file.path(run_dir_path(.y), "simdata.csv"))
+)
+
+## create mest column of re-estimation runs. Run in a subdirectory and change
+## the data_path to point to the simulated data need to re-specify fill_input
+## because the dataset has additional columns Need to rename the existing DV to
+## DV_OBS, and DV_OUT to DV so the re-estimation is on the simulated data.
+
+dsr <- dsr %>%
+  mutate(
+    mest = m1 %>% child(run_id = sim) %>%
+      run_in("Models/m1_simest/est") %>%
+      data_path(run_dir_path(msim)) %>%
+      fill_input(rename = list("DV_OBS" = "DV", "DV" = "DV_OUT"))
+  )
+
+dsr$mest %>% run_nm() %>% 
+  wait_finish() %>%
+  summary_wide(parameters = "all")
+
+```
+
+

@@ -167,7 +167,7 @@ cores <- function(m, text) {
 #' @export
 parafile <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "parafile") else {
-    custom_1d_field(m, "parafile", normalizePath(text))
+    custom_1d_field(m, "parafile", normalizePath(text, winslash = "/", mustWork = FALSE))
   }
 }
 
