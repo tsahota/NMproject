@@ -148,7 +148,7 @@ m1s_temp <- m1 %>% child("m1s_temp") %>%
 m1 %>% saveRDS("Results/m1.RDS")
 
 # create a child run where we investigate a different TRANS subroutine
-m2 <- m1 %>% child("m2") %>%
+m2 <- m1 %>% child() %>%
   subroutine(trans = 2) %>% 
   # see nm_diff app to see if you're happy with the changes being made
   run_nm()

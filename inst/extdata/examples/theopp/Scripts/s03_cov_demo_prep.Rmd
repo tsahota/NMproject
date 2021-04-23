@@ -107,6 +107,12 @@ ggplot(dc3, aes(x = ETA3, y = value)) + theme_bw() +
 
 ```
 
+```{r}
+
+cov_cov_plot(dc, cov = c("LIN1", "PW1"), continuous = c(TRUE, TRUE))
+
+```
+
 happy with plots, select final covs
 
 ```{r}

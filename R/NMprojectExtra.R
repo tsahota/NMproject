@@ -3811,6 +3811,8 @@ block <- function(iomega,
   
 }
 
+block <- Vectorize(block, vectorize.args = "iomega", SIMPLIFY = FALSE)
+
 unblock <- function(iomega, eta_numbers){
   
   eta_numbers <- sort(eta_numbers)
@@ -3873,6 +3875,8 @@ unblock <- function(iomega, eta_numbers){
   suppressWarnings(dplyr::bind_rows(iomega_pre, iomega_block, iomega_post))  
   
 }
+
+unblock <- Vectorize(unblock, vectorize.args = "iomega", SIMPLIFY = FALSE)
 
 ctl_table_paths <- function(ctl) {
   UseMethod("ctl_table_paths")

@@ -50,4 +50,12 @@ test_that("set up",{
 
   find_nm_install_path()
   
+  d <- code_library(viewer = FALSE, return_info = TRUE)
+  expect_true(nrow(d) > 10)
+  
+  ls_code_library("Models/ADVAN2.mod") %>%
+    stage()
+  
+  expect_true(file.exists("staging/Models/ADVAN2.mod"))
+  
 })
