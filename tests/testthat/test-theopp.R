@@ -101,10 +101,20 @@ test_that("run and post",{
   expect_false(any(grepl("\\$DES", text(m1)[[1]])))
   
   m1 <- readRDS("Results/m1.RDS")
+  coef_wide(m1)
+  expect_true(is.numeric(ofv(m1)))
+  expect_true(is.numeric(AIC(m1)))
+  expect_true(is.numeric(BIC(m1)))
+  expect_true(is.numeric(cond_num(m1)))
+  
+  m1 <- m1 %>% remove_parameter("K")
+  
+  m1 <- readRDS("Results/m1.RDS")
   ## shouldn't be any temp files for m1 in zip
   expect_true(length(ls_tempfiles(m1)) == 0)
   
-  wipe_run(m1)
+  clean_run(m1) ## remove non-temp
+  wipe_run(m1)  ## remove all
   expect_true(!file.exists(run_dir_path(m1)))
   
   ## can't test job_stats as xmls are removed

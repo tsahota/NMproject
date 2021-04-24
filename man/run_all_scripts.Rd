@@ -2,12 +2,12 @@
 % Please edit documentation in R/nm.R
 \name{run_all_scripts}
 \alias{run_all_scripts}
-\title{Run all scripts sequentially}
+\title{Run all project scripts sequentially}
 \usage{
 run_all_scripts()
 }
 \description{
-Runs all scripts s01_..., s02_...
+Runs all scripts s01_..., s02_... in the designated "scripts" directory
 }
 \details{
 works with .R and .Rmd extensions.  Behaviour is to \code{source} .R

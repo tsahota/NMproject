@@ -211,7 +211,7 @@ m1_boot$m %>%
 
 ```
 
-```{r xv, eval=FALSE}
+```{r make_xv}
 # can also do bootstrap cross validation as follows
 
 m1_xv <- m1_boot %>% 
@@ -221,6 +221,9 @@ m1_xv <- m1_boot %>%
            dollar("EST",
                   "$EST METHOD=IMP INTER EONLY= 1 MAPITER=0 ISAMPLE = 2000 NITER = 10 RANMETHOD=3S2 NOABORT PRINT=1 NSIG=3 SIGL=9"))
 
+```
+
+```{r run_xv, eval = FALSE}
 m1_xv$m_xv %>% run_nm() %>% wait_finish()
 
 summary_wide(m1_xv$m_xv)
