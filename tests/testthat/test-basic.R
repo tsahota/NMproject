@@ -49,7 +49,6 @@ test_that("set up",{
   options(nmtran_exe_path=old.opt)
 
   find_nm_install_path()
-  find_nm_tran_path()
   
   d <- code_library(viewer = FALSE, return_info = TRUE)
   expect_true(nrow(d) > 10)

@@ -5838,15 +5838,16 @@ decision <- function(inputs = c(),
   call_ob <- match.call()
   decision_cache_path <- file.path(nm_default_dir("models"), "decision_cache")
   dir.create(decision_cache_path, recursive = TRUE, showWarnings = FALSE)
-  cache_name <- digest::digest(call_ob)
-  input_md5 <- digest::digest(list(inputs = inputs))
+  cache_name <- paste0(digest::digest(call_ob), ".RDS")
+  decision_info <- list(inputs = inputs)
   cache_path <- file.path(decision_cache_path, cache_name)
   
   ############
   ## check cache
   cache_match <- file.exists(cache_path) ## and contents match
   if(cache_match){
-    cache_match <- readLines(cache_path) == input_md5
+    stored_decision <- readRDS(cache_path)
+    cache_match <- identical(stored_decision, decision_info)
   }
   ############
   if(!cache_match){
@@ -5854,7 +5855,7 @@ decision <- function(inputs = c(),
     
     if(decision_accurate){
       ## save cache with a record of the decision
-      write(input_md5, cache_path)
+      saveRDS(decision_info, cache_path)
     } else {
       ## delete cache of inaccurate decisions
       unlink(cache_path, force = TRUE)

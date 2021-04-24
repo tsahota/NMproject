@@ -185,7 +185,8 @@ Make a decision point in the script.  This will enable us to skip past decisions
 In this case we are making a decision that `m1` is better than `m2`, and `m2WT` and we're basing that decision on the `summary_wide` information. We can also include the goodness of fit diagnostics via specifying the file names in the `file_inputs` argument
 
 ```{r}
-decision(inputs = summary_wide(c(m1, m2, m2WT)), outcome = "m1 is better")
+decision(inputs = summary_wide(c(m1, m2, m2WT)), 
+         outcome = "m1 is better") # next line must be end of chunk
 ```
 
 ```{r boot}
