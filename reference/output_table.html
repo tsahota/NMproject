@@ -123,7 +123,7 @@
     <p>Get processed output table</p>
     </div>
 
-    <pre class="usage"><span class='fu'>output_table</span><span class='op'>(</span><span class='va'>r</span>, <span class='va'>...</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>output_table</span><span class='op'>(</span><span class='va'>r</span>, only_append <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='fu'>output_table_first</span><span class='op'>(</span><span class='va'>r</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
@@ -133,6 +133,11 @@
     <tr>
       <th>r</th>
       <td><p>object of class nm</p></td>
+    </tr>
+    <tr>
+      <th>only_append</th>
+      <td><p>optional character vector. If missing will append all,
+otherwise will append only those variables requested</p></td>
     </tr>
     <tr>
       <th>...</th>
