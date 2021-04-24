@@ -5789,6 +5789,7 @@ decision <- function(inputs = c(),
   }
   
   wait_input <- function(inputs){
+    if(!interactive()) stop("new manual decision needed. Run interactively")
     inputs  ## create inputs dependency
     cat(crayon::underline("manual decision check\n"))
     cat("decision outcome:\n", outcome)
@@ -5820,37 +5821,34 @@ decision <- function(inputs = c(),
     inputs <- c(inputs, tools::md5sum(files))
   }
   
-  decision_inputs_exp <- rlang::parse_expr("decision_inputs")
-  ## that was just to avoid CRAN error with using decision_inputs below
-  drpl <- drake::drake_plan(
-    decision_inputs = inputs,
-    pause = wait_input(!!decision_inputs_exp)
-  )
-  
-  drconfig <- drake::drake_config(drpl)
-  
-  outdated <- drake::outdated(drconfig)
-  
-  ## if up-to-date and pause/outcome is TRUE  
-  previous_outcome <- try(drake::readd("pause"), silent = TRUE)
-  if(inherits(previous_outcome, "try-error")) previous_outcome <- FALSE
-  
-  if(!length(outdated) & previous_outcome){
-    message("decision inputs haven't changed, trusting that decision is still correct")
-    suppressMessages({
-      drake::make(drpl)
-    })  
-  } else {
-    suppressMessages({
-      drake::clean("pause")
-      drake::make(drpl, force = TRUE)
-    })
-    current_outcome <- try(drake::readd("pause"), silent = TRUE)
-    if(inherits(current_outcome, "try-error")) current_outcome <- FALSE
+  ## check cache
+  cache_match <- FALSE   ## temporarily assume 
+  if(!cache_match){
+    pause <- wait_input(inputs)    
     
-    if(!current_outcome) ## if outcome = FALSE, then "[c]heck". ([n]o makes error)
-      message("make decision again (check inputs and files), then re-execute")
+    ## save cache
+    
+    
+  } else {
+    message("decision inputs haven't changed, trusting that decision is still correct")
   }
+# 
+#   if(!length(outdated) & previous_outcome){
+#     message("decision inputs haven't changed, trusting that decision is still correct")
+#     suppressMessages({
+#       drake::make(drpl)
+#     })  
+#   } else {
+#     suppressMessages({
+#       drake::clean("pause")
+#       drake::make(drpl, force = TRUE)
+#     })
+#     current_outcome <- try(drake::readd("pause"), silent = TRUE)
+#     if(inherits(current_outcome, "try-error")) current_outcome <- FALSE
+#     
+#     if(!current_outcome) ## if outcome = FALSE, then "[c]heck". ([n]o makes error)
+#       message("make decision again (check inputs and files), then re-execute")
+#   }
 }
 
 #' Plot covariance matrix
