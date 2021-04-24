@@ -4503,8 +4503,10 @@ summary_long <- function(..., parameters = c("none", "new", "all")){
 #' @name output_table
 #' @rdname output_table
 #' @title Get processed output table
-#' 
+#'
 #' @param r object of class nm
+#' @param only_append optional character vector. If missing will append all,
+#'   otherwise will append only those variables requested
 #' @param ... optional additional arguments to pass on to read.csv of orig data
 
 NULL
@@ -4517,18 +4519,21 @@ NULL
 #'   will contain simulated \code{DV} values. \code{DV} will always be
 #'   unmodified from the input dataset
 #' @export
-output_table <- function(r, ...){
+output_table <- function(r, only_append = c(), ...){
   UseMethod("output_table") 
 }
 
 #' @export
-output_table.default <- function(r, ...){
+output_table.default <- function(r, only_append = c(), ...){
   out_path <- file.path(run_dir_path(r), "NMout.RDS")
   if(!file.exists(out_path)) {
     do <- nm_output(r, ...)
     saveRDS(do, file = out_path)
   } else {
     do <- readRDS(out_path)
+  }
+  if(length(only_append) > 0){
+    do <- do[, c(names(input_data(r)), only_append)]
   }
   return(do)
 }
@@ -5367,6 +5372,11 @@ cov_cov_plot <- function(d,
 #' @export
 
 write_derived_data <- function(d, name, ...){
+  UseMethod("write_derived_data")
+}
+
+#' @export
+write_derived_data.data.frame <- function(d, name, ...){
   
   name <- tools::file_path_sans_ext(name)
   
@@ -5383,12 +5393,37 @@ write_derived_data <- function(d, name, ...){
   
   dir.create(dirname(RDS_name), showWarnings = FALSE, recursive = TRUE)
   saveRDS(d, file = RDS_name)
-  utils::write.csv(d, file = csv_name, na = ".", row.names=FALSE, quote=FALSE)
+  utils::write.csv(d, file = csv_name, na = ".", row.names=FALSE, quote=FALSE, ...)
   
   message("written: ")
   message(RDS_name)
   message(csv_name)
 }
+
+#' @export
+write_derived_data.list <- function (d, name, ...) 
+{
+  vectorize.args = c("d", "name")
+  SIMPLIFY = TRUE
+  USE.NAMES = TRUE
+  FUN = write_derived_data.data.frame
+  arg_call <- as.list(match.call())[-1L]
+  ##########
+  args <- lapply(arg_call, eval, parent.frame())
+  names <- if (is.null(names(args))) 
+    character(length(args))
+  else names(args)
+  dovec <- names %in% vectorize.args
+  do.call("mapply", c(FUN = FUN, args[dovec], MoreArgs = list(args[!dovec]), 
+                      SIMPLIFY = SIMPLIFY, USE.NAMES = USE.NAMES))
+  ##########
+  invisible()
+}
+
+# write_derived_data.list <- Vectorize(write_derived_data.data.frame, 
+#                                      vectorize.args = c("d", "name"), 
+#                                      SIMPLIFY = TRUE)
+
 
 #' Read derived data
 #'

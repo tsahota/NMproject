@@ -70,7 +70,7 @@ Often you'll want to know the right level of parallelisation to run your model t
 
 ```{r core_test}
 
-dc <- tibble::tibble(cores = c(1, 2, 3)) %>%
+dc <- tibble::tibble(cores = c(1, 2, 3)) %>%  ## only 3 different values to test for demo purposes
   mutate(m = m1 %>%
            ## supply the "cores" vector (of the tibble) to child(), this will create 3 runs
            child(run_id = cores) %>%
@@ -95,42 +95,37 @@ dc$m %>% run_nm() %>% wait_finish()
 ```
 You can also use the vectorized nature to create a simulation re-estimation routines from scratch.
 
-```{r sim_reest, eval = FALSE}
+```{r sim_reest}
 
-n_sims <- 3
+n_sims <- 3  ## only 3 samples for demo purposes
 
 dsr <- tibble(sim = 1:n_sims) %>%
   mutate(
-    msim = m1 %>% 
-      update_parameters() %>%
-      child(run_id = sim) %>%
-      run_in("Models/m1_simest") %>%
-      convert_to_simulation(subpr = 1)
+    msim = m1 %>%              ## start with single parent run, m1, an nm object of length 1
+      update_parameters() %>%  ## update inits to finals, here nm object is still length 1
+      child(run_id = sim) %>%  ## at this point it becomes length n_sims
+      run_in("Models/m1_simest") %>% ## this applies the run_in modification to all n_sims runs
+      convert_to_simulation(subpr = 1, seed = sim) ## converts all to simulation
   )
 
-## run, wait and then read results.  
-douts <- dsr$msim %>% run_nm() %>% 
+## run, wait, read results and then write to run_dir paths of simulations
+dsr$msim %>% run_nm() %>% 
   wait_finish() %>%
-  output_table()
+  output_table(only_append = "DV_OUT") %>%
+  write_derived_data(file.path(run_dir_path(dsr$msim), "simdata.csv"))
 
-## save the results files to the run directories of each simulation run
-douts %>% purrr::map2(
-  dsr$msim, 
-  ~write_derived_data(.x, file.path(run_dir_path(.y), "simdata.csv"))
-)
-
-## create mest column of re-estimation runs. Run in a subdirectory and change
-## the data_path to point to the simulated data need to re-specify fill_input
-## because the dataset has additional columns Need to rename the existing DV to
-## DV_OBS, and DV_OUT to DV so the re-estimation is on the simulated data.
-
+## Now create mest column
 dsr <- dsr %>%
   mutate(
-    mest = m1 %>% child(run_id = sim) %>%
-      run_in("Models/m1_simest/est") %>%
-      data_path(run_dir_path(msim)) %>%
+    mest = m1 %>% child(run_id = sim) %>%  ## estimations derived from m1
+      run_in("Models/m1_simest/est") %>%   ## run in a new subdirectory
+      data_path(file.path(run_dir_path(msim), "simdata.csv")) %>%    ## set new data_paths
+      ## refill $INPUT. Rename DV to be DV_OUT column. Run nm_diff() command below to see
+      ## what has changed
       fill_input(rename = list("DV_OBS" = "DV", "DV" = "DV_OUT"))
   )
+
+# nm_diff(dsr$mest[1])
 
 dsr$mest %>% run_nm() %>% 
   wait_finish() %>%

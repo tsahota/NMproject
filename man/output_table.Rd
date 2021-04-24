@@ -5,12 +5,15 @@
 \alias{output_table_first}
 \title{Get processed output table}
 \usage{
-output_table(r, ...)
+output_table(r, only_append = c(), ...)
 
 output_table_first(r, ...)
 }
 \arguments{
 \item{r}{object of class nm}
+
+\item{only_append}{optional character vector. If missing will append all,
+otherwise will append only those variables requested}
 
 \item{...}{optional additional arguments to pass on to read.csv of orig data}
 }

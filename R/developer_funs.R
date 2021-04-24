@@ -135,6 +135,9 @@ copy_demo_to_test <- function(demo = "theopp"){
   
   all_model_files <- all_model_files[!grepl(".html", all_model_files)]
   
+  keep_simdata_csvs <- all_model_files[basename(all_model_files) %in% "simdata.csv" &
+                                         !grepl("\\bNM_run1\\b", all_model_files)]
+  
   all_model_files <- all_model_files[!all_model_files %in% ls_tempfiles()]
   
   ## specific for demo
@@ -151,7 +154,7 @@ copy_demo_to_test <- function(demo = "theopp"){
   #all_model_files <- all_model_files[!tools::file_ext(all_model_files) %in% 
   #                                     c("lst")]
   
-  all_model_files <- c(all_model_files, keep_m1_outs)
+  all_model_files <- c(all_model_files, keep_m1_outs, keep_simdata_csvs)
   
   all_model_files <- all_model_files[!tools::file_ext(all_model_files) %in% 
                                        c("xml")]

@@ -178,9 +178,9 @@ setup_nm_demo <- function(demo_name="theopp",
 }
 
 
-#' Run all scripts sequentially
+#' Run all project scripts sequentially
 #'
-#' Runs all scripts s01_..., s02_...
+#' Runs all scripts s01_..., s02_... in the designated "scripts" directory
 #'
 #' @details works with .R and .Rmd extensions.  Behaviour is to \code{source} .R
 #'   files and use \code{rmarkdown::render} on .Rmd files
