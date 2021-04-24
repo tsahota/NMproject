@@ -59,6 +59,11 @@ dt$m %>% run_nm() %>% wait_finish()
 
 summary_wide(dt$m)
 
+#dt$m %>% 
+#  subset(ofv(.) < 120) %>%
+#  nm_render("Scripts/basic_gof.Rmd")
+
+
 ```
 
 Often you'll want to know the right level of parallelisation to run your model to maximise speed without wasting too many resources.  The following uses the vectorized nm objects in a similar way with `dplyr::mutate()` to create multiple runes with different levels of parallelisation. For the demo we'll just test it across 1, 2 and 3 cores, but this can be an arbitrary vector.

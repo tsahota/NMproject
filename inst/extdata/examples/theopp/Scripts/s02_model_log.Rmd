@@ -184,15 +184,30 @@ rr(c(m2, m2WT))
 
 # here we do a bootstrap. This relies of bootstrap splits being already
 # calculated - see the s01 script for how to make them
+# only running 4 samples for demo purposes
 
-m1_boot <- m1 %>% 
-  make_boot_datasets(samples = 5, overwrite = TRUE)
+m1_boot <- m1 %>% make_boot_datasets(samples = 4, overwrite = TRUE)
 
-m1_boot$m <- m1_boot$m %>% run_nm()
-wait_finish(m1_boot$m)
+m1_boot ## display data.frame
 
-m1_boot$m %>% nm_list_render("Scripts/basic_boot.Rmd")
+## Note that the column m is a vector of nm objects.  nm objects and functions are fully vectorized.  So you can extract and set fields using the normal syntax. Note that above when you did c(m2, m2WT) you were creating a vector of length 2 of 2 nonmem runs.  The advanced usage script in the demo will make extensive use of vectorization - combined with dplyr you can make very complex workflows with small readable syntax
 
+cmd(m1_boot$m)
+
+```
+
+```{r run_boot}
+
+## running a vector of runs uses the same syntax as running a single run.  All
+## runs will be launched at the same time.  In a grid system this is usually
+## fine as jobs will queue until resources are available.  If running on a
+## non-grid system consider run_nm_batch() with the "threads" argument to avoid
+## eating up all your resources
+
+m1_boot$m %>% 
+  run_nm() %>% ## run all runs
+  wait_finish() %>% ## wait until all are finished
+  nm_list_render("Scripts/basic_boot.Rmd") ## generate run report in "Results" directory
 
 ```
 
@@ -206,13 +221,9 @@ m1_xv <- m1_boot %>%
            dollar("EST",
                   "$EST METHOD=IMP INTER EONLY= 1 MAPITER=0 ISAMPLE = 2000 NITER = 10 RANMETHOD=3S2 NOABORT PRINT=1 NSIG=3 SIGL=9"))
 
-m1_xv$m_xv <- m1_xv$m_xv %>% run_nm()
-wait_finish(m1_xv$m_xv)
+m1_xv$m_xv %>% run_nm() %>% wait_finish()
 
-m1_xv$m_xv %>% 
-  subset(status(.) %in% "finished") %>% 
-  ofv() %>% 
-  mean() ## xv-ofv - to be used for xv model selection
+summary_wide(m1_xv$m_xv)
 
 ```
 
