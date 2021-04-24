@@ -5764,36 +5764,49 @@ nm_tree <- function(..., summary = FALSE){
 
 
 #' make decision point
-#' 
-#' formalise process of decision making.  Creates a decision point.
-#' Requests inputs (\code{values} and \code{files}) that you base a
+#'
+#' formalise process of decision making.  Creates a decision point in the
+#' workflow. Requests inputs (\code{values} and \code{files}) that you base a
 #' decision on and stop for users to remake decision if inputs change
-#' 
+#'
 #' @param inputs (optional) non file names upon which decision depends
-#' @param files (optional) file names upon which decision depends
-#' @param auto_decision (optional) logical. logical statement for automatic decisions
+#' @param file_inputs (optional) file names upon which decision depends
+#' @param auto (optional) logical. logical statement for automatic decisions
 #' @param outcome character. Description of the decision outcome
-#' @export 
+#' @param force logical (default = FALSE). Force redo of decision
+#' @export
 decision <- function(inputs = c(), 
-                     files = c(), 
-                     auto_decision = TRUE,
-                     outcome){
+                     file_inputs = c(), 
+                     auto = logical(),
+                     outcome = character(),
+                     force = FALSE){
   
   if(!requireNamespace("drake"))
     stop("install drake")
   
-  error_msg <- "decision needs revisiting"
+  if(!requireNamespace("digest"))
+    stop("install digest")
   
-  if(!auto_decision){
-    stop("auto-decision failed - ", error_msg, call. =  FALSE)
+  error_msg <- "decision needs revisiting."
+  
+  if((!missing(inputs) | !missing(file_inputs)) & missing(outcome))
+    stop("if specifying decision inputs need to specify outcome \n'outcome' = character description of decision")
+  
+  if(!missing(auto)){
+    if(!auto){
+      stop("auto decision FAILED - ", error_msg, call. =  FALSE)
+    } else {
+      message("auto decision PASSED")
+      return(invisible())
+    }
   }
   
   wait_input <- function(inputs){
     if(!interactive()) stop("new manual decision needed. Run interactively")
     inputs  ## create inputs dependency
-    cat(crayon::underline("manual decision check\n"))
-    cat("decision outcome:\n", outcome)
-    ans <- readline("Is this decision correct? [y]es/[n]o/[c]heck:\n")
+    cat(crayon::underline("\nmanual decision check\n"))
+    cat("expected decision outcome:\n", outcome)
+    ans <- readline("Does this accurately describe your decision? [y]es/[n]o/[c]heck:\n")
     if(ans %in% ""){
       stop("blank detected (if in R Notebooks, make sure decision() is at end of chunk with no blank line in between)")
     }
@@ -5814,23 +5827,40 @@ decision <- function(inputs = c(),
   
   if(!length(inputs)) inputs <- c()
   
-  if(length(files)){
-    if(!all(file.exists(files))){
+  if(length(file_inputs)){
+    if(!all(file.exists(file_inputs))){
       stop("file(s) do not exist", call. = FALSE)
     }
-    inputs <- c(inputs, tools::md5sum(files))
+    inputs <- c(inputs, tools::md5sum(file_inputs))
   }
   
+  ## generate hashes for current call
+  call_ob <- match.call()
+  decision_cache_path <- file.path(nm_default_dir("models"), "decision_cache")
+  dir.create(decision_cache_path, recursive = TRUE, showWarnings = FALSE)
+  cache_name <- digest::digest(call_ob)
+  input_md5 <- digest::digest(list(inputs = inputs))
+  cache_path <- file.path(decision_cache_path, cache_name)
+  
+  ############
   ## check cache
-  cache_match <- FALSE   ## temporarily assume 
+  cache_match <- file.exists(cache_path) ## and contents match
+  if(cache_match){
+    cache_match <- readLines(cache_path) == input_md5
+  }
+  ############
   if(!cache_match){
-    pause <- wait_input(inputs)    
+    decision_accurate <- wait_input(inputs)    
     
-    ## save cache
-    
-    
+    if(decision_accurate){
+      ## save cache with a record of the decision
+      write(input_md5, cache_path)
+    } else {
+      ## delete cache of inaccurate decisions
+      unlink(cache_path, force = TRUE)
+    }
   } else {
-    message("decision inputs haven't changed, trusting that decision is still correct")
+    message("\ndecision inputs & outcome match prior decision")
   }
 # 
 #   if(!length(outdated) & previous_outcome){
@@ -5847,8 +5877,9 @@ decision <- function(inputs = c(),
 #     if(inherits(current_outcome, "try-error")) current_outcome <- FALSE
 #     
 #     if(!current_outcome) ## if outcome = FALSE, then "[c]heck". ([n]o makes error)
-#       message("make decision again (check inputs and files), then re-execute")
+#       message("make decision again (check inputs and file_inputs), then re-execute")
 #   }
+  
 }
 
 #' Plot covariance matrix

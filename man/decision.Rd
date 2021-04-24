@@ -4,19 +4,27 @@
 \alias{decision}
 \title{make decision point}
 \usage{
-decision(inputs = c(), files = c(), auto_decision = TRUE, outcome)
+decision(
+  inputs = c(),
+  file_inputs = c(),
+  auto = logical(),
+  outcome = character(),
+  force = FALSE
+)
 }
 \arguments{
 \item{inputs}{(optional) non file names upon which decision depends}
 
-\item{files}{(optional) file names upon which decision depends}
+\item{file_inputs}{(optional) file names upon which decision depends}
 
-\item{auto_decision}{(optional) logical. logical statement for automatic decisions}
+\item{auto}{(optional) logical. logical statement for automatic decisions}
 
 \item{outcome}{character. Description of the decision outcome}
+
+\item{force}{logical (default = FALSE). Force redo of decision}
 }
 \description{
-formalise process of decision making.  Creates a decision point.
-Requests inputs (\code{values} and \code{files}) that you base a
+formalise process of decision making.  Creates a decision point in the
+workflow. Requests inputs (\code{values} and \code{files}) that you base a
 decision on and stop for users to remake decision if inputs change
 }

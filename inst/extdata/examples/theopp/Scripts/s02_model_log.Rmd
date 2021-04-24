@@ -175,9 +175,17 @@ Body weight not signficant.  K parameterisation better than CL in terms of OFV
 
 ```{r summary_rr}
 
-summary_long(c(m2, m2WT), parameters = "all")
+summary_long(c(m1, m2, m2WT), parameters = "all")
 rr(c(m2, m2WT))
 
+```
+
+Make a decision point in the script.  This will enable us to skip past decisions we have already made and will stop the script if we have not yet confirmed that we agree with the decision outcome as it's written below OR if our decision inputs have changed since we last confirmed.  To confirm a decision we have to make sure we run this in interactive mode and that the decision statement is the last statement in a chunk with no blank lines.
+
+In this case we are making a decision that `m1` is better than `m2`, and `m2WT` and we're basing that decision on the `summary_wide` information. We can also include the goodness of fit diagnostics via specifying the file names in the `file_inputs` argument
+
+```{r}
+decision(inputs = summary_wide(c(m1, m2, m2WT)), outcome = "m1 is better")
 ```
 
 ```{r boot}

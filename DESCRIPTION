@@ -51,7 +51,8 @@ Suggests:
     starters,
     renv,
     desc,
-    purrr
+    purrr,
+    digest
 Collate: 
     'NMproject.R'
     'utils.R'
