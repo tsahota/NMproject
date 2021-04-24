@@ -40,8 +40,8 @@
 
 
 <meta property="og:title" content="make decision point — decision" />
-<meta property="og:description" content="formalise process of decision making.  Creates a decision point.
-Requests inputs (values and files) that you base a
+<meta property="og:description" content="formalise process of decision making.  Creates a decision point in the
+workflow. Requests inputs (values and files) that you base a
 decision on and stop for users to remake decision if inputs change" />
 
 
@@ -122,12 +122,18 @@ decision on and stop for users to remake decision if inputs change" />
     </div>
 
     <div class="ref-description">
-    <p>formalise process of decision making.  Creates a decision point.
-Requests inputs (<code>values</code> and <code>files</code>) that you base a
+    <p>formalise process of decision making.  Creates a decision point in the
+workflow. Requests inputs (<code>values</code> and <code>files</code>) that you base a
 decision on and stop for users to remake decision if inputs change</p>
     </div>
 
-    <pre class="usage"><span class='fu'>decision</span><span class='op'>(</span>inputs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>, files <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>, auto_decision <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>outcome</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>decision</span><span class='op'>(</span>
+  inputs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>,
+  file_inputs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>,
+  auto <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/logical.html'>logical</a></span><span class='op'>(</span><span class='op'>)</span>,
+  outcome <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
+  force <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -137,16 +143,20 @@ decision on and stop for users to remake decision if inputs change</p>
       <td><p>(optional) non file names upon which decision depends</p></td>
     </tr>
     <tr>
-      <th>files</th>
+      <th>file_inputs</th>
       <td><p>(optional) file names upon which decision depends</p></td>
     </tr>
     <tr>
-      <th>auto_decision</th>
+      <th>auto</th>
       <td><p>(optional) logical. logical statement for automatic decisions</p></td>
     </tr>
     <tr>
       <th>outcome</th>
       <td><p>character. Description of the decision outcome</p></td>
+    </tr>
+    <tr>
+      <th>force</th>
+      <td><p>logical (default = FALSE). Force redo of decision</p></td>
     </tr>
     </table>
 
