@@ -78,12 +78,30 @@ test_that("run and post",{
   
   m1 <- readRDS("Results/m1.RDS")
   expect_true(is_successful(m1))
+  
+  om_matrix <- m1 %>% omega_matrix() %>% dplyr::first()
+  expect_true(inherits(om_matrix, "matrix"))
+  expect_true(nrow(om_matrix) > 0)
+  expect_true(nrow(om_matrix) == ncol(om_matrix))
+  
   d <- output_table_first(m1)
   expect_true(nrow(d) > 0)
   
   d <- d %>% append_nonmem_var(m1, "K")
   expect_true(!is.null(d$K))
   
+  
+  m1 <- readRDS("Results/m1.RDS")
+  m1 <- m1 %>% insert_dollar("DES", "
+  $DES
+  DADT(1) = ...
+  ","PK")
+  expect_true(any(grepl("\\$DES", text(m1)[[1]])))
+  
+  m1 <- m1 %>% delete_dollar("DES")
+  expect_false(any(grepl("\\$DES", text(m1)[[1]])))
+  
+  m1 <- readRDS("Results/m1.RDS")
   ## shouldn't be any temp files for m1 in zip
   expect_true(length(ls_tempfiles(m1)) == 0)
   

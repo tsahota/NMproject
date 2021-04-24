@@ -1,5 +1,193 @@
 if(0){
 
+  insert_theta <- function(itheta,
+                           theta_number = NA,
+                           init = 0.1,
+                           name = NA,
+                           lower = NA,
+                           upper = NA,
+                           FIX = FALSE,
+                           unit = NA,
+                           trans = NA){
+    
+    if(missing(theta_number)) theta_number <- max(c(0,stats::na.omit(itheta$theta))) +1
+    
+    insert_line <- max(c(0, itheta$line[itheta$theta %in% (theta_number-1)])) + 1
+    
+    itheta_pre <- itheta[itheta$line < insert_line, ]
+    itheta_post <- itheta[itheta$line >= insert_line, ]
+    itheta_post$line <- itheta_post$line + 1
+    
+    itheta_post$theta[(itheta_post$theta >= theta_number) %in% TRUE] <- 
+      itheta_post$theta[(itheta_post$theta >= theta_number) %in% TRUE] + 1
+    
+    
+    dinsert <- data.frame(theta = theta_number,
+                          init = init, 
+                          name = name,
+                          lower = lower,
+                          upper = upper,
+                          FIX = FIX,
+                          unit = unit,
+                          trans = trans,
+                          line = insert_line,
+                          pos = 1)
+    
+    suppressWarnings(dplyr::bind_rows(itheta_pre, dinsert, itheta_post))
+    
+  }
+  
+  insert_omega <- function(iomega,
+                           omega_number = NA,
+                           init = 0.1,
+                           name = NA,
+                           lower = NA,
+                           upper = NA,
+                           FIX = FALSE,
+                           unit = NA,
+                           trans = NA){
+    
+    #iomega$new_line <- iomega$line
+    #iomega$new_pos <- iomega$pos
+    
+    if(missing(omega_number)) omega_number <- max(c(0,stats::na.omit(iomega$omega1))) +1
+    
+    insert_line <- max(c(0, iomega$line[iomega$omega1 %in% (omega_number-1)])) + 1
+    
+    #iomega_pre <- iomega[iomega$line[iomega$line < insert_line], ]
+    #iomega_post <- iomega[iomega$line[iomega$line >= insert_line], ]
+    iomega_pre <- iomega[iomega$line < insert_line, ]
+    iomega_post <- iomega[iomega$line >= insert_line, ]
+    iomega_post$line <- iomega_post$line + 1
+    
+    iomega_post$omega1[(iomega_post$omega1 >= omega_number) %in% TRUE] <- 
+      iomega_post$omega1[(iomega_post$omega1 >= omega_number) %in% TRUE] + 1
+    
+    iomega_post$omega2[(iomega_post$omega2 >= omega_number) %in% TRUE] <- 
+      iomega_post$omega2[(iomega_post$omega2 >= omega_number) %in% TRUE] + 1
+    
+    iomega_post$block <- iomega_post$block + 1
+    
+    insert_block <- max(c(0, stats::na.omit(iomega$block[iomega$omega1 %in% (omega_number-1)]))) + 1
+    
+    insert_mblock <- max(c(0, stats::na.omit(iomega$mblock[iomega$omega1 %in% (omega_number-1)])))
+    if(length(which(iomega$omega1 %in% (omega_number-1))) > 1)
+      insert_mblock <- insert_mblock + 1
+    
+    dinsert <- data.frame(omega1 = omega_number,
+                          omega2 = omega_number,
+                          init = init, 
+                          name = name,
+                          lower = lower,
+                          upper = upper,
+                          block = insert_block,
+                          mblock = insert_mblock,
+                          FIX = FIX,
+                          unit = unit,
+                          trans = trans,
+                          line = insert_line,
+                          pos = 1)
+    
+    suppressWarnings(dplyr::bind_rows(iomega_pre, dinsert, iomega_post))
+    
+  }
+  
+  append_dollar <- function(ctl_lines, after = NULL, ...){
+    ctl_lines <- ctl_list(ctl_lines)
+    if(is.null(after)) append_after <- length(ctl_lines) else
+      append_after <- max(which(grepl(after,names(ctl_lines))))
+    if(length(after)!=1) stop("cannot find determine \"after\"")
+    if(is.na(after)) stop("cannot find determine \"after\"")
+    if(after %in% -Inf) stop("cannot find determine \"after\"")
+    attributes_ctl_lines <- attributes(ctl_lines)
+    attributes_ctl_lines$names <- NULL
+    ctl_lines <- append(ctl_lines, list(...) ,after = append_after)
+    attributes_ctl_lines$names <- names(ctl_lines)
+    attributes(ctl_lines) <- attributes_ctl_lines
+    ctl_lines
+  }
+  
+  change_to_sim <- function(ctl_lines,subpr=1,seed=1){
+    ctl_lines <- ctl_list(ctl_lines)
+    ctl_lines$EST <- paste0(";",ctl_lines$EST)
+    ctl_lines$COV <- paste0(";",ctl_lines$COV)
+    if("SIM" %in% names(ctl_lines)){
+      ctl_lines$SIM <- gsub("^\\s*;+(.*)","\\1",ctl_lines$SIM)
+      ctl_lines$SIM <- gsub("(SUBPR[^=]*\\s*=\\s*)[0-9]+",paste0("\\1",subpr),ctl_lines$SIM)
+      ctl_lines$SIM <- gsub("(\\$SIM[^\\s]*\\s*\\()[0-9]+(\\))",paste0("\\1",seed,"\\2"),ctl_lines$SIM)
+    } else {
+      ## insert before $TABLE, after $ERROR/$PRED
+      #pred_error_pos <- which(grepl("ERROR|PRED",names(ctl_lines)))
+      #if(length(pred_error_pos) > 1) stop("multiple $ERROR/$PREDs detected - should only have one or the other?")
+      #ctl_lines <- append(ctl_lines,list(SIM=NA),pred_error_pos)
+      ctl_lines <- append_dollar(ctl_lines, SIM=NA, "ERROR|PRED|SIGMA|OMEGA")
+      ctl_lines$SIM <- paste0("$SIM (",seed,") ONLYSIM SUBPR=",subpr)
+    }
+    
+    e <- ctl_lines$ERROR
+    fflag1_pos <- grep("F_FLAG\\s*=\\s*1",e)
+    if(length(fflag1_pos) > 0) {
+      message("attempting to remove F_FLAG code... check this")
+      y_line <- grep("^\\s*Y\\s*=.*(EPS|ETA).*$",e)
+      if_pos <- grep("^\\s*IF.*\\sTHEN",e)
+      endif_pos <- grep("^\\s*ENDIF",e)
+      if_statements <- lapply(seq_along(if_pos),function(i)if_pos[i]:endif_pos[i])
+      
+      y_if_pos <- which(sapply(if_statements,function(i) y_line %in% i))
+      
+      if_statements[[y_if_pos]]
+      e[setdiff(if_statements[[y_if_pos]], y_line)] <- paste(";",e[setdiff(if_statements[[y_if_pos]], y_line)])
+      ctl_lines$ERROR <- e
+    }
+    ctl_list(ctl_lines)
+  }
+  
+  theta_r2nm <- function(x){
+    x0 <- x
+    x0$name[is.na(x0$name)] <- paste0("THETA",x0$N[is.na(x0$name)])
+    x0$unit[!is.na(x0$unit)] <- paste(";",x0$unit[!is.na(x0$unit)])
+    x0$unit[is.na(x0$unit)] <- ""
+    x0$trans[!is.na(x0$trans)] <- paste(";",x0$trans[!is.na(x0$trans)])
+    x0$trans[is.na(x0$trans)] <- ""
+    x0$COM <- paste(x0$name,x0$unit,x0$trans)
+    x0$COM <- rem_trailing_spaces(x0$COM)
+    x <- by(x,x$N,function(d){
+      if(!is.na(d$lower)) paste0("(",d$lower,",",d$init,")") else d$init
+    })
+    x <- unlist(x)
+    x <- paste(x,";",x0$COM)
+    setup_dollar(x,"$THETA")
+  }
+  
+  new_script <- function(name, overwrite = FALSE, open_file = TRUE, libs=c("NMproject")) {
+    ## create black script with comment fields. Add new_script to git
+    # if (name != basename(name)) 
+    #   stop("name must not be a path")
+    if (name == basename(name)) {
+      to_path <- file.path(nm_default_dir("scripts"), name)  ## destination path
+    } else {
+      to_path <- name
+    }
+    if (file.exists(to_path) & !overwrite) 
+      stop(paste(to_path, "already exists. Rerun with overwrite = TRUE"))
+    s <- c(paste0("## ", "Author: ", Sys.info()["user"]),
+           paste0("## ", "First created: ", Sys.Date()),
+           paste0("## ", "Description: "),
+           paste0("## ", "Keywords: "),
+           "",
+           "########################################",
+           "## load packages and source functions here",
+           "",
+           paste0("library(",libs,")"),
+           "",
+           "########################################",
+           "## main script here", 
+           "")
+    writeLines(s, to_path)
+    if (open_file) 
+      get("file.edit")(to_path)
+  }
+  
   #' @importFrom dplyr mutate
   #' @export
   dplyr::mutate

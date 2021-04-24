@@ -495,41 +495,6 @@ update_dollar_data <- function(ctl_name,new_data_name){
   ctl
 }
 
-#' Create new R script
-#' @param name character indicating name of script to create
-#' @param overwrite logical. Whether to overwrite existing file (default = FALSE)
-#' @param open_file logical. Whether function should open script (default = TRUE)
-#' @param libs character. What libraries to add.
-#' @export
-new_script <- function(name, overwrite = FALSE, open_file = TRUE, libs=c("NMproject")) {
-  ## create black script with comment fields. Add new_script to git
-  # if (name != basename(name)) 
-  #   stop("name must not be a path")
-  if (name == basename(name)) {
-    to_path <- file.path(nm_default_dir("scripts"), name)  ## destination path
-  } else {
-    to_path <- name
-  }
-  if (file.exists(to_path) & !overwrite) 
-    stop(paste(to_path, "already exists. Rerun with overwrite = TRUE"))
-  s <- c(paste0("## ", "Author: ", Sys.info()["user"]),
-         paste0("## ", "First created: ", Sys.Date()),
-         paste0("## ", "Description: "),
-         paste0("## ", "Keywords: "),
-         "",
-         "########################################",
-         "## load packages and source functions here",
-         "",
-         paste0("library(",libs,")"),
-         "",
-         "########################################",
-         "## main script here", 
-         "")
-  writeLines(s, to_path)
-  if (open_file) 
-    get("file.edit")(to_path)
-}
-
 #' Get Omega matrix from run
 #'
 #' @param r object of class nm
@@ -561,6 +526,8 @@ omega_matrix <- function(r){
 
   matrix(d_all$FINAL,nrow=max_size)
 }
+
+omega_matrix <- Vectorize(omega_matrix, vectorize.args = list("r"), SIMPLIFY = FALSE)
 
 #' Get NONMEM version info
 #' 

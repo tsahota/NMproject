@@ -264,28 +264,6 @@ rem_trailing_spaces <- function(x){
   x
 }
 
-#' Convert R abstraction layer to $THETA
-#' @param x object abstracting $THETA contents
-#' @return character vector with $THETA information
-#' @export
-
-theta_r2nm <- function(x){
-  x0 <- x
-  x0$name[is.na(x0$name)] <- paste0("THETA",x0$N[is.na(x0$name)])
-  x0$unit[!is.na(x0$unit)] <- paste(";",x0$unit[!is.na(x0$unit)])
-  x0$unit[is.na(x0$unit)] <- ""
-  x0$trans[!is.na(x0$trans)] <- paste(";",x0$trans[!is.na(x0$trans)])
-  x0$trans[is.na(x0$trans)] <- ""
-  x0$COM <- paste(x0$name,x0$unit,x0$trans)
-  x0$COM <- rem_trailing_spaces(x0$COM)
-  x <- by(x,x$N,function(d){
-    if(!is.na(d$lower)) paste0("(",d$lower,",",d$init,")") else d$init
-  })
-  x <- unlist(x)
-  x <- paste(x,";",x0$COM)
-  setup_dollar(x,"$THETA")
-}
-
 #' Get parameter information
 #'
 #' @param ctl character. Path to control file
@@ -402,62 +380,7 @@ gsub_ctl.default <- function(ctl, pattern, replacement, ..., dollar = NA_charact
   ctl_list(ctl)
 }
 
-append_dollar <- function(ctl_lines, after = NULL, ...){
-  ctl_lines <- ctl_list(ctl_lines)
-  if(is.null(after)) append_after <- length(ctl_lines) else
-    append_after <- max(which(grepl(after,names(ctl_lines))))
-  if(length(after)!=1) stop("cannot find determine \"after\"")
-  if(is.na(after)) stop("cannot find determine \"after\"")
-  if(after %in% -Inf) stop("cannot find determine \"after\"")
-  attributes_ctl_lines <- attributes(ctl_lines)
-  attributes_ctl_lines$names <- NULL
-  ctl_lines <- append(ctl_lines, list(...) ,after = append_after)
-  attributes_ctl_lines$names <- names(ctl_lines)
-  attributes(ctl_lines) <- attributes_ctl_lines
-  ctl_lines
-}
 
-#' change to estimation control stream to sim
-#'
-#' @param ctl_lines character vector. ctl file read into R
-#' @param subpr numeric. Number of subproblems
-#' @param seed numeric
-#' @export
-
-change_to_sim <- function(ctl_lines,subpr=1,seed=1){
-  ctl_lines <- ctl_list(ctl_lines)
-  ctl_lines$EST <- paste0(";",ctl_lines$EST)
-  ctl_lines$COV <- paste0(";",ctl_lines$COV)
-  if("SIM" %in% names(ctl_lines)){
-    ctl_lines$SIM <- gsub("^\\s*;+(.*)","\\1",ctl_lines$SIM)
-    ctl_lines$SIM <- gsub("(SUBPR[^=]*\\s*=\\s*)[0-9]+",paste0("\\1",subpr),ctl_lines$SIM)
-    ctl_lines$SIM <- gsub("(\\$SIM[^\\s]*\\s*\\()[0-9]+(\\))",paste0("\\1",seed,"\\2"),ctl_lines$SIM)
-  } else {
-    ## insert before $TABLE, after $ERROR/$PRED
-    #pred_error_pos <- which(grepl("ERROR|PRED",names(ctl_lines)))
-    #if(length(pred_error_pos) > 1) stop("multiple $ERROR/$PREDs detected - should only have one or the other?")
-    #ctl_lines <- append(ctl_lines,list(SIM=NA),pred_error_pos)
-    ctl_lines <- append_dollar(ctl_lines, SIM=NA, "ERROR|PRED|SIGMA|OMEGA")
-    ctl_lines$SIM <- paste0("$SIM (",seed,") ONLYSIM SUBPR=",subpr)
-  }
-
-  e <- ctl_lines$ERROR
-  fflag1_pos <- grep("F_FLAG\\s*=\\s*1",e)
-  if(length(fflag1_pos) > 0) {
-    message("attempting to remove F_FLAG code... check this")
-    y_line <- grep("^\\s*Y\\s*=.*(EPS|ETA).*$",e)
-    if_pos <- grep("^\\s*IF.*\\sTHEN",e)
-    endif_pos <- grep("^\\s*ENDIF",e)
-    if_statements <- lapply(seq_along(if_pos),function(i)if_pos[i]:endif_pos[i])
-
-    y_if_pos <- which(sapply(if_statements,function(i) y_line %in% i))
-
-    if_statements[[y_if_pos]]
-    e[setdiff(if_statements[[y_if_pos]], y_line)] <- paste(";",e[setdiff(if_statements[[y_if_pos]], y_line)])
-    ctl_lines$ERROR <- e
-  }
-  ctl_list(ctl_lines)
-}
 
 #' Add a covariate to a NONMEM model
 #'
