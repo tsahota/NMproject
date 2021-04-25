@@ -937,3 +937,37 @@ job_stats <- function(m){
   )
   
 }
+
+#' Get Omega matrix from run
+#'
+#' @param r object of class nm
+#' @export
+omega_matrix <- function(r){
+  dc <- coef(r,trans=FALSE)
+  dc <- dc[dc$type %in% c("OMEGAVAR","OMEGACOV"),]
+  dc <- dc[,c("parameter","FINAL")]
+  dc$ROW <- as.numeric(gsub("OMEGA\\.([0-9]+)\\..*","\\1",dc$parameter))
+  dc$COL <- as.numeric(gsub("OMEGA\\.[0-9]+\\.([0-9]+).*","\\1",dc$parameter))
+  dc <- dc[order(dc$ROW,dc$COL),]
+  max_size <- max(c(dc$ROW,dc$COL))
+  dc <- dc[,c("FINAL","ROW","COL")]
+  dc_mirror <- dc
+  dc_mirror$COLOLD <- dc_mirror$COL
+  dc_mirror$ROWOLD <- dc_mirror$ROW
+  dc_mirror$COL <- dc_mirror$ROWOLD
+  dc_mirror$ROW <- dc_mirror$COLOLD
+  dc_mirror$COLOLD <- NULL
+  dc_mirror$ROWOLD <- NULL
+  
+  dc <- rbind(dc,dc_mirror)
+  dc <- unique(dc)
+  
+  d_all <- expand.grid(ROW=1:max_size,COL=1:max_size)
+  d_all <- merge(dc,d_all,all=TRUE)
+  d_all$FINAL[is.na(d_all$FINAL)] <- 0
+  d_all <- d_all[order(d_all$ROW,d_all$COL), ]
+  
+  matrix(d_all$FINAL,nrow=max_size)
+}
+
+omega_matrix <- Vectorize(omega_matrix, vectorize.args = list("r"), SIMPLIFY = FALSE)

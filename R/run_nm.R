@@ -158,6 +158,43 @@ run_nm_batch <- function(m, threads = 10, ...){
   m
 }
 
+#' Run NMTRAN step only
+#'
+#' Runs initial part of NONMEM where control file and dataset checks are performed.
+#' Stops before running NONMEM.  Useful especially on grid infrastructures where 
+#' it may take a while for NONMEM to start return ctl/dataset errors
+#'
+#' @param x nm object
+#' @details
+#' Requires \code{options("nmtran_exe_path")} to be set.
+#' @export
+nm_tran <- function(x) UseMethod("nm_tran")
+
+#' @export
+nm_tran.default <- function(x){
+  
+  if(is.null(nm_tran_command())) stop("nm_tran not set up, see ?nm_tran_command")
+  
+  tempdir0 <- basename(tempdir()) ## make temporary directory in current directory
+  dir.create(tempdir0) ; on.exit(unlink(tempdir0,recursive=TRUE,force = TRUE))
+  file.copy(x,tempdir0) ## copy_control file
+  data_path <- file.path(dirname(x), data_name(x))
+  file.copy(data_path,tempdir0) ## copy dataset
+  dataset.name <- basename(data_path)
+  suppressMessages({
+    ctl_text <- update_dollar_data(file.path(tempdir0,basename(x)),dataset.name)
+    write(ctl_text, file.path(tempdir0,basename(x)))
+  })
+  message("running NMTRAN on ", x)
+  
+  nm_tran_command <- nm_tran_command()
+  cmd <- stringr::str_glue(nm_tran_command, .envir = list(ctl_name= basename(x)), .na = NULL)
+  ## if non-glue - append the control file name
+  if(cmd == nm_tran_command) cmd <- paste(cmd, "<", basename(x))
+  
+  system_nm(cmd, dir=tempdir0, wait=TRUE)
+}
+
 #' @export
 nm_tran.nm_generic <- function(x){
   xtmp <- x %>% run_in(file.path(run_in(x), "temp"))
@@ -334,3 +371,31 @@ write_ctl.nm_generic <- function(m, force = FALSE){
 write_ctl.nm_list <- Vectorize_nm_list(write_ctl.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
 
+
+
+data_name <- function(x) UseMethod("data_name")
+
+data_name.default <- function(x){
+  unlist(lapply(x,function(x){
+    if(!file.exists(x)) x <- from_models(x)
+    if(!file.exists(x)) stop("can't find control stream")
+    x <- normalizePath(x)
+    ctl <- readLines(x,warn = FALSE)
+    data.row <- grep("^ *\\$DATA",ctl)
+    if(length(data.row)<1) stop("can't identify data row")
+    if(length(data.row)>1) {
+      warning("multiple data rows found. Using first")
+      data.row <- data.row[1]
+    }
+    ctl <- paste(ctl[data.row:length(ctl)],collapse = " ")
+    data_name <- gsub("^ *\\$DATA\\s*([^ ]+).*$","\\1",ctl)
+    data_name
+  }))
+}
+
+update_dollar_data <- function(ctl_name,new_data_name){
+  if(is_single_na(ctl_name)) return(NA)
+  ctl <- ctl_character(ctl_name)
+  ctl <- gsub("^(\\s*\\$DATA\\s*)[^ ]+(.*)$",paste0("\\1",new_data_name,"\\2"),ctl)
+  ctl
+}
