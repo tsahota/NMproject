@@ -4,7 +4,7 @@ Title: New NMproject
 Parameter: style
 Widget: SelectInput
 Label: style
-Fields: simple, starters
+Fields: simple
 Default: simple
 Position: left
 

@@ -7,30 +7,30 @@
 nm_create_analysis_project(
   path,
   dirs = nm_default_dirs(),
-  style = c("simple", "starters"),
+  style = c("simple"),
   use_renv = TRUE,
   ...
 )
 }
 \arguments{
-\item{path}{character path (relative or absolute) to project.  If just specifying a name, this will create the analysis project in the current working directory}
+\item{path}{character path (relative or absolute) to project.  If just
+specifying a name, this will create the analysis project in the current
+working directory}
 
 \item{dirs}{character list or vector.  Default = `nm_default_dirs()`}
 
-\item{style}{character. Either "simple" (default) or "starters".  See details}
+\item{style}{character. Currently only "simple" See details}
 
-\item{use_renv}{logical (default = TRUE). should renv be used or not in project}
+\item{use_renv}{logical (default = TRUE). should renv be used or not in
+project.}
 
-\item{...}{arguments passted to `starters::create_analysis_package`}
+\item{...}{deprecated}
 }
 \description{
 Create analysis project
 }
 \details{
-if `style = "starters"` the function works as light wrapper around
-  `starters::create_analysis_project`.  There will be restriction that `name`
-  will not be able to contain underscores and will need to be comprised of
-  only letters, numbers and periods. if `style = "simple"` the function
-  sacrifices some of the R package-like structure so that underscores can be
-  used.
+function works like `starters::create_analysis_project`.  With a few
+  differences.  There is no restriction on directory name.  It is therefore
+  possible to violate package naming conventions.
 }

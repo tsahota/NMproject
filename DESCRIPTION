@@ -7,13 +7,10 @@ Authors@R: c(
  person("Tarj", "Sahota", email = "t.sahota0@gmail.com", role = c("aut", "cre")),
  person("AstraZeneca", role = "cph"))
 Maintainer: Tarj Sahota <t.sahota0@gmail.com>
-Description: Script based model development in NONMEM.
+Description: Industrialisation of NONMEM via script based model development.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-Remotes: 
-    lockedata/starters,
-    gluc/data.tree
 Imports:
     shiny,
     reshape2,
@@ -48,7 +45,6 @@ Suggests:
     pmxTools,
     Hmisc,
     rsample,
-    starters,
     renv,
     desc,
     purrr,

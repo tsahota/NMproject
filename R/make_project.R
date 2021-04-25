@@ -1,22 +1,22 @@
 #' Create analysis project
 #'
-#' @param path character path (relative or absolute) to project.  If just specifying a name, this will create the analysis project in the current working directory
+#' @param path character path (relative or absolute) to project.  If just
+#'   specifying a name, this will create the analysis project in the current
+#'   working directory
 #' @param dirs character list or vector.  Default = `nm_default_dirs()`
-#' @param style character. Either "simple" (default) or "starters".  See details
-#' @param use_renv logical (default = TRUE). should renv be used or not in project
-#' @param ... arguments passted to `starters::create_analysis_package`
+#' @param style character. Currently only "simple" See details
+#' @param use_renv logical (default = TRUE). should renv be used or not in
+#'   project.
+#' @param ... deprecated
 #'
-#' @details if `style = "starters"` the function works as light wrapper around
-#'   `starters::create_analysis_project`.  There will be restriction that `name`
-#'   will not be able to contain underscores and will need to be comprised of
-#'   only letters, numbers and periods. if `style = "simple"` the function
-#'   sacrifices some of the R package-like structure so that underscores can be
-#'   used.
+#' @details function works like `starters::create_analysis_project`.  With a few
+#'   differences.  There is no restriction on directory name.  It is therefore
+#'   possible to violate package naming conventions.
+
 #' @export
 
 nm_create_analysis_project <- function(path, dirs = nm_default_dirs(), 
-                                       style = c("simple",
-                                                 "starters"), 
+                                       style = c("simple"), 
                                        use_renv = TRUE, ...){
   
   validate_dir_list(dirs)
@@ -36,12 +36,12 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
     usethis::proj_set(path)
     on.exit(usethis::proj_set(current_proj))
     
-    if(requireNamespace("starters", quietly = TRUE)){
-      usethis::use_template("README.Rmd", data = list(Package = name), 
-                            package = "starters")      
-    } else {
+    #if(requireNamespace("starters", quietly = TRUE)){
+    #  usethis::use_template("README.Rmd", data = list(Package = name), 
+    #                        package = "starters")      
+    #} else {
       usethis::use_readme_rmd(open = FALSE) 
-    }
+    #}
 
     usethis::use_build_ignore("README.Rmd")
     
@@ -82,15 +82,15 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
     
   }
   
-  if(style %in% "starters"){
-    if(!requireNamespace("starters", quietly = TRUE)) 
-      stop("install package: starters", call. = FALSE)
-    starters::create_analysis_project(name = name, 
-                                      folder = folder,
-                                      dirs = dirs, 
-                                      git = FALSE,
-                                      external_setup = NULL, ...)    
-  }
+  # if(style %in% "starters"){
+  #   if(!requireNamespace("starters", quietly = TRUE)) 
+  #     stop("install package: starters", call. = FALSE)
+  #   starters::create_analysis_project(name = name, 
+  #                                     folder = folder,
+  #                                     dirs = dirs, 
+  #                                     git = FALSE,
+  #                                     external_setup = NULL, ...)    
+  # }
   
   set_default_dirs_in_rprofile(file.path(folder, name, ".Rprofile"), dirs)
   return(invisible(path))
