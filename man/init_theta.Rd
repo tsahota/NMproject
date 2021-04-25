@@ -27,26 +27,23 @@ Get/set initial parameters
 
  ## fix THETA on KA
   ip <- init_theta(m1)
-  ip$FIX[ip$name \%in\% "KA"] <- TRUE
+  ip[[1]]$FIX[ip[[1]]$name \%in\% "KA"] <- TRUE
   m1 <- m1 \%>\% init_theta(ip)
   
  ## fix OMEGA on KA to 0.0225
   ip <- init_omega(m1)
-  ip$init[ip$name \%in\% "IIV_KA"] <- 0.0225
-  ip$FIX[ip$name \%in\% "IIV_KA"] <- TRUE
+  ip[[1]]$init[ip[[1]]$name \%in\% "IIV_KA"] <- 0.0225
+  ip[[1]]$FIX[ip[[1]]$name \%in\% "IIV_KA"] <- TRUE
   m1 <- m1 \%>\% init_omega(ip)
   
  ## perturb all log transformed parameters by ~10\%
-  ip <- init_theta(m1)
-  ip <- ip \%>\% mutate(
+  m1 <- m1 \%>\% init_theta(
     init = ifelse(
       trans \%in\% "LOG",
       rnorm(length(init), mean = init, sd = 0.1),
       init
     )
   )
-  m1 <- m1 \%>\% init_theta(ip)
- 
 
 }
 }

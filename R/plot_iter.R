@@ -59,6 +59,12 @@ plot_iter_data.default <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
   dl
 }
 
+#' @export
+plot_iter_data.nm_list <- function(r, trans = TRUE, skip = 0, yvar = "OBJ"){
+  if(length(r) > 1) stop("currently can't do multiple plots at the same time", call. = FALSE)
+  plot_iter_data(as_nm_generic(r), trans = trans, skip = skip, yvar = yvar)
+}
+
 #' Plot iterations vs parameters/OBJ (ggplot2)
 #'
 #' @param d data.frame. output from plot_iter_data

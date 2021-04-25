@@ -705,3 +705,35 @@ nonmem_code_to_r <- function(code, eta_to_0 = TRUE){
   
   
 }
+
+
+#' comment lines of control file
+#' 
+#' @param m nm object
+#' @param pattern optional character regex.  Passed to gsub
+#' @export
+comment_out <- function(m, pattern = ".*"){
+  m %>% gsub_ctl(paste0("(",pattern,")"), "; \\1")
+}
+
+#' uncomment lines of control file
+#' 
+#' @param m nm object
+#' @param pattern optional character regex.  Passed to gsub
+#' @export
+uncomment <- function(m, pattern = ".*"){
+  m %>% gsub_ctl(paste0("^;+\\s*(",pattern,")"), "\\1")
+}
+
+#' @export
+gsub_ctl.nm_generic <- function(ctl, pattern, replacement, ..., dollar = NA_character_){
+  m <- ctl
+  
+  text <- get_target_text(m)
+  text <- gsub(pattern, replacement, text, ...)
+  
+  m <- m %>% set_target_text(text)
+  m
+}
+#' @export
+gsub_ctl.nm_list <- Vectorize_nm_list(gsub_ctl.nm_generic, SIMPLIFY = FALSE)
