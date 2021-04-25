@@ -36,13 +36,10 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
     usethis::proj_set(path)
     on.exit(usethis::proj_set(current_proj))
     
-    #if(requireNamespace("starters", quietly = TRUE)){
-    #  usethis::use_template("README.Rmd", data = list(Package = name), 
-    #                        package = "starters")      
-    #} else {
-      usethis::use_readme_rmd(open = FALSE) 
-    #}
-
+    
+    usethis::use_template("README.Rmd", data = list(Package = name),
+                          package = "NMproject")
+    
     usethis::use_build_ignore("README.Rmd")
     
     ## no badges - skip this part of starters for now
