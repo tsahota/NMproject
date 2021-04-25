@@ -126,7 +126,7 @@
     <pre class="usage"><span class='fu'>nm_create_analysis_project</span><span class='op'>(</span>
   <span class='va'>path</span>,
   dirs <span class='op'>=</span> <span class='fu'><a href='nm_default_dirs.html'>nm_default_dirs</a></span><span class='op'>(</span><span class='op'>)</span>,
-  style <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"simple"</span>, <span class='st'>"starters"</span><span class='op'>)</span>,
+  style <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"simple"</span><span class='op'>)</span>,
   use_renv <span class='op'>=</span> <span class='cn'>TRUE</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
@@ -136,7 +136,9 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>path</th>
-      <td><p>character path (relative or absolute) to project.  If just specifying a name, this will create the analysis project in the current working directory</p></td>
+      <td><p>character path (relative or absolute) to project.  If just
+specifying a name, this will create the analysis project in the current
+working directory</p></td>
     </tr>
     <tr>
       <th>dirs</th>
@@ -144,26 +146,24 @@
     </tr>
     <tr>
       <th>style</th>
-      <td><p>character. Either "simple" (default) or "starters".  See details</p></td>
+      <td><p>character. Currently only "simple" See details</p></td>
     </tr>
     <tr>
       <th>use_renv</th>
-      <td><p>logical (default = TRUE). should renv be used or not in project</p></td>
+      <td><p>logical (default = TRUE). should renv be used or not in
+project.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>arguments passted to `starters::create_analysis_package`</p></td>
+      <td><p>deprecated</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>if `style = "starters"` the function works as light wrapper around
-  `starters::create_analysis_project`.  There will be restriction that `name`
-  will not be able to contain underscores and will need to be comprised of
-  only letters, numbers and periods. if `style = "simple"` the function
-  sacrifices some of the R package-like structure so that underscores can be
-  used.</p>
+    <p>function works like `starters::create_analysis_project`.  With a few
+  differences.  There is no restriction on directory name.  It is therefore
+  possible to violate package naming conventions.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
