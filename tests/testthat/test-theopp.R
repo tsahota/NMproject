@@ -32,7 +32,6 @@ test_that("run and post",{
   ## run all scripts
   overwrite_behaviour("skip")
 
-  browser()
   expect_true(run_all_scripts())
   
   res_files <- dir("Results", pattern = "\\.html", full.names = TRUE)

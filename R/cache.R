@@ -1,3 +1,5 @@
+#' @include nm_object.R
+
 run_checksums <- function(m){  ## only works on single m
   ## information determinative to whether run should be rerun
   mtmp <- m %>% run_in(file.path(run_in(m), "temp"))

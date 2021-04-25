@@ -52,10 +52,10 @@ Suggests:
     covr
 Collate: 
     'NMproject.R'
+    'boot.R'
     'utils.R'
     'utilsExtra.R'
-    'NMprojectExtra.R'
-    'boot.R'
+    'nm_object.R'
     'cache.R'
     'covariate_building.R'
     'nm.R'
