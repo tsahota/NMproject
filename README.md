@@ -11,6 +11,8 @@ Status](https://travis-ci.org/tsahota/NMproject.svg?branch=master)](https://trav
 Status](https://coveralls.io/repos/github/tsahota/NMproject/badge.svg?branch=master)](https://coveralls.io/github/tsahota/NMproject?branch=master)
 [![AppVeyor Build
 Status](https://ci.appveyor.com/api/projects/status/github/tsahota/NMproject?branch=master&svg=true)](https://ci.appveyor.com/project/tsahota/NMproject)
+[![Lifecycle:
+maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 <!-- badges: end -->
 
 *This is the newer beta interface. To use the older interface, install
@@ -19,24 +21,24 @@ v0.3.2 (see releases)*
 The intent of NMproject is to allow for fully script based NONMEM model
 development:
 
--   Code management:
-    -   Code library: NONMEM template scripts to speed creation of
+  - Code management:
+      - Code library: NONMEM template scripts to speed creation of
         NONMEM runs and facilitate adherence to best practices.
-    -   Standardised, version controlled, directory structure for all
+      - Standardised, version controlled, directory structure for all
         NONMEM users.
--   Script based model development:
-    -   Instead of command line interface (CLI) or graphical user
+  - Script based model development:
+      - Instead of command line interface (CLI) or graphical user
         interface (GUI) use a script based interface
-    -   End-to-end R workflows that can be repeated, reused and
+      - End-to-end R workflows that can be repeated, reused and
         documented in R markdown
-    -   Convenience functions for routine NONMEM control file edits
-    -   Tracked manual edits for everything else to ensure full
+      - Convenience functions for routine NONMEM control file edits
+      - Tracked manual edits for everything else to ensure full
         flexibility
-    -   Fully customizable r markdown templates for goodness of fits,
+      - Fully customizable r markdown templates for goodness of fits,
         vpcs, ppcs, bootstraps
-    -   Vectorized model objects - interact with groups of NONMEM runs
+      - Vectorized model objects - interact with groups of NONMEM runs
         as if they were one (no loops needed)
-    -   Shiny interface for real time run tracking in grid environments
+      - Shiny interface for real time run tracking in grid environments
 
 History: NMproject was previously an AstraZeneca project. It is being
 reimplemented here as a community version to be compatible with a
@@ -73,12 +75,12 @@ library(NMproject)
 
 ## Instructions
 
--   NMprojects are directories where you can work on pharmacometric
+  - NMprojects are directories where you can work on pharmacometric
     analysis.
--   First, set up a tidyproject with the
-    `make_project("/path/to/project/dir"")` or in RStudio File -&gt; New
-    Project -&gt; New Directory -&gt; New tidyproject
-    -   See tutorial at <https://github.com/tsahota/tidyproject> for
+  - First, set up a tidyproject with the
+    `make_project("/path/to/project/dir"")` or in RStudio File -\> New
+    Project -\> New Directory -\> New tidyproject
+      - See tutorial at <https://github.com/tsahota/tidyproject> for
         more information
 
 ### Demo
@@ -86,9 +88,9 @@ library(NMproject)
 The easiest way to familiarise your with NMproject is to follow through
 the demo.
 
-First create a new tidyproject (`FILE` -&gt; `New Project` -&gt;
-`New Directory` -&gt; `New tidyproject`). You’ll see a clean analysis
-directory with empty subfolders. Run the following in the new R session:
+First create a new tidyproject (`FILE` -\> `New Project` -\> `New
+Directory` -\> `New tidyproject`). You’ll see a clean analysis directory
+with empty subfolders. Run the following in the new R session:
 
 ``` r
 library(NMproject)
@@ -108,6 +110,7 @@ If we already have a parent run `m1` using `ADVAN2 TRANS1`, we can
 create a `child()` run that uses `TRANS2` using `subroutine()`:
 
 ``` r
+
 m2 <- m1 %>% child() %>%
   subroutine(trans = 2) %>%
   run_nm()
@@ -123,6 +126,7 @@ environments).
 To add a covariate using PsN coding conventions use `add_cov()`:
 
 ``` r
+
 m3 <- m2 %>% child() %>%
   add_cov(param = "CL", cov = "WT", state = "linear") %>%
   run_nm()
@@ -132,6 +136,7 @@ Apply a fully editable goodness of fit R markdown template to both runs
 `m2` and `m3`:
 
 ``` r
+
 c(m2, m3) %>% nm_render("Scripts/basic_gof.Rmd")
 ## will produce two run specific html reports in the "Results" directory for run evaluation
 ```

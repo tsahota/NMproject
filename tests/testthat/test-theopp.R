@@ -32,6 +32,7 @@ test_that("run and post",{
   ## run all scripts
   overwrite_behaviour("skip")
 
+  browser()
   expect_true(run_all_scripts())
   
   res_files <- dir("Results", pattern = "\\.html", full.names = TRUE)
@@ -60,18 +61,21 @@ test_that("run and post",{
   d <- input_data(m1)
   
   expect_true(nrow(df) > 0 & nrow(df) < nrow(d))
-  
+
+  ##################
+  ## omega block/unblock test - can delete this, it's in demo
   io <- m1 %>% init_omega()
-  
   io <- io %>% block(c(2,3))
-  m1 <- m1 %>% init_omega(io[[1]])
-  
+  m1 <- m1 %>% init_omega(io)
   om_text <- m1 %>% dollar("OMEGA") %>% dplyr::first()
-  
   expect_true(any(grepl("BLOCK", om_text)))
   
-  io <- io %>% unblock(c(2,3))
-  m1 <- m1 %>% init_omega(io[[1]])
+  io <- m1 %>% init_omega()
+  io <- io %>% unblock(c(2,3)) ## this isn't working
+  m1 <- m1 %>% init_omega(io)
+  om_text <- m1 %>% dollar("OMEGA") %>% dplyr::first()
+  expect_true(!any(grepl("BLOCK", om_text)))
+  ###################
   
   unlink(file.path(run_dir_path(m1), "NMout.RDS"))
   

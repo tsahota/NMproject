@@ -3453,19 +3453,7 @@ init_theta.nm_generic <- function(m, replace, ...){
 }
 
 #' @export
-init_theta.nm_list <- function(m, replace, ...){
-  current_call <- match.call()
-  calling_env <- parent.frame()
-  result <- lapply(m, function(m){
-    current_call[[1]] <- as.symbol("init_theta")
-    current_call[[2]] <- m
-    eval(current_call, envir = calling_env)
-  })
-  if(is_nm_list(result)){
-    result <- as_nm_list(result)
-  }
-  result
-}
+init_theta.nm_list <- Vectorize_nm_list(init_theta.nm_generic, SIMPLIFY = FALSE, replace_arg = "replace")
 
 
 #' @rdname init_theta
@@ -3494,6 +3482,7 @@ init_omega.nm_generic <- function(m, replace, ...){
     }
   } 
   ## set
+  ## need to add back in column from raw_init_omega format
   d_derived <- d[,c("value","comment","parameter","SUB", ## same as what was deleted above
                     "orig_line", "orig_pos")] 
   
@@ -3503,25 +3492,13 @@ init_omega.nm_generic <- function(m, replace, ...){
   }
   if("new_line" %in% names(replace)) replace$line <- replace$new_line
   if("new_pos" %in% names(replace)) replace$pos <- replace$new_pos
-  
+  #debugonce(raw_init_omega)
   m <- m %>% raw_init_omega(replace)
   m
 }
 
 #' @export
-init_omega.nm_list <- function(m, replace, ...){
-  current_call <- match.call()
-  calling_env <- parent.frame()
-  result <- lapply(m, function(m){
-    current_call[[1]] <- as.symbol("init_omega")
-    current_call[[2]] <- m
-    eval(current_call, envir = calling_env)
-  })
-  if(is_nm_list(result)){
-    result <- as_nm_list(result)
-  }
-  result
-}
+init_omega.nm_list <- Vectorize_nm_list(init_omega.nm_generic, SIMPLIFY = FALSE, replace_arg = "replace")
 
 #' @name init_theta
 #' @export
@@ -3564,19 +3541,8 @@ init_sigma.nm_generic <- function(m, replace, ...){
 }
 
 #' @export
-init_sigma.nm_list <- function(m, replace, ...){
-  current_call <- match.call()
-  calling_env <- parent.frame()
-  result <- lapply(m, function(m){
-    current_call[[1]] <- as.symbol("init_sigma")
-    current_call[[2]] <- m
-    eval(current_call, envir = calling_env)
-  })
-  if(is_nm_list(result)){
-    result <- as_nm_list(result)
-  }
-  result
-}
+init_sigma.nm_list <- Vectorize_nm_list(init_sigma.nm_generic, SIMPLIFY = FALSE, replace_arg = "replace")
+
 
 update_variable_in_text_numbers <- function(m, before_number, after_number){
   
@@ -3599,7 +3565,24 @@ update_variable_in_text_numbers <- function(m, before_number, after_number){
 }
 
 
-
+#' Create omega/sigma block from init_omega() and init_sigma() output
+#' 
+#' @param iomega tibble.  Output from init_omega() and init_sigma()
+#' @param eta_numbers numeric vector.  ETA numbers to put into a block. Must be contiguous
+#' @param diag_init numeric. Default value for off diagonal elements
+#' 
+#' @seealso \code{\link{unblock}}, \code{\link{init_theta}}
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' io <- m1 %>% init_omega()
+#' io <- io %>% block(c(2,3))
+#' m1 <- m1 %>% init_omega(io)
+#' m1 %>% dollar("OMEGA") ## to display $OMEGA
+#' }
+#' 
+#' @export
 block <- function(iomega,
                   eta_numbers = NA,
                   diag_init = 0.01){
@@ -3693,6 +3676,23 @@ block <- function(iomega,
 
 block <- Vectorize(block, vectorize.args = "iomega", SIMPLIFY = FALSE)
 
+#' Remove $OMEGA/$SIGMA BLOCK from init_omega() and init_sigma() output
+#' 
+#' @param iomega tibble.  Output from init_omega() and init_sigma()
+#' @param eta_numbers numeric vector.  ETA numbers to unblock. Must be contiguous
+#' 
+#' @seealso \code{\link{block}}, \code{\link{init_theta}}
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' io <- m1 %>% init_omega()
+#' io <- io %>% unblock(c(2,3))
+#' m1 <- m1 %>% init_omega(io)
+#' m1 %>% dollar("OMEGA") ## to display $OMEGA
+#' }
+#' 
+#' @export
 unblock <- function(iomega, eta_numbers){
   
   eta_numbers <- sort(eta_numbers)
@@ -5766,23 +5766,49 @@ nm_tree <- function(..., summary = FALSE){
 #' make decision point
 #'
 #' formalise process of decision making.  Creates a decision point in the
-#' workflow. Requests inputs (\code{values} and \code{files}) that you base a
+#' workflow where subsequent parts of your workflow depend on this decision, e.g. if you compare a 1 compartment and 2 compartment and decide based on the OFV and goodness of fit plots that the 1 compartment model is better and subsequent steps will build off of this, it is worth putting a decision point in your code so that if you are to rerun the workflow with a new/updated dataset, the decision can be revisted prior to moving onto the parts of the workflow that depend on the 1 compartment decision.  The function requests inputs (\code{values} and \code{files}) that you base a
 #' decision on and stop for users to remake decision if inputs change
 #'
 #' @param inputs (optional) non file names upon which decision depends
 #' @param file_inputs (optional) file names upon which decision depends
 #' @param auto (optional) logical. logical statement for automatic decisions
 #' @param outcome character. Description of the decision outcome
-#' @param force logical (default = FALSE). Force redo of decision
+#' @param force logical (default = FALSE). Force a stop in the workflow so decision has been remade
+#' 
+#' @details 
+#' There are two ways to use `decision`:
+#' 
+#' Automatic: An `auto` decision (see examples below) works like `stopifnot()`.  It requires a logical (TRUE/FALSE) condition.  Doing this this way ensures that 
+#' creates fewer points in your workflow where at the cost of removing.  If updating a workflow (e.g. with an updated dataset), so long as the TRUE/FALSE is TRUE, the workflow will proceed uninterrupted.  If the condition flips to FALSE the workflow will stop as it will be assumed that subsequent steps will no longer be valid.
+#' 
+#' Manual: Requires specification of either `input` or `file_inputs` (or both) AND `outcome`.  Inputs represent information you have considered in your decision and `outcome` is a text description of the resulting decision.  The assumption made is that if inputs have not changed since the last decision was made.
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' ## a decision based on summary statistics
+#' decision(inputs = summary_wide(c(m1, m2, m2WT)), 
+#'          outcome = "m1 is better") # next line must be end of chunk
+#' 
+#' ## a decision based also on goodness of fit plots
+#' decision(inputs = summary_wide(c(m1, m2, m2WT)), 
+#'          file_inputs = c("Results/basic_gof.m1.nb.html",
+#'                          "Results/basic_gof.m2.nb.html"), 
+#'          outcome = "m1 is better") # next line must be end of chunk
+#' 
+#' ## a decision based on an automatic TRUE/FALSE criteria
+#' ## here we're ensuring m1 has the lowest AIC
+#' decision(auto = (AIC(m1) == min(AIC(m1, m2, m3))))
+#' 
+#' }
+#' 
 #' @export
 decision <- function(inputs = c(), 
                      file_inputs = c(), 
                      auto = logical(),
                      outcome = character(),
                      force = FALSE){
-  
-  if(!requireNamespace("drake"))
-    stop("install drake")
   
   if(!requireNamespace("digest"))
     stop("install digest")
@@ -5844,11 +5870,13 @@ decision <- function(inputs = c(),
   
   ############
   ## check cache
-  cache_match <- file.exists(cache_path) ## and contents match
-  if(cache_match){
-    stored_decision <- readRDS(cache_path)
-    cache_match <- identical(stored_decision, decision_info)
-  }
+  if(!force){
+    cache_match <- file.exists(cache_path) ## and contents match
+    if(cache_match){
+      stored_decision <- readRDS(cache_path)
+      cache_match <- identical(stored_decision, decision_info)
+    }    
+  } else cache_match <- FALSE
   ############
   if(!cache_match){
     decision_accurate <- wait_input(inputs)    

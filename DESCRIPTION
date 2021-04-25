@@ -46,7 +46,6 @@ Suggests:
     lubridate,
     pmxTools,
     Hmisc,
-    drake (>= 5.3.0),
     rsample,
     starters,
     renv,

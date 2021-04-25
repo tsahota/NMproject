@@ -35,11 +35,88 @@ m1 <- readRDS("Results/m1.RDS")
 
 ```
 
-Test all oral advans on model.  Available advans shows all available advans.  Can use the `subroutine()` function within a mutate statement to create one nonmem run per advan combination
+### Setting initial estimates
+
+```{r}
+
+## return a tibble version of $OMEGA with init_omega()
+io <- m1 %>% init_omega()
+io 
+
+# this can then be manipulated (note that io is a list of a data.frame) and put
+# back into the object m1 with: 
+
+# m1 <- m1 %>% init_omega(io) 
+
+# see next chunk
+
+```
+
+```{r}
+
+## here we will manipulate io with the ready made block() function
+## this constructs
+io <- io %>% block(c(2,3))  ## make block out ETA 2 and 3
+## put modified io wit
+m1 <- m1 %>% init_omega(io)
+m1 %>% dollar("OMEGA")
+
+```
+
+```{r}
+
+## for demo purposes we'll reverse the process with unblock()
+io <- m1 %>% init_omega()
+io <- io %>% unblock(c(2,3))
+m1 <- m1 %>% init_omega(io)
+m1 %>% dollar("OMEGA")
+
+```
+
+### Perturbing initial parameters
+
+To modify initial estimates, we'll use the `mutate`-like behaviour of `init_*` functions.  We will modify the `init` by referencing itself.  We'll modified all our fixed effects (log transformed) by 30%
+
+```{r}
+
+m1 %>% dollar("THETA")
+m1 <- m1 %>% init_theta(init = rnorm(init, mean = init, sd = 0.3))
+m1 %>% dollar("THETA")
+
+```
+
+As a more advanced exercise, lets create 5 runs with modified initial estimates by combining the above with `dplyr::mutate()`
+
+```{r}
+
+dp <- tibble(rep = 1:5) %>%
+  mutate(
+    m = m1 %>% ## start with single parent run, m1, an nm object of length 1
+      child(run_id = rep) %>% ## rep is vector of length 5
+      ## this makes the child() output a nm object vector of length 5 - each with a unique run_id
+      ## do the same manipulation above - since NMproject functiosn are
+      ## vectorized, this will apply the same manipulation elementwise
+      init_theta(init = rnorm(init, mean = init, sd = 0.3))
+  )
+
+## the m column of dp is a nm object vector, display all $THETAs like this
+dp$m %>% dollar("THETA")
+
+## run this with 
+# dp$m %>% run_nm()
+
+```
+
+### Automating model checking
+
+We'll use a similar combination of nm object vectorized and `dplyr` the previous section to test multiple model structures in one go using the `subroutine()` control file manipulation function.  `.available_advans` shows all available advans.
 
 ```{r advan_test}
 
-.available_advans
+## discard previous changes to m1 by reloading
+m1 <- readRDS("Results/m1.RDS")
+
+.available_advans ## display available advans
 
 dt <- .available_advans %>%
   ## filter only for oral dosing advans
@@ -47,8 +124,9 @@ dt <- .available_advans %>%
   ## mutate state create a column vector m of nm objects
   ## first step is to create children runs from the parent object m1
   ## this is done by supplying a vector of run_ids to the child() function
-  mutate(m = m1 %>% child(run_id = label) %>%
-           ## then use the advan and trans columns of the tibble in the subroutine() function
+  mutate(m = m1 %>% ## start with parent m1 again
+           child(run_id = label) %>% ## create multiple children using "label" column
+           ## then use advan and trans columns with subroutine()
            subroutine(advan = advan, trans = trans))
 
 ## view the $PK blocks of each
@@ -71,7 +149,7 @@ Often you'll want to know the right level of parallelisation to run your model t
 ```{r core_test}
 
 dc <- tibble::tibble(cores = c(1, 2, 3)) %>%  ## only 3 different values to test for demo purposes
-  mutate(m = m1 %>%
+  mutate(m = m1 %>% ## start with parent m1 again
            ## supply the "cores" vector (of the tibble) to child(), this will create 3 runs
            child(run_id = cores) %>%
            ## run them all in m1_coretest
@@ -93,11 +171,13 @@ dc$m %>% run_nm() %>% wait_finish()
 ## This
 
 ```
+
 You can also use the vectorized nature to create a simulation re-estimation routines from scratch.
 
 ```{r sim_reest}
 
-n_sims <- 3  ## only 3 samples for demo purposes
+## whenever making a routine that will scale up to 100s or 1000s or runs, always start with 1 or 2 replicates.  Get the code working below, and then rerun with desired number of replicates (here we're just using 3 for demo purposes).  You will not waste time because run_nm() will skip over runs that have already completed. 
+n_sims <- 3  
 
 dsr <- tibble(sim = 1:n_sims) %>%
   mutate(
@@ -132,5 +212,4 @@ dsr$mest %>% run_nm() %>%
   summary_wide(parameters = "all")
 
 ```
-
 
