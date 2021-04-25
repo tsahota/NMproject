@@ -66,6 +66,8 @@ orig_dir <- getwd()
 
 The easiest way to familiarise your with NMproject is to follow through the demo.
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/nAkcEFz0RLg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 First create a new tidyproject (`FILE` -> `New Project` -> `New Directory` -> `New tidyproject`). You'll see a clean analysis directory with empty subfolders.  Run the following in the new R session:
 
 ```{r eval = FALSE}
@@ -389,6 +391,201 @@ m1_boot$m %>% nm_list_render("Scripts/basic_boot.Rmd")
 
 Results can be viewed in `Results/basic_boot.m1.html`.
 
+
+```{r include=FALSE}
+m1 <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m1$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+```
+
+### Setting initial estimates
+
+The functions `init_theta`, `init_omega` and `init_sigma` can be used to get and set initial estimation, parameter bounds, names, units, etc.  The work much like the functions used to access fields of the nm object
+
+```{r}
+
+## return a tibble version of $OMEGA with init_omega()
+io <- m1 %>% init_omega()
+io 
+
+```
+
+Note that `io` is a list of a data.frame.  This makes manipulation a bit more difficult, but referring to `io[[1]]` instead `io` will allows you to manipulate io with R's standard data.frame manipulation functions.  There are also built in functions like `block` and `unblock` (to create $OMEGA BLOCKS for correlated random effects).
+
+```{r}
+
+io <- io %>% block(c(2,3))  ## make block out ETA 2 and 3
+
+## put modified io wit
+m1 <- m1 %>% init_omega(io)
+m1 %>% dollar("OMEGA")
+
+```
+
+```{r}
+
+## for demo purposes we'll reverse the process with unblock()
+io <- m1 %>% init_omega()
+io <- io %>% unblock(c(2,3))
+m1 <- m1 %>% init_omega(io)
+m1 %>% dollar("OMEGA")
+
+```
+
+### Perturbing initial parameters
+
+To modify initial estimates, we'll use the `mutate`-like behaviour of `init_*` functions.  We will modify the `init` by referencing itself.  We'll modified all our fixed effects (log transformed) by 30%
+
+```{r include=FALSE}
+m1 <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m1$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+```
+
+```{r eval=FALSE}
+
+#m1 <- m1 %>% init_theta(init = rnorm(init, mean = init, sd = 0.3))
+# m1 %>% dollar("THETA")  ## view with this
+
+```
+
+As a more advanced exercise, lets create 5 runs with modified initial estimates by combining the above with `dplyr::mutate()`.  The basic idea is to contruct a `tibble` (if you are unfamiliar with `tibble`s, they are a tidyverse expansion of the concept of a `data.frame`), and then use a `dplyr::mutate` statement to construct a column vector of nm objects.  Below the column vector is produced by starting with the parent object `m1` and then supplying a vector rather than a scalar to the `child()` function.  Since the `rep` column is length 5, this will make the nm_object length 5.
+
+```{r eval = FALSE}
+
+dp <- tibble(rep = 1:5) %>%
+  mutate(
+    m = m1 %>% ## start with single parent run, m1, an nm object of length 1
+      child(run_id = rep) %>% ## rep is vector of length 5
+      ## this makes the child() output a nm object vector of length 5 - each
+      ## with a unique run_id do the same manipulation above - since NMproject
+      ## functions are vectorized, this will apply the same manipulation
+      ## elementwise
+      init_theta(init = rnorm(init, mean = init, sd = 0.3))
+  )
+
+length(m1)
+length(dp$m)
+
+## the m column of dp is a nm object vector, display all $THETAs like this
+dp$m %>% dollar("THETA")
+
+## run all runs in dp$m with the normal syntax 
+# dp$m %>% run_nm()
+
+```
+
+### Automating model checking
+
+We'll use a similar combination of nm object vectorized and `dplyr` the previous section to test multiple model structures in one go using the `subroutine()` control file manipulation function.  `.available_advans` shows all available advans.
+
+
+```{r eval=FALSE}
+
+.available_advans ## display available advans
+
+dt <- .available_advans %>%
+  ## filter only for oral dosing advans
+  filter(oral %in% TRUE) %>%
+  ## mutate state create a column vector m of nm objects
+  ## first step is to create children runs from the parent object m1
+  ## this is done by supplying a vector of run_ids to the child() function
+  mutate(m = m1 %>% ## start with parent m1 again
+           child(run_id = label) %>% ## create multiple children using "label" column
+           ## then use advan and trans columns with subroutine()
+           subroutine(advan = advan, trans = trans))
+
+## view the $PK blocks of each
+dt$m %>% dollar("PK")
+
+## run them all and wait for them to finish
+dt$m %>% run_nm() %>% wait_finish()
+
+summary_wide(dt$m)
+
+#dt$m %>% 
+#  subset(ofv(.) < 120) %>%
+#  nm_render("Scripts/basic_gof.Rmd")
+
+
+```
+
+### Parallel efficiency test
+
+Often you'll want to know the right level of parallelisation to run your model to maximise speed without wasting too many resources.  The following uses the vectorized nm objects in a similar way with `dplyr::mutate()` to create multiple runes with different levels of parallelisation. For the demo we'll just test it across 1, 2 and 3 cores, but this can be an arbitrary vector.
+
+```{r eval = FALSE}
+
+dc <- tibble::tibble(cores = c(1, 2, 3)) %>%  ## only 3 different values to test for demo purposes
+  mutate(m = m1 %>% ## start with parent m1 again
+           ## supply the "cores" vector (of the tibble) to child(), this will create 3 runs
+           child(run_id = cores) %>%
+           ## run them all in m1_coretest
+           run_in("Models/m1_coretest") %>%
+           ## run them all with the following execute command
+           cmd("execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}") %>%
+           ## and the following parafile
+           parafile("/opt/NONMEM/nm75/run/mpilinux8.pnm") %>%
+           ## and finally set the cores to the "cores" vector
+           cores(cores))
+
+## run them all and wait for them to finish
+dc$m %>% run_nm() %>% wait_finish()
+
+## following is disabled for the demo
+# job_info(dc$m)
+
+## plot cores vs Rtime or Ttime to get plots of run time and total time vs number of CPUs
+## This
+
+```
+
+### Simulation re-estimation
+
+You can also use the vectorized nature to create a simulation re-estimation routines from scratch.
+
+```{r eval=FALSE}
+
+## whenever making a routine that will scale up to 100s or 1000s or runs, always start with 1 or 2 replicates.  Get the code working below, and then rerun with desired number of replicates (here we're just using 3 for demo purposes).  You will not waste time because run_nm() will skip over runs that have already completed. 
+n_sims <- 3  
+
+dsr <- tibble(sim = 1:n_sims) %>%
+  mutate(
+    msim = m1 %>%              ## start with single parent run, m1, an nm object of length 1
+      update_parameters() %>%  ## update inits to finals, here nm object is still length 1
+      child(run_id = sim) %>%  ## at this point it becomes length n_sims
+      run_in("Models/m1_simest") %>% ## this applies the run_in modification to all n_sims runs
+      convert_to_simulation(subpr = 1, seed = sim) ## converts all to simulation
+  )
+
+## run, wait, read results and then write to run_dir paths of simulations
+dsr$msim %>% run_nm() %>% 
+  wait_finish() %>%
+  output_table(only_append = "DV_OUT") %>%
+  write_derived_data(file.path(run_dir_path(dsr$msim), "simdata.csv"))
+
+## Now create mest column
+dsr <- dsr %>%
+  mutate(
+    mest = m1 %>% child(run_id = sim) %>%  ## estimations derived from m1
+      run_in("Models/m1_simest/est") %>%   ## run in a new subdirectory
+      data_path(file.path(run_dir_path(msim), "simdata.csv")) %>%    ## set new data_paths
+      ## refill $INPUT. Rename DV to be DV_OUT column. Run nm_diff() command below to see
+      ## what has changed
+      fill_input(rename = list("DV_OBS" = "DV", "DV" = "DV_OUT"))
+  )
+
+# nm_diff(dsr$mest[1])
+
+dsr$mest %>% run_nm() %>% 
+  wait_finish() %>%
+  summary_wide(parameters = "all")
+
+```
+
+
+
+
 ## FAQ
 
 ### + After having closed my session how to I recreate my workspace
@@ -407,7 +604,8 @@ The PMX code library is version controlled with `git`.  Ensure you have git inst
 Append your directory location to the `code_library_path` option.  To do this add the following command to your `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site`) configuration file:
 
 ```{r eval=FALSE}
-options(code_library_path = c("/path/to/PMXcodelibrary/","path/to/existing/repository"))
+options(code_library_path = c("/path/to/PMXcodelibrary/",
+                              "path/to/existing/repository"))
 ```
 
 ### + How can I contribute to the PMX code library?
@@ -421,7 +619,7 @@ There is a pre-prepared built in `sge_parallel_execute` character object that's 
 ```{r eval=FALSE}
 m1 <- m1 %>% 
   cmd(sge_parallel_execute) %>%
-  parafile("/opt/NONMEM/nm750/run/mpilinux8.pnm") %>%
+  parafile("/opt/NONMEM/nm75/run/mpilinux8.pnm") %>%
   cores(8) %>%
   run_nm()
 ```
