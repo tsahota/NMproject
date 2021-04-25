@@ -100,7 +100,9 @@
 </ul>
 <p>History: NMproject was previously an AstraZeneca project. It is being reimplemented here as a community version to be compatible with a variety of architectures (standalone NONMEM and a variety of grid submission systems)</p>
 <p>Two-minute Youtube summary (alpha interface): <a href="https://www.youtube.com/watch?v=b7oBb6QZub8" class="uri">https://www.youtube.com/watch?v=b7oBb6QZub8</a></p>
-<p><img src="https://user-images.githubusercontent.com/18026277/26879195-79b6f4c0-4b90-11e7-8228-01b117e64a12.png" width="24.6%"><img src="https://user-images.githubusercontent.com/18026277/26879231-a046cfc0-4b90-11e7-9dbf-666086f32b9d.png" width="24.5%"><img src="https://user-images.githubusercontent.com/18026277/26879238-a4a94fc0-4b90-11e7-8e8f-1b12a03f912d.png" width="24.5%"><img src="https://user-images.githubusercontent.com/18026277/26879240-a7a53ebe-4b90-11e7-80fa-74bef643db29.png" width="24.5%"></p>
+<!-- old pictures
+<img src=https://user-images.githubusercontent.com/18026277/26879195-79b6f4c0-4b90-11e7-8228-01b117e64a12.png width=24.6% /><img src=https://user-images.githubusercontent.com/18026277/26879231-a046cfc0-4b90-11e7-9dbf-666086f32b9d.png width=24.5% /><img src=https://user-images.githubusercontent.com/18026277/26879238-a4a94fc0-4b90-11e7-8e8f-1b12a03f912d.png width=24.5% /><img src=https://user-images.githubusercontent.com/18026277/26879240-a7a53ebe-4b90-11e7-80fa-74bef643db29.png width=24.5% />
+-->
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -146,30 +148,21 @@
 <code class="sourceCode R">
 <span class="va">m2</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/child.html">child</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="reference/subroutine.html">subroutine</a></span><span class="op">(</span>trans <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>View exactly what’s been changed by highlighting the above code in RStudio and clicking the <code>nm_diff</code> addin to see what’s been changed before running. Here, changes will be in the <code>$SUB</code>, <code>$PK</code> and <code>$THETA</code>.</p>
-<p>Also use the <code>nm_tran</code> addin to test before running (useful on grid environments).</p>
-<p>To add a covariate using PsN coding conventions use <code><a href="reference/add_cov.html">add_cov()</a></code>:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">m3</span> <span class="op">&lt;-</span> <span class="va">m2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/child.html">child</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="reference/add_cov.html">add_cov</a></span><span class="op">(</span>param <span class="op">=</span> <span class="st">"CL"</span>, cov <span class="op">=</span> <span class="st">"WT"</span>, state <span class="op">=</span> <span class="st">"linear"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>Apply a fully editable goodness of fit R markdown template to both runs <code>m2</code> and <code>m3</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">m2</span>, <span class="va">m3</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_gof.Rmd"</span><span class="op">)</span>
-<span class="co">## will produce two run specific html reports in the "Results" directory for run evaluation</span></code></pre></div>
-<p><code><a href="https://rdrr.io/r/base/c.html">c(m1, m3)</a></code> is a vector object of 2 NONMEM runs. It can be embedded into data.frames/tibbles.</p>
+  <span class="fu"><a href="reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span>
+
+<span class="va">m2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_gof.Rmd"</span><span class="op">)</span>
+<span class="co">## run reports will be in "Results" directory of analysis project</span></code></pre></div>
 <p>Create a simulation run using <code><a href="reference/update_parameters.html">update_parameters()</a></code> and <code><a href="reference/convert_to_simulation.html">convert_to_simulation()</a></code>. Apply vpc and ppc diagnostics</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2s</span> <span class="op">&lt;-</span> <span class="va">m2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m2s"</span><span class="op">)</span> <span class="op">%&gt;%</span>
               <span class="fu"><a href="reference/update_parameters.html">update_parameters</a></span><span class="op">(</span><span class="va">m2</span><span class="op">)</span> <span class="op">%&gt;%</span>
               <span class="fu"><a href="reference/convert_to_simulation.html">convert_to_simulation</a></span><span class="op">(</span>subpr <span class="op">=</span> <span class="fl">50</span><span class="op">)</span> <span class="op">%&gt;%</span>
               <span class="fu"><a href="reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="va">m2s</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_vpc.Rmd"</span><span class="op">)</span>
-<span class="va">m2s</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_ppc.Rmd"</span><span class="op">)</span></code></pre></div>
+<span class="va">m2s</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_ppc.Rmd"</span><span class="op">)</span>
+
+<span class="co">## run reports will be in "Results" directory of analysis project</span></code></pre></div>
 <p>See the vignette for more examples</p>
 </div>
 </div>
@@ -186,15 +179,15 @@
 <div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
-<li>
-<a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a> | file <a href="LICENSE-text.html">LICENSE</a>
-</li>
+<li><a href="LICENSE.html">Full license</a></li>
+<li><small>GPL (&gt;= 3)</small></li>
 </ul>
 </div>
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
 <li>Tarj Sahota <br><small class="roles"> Author, maintainer </small>  </li>
+<li><a href="authors.html">All authors...</a></li>
 </ul>
 </div>
 
@@ -205,6 +198,7 @@
 <li><a href="https://coveralls.io/github/tsahota/NMproject?branch=master"><img src="https://coveralls.io/repos/github/tsahota/NMproject/badge.svg?branch=master" alt="Coverage Status"></a></li>
 <li><a href="https://ci.appveyor.com/project/tsahota/NMproject"><img src="https://ci.appveyor.com/api/projects/status/github/tsahota/NMproject?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a></li>
 <li><a href="https://www.tidyverse.org/lifecycle/#maturing"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="Lifecycle: maturing"></a></li>
+<li><a href="https://codecov.io/gh/tsahota/NMproject?branch=master"><img src="https://codecov.io/gh/tsahota/NMproject/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
 </div>
