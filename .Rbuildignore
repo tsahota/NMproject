@@ -10,3 +10,7 @@
 ^Scripts$
 ^Results$
 ^\.github$
+^cran-comments\.md$
+^codecov\.yml$
+^\.covrignore$
+^LICENSE\.md$

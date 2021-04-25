@@ -13,6 +13,8 @@ Status](https://coveralls.io/repos/github/tsahota/NMproject/badge.svg?branch=mas
 Status](https://ci.appveyor.com/api/projects/status/github/tsahota/NMproject?branch=master&svg=true)](https://ci.appveyor.com/project/tsahota/NMproject)
 [![Lifecycle:
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![Codecov test
+coverage](https://codecov.io/gh/tsahota/NMproject/branch/master/graph/badge.svg)](https://codecov.io/gh/tsahota/NMproject?branch=master)
 <!-- badges: end -->
 
 *This is the newer beta interface. To use the older interface, install
@@ -48,7 +50,9 @@ submission systems)
 Two-minute Youtube summary (alpha interface):
 <https://www.youtube.com/watch?v=b7oBb6QZub8>
 
+<!-- old pictures
 <img src=https://user-images.githubusercontent.com/18026277/26879195-79b6f4c0-4b90-11e7-8228-01b117e64a12.png width=24.6% /><img src=https://user-images.githubusercontent.com/18026277/26879231-a046cfc0-4b90-11e7-9dbf-666086f32b9d.png width=24.5% /><img src=https://user-images.githubusercontent.com/18026277/26879238-a4a94fc0-4b90-11e7-8e8f-1b12a03f912d.png width=24.5% /><img src=https://user-images.githubusercontent.com/18026277/26879240-a7a53ebe-4b90-11e7-80fa-74bef643db29.png width=24.5% />
+-->
 
 ## Installation
 
@@ -114,35 +118,10 @@ create a `child()` run that uses `TRANS2` using `subroutine()`:
 m2 <- m1 %>% child() %>%
   subroutine(trans = 2) %>%
   run_nm()
+
+m2 %>% nm_render("Scripts/basic_gof.Rmd")
+## run reports will be in "Results" directory of analysis project
 ```
-
-View exactly what’s been changed by highlighting the above code in
-RStudio and clicking the `nm_diff` addin to see what’s been changed
-before running. Here, changes will be in the `$SUB`, `$PK` and `$THETA`.
-
-Also use the `nm_tran` addin to test before running (useful on grid
-environments).
-
-To add a covariate using PsN coding conventions use `add_cov()`:
-
-``` r
-
-m3 <- m2 %>% child() %>%
-  add_cov(param = "CL", cov = "WT", state = "linear") %>%
-  run_nm()
-```
-
-Apply a fully editable goodness of fit R markdown template to both runs
-`m2` and `m3`:
-
-``` r
-
-c(m2, m3) %>% nm_render("Scripts/basic_gof.Rmd")
-## will produce two run specific html reports in the "Results" directory for run evaluation
-```
-
-`c(m1, m3)` is a vector object of 2 NONMEM runs. It can be embedded into
-data.frames/tibbles.
 
 Create a simulation run using `update_parameters()` and
 `convert_to_simulation()`. Apply vpc and ppc diagnostics
@@ -155,6 +134,8 @@ m2s <- m2 %>% child(run_id = "m2s") %>%
 
 m2s %>% nm_render("Scripts/basic_vpc.Rmd")
 m2s %>% nm_render("Scripts/basic_ppc.Rmd")
+
+## run reports will be in "Results" directory of analysis project
 ```
 
 See the vignette for more examples

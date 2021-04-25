@@ -3,11 +3,12 @@ Type: Package
 Title: Script Based Interface To NONMEM
 URL: https://tsahota.github.io/NMproject, https://github.com/tsahota/NMproject
 Version: 0.5.9.9000
-Authors@R: person("Tarj", "Sahota", email =
-    "t.sahota0@gmail.com", role = c("aut", "cre"))
+Authors@R: c(
+ person("Tarj", "Sahota", email = "t.sahota0@gmail.com", role = c("aut", "cre")),
+ person("AstraZeneca", role = "cph"))
 Maintainer: Tarj Sahota <t.sahota0@gmail.com>
 Description: Script based model development in NONMEM.
-License: GPL-3 | file LICENSE
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Remotes: 
@@ -51,7 +52,8 @@ Suggests:
     renv,
     desc,
     purrr,
-    digest
+    digest,
+    covr
 Collate: 
     'NMproject.R'
     'utils.R'
