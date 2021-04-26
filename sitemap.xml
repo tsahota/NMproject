@@ -61,9 +61,6 @@
     <loc>https://tsahota.github.io/NMproject/reference/code_library.html</loc>
   </url>
   <url>
-    <loc>https://tsahota.github.io/NMproject/reference/code_library_app.html</loc>
-  </url>
-  <url>
     <loc>https://tsahota.github.io/NMproject/reference/code_library_path.html</loc>
   </url>
   <url>
@@ -209,9 +206,6 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/list_dirs.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/reference/load_sse.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/ls_code_library.html</loc>
