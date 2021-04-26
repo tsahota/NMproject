@@ -2,7 +2,7 @@
 % Please edit documentation in R/shiny_apps.R
 \name{shiny_nm}
 \alias{shiny_nm}
-\title{Shiny view of NMproject}
+\title{Run monitor & summary app}
 \usage{
 shiny_nm(m, envir = .GlobalEnv)
 }

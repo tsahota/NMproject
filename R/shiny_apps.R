@@ -1,4 +1,4 @@
-#' Shiny view of NMproject
+#' Run monitor & summary app
 #' 
 #' Interactively monitor NONMEM runs.  This interface is intentionally limited to monitoring
 #'  activities only.  Running and post processing should be scripted
@@ -44,11 +44,6 @@ shiny_nm <- function(m, envir = .GlobalEnv){
   shiny::runApp(shiny_dir,launch.browser = TRUE)
 }
 
-#' Code library
-#' 
-#' Shiny app to search code library and stage code into R package
-#' 
-#' @export
 code_library_app <- function(){
   shiny_dir <- system.file("extdata/code_library_shiny", package="NMproject")
   .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env
@@ -56,4 +51,18 @@ code_library_app <- function(){
     .sso_env$.currentwd <- NULL
   }, add = TRUE)
   shiny::runApp(shiny_dir,launch.browser = TRUE)
+}
+
+
+overwrite_behaviour_app <- function() {
+  
+  shiny_dir <- system.file("extdata/overwrite_behaviour", package="NMproject")
+  .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env
+  on.exit({
+    .sso_env$.currentwd <- NULL
+  }, add = TRUE)
+  #viewer <- shiny::paneViewer(300)
+  viewer <- shiny::dialogViewer(dialogName = "overwrite behaviour")
+  shiny::runGadget(shiny::shinyAppDir(shiny_dir), viewer = viewer)
+  
 }
