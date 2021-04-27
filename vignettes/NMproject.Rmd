@@ -269,12 +269,12 @@ Apply a fully editable goodness of fit R markdown template to both runs `m2` and
 
 ```{r eval=FALSE}
 
-c(m2, m3) %>% nm_render("Scripts/basic_gof.Rmd")
+c(m1, m2) %>% nm_render("Scripts/basic_gof.Rmd")
 ## will produce two run specific html reports in the "Results" directory for run evaluation
 
 ```
 
-`c(m1, m3)` is a vector object of 2 NONMEM runs.  It can be embedded into data.frames/tibbles.  
+Note: `c(m1, m3)` is a vector object of 2 NONMEM runs.  We'll touch more on this later.
 
 Evaluate and compare runs on the fly with the following commands
 
@@ -337,24 +337,6 @@ m1 <- m1 %>%
   cores(4)
 ```
 
-*ADVANCED* You can make use of the vectorized objects to run multiple levels of parallelisation to invest which is the best for your particular model.  Here is sample code for that uses `m1` as a parent
-
-```{r}
-dc <- tibble(cores = c(1, 3, 10, 30)) %>%
-  mutate(m = m1 %>% 
-           child(run_id = cores) %>%
-           cores(cores) %>%
-           run_in("Models/m1_coretest"))
-
-dc
-
-dc$m %>% cmd()
-
-# dc$m %>% run_nm()  ## command to run
-
-```
-
-
 ### Bootstraps
 
 The package `rsample` can be used to create bootstrap datasets in your initial data manipulation scripts.  The following is an example bootstrap dataset being prepared with stratification on `SEX` and bodyweight `WTC` categorised in two categories  
@@ -383,8 +365,9 @@ In a model development script, the following, performs a 100 sample bootstrap of
 
 m1_boot <- m1 %>% make_boot_datasets(samples = 100, overwrite = TRUE)
 
-m1_boot$m <- m1_boot$m %>% run_nm()
+m1_boot$m %>% run_nm()
 
+## the following bootstrap template will wait for results to complete
 m1_boot$m %>% nm_list_render("Scripts/basic_boot.Rmd")
 
 ```
@@ -444,12 +427,28 @@ m1 <- dir(".cache", full.names = TRUE) %>%
 
 ```{r eval=FALSE}
 
-#m1 <- m1 %>% init_theta(init = rnorm(init, mean = init, sd = 0.3))
+# m1 <- m1 %>% init_theta(init = rnorm(init, mean = init, sd = 0.3))
 # m1 %>% dollar("THETA")  ## view with this
 
 ```
+## Combining vectorized nm objects and dplyr
 
-As a more advanced exercise, lets create 5 runs with modified initial estimates by combining the above with `dplyr::mutate()`.  The basic idea is to contruct a `tibble` (if you are unfamiliar with `tibble`s, they are a tidyverse expansion of the concept of a `data.frame`), and then use a `dplyr::mutate` statement to construct a column vector of nm objects.  Below the column vector is produced by starting with the parent object `m1` and then supplying a vector rather than a scalar to the `child()` function.  Since the `rep` column is length 5, this will make the nm_object length 5.
+### Vectorization
+
+The basic nm object is fully vectorized.  To see this compare the following two outputs
+
+```{r}
+
+m1
+c(m1, m2)
+
+```
+
+Both are nm objects with length 1 and 2, respectively.  We used the `c(m1, m2)` above when we wanted to use `nm_render()` on both runs.  We didn't need to write any loops or special code to handle this because nm objects and the functions that operate on them have been designed with parallelisation in mind.  This is because in pharmacometrics we are often dealing with multiple models, perhaps moreso than other statistical modelling disciplines.
+
+The vectorized nature of the nm object is particularly powerful when used in conjuction with `dplyr`.  To demonstrate, lets repeat the the previous initial perturbation exercise, but create 5 runs each with their own perturbed initial estimates.
+
+The basic idea is to contruct a `tibble` (if you are unfamiliar with `tibble`s, they are a tidyverse expansion of the concept of a `data.frame`), and then use a `dplyr::mutate` statement to construct a column vector of nm objects.  Below the column vector is produced by starting with the parent object `m1` and then supplying a vector rather than a scalar to the `child()` function.  Since the `rep` column is length 5, this will make the nm_object length 5.
 
 ```{r eval = FALSE}
 
@@ -471,16 +470,22 @@ length(dp$m)
 dp$m %>% dollar("THETA")
 
 ## run all runs in dp$m with the normal syntax 
-# dp$m %>% run_nm()
+dp$m %>% run_nm()
 
 ```
 
+Here the functions `init_theta`, `dollar` and `run_nm` were all operating in a vectorized fashion
+
 ### Automating model checking
 
-We'll use a similar combination of nm object vectorized and `dplyr` the previous section to test multiple model structures in one go using the `subroutine()` control file manipulation function.  `.available_advans` shows all available advans.
+Lets expand the earlier subroutine example to build a vector of runs that test multiple different `ADVAN`s and `TRANS` at the same time.
+
+We'll use a similar structure to the previous section using `.available_advans` to list all available advans, `filter` to isolate specific advans, and `mutate` and `subroutine()` to perform the control file manipulation function.
+
+Then we'll display all the `$PK` subroutines to view the changes.
 
 
-```{r eval=FALSE}
+```{r}
 
 .available_advans ## display available advans
 
@@ -498,25 +503,32 @@ dt <- .available_advans %>%
 ## view the $PK blocks of each
 dt$m %>% dollar("PK")
 
+```
+
+Let's run these, summarise the results, and generate goodness of fit diagnostics for the ones that gave somewhat reasonable outputs
+
+```{r eval = FALSE}
+
 ## run them all and wait for them to finish
 dt$m %>% run_nm() %>% wait_finish()
 
+## summarise all runs in a table
 summary_wide(dt$m)
 
-#dt$m %>% 
-#  subset(ofv(.) < 120) %>%
-#  nm_render("Scripts/basic_gof.Rmd")
-
+## plot goodness of fits for all runs with ofv < 120
+dt$m %>% 
+  subset(ofv(.) < 120) %>%  ## subsetting is a powerful way of isolating functions to particular model objects
+  nm_render("Scripts/basic_gof.Rmd")
 
 ```
 
 ### Parallel efficiency test
 
-Often you'll want to know the right level of parallelisation to run your model to maximise speed without wasting too many resources.  The following uses the vectorized nm objects in a similar way with `dplyr::mutate()` to create multiple runes with different levels of parallelisation. For the demo we'll just test it across 1, 2 and 3 cores, but this can be an arbitrary vector.
+Often you'll want to know the right level of parallelisation to run your model to maximise speed without wasting too many resources.  The following creates multiple runes with different levels of parallelisation. We'll just test it across 1, 3, 10, and 30 cores, but this can be any vector.
 
-```{r eval = FALSE}
+```{r}
 
-dc <- tibble::tibble(cores = c(1, 2, 3)) %>%  ## only 3 different values to test for demo purposes
+dc <- tibble::tibble(cores = c(1, 3, 10, 30)) %>% 
   mutate(m = m1 %>% ## start with parent m1 again
            ## supply the "cores" vector (of the tibble) to child(), this will create 3 runs
            child(run_id = cores) %>%
@@ -529,6 +541,8 @@ dc <- tibble::tibble(cores = c(1, 2, 3)) %>%  ## only 3 different values to test
            ## and finally set the cores to the "cores" vector
            cores(cores))
 
+dc$m %>% cmd()
+
 ```
 
 ```{r eval = FALSE}
@@ -536,14 +550,14 @@ dc <- tibble::tibble(cores = c(1, 2, 3)) %>%  ## only 3 different values to test
 ## run them all and wait for them to finish
 dc$m %>% run_nm() %>% wait_finish()
 
-## following is disabled for the demo
-# job_info(dc$m)
+## extract job statistics and plot cores vs Rtime or Ttime to get plots of run
+## time and total time vs number of CPUs
 
-## plot cores vs Rtime or Ttime to get plots of run time and total time vs number of CPUs
-
-# ggplot(aes(x = cores, y = Rtime)) + theme_bw() +
-#   geom_point()
-
+dc$m %>%
+  job_stats() %>%
+  ggplot(aes(x = cores, y = Rtime)) + theme_bw() +
+  geom_point()
+  
 ```
 
 ### Simulation re-estimation
