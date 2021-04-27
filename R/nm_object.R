@@ -129,27 +129,40 @@ is.na.nm_generic <- function(x) is.na(run_id(x))
 is.na.nm_list <- function(x) is.na(run_id(x))
 
 #' Make child nm object from parent
-#' 
-#' Child objects inherit attributes of parent but with a new run_id.
-#' The control file will be inherited too with $TABLEs updated
-#' 
+#'
+#' Child objects inherit attributes of parent but with a new run_id. The control
+#' file will be inherited too with $TABLEs updated
+#'
 #' @param m parent nm object
 #' @param run_id character.  New run id to assign to child object
 #' @param type character (default = "execute"). type of child object
+#' @param parent optional (default = nm(NA)) nm object. Parent object will by
+#'   default be `m`, but this argument will force parent to be a different
+#'   object
 #' @param silent logical (default = FALSE). Should warn if conflicts detected
-#' 
-#' @examples 
+#'
+#' @details Specifying `parent` will run the function `change_parent` to force
+#' parent to be different from `m`.  This is useful in piping when a parent
+#' object is modified prior to being used in the child object.
+#'
+#' @examples
 #' \dontrun{
-#' 
+#'
 #' m2 <- m1 %>% child("m2")
-#' 
+#'
+#' ## use parent object to ensure child object retain 
+#' ## correct parent-child structure
+#' m2 <- m1 %>% c
+#'   update_parameters() %>%  ## modifying parent object
+#'   child("m2", parent = m1)
+#'
 #' }
 #' @export
-child <- function(m, run_id = NA_character_, type = "execute", silent = FALSE){
+child <- function(m, run_id = NA_character_, type = "execute", parent = nm(NA), silent = FALSE){
   UseMethod("child")
 }
 #' @export
-child.nm_generic <- function(m, run_id = NA_character_, type = "execute", silent = FALSE){
+child.nm_generic <- function(m, run_id = NA_character_, type = "execute", parent = nm(NA), silent = FALSE){
   mparent <- m
   if(is.environment(m)){
     old_classes <- class(m)
@@ -199,6 +212,9 @@ child.nm_generic <- function(m, run_id = NA_character_, type = "execute", silent
                         "\nThese fields will be identical to parent and may result in conflicts",
                         "\nIf this is unintended, make sure parent object uses {glue} notation for these attributes", call. = FALSE)
   }
+  
+  if(!is.na(parent)) m <- m %>% change_parent(parent)
+  
   m
 }
 #' @export

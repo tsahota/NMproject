@@ -529,6 +529,10 @@ dc <- tibble::tibble(cores = c(1, 2, 3)) %>%  ## only 3 different values to test
            ## and finally set the cores to the "cores" vector
            cores(cores))
 
+```
+
+```{r eval = FALSE}
+
 ## run them all and wait for them to finish
 dc$m %>% run_nm() %>% wait_finish()
 
@@ -536,7 +540,9 @@ dc$m %>% run_nm() %>% wait_finish()
 # job_info(dc$m)
 
 ## plot cores vs Rtime or Ttime to get plots of run time and total time vs number of CPUs
-## This
+
+# ggplot(aes(x = cores, y = Rtime)) + theme_bw() +
+#   geom_point()
 
 ```
 
@@ -544,16 +550,17 @@ dc$m %>% run_nm() %>% wait_finish()
 
 You can also use the vectorized nature to create a simulation re-estimation routines from scratch.
 
+Whenever making a routine that will scale up to 100s or 1000s or runs, always start with 1 or 2 replicates.  Get the code working below, and then rerun with desired number of replicates (here we're just using 3 for demo purposes).  You will not waste time because `run_nm()` will skip over runs that have already completed. 
+
 ```{r eval=FALSE}
 
-## whenever making a routine that will scale up to 100s or 1000s or runs, always start with 1 or 2 replicates.  Get the code working below, and then rerun with desired number of replicates (here we're just using 3 for demo purposes).  You will not waste time because run_nm() will skip over runs that have already completed. 
-n_sims <- 3  
+n_sims <- 3  ## start small, scale up later
 
 dsr <- tibble(sim = 1:n_sims) %>%
   mutate(
     msim = m1 %>%              ## start with single parent run, m1, an nm object of length 1
       update_parameters() %>%  ## update inits to finals, here nm object is still length 1
-      child(run_id = sim) %>%  ## at this point it becomes length n_sims
+      child(run_id = sim, parent = m1) %>%  ## at this point it becomes length n_sims
       run_in("Models/m1_simest") %>% ## this applies the run_in modification to all n_sims runs
       convert_to_simulation(subpr = 1, seed = sim) ## converts all to simulation
   )
@@ -582,7 +589,6 @@ dsr$mest %>% run_nm() %>%
   summary_wide(parameters = "all")
 
 ```
-
 
 
 

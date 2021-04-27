@@ -4,7 +4,13 @@
 \alias{child}
 \title{Make child nm object from parent}
 \usage{
-child(m, run_id = NA_character_, type = "execute", silent = FALSE)
+child(
+  m,
+  run_id = NA_character_,
+  type = "execute",
+  parent = nm(NA),
+  silent = FALSE
+)
 }
 \arguments{
 \item{m}{parent nm object}
@@ -13,16 +19,31 @@ child(m, run_id = NA_character_, type = "execute", silent = FALSE)
 
 \item{type}{character (default = "execute"). type of child object}
 
+\item{parent}{optional (default = nm(NA)) nm object. Parent object will by
+default be `m`, but this argument will force parent to be a different
+object}
+
 \item{silent}{logical (default = FALSE). Should warn if conflicts detected}
 }
 \description{
-Child objects inherit attributes of parent but with a new run_id.
-The control file will be inherited too with $TABLEs updated
+Child objects inherit attributes of parent but with a new run_id. The control
+file will be inherited too with $TABLEs updated
+}
+\details{
+Specifying `parent` will run the function `change_parent` to force
+parent to be different from `m`.  This is useful in piping when a parent
+object is modified prior to being used in the child object.
 }
 \examples{
 \dontrun{
 
 m2 <- m1 \%>\% child("m2")
+
+## use parent object to ensure child object retain 
+## correct parent-child structure
+m2 <- m1 \%>\% c
+  update_parameters() \%>\%  ## modifying parent object
+  child("m2", parent = m1)
 
 }
 }
