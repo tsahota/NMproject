@@ -2937,7 +2937,7 @@ decision <- function(inputs = c(),
       stop(error_msg, call. =  FALSE)
     }
     if(ans %in% "c"){
-      return(FALSE)
+      stop("have a look at inputs and if you agree with decision, rerun this answering [y] ", call. =  FALSE)
     }
     if(ans %in% "y"){
       return(TRUE)
