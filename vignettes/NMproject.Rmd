@@ -68,7 +68,7 @@ The easiest way to familiarise your with NMproject is to follow through the demo
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/nAkcEFz0RLg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-First create a new tidyproject (`FILE` -> `New Project` -> `New Directory` -> `New tidyproject`). You'll see a clean analysis directory with empty subfolders.  Run the following in the new R session:
+First create a new NMproject (`FILE` -> `New Project` -> `New Directory` -> `New NMproject`). You'll see a clean analysis directory with empty subfolders.  Run the following in the new R session:
 
 ```{r eval = FALSE}
 library(NMproject)

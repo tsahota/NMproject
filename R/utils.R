@@ -82,3 +82,9 @@ relative_path <- function(path, relative_path){
 }
 
 relative_path <- Vectorize(relative_path, USE.NAMES = FALSE)
+
+
+#' Logical flag for detecting if R session is on rstudio not
+#' @export
+is_rstudio <- function() Sys.getenv("RSTUDIO") == "1"
+

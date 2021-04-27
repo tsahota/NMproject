@@ -14,6 +14,7 @@
 \alias{results_dir}
 \alias{cores}
 \alias{parafile}
+\alias{walltime}
 \alias{executed}
 \alias{lst_path}
 \alias{run_in}
@@ -44,6 +45,8 @@ results_dir(m, text)
 cores(m, text)
 
 parafile(m, text)
+
+walltime(m, text)
 
 executed(m, text)
 

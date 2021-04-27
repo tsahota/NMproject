@@ -173,6 +173,12 @@ parafile <- function(m, text) {
 
 #' @rdname nm_getsetters
 #' @export
+walltime <- function(m, text) {
+  if(missing(text)) custom_1d_field(m, "walltime") else custom_1d_field(m, "walltime", text)
+}
+
+#' @rdname nm_getsetters
+#' @export
 executed <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "executed") else custom_1d_field(m, "executed", text)
 }
