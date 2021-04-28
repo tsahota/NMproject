@@ -32,8 +32,8 @@ shiny_nm <- function(m, envir = .GlobalEnv){
   if(!requireNamespace("dygraphs", quietly = TRUE))
     stop("dygraphs needed for this function to work. Please install it.",
          call. = FALSE)
-  dygraphs::dygraph
-  DT::datatable
+  dygraphs::dygraph  ## check main function exists
+  DT::datatable      ## check main function exists
   shiny_dir <- system.file("extdata/shiny",package="NMproject")
   .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env
   .sso_env$.m <- m  # see zzz.R for .sso_env
@@ -55,6 +55,12 @@ code_library_app <- function(){
 
 
 overwrite_behaviour_app <- function() {
+  
+  if(!requireNamespace("miniUI", quietly = TRUE))
+    stop("miniUI needed for this function to work. Please install it.",
+         call. = FALSE)
+  
+  miniUI::miniPage  ## main function needed
   
   shiny_dir <- system.file("extdata/overwrite_behaviour", package="NMproject")
   .sso_env$.currentwd <- getwd()  # see zzz.R for .sso_env

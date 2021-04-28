@@ -10,7 +10,7 @@ Authors@R: c(
 Maintainer: Tarj Sahota <t.sahota0@gmail.com>
 Description: Industrialisation of 'NONMEM'
   <https://www.iconplc.com/innovation/nonmem/> model development 
-  via end-to-end model development workflows.
+  via end-to-end model development 'workflows'.
 License: GPL (>= 3)
 Encoding: UTF-8
 Imports:
@@ -29,7 +29,6 @@ Imports:
     miniUI (>= 0.1.1),
     rstudioapi (>= 0.7),
     crayon (>= 1.3.4),
-    devtools,
     rprojroot,
     htmltools,
     rmarkdown,
@@ -51,7 +50,8 @@ Suggests:
     desc,
     purrr,
     digest,
-    covr
+    covr,
+    devtools
 Collate: 
     'NMproject.R'
     'addin_apps.R'

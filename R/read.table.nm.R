@@ -1,4 +1,10 @@
-suppressWarnings(suppressMessages(methods::setAs("character","dummy.numeric", function(from) as.numeric(from))))
+#' @importFrom methods setAs
+
+suppressWarnings(
+  suppressMessages(
+    methods::setAs("character","dummy.numeric", function(from) as.numeric(from))
+  )
+)
 
 #' Fast read of NONMEM output table
 #'
@@ -7,6 +13,7 @@ suppressWarnings(suppressMessages(methods::setAs("character","dummy.numeric", fu
 #' @export
 
 nm_read_table <- function(file,...){
+  
   tmp <- suppressWarnings(utils::read.table(file, fill=T, colClasses="dummy.numeric",...))
   return(tmp[stats::complete.cases(tmp[,sapply(tmp,function(i) !all(is.na(i)))]),])
 }
