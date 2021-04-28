@@ -1,6 +1,6 @@
 Package: NMproject
 Type: Package
-Title: Script Based Pharmacometric Model Development
+Title: Script Based 'NONMEM' Model Development
 URL: https://tsahota.github.io/NMproject/, https://github.com/tsahota/NMproject
 BugReports: https://github.com/tsahota/NMproject/issues
 Version: 0.5.9.9000
@@ -8,7 +8,7 @@ Authors@R: c(
  person("Tarj", "Sahota", email = "t.sahota0@gmail.com", role = c("aut", "cre")),
  person("AstraZeneca", role = "cph"))
 Maintainer: Tarj Sahota <t.sahota0@gmail.com>
-Description: 'NMproject' enables industrialisation of 'NONMEM'
+Description: Industrialisation of 'NONMEM'
   <https://www.iconplc.com/innovation/nonmem/> model development 
   via end-to-end model development workflows.
 License: GPL (>= 3)
