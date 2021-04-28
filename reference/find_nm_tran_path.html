@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>get/set nm_tran_command — nm_tran_command • NMproject</title>
+<title>Find location of NMTRAN — find_nm_tran_path • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,11 +39,8 @@
 
 
 
-<meta property="og:title" content="get/set nm_tran_command — nm_tran_command" />
-<meta property="og:description" content="`nm_tran` needs the location of NMTRAN.exe on your system.  This
-is guessed on package load, assuming PsN is on the $PATH environmental
-variable, if this is not the case, then you can manually set the path and
-command used" />
+<meta property="og:title" content="Find location of NMTRAN — find_nm_tran_path" />
+<meta property="og:description" content="Attempts to find location of NMTRAN used by PsN." />
 
 
 
@@ -117,54 +114,46 @@ command used" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>get/set nm_tran_command</h1>
+    <h1>Find location of NMTRAN</h1>
     <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/NMproject.R'><code>R/NMproject.R</code></a></small>
-    <div class="hidden name"><code>nm_tran_command.Rd</code></div>
+    <div class="hidden name"><code>find_nm_tran_path.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>`nm_tran` needs the location of NMTRAN.exe on your system.  This
-is guessed on package load, assuming PsN is on the $PATH environmental
-variable, if this is not the case, then you can manually set the path and
-command used</p>
+    <p>Attempts to find location of NMTRAN used by PsN.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>nm_tran_command</span><span class='op'>(</span><span class='va'>text</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>find_nm_tran_path</span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>"default"</span>, warn <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>text</th>
-      <td><p>optional character. If specified will set nm_tran_command</p></td>
+      <th>name</th>
+      <td><p>character name of nonmem installation (according PsN)</p></td>
+    </tr>
+    <tr>
+      <th>warn</th>
+      <td><p>logical (default = TRUE), should warning be given if fail to find
+NMTRAN.exe</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>if `text` is missing will get and return the current NMTRAN command</p>
+    <p>If cannot find installation will return `NULL` without errors. Will
+  emit warnings `warm = TRUE`.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>`text` can just be the path to NMTRAN.exe.  In this case
-  `nm_tran_command` will use the format `/path/to/NMTRAN.exe &lt; ctl_name` to
-  launch NMTRAN.exe where `ctl_name` is the name of the control file `text`
-  can use the `ctl_name` glue field however for more complicated commands.
-  See examples</p>
-<p>Set this up either at the beginning of your script, in your `.Rprofile` or
-  for all users in `Rprofile.site`</p>
+    <p>The function will attempt to use a locally available PsN
+  installation to get this information.  If the PsN installation is on a
+  remote server, this function will not work (it will return a `NULL`). If
+  cannot find installation, you will need to set
+  <code><a href='nm_tran_command.html'>nm_tran_command</a></code>, manually</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='find_nm_tran_path.html'>find_nm_tran_path</a></code></p></div>
+    <div class='dont-index'><p><code><a href='nm_tran_command.html'>nm_tran_command</a></code></p></div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-
-  <span class='co'># the following two are equivalent</span>
-  <span class='fu'>nm_tran_command</span><span class='op'>(</span><span class='st'>"/opt/NONMEM/nm75/tr/NMTRAN.exe"</span><span class='op'>)</span>
-  <span class='fu'>nm_tran_command</span><span class='op'>(</span><span class='st'>"/opt/NONMEM/nm75/tr/NMTRAN.exe &lt; {ctl_name}"</span><span class='op'>)</span>
-
-<span class='op'>}</span>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
