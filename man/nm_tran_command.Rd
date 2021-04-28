@@ -37,3 +37,6 @@ command used
 
 }
 }
+\seealso{
+\code{\link{find_nm_tran_path}}
+}

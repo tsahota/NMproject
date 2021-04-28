@@ -2,13 +2,23 @@
 % Please edit documentation in R/NMproject.R
 \name{find_nm_install_path}
 \alias{find_nm_install_path}
-\title{Find location of NONMEM}
+\title{Find location of NONMEM installation}
 \usage{
 find_nm_install_path(name = "default")
 }
 \arguments{
 \item{name}{character name of nonmem installation (according PsN)}
 }
+\value{
+If cannot find installation will return `NULL` without errors or
+  warnings
+}
 \description{
-Find location of NONMEM
+Attempts to find location of NONMEM installation directory used by PsN.  Can
+be useful for finding the location of parafiles etc.
+}
+\details{
+The function will attempt to use a locally available PsN
+  installation to get this information.  If the PsN installation is on a
+  remote server, this function will not work (it will return a `NULL`)
 }

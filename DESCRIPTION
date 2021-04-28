@@ -1,6 +1,6 @@
 Package: NMproject
 Type: Package
-Title: Script Based Interface To NONMEM
+Title: Script Based Interface to NONMEM
 URL: https://tsahota.github.io/NMproject, https://github.com/tsahota/NMproject
 Version: 0.5.9.9000
 Authors@R: c(

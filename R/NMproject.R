@@ -116,7 +116,7 @@ set_nm_opts <- function(){
   
   if(is.null(getOption("nmtran_exe_path"))) options(nmtran_exe_path=find_nm_tran_path(warn = FALSE))
   
-  if(is.null(getOption("code_library_path"))) 
+  if(is.null(getOption("code_library_path")))
     options(code_library_path=system.file("extdata", "CodeLibrary", package = "NMproject"))
   
   
@@ -221,13 +221,24 @@ nm_default_dir <- function(name = c("scripts", "models", "results"), ...){
 #' @export
 sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_flags='-pe orte {cores} -V' {ctl_name} -dir={run_dir} -nodes={cores}"
 
+psn_available <- function() Sys.which("psn") != ""
 
-#' Find location of NONMEM
-#' 
+#' Find location of NONMEM installation
+#'
+#' Attempts to find location of NONMEM installation directory used by PsN.  Can
+#' be useful for finding the location of parafiles etc.
+#'
 #' @param name character name of nonmem installation (according PsN)
-#' 
+#' @details The function will attempt to use a locally available PsN
+#'   installation to get this information.  If the PsN installation is on a
+#'   remote server, this function will not work (it will return a `NULL`)
+#' @return If cannot find installation will return `NULL` without errors or
+#'   warnings
+#'
 #' @export
 find_nm_install_path <- function(name = "default"){
+  
+  if(!psn_available()) return(NULL)
 
   nm_versions <- try(system_nm("psn -nm_versions", intern = TRUE, ignore.stderr = TRUE, wait = TRUE),
                      silent = TRUE)
@@ -248,9 +259,27 @@ find_nm_install_path <- function(name = "default"){
   path
 }
 
-
+#' Find location of NMTRAN
+#'
+#' Attempts to find location of NMTRAN used by PsN.
+#'
+#' @param name character name of nonmem installation (according PsN)
+#' @param warn logical (default = TRUE), should warning be given if fail to find
+#'   NMTRAN.exe
+#' @details The function will attempt to use a locally available PsN
+#'   installation to get this information.  If the PsN installation is on a
+#'   remote server, this function will not work (it will return a `NULL`). If
+#'   cannot find installation, you will need to set
+#'   \code{\link{nm_tran_command}}, manually
+#' @return If cannot find installation will return `NULL` without errors. Will
+#'   emit warnings `warm = TRUE`.
+#'
+#' @seealso \code{\link{nm_tran_command}}
+#' @export
 find_nm_tran_path <- function(name = "default", warn = TRUE){
 
+  if(!psn_available()) return(NULL)
+  
   nm_versions <- try(system_nm("psn -nm_versions", intern = TRUE, ignore.stderr = TRUE, wait = TRUE), 
                      silent = TRUE)
   
@@ -306,6 +335,7 @@ find_nm_tran_path <- function(name = "default", warn = TRUE){
 #'   for all users in `Rprofile.site`
 #'
 #' @return if `text` is missing will get and return the current NMTRAN command
+#' @seealso \code{\link{find_nm_tran_path}}
 #' @examples
 #' \dontrun{
 #'
