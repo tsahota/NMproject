@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>NONMEM interface with code management — NMproject • NMproject</title>
+<title>Script Based 'NONMEM' Model Development — NMproject • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="NONMEM interface with code management — NMproject" />
-<meta property="og:description" content="The NMproject an inteface to NONMEM (via PsN) and a package to manage code in a modelling project" />
+<meta property="og:title" content="Script Based 'NONMEM' Model Development — NMproject" />
+<meta property="og:description" content="Industrialisation of 'NONMEM' model development via end-to-end model
+development workflows." />
 
 
 
@@ -114,42 +115,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>NONMEM interface with code management</h1>
+    <h1>Script Based 'NONMEM' Model Development</h1>
     <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/NMproject.R'><code>R/NMproject.R</code></a></small>
     <div class="hidden name"><code>NMproject.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>The NMproject an inteface to NONMEM (via PsN) and a package to manage code in a modelling project</p>
+    <p>Industrialisation of 'NONMEM' model development via end-to-end model
+development workflows.</p>
     </div>
 
 
 
-    <h2 class="hasAnchor" id="strategy"><a class="anchor" href="#strategy"></a>Strategy</h2>
+    <h2 class="hasAnchor" id="getting-started"><a class="anchor" href="#getting-started"></a>Getting started</h2>
 
     
 
 
-<p>Assume access to NONMEM</p>
-<p>Assume access to PsN (or PsN wrapper) via command line - new NONMEM methodology will is being developed there</p>
-<p>Compatible with git</p>
-    <h2 class="hasAnchor" id="requirements"><a class="anchor" href="#requirements"></a>Requirements</h2>
+<p>URL: <a href='http://tsahota.github.io/NMproject'>http://tsahota.github.io/NMproject</a></p>
+<p>The primary source of documentation is the webpage. The vignette is on the
+  "Getting Started" and the demo is accessible via the
+  <code><a href='setup_nm_demo.html'>setup_nm_demo</a></code> function.  To create a new project to work
+  within see <code><a href='nm_create_analysis_project.html'>nm_create_analysis_project</a></code>.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    
+    <div class='dont-index'><p><code><a href='setup_nm_demo.html'>setup_nm_demo</a></code>,
+  <code><a href='nm_create_analysis_project.html'>nm_create_analysis_project</a></code></p></div>
 
-<p>Controls stream name: <code>runXX.mod</code></p>
-<p>Execution in numbered directories: <code>execute run55.mod -dir=55</code></p>
-    <h2 class="hasAnchor" id="options"><a class="anchor" href="#options"></a>Options</h2>
-
-    
-
-<p><code>scripts.dir</code> = names of the "scripts" directory in the project</p>
-<p><code>models.dir</code> = names of the "models" directory in the project</p>
-<p><code>git.exists</code> = <code>TRUE</code> if git is installed (only works on unix currently)</p>
-<p><code>nmtran_exe_path</code> = path to nm_tran file</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
