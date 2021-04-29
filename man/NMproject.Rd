@@ -11,7 +11,7 @@ development workflows.
 \section{Getting started}{
 
 
-  URL: \url{http://tsahota.github.io/NMproject/}
+  URL: \url{https://tsahota.github.io/NMproject/}
 
   The primary source of documentation is the webpage. The vignette is on the
   "Getting Started" and the demo is accessible via the

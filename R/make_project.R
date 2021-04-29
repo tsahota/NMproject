@@ -380,7 +380,7 @@ ls_code_library <- function(pattern = ".") {
 #' Function not designed for direct use.  Instead use the RStudio "addin" on the
 #' Addins menu. In the shiny, select the file, and click "preview" to view and
 #' \code{\link{stage}} to bring into the "staging" area of your project.  See
-#' vignette at \url{http://tsahota.github.io/NMproject/} for a video showing use
+#' vignette at \url{https://tsahota.github.io/NMproject/} for a video showing use
 #' of the app. Non-NONMEM code can then be imported into the project separately
 #' with the the \code{\link{import}} function.
 #'
