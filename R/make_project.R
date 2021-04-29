@@ -375,7 +375,14 @@ ls_code_library <- function(pattern = ".") {
   paths[grepl(pattern, paths)]
 }
 
-#' Show Code Library
+#' Code Library
+#'
+#' Function not designed for direct use.  Instead use the RStudio "addin" on the
+#' Addins menu. In the shiny, select the file, and click "preview" to view and
+#' \code{\link{stage}} to bring into the "staging" area of your project.  See
+#' vignette at \url{http://tsahota.github.io/NMproject} for a video showing use
+#' of the app. Non-NONMEM code can then be imported into the project separately
+#' with the the \code{\link{import}} function.
 #'
 #' @param extn vector string of extensions to include
 #' @param fields character vector of fields to extract
@@ -388,28 +395,14 @@ ls_code_library <- function(pattern = ".") {
 #'
 #' @details requires \code{getOption("code_library_path")} to be set
 #'
-#' @seealso \code{\link{ls_code_library}}, \code{\link{preview}}
-#' @examples
+#' @seealso \code{\link{ls_code_library}}, \code{\link{preview}},
+#'   \code{\link{stage}}, \code{\link{import}}
 #'
-#' \dontrun{
-#'
-#' code_library()
-#'
-#' }
 #' @export
 code_library <- function(extn = NULL, fields = "Description", viewer = TRUE, silent = FALSE, 
                          return_info = FALSE) {
   if (is.null(getOption("code_library_path"))) {
-    if (!silent) {
-      message("No directories attached. To attach add the following command:")
-      message("  options(code_library_path=c(\"dir/of/scripts1\",\"dir/of/scripts2\",...))")
-      message("     1. (for this session only) in the console")
-      message("     2. (for this user) to ~/.Rprofile")
-      message(paste0("     3. (for all users) to ", file.path(R.home(component = "home"), 
-                                                              "etc", "Rprofile.site")))
-      
-      message(" 2. Attach for this user by putting command in ~/.Rprofile:")
-    }
+    stop("no code library found check getOption(\"code_library_path\")")
     return(invisible(data.frame()))
   }
   

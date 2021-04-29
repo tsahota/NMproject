@@ -13,22 +13,6 @@ status.default <- function(x, simple = TRUE) {
   stop("don't know how to handle this")
 }
 
-#' @export
-status.data.frame <- function(x, simple = TRUE) {
-  if(ncol(x) == 1) {
-    return(status(as.list(x)[[1]]))
-  }
-}
-
-#' @export
-status.list <- function(x, simple = TRUE) {
-  if(simple){
-    sapply(x, status, simple = TRUE)    
-  } else {
-    lapply(x, status, simple = FALSE)    
-  }
-}
-
 #' Tail of lst file
 #' 
 #' @param r nm object

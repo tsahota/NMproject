@@ -122,31 +122,26 @@ ctl_out_files.default <- function(ctl_file){ ## will get vector of $TABLE file n
   out.files
 }
 
-#' Setup demo files
+#' Setup demo in current directory
+#'
+#' Following through the demo is the fastest way to learn the syntax of
+#' NMproject. The default demo is the Theophylline demo "theopp".  Scripts will
+#' be copied numbered s01_XXX.Rmd, s02_XXX.Rmd in the "Scripts" directory and a
+#' dataset into "SourceData". The "staging" area will also be pre-filled with
+#' the code library model, "ADVAN2.mod".  To practice copying this yourself, see
+#' \code{\link{code_library}} for how the app works.
 #'
 #' @param demo_name character. Name of demo. Default = "theopp"
-#' @param new_project character. To set up demo in a separate (new) project
-#' @param file_stub character. Default = "run1". Stub to some file names
 #' @param overwrite logical. Default changed to FALSE.
-#' @param exclude character. Name of extension to exclude from copying
-#' @param additional_demo_locations character vector. default = NULL.
-#'   locations for demo directories
+#' @param additional_demo_locations character vector. default = NULL. locations
+#'   for demo directories
+#'   
+#' @seealso \code{\link{code_library}}
 #' @export
 
-setup_nm_demo <- function(demo_name="theopp",
-                          new_project = NA,
-                          file_stub = paste0(getOption("model_file_stub"),1),
+setup_nm_demo <- function(demo_name = "theopp",
                           overwrite=FALSE,
-                          exclude=NULL,
                           additional_demo_locations = NULL){
-  
-  if(!is.na(new_project)){
-    cwd <- getwd()
-    on.exit(setwd(cwd))
-    stop("under contruction")
-    #tidyproject::make_project(proj_name = new_project)
-    setwd(new_project)
-  }
   
   examples_dir <- character()
   examples_dirs <- character()
@@ -180,7 +175,7 @@ setup_nm_demo <- function(demo_name="theopp",
 
 #' Run all project scripts sequentially
 #'
-#' Runs all scripts s01_..., s02_... in the designated "scripts" directory
+#' Runs all scripts s01_XXX, s02_XXX in the designated "scripts" directory
 #'
 #' @details works with .R and .Rmd extensions.  Behaviour is to \code{source} .R
 #'   files and use \code{rmarkdown::render} on .Rmd files

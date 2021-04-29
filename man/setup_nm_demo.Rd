@@ -2,31 +2,30 @@
 % Please edit documentation in R/nm.R
 \name{setup_nm_demo}
 \alias{setup_nm_demo}
-\title{Setup demo files}
+\title{Setup demo in current directory}
 \usage{
 setup_nm_demo(
   demo_name = "theopp",
-  new_project = NA,
-  file_stub = paste0(getOption("model_file_stub"), 1),
   overwrite = FALSE,
-  exclude = NULL,
   additional_demo_locations = NULL
 )
 }
 \arguments{
 \item{demo_name}{character. Name of demo. Default = "theopp"}
 
-\item{new_project}{character. To set up demo in a separate (new) project}
-
-\item{file_stub}{character. Default = "run1". Stub to some file names}
-
 \item{overwrite}{logical. Default changed to FALSE.}
 
-\item{exclude}{character. Name of extension to exclude from copying}
-
-\item{additional_demo_locations}{character vector. default = NULL.
-locations for demo directories}
+\item{additional_demo_locations}{character vector. default = NULL. locations
+for demo directories}
 }
 \description{
-Setup demo files
+Following through the demo is the fastest way to learn the syntax of
+NMproject. The default demo is the Theophylline demo "theopp".  Scripts will
+be copied numbered s01_XXX.Rmd, s02_XXX.Rmd in the "Scripts" directory and a
+dataset into "SourceData". The "staging" area will also be pre-filled with
+the code library model, "ADVAN2.mod".  To practice copying this yourself, see
+\code{\link{code_library}} for how the app works.
+}
+\seealso{
+\code{\link{code_library}}
 }

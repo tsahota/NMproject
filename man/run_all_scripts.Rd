@@ -7,7 +7,7 @@
 run_all_scripts()
 }
 \description{
-Runs all scripts s01_..., s02_... in the designated "scripts" directory
+Runs all scripts s01_XXX, s02_XXX in the designated "scripts" directory
 }
 \details{
 works with .R and .Rmd extensions.  Behaviour is to \code{source} .R

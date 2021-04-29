@@ -6,7 +6,6 @@
 \usage{
 run_nm(
   m,
-  wait = getOption("wait"),
   ignore.stdout = TRUE,
   ignore.stderr = TRUE,
   quiet = getOption("quiet_run"),
@@ -19,9 +18,6 @@ run_nm(
 }
 \arguments{
 \item{m}{nm objects}
-
-\item{wait}{logical (default=FALSE). Should R wait for run to finish.
-Default can be changed with  wait_by_default() function}
 
 \item{ignore.stdout}{logical (default=TRUE). Parameter passed to system()}
 

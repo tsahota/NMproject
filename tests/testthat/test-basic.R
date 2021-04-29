@@ -58,4 +58,9 @@ test_that("set up",{
   
   expect_true(file.exists("staging/Models/ADVAN2.mod"))
   
+  TVK_files <- ls_code_library() %>% 
+    search_raw("TVK")
+  
+  expect_true(length(TVK_files) > 0)
+  
 })

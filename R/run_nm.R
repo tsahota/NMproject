@@ -7,8 +7,6 @@ NULL
 #' Run nm objects.  Uses \code{system_nm()} to submit the \code{cmd()} value of object
 #' 
 #' @param m nm objects
-#' @param wait logical (default=FALSE). Should R wait for run to finish.
-#' Default can be changed with  wait_by_default() function
 #' @param ignore.stdout logical (default=TRUE). Parameter passed to system()
 #' @param ignore.stderr logical (default=TRUE). Parameter passed to system()
 #' @param quiet logical (default=FALSE). should system_nm output be piped to screen
@@ -21,7 +19,7 @@ NULL
 #' @return m with \code{job_info} fields populated.
 #'
 #' @export
-run_nm <- function(m, wait=getOption("wait"),
+run_nm <- function(m,
                    ignore.stdout = TRUE, ignore.stderr = TRUE,
                    quiet = getOption("quiet_run"),intern=getOption("intern"),
                    force = FALSE, 
@@ -30,7 +28,7 @@ run_nm <- function(m, wait=getOption("wait"),
 }
 
 #' @export
-run_nm.nm_generic <- function(m, wait=getOption("wait"),
+run_nm.nm_generic <- function(m,
                               ignore.stdout = TRUE, ignore.stderr = TRUE,
                               quiet = getOption("quiet_run"),intern=getOption("intern"),
                               force = FALSE, 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_project.R
 \name{code_library}
 \alias{code_library}
-\title{Show Code Library}
+\title{Code Library}
 \usage{
 code_library(
   extn = NULL,
@@ -27,19 +27,17 @@ code_library(
 (FALSE= returns file paths)}
 }
 \description{
-Show Code Library
+Function not designed for direct use.  Instead use the RStudio "addin" on the
+Addins menu. In the shiny, select the file, and click "preview" to view and
+\code{\link{stage}} to bring into the "staging" area of your project.  See
+vignette at \url{http://tsahota.github.io/NMproject} for a video showing use
+of the app. Non-NONMEM code can then be imported into the project separately
+with the the \code{\link{import}} function.
 }
 \details{
 requires \code{getOption("code_library_path")} to be set
 }
-\examples{
-
-\dontrun{
-
-code_library()
-
-}
-}
 \seealso{
-\code{\link{ls_code_library}}, \code{\link{preview}}
+\code{\link{ls_code_library}}, \code{\link{preview}},
+  \code{\link{stage}}, \code{\link{import}}
 }
