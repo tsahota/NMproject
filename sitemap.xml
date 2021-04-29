@@ -49,9 +49,6 @@
     <loc>https://tsahota.github.io/NMproject/reference/change_parent.html</loc>
   </url>
   <url>
-    <loc>https://tsahota.github.io/NMproject/reference/change_seed.html</loc>
-  </url>
-  <url>
     <loc>https://tsahota.github.io/NMproject/reference/child.html</loc>
   </url>
   <url>
@@ -73,16 +70,10 @@
     <loc>https://tsahota.github.io/NMproject/reference/comment_out.html</loc>
   </url>
   <url>
-    <loc>https://tsahota.github.io/NMproject/reference/commit_file.html</loc>
-  </url>
-  <url>
     <loc>https://tsahota.github.io/NMproject/reference/cond_num.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/convert_to_simulation.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/reference/copy_script2.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/cov_cov_plot.html</loc>
@@ -137,9 +128,6 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/exclude_rows.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/reference/file_name.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/fill_input.html</loc>
@@ -464,9 +452,6 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/update_parameters.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/reference/update_sizes.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/view_patch.html</loc>
