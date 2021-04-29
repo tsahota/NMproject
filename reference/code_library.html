@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Show Code Library — code_library • NMproject</title>
+<title>Code Library — code_library • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,13 @@
 
 
 
-<meta property="og:title" content="Show Code Library — code_library" />
-<meta property="og:description" content="Show Code Library" />
+<meta property="og:title" content="Code Library — code_library" />
+<meta property="og:description" content="Function not designed for direct use.  Instead use the RStudio &quot;addin&quot; on the
+Addins menu. In the shiny, select the file, and click &quot;preview&quot; to view and
+stage to bring into the &quot;staging&quot; area of your project.  See
+vignette at http://tsahota.github.io/NMproject for a video showing use
+of the app. Non-NONMEM code can then be imported into the project separately
+with the the import function." />
 
 
 
@@ -114,13 +119,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Show Code Library</h1>
+    <h1>Code Library</h1>
     <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/make_project.R'><code>R/make_project.R</code></a></small>
     <div class="hidden name"><code>code_library.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Show Code Library</p>
+    <p>Function not designed for direct use.  Instead use the RStudio "addin" on the
+Addins menu. In the shiny, select the file, and click "preview" to view and
+<code><a href='stage.html'>stage</a></code> to bring into the "staging" area of your project.  See
+vignette at <a href='http://tsahota.github.io/NMproject'>http://tsahota.github.io/NMproject</a> for a video showing use
+of the app. Non-NONMEM code can then be imported into the project separately
+with the the <code><a href='import.html'>import</a></code> function.</p>
     </div>
 
     <pre class="usage"><span class='fu'>code_library</span><span class='op'>(</span>
@@ -164,16 +174,9 @@
     <p>requires <code><a href='https://rdrr.io/r/base/options.html'>getOption("code_library_path")</a></code> to be set</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='ls_code_library.html'>ls_code_library</a></code>, <code><a href='preview.html'>preview</a></code></p></div>
+    <div class='dont-index'><p><code><a href='ls_code_library.html'>ls_code_library</a></code>, <code><a href='preview.html'>preview</a></code>,
+  <code><a href='stage.html'>stage</a></code>, <code><a href='import.html'>import</a></code></p></div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-
-<span class='fu'>code_library</span><span class='op'>(</span><span class='op'>)</span>
-
-<span class='op'>}</span>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

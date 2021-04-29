@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Setup demo files — setup_nm_demo • NMproject</title>
+<title>Setup demo in current directory — setup_nm_demo • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,13 @@
 
 
 
-<meta property="og:title" content="Setup demo files — setup_nm_demo" />
-<meta property="og:description" content="Setup demo files" />
+<meta property="og:title" content="Setup demo in current directory — setup_nm_demo" />
+<meta property="og:description" content="Following through the demo is the fastest way to learn the syntax of
+NMproject. The default demo is the Theophylline demo &quot;theopp&quot;.  Scripts will
+be copied numbered s01_XXX.Rmd, s02_XXX.Rmd in the &quot;Scripts&quot; directory and a
+dataset into &quot;SourceData&quot;. The &quot;staging&quot; area will also be pre-filled with
+the code library model, &quot;ADVAN2.mod&quot;.  To practice copying this yourself, see
+code_library for how the app works." />
 
 
 
@@ -114,21 +119,23 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Setup demo files</h1>
+    <h1>Setup demo in current directory</h1>
     <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/nm.R'><code>R/nm.R</code></a></small>
     <div class="hidden name"><code>setup_nm_demo.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Setup demo files</p>
+    <p>Following through the demo is the fastest way to learn the syntax of
+NMproject. The default demo is the Theophylline demo "theopp".  Scripts will
+be copied numbered s01_XXX.Rmd, s02_XXX.Rmd in the "Scripts" directory and a
+dataset into "SourceData". The "staging" area will also be pre-filled with
+the code library model, "ADVAN2.mod".  To practice copying this yourself, see
+<code><a href='code_library.html'>code_library</a></code> for how the app works.</p>
     </div>
 
     <pre class="usage"><span class='fu'>setup_nm_demo</span><span class='op'>(</span>
   demo_name <span class='op'>=</span> <span class='st'>"theopp"</span>,
-  new_project <span class='op'>=</span> <span class='cn'>NA</span>,
-  file_stub <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"model_file_stub"</span><span class='op'>)</span>, <span class='fl'>1</span><span class='op'>)</span>,
   overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  exclude <span class='op'>=</span> <span class='cn'>NULL</span>,
   additional_demo_locations <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
@@ -140,28 +147,19 @@
       <td><p>character. Name of demo. Default = "theopp"</p></td>
     </tr>
     <tr>
-      <th>new_project</th>
-      <td><p>character. To set up demo in a separate (new) project</p></td>
-    </tr>
-    <tr>
-      <th>file_stub</th>
-      <td><p>character. Default = "run1". Stub to some file names</p></td>
-    </tr>
-    <tr>
       <th>overwrite</th>
       <td><p>logical. Default changed to FALSE.</p></td>
     </tr>
     <tr>
-      <th>exclude</th>
-      <td><p>character. Name of extension to exclude from copying</p></td>
-    </tr>
-    <tr>
       <th>additional_demo_locations</th>
-      <td><p>character vector. default = NULL.
-locations for demo directories</p></td>
+      <td><p>character vector. default = NULL. locations
+for demo directories</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='code_library.html'>code_library</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
