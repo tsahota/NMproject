@@ -54,6 +54,7 @@ Suggests:
     devtools
 Collate: 
     'NMproject.R'
+    'Vectorize.R'
     'addin_apps.R'
     'utils.R'
     'utilsExtra.R'
@@ -75,6 +76,7 @@ Collate:
     'nm_render.R'
     'plot_iter.R'
     'potential_deletion.R'
+    'psn_style_scm.R'
     'read.table.nm.R'
     'read_ext.R'
     'run_nm.R'

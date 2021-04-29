@@ -622,7 +622,6 @@ ofv.default <- function(r){
 
 #' @export
 ofv.data.frame <- function(r){
-  #if(is_empty_nmcoef(r)) return(NA)
   if(nrow(r) == 0) return(NA)
   r$FINAL[r$parameter %in% "OBJ"]
 }
@@ -630,37 +629,6 @@ ofv.data.frame <- function(r){
 #' @export
 ofv.list <- function(r){
   sapply(r, ofv)
-}
-
-is_empty_nmcoef <- function(r){
-  if(!inherits(r, "nmcoef")) return(FALSE)
-  if(!inherits(r, "data.frame")) return(FALSE)
-  if(nrow(r) > 0) return(FALSE)
-  if(ncol(r) > 0) return(FALSE)
-  return(TRUE)
-}
-
-
-#' get file name
-#' 
-#' @param ctl object coercible into ctl_list
-#' @export
-
-file_name <- function(ctl){
-  ctl <- ctl_list(ctl)
-  attr(ctl, "file_name")
-}
-
-#' make new control file based on previous
-#'
-#' @param ctl object of class nmexecute, ctl_list, ctl_character or character
-#' @param new_seed character or numeric. new seed
-#' @return object of class ctl_character
-#' @export
-
-change_seed <- function(ctl,new_seed){
-  ctl <- ctl_character(ctl)
-  gsub("(^\\$SIM\\S*\\s+\\()[0-9]+(\\).*$)",paste0("\\1",new_seed,"\\2"),ctl)
 }
 
 #' convert nonmem code to R ready

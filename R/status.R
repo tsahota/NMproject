@@ -7,11 +7,6 @@
 #' @export
 status <- function(x, simple = TRUE) UseMethod("status",x)
 
-#' @export
-status.default <- function(x, simple = TRUE) {
-  if(length(x) == 1) if(is.na(x)) return(NA)
-  stop("don't know how to handle this")
-}
 
 #' Tail of lst file
 #' 

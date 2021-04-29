@@ -497,47 +497,6 @@ short_path <- function(x) {
   unlist(short_paths)
 }
 
-#' commit individual file(s)
-#' 
-#' Has side effect that staged changed will be updated to working tree
-#'
-#' @param file_name character vector. File(s) to be committed
-#' @export
-#' @examples 
-#' \dontrun{
-#' commit_file("Scripts/script1.R")
-#' }
-commit_file <- function(file_name){
-  repo <- git2r::repository(".")
-  
-  old_staged_files <- git2r::status(repo)
-  old_staged_files <- unlist(old_staged_files$staged)
-  
-  if(length(old_staged_files) > 0) {
-    on.exit(git2r::add(repo, path = old_staged_files))
-    git2r::reset(repo, path = old_staged_files)
-  }
-  
-  git2r::add(repo,path = file_name)
-  new_staged_files <- git2r::status(repo)
-  new_staged_files <- unlist(new_staged_files$staged)
-  if(length(new_staged_files) == 0){
-    if(getOption("git.command.line.available")){
-      for(f in file_name) system_cmd(paste("git add",f))
-      new_staged_files <- git2r::status(repo)
-      new_staged_files <- unlist(new_staged_files$staged)
-      if(length(new_staged_files) == 0){
-        #nothing to commit. file already commited
-        return(invisible())
-      }
-    } else {
-      #Skipping adding files to repo: git2r failed. Do it manually if needed
-      return(invisible())
-    }
-  }
-  git2r::commit(repo,message = paste("snapshot:", paste(file_name, collapse = ",")))
-}
-
 #' system/shell command wrapper
 #'
 #' @param cmd character. command to send to shell
@@ -548,44 +507,6 @@ system_cmd <- function(cmd,dir=".",...){
   if(!dir %in% ".") if(file.exists(dir)) {currentwd <- getwd(); setwd(dir) ; on.exit(setwd(currentwd))} else
     stop(paste0("Directory \"",dir,"\" doesn't exist."))
   getOption("system_cmd")(cmd,...)
-}
-
-#' Copy script to project directory
-#'
-#' Will search code library and copy script and dependencies into scripts directory.
-#' Script will also be stamped with source location, time and user information
-#'
-#' @param from character. file name or path of file to copy
-#' @param to character. file name.  default = same as from
-#' @param stamp_copy logical. Create a commented timestamp at beginning of file
-#' @param overwrite logical. Overwrite 'to' file if exists?
-#' @param comment_char character. Comment character
-#' @export
-copy_script2 <- function(from, to = file.path(nm_default_dir("scripts"), basename(from)), 
-                         stamp_copy = TRUE, overwrite = FALSE, comment_char = "#") {
-  ## User function: copies script from one location (e.g. code_library) to project
-  ## scripts directory
-  
-  d <- data.frame(from, to, stringsAsFactors = FALSE)
-  
-  already_exist <- file.exists(d$to)
-  
-  if(!overwrite & any(already_exist))
-    message("File(s) already exist:\n",
-            paste(paste0("  ",d$to[already_exist]),collapse="\n"),
-            "\nRename existing files or use overwrite=TRUE")
-  
-  d <- d[!already_exist, ]
-  
-  for(i in seq_len(nrow(d))){
-    suppressWarnings(s0 <- readLines(d$from[i]))
-    ## modify text at top of 'd$from'
-    if (stamp_copy) 
-      s <- c(paste0(comment_char, comment_char, " Copied from ", d$from[i], "\n##  (", 
-                    Sys.time(), ") by ", Sys.info()["user"]), s0) else s <- s0
-                    writeLines(s, d$to[i])
-                    
-  }
 }
 
 #' List directories
@@ -657,14 +578,3 @@ wait_for <- function(x,timeout=NULL,interval=1){
   invisible(TRUE)
 }
 
-if(FALSE){
-  unlink("~/projects/test.analysis.project", recursive = TRUE)
-  nm_create_analysis("test.analysis.project", folder = "~/projects/", style = "starters")
-  
-  # # opens vignettes and doesn't allow dirs
-  # unlink("~/projects/test.package.project", recursive = TRUE)
-  # nm_create_package_project("test.package.project", folder = "~/projects/")
-  
-  unlink("~/projects/test_simple_analysis", recursive = TRUE)
-  nm_create_analysis("test_simple_analysis", folder = "~/projects/", style = "simple")  
-}

@@ -75,14 +75,6 @@ cond_num.default <- function(r){
 }
 
 #' @export
-cond_num.nmcoef <- function(r){
-  if(is_empty_nmcoef(r)) return(as.numeric(NA))
-  dc <- r
-  ans <- as.numeric(dc$FINAL[dc$parameter %in% "CONDNUM"])
-  if(length(ans) == 0) as.numeric(NA) else ans
-}
-
-#' @export
 cond_num.list <- function(r){
   sapply(r, cond_num)
 }
@@ -288,36 +280,6 @@ update_ignore.default <- function(ctl, ignore_char){
   ctl
   
 }
-
-#' update sizes statement
-#' @param ctl object coercible into ctl_list
-#' @param sizes_char character. replacement statement
-#' @export
-
-update_sizes <- function(ctl, sizes_char){
-  ctl <- ctl_character(ctl)
-  if("SIZES" %in% names(ctl_list(ctl))){
-    stop("can't modifying existing sizes yet")
-  } else {
-    dol_matches <- grep("\\s*\\$", ctl)
-    if(length(dol_matches) == 0) dol_matches <- 1 else {
-      dol_matches <- dol_matches[1]
-    }
-    before <- c()
-    after <- ctl
-    if(dol_matches > 1){
-      before <- ctl[1:(dol_matches-1)]
-      after <- ctl[dol_matches:length(ctl)]
-    }
-    save_attr <- attributes(ctl)
-    ctl <- c(before,
-             paste("$SIZES", sizes_char),
-             after)
-    attributes(ctl) <- save_attr
-  }
-  ctl_list(ctl)
-}
-
 
 #' Exclude rows of NONMEM dataset
 #' 

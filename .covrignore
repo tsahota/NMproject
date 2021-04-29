@@ -2,3 +2,5 @@ R/developer_funs.R
 R/shiny_apps.R
 R/addin_apps.R
 R/manual_edit.R
+R/Vectorize.R
+R/psn_style_scm.R

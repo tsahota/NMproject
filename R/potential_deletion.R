@@ -1,4 +1,28 @@
 if(0){
+
+  update_sizes <- function(ctl, sizes_char){
+    ctl <- ctl_character(ctl)
+    if("SIZES" %in% names(ctl_list(ctl))){
+      stop("can't modifying existing sizes yet")
+    } else {
+      dol_matches <- grep("\\s*\\$", ctl)
+      if(length(dol_matches) == 0) dol_matches <- 1 else {
+        dol_matches <- dol_matches[1]
+      }
+      before <- c()
+      after <- ctl
+      if(dol_matches > 1){
+        before <- ctl[1:(dol_matches-1)]
+        after <- ctl[dol_matches:length(ctl)]
+      }
+      save_attr <- attributes(ctl)
+      ctl <- c(before,
+               paste("$SIZES", sizes_char),
+               after)
+      attributes(ctl) <- save_attr
+    }
+    ctl_list(ctl)
+  }
   
   perturb_inits <- function(m, theta_log, omega_diag){
     UseMethod("perturb_inits")
