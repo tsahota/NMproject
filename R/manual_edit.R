@@ -27,7 +27,9 @@ start_manual_edit <- function(m, combine_patch = NA_character_){
 
   ## soft unstage all first, then add only the file
   if(!git_cmd_available) stop("need git available from system() for this to work")
-
+  
+  if(!user_values_exist()) stop("git user.name and/or user.email not set")
+  
   system("git reset", intern = TRUE) ## for some reason git2r::reset() doesn't reset
   git2r::add(path = ctl_path(mnew))
   git2r::commit(message = paste("before manual change: ", ctl_path(mnew)))
@@ -42,6 +44,42 @@ start_manual_edit <- function(m, combine_patch = NA_character_){
   res$patch_path <- patch_path
   
   res
+}
+
+user_values_exist <- function(){
+  all(c("user.email", "user.name") %in% names(git2r::config()$global)) |
+    all(c("user.email", "user.name") %in% names(git2r::config()$local))
+}
+
+check_git_username <- function(){
+
+  if(!user_values_exist()) {
+    message("manual edits need git a user.name and user.email")
+    
+    if(interactive()){
+      username <- rstudioapi::showPrompt(title = "First time git set up for NMproject", "enter a user.name")
+      email <- rstudioapi::showPrompt(title = "First time git set up for NMproject", "enter a user.email")
+      usethis::use_git_config(user.name = username, user.email = email)
+      if(!user_values_exist()){ ## if still none - error
+        stop("manual edits needs your git installation configured with
+a user.name and user.email, set this up on the command line with:
+git config user.name \"[name]\"
+git config user.email \"[name@example.com]\"
+")
+      } else {
+        try({
+          repo <- git2r::init(usethis::proj_get())
+          git2r::add(repo, path = "README.Rmd")
+          git2r::commit(repo, message = "added README.Rmd", all = TRUE)          
+        }, silent = TRUE)
+      }
+    }
+    if(!interactive()) stop("manual edits needs your git installation configured with
+a user.name and user.email, set this up with:
+ usethis::use_git_config(user.name = [your name], user.email = [your email])")
+  }
+  invisible(TRUE)
+  
 }
 
 diff_manual_edit <- function(m, res){
@@ -133,7 +171,9 @@ modify_patch_app <- function(){
 }
 
 make_patch_app <- function(){
-
+  
+  check_git_username()
+  
   ctx <- rstudioapi::getActiveDocumentContext()
   selected_text <- ctx$selection[[1]]$text
   
