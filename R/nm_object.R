@@ -49,6 +49,7 @@ To use the alpha interface, install NMproject 0.3.2",
   m$cmd <- NA_character_
   m$cores <- as.integer(1)
   m$parafile <- NA_character_
+  m$walltime <- NA_integer_
   
   unique_id <- "{type}.{run_in}{.Platform$file.sep}{run_dir}"
   ## the following is in order of glueing
