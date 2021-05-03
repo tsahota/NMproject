@@ -46,7 +46,7 @@ To use the alpha interface, install NMproject 0.3.2",
   m$ctl_contents <- NA_character_
   m$ctl_orig <- NA_character_
   m$data_path <- NA_character_
-  m$cmd <- NA_character_
+  m$cmd <- getOption("nm.cmd_default")
   m$cores <- as.integer(1)
   m$parafile <- NA_character_
   m$walltime <- NA_integer_
@@ -102,24 +102,27 @@ nm <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
 #' create a new nm object
 #' 
 #' Wrapper function around nm()
-#' @param run_id character. Run identifier
 #' @param based_on character. Prior ctl file to base run on
+#' @param run_id character. Run identifier
 #' @param data_path character. Path to dataset
 #' @param cmd character. Psn command to use
 #' @examples 
 #' \dontrun{
-#'m1 <- new_nm(run_id = "m1",
-#'             based_on = "staging/Models/run1.mod",
+#'m1 <- new_nm(based_on = "staging/Models/run1.mod",
+#'             run_id = "m1",
 #'             data_path = "DerivedData/data.csv",
 #'             cmd = "execute -run_on_sge -sge_prepend_flags='-V' {ctl_name} -dir={run_dir}")
 #'}
 #' @export
-new_nm <- function(run_id = NA_character_, based_on, data_path, cmd = "execute {ctl_name} -dir={run_dir}"){
+new_nm <- function(based_on,
+                   run_id = NA_character_, 
+                   data_path, 
+                   cmd){
   
   m <- nm(run_id = run_id)
   if(!missing(based_on)) m <- m %>% based_on(based_on)
   if(!missing(data_path)) m <- m %>% data_path(data_path)
-  m <- m %>% cmd(cmd)
+  if(!missing(cmd)) m <- m %>% cmd(cmd)
   m
   
 }

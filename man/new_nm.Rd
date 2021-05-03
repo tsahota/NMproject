@@ -4,17 +4,12 @@
 \alias{new_nm}
 \title{create a new nm object}
 \usage{
-new_nm(
-  run_id = NA_character_,
-  based_on,
-  data_path,
-  cmd = "execute {ctl_name} -dir={run_dir}"
-)
+new_nm(based_on, run_id = NA_character_, data_path, cmd)
 }
 \arguments{
-\item{run_id}{character. Run identifier}
-
 \item{based_on}{character. Prior ctl file to base run on}
+
+\item{run_id}{character. Run identifier}
 
 \item{data_path}{character. Path to dataset}
 
@@ -25,8 +20,8 @@ Wrapper function around nm()
 }
 \examples{
 \dontrun{
-m1 <- new_nm(run_id = "m1",
-            based_on = "staging/Models/run1.mod",
+m1 <- new_nm(based_on = "staging/Models/run1.mod",
+            run_id = "m1",
             data_path = "DerivedData/data.csv",
             cmd = "execute -run_on_sge -sge_prepend_flags='-V' {ctl_name} -dir={run_dir}")
 }

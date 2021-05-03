@@ -105,6 +105,8 @@ nm_render.nm_generic <- function(m,
                                  async = FALSE,
                                  ...){
   
+  if(getOption("bitmapType") != "cairo")
+  
   if(is.na(output_file))
     output_file <- paste0(
       basename(tools::file_path_sans_ext(input)),

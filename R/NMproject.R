@@ -54,6 +54,7 @@ set_nm_opts <- function(){
 
   if(is.null(getOption("nm.overwrite_behaviour"))) options(nm.overwrite_behaviour="ask")
   if(is.null(getOption("nm.force_render"))) options(nm.force_render=FALSE)
+  if(is.null(getOption("nm.cmd_default"))) options(nm.cmd_default = "execute {ctl_name} -dir={run_dir}")
   
   if(is.null(getOption("nmtran_exe_path"))) options(nmtran_exe_path=find_nm_tran_path(warn = FALSE))
   
