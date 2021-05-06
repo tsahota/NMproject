@@ -5,7 +5,7 @@
 #'   working directory
 #' @param dirs character list or vector.  Default = `nm_default_dirs()`
 #' @param style character. Currently only "simple" See details
-#' @param use_renv logical (default = TRUE). should renv be used or not in
+#' @param use_renv logical (default = FALSE). should renv be used or not in
 #'   project.
 #' @param ... deprecated
 #'
@@ -17,7 +17,7 @@
 
 nm_create_analysis_project <- function(path, dirs = nm_default_dirs(), 
                                        style = c("simple"), 
-                                       use_renv = TRUE, ...){
+                                       use_renv = FALSE, ...){
   
   validate_dir_list(dirs)
   

@@ -11,5 +11,5 @@ Position: left
 Parameter: use_renv
 Widget: CheckboxInput
 Label: Use renv with this project
-Default: TRUE
+Default: FALSE
 Position: left

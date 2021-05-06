@@ -8,7 +8,7 @@ nm_create_analysis_project(
   path,
   dirs = nm_default_dirs(),
   style = c("simple"),
-  use_renv = TRUE,
+  use_renv = FALSE,
   ...
 )
 }
@@ -21,7 +21,7 @@ working directory}
 
 \item{style}{character. Currently only "simple" See details}
 
-\item{use_renv}{logical (default = TRUE). should renv be used or not in
+\item{use_renv}{logical (default = FALSE). should renv be used or not in
 project.}
 
 \item{...}{deprecated}
