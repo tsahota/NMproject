@@ -1,5 +1,6 @@
 context("run and post")
 
+debug <- TRUE
 proj_name <- "test_nmproject"
 proj_path <- file.path(tempdir(), proj_name)
 
@@ -31,7 +32,6 @@ test_that("run and post",{
 
   ## run all scripts
   overwrite_behaviour("skip")
-
   expect_true(run_all_scripts())
   
   res_files <- dir("Results", pattern = "\\.html", full.names = TRUE)
