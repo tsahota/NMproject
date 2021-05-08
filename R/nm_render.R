@@ -105,8 +105,9 @@ nm_render.nm_generic <- function(m,
                                  async = FALSE,
                                  ...){
   
-  if(getOption("bitmapType") != "cairo") 
-    warning("if this step fails try setting options(bitmapType=\"cairo\")")
+  if(.Platform$OS.type == "unix")
+    if(!"cairo" %in% getOption("bitmapType")) 
+      warning("if this step fails try setting options(bitmapType=\"cairo\")")
   
   if(is.na(output_file))
     output_file <- paste0(
