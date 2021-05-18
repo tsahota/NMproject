@@ -375,18 +375,15 @@
 <div id="perturbing-initial-parameters" class="section level3">
 <h3 class="hasAnchor">
 <a href="#perturbing-initial-parameters" class="anchor"></a>Perturbing initial parameters</h3>
-<p>To modify initial estimates, we’ll use the <code>mutate</code>-like behaviour of <code>init_*</code> functions. We will modify the <code>init</code> by referencing itself. We’ll modified all our fixed effects (log transformed) by 30%</p>
+<p>To modify initial estimates, we’ll use the <code>mutate</code> like behaviour of <code>init_*</code> functions. We will modify the <code>init</code> by referencing itself. We’ll modified all our fixed effects (log transformed) by 30%</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># m1 &lt;- m1 %&gt;% init_theta(init = rnorm(init, mean = init, sd = 0.3))</span>
-<span class="co"># m1 %&gt;% dollar("THETA")  ## view with this</span></code></pre></div>
+<code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/init_theta.html">init_theta</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">init</span>, mean <span class="op">=</span> <span class="va">init</span>, sd <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>View with <code>m1 %&gt;% dollar("THETA")</code>.</p>
 </div>
 </div>
-<div id="combining-vectorized-nm-objects-and-dplyr" class="section level2">
+<div id="advanced-vectorization" class="section level2">
 <h2 class="hasAnchor">
-<a href="#combining-vectorized-nm-objects-and-dplyr" class="anchor"></a>Combining vectorized nm objects and dplyr</h2>
-<div id="vectorization" class="section level3">
-<h3 class="hasAnchor">
-<a href="#vectorization" class="anchor"></a>Vectorization</h3>
+<a href="#advanced-vectorization" class="anchor"></a>(advanced) Vectorization</h2>
 <p>The basic nm object is fully vectorized. To see this compare the following two outputs</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span></code></pre></div>
@@ -452,34 +449,35 @@
 <p>The vectorized nature of the nm object is particularly powerful when used in conjuction with <code>dplyr</code>. To demonstrate, lets repeat the the previous initial perturbation exercise, but create 5 runs each with their own perturbed initial estimates.</p>
 <p>The basic idea is to contruct a <code>tibble</code> (if you are unfamiliar with <code>tibble</code>s, they are a tidyverse expansion of the concept of a <code>data.frame</code>), and then use a <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate</a></code> statement to construct a column vector of nm objects. Below the column vector is produced by starting with the parent object <code>m1</code> and then supplying a vector rather than a scalar to the <code><a href="../reference/child.html">child()</a></code> function. Since the <code>rep</code> column is length 5, this will make the nm_object length 5.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">dp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>rep <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span>
+<span class="va">dp</span><span class="op">$</span><span class="va">m</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="co">## start with parent - m1 is length 1</span>
+  <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="va">dp</span><span class="op">$</span><span class="va">rep</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## now object is length = length(dp$rep) = 5</span>
+  <span class="fu"><a href="../reference/init_theta.html">init_theta</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">init</span>, mean <span class="op">=</span> <span class="va">init</span>, sd <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## vectorized operation</span>
+  <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span> <span class="co">## run all 5 runs</span></code></pre></div>
+<p>View <code>dp</code> to see a tibble with two columsn <code>rep</code> and <code>m</code>. View the new <code>$THETA</code> statements with <code>dp$m %&gt;% dollar("THETA")</code>.</p>
+<p>An alternative but equivalent way of writing the above is to use dplyrs <code>mutate</code> statement to create the <code>m</code> column</p>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>rep <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">mutate</span><span class="op">(</span>
-    m <span class="op">=</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="co">## start with single parent run, m1, an nm object of length 1</span>
-      <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="va">rep</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## rep is vector of length 5</span>
-      <span class="co">## this makes the child() output a nm object vector of length 5 - each</span>
-      <span class="co">## with a unique run_id do the same manipulation above - since NMproject</span>
-      <span class="co">## functions are vectorized, this will apply the same manipulation</span>
-      <span class="co">## elementwise</span>
+    m <span class="op">=</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="co">## start with parent - m1 is length 1</span>
+      <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="va">rep</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## now object is length = length(dp$rep) = 5</span>
       <span class="fu"><a href="../reference/init_theta.html">init_theta</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">init</span>, mean <span class="op">=</span> <span class="va">init</span>, sd <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span><span class="op">)</span>
   <span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">dp</span><span class="op">$</span><span class="va">m</span><span class="op">)</span>
 
 <span class="co">## the m column of dp is a nm object vector, display all $THETAs like this</span>
 <span class="va">dp</span><span class="op">$</span><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"THETA"</span><span class="op">)</span>
 
 <span class="co">## run all runs in dp$m with the normal syntax </span>
 <span class="va">dp</span><span class="op">$</span><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>Here the functions <code>init_theta</code>, <code>dollar</code> and <code>run_nm</code> were all operating in a vectorized fashion</p>
-</div>
+<p>The reset of the code in this vignette will use the dplyr layout.</p>
+<p>Note that here the functions <code>init_theta</code>, <code>dollar</code> and <code>run_nm</code> were all operating in a vectorized fashion</p>
 <div id="automating-model-checking" class="section level3">
 <h3 class="hasAnchor">
 <a href="#automating-model-checking" class="anchor"></a>Automating model checking</h3>
 <p>Lets expand the earlier subroutine example to build a vector of runs that test multiple different <code>ADVAN</code>s and <code>TRANS</code> at the same time.</p>
 <p>We’ll use a similar structure to the previous section using <code>.available_advans</code> to list all available advans, <code>filter</code> to isolate specific advans, and <code>mutate</code> and <code><a href="../reference/subroutine.html">subroutine()</a></code> to perform the control file manipulation function.</p>
 <p>Then we’ll display all the <code>$PK</code> subroutines to view the changes.</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">.available_advans</span> <span class="co">## display available advans</span></code></pre></div>
 <pre><code>## # A tibble: 20 x 6
 ##    advan trans   cmt oral  params                  label
@@ -504,7 +502,7 @@
 ## 18    12     1     3 TRUE  KA,K,K23,K32,K24,K42,V2 a12t1
 ## 19    12     4     3 TRUE  KA,CL,Q3,V2,V3,Q4,V4    a12t4
 ## 20    13     1    NA NA    KXY,VX                  a13t1</code></pre>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dt</span> <span class="op">&lt;-</span> <span class="va">.available_advans</span> <span class="op">%&gt;%</span>
   <span class="co">## filter only for oral dosing advans</span>
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">oral</span> <span class="op">%in%</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -512,9 +510,9 @@
   <span class="co">## first step is to create children runs from the parent object m1</span>
   <span class="co">## this is done by supplying a vector of run_ids to the child() function</span>
   <span class="fu">mutate</span><span class="op">(</span>m <span class="op">=</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="co">## start with parent m1 again</span>
-           <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="va">label</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## create multiple children using "label" column</span>
-           <span class="co">## then use advan and trans columns with subroutine()</span>
-           <span class="fu"><a href="../reference/subroutine.html">subroutine</a></span><span class="op">(</span>advan <span class="op">=</span> <span class="va">advan</span>, trans <span class="op">=</span> <span class="va">trans</span><span class="op">)</span><span class="op">)</span>
+           <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="va">label</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## create multiple children using label column</span>
+           <span class="fu"><a href="../reference/subroutine.html">subroutine</a></span><span class="op">(</span>advan <span class="op">=</span> <span class="va">advan</span>, trans <span class="op">=</span> <span class="va">trans</span><span class="op">)</span> <span class="co">## set subroutine using advan and trans columns</span>
+         <span class="op">)</span>
 
 <span class="co">## view the $PK blocks of each</span>
 <span class="va">dt</span><span class="op">$</span><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"PK"</span><span class="op">)</span></code></pre></div>
@@ -700,7 +698,7 @@
 ##  29| MU_7=LOG(TVV4)
 ##  30| V4 = EXP(MU_7+ETA(7))</code></pre>
 <p>Let’s run these, summarise the results, and generate goodness of fit diagnostics for the ones that gave somewhat reasonable outputs</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## run them all and wait for them to finish</span>
 <span class="va">dt</span><span class="op">$</span><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/wait_finish.html">wait_finish</a></span><span class="op">(</span><span class="op">)</span>
 
@@ -716,26 +714,22 @@
 <h3 class="hasAnchor">
 <a href="#parallel-efficiency-test" class="anchor"></a>Parallel efficiency test</h3>
 <p>Often you’ll want to know the right level of parallelisation to run your model to maximise speed without wasting too many resources. The following creates multiple runes with different levels of parallelisation. We’ll just test it across 1, 3, 10, and 30 cores, but this can be any vector.</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dc</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>cores <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">10</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">mutate</span><span class="op">(</span>m <span class="op">=</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="co">## start with parent m1 again</span>
-           <span class="co">## supply the "cores" vector (of the tibble) to child(), this will create 3 runs</span>
-           <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="va">cores</span><span class="op">)</span> <span class="op">%&gt;%</span>
-           <span class="co">## run them all in m1_coretest</span>
-           <span class="fu"><a href="../reference/nm_getsetters.html">run_in</a></span><span class="op">(</span><span class="st">"Models/m1_coretest"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-           <span class="co">## run them all with the following execute command</span>
-           <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-           <span class="co">## and the following parafile</span>
+           <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="va">cores</span><span class="op">)</span> <span class="op">%&gt;%</span>  <span class="co">## use "cores" as run_id (object is now 3 models)</span>
+           <span class="fu"><a href="../reference/nm_getsetters.html">run_in</a></span><span class="op">(</span><span class="st">"Models/m1_coretest"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## run them all in m1_coretest</span>
+           <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## parallelized execute</span>
            <span class="fu"><a href="../reference/nm_getsetters.html">parafile</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm75/run/mpilinux8.pnm"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-           <span class="co">## and finally set the cores to the "cores" vector</span>
-           <span class="fu"><a href="../reference/nm_getsetters.html">cores</a></span><span class="op">(</span><span class="va">cores</span><span class="op">)</span><span class="op">)</span>
+           <span class="fu"><a href="../reference/nm_getsetters.html">cores</a></span><span class="op">(</span><span class="va">cores</span><span class="op">)</span> <span class="co">## and finally set the cores to the "cores" vector</span>
+         <span class="op">)</span>
 
 <span class="va">dc</span><span class="op">$</span><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "execute run1.mod -parafile=/opt/NONMEM/nm75/run/mpilinux8.pnm -dir=1 -nodes=1"   
 ## [2] "execute run3.mod -parafile=/opt/NONMEM/nm75/run/mpilinux8.pnm -dir=3 -nodes=3"   
 ## [3] "execute run10.mod -parafile=/opt/NONMEM/nm75/run/mpilinux8.pnm -dir=10 -nodes=10"
 ## [4] "execute run30.mod -parafile=/opt/NONMEM/nm75/run/mpilinux8.pnm -dir=30 -nodes=30"</code></pre>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## run them all and wait for them to finish</span>
 <span class="va">dc</span><span class="op">$</span><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/wait_finish.html">wait_finish</a></span><span class="op">(</span><span class="op">)</span>
 
@@ -750,9 +744,9 @@
 <div id="simulation-re-estimation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#simulation-re-estimation" class="anchor"></a>Simulation re-estimation</h3>
-<p>You can also use the vectorized nature to create a simulation re-estimation routines from scratch.</p>
-<p>Whenever making a routine that will scale up to 100s or 1000s or runs, always start with 1 or 2 replicates. Get the code working below, and then rerun with desired number of replicates (here we’re just using 3 for demo purposes). You will not waste time because <code><a href="../reference/run_nm.html">run_nm()</a></code> will skip over runs that have already completed.</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<p>There will soon a be a simple wrapper for the code below, as with the bootstrap and step wise covariate functionaliy above, but for now the code below is a good example of how the flexibility of the vectorized object can be used to create complex workflows whilst still providing granular control of runs.</p>
+<p>It’s good advice to start with 1 or 2 replicates and scale up only when you’ve confirmed your code is working (here we’re just using 3 for demo purposes). You will not waste time because <code><a href="../reference/run_nm.html">run_nm()</a></code> will skip over runs that have already completed.</p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">n_sims</span> <span class="op">&lt;-</span> <span class="fl">3</span>  <span class="co">## start small, scale up later</span>
 
 <span class="va">dsr</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>sim <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">n_sims</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -791,35 +785,58 @@
 <div id="faq" class="section level2">
 <h2 class="hasAnchor">
 <a href="#faq" class="anchor"></a>FAQ</h2>
+<div id="i-have-pre-prepared-model-and-dataset--whats-the-fastest-way-make-an-nm-object-and-make-use-of-the-objects-functionality-for-post-processing-etc-" class="section level3">
+<h3 class="hasAnchor">
+<a href="#i-have-pre-prepared-model-and-dataset--whats-the-fastest-way-make-an-nm-object-and-make-use-of-the-objects-functionality-for-post-processing-etc-" class="anchor"></a>+ I have pre-prepared model and dataset. What’s the fastest way make an nm object and make use of the objects functionality for post processing etc.</h3>
+<p>Ensure the dataset and model file are somewhere in the project.</p>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>, 
+             based_on <span class="op">=</span> <span class="st">"path/to/control/file"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+</div>
 <div id="after-having-closed-my-session-how-to-i-recreate-my-workspace" class="section level3">
 <h3 class="hasAnchor">
 <a href="#after-having-closed-my-session-how-to-i-recreate-my-workspace" class="anchor"></a>+ After having closed my session how to I recreate my workspace</h3>
-<p>Just re-run all the code again.</p>
-<p>If nothing has changed with regards to datasets and control files run_nm() will retrieve cached results without running nonmem.</p>
+<p>Just re-run all the code again. If there has been a breakage in reproducibility meaning that model files are not built in the same way, NMproject will by default prompt for user confirmation before overwriting anything. If in doubt, press abort and check your code</p>
 </div>
-<div id="i-see-the-pmx-code-library-has-been-updated-how-can-i-update-my-local-version-of-it" class="section level3">
+<div id="in-my-organisation-we-dont-want-execute-ctl_name--dirrun_dir-as-the-default-command-how-can-we-change-this" class="section level3">
 <h3 class="hasAnchor">
-<a href="#i-see-the-pmx-code-library-has-been-updated-how-can-i-update-my-local-version-of-it" class="anchor"></a>+ I see the PMX code library has been updated, how can I update my local version of it?</h3>
-<p>The PMX code library is version controlled with <code>git</code>. Ensure you have git installed, navigate to the local PMX code library repository and type <code>git pull</code>. Git will complain if you have made changes to your local directory since downloading it. If you have, you need to <code>commit</code> those changes before using <code>git pull</code>. See git help for more information on how to do this. Consider splitting your code library into multiple repositories for easier management (e.g. one public, one for your organisation, one for you)</p>
+<a href="#in-my-organisation-we-dont-want-execute-ctl_name--dirrun_dir-as-the-default-command-how-can-we-change-this" class="anchor"></a>+ In my organisation we dont want <code>execute {ctl_name} -dir={run_dir}</code> as the default command, how can we change this?</h3>
+<p>Two options:</p>
+<ol style="list-style-type: decimal">
+<li><p>set it once for your parent object using <code>cmd</code> and then make all other objects child objects from the parent.</p></li>
+<li><p>set the <code>nm.cmd_default</code> option. E.g. if you are using docker, you’re command is long: <code>"docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}"</code>.</p></li>
+</ol>
+<p><code><a href="https://rdrr.io/r/base/options.html">options(nm.cmd_default = "docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}")</a></code></p>
+<p>This will ensure all runs produced in the R session will run using the above command. To see how to set an option for all your R sessions see subsequent question</p>
 </div>
-<div id="we-already-have-directory-of-rnonmem-scriptstemplates-how-can-we-also-use-these" class="section level3">
+<div id="how-do-i-set-an-option-so-that-its-set-permanently-for-all-my-future-r-sessions" class="section level3">
 <h3 class="hasAnchor">
-<a href="#we-already-have-directory-of-rnonmem-scriptstemplates-how-can-we-also-use-these" class="anchor"></a>+ We already have directory of R/NONMEM scripts/templates, how can we also use these?</h3>
-<p>Append your directory location to the <code>code_library_path</code> option. To do this add the following command to your <code>~/.Rprofile</code> (or <code>$R_HOME/etc/Rprofile.site</code>) configuration file:</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>code_library_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"/path/to/PMXcodelibrary/"</span>,
-                              <span class="st">"path/to/existing/repository"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<a href="#how-do-i-set-an-option-so-that-its-set-permanently-for-all-my-future-r-sessions" class="anchor"></a>+ How do I set an option so that it’s set permanently for all my future R sessions?</h3>
+<p>In a multiple user environment it’s best practice to avoid user specific configurations as your code may run different from user to user. There are two remaining options, set the option for the project or site wide for all users.</p>
+<p>To set the option for anyone using the project, include the <code>options</code> command (e.g. <code><a href="https://rdrr.io/r/base/options.html">options(nm.cmd_default = ....)</a></code>) in <code>.Rprofile</code>.</p>
+<p>To set the option site wide include the <code>options</code> command in <code>$R_HOME/etc/Rprofile.site</code> (requires administration privileges).</p>
+<p>If multiple options are required it may be easier to create your own custom option setting package. The <code>options</code> statement then just needs to be in a R script in the packages <code>R</code> directory. Loading this package will then set the option. So be sure to load it (before or after) each time you’re using <code>NMproject</code></p>
 </div>
 <div id="how-can-i-contribute-to-the-pmx-code-library" class="section level3">
 <h3 class="hasAnchor">
 <a href="#how-can-i-contribute-to-the-pmx-code-library" class="anchor"></a>+ How can I contribute to the PMX code library?</h3>
-<p>Log in to github (create an account if necessary). Fork the repository <code>tsahota/PMXcodelibrary</code>. Make your change. Create a pull request detailing your change.</p>
+<p>The repository <code>tsahota/PMXcodelibrary</code> may be discontinued in the future. The current location of the code library is within the NMproject package in the relative path <code>inst/extdata/CodeLibrary</code>. To contribute, either use the pull request functionality of GitHub or send me an email with your change. Make sure you describe the reason for the change so I can ensure it will suit everyone.</p>
+</div>
+<div id="we-already-have-directory-of-rnonmem-scriptstemplates-how-can-we-also-use-these" class="section level3">
+<h3 class="hasAnchor">
+<a href="#we-already-have-directory-of-rnonmem-scriptstemplates-how-can-we-also-use-these" class="anchor"></a>+ We already have directory of R/NONMEM scripts/templates, how can we also use these?</h3>
+<p>Append your directory location to the <code>code_library_path</code> option.</p>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>code_library_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/options.html">getOption</a></span><span class="op">(</span><span class="st">"code_library_path"</span><span class="op">)</span>,
+                              <span class="st">"path/to/existing/repository"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>You’ll probably want to set this for all users so see the question above on setting options permanently</p>
 </div>
 <div id="how-do-i-run-this-on-sge" class="section level3">
 <h3 class="hasAnchor">
 <a href="#how-do-i-run-this-on-sge" class="anchor"></a>+ How do I run this on SGE?</h3>
 <p>There is a pre-prepared built in <code>sge_parallel_execute</code> character object that’s part of NMproject. This uses the grid functionality built into PsN and has been tested to work within the Metworx platform. Simply type it in the console to see the contents. Required fields are <code>parafile</code>, <code>cores</code>. Ensure these are set for your parent object like so.</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="va">sge_parallel_execute</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/nm_getsetters.html">parafile</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm75/run/mpilinux8.pnm"</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -836,22 +853,22 @@
 <div id="how-do-i-run-nonmem-via-a-psnnonmem-docker-container" class="section level3">
 <h3 class="hasAnchor">
 <a href="#how-do-i-run-nonmem-via-a-psnnonmem-docker-container" class="anchor"></a>+ How do I run NONMEM via a PsN/NONMEM docker container</h3>
-<p>This requires setting <code><a href="../reference/nm_getsetters.html">cmd()</a></code> field of the first (parent) nm object and also setting <code><a href="../reference/nm_tran_command.html">nm_tran_command()</a></code> once in your script.</p>
+<p>This requires setting <code><a href="../reference/nm_getsetters.html">cmd()</a></code> field of the first (parent) nm object and also setting <code><a href="../reference/nm_tran_command.html">nm_tran_command()</a></code>.</p>
 <p>Easiest way to understand this is via an example: The following assumes the docker container has been set as shown in the fabulous <code>https://github.com/billdenney/Pharmacometrics-Docker</code> repository:</p>
 <p>Set cmd for an <code>execute</code> command like so:</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}"</span><span class="op">)</span></code></pre></div>
 <p><code><a href="../reference/run_nm.html">run_nm()</a></code> will then execute NONMEM via the docker container. All subsequent child objects will inherit the same command structure. Note the use the glueing object fields <code>ctl_name</code> and <code>run_dir</code> so child objects can inherit the same command structure to save the command being rewritten for each run)</p>
 <p>Set up dockerized NMTRAN checking with:</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/nm_tran_command.html">nm_tran_command</a></span><span class="op">(</span><span class="st">"docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn /bin/bash -c '/opt/NONMEM/nm_current/tr/NMTRAN.exe &lt; {ctl_name}'"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="my-rstudio-server-is-on-a-different-linux-server-to-my-nonmem-cluster--how-can-i-set-up-nmproject-to-work-with-this" class="section level3">
 <h3 class="hasAnchor">
 <a href="#my-rstudio-server-is-on-a-different-linux-server-to-my-nonmem-cluster--how-can-i-set-up-nmproject-to-work-with-this" class="anchor"></a>+ My Rstudio Server is on a different linux server to my NONMEM cluster. How can I set up NMproject to work with this?</h3>
-<p>You need to ensure your account has passwordless ssh set up. Then create a <code><a href="../reference/system_nm.html">system_nm()</a></code> option in your <code>~/.Rprofile</code> configuration file which appends an ssh statement to the system call e.g. the following will set you up to connect to the host <code>clustername</code>:</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<p>You need to ensure your account has passwordless ssh set up. Then create a <code>system_nm</code> option in your <code>~/.Rprofile</code> configuration file which appends an ssh statement to the system call e.g. the following will set you up to connect to the host <code>clustername</code>:</p>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>system_nm<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">cmd</span>,<span class="va">...</span><span class="op">)</span> <span class="op">{</span>
         <span class="fu"><a href="https://rdrr.io/r/base/system.html">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"ssh -q clustername \"cd $(pwd); "</span>,<span class="va">cmd</span>,<span class="st">"\""</span><span class="op">)</span>,<span class="va">...</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span></code></pre></div>
@@ -864,32 +881,33 @@
 <div id="my-organisation-has-a-different-control-file-convention-to-the-runxx-mod-convention--can-i-change-this" class="section level3">
 <h3 class="hasAnchor">
 <a href="#my-organisation-has-a-different-control-file-convention-to-the-runxx-mod-convention--can-i-change-this" class="anchor"></a>+ My organisation has a different control file convention to the runXX.mod convention. Can I change this?</h3>
-<p>Yes, you can specify the convention with the ctl_path() on your parent object e.g. to change the convention to nm.XX.con</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<p>Set it up with <code>ctl_path</code> the field of your object, e.g. to change the convention to <code>nm.XX.con</code></p>
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/ctl_path.html">ctl_path</a></span><span class="op">(</span><span class="st">"Models/nm.{run_id}.com"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="how-do-i-submit-a-command-directly-to-the-nonmem-server" class="section level3">
+<div id="how-do-i-submit-a-generic-command-directly-to-the-nonmem-server" class="section level3">
 <h3 class="hasAnchor">
-<a href="#how-do-i-submit-a-command-directly-to-the-nonmem-server" class="anchor"></a>+ How do I submit a command directly to the NONMEM server?</h3>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<a href="#how-do-i-submit-a-generic-command-directly-to-the-nonmem-server" class="anchor"></a>+ How do I submit a generic command directly to the NONMEM server?</h3>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/system_nm.html">system_nm</a></span><span class="op">(</span><span class="st">"command_to_run"</span>, dir<span class="op">=</span><span class="st">"path/to/dir"</span><span class="op">)</span></code></pre></div>
+<p>if dir is not specified, this will default to the <code>Models</code> directory</p>
 </div>
-<div id="there-is-functionality-in-psns-runrecord-sumo-or-pirana-that-i-would-like-but-is-not-currently-available-in-nmproject-" class="section level3">
+<div id="there-is-functionality-in-psns-runrecord-sumo-or-pirana-that-i-would-like-but-is-not-available-in-nmproject-" class="section level3">
 <h3 class="hasAnchor">
-<a href="#there-is-functionality-in-psns-runrecord-sumo-or-pirana-that-i-would-like-but-is-not-currently-available-in-nmproject-" class="anchor"></a>+ There is functionality in PsN’s runrecord, sumo or Pirana that I would like but is not currently available in NMproject.</h3>
+<a href="#there-is-functionality-in-psns-runrecord-sumo-or-pirana-that-i-would-like-but-is-not-available-in-nmproject-" class="anchor"></a>+ There is functionality in PsN’s runrecord, sumo or Pirana that I would like but is not available in NMproject.</h3>
 <p>NMproject doesn’t change PsN’s default directory structure, everything in the “Models” directory is as if you lauched the jobs from the command line. Therefore you can continue to use PsN functions on the command line. You can also continue using Pirana by pointing it towards your models directory.</p>
 <p>If it’s something you think really should be part of NMproject, open a github “issue” and ask for the feature.</p>
 </div>
 <div id="i-dont-want-to-use-nmproject-on-my-analysis-project-any-more-can-i-go-back-to-submitting-runs-on-the-command-line" class="section level3">
 <h3 class="hasAnchor">
 <a href="#i-dont-want-to-use-nmproject-on-my-analysis-project-any-more-can-i-go-back-to-submitting-runs-on-the-command-line" class="anchor"></a>+ I don’t want to use NMproject on my analysis project any more, can I go back to submitting runs on the command line</h3>
-<p>Yes, NMproject doesn’t change PsN’s default directory structure, so you can go back to running PsN via command line. If there a bug or a feature you think really should be part of NMproject, consider opening a github “issue” and asking.</p>
+<p>Yes, NMproject has been built to reduce as much as possible the barrier-to-exit to ensure all usage is a voluntary as possible. NMproject doesn’t change PsN’s default directory structure, so you can go back to running PsN via command line or using Pirana etc., at any point.</p>
 </div>
-<div id="i-work-for-a-cro--my-client-doesnt-have-nmproject-how-can-send-the-analysis-to-them-" class="section level3">
+<div id="i-work-for-a-cro--my-client-doesnt-have-nmproject-or-doesnt-know-to-use-nmproject-how-can-send-the-analysis-to-them-" class="section level3">
 <h3 class="hasAnchor">
-<a href="#i-work-for-a-cro--my-client-doesnt-have-nmproject-how-can-send-the-analysis-to-them-" class="anchor"></a>+ I work for a CRO. My client doesn’t have NMproject, how can send the analysis to them.</h3>
-<p>NMproject doesn’t change PsN’s default directory structure, and everything will work for them as long as their version of R (and package versions) are compatible. It is recommended to run Renvironment_info() as a last step before sending the analysis directory so they can see the package versions you used.</p>
-<p>Obviously they will not be able to run code that is dependent on NMproject unless they install it. But your model development script can still serve as a helpful, human readable process description of your model development steps.</p>
+<a href="#i-work-for-a-cro--my-client-doesnt-have-nmproject-or-doesnt-know-to-use-nmproject-how-can-send-the-analysis-to-them-" class="anchor"></a>+ I work for a CRO. My client doesn’t have NMproject or doesn’t know to use NMproject, how can send the analysis to them.</h3>
+<p>NMproject doesn’t change PsN’s default directory structure, and everything will work for them as long as their version of R (and package versions) are compatible. Your model development log/notebook can still serve as a helpful, human readable process description of your model development steps though. You just need to explain how <code>run_id</code>s correspond to files (e.g. <code>m1</code> corresponds to <code>Models/runm1.mod</code>) so they are able to track what is happening in the model development log to the files on the disk.</p>
+<p>If NMproject will be rerun in a different environment consider using <code>renv</code> to ensure package versions remain consistent.</p>
 </div>
 </div>
   </div>
