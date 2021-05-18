@@ -4,7 +4,10 @@
 \alias{run_all_scripts}
 \title{Run all project scripts sequentially}
 \usage{
-run_all_scripts()
+run_all_scripts(quiet = FALSE)
+}
+\arguments{
+\item{quiet}{Argument passed to \code{rmarkdown::render}}
 }
 \description{
 Runs all scripts s01_XXX, s02_XXX in the designated "scripts" directory

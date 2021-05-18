@@ -168,12 +168,14 @@ setup_nm_demo <- function(demo_name = "theopp",
 #' Run all project scripts sequentially
 #'
 #' Runs all scripts s01_XXX, s02_XXX in the designated "scripts" directory
+#' 
+#' @param quiet Argument passed to \code{rmarkdown::render}
 #'
 #' @details works with .R and .Rmd extensions.  Behaviour is to \code{source} .R
 #'   files and use \code{rmarkdown::render} on .Rmd files
 #'
 #' @export
-run_all_scripts <- function(){
+run_all_scripts <- function(quiet = FALSE){
   
   script_files <- dir(nm_default_dir("scripts"), "s[0-9]+_.*?\\.R(md)?$", full.names = TRUE)
   
@@ -183,7 +185,7 @@ run_all_scripts <- function(){
   dplan <- dplan %>%
     dplyr::mutate(
       cmd = ifelse(.data$rmd, 
-                   paste0("rmarkdown::render(\"",script_files,"\")"),
+                   paste0("rmarkdown::render(\"",script_files,"\", quiet = ", quiet, ")"),
                    paste0("source(\"",script_files,"\")"))
     )
   
