@@ -417,7 +417,7 @@ m1 %>% dollar("OMEGA")
 
 ### Perturbing initial parameters
 
-To modify initial estimates, we'll use the `mutate`-like behaviour of `init_*` functions.  We will modify the `init` by referencing itself.  We'll modified all our fixed effects (log transformed) by 30%
+To modify initial estimates, we'll use the `mutate` like behaviour of `init_*` functions.  We will modify the `init` by referencing itself.  We'll modified all our fixed effects (log transformed) by 30%
 
 ```{r include=FALSE}
 m1 <- dir(".cache", full.names = TRUE) %>%
@@ -427,13 +427,13 @@ m1 <- dir(".cache", full.names = TRUE) %>%
 
 ```{r eval=FALSE}
 
-# m1 <- m1 %>% init_theta(init = rnorm(init, mean = init, sd = 0.3))
-# m1 %>% dollar("THETA")  ## view with this
+m1 <- m1 %>% init_theta(init = rnorm(init, mean = init, sd = 0.3))
 
 ```
-## Combining vectorized nm objects and dplyr
 
-### Vectorization
+View with `m1 %>% dollar("THETA")`.
+
+## (advanced) Vectorization 
 
 The basic nm object is fully vectorized.  To see this compare the following two outputs
 
@@ -452,19 +452,26 @@ The basic idea is to contruct a `tibble` (if you are unfamiliar with `tibble`s, 
 
 ```{r eval = FALSE}
 
+dp <- tibble(rep = 1:5)
+dp$m <- m1 %>% ## start with parent - m1 is length 1
+  child(run_id = dp$rep) %>% ## now object is length = length(dp$rep) = 5
+  init_theta(init = rnorm(init, mean = init, sd = 0.3)) %>% ## vectorized operation
+  run_nm() ## run all 5 runs
+
+```
+
+View `dp` to see a tibble with two columsn `rep` and `m`.  View the new `$THETA` statements with `dp$m %>% dollar("THETA")`.
+
+An alternative but equivalent way of writing the above is to use dplyrs `mutate` statement to create the `m` column
+
+```{r eval = FALSE}
+
 dp <- tibble(rep = 1:5) %>%
   mutate(
-    m = m1 %>% ## start with single parent run, m1, an nm object of length 1
-      child(run_id = rep) %>% ## rep is vector of length 5
-      ## this makes the child() output a nm object vector of length 5 - each
-      ## with a unique run_id do the same manipulation above - since NMproject
-      ## functions are vectorized, this will apply the same manipulation
-      ## elementwise
+    m = m1 %>% ## start with parent - m1 is length 1
+      child(run_id = rep) %>% ## now object is length = length(dp$rep) = 5
       init_theta(init = rnorm(init, mean = init, sd = 0.3))
   )
-
-length(m1)
-length(dp$m)
 
 ## the m column of dp is a nm object vector, display all $THETAs like this
 dp$m %>% dollar("THETA")
@@ -474,7 +481,9 @@ dp$m %>% run_nm()
 
 ```
 
-Here the functions `init_theta`, `dollar` and `run_nm` were all operating in a vectorized fashion
+The reset of the code in this vignette will use the dplyr layout.
+
+Note that here the functions `init_theta`, `dollar` and `run_nm` were all operating in a vectorized fashion
 
 ### Automating model checking
 
@@ -496,9 +505,9 @@ dt <- .available_advans %>%
   ## first step is to create children runs from the parent object m1
   ## this is done by supplying a vector of run_ids to the child() function
   mutate(m = m1 %>% ## start with parent m1 again
-           child(run_id = label) %>% ## create multiple children using "label" column
-           ## then use advan and trans columns with subroutine()
-           subroutine(advan = advan, trans = trans))
+           child(run_id = label) %>% ## create multiple children using label column
+           subroutine(advan = advan, trans = trans) ## set subroutine using advan and trans columns
+         )
 
 ## view the $PK blocks of each
 dt$m %>% dollar("PK")
@@ -530,16 +539,12 @@ Often you'll want to know the right level of parallelisation to run your model t
 
 dc <- tibble::tibble(cores = c(1, 3, 10, 30)) %>% 
   mutate(m = m1 %>% ## start with parent m1 again
-           ## supply the "cores" vector (of the tibble) to child(), this will create 3 runs
-           child(run_id = cores) %>%
-           ## run them all in m1_coretest
-           run_in("Models/m1_coretest") %>%
-           ## run them all with the following execute command
-           cmd("execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}") %>%
-           ## and the following parafile
+           child(run_id = cores) %>%  ## use "cores" as run_id (object is now 3 models)
+           run_in("Models/m1_coretest") %>% ## run them all in m1_coretest
+           cmd("execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}") %>% ## parallelized execute
            parafile("/opt/NONMEM/nm75/run/mpilinux8.pnm") %>%
-           ## and finally set the cores to the "cores" vector
-           cores(cores))
+           cores(cores) ## and finally set the cores to the "cores" vector
+         )
 
 dc$m %>% cmd()
 
@@ -562,9 +567,9 @@ dc$m %>%
 
 ### Simulation re-estimation
 
-You can also use the vectorized nature to create a simulation re-estimation routines from scratch.
+There will soon a be a simple wrapper for the code below, as with the bootstrap and step wise covariate functionaliy above, but for now the code below is a good example of how the flexibility of the vectorized object can be used to create complex workflows whilst still providing granular control of runs.
 
-Whenever making a routine that will scale up to 100s or 1000s or runs, always start with 1 or 2 replicates.  Get the code working below, and then rerun with desired number of replicates (here we're just using 3 for demo purposes).  You will not waste time because `run_nm()` will skip over runs that have already completed. 
+It's good advice to start with 1 or 2 replicates and scale up only when you've confirmed your code is working (here we're just using 3 for demo purposes).  You will not waste time because `run_nm()` will skip over runs that have already completed. 
 
 ```{r eval=FALSE}
 
@@ -608,29 +613,58 @@ dsr$mest %>% run_nm() %>%
 
 ## FAQ
 
+### + I have pre-prepared model and dataset. What's the fastest way make an nm object and make use of the objects functionality for post processing etc.
+
+Ensure the dataset and model file are somewhere in the project.
+
+```{r eval = FALSE}
+
+m1 <- new_nm(run_id = "m1", 
+             based_on = "path/to/control/file") %>%
+  run_nm()
+
+```
+
 ### + After having closed my session how to I recreate my workspace
 
-Just re-run all the code again.
+Just re-run all the code again.  If there has been a breakage in reproducibility meaning that model files are not built in the same way, NMproject will by default prompt for user confirmation before overwriting anything.  If in doubt, press abort and check your code
 
-If nothing has changed with regards to datasets and control files run_nm() will retrieve cached results without running nonmem.
+### + In my organisation we dont want `execute {ctl_name} -dir={run_dir}` as the default command, how can we change this?
 
+Two options:
 
-### + I see the PMX code library has been updated, how can I update my local version of it?
+1) set it once for your parent object using `cmd` and then make all other objects child objects from the parent.
 
-The PMX code library is version controlled with `git`.  Ensure you have git installed, navigate to the local PMX code library repository and type `git pull`.  Git will complain if you have made changes to your local directory since downloading it.  If you have, you need to `commit` those changes before using `git pull`.  See git help for more information on how to do this.  Consider splitting your code library into multiple repositories for easier management (e.g. one public, one for your organisation, one for you)
+2) set the `nm.cmd_default` option.  E.g. if you are using docker, you're command is long: `"docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}"`.
 
-### + We already have directory of R/NONMEM scripts/templates, how can we also use these?
+`options(nm.cmd_default = "docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}")`
 
-Append your directory location to the `code_library_path` option.  To do this add the following command to your `~/.Rprofile` (or `$R_HOME/etc/Rprofile.site`) configuration file:
+This will ensure all runs produced in the R session will run using the above command.  To see how to set an option for all your R sessions see subsequent question
 
-```{r eval=FALSE}
-options(code_library_path = c("/path/to/PMXcodelibrary/",
-                              "path/to/existing/repository"))
-```
+### + How do I set an option so that it's set permanently for all my future R sessions?
+
+In a multiple user environment it's best practice to avoid user specific configurations as your code may run different from user to user.  There are two remaining options, set the option for the project or site wide for all users.
+
+To set the option for anyone using the project, include the `options` command (e.g. `options(nm.cmd_default = ....)`) in `.Rprofile`.
+
+To set the option site wide include the `options` command in `$R_HOME/etc/Rprofile.site` (requires administration privileges).
+
+If multiple options are required it may be easier to create your own custom option setting package.  The `options` statement then just needs to be in a R script in the packages `R` directory.  Loading this package will then set the option.  So be sure to load it (before or after) each time you're using `NMproject`
 
 ### + How can I contribute to the PMX code library?
 
-Log in to github (create an account if necessary).  Fork the repository `tsahota/PMXcodelibrary`. Make your change.  Create a pull request detailing your change.
+The repository `tsahota/PMXcodelibrary` may be discontinued in the future.  The current location of the code library is within the NMproject package in the relative path `inst/extdata/CodeLibrary`.  To contribute, either use the pull request functionality of GitHub or send me an email with your change.  Make sure you describe the reason for the change so I can ensure it will suit everyone. 
+
+### + We already have directory of R/NONMEM scripts/templates, how can we also use these?
+
+Append your directory location to the `code_library_path` option.
+
+```{r eval=FALSE}
+options(code_library_path = c(getOption("code_library_path"),
+                              "path/to/existing/repository"))
+```
+
+You'll probably want to set this for all users so see the question above on setting options permanently
 
 ### + How do I run this on SGE?
 
@@ -654,7 +688,7 @@ Feel free to contact me if you need help
 
 ### + How do I run NONMEM via a PsN/NONMEM docker container
 
-This requires setting `cmd()` field of the first (parent) nm object and also setting `nm_tran_command()` once in your script.
+This requires setting `cmd()` field of the first (parent) nm object and also setting `nm_tran_command()`.
 
 Easiest way to understand this is via an example: The following assumes the docker container has been set as shown in the fabulous `https://github.com/billdenney/Pharmacometrics-Docker` repository:
 
@@ -673,10 +707,9 @@ Set up dockerized NMTRAN checking with:
 nm_tran_command("docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn /bin/bash -c '/opt/NONMEM/nm_current/tr/NMTRAN.exe < {ctl_name}'")
 ```
 
-
 ### + My Rstudio Server is on a different linux server to my NONMEM cluster.  How can I set up NMproject to work with this?
 
-You need to ensure your account has passwordless ssh set up.  Then create a `system_nm()` option in your `~/.Rprofile` configuration file which appends an ssh statement to the system call e.g. the following will set you up to connect to the host `clustername`:
+You need to ensure your account has passwordless ssh set up.  Then create a `system_nm` option in your `~/.Rprofile` configuration file which appends an ssh statement to the system call e.g. the following will set you up to connect to the host `clustername`:
 
 ```{r eval=FALSE}
 options(system_nm=function(cmd,...) {
@@ -690,19 +723,21 @@ This is not recommended as it requires R working directory being set to a networ
 
 ### + My organisation has a different control file convention to the runXX.mod convention.  Can I change this?
 
-Yes, you can specify the convention with the ctl_path() on your parent object e.g. to change the convention to nm.XX.con
+Set it up with `ctl_path` the field of your object, e.g. to change the convention to `nm.XX.con`
 
 ```{r eval=FALSE}
 m %>% ctl_path("Models/nm.{run_id}.com")
 ```
 
-### + How do I submit a command directly to the NONMEM server?
+### + How do I submit a generic command directly to the NONMEM server?
 
 ```{r eval=FALSE}
 system_nm("command_to_run", dir="path/to/dir")
 ```
 
-### + There is functionality in PsN's runrecord, sumo or Pirana that I would like but is not currently available in NMproject.
+if dir is not specified, this will default to the `Models` directory
+
+### + There is functionality in PsN's runrecord, sumo or Pirana that I would like but is not available in NMproject.
 
 NMproject doesn't change PsN's default directory structure, everything in the "Models" directory is as if you lauched the jobs from the command line.  Therefore you can continue to use PsN functions on the command line.  You can also continue using Pirana by pointing it towards your models directory.
 
@@ -710,14 +745,13 @@ If it's something you think really should be part of NMproject, open a github "i
 
 ### + I don't want to use NMproject on my analysis project any more, can I go back to submitting runs on the command line
 
-Yes, NMproject doesn't change PsN's default directory structure, so you can go back to running PsN via command line.  If there a bug or a feature you think really should be part of NMproject, consider opening a github "issue" and asking.
+Yes, NMproject has been built to reduce as much as possible the barrier-to-exit to ensure all usage is a voluntary as possible.  NMproject doesn't change PsN's default directory structure, so you can go back to running PsN via command line or using Pirana etc., at any point.
 
-### + I work for a CRO. My client doesn't have NMproject, how can send the analysis to them.
+### + I work for a CRO. My client doesn't have NMproject or doesn't know to use NMproject, how can send the analysis to them.
 
-NMproject doesn't change PsN's default directory structure, and everything will work for them as long as their version of R (and package versions) are compatible.  It is recommended to run Renvironment_info() as a last step before sending the analysis directory so they can see the package versions you used.
+NMproject doesn't change PsN's default directory structure, and everything will work for them as long as their version of R (and package versions) are compatible.  Your model development log/notebook can still serve as a helpful, human readable process description of your model development steps though.  You just need to explain how `run_id`s correspond to files (e.g. `m1` corresponds to `Models/runm1.mod`) so they are able to track what is happening in the model development log to the files on the disk.
 
-Obviously they will not be able to run code that is dependent on NMproject unless they install it.  But your model development script can still serve as a helpful, human readable process description of your model development steps.
-
+If NMproject will be rerun in a different environment consider using `renv` to ensure package versions remain consistent.
 
 ```{r include=FALSE}
 ## clean up 
