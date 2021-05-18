@@ -32,7 +32,21 @@ test_that("run and post",{
 
   ## run all scripts
   overwrite_behaviour("skip")
-  expect_true(run_all_scripts())
+  
+  res <- tryCatch(run_all_scripts(), error = function(e){
+    on.exit({
+      dump.frames(to.file = TRUE)
+      debug_zip_file <- paste0(proj_path, ".zip")
+      setwd("..")
+      unlink(debug_zip_file)
+      utils::zip(basename(debug_zip_file), proj_name)
+      file.copy(debug_zip_file, file.path(currentwd, basename(debug_zip_file)))
+      setwd(currentwd)
+    })
+    stop(e)
+  })
+  
+  expect_true(res)
   
   res_files <- dir("Results", pattern = "\\.html", full.names = TRUE)
   expect_true(length(res_files) > 0)
