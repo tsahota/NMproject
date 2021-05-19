@@ -613,7 +613,7 @@ dsr$mest %>% run_nm() %>%
 
 ## FAQ
 
-### + I have pre-prepared model and dataset. What's the fastest way make an nm object and make use of the objects functionality for post processing etc.
+### + I have a pre-prepared model and dataset. What's the fastest way to make an nm object and make use of the objects functionality for scripting, post processing etc.
 
 Ensure the dataset and model file are somewhere in the project.
 
@@ -625,31 +625,31 @@ m1 <- new_nm(run_id = "m1",
 
 ```
 
-### + After having closed my session how to I recreate my workspace
+### + After having closed my session how do I recreate my workspace and pick up where I left off
 
-Just re-run all the code again.  If there has been a breakage in reproducibility meaning that model files are not built in the same way, NMproject will by default prompt for user confirmation before overwriting anything.  If in doubt, press abort and check your code
+Just re-run all the code again.  NONMEM runs that have already been run will not be run again and will instead be retrieved from the cache.
 
-### + In my organisation we dont want `execute {ctl_name} -dir={run_dir}` as the default command, how can we change this?
+### + In my organisation we have a custom "execute" command/wrapper we can't use the default `execute {ctl_name} -dir={run_dir}`, how can we change this?
 
 Two options:
 
-1) set it once for your parent object using `cmd` and then make all other objects child objects from the parent.
+1) set `cmd` once for your parent object and then make all other objects child objects from the parent.
 
-2) set the `nm.cmd_default` option.  E.g. if you are using docker, you're command is long: `"docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}"`.
+2) set the `nm.cmd_default` option for the analysis project for your organisation.  E.g. organisations using docker (as described in below FAQ question) require the execute command to be much longer: `"docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}"`.
 
 `options(nm.cmd_default = "docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}")`
 
-This will ensure all runs produced in the R session will run using the above command.  To see how to set an option for all your R sessions see subsequent question
+Setting this will ensure all runs produced in the R session will run using the above command.  To see how to set an option for all your R sessions see subsequent question
 
-### + How do I set an option so that it's set permanently for all my future R sessions?
+### + How do I set a NMproject configuration option permanently so I don't have to set it for all my future R sessions?
 
-In a multiple user environment it's best practice to avoid user specific configurations as your code may run different from user to user.  There are two remaining options, set the option for the project or site wide for all users.
+See ?.Rprofile.  In a multiple user environment it's best practice to avoid user specific configurations as your code may run different from user to user.  There are two options, set the option for the project or site wide for all users.
 
 To set the option for anyone using the project, include the `options` command (e.g. `options(nm.cmd_default = ....)`) in `.Rprofile`.
 
 To set the option site wide include the `options` command in `$R_HOME/etc/Rprofile.site` (requires administration privileges).
 
-If multiple options are required it may be easier to create your own custom option setting package.  The `options` statement then just needs to be in a R script in the packages `R` directory.  Loading this package will then set the option.  So be sure to load it (before or after) each time you're using `NMproject`
+Also consider creating your own organisation specific option/path setting package.  The `options` statement then just needs to be in a R script in the packages `R` directory.  Loading this package will then set the option.  So be sure to load it (before or after) each time you're using `NMproject`.  The advantage of a package is you can also bundle other functions in there for them to use.
 
 ### + How can I contribute to the PMX code library?
 
