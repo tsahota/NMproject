@@ -23,27 +23,27 @@ v0.3.2 (see releases)*
 The intent of NMproject is to allow for fully script based NONMEM model
 development:
 
-  - Code management:
-      - Code library: NONMEM template scripts to speed creation of
+-   Code management:
+    -   Code library: NONMEM template scripts to speed creation of
         NONMEM runs and facilitate adherence to best practices.
-      - Standardised, version controlled, directory structure for all
+    -   Standardised, version controlled, directory structure for all
         NONMEM users.
-  - Script based model development:
-      - Instead of command line interface (CLI) or graphical user
+-   Script based model development:
+    -   Instead of command line interface (CLI) or graphical user
         interface (GUI) use a script based interface
-      - End-to-end R workflows that can be repeated, reused and
+    -   End-to-end R workflows that can be repeated, reused and
         documented in R markdown
-      - Convenience functions for routine NONMEM control file edits
-      - Tracked manual edits for everything else to ensure full
+    -   Convenience functions for routine NONMEM control file edits
+    -   Tracked manual edits for everything else to ensure full
         flexibility
-      - Fully customizable r markdown templates for goodness of fits,
+    -   Fully customizable r markdown templates for goodness of fits,
         vpcs, ppcs, bootstraps
-      - Vectorized model objects - interact with groups of NONMEM runs
+    -   Vectorized model objects - interact with groups of NONMEM runs
         as if they were one (no loops needed)
-      - Shiny interface for real time run tracking in grid environments
+    -   Shiny interface for real time run tracking in grid environments
 
-History: NMproject was previously an AstraZeneca project. It is being
-reimplemented here as a community version to be compatible with a
+History: NMproject was previously an internal AstraZeneca project. It is
+being reimplemented here as a community version to be compatible with a
 variety of architectures (standalone NONMEM and a variety of grid
 submission systems)
 
@@ -77,54 +77,39 @@ Load the package with
 library(NMproject)
 ```
 
-## Instructions
-
-  - NMprojects are directories where you can work on pharmacometric
-    analysis.
-  - First, set up a tidyproject with the
-    `make_project("/path/to/project/dir"")` or in RStudio File -\> New
-    Project -\> New Directory -\> New tidyproject
-      - See tutorial at <https://github.com/tsahota/tidyproject> for
-        more information
-
-### Demo
+## Getting started with NMproject
 
 The easiest way to familiarise your with NMproject is to follow through
-the demo.
+the demo. The
+(vignette)\[<https://tsahota.github.io/NMproject/articles/NMproject.html>\]
+gives instructions for how to get started.
 
-First create a new tidyproject (`FILE` -\> `New Project` -\> `New
-Directory` -\> `New tidyproject`). You’ll see a clean analysis directory
-with empty subfolders. Run the following in the new R session:
+## Example code
 
-``` r
-library(NMproject)
-setup_nm_demo()
-```
-
-This will population the `Scripts` directory with scripts, and deposit
-the Theopp dataset into the `SourceData` subdirectory.
-
-The scripts are numbered s01…..Rmd, s02….Rmd etc., and are designed to
-be read and run in order. This is the best way to familiarize yourself.
-The scripts can also be used as template for your own model development
-
-## Example
-
-If we already have a parent run `m1` using `ADVAN2 TRANS1`, we can
-create a `child()` run that uses `TRANS2` using `subroutine()`:
+NMprojects works best with pipes `%>%`. Below we take a parent run,
+`m1`, create a new child run with the first pipe, then convert it from
+`ADVAN2 TRANS1` (KA, K, V) to `ADVAN2 TRANS2` (KA, CL, V) by piping into
+the `subroutine()` function before running with the `run_nm()` function:
 
 ``` r
-
 m2 <- m1 %>% child() %>%
   subroutine(trans = 2) %>%
   run_nm()
+```
 
+To generate diagnostics we create a diagnostic template with help of
+pre-existing templates, here it’s `Scripts/basic_gof.Rmd` and run this
+on m2. This will create a project specific run report to evaluate your
+model
+
+``` r
 m2 %>% nm_render("Scripts/basic_gof.Rmd")
+
 ## run reports will be in "Results" directory of analysis project
 ```
 
-Create a simulation run using `update_parameters()` and
-`convert_to_simulation()`. Apply vpc and ppc diagnostics
+Here’s a code snippet creating a running simulation so that vpc and ppc
+diagnostics can be applied
 
 ``` r
 m2s <- m2 %>% child(run_id = "m2s") %>%
