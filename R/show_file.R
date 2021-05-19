@@ -1,3 +1,16 @@
+show_file <- function(file_name){
+  if(.Platform$OS.type=="windows")
+    file.show(file_name) else
+      if(exists("file.show")) file.show(file_name) else
+        utils::file.edit(file_name)
+}
+
+edit_file <- function(file_name){
+  if(.Platform$OS.type=="windows")
+    file.show(file_name) else
+      get("file.edit")(file_name)
+}
+
 #' Show an uneditable version of the lst file
 #'
 #' @param r nm object

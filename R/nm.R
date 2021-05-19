@@ -11,20 +11,6 @@ job_info <- function(m, text){
   UseMethod("job_info")  
 }
 
-show_file <- function(file_name){
-  if(.Platform$OS.type=="windows")
-    file.show(file_name) else
-      if(exists("file.show")) file.show(file_name) else
-        utils::file.edit(file_name)
-}
-
-edit_file <- function(file_name){
-  if(.Platform$OS.type=="windows")
-    file.show(file_name) else
-      get("file.edit")(file_name)
-}
-
-
 search_ctl_name <- function(r, models_dir=nm_default_dir("models")){
   if(inherits(r,"nm")) ctl_name <- r$ctl
   if(inherits(r,"numeric") | inherits(r,"character")) {
@@ -81,29 +67,6 @@ ctl_table_files.default <- function(ctl){
   s <- grep("FILE\\s*=\\s*(\\S+)",s0,value=TRUE)
   table_files <- gsub(".*FILE\\s*=\\s*(\\S+)\\s*.*$","\\1", s)
   table_files
-}
-
-ctl_out_files <- function(ctl_file){
-  UseMethod("ctl_out_files")  
-}
-
-ctl_out_files.default <- function(ctl_file){ ## will get vector of $TABLE file names from control file.
-  if(!file.exists(ctl_file)) stop(paste(ctl_file, "doesn't exist"))
-  dir0 <- dir(dirname(ctl_file))
-  
-  ctl <- readLines(ctl_file,warn = FALSE)
-  
-  table.files <- ctl_table_files(ctl)
-  
-  stub <- basename(ctl_file)
-  stub <- gsub("(.+)\\.\\w+$","\\1",stub)
-  
-  out.files <- dir0[grepl(paste(stub,"\\.",sep=""),dir0)]
-  out.files <- out.files[!grepl("scm",out.files)]
-  out.files <- out.files[!out.files%in%basename(ctl_file)]
-  
-  out.files <- c(table.files,out.files)
-  out.files
 }
 
 #' Setup demo in current directory
@@ -230,16 +193,7 @@ data_filter_char <- function(r, ...){
   }
 }
 
-#' replace ignore statement
-#' @param ctl object coercible into ctl_list
-#' @param ignore_char character. replacement statement
-#' @export
 update_ignore <- function(ctl, ignore_char){
-  UseMethod("update_ignore")
-}
-
-#' @export
-update_ignore.default <- function(ctl, ignore_char){
   ctl <- ctl_list(ctl)
   
   ignore_present <- any(grepl(".*IGNORE\\s*=\\s*\\(",ctl$DATA))
@@ -290,10 +244,10 @@ update_ignore.default <- function(ctl, ignore_char){
 #' @export
 
 exclude_rows <- function(d, dexcl, exclude_col = "EXCL"){
-  excluded <- do.call(paste, d[, names(d) %in% names(dexcl)]) %in% 
-    do.call(paste, dexcl)
-  excluded <- which(excluded)
-  if(nrow(dexcl) != length(excluded)) stop("couldn't find all rows")
+  if(any(!names(dexcl) %in% names(d))) stop("dexcl must contain a subset of the columns of d")
+  excluded <- do.call(paste, d[, names(dexcl)]) %in% do.call(paste, dexcl)
+  if(nrow(dexcl) != length(which(excluded))) stop("couldn't find all rows")
+  if(!exclude_col %in% names(d)) d[[exclude_col]] <- 0
   d[[exclude_col]][excluded] <- 1
   d
 }

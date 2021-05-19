@@ -1,15 +1,14 @@
 #' get status of a run
 #' 
 #' @param x nm object
-#' @param simple logical. deprecated
 #' @export
 
-status <- function(x, simple = TRUE) { ## TODO: delete simple
+status <- function(x) {
   UseMethod("status")
 }
 
 #' @export
-status.nm_generic <- function(x, simple = TRUE){
+status.nm_generic <- function(x){
   m <- x
   get_sub_dirs <- function(path){
     ## only checks 1 level deep - good enough for execute/boostrap/sse
@@ -137,11 +136,7 @@ wait_finish <- function(r, timeout=NA){
 wait_finish.nm_list <- function(r, timeout=NA){
   r_orig <- r
   r <- r[!is_finished(r)]
-  #r <- r[]
-  
-  #if(!force) {
-  #  if(!executed(r)) warning("run ", unique_id(r), "not executed, will not wait, use force=TRUE to override") 
-  #}
+
   if(is.na(timeout)) wait_for(all(is_finished(r))) else
     wait_for(all(is_finished(r)), timeout = timeout)
   invisible(r_orig)
@@ -151,9 +146,3 @@ wait_finish.nm_list <- function(r, timeout=NA){
 wait_finish.nm_generic <- function(r, timeout=NA){
   wait_finish.nm_list(as_nm_list(r), timeout = timeout)
 }
-
-# wait_finish.nm_list <- function(r, timeout=NA, force = FALSE){
-#   for(ri in r){
-#     wait_finish(ri, timeout = timeout, force = force)
-#   }
-# }

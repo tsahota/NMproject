@@ -93,7 +93,6 @@ Collate:
     'shiny_apps.R'
     'show_file.R'
     'sim_reestExtra.R'
-    'status.R'
     'subroutine.R'
     'zzz.R'
 VignetteBuilder: knitr

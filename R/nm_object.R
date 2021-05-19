@@ -821,7 +821,7 @@ ignore.nm_generic <- function(ctl, ignore_char){
     return(data_ignore_char(m))
   }
   ctl <- ctl_contents(m)
-  ctl <- update_ignore.default(ctl, ignore_char)
+  ctl <- update_ignore(ctl, ignore_char)
   m <- m %>% ctl_contents_simple(ctl)
   m
 }

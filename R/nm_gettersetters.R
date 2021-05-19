@@ -259,25 +259,6 @@ result_files.nm_generic <- function(m, text){
 #' @export
 result_files.nm_list <- Vectorize_nm_list(result_files.nm_generic, SIMPLIFY = FALSE)
 
-#' get paths of results files 
-#' 
-#' @param r nm object
-#' @param pattern grep matching pattern
-#' 
-#' @export
-find_result_files <- function(r, pattern = "."){
-  UseMethod("find_result_files")
-}
-#' @export
-find_result_files.nm_generic <- function(r, pattern = "."){
-  res <- r[["result_files"]]
-  res <- res[grepl(pattern, res)]
-  res <- file.path(results_dir(r), res)
-  res
-}
-#' @export
-find_result_files.nm_list <- Vectorize_nm_list(find_result_files.nm_generic, SIMPLIFY = TRUE)
-
 #' set/get control file object
 #'
 #' @param m nm object

@@ -139,28 +139,19 @@ stats::nobs
 stats::BIC
 
 #' @export
-coef.nm_generic <- function(object,trans=TRUE,...){
+coef.nm_generic <- function(object, trans=TRUE, ...){
   
-  if(!is_finished(object)) {
-    #warning(unique_id(object)," not finished, returning empty data.frame")
-    d <- data.frame()
-    return(invisible(d))
-  }
+  if(!is_finished(object)) return(invisible(data.frame()))
   
   ext_file_path <- object %>% nm_output_path("ext")
   
   d <- coef_ext0(ext_file_path)
-  if(nrow(d) == 0) {
-    d <- data.frame()
-    return(d)
-  }
+  if(nrow(d) == 0) return(data.frame())
   
   d$run_name <- gsub("execute\\.", "\\1", unique_id(object))
   if(!unique(d$is_final)) d$run_name <- paste0(d$run_name,"*")
   d$is_final <- NULL
-  if(!trans) {
-    return(d)
-  }
+  if(!trans) return(d)
   
   p <- param_info2(object)
   

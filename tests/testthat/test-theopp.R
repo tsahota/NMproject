@@ -73,6 +73,12 @@ test_that("run and post",{
   dataset <- data_name(ctl_path(m1))
   expect_true(file.exists(file.path(run_in(m1), dataset)))
   
+  d <- input_data(m1)
+
+  dexcl <- d %>% filter(ID < 3)
+  dnew <- d %>% exclude_rows(dexcl)
+  expect_true(max(dnew$ID[dnew$EXCL %in% 1]) < 3)
+  
   m1 <- m1 %>% simple_field(test_field = 3)
   expect_true(simple_field(m1, test_field) == 3)
   
