@@ -168,11 +168,11 @@ child <- function(m, run_id = NA_character_, type = "execute", parent = nm(NA), 
 #' @export
 child.nm_generic <- function(m, run_id = NA_character_, type = "execute", parent = nm(NA), silent = FALSE){
   mparent <- m
-  if(is.environment(m)){
-    old_classes <- class(m)
-    m <- as.environment(as.list(m, all.names=TRUE))
-    class(m) <- old_classes 
-  }
+  # if(is.environment(m)){
+  #   old_classes <- class(m)
+  #   m <- as.environment(as.list(m, all.names=TRUE))
+  #   class(m) <- old_classes 
+  # }
   
   m <- m %>% executed(FALSE)
   m <- m %>% job_info(NA_character_)
@@ -497,15 +497,7 @@ glue_fields <- function(m){
 }
 
 glue_fields.nm_generic <- function(m) m$glue_fields
-
 glue_fields.nm_list <- Vectorize_nm_list(glue_fields.nm_generic, SIMPLIFY = FALSE)
-
-## following is only to get, not to set 
-get_glue_field <- function(m, field){
-  UseMethod("get_glue_field")
-}
-get_glue_field.nm_generic <- function(m, field) m$glue_fields[[field]]
-get_glue_field.nm_list <- Vectorize_nm_list(get_glue_field.nm_generic, SIMPLIFY = FALSE)
 
 custom_vector_field <- function(m, field, replace){
   UseMethod("custom_vector_field")
@@ -517,7 +509,7 @@ custom_vector_field.nm_generic <- function(m, field, replace){
   m[[field]] <- replace
   m
 }
-custom_vector_field.nm_list <- Vectorize_nm_list(custom_vector_field.nm_generic, SIMPLIFY = FALSE, replace_arg = "replace")
+custom_vector_field.nm_list <- Vectorize_nm_list(custom_vector_field.nm_generic, SIMPLIFY = FALSE, replace_arg = "replace", vectorize.args = c("m", "field"))
 
 
 ctl_list2 <- function(r){

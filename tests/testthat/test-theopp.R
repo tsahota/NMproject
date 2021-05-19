@@ -70,6 +70,12 @@ test_that("run and post",{
   gfs <- glue_fields(m1)
   expect_true(length(gfs) > 0)
   
+  ## custom_vector_field
+  dummy_list <- list(a = 1, b = 1:2)
+  m1 <- m1 %>% custom_vector_field("test field", dummy_list)
+  extracted_list <- m1 %>% custom_vector_field("test field") %>% dplyr::first()
+  expect_identical(dummy_list, extracted_list)
+  
   dataset <- data_name(ctl_path(m1))
   expect_true(file.exists(file.path(run_in(m1), dataset)))
   
@@ -142,7 +148,11 @@ test_that("run and post",{
   m1 <- m1 %>% remove_parameter("DUMPARAM")
   expect_true(!any(grepl("\\bDUMPARAM\\b", m1 %>% dollar("PK"))))
   
+  new_tol <- m1 %>% advan(13) %>% tol(12) %>% tol()
+  expect_true(new_tol %in% 12)
+  
   m1 <- readRDS("Results/m1.RDS")
+  
   cache_history(m1)
   cache_current(m1)
   
@@ -152,6 +162,9 @@ test_that("run and post",{
   clean_run(m1) ## remove non-temp
   wipe_run(m1)  ## remove all
   expect_true(!file.exists(run_dir_path(m1)))
+  
+  clear_cache()
+  expect_true(!file.exists(".cache"))
   
   ## can't test job_stats as xmls are removed
   #d <- job_stats(m1)

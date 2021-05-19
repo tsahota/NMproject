@@ -87,15 +87,6 @@ ctl_list.ctl_character <- function(r){
 }
 
 #' @export
-ctl_list.nmexecute <- function(r){
-  ctl <- ctl_character(r)
-  file_name <- attributes(ctl)$file_name
-  ctl <- ctl_nm2r(ctl)
-  attr(ctl, "file_name") <- file_name
-  return(ctl)  
-}
-
-#' @export
 ctl_list.ctl_list <- function(r){
   r
 }

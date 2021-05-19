@@ -614,10 +614,13 @@ tol.nm_generic <- function(m, text){
   old_target <- target(m)
   m <- m %>% target("SUB")
   
-  if(grepl("TOL", text(m))){ ## TOL already exists
+  if(any(grepl("TOL", text(m)))){ ## TOL already exists
     m <- m %>% gsub_ctl("TOL[0-9]+", paste0("TOL", text))
   } else {
-    m <- m %>% text(paste(text(m), paste0("TOL", text)))
+    existing_text <- text(m)
+    existing_text[grepl("ADVAN", existing_text)] <- 
+      paste(existing_text[grepl("ADVAN", existing_text)], paste0("TOL", text))
+    m <- m %>% text(existing_text)
   }
   
   m <- m %>% target(old_target)

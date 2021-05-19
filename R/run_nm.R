@@ -105,11 +105,8 @@ run_nm.nm_generic <- function(m,
   kill_job(m)
   
   message(paste0("Running: ",type(m),":",ctl_path(m)))
-  stdout0 <- system_nm(cmd = cmd(m),
-                       dir = run_in(m), 
-                       wait = FALSE,
-                       ignore.stdout = FALSE,
-                       ignore.stderr = FALSE,
+  stdout0 <- system_nm(cmd = cmd(m), dir = run_in(m), wait = FALSE,
+                       ignore.stdout = FALSE, ignore.stderr = FALSE,
                        intern=intern)
   
   if(intern) {
