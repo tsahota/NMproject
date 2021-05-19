@@ -70,15 +70,6 @@ ctl_character <- function(r){
   stop("cannot coerce to ctl_character")
 }
 
-#' print ctl file from an nm object
-#' 
-#' @param r object of class nm
-#' @export
-print_ctl <- function(r) {
-  print(ctl_character(r))
-  invisible(r)
-}
-
 #' Constructor/converter to ctl_list
 #' @param r either class nmexecute, character, ctl_list, ctl_character
 #' @return object of class ctl_list
@@ -355,30 +346,6 @@ update_parameters0 <- function(ctl,coef_from,type = c("THETA","OMEGA","SIGMA")){
   ctl_lines
 }
 
-#' gsub for ctl file
-#' 
-#' @param ctl object coercible into ctl_character
-#' @param pattern argument passed to gsub
-#' @param replacement argument passed to gsub
-#' @param ... additional arguments passed to gsub
-#' @param dollar character name of subroutine
-#' @export
-
-gsub_ctl <- function(ctl, pattern, replacement, ..., dollar = NA_character_){
-  UseMethod("gsub_ctl")
-}
-
-#' @export
-gsub_ctl.default <- function(ctl, pattern, replacement, ..., dollar = NA_character_){
-  if(is.na(dollar)){
-    ctl <- ctl_character(ctl)
-    ctl <- gsub(pattern, replacement, x = ctl, ...)    
-  } else {
-    ctl <- ctl_list(ctl)
-    ctl[[dollar]] <- gsub(pattern, replacement, x = ctl[[dollar]], ...)    
-  }
-  ctl_list(ctl)
-}
 
 
 
@@ -691,6 +658,19 @@ comment_out <- function(m, pattern = ".*"){
 #' @export
 uncomment <- function(m, pattern = ".*"){
   m %>% gsub_ctl(paste0("^;+\\s*(",pattern,")"), "\\1")
+}
+
+#' gsub for ctl file
+#' 
+#' @param ctl object coercible into ctl_character
+#' @param pattern argument passed to gsub
+#' @param replacement argument passed to gsub
+#' @param ... additional arguments passed to gsub
+#' @param dollar character name of subroutine
+#' @export
+
+gsub_ctl <- function(ctl, pattern, replacement, ..., dollar = NA_character_){
+  UseMethod("gsub_ctl")
 }
 
 #' @export

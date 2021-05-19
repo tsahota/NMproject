@@ -437,33 +437,9 @@ code_library <- function(extn = NULL, fields = "Description", viewer = TRUE, sil
 }
 
 
-#' Preview code_library file
-#' @param name character indicating script in code_library to preview
-#' @export
-preview <- function(name) {
-  ## preview files in code_library
-  if(length(name)>1) stop("can only preview one file at a time")
-  if (is_full_path(name)) {
-    if (!file.exists(name)) 
-      stop("file not found")
-    file.show(name)
-    return()
-  }
-  d <- code_library(extn = ".*", viewer = FALSE, silent = TRUE, return_info = TRUE, 
-                    fields = c())
-  if (!name %in% d$NAME) 
-    stop("file not found in code_library")
-  if (length(which(d$NAME %in% name)) > 1) 
-    stop("Matched more than one file with that name.\n Try preview() again with full path")
-  pos <- match(name, d$NAME)
-  path <- file.path(d$FOLDER[pos], d$NAME[pos])
-  file.show(path)
-}
-
 #' Display code library search path
 #'
 #' @export
-
 code_library_path <- function() getOption("code_library_path")
 
 #' Attach code library
@@ -474,16 +450,6 @@ code_library_path <- function() getOption("code_library_path")
 
 attach_code_library <- function(path) {
   options(code_library_path = unique(c(path, getOption("code_library_path"))))
-}
-
-#' Replaces code library
-#'
-#' Replace code library search path with path(s)
-#'
-#' @param path character vector with paths to attach to
-
-replace_code_library <- function(path) {
-  options(code_library_path = unique(path))
 }
 
 short_path <- function(x) {

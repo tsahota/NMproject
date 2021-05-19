@@ -48,7 +48,7 @@ test_that("set up",{
   expect_error(nm_tran("run1.mod"))
   options(nmtran_exe_path=old.opt)
 
-  find_nm_install_path()
+  expect_error(nm("execute run1.mod -dir=m1"))
   
   d <- code_library(viewer = FALSE, return_info = TRUE)
   expect_true(nrow(d) > 10)

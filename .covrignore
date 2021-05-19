@@ -8,3 +8,8 @@ R/find_nonmem.R
 R/make_OCC_every_dose.R
 R/nm_tran.R
 R/job_stats.R
+R/show_file.R
+R/nm_tree.R
+R/prompt_overwrite.R
+R/preview.R
+R/nmsave.R

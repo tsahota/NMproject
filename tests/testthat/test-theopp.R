@@ -137,6 +137,9 @@ test_that("run and post",{
   expect_true(!any(grepl("\\bDUMPARAM\\b", m1 %>% dollar("PK"))))
   
   m1 <- readRDS("Results/m1.RDS")
+  cache_history(m1)
+  cache_current(m1)
+  
   ## shouldn't be any temp files for m1 in zip
   expect_true(length(ls_tempfiles(m1)) == 0)
   

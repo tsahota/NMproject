@@ -11,14 +11,6 @@ job_info <- function(m, text){
   UseMethod("job_info")  
 }
 
-#' Show lst file
-#'
-#' @param r object of class nm
-#' @export
-out <- function(r) {
-  .Deprecated("show_out")
-}
-
 show_file <- function(file_name){
   if(.Platform$OS.type=="windows")
     file.show(file_name) else
