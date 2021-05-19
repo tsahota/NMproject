@@ -27,3 +27,14 @@ Name: view patch
 Description: run view_patch on selected string
 Binding: view_patch_app
 Interactive: true
+
+Name: show model/ctl file
+Description: Displays safe read-only version of model file
+Binding: show_ctl_app
+Interactive: true
+
+Name: show output file
+Description: Displays safe read-only version of output file
+Binding: show_out_app
+Interactive: true
+

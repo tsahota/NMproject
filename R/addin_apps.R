@@ -36,3 +36,13 @@ nm_diff_app <- function(){
   m <- get_single_object_for_app()
   nm_diff(m)
 }
+
+show_ctl_app <- function(){
+  m <- get_single_object_for_app()
+  show_ctl(m)
+}
+
+show_out_app <- function(){
+  m <- get_single_object_for_app()
+  show_out(m)
+}
