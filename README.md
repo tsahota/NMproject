@@ -57,18 +57,18 @@ Two-minute Youtube summary (alpha interface):
 ## Installation
 
 NONMEM, PsN, and Rstudio are required to be installed prior to these
-steps. To install a specific release version (e.g. v0.5.1) from
+steps. To install the latest development version from
 [GitHub](https://github.com/):
 
 ``` r
 if(!require("devtools")) install.packages("devtools")
-devtools::install_github("tsahota/NMproject@v0.5.1")
+devtools::install_github("tsahota/NMproject")
 ```
 
-To install the latest developmental version:
+To install a specific release (e.g. v0.5.1) use the following command:
 
 ``` r
-devtools::install_github("tsahota/NMproject")
+devtools::install_github("tsahota/NMproject@v0.5.1")
 ```
 
 Load the package with
@@ -79,10 +79,12 @@ library(NMproject)
 
 ## Getting started with NMproject
 
+See the
+[vignette](https://tsahota.github.io/NMproject/articles/NMproject.html)
+for instructions on how to get started.
+
 The easiest way to familiarise your with NMproject is to follow through
-the demo. The
-(vignette)\[<https://tsahota.github.io/NMproject/articles/NMproject.html>\]
-gives instructions for how to get started.
+the demo.
 
 ## Example code
 
