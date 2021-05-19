@@ -17,7 +17,7 @@ rename a parameter in NONMEM control stream
 \examples{
 \dontrun{
 
-m1 \%>\% rename_parameter(CL = KE)
+m1 \%>\% rename_parameter("CL" = "KE")
 ## renames KE to CL
 
 }

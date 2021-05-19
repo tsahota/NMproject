@@ -66,6 +66,13 @@ test_that("run and post",{
   
   expect_true(length(nm_list_gather(environment())) == 1)
   
+  print(as_nm_generic(m1))
+  gfs <- glue_fields(m1)
+  expect_true(length(gfs) > 0)
+  
+  dataset <- data_name(ctl_path(m1))
+  expect_true(file.exists(file.path(run_in(m1), dataset)))
+  
   m1 <- m1 %>% simple_field(test_field = 3)
   expect_true(simple_field(m1, test_field) == 3)
   
@@ -124,7 +131,10 @@ test_that("run and post",{
   expect_true(is.numeric(BIC(m1)))
   expect_true(is.numeric(cond_num(m1)))
   
-  m1 <- m1 %>% remove_parameter("K")
+  m1 <- m1 %>% rename_parameter("DUMPARAM" = "K")
+  expect_true(any(grepl("\\bDUMPARAM\\b", m1 %>% dollar("PK"))))
+  m1 <- m1 %>% remove_parameter("DUMPARAM")
+  expect_true(!any(grepl("\\bDUMPARAM\\b", m1 %>% dollar("PK"))))
   
   m1 <- readRDS("Results/m1.RDS")
   ## shouldn't be any temp files for m1 in zip
