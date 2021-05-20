@@ -11,23 +11,47 @@ vignette: >
 
 ## Why NMproject?
 
-NMproject's initial outing (the alpha interface) was developed in AZ and internally had 83% voluntary user retention ("user" = someone with 5+ separate model development workflows).  NMproject's main objective is industrialisation via script based model development.
+### History
 
-The beta interface is a completely new syntax that address several shortcoming of the previous syntax and expands functionality.
+NMproject's initial outing (the "alpha" interface) was developed in AZ and internally had 83% voluntary user retention ("user" = someone with 5+ separate model development workflows) across 100s of analyses in all TAs.  It was a prototype R package produced to demonstrate the concept of industrialising pharmacometric analyses via script based model development.  Key benefits included:
 
-So why NMproject?
+1. script-based model development workflows being used as the primary location to record modeller thoughts/notes/decisions alongside reproducible, re-executable code
 
-- Go from code library templates (shiny interface) to a working parent NONMEM model quickly and entirely within R.  See demo.
+2. a code library to encourage standardisation and sharing of best coding practices
 
-- Use R functions and tracked manual editing to create NONMEM runs.  NMproject is the only NONMEM interface (that I know of) that tracks manual edits to NONMEM code in the form of reusable patches.  It is also the only R package (that I know of) with a vectorized model object allowing single runs to be handled in the same way as groups of runs.
+3. compatibility with PsN and Pirana
 
-- Create end-to-end model development workflows entirely within R without any additional effort. Run caching encourages you to re-execute scripts and rebuild objects frequently to ensure your workflow contains no reproduciblity breaks.  Use workflows to pre-program analyses for project decision points, and repeat workflows to greatly accelerate re-analysis with updated datasets.
+4. installable in a wide variety of infrastructures in multiple organisations, from standalone windows installations to large unix based clusters
 
-- See impactful oncology example where the commitment to pre-program in NMproject and deliver analysis in stats-like timelines got us onto formal go-nogo: https://youtu.be/QVw28Im3Zz0)
+### New interface
 
-- R markdown friendly. Pipe friendly. Create human readable model development logs for other people (or even yourself in 6 months) to read/refresh.
+This is the new "beta" interface.  A completely redesigned syntax that address several shortcoming of the previous syntax and expands functionality.  Why the redesign?
 
-Prerequisites: NMproject targetted towards mid to upper level R/NONMEM users. If you know what a pipe is, what knitr is, you should be good.  If you know dplyr you'll be able to use the advanced functionality to complex workflows
+-	(*New*)End-to-end model development workflows/notebooks for people who want 100% control over their model files.  The new interface is the only NONMEM interface (known to the author) that can record and replay manual edits to files (seemlessly) for 100% flexibility without breaking the end-to-end reproducibility.  
+
+-	(*New*)R Functions to automatically fill $INPUT, $DATA, $THETA,… elements as well as various other routine model file manipulations
+
+- (*New*)Import code library templates (via a shiny interface) and get to a working NONMEM model quickly and entirely within R.  See demo.
+
+-	(*New*)NMproject is the only R package (known to the author) with a vectorized model object allowing groups of models to be operated on using the same syntax as a single model.
+
+-	(*New*)Custom NMproject implementations of bootstrap, cross-validation, PPCs, stepwise covariate selection, and simulation-re-estimation. All controllable on granular level using vectorized model objects.
+
+-	Diagnostics and VPCs using your favourite packages (e.g., xpose, vpc, …)
+
+-	(*New*)RStudio addins to streamline user experience.
+
+-	Monitor runs via shiny app including interactive OFV vs iteration plots for convergence assessment.
+
+-	Optional customizable analysis directory structure for consistent code organisation
+
+- (*New*)R markdown friendly. Pipe friendly
+
+NMproject has been used to conduct exploratory analyses and submission work.  Model based power calculations were performed with NMproject in collaboration with biostatistics to demonstrate feasibility, design (sample size and dose), and to plan interim decision points of a recently published oncology dose finding study using pharmacometric endpoints: [video presentation](https://youtu.be/QVw28Im3Zz0)
+
+### Prerequisites
+
+NMproject targetted towards mid to upper level R users. If you know what a pipe is, what knitr is, you should be good.  NMproject does not hide NONMEM from the user so users should be familiar with NONMEM coding.  For advanced functionality, knowledge of dplyr will help to create complex workflows.
 
 
 ```{r setup, include=FALSE}
