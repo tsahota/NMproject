@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>run_nm in batches — run_nm_batch • NMproject</title>
+<title>Execute run_nm in batches — run_nm_batch • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="run_nm in batches — run_nm_batch" />
-<meta property="og:description" content="a variant of run_nm() that will submit run_nm's in batches and wait for them to complete" />
+<meta property="og:title" content="Execute run_nm in batches — run_nm_batch" />
+<meta property="og:description" content="a variant of run_nm that will submit run_nm's in
+batches and wait for them to complete" />
 
 
 
@@ -114,13 +115,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>run_nm in batches</h1>
+    <h1>Execute run_nm in batches</h1>
     <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/run_nm.R'><code>R/run_nm.R</code></a></small>
     <div class="hidden name"><code>run_nm_batch.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>a variant of <code><a href='run_nm.html'>run_nm()</a></code> that will submit run_nm's in batches and wait for them to complete</p>
+    <p>a variant of <code><a href='run_nm.html'>run_nm</a></code> that will submit <code><a href='run_nm.html'>run_nm</a></code>'s in
+batches and wait for them to complete</p>
     </div>
 
     <pre class="usage"><span class='fu'>run_nm_batch</span><span class='op'>(</span><span class='va'>m</span>, threads <span class='op'>=</span> <span class='fl'>10</span>, <span class='va'>...</span><span class='op'>)</span></pre>
@@ -144,7 +146,10 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>if you need all the runs to complete ensure you use a <code><a href='wait_finish.html'>wait_finish</a></code> statement afterwards as R console will only be blocked for until the last batch has been submitted which will be before all runs have completed</p>
+    <p>if you need all the runs to complete ensure you use a
+  <code><a href='wait_finish.html'>wait_finish</a></code> statement afterwards as R console will only be
+  blocked for until the last batch has been submitted which will be before
+  all runs have completed</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='run_nm.html'>run_nm</a></code></p></div>

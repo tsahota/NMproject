@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create omega/sigma block from init_omega() and init_sigma() output — block • NMproject</title>
+<title>Create $OMEGA/$SIGMA BLOCK from init_omega and init_sigma output — block • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Create omega/sigma block from init_omega() and init_sigma() output — block" />
-<meta property="og:description" content="Create omega/sigma block from init_omega() and init_sigma() output" />
+<meta property="og:title" content="Create $OMEGA/$SIGMA BLOCK from init_omega and init_sigma output — block" />
+<meta property="og:description" content="Create $OMEGA/$SIGMA BLOCK from init_omega and init_sigma output" />
 
 
 
@@ -114,13 +114,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create omega/sigma block from init_omega() and init_sigma() output</h1>
+    <h1>Create $OMEGA/$SIGMA BLOCK from init_omega and init_sigma output</h1>
     <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/nm_object.R'><code>R/nm_object.R</code></a></small>
     <div class="hidden name"><code>block.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create omega/sigma block from init_omega() and init_sigma() output</p>
+    <p>Create $OMEGA/$SIGMA BLOCK from init_omega and init_sigma output</p>
     </div>
 
     <pre class="usage"><span class='fu'>block</span><span class='op'>(</span><span class='va'>iomega</span>, eta_numbers <span class='op'>=</span> <span class='cn'>NA</span>, diag_init <span class='op'>=</span> <span class='fl'>0.01</span><span class='op'>)</span></pre>
@@ -130,11 +130,13 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>iomega</th>
-      <td><p>tibble.  Output from init_omega() and init_sigma()</p></td>
+      <td><p>tibble.  Output from <code><a href='init_theta.html'>init_omega</a></code> and
+<code><a href='init_theta.html'>init_sigma</a></code></p></td>
     </tr>
     <tr>
       <th>eta_numbers</th>
-      <td><p>numeric vector.  ETA numbers to put into a block. Must be contiguous</p></td>
+      <td><p>numeric vector.  ETA numbers to put into a block. Must be
+contiguous</p></td>
     </tr>
     <tr>
       <th>diag_init</th>
@@ -144,7 +146,8 @@
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='unblock.html'>unblock</a></code>, <code><a href='init_theta.html'>init_theta</a></code></p></div>
+    <div class='dont-index'><p><code><a href='unblock.html'>unblock</a></code>, <code><a href='init_theta.html'>init_theta</a></code>,
+  <code><a href='init_theta.html'>init_omega</a></code>, <code><a href='init_theta.html'>init_sigma</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
