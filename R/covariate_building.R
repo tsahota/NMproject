@@ -298,7 +298,7 @@ remove_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
 remove_cov.nm_list <- Vectorize_nm_list(remove_cov.nm_generic, SIMPLIFY = FALSE)
 
 
-#' produce dataset for covariate forest plotting
+#' Produce dataset for covariate forest plotting
 #'
 #' @param m nm object
 #' @param covariate_scenarios data.frame. need names "cov", "value" and (optional) "text"
@@ -497,9 +497,36 @@ cov_forest_data <- function(m, covariate_scenarios){
   
 }
 
-#' plotting covariate forest plots
+#' Plot covariate forest plots
 #'
-#' @param d data.frame from cov_forest_data
+#' Uses \code{ggplot2} to take outputs from \code{\link{cov_forest_data}}
+#' and display a forest plot
+#'
+#' @param d data.frame from \code{\link{cov_forest_data}}
+#'
+#' @return a \code{ggplot2} forest plot
+#' @seealso \code{\link{cov_forest_data}}
+#' @examples 
+#' \dontrun{
+#' 
+#' dcov <- input_data(m1, filter = TRUE)
+#' dcov <- dcov[!duplicated(dcov$ID), ]
+#' covariate_scenarios <- bind_rows(
+#'   tibble(cov = "HEALTHGP", value = c(0, 1)),
+#'   tibble(cov = "HEPATIC", value = unique(dcov$HEPATIC[dcov$HEPATIC > -99])),
+#'   tibble(cov = "BWTIMP", value = c(50, 80, 120)),
+#'   tibble(cov = "ECOG", value = c(0,1,2,3)),
+#'   tibble(cov = "BEGFRIMP", value = quantile(dcov$BEGFR[dcov$BEGFR > -99])),
+#'   tibble(cov = "RACE", value = c(1,2),text=c("white","black")),
+#'   tibble(cov = "PPI", value = c(0,1)),
+#'   tibble(cov = "H2RA", value = c(0,1))
+#' )
+#' 
+#' dplot <- cov_forest_data(m1, covariate_scenarios = covariate_scenarios)
+#' cov_forest_plot(dplot)
+#' 
+#' }
+#' 
 #' @export
 
 cov_forest_plot <- function(d){
@@ -560,7 +587,7 @@ append_nonmem_var <- function(output_table, r, var){
 }
 
 
-#' plot relationship between a parameter and covariate
+#' Plot relationship between a parameter and covariate
 #' 
 #' @param r nm object
 #' @param param character. Name of parameter

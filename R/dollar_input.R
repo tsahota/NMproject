@@ -1,4 +1,3 @@
-
 dollar_input <- function(d, keep, drop = character(), rename){
   
   ## keep list of names to definately keep

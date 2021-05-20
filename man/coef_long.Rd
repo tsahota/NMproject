@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_record.R
 \name{coef_long}
 \alias{coef_long}
-\title{coef (in long format)}
+\title{Coef (in long format)}
 \usage{
 coef_long(m, trans = TRUE)
 }
@@ -12,5 +12,5 @@ coef_long(m, trans = TRUE)
 \item{trans}{logical (default = TRUE) should transform parameters?}
 }
 \description{
-coef (in long format)
+Coef (in long format)
 }

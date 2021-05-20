@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_object.R
 \name{run_dir_path}
 \alias{run_dir_path}
-\title{get path to run_dir}
+\title{Get path to run_dir}
 \usage{
 run_dir_path(m)
 }
@@ -10,7 +10,7 @@ run_dir_path(m)
 \item{m}{nm object}
 }
 \description{
-get path to run_dir
+Get path to run_dir
 }
 \seealso{
 \code{\link{nm_getsetters}}

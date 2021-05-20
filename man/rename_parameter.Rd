@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_object.R
 \name{rename_parameter}
 \alias{rename_parameter}
-\title{rename a parameter in NONMEM control stream}
+\title{Rename a parameter in NONMEM control stream}
 \usage{
 rename_parameter(m, ...)
 }
@@ -12,7 +12,7 @@ rename_parameter(m, ...)
 \item{...}{renaming arguments}
 }
 \description{
-rename a parameter in NONMEM control stream
+Rename a parameter in NONMEM control stream
 }
 \examples{
 \dontrun{

@@ -2,13 +2,42 @@
 % Please edit documentation in R/covariate_building.R
 \name{cov_forest_plot}
 \alias{cov_forest_plot}
-\title{plotting covariate forest plots}
+\title{Plot covariate forest plots}
 \usage{
 cov_forest_plot(d)
 }
 \arguments{
-\item{d}{data.frame from cov_forest_data}
+\item{d}{data.frame from \code{\link{cov_forest_data}}}
+}
+\value{
+a \code{ggplot2} forest plot
 }
 \description{
-plotting covariate forest plots
+Uses \code{ggplot2} to take outputs from \code{\link{cov_forest_data}}
+and display a forest plot
+}
+\examples{
+\dontrun{
+
+dcov <- input_data(m1, filter = TRUE)
+dcov <- dcov[!duplicated(dcov$ID), ]
+covariate_scenarios <- bind_rows(
+  tibble(cov = "HEALTHGP", value = c(0, 1)),
+  tibble(cov = "HEPATIC", value = unique(dcov$HEPATIC[dcov$HEPATIC > -99])),
+  tibble(cov = "BWTIMP", value = c(50, 80, 120)),
+  tibble(cov = "ECOG", value = c(0,1,2,3)),
+  tibble(cov = "BEGFRIMP", value = quantile(dcov$BEGFR[dcov$BEGFR > -99])),
+  tibble(cov = "RACE", value = c(1,2),text=c("white","black")),
+  tibble(cov = "PPI", value = c(0,1)),
+  tibble(cov = "H2RA", value = c(0,1))
+)
+
+dplot <- cov_forest_data(m1, covariate_scenarios = covariate_scenarios)
+cov_forest_plot(dplot)
+
+}
+
+}
+\seealso{
+\code{\link{cov_forest_data}}
 }

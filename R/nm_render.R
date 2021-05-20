@@ -1,5 +1,4 @@
-
-#' render function for nm objects
+#' Render function for nm objects
 #' 
 #' @param m nm object
 #' @param input character. Same as rmarkdown::render() arg
@@ -117,7 +116,7 @@ nm_render.nm_generic <- function(m,
 #' @export
 nm_render.nm_list <- Vectorize_nm_list(nm_render.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
-#' render function for child nm_lists
+#' Render function for child nm_lists
 #' 
 #' Mostly used for bootstraps, and other routines where
 #'   a parent run spawns multiple children in the form of an nm_list

@@ -2,7 +2,7 @@
 % Please edit documentation in R/NMproject.R
 \name{from_models}
 \alias{from_models}
-\title{path of directory from models dir}
+\title{Path of directory from models dir}
 \usage{
 from_models(x, models_dir = nm_default_dir("models"))
 }
@@ -12,5 +12,5 @@ from_models(x, models_dir = nm_default_dir("models"))
 \item{models_dir}{character. Models directory}
 }
 \description{
-path of directory from models dir
+Path of directory from models dir
 }

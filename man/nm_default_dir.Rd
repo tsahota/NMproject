@@ -2,7 +2,7 @@
 % Please edit documentation in R/NMproject.R
 \name{nm_default_dir}
 \alias{nm_default_dir}
-\title{get a default directory}
+\title{Get a default directory}
 \usage{
 nm_default_dir(name = c("scripts", "models", "results"), ...)
 }
@@ -12,7 +12,7 @@ nm_default_dir(name = c("scripts", "models", "results"), ...)
 \item{...}{not used yet}
 }
 \description{
-get a default directory
+Get a default directory
 }
 \examples{
 nm_default_dir("scripts")

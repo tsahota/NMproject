@@ -13,5 +13,5 @@ ctl_character(r)
 object of class ctl_character
 }
 \description{
-Constructor/converter to ctl_character
+Internal function
 }

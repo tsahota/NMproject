@@ -2,7 +2,7 @@
 % Please edit documentation in R/covariate_building.R
 \name{cov_forest_data}
 \alias{cov_forest_data}
-\title{produce dataset for covariate forest plotting}
+\title{Produce dataset for covariate forest plotting}
 \usage{
 cov_forest_data(m, covariate_scenarios)
 }
@@ -12,7 +12,7 @@ cov_forest_data(m, covariate_scenarios)
 \item{covariate_scenarios}{data.frame. need names "cov", "value" and (optional) "text"}
 }
 \description{
-produce dataset for covariate forest plotting
+Produce dataset for covariate forest plotting
 }
 \examples{
 \dontrun{

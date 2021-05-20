@@ -2,7 +2,7 @@
 % Please edit documentation in R/NMproject.R
 \name{nm_tran_command}
 \alias{nm_tran_command}
-\title{get/set nm_tran_command}
+\title{Get/set nm_tran_command}
 \usage{
 nm_tran_command(text)
 }

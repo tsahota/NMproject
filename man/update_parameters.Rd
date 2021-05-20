@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_object.R
 \name{update_parameters}
 \alias{update_parameters}
-\title{update parameters from a control stream}
+\title{Update parameters from a control stream}
 \usage{
 update_parameters(ctl, from)
 }
@@ -12,5 +12,5 @@ update_parameters(ctl, from)
 \item{from}{class nm. object from which to extract results}
 }
 \description{
-update parameters from a control stream
+Update parameters from a control stream
 }

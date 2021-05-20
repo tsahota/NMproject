@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilsExtra.R
 \name{is_nm_generic}
 \alias{is_nm_generic}
-\title{test if object is an nm_generic object}
+\title{Test if object is an nm_generic object}
 \usage{
 is_nm_generic(x)
 }
@@ -10,5 +10,5 @@ is_nm_generic(x)
 \item{x}{object}
 }
 \description{
-test if object is an nm_generic object
+Test if object is an nm_generic object
 }

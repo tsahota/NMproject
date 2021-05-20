@@ -2,7 +2,7 @@
 % Please edit documentation in R/monitoring.R
 \name{status}
 \alias{status}
-\title{get status of a run}
+\title{Get status of a run}
 \usage{
 status(x)
 }
@@ -10,5 +10,5 @@ status(x)
 \item{x}{nm object}
 }
 \description{
-get status of a run
+Get status of a run
 }

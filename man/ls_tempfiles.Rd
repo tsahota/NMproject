@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_object.R
 \name{ls_tempfiles}
 \alias{ls_tempfiles}
-\title{get all temp files}
+\title{Get all temp files}
 \usage{
 ls_tempfiles(
   object = ".",

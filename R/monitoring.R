@@ -1,4 +1,4 @@
-#' get status of a run
+#' Get status of a run
 #' 
 #' @param x nm object
 #' @export
@@ -62,7 +62,7 @@ status.nm_generic <- function(x){
 #' @export
 status.nm_list <- Vectorize_nm_list(status.nm_generic)
 
-#' get status of multiple runs in form of table
+#' Get status of multiple runs in form of table
 #' 
 #' @param m nm objects
 #' 
@@ -75,7 +75,7 @@ status_table <- function(m){
 }
 
 
-#' tests if job is finished
+#' Tests if job is finished
 #'
 #' @param r object class nm
 #' @param initial_timeout numeric. time in seconds.
@@ -110,7 +110,7 @@ is_finished.nm_generic <- function(r, initial_timeout=NA){
 #' @export
 is_finished.nm_list <- Vectorize_nm_list(is_finished.nm_generic)
 
-#' test if NONMEM ran without errors
+#' Test if NONMEM ran without errors
 #' 
 #' @param r nm object
 #' 
@@ -122,7 +122,7 @@ is_successful <- function(r) {
 }
 
 
-#' wait for runs to finish
+#' Wait for runs to finish
 #' 
 #' blocks subsequent r execution until run(s) are finished
 #' 

@@ -3,7 +3,7 @@
 \docType{data}
 \name{git_cmd_available}
 \alias{git_cmd_available}
-\title{check if git is available on command line}
+\title{Check if git is available on command line}
 \format{
 An object of class \code{logical} of length 1.
 }
@@ -11,6 +11,6 @@ An object of class \code{logical} of length 1.
 git_cmd_available
 }
 \description{
-check if git is available on command line
+Check if git is available on command line
 }
 \keyword{datasets}

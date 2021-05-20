@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_object.R
 \name{simple_field}
 \alias{simple_field}
-\title{get/set simple fields of nm objects}
+\title{Get/set simple fields of nm objects}
 \usage{
 simple_field(m, ...)
 }
@@ -12,7 +12,7 @@ simple_field(m, ...)
 \item{...}{arguments to get/set fields}
 }
 \description{
-get/set simple fields of nm objects
+Get/set simple fields of nm objects
 }
 \examples{
 \dontrun{

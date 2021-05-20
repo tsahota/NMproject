@@ -16,5 +16,30 @@ read_derived_data(name, na = ".", silent = FALSE, ...)
 \item{...}{additional arguments to be passed to read.csv}
 }
 \description{
-Read derived data
+Read the derived data directly instead of via the nm object which is what
+\code{\link{input_data}} does.
+}
+\examples{
+\dontrun{
+
+## read a dataset that's been copie into SourceData
+d <- read.csv("SourceData/orig_data.csv")
+
+## modify it
+d <- d[d$ID < 10, ]
+
+d \%>\% write_derived_data("DerivedData/data.csv")
+
+## load it again either with
+d <- read_derived_data("data")
+
+## or more commonly if it is associated with run (e.g. m1),
+## you can use input_data() to load it via the nm object
+
+d <- input_data(m1)
+
+}
+}
+\seealso{
+\code{\link{write_derived_data}}, \code{\link{input_data}}
 }

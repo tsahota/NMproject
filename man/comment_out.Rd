@@ -2,7 +2,7 @@
 % Please edit documentation in R/ctl_handling.R
 \name{comment_out}
 \alias{comment_out}
-\title{comment lines of control file}
+\title{Comment lines of control file}
 \usage{
 comment_out(m, pattern = ".*")
 }
@@ -12,5 +12,8 @@ comment_out(m, pattern = ".*")
 \item{pattern}{optional character regex.  Passed to gsub}
 }
 \description{
-comment lines of control file
+Comment lines of control file
+}
+\seealso{
+\code{\link{uncomment}}, @seealso \code{\link{gsub_ctl}}
 }

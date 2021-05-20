@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_object.R
 \name{convert_to_simulation}
 \alias{convert_to_simulation}
-\title{convert a NONMEM run to a simulation}
+\title{Convert a NONMEM run to a simulation}
 \usage{
 convert_to_simulation(m, seed = 12345, subpr = 1)
 }

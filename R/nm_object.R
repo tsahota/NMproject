@@ -99,7 +99,7 @@ To use the alpha interface, install NMproject 0.3.2",
 #' @export
 nm <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
 
-#' create a new nm object
+#' Create a new nm object
 #' 
 #' Wrapper function around nm()
 #' @param based_on character. Prior ctl file to base run on
@@ -430,7 +430,7 @@ get_simple_field <- function(m, field){
   
 }
 
-#' get/set simple fields of nm objects
+#' Get/set simple fields of nm objects
 #' 
 #' @param m nm object
 #' @param ... arguments to get/set fields
@@ -726,7 +726,7 @@ fill_dollar_data <- function(m, data_name){
   m
 }
 
-#' fill $INPUT
+#' Fill $INPUT
 #' 
 #' Uses dataset to fill $INPUT in ctl_contents
 #' 
@@ -896,7 +896,7 @@ param_info2 <- function(m){
 }
 
 
-#' update parameters from a control stream
+#' Update parameters from a control stream
 #'
 #' @param ctl object coercible into ctl_list
 #' @param from class nm. object from which to extract results
@@ -958,7 +958,7 @@ cache_current <- function(m) run_checksums(m)
 
 clear_cache <- function() unlink(".cache", recursive = TRUE)
 
-#' get all temp files
+#' Get all temp files
 #'
 #' list all tempfiles (normally for deletion)
 #'
@@ -1262,7 +1262,7 @@ nm_diff <- function(m, ref_m, format = "raw"){
   dff
 }
 
-#' remove parameter from NONMEM control file
+#' Remove parameter from NONMEM control file
 #' 
 #' @param m nm object
 #' @param name character. Parameter to remove
@@ -1369,7 +1369,7 @@ rename_parameter_.nm_generic <- function(m, new_name, name){
 
 rename_parameter_.nm_list <- Vectorize_nm_list(rename_parameter_.nm_generic, SIMPLIFY = FALSE)
 
-#' rename a parameter in NONMEM control stream
+#' Rename a parameter in NONMEM control stream
 #' 
 #' @param m nm object
 #' @param ... renaming arguments
@@ -1886,7 +1886,7 @@ param_r2nm_extra <- function(d){
 }
 
 
-#' convert nm objects to a rowwise tibble/data.frame
+#' Convert nm objects to a rowwise tibble/data.frame
 #'
 #' used mainly internally, but this could find use with advanced users
 #'
@@ -1968,7 +1968,7 @@ rr_row <- function(m){
   d
 }
 
-#' get path to run_dir
+#' Get path to run_dir
 #' 
 #' @param m nm object
 #' @seealso \code{\link{nm_getsetters}}
@@ -2170,23 +2170,26 @@ update_variable_in_text_numbers <- function(m, before_number, after_number){
 }
 
 
-#' Create omega/sigma block from init_omega() and init_sigma() output
-#' 
-#' @param iomega tibble.  Output from init_omega() and init_sigma()
-#' @param eta_numbers numeric vector.  ETA numbers to put into a block. Must be contiguous
+#' Create $OMEGA/$SIGMA BLOCK from init_omega and init_sigma output
+#'
+#' @param iomega tibble.  Output from \code{\link{init_omega}} and
+#'   \code{\link{init_sigma}}
+#' @param eta_numbers numeric vector.  ETA numbers to put into a block. Must be
+#'   contiguous
 #' @param diag_init numeric. Default value for off diagonal elements
-#' 
-#' @seealso \code{\link{unblock}}, \code{\link{init_theta}}
-#' 
-#' @examples 
-#' 
+#'
+#' @seealso \code{\link{unblock}}, \code{\link{init_theta}},
+#'   \code{\link{init_omega}}, \code{\link{init_sigma}}
+#'
+#' @examples
+#'
 #' \dontrun{
 #' io <- m1 %>% init_omega()
 #' io <- io %>% block(c(2,3))
 #' m1 <- m1 %>% init_omega(io)
 #' m1 %>% dollar("OMEGA") ## to display $OMEGA
 #' }
-#' 
+#'
 #' @export
 block <- function(iomega,
                   eta_numbers = NA,
@@ -2281,7 +2284,7 @@ block <- function(iomega,
 
 block <- Vectorize(block, vectorize.args = "iomega", SIMPLIFY = FALSE)
 
-#' Remove $OMEGA/$SIGMA BLOCK from init_omega() and init_sigma() output
+#' Remove $OMEGA/$SIGMA BLOCK from init_omega and init_sigma output
 #' 
 #' @param iomega tibble.  Output from init_omega() and init_sigma()
 #' @param eta_numbers numeric vector.  ETA numbers to unblock. Must be contiguous
@@ -2375,7 +2378,7 @@ ctl_table_paths.nm_generic <- function(ctl) {
 
 ctl_table_paths.nm_list <- Vectorize_nm_list(ctl_table_paths.nm_generic, SIMPLIFY = FALSE)
 
-#' get parent object of nm object
+#' Get parent object of nm object
 #' 
 #' @param m nm object
 #' @param n numeric. generation of parent (default = 1)
@@ -2424,7 +2427,7 @@ nm_list2list <- function(m){
   m
 }
 
-#' convert a NONMEM run to a simulation
+#' Convert a NONMEM run to a simulation
 #' 
 #' replaces $EST with $SIM
 #' 
@@ -2455,8 +2458,6 @@ convert_to_simulation.nm_generic <- function(m, seed = 12345, subpr = 1){
 }
 #' @export
 convert_to_simulation.nm_list <- Vectorize_nm_list(convert_to_simulation.nm_generic, SIMPLIFY = FALSE)
-
-## TODO: get Renvironment_info to skip unparseable scripts
 
 #' @name ppc
 #' @export
@@ -2503,14 +2504,38 @@ ppc_histogram_plot <- function(d, var1, var2, statistic = "statistic"){
   
 }
 
-#' Write derived data file.
+#' Write derived data file
 #'
-#' will write to (DerivedData) directory
-#' 
+#' The will write a dataset and an .RDS version of it (for fast reading) to the
+#' (by default) "DerivedData" directory.
+#'
 #' @param d data.frame. Data frame to be saved
 #' @param name name of file (without extension). If not a path, will save to
-#'  DerivedData directory
-#' @param ...  additional arguments to be passed to write.csv
+#'   DerivedData directory
+#' @param ...  additional arguments to be passed to \code{write.csv}
+#'
+#' @seealso \code{\link{read_derived_data}}, \code{\link{input_data}}
+#'
+#' @examples
+#' \dontrun{
+#'
+#' ## read a dataset that's been copie into SourceData
+#' d <- read.csv("SourceData/orig_data.csv")
+#'
+#' ## modify it
+#' d <- d[d$ID < 10, ]
+#'
+#' d %>% write_derived_data("DerivedData/data.csv")
+#'
+#' ## load it again either with
+#' d <- read_derived_data("data")
+#'
+#' ## or more commonly if it is associated with run (e.g. m1),
+#' ## you can use input_data() to load it via the nm object
+#'
+#' d <- input_data(m1)
+#'
+#' }
 #' @export
 
 write_derived_data <- function(d, name, ...){
@@ -2562,17 +2587,38 @@ write_derived_data.list <- function (d, name, ...)
   invisible()
 }
 
-# write_derived_data.list <- Vectorize(write_derived_data.data.frame, 
-#                                      vectorize.args = c("d", "name"), 
-#                                      SIMPLIFY = TRUE)
-
 
 #' Read derived data
+#'
+#' Read the derived data directly instead of via the nm object which is what
+#' \code{\link{input_data}} does.
 #'
 #' @param name name of file (without extension)
 #' @param na character to be passed to read.csv
 #' @param silent logical (default = TRUE). should messages be suppressed
 #' @param ...  additional arguments to be passed to read.csv
+#' @seealso \code{\link{write_derived_data}}, \code{\link{input_data}}
+#'
+#' @examples
+#' \dontrun{
+#'
+#' ## read a dataset that's been copie into SourceData
+#' d <- read.csv("SourceData/orig_data.csv")
+#'
+#' ## modify it
+#' d <- d[d$ID < 10, ]
+#'
+#' d %>% write_derived_data("DerivedData/data.csv")
+#'
+#' ## load it again either with
+#' d <- read_derived_data("data")
+#'
+#' ## or more commonly if it is associated with run (e.g. m1),
+#' ## you can use input_data() to load it via the nm object
+#'
+#' d <- input_data(m1)
+#'
+#' }
 #' @export
 
 read_derived_data <- function(name, na = ".", silent = FALSE, ...){
@@ -2608,7 +2654,7 @@ read_derived_data <- function(name, na = ".", silent = FALSE, ...){
   return(d)
 }
 
-#' get all nm_list objects
+#' Get all nm_list objects
 #' 
 #' @param x environment (default = .GlobalEnv) to search
 #'   or data.frame with (nm_list column) or nm_list

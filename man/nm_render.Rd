@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_render.R
 \name{nm_render}
 \alias{nm_render}
-\title{render function for nm objects}
+\title{Render function for nm objects}
 \usage{
 nm_render(
   m,
@@ -30,7 +30,7 @@ nm_render(
 \item{...}{additional argument passed to rmarkdown::render()}
 }
 \description{
-render function for nm objects
+Render function for nm objects
 }
 \details{
 \code{input} must refer to a properly specified Rmd document.

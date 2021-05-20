@@ -2,7 +2,7 @@
 % Please edit documentation in R/monitoring.R
 \name{wait_finish}
 \alias{wait_finish}
-\title{wait for runs to finish}
+\title{Wait for runs to finish}
 \usage{
 wait_finish(r, timeout = NA)
 }

@@ -1,4 +1,6 @@
-#' get job stats
+#' Get job stats for a completed NONMEM run
+#' 
+#' Gets attributes of the run like run time, queue time
 #' 
 #' @param m nm object
 #' 

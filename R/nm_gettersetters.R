@@ -42,7 +42,7 @@ ctl_path <- function(m, text) {
 #' @name nm_getsetters
 #' @rdname nm_getsetters
 #'
-#' @title functions to access and modify fields of nm objects
+#' @title Functions to access and modify fields of nm objects
 #'
 #' @param m nm object
 #' @param text optional character for replacing field. If present function will
@@ -259,7 +259,7 @@ result_files.nm_generic <- function(m, text){
 #' @export
 result_files.nm_list <- Vectorize_nm_list(result_files.nm_generic, SIMPLIFY = FALSE)
 
-#' set/get control file object
+#' Get/set control file object
 #'
 #' @param m nm object
 #' @param ctl_ob optional path to control file
@@ -270,7 +270,6 @@ result_files.nm_list <- Vectorize_nm_list(result_files.nm_generic, SIMPLIFY = FA
 #' @export
 
 ctl_contents <- function(m, ctl_ob, update_numbering = TRUE, update_dollar_data = TRUE, ...){
-  #.Deprecated("show_ctl")
   UseMethod("ctl_contents")
 }
 

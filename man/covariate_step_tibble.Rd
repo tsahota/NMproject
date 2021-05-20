@@ -20,14 +20,15 @@ covariate_step_tibble(
 
 \item{run_in}{character.  See \code{\link{run_in}}}
 
-\item{dtest}{tibble::tibble with testing relations (from \code{\link{test_relations}})}
+\item{dtest}{\code{tibble::tibble} with testing relations (from
+\code{\link{test_relations}})}
 
 \item{direction}{character. "forward" (default) or "backward"}
 
-\item{...}{additional arguments passed to add_cov}
+\item{...}{additional arguments passed to \code{\link{add_cov}}}
 }
 \value{
-tibble::tibble dtest with appended columns
+Will return \code{dtest} a \code{tibble::tibble} with appended columns
 }
 \description{
 Prepare forward covariate step
@@ -36,15 +37,15 @@ Prepare forward covariate step
 \dontrun{
 
 dtest <- test_relations(param = c("KA", "K", "V"),
-                        cov = c("LIN1", "LIN2", "LIN3", "RND1", "RND2", "RND3"), 
-                        state = c("linear", "power"), 
+                        cov = c("LIN1", "LIN2", "LIN3", "RND1", "RND2", "RND3"),
+                        state = c("linear", "power"),
                         continuous = TRUE)
-dtest <- dtest \%>\% 
+dtest <- dtest \%>\%
              test_relations(param = c("KA", "K", "V"),
                             cov = "BN1",
                             state = "linear",
                             continuous = FALSE)
-                            
+
 ## create tibble of covariate step with model objects as column m
 dsm1 <- m1 \%>\% covariate_step_tibble(
   run_id = "m1_f1",
@@ -62,7 +63,7 @@ dsm1 <- dsm1 \%>\% bind_covariate_results()
 dsm1 <- dsm1 \%>\% arrange(BIC)
 dsm1
 
-## check condition number, covariance,... 
+## check condition number, covariance,...
 ## run any diagnostics here
 
 ## when happy with selection, select run for subsequent step
@@ -82,9 +83,10 @@ dsm2 <- m1_f1 \%>\% covariate_step_tibble(
 )
 
 ## continue ...
-  
+
 }
 }
 \seealso{
-\code{\link{test_relations}}, \code{\link{covariate_step_tibble}}, \code{\link{bind_covariate_results}}
+\code{\link{test_relations}}, \code{\link{covariate_step_tibble}},
+  \code{\link{bind_covariate_results}}, \code{\link{add_cov}}
 }

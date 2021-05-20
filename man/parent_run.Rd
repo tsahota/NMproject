@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_object.R
 \name{parent_run}
 \alias{parent_run}
-\title{get parent object of nm object}
+\title{Get parent object of nm object}
 \usage{
 parent_run(m, n = 1L)
 }
@@ -12,5 +12,5 @@ parent_run(m, n = 1L)
 \item{n}{numeric. generation of parent (default = 1)}
 }
 \description{
-get parent object of nm object
+Get parent object of nm object
 }

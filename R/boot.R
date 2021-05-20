@@ -1,4 +1,4 @@
-#' save bootstrap datasets to disk
+#' Save bootstrap datasets to disk
 #' 
 #' Internal function used by \code{make_boot_datasets()}, 
 #'   run once per bootstrap sample
@@ -50,7 +50,7 @@ boot_to_csv <- function(d,
   return(csv_name)
 }
 
-#' add/write bootstrap datasets
+#' Write bootstrap datasets
 #' 
 #' @param m nm object
 #' @param samples number of samples
@@ -85,7 +85,7 @@ make_boot_datasets <- function(m,
     ) %>%
     dplyr::ungroup()
   
-  dboots <- dboots %>% mutate(
+  dboots <- dboots %>% dplyr::mutate(
     m = m %>%
       ## the following run_in will screw up parent_run_in, fix later
       run_in(file.path(run_in(m), paste0(run_id(m), "_boot"))) %>%
@@ -101,7 +101,7 @@ make_boot_datasets <- function(m,
   dboots
 }
 
-#' add/write xv datasets
+#' Write xv datasets
 #' 
 #' @param dboot output from make_boot_dataset()
 #' @param data_folder folder to store datasets

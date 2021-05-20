@@ -13,5 +13,5 @@ ctl_nm2r(ctl)
 object of class r.ctl
 }
 \description{
-Convert controls stream to first abstraction layer
+Internal function
 }

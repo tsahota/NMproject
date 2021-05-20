@@ -2,7 +2,7 @@
 % Please edit documentation in R/manual_edit.R
 \name{start_manual_edit}
 \alias{start_manual_edit}
-\title{internal function: start manual edit}
+\title{Start manual edit}
 \usage{
 start_manual_edit(m, combine_patch = NA_character_)
 }
@@ -12,5 +12,5 @@ start_manual_edit(m, combine_patch = NA_character_)
 \item{combine_patch}{logical. should patch be added first before edit}
 }
 \description{
-Needed for addin functionality
+Internal function. Needed for addin functionality
 }

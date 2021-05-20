@@ -285,10 +285,27 @@ cond_num.nm_list <- function(r){
   unlist(cond_nums)
 }
 
-#' run record
-#' 
+#' Run record
+#'
+#' Displays the transformed parameters of a completed or running model.
+#' Normally used inside of a diagnostic template, but can be useful for quickly
+#' seeing parameter estimates of several models
+#'
 #' @param m nm object
-#' @param trans logical. if TRUE (default) will transform using control file $THETA/OMEGA conventions
+#' @param trans logical. if TRUE (default) will transform using control file
+#'   $THETA/OMEGA conventions
+#'
+#' @seealso \code{\link{nm_render}}
+#' @examples
+#' \dontrun{
+#'
+#' rr(m1)
+#'
+#' ## compare m1 and m2
+#'
+#' rr(c(m1, m2))
+#'
+#' }
 #' @export
 rr <- function(m, trans = TRUE){
   UseMethod("rr")
@@ -331,7 +348,7 @@ rr.nm_generic <- function(m, trans = TRUE){
   rr(as_nm_list(m), trans = trans)
 }
 
-#' coef (in wide format)
+#' Coef (in wide format)
 #' 
 #' @param m nm object
 #' @param trans logical (default = TRUE) should transform parameters?
@@ -369,7 +386,7 @@ coef_wide <- function(m, trans = TRUE){
   
 }
 
-#' coef (in long format)
+#' Coef (in long format)
 #' 
 #' @param m nm object
 #' @param trans logical (default = TRUE) should transform parameters?
@@ -407,13 +424,6 @@ coef_long <- function(m, trans = TRUE){
   d
 }
 
-
-
-#' run record
-#' 
-#' @param m nm object
-#' @param trans logical. if TRUE (default) will transform using control file $THETA/OMEGA conventions
-#' @export
 rr2 <- function(m, trans = TRUE){
   d <- coef_long(m, trans = trans)
   
@@ -778,7 +788,7 @@ summary_long <- function(..., parameters = c("none", "new", "all")){
 NULL
 
 #' @rdname output_table
-#' @return \code{output_table} will return a list of tibbles with merged version
+#' @return \code{\link{output_table}} will return a list of tibbles with merged version
 #'   of all output $TABLEs and the input data.  Additional columns will be
 #'   \code{INNONMEM} which will be TRUE for rows that were not ignored by
 #'   NONMEM.  For simulation control files there is also \code{DV_OUT} which
@@ -886,7 +896,7 @@ covariance_plot <- function(r,trans=TRUE){
   
 }
 
-#' Get Omega matrix from run
+#' Get OMEGA matrix from run
 #'
 #' @param r object of class nm
 #' @export

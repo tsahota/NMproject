@@ -12,7 +12,7 @@ is_single_na <- function(x) if(length(x) == 1) is.na(x) else FALSE
 is_full_path <- function(x) grepl("^(~|/|\\\\|([a-zA-Z]:))", x, perl = TRUE)
 
 
-#' check if git is available on command line
+#' Check if git is available on command line
 
 git_cmd_available <- Sys.which("git") != ""
 
@@ -47,7 +47,7 @@ magrittr::'%$%'
 #' @export
 rlang::.data
 
-#' compute path relative to reference
+#' Compute path relative to reference
 #'
 #' @param path character
 #' @param relative_path character

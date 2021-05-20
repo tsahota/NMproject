@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{relative_path}
 \alias{relative_path}
-\title{compute path relative to reference}
+\title{Compute path relative to reference}
 \usage{
 relative_path(path, relative_path)
 }
@@ -12,5 +12,5 @@ relative_path(path, relative_path)
 \item{relative_path}{character}
 }
 \description{
-compute path relative to reference
+Compute path relative to reference
 }

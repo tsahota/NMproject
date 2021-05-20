@@ -65,7 +65,7 @@ set_nm_opts <- function(){
 }
 
 
-#' setup analysis subdirectories
+#' Setup analysis subdirectories
 #' 
 #' This allows organisations/individuals with their own directory to customize their directory structure
 #' 
@@ -138,7 +138,7 @@ set_default_dirs_in_rprofile <- function(path = ".Rprofile", dir_list = nm_defau
   
 }
 
-#' get a default directory
+#' Get a default directory
 #' 
 #' @param name character. Directory type
 #' @param ... not used yet
@@ -165,7 +165,7 @@ sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_f
 
 
 
-#' get/set nm_tran_command
+#' Get/set nm_tran_command
 #'
 #' `nm_tran` needs the location of NMTRAN.exe on your system.  This
 #' is guessed on package load, assuming PsN is on the $PATH environmental
@@ -205,7 +205,7 @@ nm_tran_command <- function(text){
   invisible()
 }
 
-#' default system_nm
+#' Default system_nm
 #'
 #' Not to be used directly
 #' @param cmd character. system call
@@ -234,7 +234,7 @@ system_nm_default <- function(cmd, ...) {
 }
 
 
-#' system command for NONMEM execution
+#' System command for NONMEM execution
 #'
 #' @param cmd character. command to send to shell
 #' @param dir character. directory to run command in
@@ -248,7 +248,7 @@ system_nm <- function(cmd,dir=nm_default_dir("models"),...){
 }
 
 
-#' kill cluster job
+#' Kill cluster job
 #' 
 #' Requires setting "kill_job" \code{option()}
 #'
@@ -258,7 +258,7 @@ kill_job <- function(m){
   getOption("kill_job")(m)
 }
 
-#' overwrite behaviour of NMproject
+#' Overwrite behaviour of NMproject
 #' 
 #' Requires setting "nm.overwrite_behaviour" \code{option()}
 #'
@@ -290,7 +290,7 @@ overwrite_behaviour <- function(txt = c("ask",
                     "no overwriting (skip, no error)")
 )
 
-#' path of directory from models dir
+#' Path of directory from models dir
 #'
 #' @param x character vector. Relative path from models.dir
 #' @param models_dir character. Models directory

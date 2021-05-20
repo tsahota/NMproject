@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_object.R
 \name{unblock}
 \alias{unblock}
-\title{Remove $OMEGA/$SIGMA BLOCK from init_omega() and init_sigma() output}
+\title{Remove $OMEGA/$SIGMA BLOCK from init_omega and init_sigma output}
 \usage{
 unblock(iomega, eta_numbers)
 }
@@ -12,7 +12,7 @@ unblock(iomega, eta_numbers)
 \item{eta_numbers}{numeric vector.  ETA numbers to unblock. Must be contiguous}
 }
 \description{
-Remove $OMEGA/$SIGMA BLOCK from init_omega() and init_sigma() output
+Remove $OMEGA/$SIGMA BLOCK from init_omega and init_sigma output
 }
 \examples{
 

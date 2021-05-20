@@ -2,16 +2,16 @@
 
 NULL
 
-#' apply a manual edit
-#' 
-#' Best used with "make manual edit patch" addin.
-#' 
+#' Apply a manual edit patch
+#'
+#' Best to allow the "manual edit" RStudio addin to write this function for you
+#'
 #' @param m nm object
 #' @param patch_name character name of patch
-#' 
-#' @details Generally best to to apply patches before automatic edits
-#'  and changes in directories e.g. via \code{run_in()}
-#' 
+#'
+#' @details Generally best to to apply patches before automatic edits and
+#'   changes in directories e.g. via \code{run_in()}
+#'
 #' @export
 apply_manual_edit <- function(m, patch_name){
   UseMethod("apply_manual_edit")

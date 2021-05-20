@@ -2,7 +2,7 @@
 % Please edit documentation in R/NMproject.R
 \name{overwrite_behaviour}
 \alias{overwrite_behaviour}
-\title{overwrite behaviour of NMproject}
+\title{Overwrite behaviour of NMproject}
 \usage{
 overwrite_behaviour(txt = c("ask", "overwrite", "stop", "skip"))
 }

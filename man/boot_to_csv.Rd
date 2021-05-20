@@ -2,7 +2,7 @@
 % Please edit documentation in R/boot.R
 \name{boot_to_csv}
 \alias{boot_to_csv}
-\title{save bootstrap datasets to disk}
+\title{Save bootstrap datasets to disk}
 \usage{
 boot_to_csv(
   d,

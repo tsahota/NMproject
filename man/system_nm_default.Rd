@@ -2,7 +2,7 @@
 % Please edit documentation in R/NMproject.R
 \name{system_nm_default}
 \alias{system_nm_default}
-\title{default system_nm}
+\title{Default system_nm}
 \usage{
 system_nm_default(cmd, ...)
 }

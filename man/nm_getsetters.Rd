@@ -20,7 +20,7 @@
 \alias{run_in}
 \alias{run_id}
 \alias{result_files}
-\title{functions to access and modify fields of nm objects}
+\title{Functions to access and modify fields of nm objects}
 \usage{
 run_dir(m, text)
 
@@ -66,7 +66,7 @@ modify field (of same name as function) otherwise will return value of
 field (of same name as function)}
 }
 \description{
-functions to access and modify fields of nm objects
+Functions to access and modify fields of nm objects
 }
 \details{
 Easiest way to see all fields of an object is to type the object

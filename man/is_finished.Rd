@@ -2,7 +2,7 @@
 % Please edit documentation in R/monitoring.R
 \name{is_finished}
 \alias{is_finished}
-\title{tests if job is finished}
+\title{Tests if job is finished}
 \usage{
 is_finished(r, initial_timeout = NA)
 }
@@ -13,5 +13,5 @@ is_finished(r, initial_timeout = NA)
 time period to give up on a run if directory hasn't been created.}
 }
 \description{
-tests if job is finished
+Tests if job is finished
 }

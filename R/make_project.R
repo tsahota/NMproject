@@ -1,5 +1,9 @@
 #' Create analysis project
 #'
+#' Easiest way to use this function is via RStudio menus (FILE -> New Project ->
+#' New Directory -> New NMproject).  However the function can be used directly
+#' too.
+#'
 #' @param path character path (relative or absolute) to project.  If just
 #'   specifying a name, this will create the analysis project in the current
 #'   working directory
@@ -9,10 +13,12 @@
 #'   project.
 #' @param ... deprecated
 #'
-#' @details function works like `starters::create_analysis_project`.  With a few
-#'   differences.  There is no restriction on directory name.  It is therefore
-#'   possible to violate package naming conventions.
-
+#' @details The function works like as is inspired by
+#'   `starters::create_analysis_project`. There is no restriction on directory
+#'   name.  It is therefore possible to violate R package naming conventions.
+#'   This is to cater to users who like underscores and aren't interested in
+#'   creating a package.
+#'
 #' @export
 
 nm_create_analysis_project <- function(path, dirs = nm_default_dirs(), 
@@ -95,7 +101,7 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
 
 
 
-#' stage files in project staging area ready for import
+#' Stage files in project staging area ready for import
 #'
 #' @param files character vector. path of files to stage
 #' @param root_dir character path to root directory of `files`. Staged files
@@ -463,7 +469,7 @@ short_path <- function(x) {
   unlist(short_paths)
 }
 
-#' system/shell command wrapper
+#' System/shell command wrapper
 #'
 #' @param cmd character. command to send to shell
 #' @param dir character. directory to run command in

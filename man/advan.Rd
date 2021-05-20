@@ -3,14 +3,14 @@
 \name{advan}
 \alias{advan}
 \alias{trans}
-\alias{tol.nm_generic}
-\title{get/set advan/trans/tol in ctl_contents}
+\alias{tol}
+\title{Get/set ADVAN/TRANS/TOL in ctl_contents}
 \usage{
 advan(m, text)
 
 trans(m, text)
 
-\method{tol}{nm_generic}(m, text)
+tol(m, text)
 }
 \arguments{
 \item{m}{nm object}

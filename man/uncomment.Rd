@@ -2,7 +2,7 @@
 % Please edit documentation in R/ctl_handling.R
 \name{uncomment}
 \alias{uncomment}
-\title{uncomment lines of control file}
+\title{Uncomment lines of control file}
 \usage{
 uncomment(m, pattern = ".*")
 }
@@ -12,5 +12,8 @@ uncomment(m, pattern = ".*")
 \item{pattern}{optional character regex.  Passed to gsub}
 }
 \description{
-uncomment lines of control file
+Uncomment lines of control file
+}
+\seealso{
+\code{\link{comment}}, @seealso \code{\link{gsub_ctl}}
 }

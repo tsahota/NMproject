@@ -1,8 +1,8 @@
-#' Experiment - make an OCC column for NONMEM in dataset
+#' Experimental function to make an OCC column for NONMEM IOV use
 #' 
 #' To be used in a \code{mutate()} statement \code{group_by}'d by "ID"
 #' 
-#' @param d data.frame. NONMEM input dataset
+#' @param d data.frame. NONMEM ready input dataset
 #' @param dose_trigger logical expression for defining a dosing row
 #' @param new_OCC_trigger logical expression for defining when OCC should increment
 #' @export

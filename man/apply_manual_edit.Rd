@@ -2,7 +2,7 @@
 % Please edit documentation in R/apply_manual_edit.R
 \name{apply_manual_edit}
 \alias{apply_manual_edit}
-\title{apply a manual edit}
+\title{Apply a manual edit patch}
 \usage{
 apply_manual_edit(m, patch_name)
 }
@@ -12,9 +12,9 @@ apply_manual_edit(m, patch_name)
 \item{patch_name}{character name of patch}
 }
 \description{
-Best used with "make manual edit patch" addin.
+Best to allow the "manual edit" RStudio addin to write this function for you
 }
 \details{
-Generally best to to apply patches before automatic edits
- and changes in directories e.g. via \code{run_in()}
+Generally best to to apply patches before automatic edits and
+  changes in directories e.g. via \code{run_in()}
 }

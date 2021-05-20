@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_project.R
 \name{system_cmd}
 \alias{system_cmd}
-\title{system/shell command wrapper}
+\title{System/shell command wrapper}
 \usage{
 system_cmd(cmd, dir = ".", ...)
 }
@@ -14,5 +14,5 @@ system_cmd(cmd, dir = ".", ...)
 \item{...}{other arguments passed to system command}
 }
 \description{
-system/shell command wrapper
+System/shell command wrapper
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilsExtra.R
 \name{as_nm_list}
 \alias{as_nm_list}
-\title{coerce object into nm_list}
+\title{Coerce object into nm_list}
 \usage{
 as_nm_list(m)
 }
@@ -10,5 +10,5 @@ as_nm_list(m)
 \item{m}{nm object}
 }
 \description{
-coerce object into nm_list
+Coerce object into nm_list
 }

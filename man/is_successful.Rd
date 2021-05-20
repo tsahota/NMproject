@@ -2,7 +2,7 @@
 % Please edit documentation in R/monitoring.R
 \name{is_successful}
 \alias{is_successful}
-\title{test if NONMEM ran without errors}
+\title{Test if NONMEM ran without errors}
 \usage{
 is_successful(r)
 }
@@ -10,5 +10,5 @@ is_successful(r)
 \item{r}{nm object}
 }
 \description{
-test if NONMEM ran without errors
+Test if NONMEM ran without errors
 }

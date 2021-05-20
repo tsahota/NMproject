@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_nm.R
 \name{wipe_run}
 \alias{wipe_run}
-\title{wipe previous run files}
+\title{Wipe previous run files}
 \usage{
 wipe_run(r)
 }
@@ -10,5 +10,5 @@ wipe_run(r)
 \item{r}{object class nm}
 }
 \description{
-wipe previous run files
+Wipe previous run files
 }

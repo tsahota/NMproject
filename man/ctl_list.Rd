@@ -13,5 +13,5 @@ ctl_list(r)
 object of class ctl_list
 }
 \description{
-Constructor/converter to ctl_list
+Internal function
 }

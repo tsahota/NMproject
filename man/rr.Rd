@@ -2,15 +2,32 @@
 % Please edit documentation in R/run_record.R
 \name{rr}
 \alias{rr}
-\title{run record}
+\title{Run record}
 \usage{
 rr(m, trans = TRUE)
 }
 \arguments{
 \item{m}{nm object}
 
-\item{trans}{logical. if TRUE (default) will transform using control file $THETA/OMEGA conventions}
+\item{trans}{logical. if TRUE (default) will transform using control file
+$THETA/OMEGA conventions}
 }
 \description{
-run record
+Displays the transformed parameters of a completed or running model.
+Normally used inside of a diagnostic template, but can be useful for quickly
+seeing parameter estimates of several models
+}
+\examples{
+\dontrun{
+
+rr(m1)
+
+## compare m1 and m2
+
+rr(c(m1, m2))
+
+}
+}
+\seealso{
+\code{\link{nm_render}}
 }

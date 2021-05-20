@@ -1,12 +1,18 @@
-#' generate paths for simulation runs
+#' Generate paths for simulation runs
 #' 
-#' @param dsc tibble::tibble with experimental factors to vary
+#' Internal function
+#' 
+#' @param dsc \code{tibble::tibble} with experimental factors to vary
 #' @param start_dir directory name within which all runs should take place.
 #' @param include_names logical (default = TRUE). 
+#' @examples 
+#' \dontrun{
+#' 
+#' dsc$location <- gen_sim_path(dsc, ...)
+#' 
+#' }
 
 gen_sim_path <- function(dsc, start_dir, include_names = TRUE){
-  
-  ## run as dsc$location <- gen_sim_path(dsc, ...)
   
   for(i in which(sapply(dsc,is.factor))){
     dsc[,i] <- as.character(dsc[,i])
@@ -19,70 +25,71 @@ gen_sim_path <- function(dsc, start_dir, include_names = TRUE){
 }
 
 #' Prepare forward covariate step
-#' 
+#'
 #' @param base nm object
 #' @param run_id base run_id to construct run_ids of covariate runs
 #' @param run_in character.  See \code{\link{run_in}}
-#' @param dtest tibble::tibble with testing relations (from \code{\link{test_relations}})
+#' @param dtest \code{tibble::tibble} with testing relations (from
+#'   \code{\link{test_relations}})
 #' @param direction character. "forward" (default) or "backward"
-#' @param ... additional arguments passed to add_cov
-#' 
-#' 
-#' @return tibble::tibble dtest with appended columns 
-#' 
-#' @seealso \code{\link{test_relations}}, \code{\link{covariate_step_tibble}}, \code{\link{bind_covariate_results}} 
-#' 
-#' @examples 
+#' @param ... additional arguments passed to \code{\link{add_cov}}
+#'
+#' @return Will return \code{dtest} a \code{tibble::tibble} with appended columns
+#'
+#' @seealso \code{\link{test_relations}}, \code{\link{covariate_step_tibble}},
+#'   \code{\link{bind_covariate_results}}, \code{\link{add_cov}}
+#'
+#' @examples
 #' \dontrun{
-#' 
+#'
 #' dtest <- test_relations(param = c("KA", "K", "V"),
-#'                         cov = c("LIN1", "LIN2", "LIN3", "RND1", "RND2", "RND3"), 
-#'                         state = c("linear", "power"), 
+#'                         cov = c("LIN1", "LIN2", "LIN3", "RND1", "RND2", "RND3"),
+#'                         state = c("linear", "power"),
 #'                         continuous = TRUE)
-#' dtest <- dtest %>% 
+#' dtest <- dtest %>%
 #'              test_relations(param = c("KA", "K", "V"),
 #'                             cov = "BN1",
 #'                             state = "linear",
 #'                             continuous = FALSE)
-#'                             
+#'
 #' ## create tibble of covariate step with model objects as column m
 #' dsm1 <- m1 %>% covariate_step_tibble(
 #'   run_id = "m1_f1",
 #'   dtest = dtest,
 #'   direction = "forward"
 #' )
-#' 
+#'
 #' ## run all models greedily
 #' dsm1$m <- dsm1$m %>% run_nm()
-#' 
+#'
 #' ## extract results and put into tibble
 #' dsm1 <- dsm1 %>% bind_covariate_results()
-#' 
+#'
 #' ## sort by BIC (for example) and view
 #' dsm1 <- dsm1 %>% arrange(BIC)
 #' dsm1
-#' 
-#' ## check condition number, covariance,... 
+#'
+#' ## check condition number, covariance,...
 #' ## run any diagnostics here
-#' 
+#'
 #' ## when happy with selection, select run for subsequent step
-#' 
+#'
 #' m1_f1 <- dsm1$m[1]   ## select most signifcant BIC
 #' # alternative select by relationship
 #' m1_f1 <- dsm1 %>%
 #'     filter(param = "CL", cov = "BWT", state = "power") %$%
 #'     m
-#' 
+#'
 #' ## do next forward step
-#' 
+#'
 #' dsm2 <- m1_f1 %>% covariate_step_tibble(
 #'   run_id = "m1_f2",
 #'   dtest = dtest,
 #'   direction = "forward"
 #' )
-#' 
+#'
 #' ## continue ...
-#'   
+#'
 #' }
 #' @export
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/NMproject.R
 \name{system_nm}
 \alias{system_nm}
-\title{system command for NONMEM execution}
+\title{System command for NONMEM execution}
 \usage{
 system_nm(cmd, dir = nm_default_dir("models"), ...)
 }
@@ -14,5 +14,5 @@ system_nm(cmd, dir = nm_default_dir("models"), ...)
 \item{...}{other arguments passed to system command}
 }
 \description{
-system command for NONMEM execution
+System command for NONMEM execution
 }

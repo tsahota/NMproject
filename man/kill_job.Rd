@@ -2,7 +2,7 @@
 % Please edit documentation in R/NMproject.R
 \name{kill_job}
 \alias{kill_job}
-\title{kill cluster job}
+\title{Kill cluster job}
 \usage{
 kill_job(m)
 }

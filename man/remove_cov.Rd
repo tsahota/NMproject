@@ -74,3 +74,6 @@ summary_wide(c(m1, m1noWT))
 }
 
 }
+\seealso{
+\code{\link{covariate_step_tibble}}
+}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_object.R
 \name{remove_parameter}
 \alias{remove_parameter}
-\title{remove parameter from NONMEM control file}
+\title{Remove parameter from NONMEM control file}
 \usage{
 remove_parameter(m, name)
 }
@@ -12,5 +12,5 @@ remove_parameter(m, name)
 \item{name}{character. Parameter to remove}
 }
 \description{
-remove parameter from NONMEM control file
+Remove parameter from NONMEM control file
 }

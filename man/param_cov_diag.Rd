@@ -2,7 +2,7 @@
 % Please edit documentation in R/covariate_building.R
 \name{param_cov_diag}
 \alias{param_cov_diag}
-\title{plot relationship between a parameter and covariate}
+\title{Plot relationship between a parameter and covariate}
 \usage{
 param_cov_diag(r, param, cov, ..., categorical = FALSE, plot_tv = TRUE)
 }
@@ -20,7 +20,7 @@ param_cov_diag(r, param, cov, ..., categorical = FALSE, plot_tv = TRUE)
 \item{plot_tv}{logical}
 }
 \description{
-plot relationship between a parameter and covariate
+Plot relationship between a parameter and covariate
 }
 \details{
 the mutate statement is to add variables not included in original $TABLE

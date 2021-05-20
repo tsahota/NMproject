@@ -510,7 +510,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE){
 #' @export
 subroutine.nm_list <- Vectorize_nm_list(subroutine.nm_generic, SIMPLIFY = FALSE)
 
-#' get/set advan/trans/tol in ctl_contents
+#' Get/set ADVAN/TRANS/TOL in ctl_contents
 #' 
 #' Will make no other changes to control file
 #' 
@@ -600,6 +600,11 @@ trans.nm_list <- Vectorize_nm_list(trans.nm_generic)
 
 #' @rdname advan
 #' @export
+tol <- function(m, text){
+  UseMethod("tol")
+}
+
+#' @export
 tol.nm_generic <- function(m, text){
   if(missing(text)){
     sub_text <- m %>% dollar("SUB")
@@ -629,11 +634,3 @@ tol.nm_generic <- function(m, text){
 #' @export
 tol.nm_list <- Vectorize_nm_list(tol.nm_generic)
 
-#' Get/set TOL value in NONMEM control file
-#' 
-#' @param m nm object
-#' @param text optional character. value of TOL to set
-#' @export
-tol <- function(m, text){
-  UseMethod("tol")
-}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/monitoring.R
 \name{status_table}
 \alias{status_table}
-\title{get status of multiple runs in form of table}
+\title{Get status of multiple runs in form of table}
 \usage{
 status_table(m)
 }
@@ -10,5 +10,5 @@ status_table(m)
 \item{m}{nm objects}
 }
 \description{
-get status of multiple runs in form of table
+Get status of multiple runs in form of table
 }

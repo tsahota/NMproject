@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_record.R
 \name{coef_wide}
 \alias{coef_wide}
-\title{coef (in wide format)}
+\title{Coef (in wide format)}
 \usage{
 coef_wide(m, trans = TRUE)
 }
@@ -12,5 +12,5 @@ coef_wide(m, trans = TRUE)
 \item{trans}{logical (default = TRUE) should transform parameters?}
 }
 \description{
-coef (in wide format)
+Coef (in wide format)
 }

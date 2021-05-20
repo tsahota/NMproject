@@ -2,7 +2,7 @@
 % Please edit documentation in R/boot.R
 \name{make_boot_datasets}
 \alias{make_boot_datasets}
-\title{add/write bootstrap datasets}
+\title{Write bootstrap datasets}
 \usage{
 make_boot_datasets(
   m,
@@ -27,5 +27,5 @@ make_boot_datasets(
 \item{...}{arguments passed to fill_input}
 }
 \description{
-add/write bootstrap datasets
+Write bootstrap datasets
 }

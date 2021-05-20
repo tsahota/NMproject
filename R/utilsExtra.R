@@ -3,7 +3,7 @@
 
 NULL
 
-#' test if object is an nm_list object
+#' Test if object is an nm_list object
 #' 
 #' @param x object
 #' 
@@ -20,7 +20,7 @@ is_nm_list <- function(x){
   all(sapply(x, is_valid_subobject))
 }
 
-#' coerce object into nm_list
+#' Coerce object into nm_list
 #' 
 #' @param m nm object
 #' @export
@@ -48,7 +48,7 @@ as_nm_list.nm_generic <- function(m){
   as_nm_list.list(m)
 }
 
-#' test if object is an nm_generic object
+#' Test if object is an nm_generic object
 #' 
 #' @param x object
 #' 
@@ -58,7 +58,7 @@ is_nm_generic <- function(x){
   inherits(x, "nm_generic")
 }
 
-#' convert nm object to nm_generic
+#' Convert nm object to nm_generic
 #'
 #' mainly an internal function to be used where methods for nm_list don't exist
 #' or aren't appropriate

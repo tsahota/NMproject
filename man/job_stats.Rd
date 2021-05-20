@@ -2,7 +2,7 @@
 % Please edit documentation in R/job_stats.R
 \name{job_stats}
 \alias{job_stats}
-\title{get job stats}
+\title{Get job stats for a completed NONMEM run}
 \usage{
 job_stats(m)
 }
@@ -10,5 +10,5 @@ job_stats(m)
 \item{m}{nm object}
 }
 \description{
-get job stats
+Gets attributes of the run like run time, queue time
 }

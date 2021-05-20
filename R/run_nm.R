@@ -127,16 +127,20 @@ run_nm.nm_generic <- function(m,
 #' @export
 run_nm.nm_list <- Vectorize_nm_list(run_nm.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
-#' run_nm in batches
-#' 
-#' a variant of \code{run_nm()} that will submit run_nm's in batches and wait for them to complete
-#' 
+#' Execute run_nm in batches
+#'
+#' a variant of \code{\link{run_nm}} that will submit \code{\link{run_nm}}'s in
+#' batches and wait for them to complete
+#'
 #' @param m nm object
 #' @param threads numeric.  Number of threads to un
 #' @param ... additional arguments passed to run_nm()
-#' 
-#' @details if you need all the runs to complete ensure you use a \code{\link{wait_finish}} statement afterwards as R console will only be blocked for until the last batch has been submitted which will be before all runs have completed 
-#' 
+#'
+#' @details if you need all the runs to complete ensure you use a
+#'   \code{\link{wait_finish}} statement afterwards as R console will only be
+#'   blocked for until the last batch has been submitted which will be before
+#'   all runs have completed
+#'
 #' @seealso \code{\link{run_nm}}
 #' @export
 
@@ -153,7 +157,7 @@ run_nm_batch <- function(m, threads = 10, ...){
   m
 }
 
-#' wipe previous run files
+#' Wipe previous run files
 #'
 #' @param r object class nm
 #' @export

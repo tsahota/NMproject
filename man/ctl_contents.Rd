@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_gettersetters.R
 \name{ctl_contents}
 \alias{ctl_contents}
-\title{set/get control file object}
+\title{Get/set control file object}
 \usage{
 ctl_contents(
   m,
@@ -24,5 +24,5 @@ ctl_contents(
 \item{...}{additional arguments}
 }
 \description{
-set/get control file object
+Get/set control file object
 }

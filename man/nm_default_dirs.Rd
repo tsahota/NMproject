@@ -2,7 +2,7 @@
 % Please edit documentation in R/NMproject.R
 \name{nm_default_dirs}
 \alias{nm_default_dirs}
-\title{setup analysis subdirectories}
+\title{Setup analysis subdirectories}
 \usage{
 nm_default_dirs(dir_list)
 }

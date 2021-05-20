@@ -1,4 +1,3 @@
-
 #' Get job information (if it exists)
 #'
 #' Requires 'get_job_info' to be defined as an option - function that takes stdout console output

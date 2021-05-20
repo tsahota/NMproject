@@ -27,10 +27,14 @@ project.}
 \item{...}{deprecated}
 }
 \description{
-Create analysis project
+Easiest way to use this function is via RStudio menus (FILE -> New Project ->
+New Directory -> New NMproject).  However the function can be used directly
+too.
 }
 \details{
-function works like `starters::create_analysis_project`.  With a few
-  differences.  There is no restriction on directory name.  It is therefore
-  possible to violate package naming conventions.
+The function works like as is inspired by
+  `starters::create_analysis_project`. There is no restriction on directory
+  name.  It is therefore possible to violate R package naming conventions.
+  This is to cater to users who like underscores and aren't interested in
+  creating a package.
 }

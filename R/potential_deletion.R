@@ -241,11 +241,11 @@ if(0){
       get("file.edit")(to_path)
   }
   
-  #' @importFrom dplyr mutate
-  #' @export
+  # @importFrom dplyr mutate
+  # @export
   dplyr::mutate
   
-  #' @export
+  # @export
   mutate.nm_list <- function(.data, ...){
     dots_exp <- rlang::enexprs(...)
     data_extra <- dplyr::mutate(nm_row(.data), ...)
@@ -257,11 +257,11 @@ if(0){
     
   }
   
-  #' @importFrom dplyr filter
-  #' @export
+  # @importFrom dplyr filter
+  # @export
   dplyr::filter
   
-  #' @export
+  # @export
   filter.nm_list <- function(.data, ...){
     dots_exp <- rlang::enexprs(...)
     object <- .data

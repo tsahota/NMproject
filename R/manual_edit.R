@@ -1,6 +1,6 @@
-#' internal function: start manual edit
+#' Start manual edit
 #' 
-#' Needed for addin functionality
+#' Internal function. Needed for addin functionality
 #' 
 #' @param m nm object
 #' @param combine_patch logical. should patch be added first before edit
@@ -91,9 +91,9 @@ diff_manual_edit <- function(m, res){
 }
 
 
-#' internal function: view a patch
+#' View a patch
 #' 
-#' Use the addin for viewing patches instead
+#' Internal function. Use the addin for viewing patches instead
 #' 
 #' @param patch_name character. name of patch
 #' 

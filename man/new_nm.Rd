@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_object.R
 \name{new_nm}
 \alias{new_nm}
-\title{create a new nm object}
+\title{Create a new nm object}
 \usage{
 new_nm(based_on, run_id = NA_character_, data_path, cmd)
 }

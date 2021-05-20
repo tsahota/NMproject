@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_project.R
 \name{stage}
 \alias{stage}
-\title{stage files in project staging area ready for import}
+\title{Stage files in project staging area ready for import}
 \usage{
 stage(files, root_dir, overwrite = FALSE, silent = FALSE)
 }
@@ -18,5 +18,5 @@ this is not specified, will guess based on presense of `nm_default_dirs`}
 \item{silent}{logical (default = FALSE)}
 }
 \description{
-stage files in project staging area ready for import
+Stage files in project staging area ready for import
 }

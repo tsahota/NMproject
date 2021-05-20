@@ -2,7 +2,7 @@
 % Please edit documentation in R/ctl_handling.R
 \name{ofv}
 \alias{ofv}
-\title{get OFV}
+\title{Get objective function value (OFV)}
 \usage{
 ofv(r)
 }
@@ -10,5 +10,12 @@ ofv(r)
 \item{r}{object of class nm}
 }
 \description{
-get OFV
+Get objective function value (OFV)
+}
+\examples{
+\dontrun{
+
+ofv(m1)
+
+}
 }

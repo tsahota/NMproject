@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_render.R
 \name{nm_list_render}
 \alias{nm_list_render}
-\title{render function for child nm_lists}
+\title{Render function for child nm_lists}
 \usage{
 nm_list_render(
   m,

@@ -20,26 +20,13 @@ setup_dollar <- function(x, type, add_dollar_text = TRUE){
   x
 }
 
-## TODO: replace control stream objects with different (non-nested) classes:
-##  class character = name of control file (methods need (new) file_name arg)
-##  class ctl = character vector of control file
-##  class rctl = r format list of control file
-
-## no class - assume this is a file name.
-## class ctl_character = simple character vector
-## class ctl_list = list (first abstraction layer)
-## TBD subsequent layers of abstraction.
-
-
-## change ctl_nm2r to as.rctl etc.
-## all functions can be overloaded to work on all classes
-##  output the same class as input
-## need constructors for each.
-
 #' Constructor/converter to ctl_character
+#' 
+#' Internal function
+#' 
 #' @param r either class nmexecute, character, ctl_list, ctl_character
 #' @return object of class ctl_character
-#' @export
+
 ctl_character <- function(r){
   if(inherits(r, "ctl_character")) return(r)
   if(inherits(r, "nmexecute")) {
@@ -71,9 +58,11 @@ ctl_character <- function(r){
 }
 
 #' Constructor/converter to ctl_list
+#' 
+#' Internal function
+#' 
 #' @param r either class nmexecute, character, ctl_list, ctl_character
 #' @return object of class ctl_list
-#' @export
 
 ctl_list <- function(r){
   UseMethod("ctl_list")
@@ -103,9 +92,12 @@ ctl_list.character <- function(r){
 }
 
 #' Convert controls stream to first abstraction layer
+#' 
+#' Internal function
+#' 
 #' @param ctl character vector with NONMEM control stream contents
 #' @return object of class r.ctl
-#' @export
+
 ctl_nm2r <- function(ctl){
 
   ctl0 <- ctl
@@ -173,7 +165,7 @@ ctl_nm2r <- function(ctl){
 #' Convert first abstraction layer to control stream
 #' @param x object of class r.ctl
 #' @return character vector with control stream contents
-#' @export
+
 ctl_r2nm <- function(x) {
   ctl <- unlist(x,use.names = FALSE)
   class(ctl) <- c("ctl_character")
@@ -183,7 +175,7 @@ ctl_r2nm <- function(x) {
 #' Convert $THETA to R abstraction layer
 #' @param x character vector with $THETA information
 #' @return object abstracting $THETA contents
-#' @export
+
 theta_nm2r <- function(x){
   x <- rem_dollars(x)
   x <- gsub("FIX","",x) ## ignore FIX for now
@@ -342,59 +334,63 @@ update_parameters0 <- function(ctl,coef_from,type = c("THETA","OMEGA","SIGMA")){
 
 #' Add a covariate to a NONMEM model
 #'
+#' Follows PsN coding conventions to add covariates into a model.  The advantage
+#' is no need to create a .scm file, just directly modify the ctl file contents.
+#' This function is used by \code{\link{covariate_step_tibble}} for stepwise
+#' covariate model development.
+#'
 #' @param ctl object coercible to ctl_list
 #' @param param character. Name of parameter
 #' @param cov character. Name of covariate
 #' @param state numeric or character. Number/name of state (see details)
 #' @param continuous logical (default = TRUE). is covariate continuous?
 #' @param time_varying optional logical. is the covariate time varying?
-#' @param additional_state_text optional character. custom state variable to be passed to param_cov_text
+#' @param additional_state_text optional character. custom state variable to be
+#'   passed to param_cov_text
 #' @param id_var character (default = "ID"). Needed if time_varying is missing.
-#' @param force logical (default = FALSE). Force covariate in even if missing values found
-#' @param force_TV_var logical (default = FALSE). Force covariates only on TV notation parameters
-#' @param init optional numeric/character vector.  Initial estimate of additional parameters
-#' @param lower optional numeric/character vector.  lower bound of additional parameters
-#' @param upper optional numeric/character vector.  Upper bound of additional parameters
-#' 
-#' @details 
-#' available states:
-#' "2" or "linear":
-#'   PARCOV= ( 1 + THETA(1)*(COV - median))
-#' 
-#' "3" or "hockey-stick":
-#'   IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))
-#'   IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))
-#'                     
-#' "4" or "exponential":
-#'    PARCOV= EXP(THETA(1)*(COV - median))
-#' 
-#' "5" or "power":
-#'    PARCOV= ((COV/median)**THETA(1))
-#'    
-#' "power1":
-#'    PARCOV= ((COV/median))
-#'    
-#' "power0.75":
-#'    PARCOV= ((COV/median)**0.75)
-#' 
-#' "6" or "log-linear":
-#'    PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
-#' 
-#' @examples 
+#' @param force logical (default = FALSE). Force covariate in even if missing
+#'   values found
+#' @param force_TV_var logical (default = FALSE). Force covariates only on TV
+#'   notation parameters
+#' @param init optional numeric/character vector.  Initial estimate of
+#'   additional parameters
+#' @param lower optional numeric/character vector.  lower bound of additional
+#'   parameters
+#' @param upper optional numeric/character vector.  Upper bound of additional
+#'   parameters
+#'
+#' @details available states: "2" or "linear": PARCOV= ( 1 + THETA(1)*(COV -
+#' median))
+#'
+#' "3" or "hockey-stick": IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV -
+#' median)) IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))
+#'
+#' "4" or "exponential": PARCOV= EXP(THETA(1)*(COV - median))
+#'
+#' "5" or "power": PARCOV= ((COV/median)**THETA(1))
+#'
+#' "power1": PARCOV= ((COV/median))
+#'
+#' "power0.75": PARCOV= ((COV/median)**0.75)
+#'
+#' "6" or "log-linear": PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
+#'
+#' @seealso \code{\link{covariate_step_tibble}}, \code{\link{test_relations}}
+#' @examples
 #' \dontrun{
-#' 
+#'
 #' m1WT <- m1 %>% child("m1WT") %>%
-#'   add_cov(param = "CL", cov = "WT", state = "power") %>% 
+#'   add_cov(param = "CL", cov = "WT", state = "power") %>%
 #'   run_nm()
-#'   
+#'
 #' ## compare results
-#' 
+#'
 #' rr(c(m1, m1WT))
 #' summary_wide(c(m1, m1WT))
-#'   
+#'
 #' }
-#' 
-#' 
+#'
+#'
 #' @export
 
 add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
@@ -441,6 +437,7 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
 #' "6" or "log-linear":
 #'    PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
 #' 
+#' @seealso \code{\link{covariate_step_tibble}}
 #' @examples 
 #' \dontrun{
 #' 
@@ -563,10 +560,17 @@ consider using the default with state \"linear\" or use additional_state_text")
 
 }
 
-#' get OFV
+#' Get objective function value (OFV)
 #'
 #' @param r object of class nm
 #' @include nm.R
+#' 
+#' @examples 
+#' \dontrun{
+#' 
+#' ofv(m1)
+#' 
+#' }
 #' @export
 ofv <- function(r){
   UseMethod("ofv")
@@ -589,13 +593,12 @@ ofv.list <- function(r){
   sapply(r, ofv)
 }
 
-#' convert nonmem code to R ready
+#' Convert nonmem code to R ready
 #' 
 #' This is a developer function
 #' 
 #' @param code character vector of NONMEM code block
 #' @param eta_to_0 logical (default = TRUE) set all etas to 0
-#' @export
 
 nonmem_code_to_r <- function(code, eta_to_0 = TRUE){
   pk_block <- rem_comment(code)
@@ -633,26 +636,32 @@ nonmem_code_to_r <- function(code, eta_to_0 = TRUE){
 }
 
 
-#' comment lines of control file
+#' Comment lines of control file
 #' 
 #' @param m nm object
 #' @param pattern optional character regex.  Passed to gsub
+#' 
+#' @seealso \code{\link{uncomment}}, @seealso \code{\link{gsub_ctl}}
 #' @export
 comment_out <- function(m, pattern = ".*"){
   m %>% gsub_ctl(paste0("(",pattern,")"), "; \\1")
 }
 
-#' uncomment lines of control file
+#' Uncomment lines of control file
 #' 
 #' @param m nm object
 #' @param pattern optional character regex.  Passed to gsub
+#' @seealso \code{\link{comment}}, @seealso \code{\link{gsub_ctl}}
 #' @export
 uncomment <- function(m, pattern = ".*"){
   m %>% gsub_ctl(paste0("^;+\\s*(",pattern,")"), "\\1")
 }
 
-#' gsub for ctl file
-#' 
+#' Pattern replacement for ctl file
+#'
+#' A wrapper around \code{gsub} so that control files may be modified using
+#' \code{gsub} syntax.
+#'
 #' @param ctl object coercible into ctl_character
 #' @param pattern argument passed to gsub
 #' @param replacement argument passed to gsub

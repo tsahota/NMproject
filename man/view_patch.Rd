@@ -2,7 +2,7 @@
 % Please edit documentation in R/manual_edit.R
 \name{view_patch}
 \alias{view_patch}
-\title{internal function: view a patch}
+\title{View a patch}
 \usage{
 view_patch(patch_name)
 }
@@ -10,5 +10,5 @@ view_patch(patch_name)
 \item{patch_name}{character. name of patch}
 }
 \description{
-Use the addin for viewing patches instead
+Internal function. Use the addin for viewing patches instead
 }

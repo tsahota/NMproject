@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_object.R
 \name{nm_list_gather}
 \alias{nm_list_gather}
-\title{get all nm_list objects}
+\title{Get all nm_list objects}
 \usage{
 nm_list_gather(x = .GlobalEnv)
 }
@@ -11,5 +11,5 @@ nm_list_gather(x = .GlobalEnv)
 or data.frame with (nm_list column) or nm_list}
 }
 \description{
-get all nm_list objects
+Get all nm_list objects
 }

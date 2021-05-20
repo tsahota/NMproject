@@ -2,12 +2,12 @@
 % Please edit documentation in R/make_OCC_every_dose.R
 \name{make_OCC_every_dose}
 \alias{make_OCC_every_dose}
-\title{Experiment - make an OCC column for NONMEM in dataset}
+\title{Experimental function to make an OCC column for NONMEM IOV use}
 \usage{
 make_OCC_every_dose(d, dose_trigger, new_OCC_trigger)
 }
 \arguments{
-\item{d}{data.frame. NONMEM input dataset}
+\item{d}{data.frame. NONMEM ready input dataset}
 
 \item{dose_trigger}{logical expression for defining a dosing row}
 

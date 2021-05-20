@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilsExtra.R
 \name{as_nm_generic}
 \alias{as_nm_generic}
-\title{convert nm object to nm_generic}
+\title{Convert nm object to nm_generic}
 \usage{
 as_nm_generic(m)
 }

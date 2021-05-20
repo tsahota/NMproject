@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_object.R
 \name{fill_input}
 \alias{fill_input}
-\title{fill $INPUT}
+\title{Fill $INPUT}
 \usage{
 fill_input(m, ...)
 }

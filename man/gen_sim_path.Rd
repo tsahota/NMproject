@@ -2,17 +2,24 @@
 % Please edit documentation in R/sim_reestExtra.R
 \name{gen_sim_path}
 \alias{gen_sim_path}
-\title{generate paths for simulation runs}
+\title{Generate paths for simulation runs}
 \usage{
 gen_sim_path(dsc, start_dir, include_names = TRUE)
 }
 \arguments{
-\item{dsc}{tibble::tibble with experimental factors to vary}
+\item{dsc}{\code{tibble::tibble} with experimental factors to vary}
 
 \item{start_dir}{directory name within which all runs should take place.}
 
 \item{include_names}{logical (default = TRUE).}
 }
 \description{
-generate paths for simulation runs
+Internal function
+}
+\examples{
+\dontrun{
+
+dsc$location <- gen_sim_path(dsc, ...)
+
+}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_record.R
 \name{omega_matrix}
 \alias{omega_matrix}
-\title{Get Omega matrix from run}
+\title{Get OMEGA matrix from run}
 \usage{
 omega_matrix(r)
 }
@@ -10,5 +10,5 @@ omega_matrix(r)
 \item{r}{object of class nm}
 }
 \description{
-Get Omega matrix from run
+Get OMEGA matrix from run
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/ctl_handling.R
 \name{gsub_ctl}
 \alias{gsub_ctl}
-\title{gsub for ctl file}
+\title{Pattern replacement for ctl file}
 \usage{
 gsub_ctl(ctl, pattern, replacement, ..., dollar = NA_character_)
 }
@@ -18,5 +18,6 @@ gsub_ctl(ctl, pattern, replacement, ..., dollar = NA_character_)
 \item{dollar}{character name of subroutine}
 }
 \description{
-gsub for ctl file
+A wrapper around \code{gsub} so that control files may be modified using
+\code{gsub} syntax.
 }

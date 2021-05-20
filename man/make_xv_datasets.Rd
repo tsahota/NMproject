@@ -2,7 +2,7 @@
 % Please edit documentation in R/boot.R
 \name{make_xv_datasets}
 \alias{make_xv_datasets}
-\title{add/write xv datasets}
+\title{Write xv datasets}
 \usage{
 make_xv_datasets(
   dboot,
@@ -21,5 +21,5 @@ make_xv_datasets(
 \item{id_var}{character (default = "ID"). Name of ID column}
 }
 \description{
-add/write xv datasets
+Write xv datasets
 }

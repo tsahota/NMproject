@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_object.R
 \name{write_derived_data}
 \alias{write_derived_data}
-\title{Write derived data file.}
+\title{Write derived data file}
 \usage{
 write_derived_data(d, name, ...)
 }
@@ -12,8 +12,33 @@ write_derived_data(d, name, ...)
 \item{name}{name of file (without extension). If not a path, will save to
 DerivedData directory}
 
-\item{...}{additional arguments to be passed to write.csv}
+\item{...}{additional arguments to be passed to \code{write.csv}}
 }
 \description{
-will write to (DerivedData) directory
+The will write a dataset and an .RDS version of it (for fast reading) to the
+(by default) "DerivedData" directory.
+}
+\examples{
+\dontrun{
+
+## read a dataset that's been copie into SourceData
+d <- read.csv("SourceData/orig_data.csv")
+
+## modify it
+d <- d[d$ID < 10, ]
+
+d \%>\% write_derived_data("DerivedData/data.csv")
+
+## load it again either with
+d <- read_derived_data("data")
+
+## or more commonly if it is associated with run (e.g. m1),
+## you can use input_data() to load it via the nm object
+
+d <- input_data(m1)
+
+}
+}
+\seealso{
+\code{\link{read_derived_data}}, \code{\link{input_data}}
 }

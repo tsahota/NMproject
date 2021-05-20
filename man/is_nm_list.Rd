@@ -2,7 +2,7 @@
 % Please edit documentation in R/utilsExtra.R
 \name{is_nm_list}
 \alias{is_nm_list}
-\title{test if object is an nm_list object}
+\title{Test if object is an nm_list object}
 \usage{
 is_nm_list(x)
 }
@@ -10,5 +10,5 @@ is_nm_list(x)
 \item{x}{object}
 }
 \description{
-test if object is an nm_list object
+Test if object is an nm_list object
 }

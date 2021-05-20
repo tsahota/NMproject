@@ -33,60 +33,65 @@ add_cov(
 
 \item{time_varying}{optional logical. is the covariate time varying?}
 
-\item{additional_state_text}{optional character. custom state variable to be passed to param_cov_text}
+\item{additional_state_text}{optional character. custom state variable to be
+passed to param_cov_text}
 
 \item{id_var}{character (default = "ID"). Needed if time_varying is missing.}
 
-\item{force}{logical (default = FALSE). Force covariate in even if missing values found}
+\item{force}{logical (default = FALSE). Force covariate in even if missing
+values found}
 
-\item{force_TV_var}{logical (default = FALSE). Force covariates only on TV notation parameters}
+\item{force_TV_var}{logical (default = FALSE). Force covariates only on TV
+notation parameters}
 
-\item{init}{optional numeric/character vector.  Initial estimate of additional parameters}
+\item{init}{optional numeric/character vector.  Initial estimate of
+additional parameters}
 
-\item{lower}{optional numeric/character vector.  lower bound of additional parameters}
+\item{lower}{optional numeric/character vector.  lower bound of additional
+parameters}
 
-\item{upper}{optional numeric/character vector.  Upper bound of additional parameters}
+\item{upper}{optional numeric/character vector.  Upper bound of additional
+parameters}
 }
 \description{
-Add a covariate to a NONMEM model
+Follows PsN coding conventions to add covariates into a model.  The advantage
+is no need to create a .scm file, just directly modify the ctl file contents.
+This function is used by \code{\link{covariate_step_tibble}} for stepwise
+covariate model development.
 }
 \details{
-available states:
-"2" or "linear":
-  PARCOV= ( 1 + THETA(1)*(COV - median))
+available states: "2" or "linear": PARCOV= ( 1 + THETA(1)*(COV -
+median))
 
-"3" or "hockey-stick":
-  IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))
-  IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))
-                    
-"4" or "exponential":
-   PARCOV= EXP(THETA(1)*(COV - median))
+"3" or "hockey-stick": IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV -
+median)) IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))
 
-"5" or "power":
-   PARCOV= ((COV/median)**THETA(1))
-   
-"power1":
-   PARCOV= ((COV/median))
-   
-"power0.75":
-   PARCOV= ((COV/median)**0.75)
+"4" or "exponential": PARCOV= EXP(THETA(1)*(COV - median))
 
-"6" or "log-linear":
-   PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
+"5" or "power": PARCOV= ((COV/median)**THETA(1))
+
+"power1": PARCOV= ((COV/median))
+
+"power0.75": PARCOV= ((COV/median)**0.75)
+
+"6" or "log-linear": PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
 }
 \examples{
 \dontrun{
 
 m1WT <- m1 \%>\% child("m1WT") \%>\%
-  add_cov(param = "CL", cov = "WT", state = "power") \%>\% 
+  add_cov(param = "CL", cov = "WT", state = "power") \%>\%
   run_nm()
-  
+
 ## compare results
 
 rr(c(m1, m1WT))
 summary_wide(c(m1, m1WT))
-  
+
 }
 
 
+}
+\seealso{
+\code{\link{covariate_step_tibble}}, \code{\link{test_relations}}
 }

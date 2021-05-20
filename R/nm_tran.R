@@ -1,4 +1,3 @@
-
 update_dollar_data <- function(ctl_name,new_data_name){
   if(is_single_na(ctl_name)) return(NA)
   ctl <- ctl_character(ctl_name)
