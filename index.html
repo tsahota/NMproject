@@ -81,25 +81,6 @@
 
 <p><em>This is the newer beta interface. To use the older interface, install v0.3.2 (see releases)</em></p>
 <p>The intent of NMproject is to allow for fully script based NONMEM model development:</p>
-<ul>
-<li>Code management:
-<ul>
-<li>Code library: NONMEM template scripts to speed creation of NONMEM runs and facilitate adherence to best practices.</li>
-<li>Standardised, version controlled, directory structure for all NONMEM users.</li>
-</ul>
-</li>
-<li>Script based model development:
-<ul>
-<li>Instead of command line interface (CLI) or graphical user interface (GUI) use a script based interface</li>
-<li>End-to-end R workflows that can be repeated, reused and documented in R markdown</li>
-<li>Convenience functions for routine NONMEM control file edits</li>
-<li>Tracked manual edits for everything else to ensure full flexibility</li>
-<li>Fully customizable r markdown templates for goodness of fits, vpcs, ppcs, bootstraps</li>
-<li>Vectorized model objects - interact with groups of NONMEM runs as if they were one (no loops needed)</li>
-<li>Shiny interface for real time run tracking in grid environments</li>
-</ul>
-</li>
-</ul>
 <p>History: NMproject was previously an internal AstraZeneca project. It is being reimplemented here as a community version to be compatible with a variety of architectures (standalone NONMEM and a variety of grid submission systems)</p>
 <p>Two-minute Youtube summary (alpha interface): <a href="https://www.youtube.com/watch?v=b7oBb6QZub8" class="uri">https://www.youtube.com/watch?v=b7oBb6QZub8</a></p>
 <!-- old pictures
@@ -133,7 +114,7 @@
 <code class="sourceCode R"><span class="va">m2</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/child.html">child</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="reference/subroutine.html">subroutine</a></span><span class="op">(</span>trans <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>To generate diagnostics we create a diagnostic template with help of pre-existing templates, here it’s <code>Scripts/basic_gof.Rmd</code> and run this on m2. This will create a project specific run report to evaluate your model</p>
+<p>To generate diagnostics we create a diagnostic template with help of pre-existing templates, here it’s <code>Scripts/basic_gof.Rmd</code> and run this on m2. This will create a project specific run report to evaluate your model. Can also run <code>Scripts/basic_gof.Rmd</code> interactively as a notebook to customise your diagnostics to the problem.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_gof.Rmd"</span><span class="op">)</span>
 

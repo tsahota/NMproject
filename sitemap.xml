@@ -16,9 +16,6 @@
     <loc>https://tsahota.github.io/NMproject/reference/add_mixed_param.html</loc>
   </url>
   <url>
-    <loc>https://tsahota.github.io/NMproject/reference/advan.html</loc>
-  </url>
-  <url>
     <loc>https://tsahota.github.io/NMproject/reference/append_nonmem_var.html</loc>
   </url>
   <url>
@@ -127,6 +124,9 @@
     <loc>https://tsahota.github.io/NMproject/reference/dollar.html</loc>
   </url>
   <url>
+    <loc>https://tsahota.github.io/NMproject/reference/dollar_subroutine.html</loc>
+  </url>
+  <url>
     <loc>https://tsahota.github.io/NMproject/reference/exclude_rows.html</loc>
   </url>
   <url>
@@ -137,9 +137,6 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/find_nm_tran_path.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/reference/from_models.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/gen_sim_path.html</loc>
