@@ -7,9 +7,9 @@
 as_nm_generic(m)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 }
 \description{
-mainly an internal function to be used where methods for nm_list don't exist
-or aren't appropriate
+Mainly an internal function to be used where methods for nm_list don't exist
+or aren't appropriate>
 }

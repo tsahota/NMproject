@@ -7,9 +7,9 @@
 relative_path(path, relative_path)
 }
 \arguments{
-\item{path}{character}
+\item{path}{Path of desired directory or file}
 
-\item{relative_path}{character}
+\item{relative_path}{Path of directory to travel from}
 }
 \description{
 Compute path relative to reference

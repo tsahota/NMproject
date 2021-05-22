@@ -13,4 +13,4 @@ git_cmd_available
 \description{
 Check if git is available on command line
 }
-\keyword{datasets}
+\keyword{internal}

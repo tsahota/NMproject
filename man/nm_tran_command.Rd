@@ -7,7 +7,7 @@
 nm_tran_command(text)
 }
 \arguments{
-\item{text}{optional character. If specified will set nm_tran_command}
+\item{text}{Optional character. If specified will set \code{nm_tran_command}.}
 }
 \value{
 if `text` is missing will get and return the current NMTRAN command
@@ -16,7 +16,7 @@ if `text` is missing will get and return the current NMTRAN command
 `nm_tran` needs the location of NMTRAN.exe on your system.  This
 is guessed on package load, assuming PsN is on the $PATH environmental
 variable, if this is not the case, then you can manually set the path and
-command used
+command used.
 }
 \details{
 `text` can just be the path to NMTRAN.exe.  In this case

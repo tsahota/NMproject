@@ -126,10 +126,27 @@ nm_default_dir <- function(name = c("scripts", "models", "results"), ...){
 }
 
 #' Generic execute command for SGE grids
-#' 
-#' @details requires \code{cores} and \code{parafile} fields to be set
+#'
+#' Character to be used with the \code{\link{cmd}} function to launch a
+#' parallelised job on SGE
+#'
+#' @details Requires \code{cores} and \code{parafile} fields to be set.
 #' @seealso \code{\link{nm_getsetters}}
-#' 
+#'
+#' @examples
+#' \dontrun{
+#'
+#' m1 <- m1 %>%
+#'   cmd(sge_parallel_execute) %>%
+#'   parafile("/opt/NONMEM/nm75/run/mpilinux8.pnm") %>%
+#'   cores(8) %>%
+#'   run_nm()
+#'
+#' m2 <- m1 %>% child("m2") ## inherits same command as above
+#'
+#' sge_parallel_execute ## view the character to see how psn interfaces with SGE
+#'
+#' }
 #' @export
 sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_flags='-pe orte {cores} -V' {ctl_name} -dir={run_dir} -nodes={cores}"
 
@@ -140,9 +157,9 @@ sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_f
 #' `nm_tran` needs the location of NMTRAN.exe on your system.  This
 #' is guessed on package load, assuming PsN is on the $PATH environmental
 #' variable, if this is not the case, then you can manually set the path and
-#' command used
+#' command used.
 #'
-#' @param text optional character. If specified will set nm_tran_command
+#' @param text Optional character. If specified will set \code{nm_tran_command}.
 #'
 #' @details `text` can just be the path to NMTRAN.exe.  In this case
 #'   `nm_tran_command` will use the format `/path/to/NMTRAN.exe < {ctl_name}` to
@@ -177,9 +194,10 @@ nm_tran_command <- function(text){
 
 #' Default system_nm
 #'
-#' Not to be used directly
-#' @param cmd character. system call
-#' @param ... additional args to be passed to system
+#' Not intended to be used directly in most cases.
+#'
+#' @param cmd Character. system call.
+#' @param ... Additional args to be passed to system.
 #' @export
 
 system_nm_default <- function(cmd, ...) {
@@ -259,14 +277,4 @@ overwrite_behaviour <- function(txt = c("ask",
                     "no overwriting (stop with error)",
                     "no overwriting (skip, no error)")
 )
-
-#' Path of directory from models dir
-#'
-#' @param x character vector. Relative path from models.dir
-#' @param models_dir character. Models directory
-#' @export
-from_models <- function(x, models_dir=nm_default_dir("models")) {
-  file.path(models_dir,x)
-}
-
 

@@ -7,10 +7,10 @@
 system_nm_default(cmd, ...)
 }
 \arguments{
-\item{cmd}{character. system call}
+\item{cmd}{Character. system call.}
 
-\item{...}{additional args to be passed to system}
+\item{...}{Additional args to be passed to system.}
 }
 \description{
-Not to be used directly
+Not intended to be used directly in most cases.
 }

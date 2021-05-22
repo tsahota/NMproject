@@ -13,7 +13,7 @@ is_full_path <- function(x) grepl("^(~|/|\\\\|([a-zA-Z]:))", x, perl = TRUE)
 
 
 #' Check if git is available on command line
-
+#' @keywords internal
 git_cmd_available <- Sys.which("git") != ""
 
 #' Pipe operator
@@ -49,8 +49,8 @@ rlang::.data
 
 #' Compute path relative to reference
 #'
-#' @param path character
-#' @param relative_path character
+#' @param path Path of desired directory or file
+#' @param relative_path Path of directory to travel from
 #'
 #' @export
 

@@ -60,10 +60,10 @@ is_nm_generic <- function(x){
 
 #' Convert nm object to nm_generic
 #'
-#' mainly an internal function to be used where methods for nm_list don't exist
-#' or aren't appropriate
+#' Mainly an internal function to be used where methods for nm_list don't exist
+#' or aren't appropriate>
 #'
-#' @param m nm object
+#' @param m An nm object.
 #'
 #' @export
 as_nm_generic <- function(m){

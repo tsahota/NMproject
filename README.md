@@ -23,25 +23,6 @@ v0.3.2 (see releases)*
 The intent of NMproject is to allow for fully script based NONMEM model
 development:
 
--   Code management:
-    -   Code library: NONMEM template scripts to speed creation of
-        NONMEM runs and facilitate adherence to best practices.
-    -   Standardised, version controlled, directory structure for all
-        NONMEM users.
--   Script based model development:
-    -   Instead of command line interface (CLI) or graphical user
-        interface (GUI) use a script based interface
-    -   End-to-end R workflows that can be repeated, reused and
-        documented in R markdown
-    -   Convenience functions for routine NONMEM control file edits
-    -   Tracked manual edits for everything else to ensure full
-        flexibility
-    -   Fully customizable r markdown templates for goodness of fits,
-        vpcs, ppcs, bootstraps
-    -   Vectorized model objects - interact with groups of NONMEM runs
-        as if they were one (no loops needed)
-    -   Shiny interface for real time run tracking in grid environments
-
 History: NMproject was previously an internal AstraZeneca project. It is
 being reimplemented here as a community version to be compatible with a
 variety of architectures (standalone NONMEM and a variety of grid
@@ -102,7 +83,8 @@ m2 <- m1 %>% child() %>%
 To generate diagnostics we create a diagnostic template with help of
 pre-existing templates, here it’s `Scripts/basic_gof.Rmd` and run this
 on m2. This will create a project specific run report to evaluate your
-model
+model. Can also run `Scripts/basic_gof.Rmd` interactively as a notebook
+to customise your diagnostics to the problem.
 
 ``` r
 m2 %>% nm_render("Scripts/basic_gof.Rmd")

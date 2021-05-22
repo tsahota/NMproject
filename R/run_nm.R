@@ -281,7 +281,7 @@ data_name <- function(x) UseMethod("data_name")
 
 data_name.default <- function(x){
   unlist(lapply(x,function(x){
-    if(!file.exists(x)) x <- from_models(x)
+    if(!file.exists(x)) x <- file.path(nm_default_dir("models"), x)
     if(!file.exists(x)) stop("can't find control stream")
     x <- normalizePath(x)
     ctl <- readLines(x,warn = FALSE)

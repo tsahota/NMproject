@@ -510,13 +510,17 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE){
 #' @export
 subroutine.nm_list <- Vectorize_nm_list(subroutine.nm_generic, SIMPLIFY = FALSE)
 
-#' Get/set ADVAN/TRANS/TOL in ctl_contents
-#' 
-#' Will make no other changes to control file
-#' 
-#' @param m nm object
-#' @param text optional number/character number to set to
-#' @name advan
+#' Get/set $SUBROUTINE values in control file
+#'
+#' These functions will make simple ADVAN/TRANS/TOL adjustments to the NONMEM
+#' control file.  No other file changes outside $SUBROUTINE will be made which
+#' makes \code{advan} and \code{trans} less useful than \code{\link{subroutine}}
+#' which performs multiple control file changes.
+#'
+#' @param m An nm object.
+#' @param text Optional number/character number to set to.
+#' @seealso \code{\link{subroutine}}
+#' @name dollar_subroutine
 #' @export
 advan <- function(m, text){
   UseMethod("advan")
@@ -549,7 +553,7 @@ advan.nm_generic <- function(m, text){
 #' @export
 advan.nm_list <- Vectorize_nm_list(advan.nm_generic)
 
-#' @rdname advan
+#' @rdname dollar_subroutine
 #' @export
 trans <- function(m, text){
   UseMethod("trans")
@@ -598,7 +602,16 @@ trans.nm_generic <- function(m, text){
 #' @export
 trans.nm_list <- Vectorize_nm_list(trans.nm_generic)
 
-#' @rdname advan
+#' @rdname dollar_subroutine
+#' @examples
+#' \dontrun{
+#' 
+#' tol(m1) ## display current TOL value
+#' 
+#' ## set tol to 12
+#' m1 <- m1 %>% tol(12)
+#' 
+#' }
 #' @export
 tol <- function(m, text){
   UseMethod("tol")

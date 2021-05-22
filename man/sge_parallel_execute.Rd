@@ -11,10 +11,26 @@ An object of class \code{character} of length 1.
 sge_parallel_execute
 }
 \description{
-Generic execute command for SGE grids
+Character to be used with the \code{\link{cmd}} function to launch a
+parallelised job on SGE
 }
 \details{
-requires \code{cores} and \code{parafile} fields to be set
+Requires \code{cores} and \code{parafile} fields to be set.
+}
+\examples{
+\dontrun{
+
+m1 <- m1 \%>\%
+  cmd(sge_parallel_execute) \%>\%
+  parafile("/opt/NONMEM/nm75/run/mpilinux8.pnm") \%>\%
+  cores(8) \%>\%
+  run_nm()
+
+m2 <- m1 \%>\% child("m2") ## inherits same command as above
+
+sge_parallel_execute ## view the character to see how psn interfaces with SGE
+
+}
 }
 \seealso{
 \code{\link{nm_getsetters}}
