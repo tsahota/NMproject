@@ -7,10 +7,10 @@ NULL
 #' 
 #' Get and set path to control file.
 #' 
-#' @param m nm object
-#' @param text optional character. Name of path to control file (see details).
+#' @param m An nm object.
+#' @param text Optional character. Name of path to control file (see details).
 #'   Typically, this file does not yet normally exist, but will house the code
-#'   code for this run
+#'   code for this run.
 #' 
 #' @details "text" can contain "{run_id}" string.  E.g. "Models/run{run_id}.mod"
 #'   will use the name "Models/runm1.mod" if run_id(m1) is "m1".
@@ -23,8 +23,8 @@ NULL
 #'
 #' m0 <- m0 %>% ctl_name("run{run_id}.mod")
 #' ctl_name(m0)
-#' ## warning: this makes the run identifier in old xpose4 "_m0" not "m0"! ## deleteme
-#'
+#' 
+#' ## warning: this makes the run identifier in old xpose4 "_m0" not "m0"!
 #' m0 <- m0 %>% ctl_path("Models/run_{run_id}.mod")
 #' ctl_path(m0)
 #' 

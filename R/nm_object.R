@@ -2506,13 +2506,19 @@ ppc_histogram_plot <- function(d, var1, var2, statistic = "statistic"){
 
 #' Write derived data file
 #'
-#' The will write a dataset and an .RDS version of it (for fast reading) to the
-#' (by default) "DerivedData" directory.
+#' Will write a dataset and an .RDS version of it to the (by default)
+#' "DerivedData" directory.  The main benefit of the .RDS dataset is that
+#' functions like \code{\link{input_data}} and \code{\link{output_table}} can
+#' use it for rapid reading speeding up overall function.
 #'
-#' @param d data.frame. Data frame to be saved
-#' @param name name of file (without extension). If not a path, will save to
-#'   DerivedData directory
-#' @param ...  additional arguments to be passed to \code{write.csv}
+#' @param d A data.frame. Data frame to be saved.
+#' @param name Character. Name of file (without extension). If not a path, will
+#'   save to DerivedData directory.
+#' @param ...  Additional arguments to be passed to \code{\link[utils]{write.csv}}.
+#'
+#' @details If there is no "DerivedData" data directory and you are using a
+#'   different structure the argument \code{name} must be a (relative) path to
+#'   an existing directory where you want your NONMEM ready dataset to be stored.
 #'
 #' @seealso \code{\link{read_derived_data}}, \code{\link{input_data}}
 #'

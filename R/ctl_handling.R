@@ -51,7 +51,6 @@ ctl_character <- function(r){
     } else {
       class(r) <- c("ctl_character", "character")
       return(r)
-      #stop("cannot coerce to ctl_character")
     }
   }
   stop("cannot coerce to ctl_character")

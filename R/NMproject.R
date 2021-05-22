@@ -1,35 +1,8 @@
-#' Script Based 'NONMEM' Model Development
-#'
-#' Industrialisation of 'NONMEM' model development via end-to-end model
-#' development workflows.
-#'
-#' @section Getting started:
-#'
-#'   URL: \url{https://tsahota.github.io/NMproject/}
-#'
-#'   The primary source of documentation is the webpage. The vignette is on the
-#'   "Getting Started" and the demo is accessible via the
-#'   \code{\link{setup_nm_demo}} function.  To create a new project to work
-#'   within see \code{\link{nm_create_analysis_project}}.
-#'
-#' @seealso \code{\link{setup_nm_demo}},
-#'   \code{\link{nm_create_analysis_project}}
-#' @docType package
-#' @name NMproject
-
-NULL
-
 set_nm_opts <- function(){
   ## Internal function: will set all global variables
   ## put as much AZ specific code in here.
   ## add internal code library to code library
-
-  if(is.null(getOption("psn.commands")))
-    options(psn.commands=
-              c("boot_scm","bootstrap","cdd","crossval","execute","extended_grid","frem","gls",
-                "lasso","llp","mcmp","mimp","nca","npc","parallel_retries","pvar","randtest","rawresults","runrecord",
-                "scm","se_of_eta","sir","sse","sumo","update","update_inits","vpc","xv_scm"))
-
+  
   if(is.null(getOption("system_cmd"))) options(system_cmd=function(cmd,...) {
     if(.Platform$OS.type == "windows") shell(cmd,...) else system(cmd,...)
   })
@@ -37,8 +10,6 @@ set_nm_opts <- function(){
   if(is.null(getOption("quiet_run"))) options(quiet_run=TRUE)
   if(is.null(getOption("intern"))) options(intern=FALSE)
 
-  if(is.null(getOption("model_file_stub"))) options(model_file_stub="run")
-  if(is.null(getOption("model_file_extn"))) options(model_file_extn="mod")
   if(is.null(getOption("available_nm_types")))
     options(available_nm_types = c("SIZES","PROB","INPUT","DATA","SUB","MODEL","PK","DES","PRED","ERROR",
                                    "THETA","OMEGA","SIGMA","EST","SIM","COV","TABLE"))
@@ -49,7 +20,6 @@ set_nm_opts <- function(){
                                                                            "SourceData",
                                                                            "DerivedData"))
   
-  if(is.null(getOption("run_overwrite"))) options(run_overwrite=FALSE)
   if(is.null(getOption("kill_job"))) options(kill_job=identity)
 
   if(is.null(getOption("nm.overwrite_behaviour"))) options(nm.overwrite_behaviour="ask")

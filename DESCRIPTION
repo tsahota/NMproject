@@ -53,6 +53,7 @@ Suggests:
     covr,
     devtools
 Collate: 
+    'NMproject-package.R'
     'NMproject.R'
     'Vectorize.R'
     'addin_apps.R'

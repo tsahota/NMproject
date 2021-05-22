@@ -7,11 +7,11 @@
 ctl_path(m, text)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{text}{optional character. Name of path to control file (see details).
+\item{text}{Optional character. Name of path to control file (see details).
 Typically, this file does not yet normally exist, but will house the code
-code for this run}
+code for this run.}
 }
 \description{
 Get and set path to control file.
@@ -28,8 +28,8 @@ ctl_name(m0)
 
 m0 <- m0 \%>\% ctl_name("run{run_id}.mod")
 ctl_name(m0)
-## warning: this makes the run identifier in old xpose4 "_m0" not "m0"! ## deleteme
 
+## warning: this makes the run identifier in old xpose4 "_m0" not "m0"!
 m0 <- m0 \%>\% ctl_path("Models/run_{run_id}.mod")
 ctl_path(m0)
 

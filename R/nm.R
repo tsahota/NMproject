@@ -16,10 +16,7 @@ search_ctl_name <- function(r, models_dir=nm_default_dir("models")){
     r <- as.character(r)
     rtemp <- normalizePath(r, mustWork = FALSE)
     if(file.exists2(rtemp)) ctl_name <- rtemp else {
-      rtemp <- from_models(normalizePath(r,mustWork = FALSE), models_dir = models_dir)
-      if(file.exists2(rtemp)) ctl_name <- rtemp else {
-        ctl_name <- from_models(paste0(getOption("model_file_stub"),r,".",getOption("model_file_extn")), models_dir = models_dir)
-      }
+      stop("cant find ctl_name")
     }
   }
   ctl_name
