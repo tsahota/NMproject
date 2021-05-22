@@ -40,8 +40,10 @@
 
 
 <meta property="og:title" content="Write derived data file — write_derived_data" />
-<meta property="og:description" content="The will write a dataset and an .RDS version of it (for fast reading) to the
-(by default) &quot;DerivedData&quot; directory." />
+<meta property="og:description" content="Will write a dataset and an .RDS version of it to the (by default)
+&quot;DerivedData&quot; directory.  The main benefit of the .RDS dataset is that
+functions like input_data and output_table can
+use it for rapid reading speeding up overall function." />
 
 
 
@@ -121,8 +123,10 @@
     </div>
 
     <div class="ref-description">
-    <p>The will write a dataset and an .RDS version of it (for fast reading) to the
-(by default) "DerivedData" directory.</p>
+    <p>Will write a dataset and an .RDS version of it to the (by default)
+"DerivedData" directory.  The main benefit of the .RDS dataset is that
+functions like <code><a href='input_data.html'>input_data</a></code> and <code><a href='output_table.html'>output_table</a></code> can
+use it for rapid reading speeding up overall function.</p>
     </div>
 
     <pre class="usage"><span class='fu'>write_derived_data</span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>name</span>, <span class='va'>...</span><span class='op'>)</span></pre>
@@ -132,19 +136,24 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>d</th>
-      <td><p>data.frame. Data frame to be saved</p></td>
+      <td><p>A data.frame. Data frame to be saved.</p></td>
     </tr>
     <tr>
       <th>name</th>
-      <td><p>name of file (without extension). If not a path, will save to
-DerivedData directory</p></td>
+      <td><p>Character. Name of file (without extension). If not a path, will
+save to DerivedData directory.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>additional arguments to be passed to <code>write.csv</code></p></td>
+      <td><p>Additional arguments to be passed to <code><a href='https://rdrr.io/r/utils/write.table.html'>write.csv</a></code>.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>If there is no "DerivedData" data directory and you are using a
+  different structure the argument <code>name</code> must be a (relative) path to
+  an existing directory where you want your NONMEM ready dataset to be stored.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='read_derived_data.html'>read_derived_data</a></code>, <code><a href='input_data.html'>input_data</a></code></p></div>
