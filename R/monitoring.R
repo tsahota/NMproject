@@ -71,7 +71,7 @@ status_table <- function(m){
   tab <- m %>% status %>% 
     factor(levels = c("finished", "error", "running", "not started")) %>%
     table
-  tibble::as_tibble(tab)
+  dplyr::as_tibble(tab)
 }
 
 

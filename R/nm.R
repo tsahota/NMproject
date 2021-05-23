@@ -130,7 +130,7 @@ run_all_scripts <- function(quiet = FALSE){
   
   script_files <- dir(nm_default_dir("scripts"), "s[0-9]+_.*?\\.R(md)?$", full.names = TRUE)
   
-  dplan <- tibble::tibble(script_files) %>%
+  dplan <- dplyr::tibble(script_files) %>%
     dplyr::mutate(rmd = grepl("\\.Rmd", .data$script_files))
   
   dplan <- dplan %>%

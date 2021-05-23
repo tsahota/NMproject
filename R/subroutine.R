@@ -1,41 +1,41 @@
 dp <- dplyr::bind_rows(
-  tibble::tibble(advan = 1,trans = 1,
+  dplyr::tibble(advan = 1,trans = 1,
                  base_name = c("R2T0","V2"),
                  nm_name = c("K","V"),
                  cmt = 1,
                  oral = FALSE),
-  tibble::tibble(advan = 1,trans = 2,
+  dplyr::tibble(advan = 1,trans = 2,
                  base_name = c("R2T0","V2"),
                  relation = c("R2T0*V2", NA),
                  inv_relation = c("R2T0/V2", NA),
                  nm_name = c("CL","V"),
                  cmt = 1,
                  oral = FALSE),
-  tibble::tibble(advan = 2,trans = 1,
+  dplyr::tibble(advan = 2,trans = 1,
                  base_name = c("R1T2","R2T0","V2"),
                  nm_name = c("KA","K","V"),
                  cmt = 1,
                  oral = TRUE),
-  tibble::tibble(advan = 2,trans = 2,
+  dplyr::tibble(advan = 2,trans = 2,
                  base_name = c("R1T2","R2T0","V2"),
                  relation = c(NA, "R2T0*V2", NA),
                  inv_relation = c(NA, "R2T0/V2", NA),
                  nm_name = c("KA","CL","V"),
                  cmt = 1,
                  oral = TRUE),
-  tibble::tibble(advan = 3,trans = 1,
+  dplyr::tibble(advan = 3,trans = 1,
                  base_name = c("R2T0","R2T3","R3T2","V2"),
                  nm_name = c("K","K12","K21","V"),
                  cmt = 2,
                  oral = FALSE),
-  tibble::tibble(advan = 3,trans = 3,
+  dplyr::tibble(advan = 3,trans = 3,
                  base_name = c("R2T0","R2T3","V2","V3"),
                  relation = c("R2T0*V2", "R2T3*V2", NA , "V3+V2"),
                  inv_relation = c("R2T0/V2", "R2T3/V2", NA , "V3-V2"),
                  nm_name = c("CL","Q","V","VSS"),
                  cmt = 2,
                  oral = FALSE),
-  tibble::tibble(advan = 3,trans = 4,
+  dplyr::tibble(advan = 3,trans = 4,
                  base_name = c("R2T0","R2T3","V2","V3"),
                  relation = c("R2T0*V2", "R2T3*V2", NA , NA),
                  inv_relation = c("R2T0/V2", "R2T3/V2", NA , NA),
@@ -43,19 +43,19 @@ dp <- dplyr::bind_rows(
                  cmt = 2,
                  oral = FALSE),
   ## skip advan 3 trans 5/6
-  tibble::tibble(advan = 4,trans = 1,
+  dplyr::tibble(advan = 4,trans = 1,
                  base_name = c("R1T2","R2T0","R2T3","R3T2","V2"),
                  nm_name = c("KA","K","K23","K32","V2"),
                  cmt = 2,
                  oral = TRUE),
-  tibble::tibble(advan = 4,trans = 3,
+  dplyr::tibble(advan = 4,trans = 3,
                  base_name = c("R1T2","R2T0","R2T3","V2","V3"),
                  relation = c(NA, "R2T0*V2", "R2T3*V2", NA , "V3+V2"),
                  inv_relation = c(NA, "R2T0/V2", "R2T3/V2", NA , "V3-V2"),
                  nm_name = c("KA","CL","Q","V","VSS"),
                  cmt = 2,
                  oral = TRUE),
-  tibble::tibble(advan = 4,trans = 4,
+  dplyr::tibble(advan = 4,trans = 4,
                  base_name = c("R1T2","R2T0","R2T3","V2","V3"),
                  relation = c(NA, "R2T0*V2", "R2T3*V2", NA , NA),               
                  inv_relation = c(NA, "R2T0/V2", "R2T3/V2", NA , NA),               
@@ -63,12 +63,12 @@ dp <- dplyr::bind_rows(
                  cmt = 2,
                  oral = TRUE),
   ## add advan 11
-  tibble::tibble(advan = 11,trans = 1,
+  dplyr::tibble(advan = 11,trans = 1,
                  base_name = c("R2T0","R2T3","R3T2","R2T4","R4T2","V2"),
                  nm_name = c("K","K12","K21","K13","K31","V"),
                  cmt = 3,
                  oral = FALSE),
-  tibble::tibble(advan = 11,trans = 4,
+  dplyr::tibble(advan = 11,trans = 4,
                  base_name = c("R2T0","R2T3","V2","V3","R2T4","V4"),
                  relation = c("R2T0*V2", "R2T3*V2", NA , NA, "R2T4*V2", NA),
                  inv_relation = c("R2T0/V2", "R2T3/V2", NA , NA, "R2T4/V2", NA),
@@ -76,12 +76,12 @@ dp <- dplyr::bind_rows(
                  cmt = 3,
                  oral = FALSE),
   ## add advan 12
-  tibble::tibble(advan = 12,trans = 1,
+  dplyr::tibble(advan = 12,trans = 1,
                  base_name = c("R1T2","R2T0","R2T3","R3T2","R2T4","R4T2","V2"),
                  nm_name = c("KA","K","K23","K32","K24","K42","V2"),
                  cmt = 3,
                  oral = TRUE),
-  tibble::tibble(advan = 12,trans = 4,
+  dplyr::tibble(advan = 12,trans = 4,
                  base_name = c("R1T2","R2T0","R2T3","V2","V3","R2T4","V4"),
                  relation = c(NA,"R2T0*V2", "R2T3*V2", NA , NA, "R2T4*V2", NA),
                  inv_relation = c(NA,"R2T0/V2", "R2T3/V2", NA , NA, "R2T4/V2", NA),
@@ -89,38 +89,38 @@ dp <- dplyr::bind_rows(
                  cmt = 3,
                  oral = TRUE),
   ## non closed form advans
-  tibble::tibble(advan = 5, trans = 1,
+  dplyr::tibble(advan = 5, trans = 1,
                  base_name = c("RXTY","VX"),
                  nm_name = c("KXY","VX"),
                  cmt = NA,
                  oral = NA),
-  tibble::tibble(advan = 6, trans = 1,
+  dplyr::tibble(advan = 6, trans = 1,
                  base_name = c("RXTY","VX"),
                  nm_name = c("KXY","VX"),
                  cmt = NA,
                  oral = NA),
-  tibble::tibble(advan = 7, trans = 1,
+  dplyr::tibble(advan = 7, trans = 1,
                  base_name = c("RXTY","VX"),
                  nm_name = c("KXY","VX"),
                  cmt = NA,
                  oral = NA),
-  tibble::tibble(advan = 8, trans = 1,
+  dplyr::tibble(advan = 8, trans = 1,
                  base_name = c("RXTY","VX"),
                  nm_name = c("KXY","VX"),
                  cmt = NA,
                  oral = NA),
-  tibble::tibble(advan = 9, trans = 1,
+  dplyr::tibble(advan = 9, trans = 1,
                  base_name = c("RXTY","VX"),
                  nm_name = c("KXY","VX"),
                  cmt = NA,
                  oral = NA),
-  tibble::tibble(advan = 13, trans = 1,
+  dplyr::tibble(advan = 13, trans = 1,
                  base_name = c("RXTY","VX"),
                  nm_name = c("KXY","VX"),
                  cmt = NA,
                  oral = NA)
 )
-dp <- tibble::as_tibble(dp)
+dp <- dplyr::as_tibble(dp)
 
 available_advans <- dplyr::group_by(dp, .data$advan, .data$trans, .data$cmt, .data$oral)
 available_advans <- dplyr::summarise(available_advans, 
@@ -142,15 +142,15 @@ default_trans <- function(advan){
 
 #' Subroutine
 #' 
-#' This is currently experimental. Modify subroutine of an nm object
+#' This is currently experimental. Modify subroutine of an nm object.
 #' 
-#' @param m nm object
-#' @param advan character. desired ADVAN
-#' @param trans character. desired TRANS
-#' @param recursive logical (default = TRUE). Internal argument, do not modify
+#' @param m An nm object.
+#' @param advan Character. desired ADVAN.
+#' @param trans Character. desired TRANS.
+#' @param recursive Logical (default = TRUE). Internal argument, do not modify.
 #' 
 #' @details
-#'  Can only switch between subroutines listed in `available_advans`
+#'  Can only switch between subroutines listed in `available_advans`.
 #'
 #' @seealso [advan()]
 #' 
@@ -328,7 +328,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE){
   #   ##var_KXY is now either KXY or KXTY notation.
   #   ## modify dp
   #   
-  #   dp_add <- tibble::tibble(
+  #   dp_add <- dplyr::tibble(
   #     advan = new_advan,
   #     trans = 1,
   #     base_name = var_RXY,

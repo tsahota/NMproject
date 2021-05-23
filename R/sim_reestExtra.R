@@ -2,7 +2,7 @@
 #' 
 #' Internal function
 #' 
-#' @param dsc `tibble::tibble` with experimental factors to vary
+#' @param dsc `dplyr::tibble` with experimental factors to vary
 #' @param start_dir directory name within which all runs should take place.
 #' @param include_names logical (default = TRUE). 
 #' @examples 
@@ -29,12 +29,12 @@ gen_sim_path <- function(dsc, start_dir, include_names = TRUE){
 #' @param base nm object
 #' @param run_id base run_id to construct run_ids of covariate runs
 #' @param run_in character.  See [run_in()]
-#' @param dtest `tibble::tibble` with testing relations (from
+#' @param dtest `dplyr::tibble` with testing relations (from
 #'   [test_relations()])
 #' @param direction character. "forward" (default) or "backward"
 #' @param ... additional arguments passed to [add_cov()]
 #'
-#' @return Will return `dtest` a `tibble::tibble` with appended columns
+#' @return Will return `dtest` a `dplyr::tibble` with appended columns
 #'
 #' @seealso [test_relations()], [covariate_step_tibble()],
 #'   [bind_covariate_results()], [add_cov()]
@@ -110,7 +110,7 @@ covariate_step_tibble <- function(base, run_id, run_in = nm_default_dir("models"
   }
   
   ## check no covariates are in dataset and have no missing values
-  dinput <- tibble::tibble(input_data(base))
+  dinput <- dplyr::tibble(input_data(base))
   test_covs <- unique(dtest$cov)
   if(any(!test_covs %in% names(dinput))){
     stop("cannot find covariates:\n ",
@@ -267,10 +267,10 @@ bind_covariate_results <- function(dsc, nm_col = "m", parameters = "new"){
 #' @export
 test_relations <- function(dtest, param, cov, state, continuous){
   
-  if(missing(param)) return(tibble::tibble())
+  if(missing(param)) return(dplyr::tibble())
   if(length(continuous) > 1) stop("continous can only be TRUE/FALSE")
   dtest_new <- expand.grid(param = param, cov = cov, state = state, stringsAsFactors = FALSE)
-  dtest_new <- tibble::as_tibble(dtest_new)
+  dtest_new <- dplyr::as_tibble(dtest_new)
   dtest_new$continuous <- continuous
   if(!missing(dtest)) dtest_new <- dplyr::bind_rows(dtest, dtest_new)
   return(dtest_new)

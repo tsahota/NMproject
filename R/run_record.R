@@ -689,7 +689,7 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
       
       if(inherits(try(t(rri$m)), "try-error")) browser()
       
-      pars_to_add <- tibble::as_tibble(t(rri$m))
+      pars_to_add <- dplyr::as_tibble(t(rri$m))
       names(pars_to_add) <- rri$parameter
       
       dplyr::bind_cols(d, pars_to_add) #%>%
@@ -768,10 +768,10 @@ summary_long <- function(..., parameters = c("none", "new", "all")){
   ds$m <- NULL
   d <- t(ds)
   dnames <- row.names(d)
-  d <- tibble::as_tibble(d)
+  d <- dplyr::as_tibble(d)
   names(d) <- gsub("execute:","", unique_id(m))
   d <- d %>% dplyr::mutate_all(trimws)
-  dcol <- tibble::tibble("field" = dnames)
+  dcol <- dplyr::tibble("field" = dnames)
   d <- dplyr::bind_cols(dcol, d)
   d
 }

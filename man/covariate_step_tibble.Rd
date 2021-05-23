@@ -20,7 +20,7 @@ covariate_step_tibble(
 
 \item{run_in}{character.  See \code{\link[=run_in]{run_in()}}}
 
-\item{dtest}{\code{tibble::tibble} with testing relations (from
+\item{dtest}{\code{dplyr::tibble} with testing relations (from
 \code{\link[=test_relations]{test_relations()}})}
 
 \item{direction}{character. "forward" (default) or "backward"}
@@ -28,7 +28,7 @@ covariate_step_tibble(
 \item{...}{additional arguments passed to \code{\link[=add_cov]{add_cov()}}}
 }
 \value{
-Will return \code{dtest} a \code{tibble::tibble} with appended columns
+Will return \code{dtest} a \code{dplyr::tibble} with appended columns
 }
 \description{
 Prepare forward covariate step

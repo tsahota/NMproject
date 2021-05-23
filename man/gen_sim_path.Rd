@@ -7,7 +7,7 @@
 gen_sim_path(dsc, start_dir, include_names = TRUE)
 }
 \arguments{
-\item{dsc}{\code{tibble::tibble} with experimental factors to vary}
+\item{dsc}{\code{dplyr::tibble} with experimental factors to vary}
 
 \item{start_dir}{directory name within which all runs should take place.}
 

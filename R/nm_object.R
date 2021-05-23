@@ -96,24 +96,96 @@ To use the alpha interface, install NMproject 0.3.2",
 #' 
 #' }
 #' 
+#' @keywords internal
 #' @export
 nm <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
 
-#' Create a new nm object
-#' 
-#' Wrapper function around nm()
-#' @param based_on character. Prior ctl file to base run on
-#' @param run_id character. Run identifier
-#' @param data_path character. Path to dataset
-#' @param cmd character. Psn command to use
-#' @examples 
+#'Create a new (parent) nm object
+#'
+#'@description `r lifecycle::badge("stable")`
+#'
+#'  Wrapper function around [nm()] to create a new parent `nm` object.  Normally
+#'  the first NONMEM you create will be using this functions.  Subsequent
+#'  objects created with the [child()] function will inherit the properties of
+#'  the parent run.
+#'
+#'@param based_on Character. Prior ctl file to base run on
+#'@param run_id Character. Run identifier
+#'@param data_path Character. Path to dataset
+#'@param cmd Optional character. PsN command to use. If unspecified will use
+#'  `getOption("nm.cmd_default")`. Use glue notation for inheritance.  See
+#'  details.
+#'
+#'@details The `cmd` field uses `glue` notation.  So instead of specifying
+#'  `execute runm1.mod -dir=m1`, it is best to specify `execute {ctl_name}
+#'  -dir={run_dir}`.  The values of `ctl_name` and `run_dir` refer to object
+#'  fields and if these change value like when the `child()` function is used to
+#'  create a separate child object, the `cmd` field will update automatically.
+#'
+#'@section object fields (see [nm_getsetters()] for accessing):
+#'
+#'  \describe{ 
+#'  \item{type}{
+#'    The PsN run type.  Default is `execute`.
+#'  }
+#'  \item{run_id}{
+#'    The run identifier.  E.g. `m1`.
+#'  }
+#'  \item{run_in}{
+#'    The directory to copy control files and run NONMEM.  Default = "Models".
+#'  }
+#'  \item{executed}{
+#'    For internal use.
+#'  } 
+#'  \item{ctl_contents}{
+#'    Stores the contents of the control file to be written to disk when the 
+#'    [run_nm()] function is used on the object.
+#'  } 
+#'  \item{data_path}{
+#'    Path to the NONMEM ready dataset (from base project directory).
+#'  }
+#'  \item{cmd}{
+#'    See details above.
+#'  }
+#'  \item{cores}{
+#'    Numbers of cores to use.  Requires a `cmd` value that uses the `{cores}`
+#'    glue field.
+#'  } 
+#'  \item{run_dir}{ 
+#'    PsN directory to run the NONMEM run. Default is to the be the same as 
+#'    the `run_id` for simplicity.
+#'  }
+#'  \item{results_dir}{ 
+#'    Location to store results files from diagnostic reports executed with 
+#'    [nm_render()].
+#'  } 
+#'  \item{unique_id}{
+#'    For internal use.
+#'  }
+#'  \item{lst_path}{
+#'    Normally does not require setting.  Path to the expected .lst file.
+#'  }
+#'  }
+#'
+#'@return An object of class `nm_list`.  Attributes
+#'@seealso [nm_getsetters()], [child()]
+#' @examples
 #' \dontrun{
-#'m1 <- new_nm(based_on = "staging/Models/run1.mod",
-#'             run_id = "m1",
+#'
+#' m1 <- new_nm(run_id = "m1",
+#'             based_on = "staging/Models/run1.mod",
 #'             data_path = "DerivedData/data.csv",
-#'             cmd = "execute -run_on_sge -sge_prepend_flags='-V' {ctl_name} -dir={run_dir}")
+#'             cmd = "execute -run_on_sge -sge_prepend_flags='-V' {ctl_name} -dir={run_dir}") %>%
+#'      fill_input() %>%
+#'      run_nm()
+#'
+#' m1 ## display object fields
+#' cmd(m1)
+#' ctl_name(m1)
+#' run_dir(m1)
+#'
 #'}
-#' @export
+#'@export
 new_nm <- function(based_on,
                    run_id = NA_character_, 
                    data_path, 
@@ -775,7 +847,7 @@ input_data <- function(m, filter = FALSE, na = ".", ...){
 #' @export
 input_data.nm_generic <- function(m, filter = FALSE, na = ".", ...){
   file_name <- data_path(m)
-  if(is.na(file_name)) return(tibble::tibble())
+  if(is.na(file_name)) return(dplyr::tibble())
   
   if(normalizePath(dirname(file_name), mustWork = FALSE) == normalizePath("DerivedData", mustWork = FALSE)){
     d <- read_derived_data(basename(tools::file_path_sans_ext(file_name)),...)
@@ -1450,7 +1522,7 @@ raw_init_theta <- function(m, replace){
     
     d <- by(d, d$line, function(d){
       d <- merge(data.frame(value = d$x_nc2[[1]]), d)
-      #d <- merge(tibble::tibble(value = d$x_nc2[[1]]), d) ## causes seg faults
+      #d <- merge(dplyr::tibble(value = d$x_nc2[[1]]), d) ## causes seg faults
       d$pos <- seq_len(nrow(d))
       d
     })
@@ -1635,7 +1707,7 @@ raw_init_random <- function(m, replace, dollar = "OMEGA"){
     
     d <- by(d, d$line, function(d){
       d <- merge(data.frame(value = d$x_nc2[[1]]), d)
-      #d <- merge(tibble::tibble(value = d$x_nc2[[1]]), d) ## causes seg faults
+      #d <- merge(dplyr::tibble(value = d$x_nc2[[1]]), d) ## causes seg faults
       d$pos <- seq_len(nrow(d))
       d
     })
@@ -1903,7 +1975,7 @@ nm_row.nm_generic <- function(m){
   eligible_rows <- sapply(m, function(field){
     length(field) == 1
   })
-  d <- tibble::as_tibble(m[eligible_rows])
+  d <- dplyr::as_tibble(m[eligible_rows])
   d
 }
 #' @export

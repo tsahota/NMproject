@@ -140,7 +140,7 @@ stage <- function(files, root_dir,
   destination <- gsub("^Models/", paste0(nm_default_dir("models"), "/"), destination)
   destination <- gsub("^Results/", paste0(nm_default_dir("results"), "/"), destination)
   
-  d <- tibble::tibble(from = files, destination)
+  d <- dplyr::tibble(from = files, destination)
   d$staging <- file.path("staging", d$destination)
   
   d <- d[!is.na(d$destination), ]

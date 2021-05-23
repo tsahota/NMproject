@@ -20,7 +20,6 @@ Imports:
     DT,
     git2r (>= 0.18.0),
     dplyr (>= 0.7.2),
-    tibble,
     methods,
     stringr (>= 1.3.1),
     rlang (>= 0.2.1),

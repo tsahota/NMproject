@@ -20,7 +20,8 @@ inclusion}
 deletion}
 }
 \description{
-`r lifecycle::badge("experimental")
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Intent is not to replicate PsN SCM.  This is mainly here for illustrative and
 comparison purposes. Should replicate the model selection in PsN's SCM
 functionality with greedy setting.

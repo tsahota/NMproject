@@ -412,7 +412,7 @@ cov_forest_data <- function(m, covariate_scenarios){
     if(nrow(dcov_sc) == 0)
       stop("couldn't find covariate ", cov, " in covariate scenarios")
     
-    dcov_sc_simple <- tibble::tibble(dcov_sc$value)
+    dcov_sc_simple <- dplyr::tibble(dcov_sc$value)
     names(dcov_sc_simple) <- cov
     
     dd_first[[cov]] <- NULL
@@ -456,22 +456,22 @@ cov_forest_data <- function(m, covariate_scenarios){
         lev_text <- dcov_sc$text
     }
     
-    d <- tibble::tibble(par, cov, levs, lev_text)
+    d <- dplyr::tibble(par, cov, levs, lev_text)
     
     d$mask_mid <- lapply(levs, function(lev){
-      d <- tibble::tibble(lev)
+      d <- dplyr::tibble(lev)
       names(d) <- cov
       cbind(d, as.data.frame(as.list(dpar_mid)))
     })
     
     d$mask_low <- lapply(levs, function(lev){
-      d <- tibble::tibble(lev)
+      d <- dplyr::tibble(lev)
       names(d) <- cov
       cbind(d, as.data.frame(as.list(dpar_low)))
     })
     
     d$mask_upp <- lapply(levs, function(lev){
-      d <- tibble::tibble(lev)
+      d <- dplyr::tibble(lev)
       names(d) <- cov
       cbind(d, as.data.frame(as.list(dpar_upp)))
     })
@@ -692,7 +692,7 @@ cov_cov_plot <- function(d,
     continuous2 <- continuous[2]
     log_transform_plot1 <- log_transform_plot[1]
     log_transform_plot2 <- log_transform_plot[2]
-    dcov <- tibble::tibble(cov = c(cov1, cov2),
+    dcov <- dplyr::tibble(cov = c(cov1, cov2),
                            continuous = c(continuous1, continuous2),
                            log_transform_plot = c(log_transform_plot1, log_transform_plot2))
   }

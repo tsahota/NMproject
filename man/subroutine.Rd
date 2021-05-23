@@ -7,19 +7,19 @@
 subroutine(m, advan = NA, trans = 1, recursive = TRUE)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{advan}{character. desired ADVAN}
+\item{advan}{Character. desired ADVAN.}
 
-\item{trans}{character. desired TRANS}
+\item{trans}{Character. desired TRANS.}
 
-\item{recursive}{logical (default = TRUE). Internal argument, do not modify}
+\item{recursive}{Logical (default = TRUE). Internal argument, do not modify.}
 }
 \description{
-This is currently experimental. Modify subroutine of an nm object
+This is currently experimental. Modify subroutine of an nm object.
 }
 \details{
-Can only switch between subroutines listed in \code{available_advans}
+Can only switch between subroutines listed in \code{available_advans}.
 }
 \examples{
 \dontrun{

@@ -2,27 +2,102 @@
 % Please edit documentation in R/nm_object.R
 \name{new_nm}
 \alias{new_nm}
-\title{Create a new nm object}
+\title{Create a new (parent) nm object}
 \usage{
 new_nm(based_on, run_id = NA_character_, data_path, cmd)
 }
 \arguments{
-\item{based_on}{character. Prior ctl file to base run on}
+\item{based_on}{Character. Prior ctl file to base run on}
 
-\item{run_id}{character. Run identifier}
+\item{run_id}{Character. Run identifier}
 
-\item{data_path}{character. Path to dataset}
+\item{data_path}{Character. Path to dataset}
 
-\item{cmd}{character. Psn command to use}
+\item{cmd}{Optional character. PsN command to use. If unspecified will use
+\code{getOption("nm.cmd_default")}. Use glue notation for inheritance.  See
+details.}
+}
+\value{
+An object of class \code{nm_list}.  Attributes
 }
 \description{
-Wrapper function around nm()
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Wrapper function around \code{\link[=nm]{nm()}} to create a new parent \code{nm} object.  Normally
+the first NONMEM you create will be using this functions.  Subsequent
+objects created with the \code{\link[=child]{child()}} function will inherit the properties of
+the parent run.
 }
+\details{
+The \code{cmd} field uses \code{glue} notation.  So instead of specifying
+\verb{execute runm1.mod -dir=m1}, it is best to specify \verb{execute \{ctl_name\} -dir=\{run_dir\}}.  The values of \code{ctl_name} and \code{run_dir} refer to object
+fields and if these change value like when the \code{child()} function is used to
+create a separate child object, the \code{cmd} field will update automatically.
+}
+\section{object fields (see \code{\link[=nm_getsetters]{nm_getsetters()}} for accessing)}{
+
+
+\describe{
+\item{type}{
+The PsN run type.  Default is \code{execute}.
+}
+\item{run_id}{
+The run identifier.  E.g. \code{m1}.
+}
+\item{run_in}{
+The directory to copy control files and run NONMEM.  Default = "Models".
+}
+\item{executed}{
+For internal use.
+}
+\item{ctl_contents}{
+Stores the contents of the control file to be written to disk when the
+\code{\link[=run_nm]{run_nm()}} function is used on the object.
+}
+\item{data_path}{
+Path to the NONMEM ready dataset (from base project directory).
+}
+\item{cmd}{
+See details above.
+}
+\item{cores}{
+Numbers of cores to use.  Requires a \code{cmd} value that uses the \code{{cores}}
+glue field.
+}
+\item{run_dir}{
+PsN directory to run the NONMEM run. Default is to the be the same as
+the \code{run_id} for simplicity.
+}
+\item{results_dir}{
+Location to store results files from diagnostic reports executed with
+\code{\link[=nm_render]{nm_render()}}.
+}
+\item{unique_id}{
+For internal use.
+}
+\item{lst_path}{
+Normally does not require setting.  Path to the expected .lst file.
+}
+}
+}
+
 \examples{
 \dontrun{
-m1 <- new_nm(based_on = "staging/Models/run1.mod",
-            run_id = "m1",
+
+m1 <- new_nm(run_id = "m1",
+            based_on = "staging/Models/run1.mod",
             data_path = "DerivedData/data.csv",
-            cmd = "execute -run_on_sge -sge_prepend_flags='-V' {ctl_name} -dir={run_dir}")
+            cmd = "execute -run_on_sge -sge_prepend_flags='-V' {ctl_name} -dir={run_dir}") \%>\%
+     fill_input() \%>\%
+     run_nm()
+
+m1 ## display object fields
+cmd(m1)
+ctl_name(m1)
+run_dir(m1)
+
 }
+}
+\seealso{
+\code{\link[=nm_getsetters]{nm_getsetters()}}, \code{\link[=child]{child()}}
 }

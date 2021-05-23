@@ -270,7 +270,7 @@ overwrite_behaviour <- function(txt = c("ask",
 }
 
 #' @export
-.overwrite_behaviour <- tibble::tibble(
+.overwrite_behaviour <- dplyr::tibble(
   txt = c("ask", "overwrite", "stop", "skip"),
   description =   c("ask before overwrite (default)",
                     "overwrite all",
