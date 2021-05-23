@@ -14,5 +14,5 @@ Runs all scripts s01_XXX, s02_XXX in the designated "scripts" directory
 }
 \details{
 works with .R and .Rmd extensions.  Behaviour is to \code{source} .R
-  files and use \code{rmarkdown::render} on .Rmd files
+files and use \code{rmarkdown::render} on .Rmd files
 }

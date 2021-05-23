@@ -82,5 +82,5 @@ dppc \%>\% ppc_forest_plot()
 }
 }
 \seealso{
-\code{\link{nm_render}}
+\code{\link[=nm_render]{nm_render()}}
 }

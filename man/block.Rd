@@ -7,8 +7,8 @@
 block(iomega, eta_numbers = NA, diag_init = 0.01)
 }
 \arguments{
-\item{iomega}{tibble.  Output from \code{\link{init_omega}} and
-\code{\link{init_sigma}}}
+\item{iomega}{tibble.  Output from \code{\link[=init_omega]{init_omega()}} and
+\code{\link[=init_sigma]{init_sigma()}}}
 
 \item{eta_numbers}{numeric vector.  ETA numbers to put into a block. Must be
 contiguous}
@@ -29,6 +29,6 @@ m1 \%>\% dollar("OMEGA") ## to display $OMEGA
 
 }
 \seealso{
-\code{\link{unblock}}, \code{\link{init_theta}},
-  \code{\link{init_omega}}, \code{\link{init_sigma}}
+\code{\link[=unblock]{unblock()}}, \code{\link[=init_theta]{init_theta()}},
+\code{\link[=init_omega]{init_omega()}}, \code{\link[=init_sigma]{init_sigma()}}
 }

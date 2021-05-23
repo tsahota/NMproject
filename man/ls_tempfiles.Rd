@@ -31,5 +31,5 @@ list all tempfiles (normally for deletion)
 }
 \details{
 Having \code{remove_psn_exposure = TRUE} will break pirana and xpose capability
-  as these software use exported files
+as these software use exported files
 }

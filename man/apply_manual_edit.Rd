@@ -16,5 +16,5 @@ Best to allow the "manual edit" RStudio addin to write this function for you
 }
 \details{
 Generally best to to apply patches before automatic edits and
-  changes in directories e.g. via \code{run_in()}
+changes in directories e.g. via \code{run_in()}
 }

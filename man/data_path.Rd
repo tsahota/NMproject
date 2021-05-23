@@ -13,7 +13,7 @@ data_path(m, text)
 }
 \value{
 if text is not specified, will return the data_path name
- otherwise will set data_path to the text provided
+otherwise will set data_path to the text provided
 }
 \description{
 Mainly used to associate a dataset with an nm object.

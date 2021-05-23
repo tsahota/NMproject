@@ -11,7 +11,7 @@ An object of class \code{character} of length 1.
 sge_parallel_execute
 }
 \description{
-Character to be used with the \code{\link{cmd}} function to launch a
+Character to be used with the \code{\link[=cmd]{cmd()}} function to launch a
 parallelised job on SGE
 }
 \details{
@@ -33,6 +33,6 @@ sge_parallel_execute ## view the character to see how psn interfaces with SGE
 }
 }
 \seealso{
-\code{\link{nm_getsetters}}
+\code{\link[=nm_getsetters]{nm_getsetters()}}
 }
 \keyword{datasets}

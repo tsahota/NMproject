@@ -23,5 +23,5 @@ ls_code_library("Models/ADVAN2.mod") \%>\%
 
 }
 \seealso{
-\code{\link{code_library}}, \code{\link{preview}}, \code{\link{stage}}, \code{\link{import}}
+\code{\link[=code_library]{code_library()}}, \code{\link[=preview]{preview()}}, \code{\link[=stage]{stage()}}, \code{\link[=import]{import()}}
 }

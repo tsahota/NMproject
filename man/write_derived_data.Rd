@@ -12,18 +12,18 @@ write_derived_data(d, name, ...)
 \item{name}{Character. Name of file (without extension). If not a path, will
 save to DerivedData directory.}
 
-\item{...}{Additional arguments to be passed to \code{\link[utils]{write.csv}}.}
+\item{...}{Additional arguments to be passed to \code{\link[utils:write.table]{utils::write.csv()}}.}
 }
 \description{
 Will write a dataset and an .RDS version of it to the (by default)
 "DerivedData" directory.  The main benefit of the .RDS dataset is that
-functions like \code{\link{input_data}} and \code{\link{output_table}} can
+functions like \code{\link[=input_data]{input_data()}} and \code{\link[=output_table]{output_table()}} can
 use it for rapid reading speeding up overall function.
 }
 \details{
 If there is no "DerivedData" data directory and you are using a
-  different structure the argument \code{name} must be a (relative) path to
-  an existing directory where you want your NONMEM ready dataset to be stored.
+different structure the argument \code{name} must be a (relative) path to
+an existing directory where you want your NONMEM ready dataset to be stored.
 }
 \examples{
 \dontrun{
@@ -47,5 +47,5 @@ d <- input_data(m1)
 }
 }
 \seealso{
-\code{\link{read_derived_data}}, \code{\link{input_data}}
+\code{\link[=read_derived_data]{read_derived_data()}}, \code{\link[=input_data]{input_data()}}
 }

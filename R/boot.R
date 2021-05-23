@@ -1,6 +1,6 @@
 #' Save bootstrap datasets to disk
 #' 
-#' Internal function used by \code{make_boot_datasets()}, 
+#' Internal function used by `make_boot_datasets()`, 
 #'   run once per bootstrap sample
 #' 
 #' @param d dataset to merge

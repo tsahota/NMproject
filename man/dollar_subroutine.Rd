@@ -21,7 +21,7 @@ tol(m, text)
 \description{
 These functions will make simple ADVAN/TRANS/TOL adjustments to the NONMEM
 control file.  No other file changes outside $SUBROUTINE will be made which
-makes \code{advan} and \code{trans} less useful than \code{\link{subroutine}}
+makes \code{advan} and \code{trans} less useful than \code{\link[=subroutine]{subroutine()}}
 which performs multiple control file changes.
 }
 \examples{
@@ -35,5 +35,5 @@ m1 <- m1 \%>\% tol(12)
 }
 }
 \seealso{
-\code{\link{subroutine}}
+\code{\link[=subroutine]{subroutine()}}
 }

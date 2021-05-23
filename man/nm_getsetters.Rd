@@ -70,9 +70,9 @@ Functions to access and modify fields of nm objects
 }
 \details{
 Easiest way to see all fields of an object is to type the object
-  into the console and hit enter. This will display the value of each field.
-  some fields like \code{cmd} are glue fields.  In these cases inserting
-  expressions inside braces in \code{text} will evaluate the expression
+into the console and hit enter. This will display the value of each field.
+some fields like \code{cmd} are glue fields.  In these cases inserting
+expressions inside braces in \code{text} will evaluate the expression
 }
 \examples{
 \dontrun{

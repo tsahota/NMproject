@@ -17,7 +17,7 @@ read_derived_data(name, na = ".", silent = FALSE, ...)
 }
 \description{
 Read the derived data directly instead of via the nm object which is what
-\code{\link{input_data}} does.
+\code{\link[=input_data]{input_data()}} does.
 }
 \examples{
 \dontrun{
@@ -41,5 +41,5 @@ d <- input_data(m1)
 }
 }
 \seealso{
-\code{\link{write_derived_data}}, \code{\link{input_data}}
+\code{\link[=write_derived_data]{write_derived_data()}}, \code{\link[=input_data]{input_data()}}
 }

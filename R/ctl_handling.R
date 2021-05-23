@@ -172,8 +172,9 @@ ctl_r2nm <- function(x) {
 }
 
 #' Convert $THETA to R abstraction layer
-#' @param x character vector with $THETA information
-#' @return object abstracting $THETA contents
+#' @param x Character vector with $THETA information.
+#' @return Object abstracting $THETA contents.
+#' @keywords internal
 
 theta_nm2r <- function(x){
   x <- rem_dollars(x)
@@ -335,7 +336,7 @@ update_parameters0 <- function(ctl,coef_from,type = c("THETA","OMEGA","SIGMA")){
 #'
 #' Follows PsN coding conventions to add covariates into a model.  The advantage
 #' is no need to create a .scm file, just directly modify the ctl file contents.
-#' This function is used by \code{\link{covariate_step_tibble}} for stepwise
+#' This function is used by [covariate_step_tibble()] for stepwise
 #' covariate model development.
 #'
 #' @param ctl object coercible to ctl_list
@@ -374,7 +375,7 @@ update_parameters0 <- function(ctl,coef_from,type = c("THETA","OMEGA","SIGMA")){
 #'
 #' "6" or "log-linear": PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
 #'
-#' @seealso \code{\link{covariate_step_tibble}}, \code{\link{test_relations}}
+#' @seealso [covariate_step_tibble()], [test_relations()]
 #' @examples
 #' \dontrun{
 #'
@@ -436,7 +437,7 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
 #' "6" or "log-linear":
 #'    PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
 #' 
-#' @seealso \code{\link{covariate_step_tibble}}
+#' @seealso [covariate_step_tibble()]
 #' @examples 
 #' \dontrun{
 #' 
@@ -640,7 +641,7 @@ nonmem_code_to_r <- function(code, eta_to_0 = TRUE){
 #' @param m nm object
 #' @param pattern optional character regex.  Passed to gsub
 #' 
-#' @seealso \code{\link{uncomment}}, @seealso \code{\link{gsub_ctl}}
+#' @seealso [uncomment()], @seealso [gsub_ctl()]
 #' @export
 comment_out <- function(m, pattern = ".*"){
   m %>% gsub_ctl(paste0("(",pattern,")"), "; \\1")
@@ -650,7 +651,7 @@ comment_out <- function(m, pattern = ".*"){
 #' 
 #' @param m nm object
 #' @param pattern optional character regex.  Passed to gsub
-#' @seealso \code{\link{comment}}, @seealso \code{\link{gsub_ctl}}
+#' @seealso [comment()], @seealso [gsub_ctl()]
 #' @export
 uncomment <- function(m, pattern = ".*"){
   m %>% gsub_ctl(paste0("^;+\\s*(",pattern,")"), "\\1")
@@ -658,8 +659,8 @@ uncomment <- function(m, pattern = ".*"){
 
 #' Pattern replacement for ctl file
 #'
-#' A wrapper around \code{gsub} so that control files may be modified using
-#' \code{gsub} syntax.
+#' A wrapper around `gsub` so that control files may be modified using
+#' `gsub` syntax.
 #'
 #' @param ctl object coercible into ctl_character
 #' @param pattern argument passed to gsub

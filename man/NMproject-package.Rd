@@ -14,62 +14,62 @@ Industrialisation of 'NONMEM'
 
 
 \describe{
- \item{system_cmd}{
-   See \code{?system_cmd}.
- }
- \item{system_nm}{
-   See \code{?system_nm}.
- }
- \item{quiet_run}{
-   Sets the default value for the \code{quiet} argument in \code{run_nm}.
- }
- \item{intern}{
-   Sets the default value for the \code{intern} argument in \code{run_nm}.
- }
- \item{available_nm_types}{
-   A list of NONMEM subroutine names.
-   This is modifiable in case future versions of NONMEM contain new 
-   subroutines.
- }
- \item{nm_default_dirs}{
-   A optional (partially) named list of directories 
-   to be used by \code{nm_create_analysis_project} to create the project
-   directory structure when making a new analysis projct. 
-   Required names are "models", "scripts" and "results".
-   By default these will be set to "Models", "Scripts" and "Results",
-   respectively.  Additional characters (e.g. "SourceData") will ensure 
-   that those directories are presente in new projects.
- }
- \item{kill_job}{
-   An option function to kill jobs before they are started.
-   This is useful in infrastructures, where repeating a job conflicts with 
-   other jobs writing into the same directories.  For example, in slurm grids
-   this could be a function wrapper around a \code{system("scancel ...")} 
-   call.
- }
- \item{nm.overwrite_behaviour}{
-   See \code{?overwrite_behaviour}.
- }
- \item{nm.force_render}{
-   Sets default value for the \code{force} argument in See \code{nm_render}.
- }
- \item{nm.cmd_default}{
-   Sets default \code{cmd} field for all nm objects.  
-   See \code{?cmd} for more information.
-   The default value is "execute {ctl_name} -dir={run_dir}".
-   However in environments where a different command is needed, this is the 
-   place to change it.
- }
- \item{nmtran_exe_path}{
-   Sets the value of the NMTRAN.exe program.  This may be deprecated in future
-   it is recommended to use \code{nm_tran_command()}.
-   See \code{?nm_tran_command} for more information.
- }
- \item{code_library_path}{
-   Path to code library.  By default this will point to the code library 
-   within the NMproject installation directory.  
-   See \code{?code_library} for more information.
- }
+\item{system_cmd}{
+See \code{?system_cmd}.
+}
+\item{system_nm}{
+See \code{?system_nm}.
+}
+\item{quiet_run}{
+Sets the default value for the \code{quiet} argument in \code{run_nm}.
+}
+\item{intern}{
+Sets the default value for the \code{intern} argument in \code{run_nm}.
+}
+\item{available_nm_types}{
+A list of NONMEM subroutine names.
+This is modifiable in case future versions of NONMEM contain new
+subroutines.
+}
+\item{nm_default_dirs}{
+A optional (partially) named list of directories
+to be used by \code{nm_create_analysis_project} to create the project
+directory structure when making a new analysis projct.
+Required names are "models", "scripts" and "results".
+By default these will be set to "Models", "Scripts" and "Results",
+respectively.  Additional characters (e.g. "SourceData") will ensure
+that those directories are presente in new projects.
+}
+\item{kill_job}{
+An option function to kill jobs before they are started.
+This is useful in infrastructures, where repeating a job conflicts with
+other jobs writing into the same directories.  For example, in slurm grids
+this could be a function wrapper around a \code{system("scancel ...")}
+call.
+}
+\item{nm.overwrite_behaviour}{
+See \code{?overwrite_behaviour}.
+}
+\item{nm.force_render}{
+Sets default value for the \code{force} argument in See \code{nm_render}.
+}
+\item{nm.cmd_default}{
+Sets default \code{cmd} field for all nm objects.
+See \code{?cmd} for more information.
+The default value is "execute {ctl_name} -dir={run_dir}".
+However in environments where a different command is needed, this is the
+place to change it.
+}
+\item{nmtran_exe_path}{
+Sets the value of the NMTRAN.exe program.  This may be deprecated in future
+it is recommended to use \code{nm_tran_command()}.
+See \code{?nm_tran_command} for more information.
+}
+\item{code_library_path}{
+Path to code library.  By default this will point to the code library
+within the NMproject installation directory.
+See \code{?code_library} for more information.
+}
 }
 }
 

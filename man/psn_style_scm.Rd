@@ -20,6 +20,7 @@ inclusion}
 deletion}
 }
 \description{
+`r lifecycle::badge("experimental")
 Intent is not to replicate PsN SCM.  This is mainly here for illustrative and
 comparison purposes. Should replicate the model selection in PsN's SCM
 functionality with greedy setting.

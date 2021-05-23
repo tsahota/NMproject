@@ -39,5 +39,5 @@ DADT(1) = -K*A(1)
 
 }
 \seealso{
-\code{\link{insert_dollar}}
+\code{\link[=insert_dollar]{insert_dollar()}}
 }

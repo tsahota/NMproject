@@ -14,15 +14,15 @@ run_nm_batch(m, threads = 10, ...)
 \item{...}{additional arguments passed to run_nm()}
 }
 \description{
-a variant of \code{\link{run_nm}} that will submit \code{\link{run_nm}}'s in
+a variant of \code{\link[=run_nm]{run_nm()}} that will submit \code{\link[=run_nm]{run_nm()}}'s in
 batches and wait for them to complete
 }
 \details{
 if you need all the runs to complete ensure you use a
-  \code{\link{wait_finish}} statement afterwards as R console will only be
-  blocked for until the last batch has been submitted which will be before
-  all runs have completed
+\code{\link[=wait_finish]{wait_finish()}} statement afterwards as R console will only be
+blocked for until the last batch has been submitted which will be before
+all runs have completed
 }
 \seealso{
-\code{\link{run_nm}}
+\code{\link[=run_nm]{run_nm()}}
 }

@@ -18,12 +18,12 @@ otherwise will append only those variables requested}
 \item{...}{optional additional arguments to pass on to read.csv of orig data}
 }
 \value{
-\code{\link{output_table}} will return a list of tibbles with merged version
-  of all output $TABLEs and the input data.  Additional columns will be
-  \code{INNONMEM} which will be TRUE for rows that were not ignored by
-  NONMEM.  For simulation control files there is also \code{DV_OUT} which
-  will contain simulated \code{DV} values. \code{DV} will always be
-  unmodified from the input dataset
+\code{\link[=output_table]{output_table()}} will return a list of tibbles with merged version
+of all output $TABLEs and the input data.  Additional columns will be
+\code{INNONMEM} which will be TRUE for rows that were not ignored by
+NONMEM.  For simulation control files there is also \code{DV_OUT} which
+will contain simulated \code{DV} values. \code{DV} will always be
+unmodified from the input dataset
 
 \code{output_table_first} will return a tibble with a single run.
 }

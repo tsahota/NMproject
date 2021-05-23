@@ -2,7 +2,7 @@
 #' 
 #' Internal function
 #' 
-#' @param dsc \code{tibble::tibble} with experimental factors to vary
+#' @param dsc `tibble::tibble` with experimental factors to vary
 #' @param start_dir directory name within which all runs should take place.
 #' @param include_names logical (default = TRUE). 
 #' @examples 
@@ -28,16 +28,16 @@ gen_sim_path <- function(dsc, start_dir, include_names = TRUE){
 #'
 #' @param base nm object
 #' @param run_id base run_id to construct run_ids of covariate runs
-#' @param run_in character.  See \code{\link{run_in}}
-#' @param dtest \code{tibble::tibble} with testing relations (from
-#'   \code{\link{test_relations}})
+#' @param run_in character.  See [run_in()]
+#' @param dtest `tibble::tibble` with testing relations (from
+#'   [test_relations()])
 #' @param direction character. "forward" (default) or "backward"
-#' @param ... additional arguments passed to \code{\link{add_cov}}
+#' @param ... additional arguments passed to [add_cov()]
 #'
-#' @return Will return \code{dtest} a \code{tibble::tibble} with appended columns
+#' @return Will return `dtest` a `tibble::tibble` with appended columns
 #'
-#' @seealso \code{\link{test_relations}}, \code{\link{covariate_step_tibble}},
-#'   \code{\link{bind_covariate_results}}, \code{\link{add_cov}}
+#' @seealso [test_relations()], [covariate_step_tibble()],
+#'   [bind_covariate_results()], [add_cov()]
 #'
 #' @examples
 #' \dontrun{
@@ -183,11 +183,11 @@ covariate_step_tibble <- function(base, run_id, run_in = nm_default_dir("models"
 
 #' Add run results into a covariate tibble
 #' 
-#' @param dsc a covariate tibble (see \code{\link{covariate_step_tibble}})
+#' @param dsc a covariate tibble (see [covariate_step_tibble()])
 #' @param nm_col character (default = "m"). name of column to store nm objects
-#' @param parameters character (default = "new").  Passed to \code{\link{summary_wide}}
+#' @param parameters character (default = "new").  Passed to [summary_wide()]
 #' 
-#' @seealso \code{\link{covariate_step_tibble}}
+#' @seealso [covariate_step_tibble()]
 #' 
 #' @examples 
 #' \dontrun{
@@ -225,7 +225,7 @@ bind_covariate_results <- function(dsc, nm_col = "m", parameters = "new"){
 #' @param continuous logical (default = TRUE). is covariate continuous?
 #'
 #' @details 
-#' available states (see also \code{\link{add_cov}}):
+#' available states (see also [add_cov()]):
 #' "2" or "linear":
 #'   PARCOV= ( 1 + THETA(1)*(COV - median))
 #' 
@@ -248,7 +248,7 @@ bind_covariate_results <- function(dsc, nm_col = "m", parameters = "new"){
 #' "6" or "log-linear":
 #'    PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
 #'    
-#' @seealso \code{\link{add_cov}}, \code{\link{covariate_step_tibble}} 
+#' @seealso [add_cov()], [covariate_step_tibble()] 
 #'    
 #' @examples 
 #' 
@@ -291,7 +291,7 @@ test_relations <- function(dtest, param, cov, state, continuous){
 #' @param group,var1,var2 grouping variables for plotting
 #' @param d dataset
 #'   
-#' @seealso \code{\link{nm_render}}
+#' @seealso [nm_render()]
 #' @examples 
 #' \dontrun{
 #' 

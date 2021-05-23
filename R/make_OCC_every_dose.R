@@ -1,6 +1,6 @@
 #' Experimental function to make an OCC column for NONMEM IOV use
 #' 
-#' To be used in a \code{mutate()} statement \code{group_by}'d by "ID"
+#' To be used in a `mutate()` statement `group_by`'d by "ID"
 #' 
 #' @param d data.frame. NONMEM ready input dataset
 #' @param dose_trigger logical expression for defining a dosing row

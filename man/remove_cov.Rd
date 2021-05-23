@@ -38,26 +38,26 @@ Only works with covariates added with add_cov
 \details{
 available states:
 "2" or "linear":
-  PARCOV= ( 1 + THETA(1)*(COV - median))
+PARCOV= ( 1 + THETA(1)*(COV - median))
 
 "3" or "hockey-stick":
-  IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))
-  IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))
-                    
+IF(COV.LE.median) PARCOV = ( 1 + THETA(1)\emph{(COV - median))
+IF(COV.GT.median) PARCOV = ( 1 + THETA(2)}(COV - median))
+
 "4" or "exponential":
-   PARCOV= EXP(THETA(1)*(COV - median))
+PARCOV= EXP(THETA(1)*(COV - median))
 
 "5" or "power":
-   PARCOV= ((COV/median)**THETA(1))
-   
+PARCOV= ((COV/median)**THETA(1))
+
 "power1":
-   PARCOV= ((COV/median))
-   
+PARCOV= ((COV/median))
+
 "power0.75":
-   PARCOV= ((COV/median)**0.75)
+PARCOV= ((COV/median)**0.75)
 
 "6" or "log-linear":
-   PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
+PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
 }
 \examples{
 \dontrun{
@@ -75,5 +75,5 @@ summary_wide(c(m1, m1noWT))
 
 }
 \seealso{
-\code{\link{covariate_step_tibble}}
+\code{\link[=covariate_step_tibble]{covariate_step_tibble()}}
 }

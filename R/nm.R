@@ -72,14 +72,14 @@ ctl_table_files.default <- function(ctl){
 #' be copied numbered s01_XXX.Rmd, s02_XXX.Rmd in the "Scripts" directory and a
 #' dataset into "SourceData". The "staging" area will also be pre-filled with
 #' the code library model, "ADVAN2.mod".  To practice copying this yourself, see
-#' \code{\link{code_library}} for how the app works.
+#' [code_library()] for how the app works.
 #'
 #' @param demo_name character. Name of demo. Default = "theopp"
 #' @param overwrite logical. Default changed to FALSE.
 #' @param additional_demo_locations character vector. default = NULL. locations
 #'   for demo directories
 #'   
-#' @seealso \code{\link{code_library}}
+#' @seealso [code_library()]
 #' @export
 
 setup_nm_demo <- function(demo_name = "theopp",
@@ -120,10 +120,10 @@ setup_nm_demo <- function(demo_name = "theopp",
 #'
 #' Runs all scripts s01_XXX, s02_XXX in the designated "scripts" directory
 #' 
-#' @param quiet Argument passed to \code{rmarkdown::render}
+#' @param quiet Argument passed to `rmarkdown::render`
 #'
-#' @details works with .R and .Rmd extensions.  Behaviour is to \code{source} .R
-#'   files and use \code{rmarkdown::render} on .Rmd files
+#' @details works with .R and .Rmd extensions.  Behaviour is to `source` .R
+#'   files and use `rmarkdown::render` on .Rmd files
 #'
 #' @export
 run_all_scripts <- function(quiet = FALSE){

@@ -29,15 +29,15 @@ code_library(
 \description{
 Function not designed for direct use.  Instead use the RStudio "addin" on the
 Addins menu. In the shiny, select the file, and click "preview" to view and
-\code{\link{stage}} to bring into the "staging" area of your project.  See
+\code{\link[=stage]{stage()}} to bring into the "staging" area of your project.  See
 vignette at \url{https://tsahota.github.io/NMproject/} for a video showing use
 of the app. Non-NONMEM code can then be imported into the project separately
-with the the \code{\link{import}} function.
+with the the \code{\link[=import]{import()}} function.
 }
 \details{
 requires \code{getOption("code_library_path")} to be set
 }
 \seealso{
-\code{\link{ls_code_library}}, \code{\link{preview}},
-  \code{\link{stage}}, \code{\link{import}}
+\code{\link[=ls_code_library]{ls_code_library()}}, \code{\link[=preview]{preview()}},
+\code{\link[=stage]{stage()}}, \code{\link[=import]{import()}}
 }

@@ -24,8 +24,8 @@ NMproject. The default demo is the Theophylline demo "theopp".  Scripts will
 be copied numbered s01_XXX.Rmd, s02_XXX.Rmd in the "Scripts" directory and a
 dataset into "SourceData". The "staging" area will also be pre-filled with
 the code library model, "ADVAN2.mod".  To practice copying this yourself, see
-\code{\link{code_library}} for how the app works.
+\code{\link[=code_library]{code_library()}} for how the app works.
 }
 \seealso{
-\code{\link{code_library}}
+\code{\link[=code_library]{code_library()}}
 }

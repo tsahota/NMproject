@@ -18,9 +18,9 @@ diff object
 }
 \description{
 NMproject's control file manipulation functions (e.g. subroutine())
- may not work for all control files. It is the responsibilty of 
- the user to check automatic manipulations are done properly.
- Displaying diffs provides a means of manually checking.
+may not work for all control files. It is the responsibilty of
+the user to check automatic manipulations are done properly.
+Displaying diffs provides a means of manually checking.
 }
 \examples{
 \dontrun{

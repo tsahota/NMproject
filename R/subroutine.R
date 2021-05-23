@@ -150,9 +150,9 @@ default_trans <- function(advan){
 #' @param recursive logical (default = TRUE). Internal argument, do not modify
 #' 
 #' @details
-#'  Can only switch between subroutines listed in \code{available_advans}
+#'  Can only switch between subroutines listed in `available_advans`
 #'
-#' @seealso \code{\link{advan}}
+#' @seealso [advan()]
 #' 
 #' @examples
 #' \dontrun{
@@ -514,12 +514,12 @@ subroutine.nm_list <- Vectorize_nm_list(subroutine.nm_generic, SIMPLIFY = FALSE)
 #'
 #' These functions will make simple ADVAN/TRANS/TOL adjustments to the NONMEM
 #' control file.  No other file changes outside $SUBROUTINE will be made which
-#' makes \code{advan} and \code{trans} less useful than \code{\link{subroutine}}
+#' makes `advan` and `trans` less useful than [subroutine()]
 #' which performs multiple control file changes.
 #'
 #' @param m An nm object.
 #' @param text Optional number/character number to set to.
-#' @seealso \code{\link{subroutine}}
+#' @seealso [subroutine()]
 #' @name dollar_subroutine
 #' @export
 advan <- function(m, text){

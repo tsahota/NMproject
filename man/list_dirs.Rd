@@ -25,5 +25,5 @@ list_dirs(
 }
 \description{
 Wrapper around list.dirs() but includes maxdepth and pattern arguments
- and removes full.names argument, always return full names.
+and removes full.names argument, always return full names.
 }

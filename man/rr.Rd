@@ -29,5 +29,5 @@ rr(c(m1, m2))
 }
 }
 \seealso{
-\code{\link{nm_render}}
+\code{\link[=nm_render]{nm_render()}}
 }

@@ -18,7 +18,7 @@ Get and set path to control file.
 }
 \details{
 "text" can contain "{run_id}" string.  E.g. "Models/run{run_id}.mod"
-  will use the name "Models/runm1.mod" if run_id(m1) is "m1".
+will use the name "Models/runm1.mod" if run_id(m1) is "m1".
 }
 \examples{
 \dontrun{

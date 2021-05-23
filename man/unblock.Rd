@@ -25,5 +25,5 @@ m1 \%>\% dollar("OMEGA") ## to display $OMEGA
 
 }
 \seealso{
-\code{\link{block}}, \code{\link{init_theta}}
+\code{\link[=block]{block()}}, \code{\link[=init_theta]{init_theta()}}
 }

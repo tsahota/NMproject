@@ -13,19 +13,19 @@ find_nm_tran_path(name = "default", warn = TRUE)
 NMTRAN.exe}
 }
 \value{
-If cannot find installation will return `NULL` without errors. Will
-  emit warnings `warm = TRUE`.
+If cannot find installation will return \code{NULL} without errors. Will
+emit warnings \code{warm = TRUE}.
 }
 \description{
 Attempts to find location of NMTRAN used by PsN.
 }
 \details{
 The function will attempt to use a locally available PsN
-  installation to get this information.  If the PsN installation is on a
-  remote server, this function will not work (it will return a `NULL`). If
-  cannot find installation, you will need to set
-  \code{\link{nm_tran_command}}, manually
+installation to get this information.  If the PsN installation is on a
+remote server, this function will not work (it will return a \code{NULL}). If
+cannot find installation, you will need to set
+\code{\link[=nm_tran_command]{nm_tran_command()}}, manually
 }
 \seealso{
-\code{\link{nm_tran_command}}
+\code{\link[=nm_tran_command]{nm_tran_command()}}
 }

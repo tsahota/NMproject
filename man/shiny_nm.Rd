@@ -13,7 +13,7 @@ shiny_nm(m, envir = .GlobalEnv)
 }
 \description{
 Interactively monitor NONMEM runs.  This interface is intentionally limited to monitoring
- activities only.  Running and post processing should be scripted
+activities only.  Running and post processing should be scripted
 }
 \examples{
 \dontrun{

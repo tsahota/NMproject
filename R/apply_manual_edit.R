@@ -10,7 +10,7 @@ NULL
 #' @param patch_name character name of patch
 #'
 #' @details Generally best to to apply patches before automatic edits and
-#'   changes in directories e.g. via \code{run_in()}
+#'   changes in directories e.g. via `run_in()`
 #'
 #' @export
 apply_manual_edit <- function(m, patch_name){

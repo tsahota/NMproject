@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="96" height="20" xmlns="http://www.w3.org/2000/svg">
+ <linearGradient id="b" x2="0" y2="100%">
+  <stop stop-color="#bbb" stop-opacity=".1" offset="0"/>
+  <stop stop-opacity=".1" offset="1"/>
+ </linearGradient>
+ <clipPath id="a">
+  <rect width="96" height="20" rx="3" fill="#fff"/>
+ </clipPath>
+ <g clip-path="url(#a)">
+  <path d="M0 0h53v20H0z" fill="#555"/>
+  <path d="M53 0h43v20H53z" fill="#4c1"/>
+  <path d="M0 0h96v20H0z" fill="url(#b)"/>
+ </g>
+ <g fill="#fff" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="110" text-anchor="middle">
+  <text transform="scale(.1)" x="275" y="150" fill="#010101" fill-opacity=".3" textLength="430">lifecycle</text>
+  <text transform="scale(.1)" x="275" y="140" textLength="430">lifecycle</text>
+  <text transform="scale(.1)" x="735" y="150" fill="#010101" fill-opacity=".3" textLength="330">stable</text>
+  <text transform="scale(.1)" x="735" y="140" textLength="330">stable</text>
+ </g>
+</svg>

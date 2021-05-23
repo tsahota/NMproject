@@ -295,7 +295,7 @@ cond_num.nm_list <- function(r){
 #' @param trans logical. if TRUE (default) will transform using control file
 #'   $THETA/OMEGA conventions
 #'
-#' @seealso \code{\link{nm_render}}
+#' @seealso [nm_render()]
 #' @examples
 #' \dontrun{
 #'
@@ -788,11 +788,11 @@ summary_long <- function(..., parameters = c("none", "new", "all")){
 NULL
 
 #' @rdname output_table
-#' @return \code{\link{output_table}} will return a list of tibbles with merged version
+#' @return [output_table()] will return a list of tibbles with merged version
 #'   of all output $TABLEs and the input data.  Additional columns will be
-#'   \code{INNONMEM} which will be TRUE for rows that were not ignored by
-#'   NONMEM.  For simulation control files there is also \code{DV_OUT} which
-#'   will contain simulated \code{DV} values. \code{DV} will always be
+#'   `INNONMEM` which will be TRUE for rows that were not ignored by
+#'   NONMEM.  For simulation control files there is also `DV_OUT` which
+#'   will contain simulated `DV` values. `DV` will always be
 #'   unmodified from the input dataset
 #' @export
 output_table <- function(r, only_append = c(), ...){
@@ -821,7 +821,7 @@ output_table.nm_list <- Vectorize_nm_list(output_table.nm_generic, SIMPLIFY = FA
 
 #' @rdname output_table
 #'
-#' @return \code{output_table_first} will return a tibble with a single run.
+#' @return `output_table_first` will return a tibble with a single run.
 #' @export
 output_table_first <- function(r, ...){
   UseMethod("output_table_first")

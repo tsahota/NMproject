@@ -241,7 +241,7 @@ increment_run_id <- function(run_id){
 
 #' Change parent object
 #' 
-#' Useful when create a \code{child()} of a modified run
+#' Useful when create a `child()` of a modified run
 #' 
 #' @param m nm object
 #' @param mparent new parent object to child
@@ -970,7 +970,7 @@ clear_cache <- function() unlink(".cache", recursive = TRUE)
 #' @param remove_psn_exports logical (default = FALSE). should psn exports be considered temporary
 #'
 #' @details
-#' Having \code{remove_psn_exposure = TRUE} will break pirana and xpose capability
+#' Having `remove_psn_exposure = TRUE` will break pirana and xpose capability
 #'   as these software use exported files 
 #'
 #' @export
@@ -1157,7 +1157,7 @@ psn_exported_files.nm_list <- Vectorize_nm_list(psn_exported_files.nm_generic, S
 #' @param add_dollar_text logical (default = TRUE). Should the $XXXX be added to
 #'   text
 #'
-#' @seealso \code{\link{insert_dollar}}
+#' @seealso [insert_dollar()]
 #'
 #' @examples
 #' \dontrun{
@@ -1971,7 +1971,7 @@ rr_row <- function(m){
 #' Get path to run_dir
 #' 
 #' @param m nm object
-#' @seealso \code{\link{nm_getsetters}}
+#' @seealso [nm_getsetters()]
 #' @export
 run_dir_path <- function(m) file.path(run_in(m), run_dir(m))
 #nm_run_dir_path <- function(m, subdir = "NM_run1") file.path(run_dir_path(m), subdir)
@@ -2172,14 +2172,14 @@ update_variable_in_text_numbers <- function(m, before_number, after_number){
 
 #' Create $OMEGA/$SIGMA BLOCK from init_omega and init_sigma output
 #'
-#' @param iomega tibble.  Output from \code{\link{init_omega}} and
-#'   \code{\link{init_sigma}}
+#' @param iomega tibble.  Output from [init_omega()] and
+#'   [init_sigma()]
 #' @param eta_numbers numeric vector.  ETA numbers to put into a block. Must be
 #'   contiguous
 #' @param diag_init numeric. Default value for off diagonal elements
 #'
-#' @seealso \code{\link{unblock}}, \code{\link{init_theta}},
-#'   \code{\link{init_omega}}, \code{\link{init_sigma}}
+#' @seealso [unblock()], [init_theta()],
+#'   [init_omega()], [init_sigma()]
 #'
 #' @examples
 #'
@@ -2289,7 +2289,7 @@ block <- Vectorize(block, vectorize.args = "iomega", SIMPLIFY = FALSE)
 #' @param iomega tibble.  Output from init_omega() and init_sigma()
 #' @param eta_numbers numeric vector.  ETA numbers to unblock. Must be contiguous
 #' 
-#' @seealso \code{\link{block}}, \code{\link{init_theta}}
+#' @seealso [block()], [init_theta()]
 #' 
 #' @examples 
 #' 
@@ -2508,19 +2508,19 @@ ppc_histogram_plot <- function(d, var1, var2, statistic = "statistic"){
 #'
 #' Will write a dataset and an .RDS version of it to the (by default)
 #' "DerivedData" directory.  The main benefit of the .RDS dataset is that
-#' functions like \code{\link{input_data}} and \code{\link{output_table}} can
+#' functions like [input_data()] and [output_table()] can
 #' use it for rapid reading speeding up overall function.
 #'
 #' @param d A data.frame. Data frame to be saved.
 #' @param name Character. Name of file (without extension). If not a path, will
 #'   save to DerivedData directory.
-#' @param ...  Additional arguments to be passed to \code{\link[utils]{write.csv}}.
+#' @param ...  Additional arguments to be passed to [utils::write.csv()].
 #'
 #' @details If there is no "DerivedData" data directory and you are using a
-#'   different structure the argument \code{name} must be a (relative) path to
+#'   different structure the argument `name` must be a (relative) path to
 #'   an existing directory where you want your NONMEM ready dataset to be stored.
 #'
-#' @seealso \code{\link{read_derived_data}}, \code{\link{input_data}}
+#' @seealso [read_derived_data()], [input_data()]
 #'
 #' @examples
 #' \dontrun{
@@ -2597,13 +2597,13 @@ write_derived_data.list <- function (d, name, ...)
 #' Read derived data
 #'
 #' Read the derived data directly instead of via the nm object which is what
-#' \code{\link{input_data}} does.
+#' [input_data()] does.
 #'
 #' @param name name of file (without extension)
 #' @param na character to be passed to read.csv
 #' @param silent logical (default = TRUE). should messages be suppressed
 #' @param ...  additional arguments to be passed to read.csv
-#' @seealso \code{\link{write_derived_data}}, \code{\link{input_data}}
+#' @seealso [write_derived_data()], [input_data()]
 #'
 #' @examples
 #' \dontrun{

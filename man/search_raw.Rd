@@ -34,5 +34,5 @@ ls_scripts("Scripts") \%>\% search_raw("AUC\\\\(") \%>\% stage()
 
 }
 \seealso{
-\code{\link{ls_scripts}}, \code{\link{ls_code_library}}, \code{\link{stage}}
+\code{\link[=ls_scripts]{ls_scripts()}}, \code{\link[=ls_code_library]{ls_code_library()}}, \code{\link[=stage]{stage()}}
 }

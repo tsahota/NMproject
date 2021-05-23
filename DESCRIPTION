@@ -33,7 +33,8 @@ Imports:
     htmltools,
     rmarkdown,
     magrittr,
-    usethis
+    usethis,
+    lifecycle
 RoxygenNote: 7.1.1
 Suggests:
     testthat,
@@ -96,3 +97,4 @@ Collate:
     'subroutine.R'
     'zzz.R'
 VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)

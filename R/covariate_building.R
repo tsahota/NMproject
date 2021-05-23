@@ -499,13 +499,13 @@ cov_forest_data <- function(m, covariate_scenarios){
 
 #' Plot covariate forest plots
 #'
-#' Uses \code{ggplot2} to take outputs from \code{\link{cov_forest_data}}
+#' Uses `ggplot2` to take outputs from [cov_forest_data()]
 #' and display a forest plot
 #'
-#' @param d data.frame from \code{\link{cov_forest_data}}
+#' @param d data.frame from [cov_forest_data()]
 #'
-#' @return a \code{ggplot2} forest plot
-#' @seealso \code{\link{cov_forest_data}}
+#' @return a `ggplot2` forest plot
+#' @seealso [cov_forest_data()]
 #' @examples 
 #' \dontrun{
 #' 

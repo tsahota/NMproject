@@ -47,11 +47,11 @@ find_nm_install_path <- function(name = "default"){
 #'   installation to get this information.  If the PsN installation is on a
 #'   remote server, this function will not work (it will return a `NULL`). If
 #'   cannot find installation, you will need to set
-#'   \code{\link{nm_tran_command}}, manually
+#'   [nm_tran_command()], manually
 #' @return If cannot find installation will return `NULL` without errors. Will
 #'   emit warnings `warm = TRUE`.
 #'
-#' @seealso \code{\link{nm_tran_command}}
+#' @seealso [nm_tran_command()]
 #' @export
 find_nm_tran_path <- function(name = "default", warn = TRUE){
   
@@ -93,9 +93,11 @@ find_nm_tran_path <- function(name = "default", warn = TRUE){
   
 }
 
-#' Get NONMEM version info
+#' NONMEM version info
 #' 
-#' @return returns list with version info for NONMEM, PsN, perl and
+#' Gets version information about the NONMEM installation, PsN installation and compilers.
+#' 
+#' @return Returns list with version info for NONMEM, PsN, perl and
 #' fortran compiler (only gfortran currently)
 #' 
 #' @export

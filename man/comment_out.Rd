@@ -15,5 +15,5 @@ comment_out(m, pattern = ".*")
 Comment lines of control file
 }
 \seealso{
-\code{\link{uncomment}}, @seealso \code{\link{gsub_ctl}}
+\code{\link[=uncomment]{uncomment()}}, @seealso \code{\link[=gsub_ctl]{gsub_ctl()}}
 }

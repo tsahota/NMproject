@@ -17,7 +17,7 @@ nm_create_analysis_project(
 specifying a name, this will create the analysis project in the current
 working directory}
 
-\item{dirs}{character list or vector.  Default = `nm_default_dirs()`}
+\item{dirs}{character list or vector.  Default = \code{nm_default_dirs()}}
 
 \item{style}{character. Currently only "simple" See details}
 
@@ -33,8 +33,8 @@ too.
 }
 \details{
 The function works like as is inspired by
-  `starters::create_analysis_project`. There is no restriction on directory
-  name.  It is therefore possible to violate R package naming conventions.
-  This is to cater to users who like underscores and aren't interested in
-  creating a package.
+\code{starters::create_analysis_project}. There is no restriction on directory
+name.  It is therefore possible to violate R package naming conventions.
+This is to cater to users who like underscores and aren't interested in
+creating a package.
 }

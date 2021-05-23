@@ -34,7 +34,7 @@ Render function for nm objects
 }
 \details{
 \code{input} must refer to a properly specified Rmd document.
-The R markdown template "model diagnostic" in RStudio sets this up 
+The R markdown template "model diagnostic" in RStudio sets this up
 for you.
 
 These R markdown templates are usable as R Notebooks (e.g. for code

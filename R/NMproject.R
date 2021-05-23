@@ -127,11 +127,11 @@ nm_default_dir <- function(name = c("scripts", "models", "results"), ...){
 
 #' Generic execute command for SGE grids
 #'
-#' Character to be used with the \code{\link{cmd}} function to launch a
+#' Character to be used with the [cmd()] function to launch a
 #' parallelised job on SGE
 #'
-#' @details Requires \code{cores} and \code{parafile} fields to be set.
-#' @seealso \code{\link{nm_getsetters}}
+#' @details Requires `cores` and `parafile` fields to be set.
+#' @seealso [nm_getsetters()]
 #'
 #' @examples
 #' \dontrun{
@@ -159,7 +159,7 @@ sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_f
 #' variable, if this is not the case, then you can manually set the path and
 #' command used.
 #'
-#' @param text Optional character. If specified will set \code{nm_tran_command}.
+#' @param text Optional character. If specified will set `nm_tran_command`.
 #'
 #' @details `text` can just be the path to NMTRAN.exe.  In this case
 #'   `nm_tran_command` will use the format `/path/to/NMTRAN.exe < {ctl_name}` to
@@ -171,7 +171,7 @@ sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_f
 #'   for all users in `Rprofile.site`
 #'
 #' @return if `text` is missing will get and return the current NMTRAN command
-#' @seealso \code{\link{find_nm_tran_path}}
+#' @seealso [find_nm_tran_path()]
 #' @examples
 #' \dontrun{
 #'
@@ -238,7 +238,7 @@ system_nm <- function(cmd,dir=nm_default_dir("models"),...){
 
 #' Kill cluster job
 #' 
-#' Requires setting "kill_job" \code{option()}
+#' Requires setting "kill_job" `option()`
 #'
 #' @param m nm object 
 #' @export
@@ -248,7 +248,7 @@ kill_job <- function(m){
 
 #' Overwrite behaviour of NMproject
 #' 
-#' Requires setting "nm.overwrite_behaviour" \code{option()}
+#' Requires setting "nm.overwrite_behaviour" `option()`
 #'
 #' @param txt character either "run", "stop", "skip" 
 #' @export

@@ -51,8 +51,8 @@ ctl_path <- function(m, text) {
 #'
 #' @details Easiest way to see all fields of an object is to type the object
 #'   into the console and hit enter. This will display the value of each field.
-#'   some fields like \code{cmd} are glue fields.  In these cases inserting
-#'   expressions inside braces in \code{text} will evaluate the expression
+#'   some fields like `cmd` are glue fields.  In these cases inserting
+#'   expressions inside braces in `text` will evaluate the expression
 
 NULL
 

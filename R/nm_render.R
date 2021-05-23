@@ -4,17 +4,17 @@
 #' @param input character. Same as rmarkdown::render() arg
 #' @param output_file character. Same as rmarkdown::render() arg
 #' @param args list. Same as "params" arg in rmarkdown::render()
-#' @param force logical (default = \code{getOption("nm.force_render")}). will force execution
+#' @param force logical (default = `getOption("nm.force_render")`). will force execution
 #' @param async experimental option to use future package
 #' @param ... additional argument passed to rmarkdown::render()
 #' 
 #' @details 
-#' \code{input} must refer to a properly specified Rmd document.
+#' `input` must refer to a properly specified Rmd document.
 #' The R markdown template "model diagnostic" in RStudio sets this up 
 #' for you.
 #' 
 #' These R markdown templates are usable as R Notebooks (e.g. for code
-#' development and debugging) if the object \code{.m} is defined in the
+#' development and debugging) if the object `.m` is defined in the
 #' global work space first.
 #' 
 #' @examples 

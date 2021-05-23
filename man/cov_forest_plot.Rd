@@ -7,13 +7,13 @@
 cov_forest_plot(d)
 }
 \arguments{
-\item{d}{data.frame from \code{\link{cov_forest_data}}}
+\item{d}{data.frame from \code{\link[=cov_forest_data]{cov_forest_data()}}}
 }
 \value{
 a \code{ggplot2} forest plot
 }
 \description{
-Uses \code{ggplot2} to take outputs from \code{\link{cov_forest_data}}
+Uses \code{ggplot2} to take outputs from \code{\link[=cov_forest_data]{cov_forest_data()}}
 and display a forest plot
 }
 \examples{
@@ -39,5 +39,5 @@ cov_forest_plot(dplot)
 
 }
 \seealso{
-\code{\link{cov_forest_data}}
+\code{\link[=cov_forest_data]{cov_forest_data()}}
 }

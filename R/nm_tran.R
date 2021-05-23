@@ -13,7 +13,7 @@ update_dollar_data <- function(ctl_name,new_data_name){
 #'
 #' @param x nm object
 #' @details
-#' Requires \code{options("nmtran_exe_path")} to be set.
+#' Requires `options("nmtran_exe_path")` to be set.
 #' @export
 nm_tran <- function(x) UseMethod("nm_tran")
 

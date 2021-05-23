@@ -13,5 +13,5 @@ run_dir_path(m)
 Get path to run_dir
 }
 \seealso{
-\code{\link{nm_getsetters}}
+\code{\link[=nm_getsetters]{nm_getsetters()}}
 }

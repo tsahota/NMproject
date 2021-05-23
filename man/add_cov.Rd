@@ -56,15 +56,15 @@ parameters}
 \description{
 Follows PsN coding conventions to add covariates into a model.  The advantage
 is no need to create a .scm file, just directly modify the ctl file contents.
-This function is used by \code{\link{covariate_step_tibble}} for stepwise
+This function is used by \code{\link[=covariate_step_tibble]{covariate_step_tibble()}} for stepwise
 covariate model development.
 }
 \details{
 available states: "2" or "linear": PARCOV= ( 1 + THETA(1)*(COV -
 median))
 
-"3" or "hockey-stick": IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV -
-median)) IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))
+"3" or "hockey-stick": IF(COV.LE.median) PARCOV = ( 1 + THETA(1)\emph{(COV -
+median)) IF(COV.GT.median) PARCOV = ( 1 + THETA(2)}(COV - median))
 
 "4" or "exponential": PARCOV= EXP(THETA(1)*(COV - median))
 
@@ -93,5 +93,5 @@ summary_wide(c(m1, m1WT))
 
 }
 \seealso{
-\code{\link{covariate_step_tibble}}, \code{\link{test_relations}}
+\code{\link[=covariate_step_tibble]{covariate_step_tibble()}}, \code{\link[=test_relations]{test_relations()}}
 }

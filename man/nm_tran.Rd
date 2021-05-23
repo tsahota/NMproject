@@ -11,7 +11,7 @@ nm_tran(x)
 }
 \description{
 Runs initial part of NONMEM where control file and dataset checks are performed.
-Stops before running NONMEM.  Useful especially on grid infrastructures where 
+Stops before running NONMEM.  Useful especially on grid infrastructures where
 it may take a while for NONMEM to start return ctl/dataset errors
 }
 \details{

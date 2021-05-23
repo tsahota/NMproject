@@ -3,7 +3,7 @@
 #' Copy diagnostic funs to templates
 #' 
 #' Internal function (non exported)
-#'   Use within a demo directory (e.g. after \code{run_all_scripts())})
+#'   Use within a demo directory (e.g. after `run_all_scripts())`)
 
 copy_demo_to_templates <- function(){
 

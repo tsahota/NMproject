@@ -39,5 +39,5 @@ ds <- .available_advans \%>\%
 }
 }
 \seealso{
-\code{\link{advan}}
+\code{\link[=advan]{advan()}}
 }

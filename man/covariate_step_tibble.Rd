@@ -18,14 +18,14 @@ covariate_step_tibble(
 
 \item{run_id}{base run_id to construct run_ids of covariate runs}
 
-\item{run_in}{character.  See \code{\link{run_in}}}
+\item{run_in}{character.  See \code{\link[=run_in]{run_in()}}}
 
 \item{dtest}{\code{tibble::tibble} with testing relations (from
-\code{\link{test_relations}})}
+\code{\link[=test_relations]{test_relations()}})}
 
 \item{direction}{character. "forward" (default) or "backward"}
 
-\item{...}{additional arguments passed to \code{\link{add_cov}}}
+\item{...}{additional arguments passed to \code{\link[=add_cov]{add_cov()}}}
 }
 \value{
 Will return \code{dtest} a \code{tibble::tibble} with appended columns
@@ -87,6 +87,6 @@ dsm2 <- m1_f1 \%>\% covariate_step_tibble(
 }
 }
 \seealso{
-\code{\link{test_relations}}, \code{\link{covariate_step_tibble}},
-  \code{\link{bind_covariate_results}}, \code{\link{add_cov}}
+\code{\link[=test_relations]{test_relations()}}, \code{\link[=covariate_step_tibble]{covariate_step_tibble()}},
+\code{\link[=bind_covariate_results]{bind_covariate_results()}}, \code{\link[=add_cov]{add_cov()}}
 }

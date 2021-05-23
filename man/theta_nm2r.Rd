@@ -7,11 +7,12 @@
 theta_nm2r(x)
 }
 \arguments{
-\item{x}{character vector with $THETA information}
+\item{x}{Character vector with $THETA information.}
 }
 \value{
-object abstracting $THETA contents
+Object abstracting $THETA contents.
 }
 \description{
 Convert $THETA to R abstraction layer
 }
+\keyword{internal}

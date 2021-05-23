@@ -2,14 +2,14 @@
 % Please edit documentation in R/find_nonmem.R
 \name{NONMEM_version}
 \alias{NONMEM_version}
-\title{Get NONMEM version info}
+\title{NONMEM version info}
 \usage{
 NONMEM_version()
 }
 \value{
-returns list with version info for NONMEM, PsN, perl and
+Returns list with version info for NONMEM, PsN, perl and
 fortran compiler (only gfortran currently)
 }
 \description{
-Get NONMEM version info
+Gets version information about the NONMEM installation, PsN installation and compilers.
 }

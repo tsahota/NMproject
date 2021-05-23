@@ -20,7 +20,7 @@ child(
 \item{type}{character (default = "execute"). type of child object}
 
 \item{parent}{optional (default = nm(NA)) nm object. Parent object will by
-default be `m`, but this argument will force parent to be a different
+default be \code{m}, but this argument will force parent to be a different
 object}
 
 \item{silent}{logical (default = FALSE). Should warn if conflicts detected}
@@ -30,8 +30,8 @@ Child objects inherit attributes of parent but with a new run_id. The control
 file will be inherited too with $TABLEs updated
 }
 \details{
-Specifying `parent` will run the function `change_parent` to force
-parent to be different from `m`.  This is useful in piping when a parent
+Specifying \code{parent} will run the function \code{change_parent} to force
+parent to be different from \code{m}.  This is useful in piping when a parent
 object is modified prior to being used in the child object.
 }
 \examples{

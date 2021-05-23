@@ -10,8 +10,8 @@ find_nm_install_path(name = "default")
 \item{name}{character name of nonmem installation (according PsN)}
 }
 \value{
-If cannot find installation will return `NULL` without errors or
-  warnings
+If cannot find installation will return \code{NULL} without errors or
+warnings
 }
 \description{
 Attempts to find location of NONMEM installation directory used by PsN.  Can
@@ -19,6 +19,6 @@ be useful for finding the location of parafiles etc.
 }
 \details{
 The function will attempt to use a locally available PsN
-  installation to get this information.  If the PsN installation is on a
-  remote server, this function will not work (it will return a `NULL`)
+installation to get this information.  If the PsN installation is on a
+remote server, this function will not work (it will return a \code{NULL})
 }

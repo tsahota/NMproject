@@ -4,7 +4,7 @@ NULL
 
 #' Run NONMEM jobs
 #' 
-#' Run nm objects.  Uses \code{system_nm()} to submit the \code{cmd()} value of object
+#' Run nm objects.  Uses `system_nm()` to submit the `cmd()` value of object
 #' 
 #' @param m nm objects
 #' @param ignore.stdout logical (default=TRUE). Parameter passed to system()
@@ -12,11 +12,11 @@ NULL
 #' @param quiet logical (default=FALSE). should system_nm output be piped to screen
 #' @param intern logical. intern arg to be passed to system
 #' @param force logical (default = FALSE).  Force run even results unchanged
-#' @param cache_ignore_cmd logical (default = FALSE). Should check \code{cmd} field with cache?
+#' @param cache_ignore_cmd logical (default = FALSE). Should check `cmd` field with cache?
 #' @param cache_ignore_ctl logical (default = FALSE). Should check control file contents with cache?
 #' @param cache_ignore_data logical (default = FALSE). Should check dataset with cache? 
 #'
-#' @return m with \code{job_info} fields populated.
+#' @return m with `job_info` fields populated.
 #'
 #' @export
 run_nm <- function(m,
@@ -129,7 +129,7 @@ run_nm.nm_list <- Vectorize_nm_list(run_nm.nm_generic, SIMPLIFY = FALSE, invisib
 
 #' Execute run_nm in batches
 #'
-#' a variant of \code{\link{run_nm}} that will submit \code{\link{run_nm}}'s in
+#' a variant of [run_nm()] that will submit [run_nm()]'s in
 #' batches and wait for them to complete
 #'
 #' @param m nm object
@@ -137,11 +137,11 @@ run_nm.nm_list <- Vectorize_nm_list(run_nm.nm_generic, SIMPLIFY = FALSE, invisib
 #' @param ... additional arguments passed to run_nm()
 #'
 #' @details if you need all the runs to complete ensure you use a
-#'   \code{\link{wait_finish}} statement afterwards as R console will only be
+#'   [wait_finish()] statement afterwards as R console will only be
 #'   blocked for until the last batch has been submitted which will be before
 #'   all runs have completed
 #'
-#' @seealso \code{\link{run_nm}}
+#' @seealso [run_nm()]
 #' @export
 
 run_nm_batch <- function(m, threads = 10, ...){

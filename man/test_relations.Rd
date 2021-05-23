@@ -21,28 +21,28 @@ test_relations(dtest, param, cov, state, continuous)
 Generate tibble of relations to test
 }
 \details{
-available states (see also \code{\link{add_cov}}):
+available states (see also \code{\link[=add_cov]{add_cov()}}):
 "2" or "linear":
-  PARCOV= ( 1 + THETA(1)*(COV - median))
+PARCOV= ( 1 + THETA(1)*(COV - median))
 
 "3" or "hockey-stick":
-  IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))
-  IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))
-                    
+IF(COV.LE.median) PARCOV = ( 1 + THETA(1)\emph{(COV - median))
+IF(COV.GT.median) PARCOV = ( 1 + THETA(2)}(COV - median))
+
 "4" or "exponential":
-   PARCOV= EXP(THETA(1)*(COV - median))
+PARCOV= EXP(THETA(1)*(COV - median))
 
 "5" or "power":
-   PARCOV= ((COV/median)**THETA(1))
-   
+PARCOV= ((COV/median)**THETA(1))
+
 "power1":
-   PARCOV= ((COV/median))
-   
+PARCOV= ((COV/median))
+
 "power0.75":
-   PARCOV= ((COV/median)**0.75)
+PARCOV= ((COV/median)**0.75)
 
 "6" or "log-linear":
-   PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
+PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
 }
 \examples{
 
@@ -60,5 +60,5 @@ dtest <- dtest \%>\%
 }
 }
 \seealso{
-\code{\link{add_cov}}, \code{\link{covariate_step_tibble}}
+\code{\link[=add_cov]{add_cov()}}, \code{\link[=covariate_step_tibble]{covariate_step_tibble()}}
 }

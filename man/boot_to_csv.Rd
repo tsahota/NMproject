@@ -30,6 +30,6 @@ boot_to_csv(
 \item{overwrite}{should datasets be overwritten}
 }
 \description{
-Internal function used by \code{make_boot_datasets()}, 
-  run once per bootstrap sample
+Internal function used by \code{make_boot_datasets()},
+run once per bootstrap sample
 }

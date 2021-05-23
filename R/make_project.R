@@ -167,8 +167,8 @@ stage <- function(files, root_dir,
 #' Import staged files into project
 #'
 #' @param copy_table data frame or character.
-#'   if data.frame should be output from \code{stage()}
-#'   if character path, result will be \code{stage()}d first
+#'   if data.frame should be output from `stage()`
+#'   if character path, result will be `stage()`d first
 #' @param overwrite logical (default = FALSE)
 #' @param silent logical (default = FALSE)
 #' @param skip character (default = "\\.mod$"). pattern to skip
@@ -327,7 +327,7 @@ info_scripts <- function(files, fields = c("Description"), viewer = TRUE, silent
 #' @param search_title logical (default=TRUE). should matching occur in title
 #' @param search_contents logical (default=TRUE). should matching occur in file contents
 #' 
-#' @seealso \code{\link{ls_scripts}}, \code{\link{ls_code_library}}, \code{\link{stage}}
+#' @seealso [ls_scripts()], [ls_code_library()], [stage()]
 #' 
 #' @examples 
 #' 
@@ -363,7 +363,7 @@ search_raw <- function(files, text, search_title=TRUE, search_contents=TRUE) {
 #'
 #' @param pattern optional character. filter the code library use regex
 #' 
-#' @seealso \code{\link{code_library}}, \code{\link{preview}}, \code{\link{stage}}, \code{\link{import}}
+#' @seealso [code_library()], [preview()], [stage()], [import()]
 #' 
 #' @examples 
 #' 
@@ -385,10 +385,10 @@ ls_code_library <- function(pattern = ".") {
 #'
 #' Function not designed for direct use.  Instead use the RStudio "addin" on the
 #' Addins menu. In the shiny, select the file, and click "preview" to view and
-#' \code{\link{stage}} to bring into the "staging" area of your project.  See
-#' vignette at \url{https://tsahota.github.io/NMproject/} for a video showing use
+#' [stage()] to bring into the "staging" area of your project.  See
+#' vignette at <https://tsahota.github.io/NMproject/> for a video showing use
 #' of the app. Non-NONMEM code can then be imported into the project separately
-#' with the the \code{\link{import}} function.
+#' with the the [import()] function.
 #'
 #' @param extn vector string of extensions to include
 #' @param fields character vector of fields to extract
@@ -399,10 +399,10 @@ ls_code_library <- function(pattern = ".") {
 #' @param return_info logical (default = FALSE). Return data.frame of results
 #'   (FALSE= returns file paths)
 #'
-#' @details requires \code{getOption("code_library_path")} to be set
+#' @details requires `getOption("code_library_path")` to be set
 #'
-#' @seealso \code{\link{ls_code_library}}, \code{\link{preview}},
-#'   \code{\link{stage}}, \code{\link{import}}
+#' @seealso [ls_code_library()], [preview()],
+#'   [stage()], [import()]
 #'
 #' @export
 code_library <- function(extn = NULL, fields = "Description", viewer = TRUE, silent = FALSE, 

@@ -31,5 +31,5 @@ nm_list_render(
 }
 \description{
 Mostly used for bootstraps, and other routines where
-  a parent run spawns multiple children in the form of an nm_list
+a parent run spawns multiple children in the form of an nm_list
 }

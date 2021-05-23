@@ -29,12 +29,12 @@ workflow where subsequent parts of your workflow depend on this decision, e.g. i
 decision on and stop for users to remake decision if inputs change
 }
 \details{
-There are two ways to use `decision`:
+There are two ways to use \code{decision}:
 
-Automatic: An `auto` decision (see examples below) works like `stopifnot()`.  It requires a logical (TRUE/FALSE) condition.  Doing this this way ensures that 
+Automatic: An \code{auto} decision (see examples below) works like \code{stopifnot()}.  It requires a logical (TRUE/FALSE) condition.  Doing this this way ensures that
 creates fewer points in your workflow where at the cost of removing.  If updating a workflow (e.g. with an updated dataset), so long as the TRUE/FALSE is TRUE, the workflow will proceed uninterrupted.  If the condition flips to FALSE the workflow will stop as it will be assumed that subsequent steps will no longer be valid.
 
-Manual: Requires specification of either `input` or `file_inputs` (or both) AND `outcome`.  Inputs represent information you have considered in your decision and `outcome` is a text description of the resulting decision.  The assumption made is that if inputs have not changed since the last decision was made.
+Manual: Requires specification of either \code{input} or \code{file_inputs} (or both) AND \code{outcome}.  Inputs represent information you have considered in your decision and \code{outcome} is a text description of the resulting decision.  The assumption made is that if inputs have not changed since the last decision was made.
 }
 \examples{
 

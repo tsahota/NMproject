@@ -7,11 +7,11 @@
 bind_covariate_results(dsc, nm_col = "m", parameters = "new")
 }
 \arguments{
-\item{dsc}{a covariate tibble (see \code{\link{covariate_step_tibble}})}
+\item{dsc}{a covariate tibble (see \code{\link[=covariate_step_tibble]{covariate_step_tibble()}})}
 
 \item{nm_col}{character (default = "m"). name of column to store nm objects}
 
-\item{parameters}{character (default = "new").  Passed to \code{\link{summary_wide}}}
+\item{parameters}{character (default = "new").  Passed to \code{\link[=summary_wide]{summary_wide()}}}
 }
 \description{
 Add run results into a covariate tibble
@@ -33,5 +33,5 @@ dsm1 <- dsm1 \%>\% bind_covariate_results()
 }
 }
 \seealso{
-\code{\link{covariate_step_tibble}}
+\code{\link[=covariate_step_tibble]{covariate_step_tibble()}}
 }

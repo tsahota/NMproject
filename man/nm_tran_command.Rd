@@ -10,23 +10,23 @@ nm_tran_command(text)
 \item{text}{Optional character. If specified will set \code{nm_tran_command}.}
 }
 \value{
-if `text` is missing will get and return the current NMTRAN command
+if \code{text} is missing will get and return the current NMTRAN command
 }
 \description{
-`nm_tran` needs the location of NMTRAN.exe on your system.  This
+\code{nm_tran} needs the location of NMTRAN.exe on your system.  This
 is guessed on package load, assuming PsN is on the $PATH environmental
 variable, if this is not the case, then you can manually set the path and
 command used.
 }
 \details{
-`text` can just be the path to NMTRAN.exe.  In this case
-  `nm_tran_command` will use the format `/path/to/NMTRAN.exe < {ctl_name}` to
-  launch NMTRAN.exe where `{ctl_name}` is the name of the control file `text`
-  can use the `{ctl_name}` glue field however for more complicated commands.
-  See examples
+\code{text} can just be the path to NMTRAN.exe.  In this case
+\code{nm_tran_command} will use the format \verb{/path/to/NMTRAN.exe < \{ctl_name\}} to
+launch NMTRAN.exe where \code{{ctl_name}} is the name of the control file \code{text}
+can use the \code{{ctl_name}} glue field however for more complicated commands.
+See examples
 
-  Set this up either at the beginning of your script, in your `.Rprofile` or
-  for all users in `Rprofile.site`
+Set this up either at the beginning of your script, in your \code{.Rprofile} or
+for all users in \code{Rprofile.site}
 }
 \examples{
 \dontrun{
@@ -38,5 +38,5 @@ command used.
 }
 }
 \seealso{
-\code{\link{find_nm_tran_path}}
+\code{\link[=find_nm_tran_path]{find_nm_tran_path()}}
 }
