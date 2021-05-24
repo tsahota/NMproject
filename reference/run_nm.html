@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Run NONMEM jobs — run_nm" />
-<meta property="og:description" content="Run nm objects.  Uses system_nm() to submit the cmd() value of object" />
+<meta property="og:description" content="
+Run nm objects.  Uses system_nm() to submit the cmd() value of object." />
 
 
 
@@ -120,7 +121,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Run nm objects.  Uses <code><a href='system_nm.html'>system_nm()</a></code> to submit the <code><a href='nm_getsetters.html'>cmd()</a></code> value of object</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Run nm objects.  Uses <code><a href='system_nm.html'>system_nm()</a></code> to submit the <code><a href='nm_getsetters.html'>cmd()</a></code> value of object.</p>
     </div>
 
     <pre class="usage"><span class='fu'>run_nm</span><span class='op'>(</span>
@@ -140,46 +142,74 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>m</th>
-      <td><p>nm objects</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     <tr>
       <th>ignore.stdout</th>
-      <td><p>logical (default=TRUE). Parameter passed to system()</p></td>
+      <td><p>Logical (default=TRUE). Parameter passed to <code><a href='system_nm.html'>system_nm()</a></code>.</p></td>
     </tr>
     <tr>
       <th>ignore.stderr</th>
-      <td><p>logical (default=TRUE). Parameter passed to system()</p></td>
+      <td><p>Logical (default=TRUE). Parameter passed to <code><a href='system_nm.html'>system_nm()</a></code>.</p></td>
     </tr>
     <tr>
       <th>quiet</th>
-      <td><p>logical (default=FALSE). should system_nm output be piped to screen</p></td>
+      <td><p>Logical (default=FALSE). Should <code><a href='system_nm.html'>system_nm()</a></code> output be piped to
+screen?</p></td>
     </tr>
     <tr>
       <th>intern</th>
-      <td><p>logical. intern arg to be passed to system</p></td>
+      <td><p>Logical. <code>intern</code> arg to be passed to <code><a href='system_nm.html'>system_nm()</a></code>.</p></td>
     </tr>
     <tr>
       <th>force</th>
-      <td><p>logical (default = FALSE).  Force run even results unchanged</p></td>
+      <td><p>Logical (default = FALSE).  Force run even results unchanged.</p></td>
     </tr>
     <tr>
       <th>cache_ignore_cmd</th>
-      <td><p>logical (default = FALSE). Should check <code>cmd</code> field with cache?</p></td>
+      <td><p>Logical (default = FALSE). Should check <code>cmd</code> field
+with cache?</p></td>
     </tr>
     <tr>
       <th>cache_ignore_ctl</th>
-      <td><p>logical (default = FALSE). Should check control file contents with cache?</p></td>
+      <td><p>Logical (default = FALSE). Should check control file
+contents with cache?</p></td>
     </tr>
     <tr>
       <th>cache_ignore_data</th>
-      <td><p>logical (default = FALSE). Should check dataset with cache?</p></td>
+      <td><p>Logical (default = FALSE). Should check dataset with
+cache?</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>m with <code>job_info</code> fields populated.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>In grid environment it is recommended to run <code><a href='nm_tran.html'>nm_tran()</a></code> via the
+RStudio addin prior to executing this code.</p>
+<p>By default, when highlighting code and evaluating it via an RStudio app,
+run_nm() will not execute and will just return the <code>nm</code> object.</p>
+<p>For vector <code>nm</code> objects of length more than 1, all runs will be launched at
+the same time.  This could overwhelm resources if not in a grid
+environment.  In this case see <code><a href='run_nm_batch.html'>run_nm_batch()</a></code> for batched execution of a
+vector valued <code>nm</code> object.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='nm_tran.html'>nm_tran()</a></code>, <code><a href='run_nm_batch.html'>run_nm_batch()</a></code></p></div>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_nm.html'>new_nm</a></span><span class='op'>(</span>run_id <span class='op'>=</span> <span class='st'>"m1"</span>,
+             based_on <span class='op'>=</span> <span class='st'>"staging/Models/ADVAN2.mod"</span>,
+             data_path <span class='op'>=</span> <span class='st'>"DerivedData/data.csv"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+      <span class='fu'><a href='nm_getsetters.html'>cmd</a></span><span class='op'>(</span><span class='st'>"execute {ctl_name} -dir={run_dir}"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+      <span class='fu'><a href='fill_input.html'>fill_input</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+      <span class='fu'>run_nm</span><span class='op'>(</span><span class='op'>)</span>
+
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

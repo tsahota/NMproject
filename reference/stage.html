@@ -40,7 +40,13 @@
 
 
 <meta property="og:title" content="Stage files in project staging area ready for import — stage" />
-<meta property="og:description" content="Stage files in project staging area ready for import" />
+<meta property="og:description" content="`r lifecycle::badge(&quot;superseded&quot;)
+Staging is a preliminary step of bringing code from external to the project
+into the project.  The intent is it remains a snapshot of code as it was at
+the time of importing.  This aids in reproducibility because if that
+external code is changed, the staged code will remain fixed.
+In practice, this function will rarely need to be used directly.  The easiest
+way to bring code is via the code library RStudio addin shiny app." />
 
 
 
@@ -120,7 +126,13 @@
     </div>
 
     <div class="ref-description">
-    <p>Stage files in project staging area ready for import</p>
+    <p>`r lifecycle::badge("superseded")</p>
+<p>Staging is a preliminary step of bringing code from external to the project
+into the project.  The intent is it remains a snapshot of code as it was at
+the time of <code>import</code>ing.  This aids in reproducibility because if that
+external code is changed, the staged code will remain fixed.</p>
+<p>In practice, this function will rarely need to be used directly.  The easiest
+way to bring code is via the <code>code library</code> RStudio addin shiny app.</p>
     </div>
 
     <pre class="usage"><span class='fu'>stage</span><span class='op'>(</span><span class='va'>files</span>, <span class='va'>root_dir</span>, overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
@@ -130,25 +142,39 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>files</th>
-      <td><p>character vector. path of files to stage</p></td>
+      <td><p>Character vector. path of files to stage.</p></td>
     </tr>
     <tr>
       <th>root_dir</th>
-      <td><p>character path to root directory of <code>files</code>. Staged files
+      <td><p>Character path to root directory of <code>files</code>. Staged files
 relative to <code>staging</code> directory will be same as <code>files</code> to <code>root_dir</code>. If
 this is not specified, will guess based on presense of <code>nm_default_dirs</code></p></td>
     </tr>
     <tr>
       <th>overwrite</th>
-      <td><p>logical (default = FALSE).</p></td>
+      <td><p>Logical (default = FALSE).</p></td>
     </tr>
     <tr>
       <th>silent</th>
-      <td><p>logical (default = FALSE)</p></td>
+      <td><p>Logical (default = FALSE).</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
+    <div class='dont-index'><p><code><a href='code_library.html'>code_library()</a></code>, <code><a href='import.html'>import()</a></code></p></div>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+
+<span class='fu'><a href='ls_code_library.html'>ls_code_library</a></span><span class='op'>(</span><span class='st'>"Models/ADVAN2.mod"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>stage</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='import.html'>import</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

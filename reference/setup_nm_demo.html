@@ -40,8 +40,9 @@
 
 
 <meta property="og:title" content="Setup demo in current directory — setup_nm_demo" />
-<meta property="og:description" content="Following through the demo is the fastest way to learn the syntax of
-NMproject. The default demo is the Theophylline demo &quot;theopp&quot;.  Scripts will
+<meta property="og:description" content="
+Following through the demo is the fastest way to learn the syntax of
+NMproject. The default demo is a Theophylline (&quot;theopp&quot;) pharmacometric analysis.  Scripts will
 be copied numbered s01_XXX.Rmd, s02_XXX.Rmd in the &quot;Scripts&quot; directory and a
 dataset into &quot;SourceData&quot;. The &quot;staging&quot; area will also be pre-filled with
 the code library model, &quot;ADVAN2.mod&quot;.  To practice copying this yourself, see
@@ -125,11 +126,12 @@ code_library() for how the app works." />
     </div>
 
     <div class="ref-description">
-    <p>Following through the demo is the fastest way to learn the syntax of
-NMproject. The default demo is the Theophylline demo "theopp".  Scripts will
-be copied numbered s01_XXX.Rmd, s02_XXX.Rmd in the "Scripts" directory and a
-dataset into "SourceData". The "staging" area will also be pre-filled with
-the code library model, "ADVAN2.mod".  To practice copying this yourself, see
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Following through the demo is the fastest way to learn the syntax of
+NMproject. The default demo is a Theophylline ("theopp") pharmacometric analysis.  Scripts will
+be copied numbered <code>s01_XXX.Rmd</code>, <code>s02_XXX.Rmd</code> in the <code>"Scripts"</code> directory and a
+dataset into <code>"SourceData"</code>. The <code>"staging"</code> area will also be pre-filled with
+the code library model, <code>"ADVAN2.mod"</code>.  To practice copying this yourself, see
 <code><a href='code_library.html'>code_library()</a></code> for how the app works.</p>
     </div>
 
@@ -144,19 +146,23 @@ the code library model, "ADVAN2.mod".  To practice copying this yourself, see
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>demo_name</th>
-      <td><p>character. Name of demo. Default = "theopp"</p></td>
+      <td><p>Character. Name of demo. Default = "theopp".  See details to find other demos</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
-      <td><p>logical. Default changed to FALSE.</p></td>
+      <td><p>Logical. Default changed to FALSE.</p></td>
     </tr>
     <tr>
       <th>additional_demo_locations</th>
-      <td><p>character vector. default = NULL. locations
-for demo directories</p></td>
+      <td><p>Character vector. default = NULL. Locations
+for demo directories.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Available <code>demo_name</code> correspond to directory locations in
+<code><a href='https://rdrr.io/r/base/system.file.html'>system.file("extdata","examples",package = "NMproject")</a></code></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='code_library.html'>code_library()</a></code></p></div>
