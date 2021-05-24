@@ -16,7 +16,10 @@ subroutine(m, advan = NA, trans = 1, recursive = TRUE)
 \item{recursive}{Logical (default = TRUE). Internal argument, do not modify.}
 }
 \description{
-This is currently experimental. Modify subroutine of an nm object.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+Makes the necessary code changes to go from one \code{ADVAN} (and \code{TRANS}) to
+another.
 }
 \details{
 Can only switch between subroutines listed in \code{available_advans}.

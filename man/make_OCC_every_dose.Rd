@@ -7,12 +7,31 @@
 make_OCC_every_dose(d, dose_trigger, new_OCC_trigger)
 }
 \arguments{
-\item{d}{data.frame. NONMEM ready input dataset}
+\item{d}{A data.frame. NONMEM ready input dataset.}
 
-\item{dose_trigger}{logical expression for defining a dosing row}
+\item{dose_trigger}{Logical expression for defining a dosing row.}
 
-\item{new_OCC_trigger}{logical expression for defining when OCC should increment}
+\item{new_OCC_trigger}{Logical expression for defining when OCC should
+increment.}
 }
 \description{
-To be used in a \code{mutate()} statement \code{group_by}'d by "ID"
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+Creates and OCC column that increments in accordance to specified condition.
+To be used in a \code{dplyr::mutate()} statement \code{dplyr::group_by()}'d by "ID".
+}
+\examples{
+\dontrun{
+
+d <- input_data(m1)
+
+## OCC increments on every dosing interval with more than 4 samples
+d \%>\% group_by(ID) \%>\%
+  mutate(OCC = make_OCC_every_dose(
+    EVID \%in\% 1, 
+    length(which(EVID \%in\% 0)) > 4
+   )
+  )
+
+}
 }

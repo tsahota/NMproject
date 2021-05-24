@@ -1,10 +1,31 @@
 #' Experimental function to make an OCC column for NONMEM IOV use
+#'
+#' @description
+#'
+#' `r lifecycle::badge("experimental")`
+#'
+#' Creates and OCC column that increments in accordance to specified condition.
+#' To be used in a `dplyr::mutate()` statement `dplyr::group_by()`'d by "ID".  
+#'
+#' @param d A data.frame. NONMEM ready input dataset.
+#' @param dose_trigger Logical expression for defining a dosing row.
+#' @param new_OCC_trigger Logical expression for defining when OCC should
+#'   increment.
+#'   
+#' @examples 
+#' \dontrun{
 #' 
-#' To be used in a `mutate()` statement `group_by`'d by "ID"
+#' d <- input_data(m1)
 #' 
-#' @param d data.frame. NONMEM ready input dataset
-#' @param dose_trigger logical expression for defining a dosing row
-#' @param new_OCC_trigger logical expression for defining when OCC should increment
+#' ## OCC increments on every dosing interval with more than 4 samples
+#' d %>% group_by(ID) %>%
+#'   mutate(OCC = make_OCC_every_dose(
+#'     EVID %in% 1, 
+#'     length(which(EVID %in% 0)) > 4
+#'    )
+#'   )
+#' 
+#' }
 #' @export
 make_OCC_every_dose <- function(d, dose_trigger, new_OCC_trigger){
   # Rule for when new occasion is happening
@@ -12,7 +33,6 @@ make_OCC_every_dose <- function(d, dose_trigger, new_OCC_trigger){
   
   ## TODO: walk the ast of new_OCC_trigger
   ## pull out variables, evaluate them to create a mini d
-  
   
   new_OCC_trigger <- rlang::enquo(new_OCC_trigger)
   id_group <- rlang::enquo(id_group)

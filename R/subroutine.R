@@ -141,34 +141,38 @@ default_trans <- function(advan){
 }
 
 #' Subroutine
-#' 
-#' This is currently experimental. Modify subroutine of an nm object.
-#' 
+#'
+#' @description
+#'
+#' `r lifecycle::badge("experimental")`
+#'
+#' Makes the necessary code changes to go from one `ADVAN` (and `TRANS`) to
+#' another.
+#'
 #' @param m An nm object.
 #' @param advan Character. desired ADVAN.
 #' @param trans Character. desired TRANS.
 #' @param recursive Logical (default = TRUE). Internal argument, do not modify.
-#' 
-#' @details
-#'  Can only switch between subroutines listed in `available_advans`.
+#'
+#' @details Can only switch between subroutines listed in `available_advans`.
 #'
 #' @seealso [advan()]
-#' 
+#'
 #' @examples
 #' \dontrun{
-#' 
+#'
 #' advan(m)  ## 2
 #' trans(m)  ## 1
-#' 
+#'
 #' m <- m %>% subroutine(ADVAN = 2, TRANS = 2)
-#' 
+#'
 #' ds <- .available_advans %>%
 #'   filter(oral) %>%
 #'   mutate(
 #'       m = m1 %>% child(run_id = label) %>%
 #'         subroutine(advan = advan, trans = trans)
 #'   )
-#' 
+#'
 #' }
 #' @export
 

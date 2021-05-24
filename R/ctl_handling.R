@@ -332,48 +332,73 @@ update_parameters0 <- function(ctl,coef_from,type = c("THETA","OMEGA","SIGMA")){
 
 
 
-#' Add a covariate to a NONMEM model
+#' @name add_remove_covs
+#' @rdname add_remove_covs
+#' @title Add/remove a covariate to a NONMEM model
 #'
+#' @description
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
 #' Follows PsN coding conventions to add covariates into a model.  The advantage
 #' is no need to create a .scm file, just directly modify the ctl file contents.
 #' This function is used by [covariate_step_tibble()] for stepwise
 #' covariate model development.
 #'
-#' @param ctl object coercible to ctl_list
-#' @param param character. Name of parameter
-#' @param cov character. Name of covariate
-#' @param state numeric or character. Number/name of state (see details)
-#' @param continuous logical (default = TRUE). is covariate continuous?
-#' @param time_varying optional logical. is the covariate time varying?
-#' @param additional_state_text optional character. custom state variable to be
-#'   passed to param_cov_text
-#' @param id_var character (default = "ID"). Needed if time_varying is missing.
-#' @param force logical (default = FALSE). Force covariate in even if missing
-#'   values found
-#' @param force_TV_var logical (default = FALSE). Force covariates only on TV
-#'   notation parameters
-#' @param init optional numeric/character vector.  Initial estimate of
-#'   additional parameters
-#' @param lower optional numeric/character vector.  lower bound of additional
-#'   parameters
-#' @param upper optional numeric/character vector.  Upper bound of additional
-#'   parameters
+#' @param ctl An nm object or an object coercible to ctl_list.
+#' @param param Character. Name of parameter.
+#' @param cov Character. Name of covariate.
+#' @param state Numeric or character. Number or name of state (see details).
+#' @param continuous Logical (default = TRUE). is covariate continuous?
+#' @param time_varying Optional logical. is the covariate time varying?
+#' @param additional_state_text Optional character. custom state variable to be
+#'   passed to `param_cov_text`.
+#' @param id_var Character (default = "ID"). Needed if time_varying is missing.
+#' @param force Logical (default = FALSE). Force covariate in even if missing
+#'   values found.
+#' @param force_TV_var Logical (default = FALSE). Force covariates only on TV
+#'   notation parameters.
+#' @param init Optional numeric/character vector.  Initial estimate of
+#'   additional parameters.
+#' @param lower Optional numeric/character vector.  lower bound of additional
+#'   parameters.
+#' @param upper Optional numeric/character vector.  Upper bound of additional
+#'   parameters.
 #'
-#' @details available states: "2" or "linear": PARCOV= ( 1 + THETA(1)*(COV -
-#' median))
+#' @details available `state`s: 
+#' 
+#' \describe{
+#' 
+#'  \item{"2" or "linear"}{
+#'   PARCOV= ( 1 + THETA(1)*(COV -median))
+#'  }
 #'
-#' "3" or "hockey-stick": IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV -
-#' median)) IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))
+#'  \item{"3" or "hockey-stick"}{
+#'   IF(COV.LE.median) PARCOV = ( 1 + THETA(1)&ast;(COV - median)) 
+#'   IF(COV.GT.median) PARCOV = ( 1 + THETA(2)&ast;(COV - median))
+#'  }
 #'
-#' "4" or "exponential": PARCOV= EXP(THETA(1)*(COV - median))
-#'
-#' "5" or "power": PARCOV= ((COV/median)**THETA(1))
-#'
-#' "power1": PARCOV= ((COV/median))
-#'
-#' "power0.75": PARCOV= ((COV/median)**0.75)
-#'
-#' "6" or "log-linear": PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
+#'  \item{"4" or "exponential"}{
+#'   PARCOV= EXP(THETA(1)*(COV - median))
+#'  }
+#'  
+#'  \item{"5" or "power"}{
+#'   PARCOV= ((COV/median)**THETA(1))
+#'  }
+#'  
+#'  \item{"power1"}{
+#'   PARCOV= ((COV/median))
+#'  }
+#'  
+#'  \item{"power0.75"}{
+#'   PARCOV= ((COV/median)**0.75)
+#'  }
+#'  
+#'  \item{"6" or "log-linear"}{
+#'   PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
+#'  }
+#'  
+#' }
 #'
 #' @seealso [covariate_step_tibble()], [test_relations()]
 #' @examples
@@ -400,44 +425,11 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
   UseMethod("add_cov")
 }
 
-#' Remove a covariate to a NONMEM model
+#' @rdname add_remove_covs
 #'
-#' Only works with covariates added with add_cov
-#'
-#' @param ctl object coercible to ctl_list
-#' @param param character. Name of parameter
-#' @param cov character. Name of covariate
-#' @param state numeric or character. Number/name of state (see details)
-#' @param continuous logical (default = TRUE). is covariate continuous?
-#' @param time_varying optional logical. is the covariate time varying?
-#' @param additional_state_text optional character. custom state variable to be passed to param_cov_text
-#' @param id_var character (default = "ID"). Needed if time_varying is missing.
-#' 
 #' @details 
-#' available states:
-#' "2" or "linear":
-#'   PARCOV= ( 1 + THETA(1)*(COV - median))
+#' `remove_cov` only works with covariates added with `add_cov`.
 #' 
-#' "3" or "hockey-stick":
-#'   IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))
-#'   IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))
-#'                     
-#' "4" or "exponential":
-#'    PARCOV= EXP(THETA(1)*(COV - median))
-#' 
-#' "5" or "power":
-#'    PARCOV= ((COV/median)**THETA(1))
-#'    
-#' "power1":
-#'    PARCOV= ((COV/median))
-#'    
-#' "power0.75":
-#'    PARCOV= ((COV/median)**0.75)
-#' 
-#' "6" or "log-linear":
-#'    PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
-#' 
-#' @seealso [covariate_step_tibble()]
 #' @examples 
 #' \dontrun{
 #' 
