@@ -39,22 +39,26 @@ function(input, output, session) {
     updateNavbarPage(session, "mainPanel", selected = "preview")
   })
   
-  stage_expr <- expression({
+  import_expr <- expression({
     if(length(input$run_table_rows_selected)==0)
       return(showModal(modalDialog(
         title = "Error",
         "Select a row first"
       )))
-    NMproject::stage(NMproject::ls_code_library(objects()$NAME), overwrite = TRUE)
+    NMproject::stage(NMproject::ls_code_library(objects()$NAME), overwrite = TRUE) %>%
+      NMproject::import()
     return(showModal(modalDialog(
-      title = "file staged",
-      "File is in \"staging\" directory. For scripts use import(\"staging/path/to/file\"). For nonmem code new_nm(.... , based_on = \"staging/path/to/file\", ....).  Close shiny app to go back to console."
+      title = "file imported",
+      "File has been imported into project.
+      Model files are in the \"staging\" area and can be referred to with 
+      new_nm(.... , based_on = \"staging/path/to/file\", ....).  
+      Close shiny app to go back to console."
     )))
   })
   
-  observeEvent(input$stage, eval(stage_expr))
-  observeEvent(input$stage2, eval(stage_expr))
-  observeEvent(input$stage3, eval(stage_expr))
+  observeEvent(input$import, eval(import_expr))
+  observeEvent(input$import2, eval(import_expr))
+  observeEvent(input$import3, eval(import_expr))
   
   observeEvent(input$back_to_cl, {
     updateNavbarPage(session, "mainPanel", selected = "code_library")

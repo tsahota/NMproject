@@ -23,11 +23,11 @@ fluidPage(
                                 #        p(em("Click rows to select run(s)"))),
                                 # column(3,
                                 #        actionButton("preview","preview file"),
-                                #        actionButton("stage","stage file"))
+                                #        actionButton("import","import file"))
                               ),
                               fluidRow(
                                 actionButton("preview","preview file"),
-                                actionButton("stage","stage file")
+                                actionButton("import","import file")
                               ),
                               br(),
                               fluidRow(DT::dataTableOutput("run_table"))
@@ -36,14 +36,12 @@ fluidPage(
                               value = "preview",
                               fluidRow(
                                 column(4, "R command: ",tags$code(textOutput("preview_command"))),
-                                column(8, actionButton("stage2","stage file"))
-                                # wellPanel("R command: ",tags$code(textOutput("preview_command")),
-                                #           actionButton("stage2","stage file")) 
+                                column(8, actionButton("import2","import file"))
                               ),
                               fluidRow(
                                 wellPanel("File contents: ", br(), tags$code(htmlOutput("tail_lst")))
                               ),
-                              column(8, actionButton("stage3","stage file"))
+                              column(8, actionButton("import3","import file"))
                      ),
                      text = strong("NMproject location: ",tags$code(.currentwd))
   )
