@@ -2130,7 +2130,9 @@ init_theta.nm_generic <- function(m, replace, ...){
 }
 
 #' @export
-init_theta.nm_list <- Vectorize_nm_list(init_theta.nm_generic, SIMPLIFY = FALSE, replace_arg = "replace")
+init_theta.nm_list <- Vectorize_nm_list(init_theta.nm_generic, SIMPLIFY = FALSE, 
+                                        replace_arg = "replace",
+                                        exclude_classes = c("data.frame"))
 
 
 #' @rdname init_theta
@@ -2175,7 +2177,9 @@ init_omega.nm_generic <- function(m, replace, ...){
 }
 
 #' @export
-init_omega.nm_list <- Vectorize_nm_list(init_omega.nm_generic, SIMPLIFY = FALSE, replace_arg = "replace")
+init_omega.nm_list <- Vectorize_nm_list(init_omega.nm_generic, SIMPLIFY = FALSE, 
+                                        replace_arg = "replace",
+                                        exclude_classes = c("data.frame"))
 
 #' @name init_theta
 #' @export
@@ -2218,7 +2222,9 @@ init_sigma.nm_generic <- function(m, replace, ...){
 }
 
 #' @export
-init_sigma.nm_list <- Vectorize_nm_list(init_sigma.nm_generic, SIMPLIFY = FALSE, replace_arg = "replace")
+init_sigma.nm_list <- Vectorize_nm_list(init_sigma.nm_generic, SIMPLIFY = FALSE, 
+                                        replace_arg = "replace",
+                                        exclude_classes = c("data.frame"))
 
 
 update_variable_in_text_numbers <- function(m, before_number, after_number){

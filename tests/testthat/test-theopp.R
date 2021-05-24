@@ -94,6 +94,9 @@ test_that("run and post",{
   
   expect_true(nrow(df) > 0 & nrow(df) < nrow(d))
 
+  it <- m1 %>% init_theta() %>% dplyr::first()
+  it$init[1] <- 1
+  m1 <- m1 %>% init_theta(it)
   ##################
   ## omega block/unblock test - can delete this, it's in demo
   io <- m1 %>% init_omega()

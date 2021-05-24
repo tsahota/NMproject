@@ -29,7 +29,7 @@ Vectorize_nm_list <- function (FUN, vectorize.args = arg.names, SIMPLIFY = FALSE
     else names(args)
     dovec <- names %in% vectorize.args
     ## added following to exclude certain classes from vectorisation
-    skip <- sapply(args, function(arg) any(class(arg) %in% exclude_classes))
+    skip <- sapply(args, function(arg) any(inherits(arg, exclude_classes)))
     names(skip) <- NULL
     dovec <- dovec & !skip
     ## glue replace arg
