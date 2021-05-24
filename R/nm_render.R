@@ -1,29 +1,54 @@
-#' Render function for nm objects
+#' @name nm_render
+#' @rdname nm_render
+#' @title Create run reports
+#'
+#' @description
+#'
+#' `r lifecycle::badge("stable")`
+#'
+#' A wrapper around `rmarkdown::render` for nm objects.  Use markdown templates
+#' to create a customised set of diagnostics to reuse on multiple models.
+#' Ideally, your model selection criteria in your run diagnostics.  To create a
+#' rmarkdown diagnostic template go to `FILE` -> `New File` -> `R markdown` ->
+#' `From Template` the select from one of the following:
+#'
+#' \itemize{ 
+#'   \item model diagnostic
+#'   \item VPC diagnostic 
+#'   \item PPC diagnostic
+#'   \item bootstrap results (`nm_list_render`)
+#' }
+#'
+#' These are intentionally minimal templates that can be run as notebooks or as
+#' automated diagnostics run with `nm_render`.  Follow the instructions at the
+#' top of the template for more details.
 #' 
-#' @param m nm object
-#' @param input character. Same as rmarkdown::render() arg
-#' @param output_file character. Same as rmarkdown::render() arg
-#' @param args list. Same as "params" arg in rmarkdown::render()
-#' @param force logical (default = `getOption("nm.force_render")`). will force execution
-#' @param async experimental option to use future package
-#' @param ... additional argument passed to rmarkdown::render()
-#' 
-#' @details 
-#' `input` must refer to a properly specified Rmd document.
-#' The R markdown template "model diagnostic" in RStudio sets this up 
-#' for you.
-#' 
+#' @param m An nm object.
+#' @param input Character. Same as `rmarkdown::render()` arg.
+#' @param output_file Character. Same as `rmarkdown::render()` arg.
+#' @param args List. Same as "params" arg in `rmarkdown::render()`.
+#' @param force Logical (default = `getOption("nm.force_render")`). Will force
+#'   execution.
+#' @param async Experimental option to use future package.
+#' @param ... Additional argument passed to `rmarkdown::render()`.
+#'
+#' @details `input` must refer to a properly specified Rmd document. The R
+#' markdown template "model diagnostic" in RStudio sets this up for you.
+#'
 #' These R markdown templates are usable as R Notebooks (e.g. for code
-#' development and debugging) if the object `.m` is defined in the
-#' global work space first.
+#' development and debugging) if the object `.m` is defined in the global work
+#' space first.
 #' 
-#' @examples 
+#' `nm_list_render()` is mostly used for bootstraps, and other routines where a
+#' parent run spawns multiple children in the form of an nm_list
+#'
+#' @examples
 #' \dontrun{
 #'   m1 %>% nm_render("Scripts/basic_gof.Rmd")
-#' 
+#'
 #'   ## to run "Scripts/basic_gof.Rmd" as an R Notebook
 #'   ## first define .m
-#'   
+#'
 #'   .m <- m1 ## Now you can run "Scripts/basic_gof.Rmd" as a Notebook
 #' }
 #' @export
@@ -116,19 +141,7 @@ nm_render.nm_generic <- function(m,
 #' @export
 nm_render.nm_list <- Vectorize_nm_list(nm_render.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
-#' Render function for child nm_lists
-#' 
-#' Mostly used for bootstraps, and other routines where
-#'   a parent run spawns multiple children in the form of an nm_list
-#' 
-#' @param m nm object
-#' @param input character. Same as rmarkdown::render() arg
-#' @param output_file character. Same as rmarkdown::render() arg
-#' @param args list. Same as "params" arg in rmarkdown::render()
-#' @param force logical (default = FALSE). will force execution
-#' @param async experiment - should future be used to run asynchronously
-#' @param ... additional arguments passed to rmarkdown::render()
-#' 
+#' @rdname nm_render
 #' @export
 nm_list_render <- function(m, 
                            input, 

@@ -20,30 +20,45 @@ init_sigma(m, replace, ...)
 \item{...}{mutate init_theta}
 }
 \description{
-Get/set initial parameters
+`r lifecycle::badge("stable")
+
+These functions are useful to obtain and modify initial values of \verb{$THETA}, \verb{$OMEGA} and \verb{$SIGMA}.
 }
 \examples{
 \dontrun{
 
- ## fix THETA on KA
-  ip <- init_theta(m1)
-  ip[[1]]$FIX[ip[[1]]$name \%in\% "KA"] <- TRUE
-  m1 <- m1 \%>\% init_theta(ip)
+## set initial values
+
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv") \%>\%
+      fill_input() \%>\%
+      init_theta(init = c(-2, 0.5, 1)) \%>\%
+      init_sigma(init = c(0.1, 0.1)) \%>\%
+      run_nm()
+      
+init_theta(m1)  ## display current $THETA in tibble-form
+init_omega(m1)  ## display current $OMEGA in tibble-form
+
+## fix THETA on KA
+ip <- init_theta(m1)[[1]]
+ip$FIX[ip$name \%in\% "KA"] <- TRUE
+m1 <- m1 \%>\% init_theta(ip)
   
- ## fix OMEGA on KA to 0.0225
-  ip <- init_omega(m1)
-  ip[[1]]$init[ip[[1]]$name \%in\% "IIV_KA"] <- 0.0225
-  ip[[1]]$FIX[ip[[1]]$name \%in\% "IIV_KA"] <- TRUE
-  m1 <- m1 \%>\% init_omega(ip)
+## fix OMEGA on KA to 0.0225
+ip <- init_omega(m1)[[1]]
+ip$init[ip$name \%in\% "IIV_KA"] <- 0.0225
+ip$FIX[ip$name \%in\% "IIV_KA"] <- TRUE
+m1 <- m1 \%>\% init_omega(ip)
   
- ## perturb all log transformed parameters by ~10\%
-  m1 <- m1 \%>\% init_theta(
+## perturb all log transformed parameters by ~10\%
+m1 <- m1 \%>\% init_theta(
     init = ifelse(
-      trans \%in\% "LOG",
-      rnorm(length(init), mean = init, sd = 0.1),
-      init
-    )
+    trans \%in\% "LOG",
+    rnorm(length(init), mean = init, sd = 0.1),
+    init
   )
+)
 
 }
 }

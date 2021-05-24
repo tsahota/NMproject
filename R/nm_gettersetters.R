@@ -44,15 +44,27 @@ ctl_path <- function(m, text) {
 #'
 #' @title Functions to access and modify fields of nm objects
 #'
-#' @param m nm object
-#' @param text optional character for replacing field. If present function will
+#' The fields of an object can be viewed by printing the object.  Each field has
+#' a corresponding function of the same name to access and modify it's value.
+#' 
+#' @param m An nm object.
+#' @param text Optional character for replacing field. If present function will
 #'   modify field (of same name as function) otherwise will return value of
-#'   field (of same name as function)
+#'   field (of same name as function).
 #'
 #' @details Easiest way to see all fields of an object is to type the object
 #'   into the console and hit enter. This will display the value of each field.
 #'   some fields like `cmd` are glue fields.  In these cases inserting
 #'   expressions inside braces in `text` will evaluate the expression
+#'   
+#'   The fundamental structure of all these functions is the same:
+#'   
+#'   To access the value of a field: 
+#'   `m %>% fieldname()` or equivalently `fieldname(m)`
+#'   
+#'   To modify the value of a field:
+#'   `m <- m %>% fieldname("newvalue")`
+#
 
 NULL
 

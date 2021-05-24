@@ -12,16 +12,28 @@ fill_input(m, ...)
 \item{...}{either keep, drop, rename}
 }
 \description{
-Uses dataset to fill $INPUT in ctl_contents
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Uses dataset to automatically fill $INPUT in control file.
+}
+\details{
+If a new dataset with different columns is assigned to an \code{nm}
+object, \verb{$INPUT} will not be correct and so it may necessary to apply
+\code{fill_input()} again.
 }
 \examples{
 \dontrun{
 
+ m1 <- m1 \%>\% fill_input() m1 \%>\% dollar("INPUT") ## view $INPUT
+
+ ## following will will drop the "RATE" column
+ m1 <- m1 \%>\% fill_input(drop = "RATE")
+ m1 \%>\% dollar("INPUT")
+
+ ## following will rename "DATE" to be "DAT0"
  m1 <- m1 \%>\% fill_input(rename = c("DAT0" = "DATE"))
  m1 \%>\% dollar("INPUT") ## view $INPUT
 
- m1 <- m1 \%>\% fill_input(drop = "RATE")
- m1 \%>\% dollar("INPUT")
- 
+
 }
 }

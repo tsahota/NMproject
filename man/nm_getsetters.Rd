@@ -20,7 +20,10 @@
 \alias{run_in}
 \alias{run_id}
 \alias{result_files}
-\title{Functions to access and modify fields of nm objects}
+\title{Functions to access and modify fields of nm objects
+
+The fields of an object can be viewed by printing the object.  Each field has
+a corresponding function of the same name to access and modify it's value.}
 \usage{
 run_dir(m, text)
 
@@ -59,20 +62,31 @@ run_id(m, text)
 result_files(m, text)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{text}{optional character for replacing field. If present function will
+\item{text}{Optional character for replacing field. If present function will
 modify field (of same name as function) otherwise will return value of
-field (of same name as function)}
+field (of same name as function).}
 }
 \description{
 Functions to access and modify fields of nm objects
+
+The fields of an object can be viewed by printing the object.  Each field has
+a corresponding function of the same name to access and modify it's value.
 }
 \details{
 Easiest way to see all fields of an object is to type the object
 into the console and hit enter. This will display the value of each field.
 some fields like \code{cmd} are glue fields.  In these cases inserting
 expressions inside braces in \code{text} will evaluate the expression
+
+The fundamental structure of all these functions is the same:
+
+To access the value of a field:
+\code{m \%>\% fieldname()} or equivalently \code{fieldname(m)}
+
+To modify the value of a field:
+\code{m <- m \%>\% fieldname("newvalue")}
 }
 \examples{
 \dontrun{

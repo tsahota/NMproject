@@ -2,6 +2,7 @@
 % Please edit documentation in R/run_nm.R
 \name{run_nm}
 \alias{run_nm}
+\alias{run_nm_batch}
 \title{Run NONMEM jobs}
 \usage{
 run_nm(
@@ -15,6 +16,8 @@ run_nm(
   cache_ignore_ctl = FALSE,
   cache_ignore_data = FALSE
 )
+
+run_nm_batch(m, threads = 10, ...)
 }
 \arguments{
 \item{m}{An nm object.}
@@ -38,6 +41,10 @@ contents with cache?}
 
 \item{cache_ignore_data}{Logical (default = FALSE). Should check dataset with
 cache?}
+
+\item{threads}{Numeric.  Number of threads to run concurrently.}
+
+\item{...}{Additional arguments passed to \code{run_nm()}.}
 }
 \value{
 m with \code{job_info} fields populated.
@@ -58,6 +65,12 @@ For vector \code{nm} objects of length more than 1, all runs will be launched at
 the same time.  This could overwhelm resources if not in a grid
 environment.  In this case see \code{\link[=run_nm_batch]{run_nm_batch()}} for batched execution of a
 vector valued \code{nm} object.
+
+\code{run_nm_batch} is a variant of \code{run_nm()} containing a \code{threads} argument that will submit \code{\link[=run_nm]{run_nm()}}'s in
+batches and wait for them to complete. If you need all the runs to complete ensure you use a
+\code{\link[=wait_finish]{wait_finish()}} statement afterwards as R console will only be
+blocked for until the last batch has been submitted which will be before
+all runs have completed
 }
 \examples{
 \dontrun{
@@ -71,5 +84,5 @@ m1 <- new_nm(run_id = "m1",
 }
 }
 \seealso{
-\code{\link[=nm_tran]{nm_tran()}}, \code{\link[=run_nm_batch]{run_nm_batch()}}
+\code{\link[=nm_tran]{nm_tran()}}
 }

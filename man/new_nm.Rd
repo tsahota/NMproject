@@ -21,21 +21,23 @@ details.}
 An object of class \code{nm_list}.  Attributes
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
-
-Wrapper function around \code{\link[=nm]{nm()}} to create a new parent \code{nm} object.  Normally
-the first NONMEM you create will be using this functions.  Subsequent
-objects created with the \code{\link[=child]{child()}} function will inherit the properties of
-the parent run.
+escription \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \details{
+Create a new parent \code{nm} object.  Normally the first NONMEM you create will
+be using this functions.  Subsequent objects created with the \code{\link[=child]{child()}}
+function will inherit the properties of the parent run.
+
 The \code{cmd} field uses \code{glue} notation.  So instead of specifying
 \verb{execute runm1.mod -dir=m1}, it is best to specify \verb{execute \{ctl_name\} -dir=\{run_dir\}}.  The values of \code{ctl_name} and \code{run_dir} refer to object
 fields and if these change value like when the \code{child()} function is used to
 create a separate child object, the \code{cmd} field will update automatically.
 }
-\section{object fields (see \code{\link[=nm_getsetters]{nm_getsetters()}} for accessing)}{
+\section{object fields}{
 
+
+Each field has a corresponding function (documented in \link{nm_getsetters}) of the same name to access and
+modify it's value.
 
 \describe{
 \item{type}{

@@ -2,7 +2,10 @@
 
 NULL
 
-#' Run NONMEM jobs
+#' @name run_nm
+#' @rdname run_nm
+#'
+#' @title Run NONMEM jobs
 #'
 #' @description
 #'
@@ -37,7 +40,7 @@ NULL
 #'
 #' @return m with `job_info` fields populated.
 #'
-#' @seealso [nm_tran()], [run_nm_batch()]
+#' @seealso [nm_tran()]
 #'
 #' @examples
 #' \dontrun{
@@ -158,21 +161,15 @@ run_nm.nm_generic <- function(m,
 #' @export
 run_nm.nm_list <- Vectorize_nm_list(run_nm.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
 
-#' Execute run_nm in batches
-#'
-#' a variant of [run_nm()] that will submit [run_nm()]'s in
-#' batches and wait for them to complete
-#'
-#' @param m nm object
-#' @param threads numeric.  Number of threads to un
-#' @param ... additional arguments passed to run_nm()
-#'
-#' @details if you need all the runs to complete ensure you use a
+#' @rdname run_nm
+#' @param threads Numeric.  Number of threads to run concurrently.
+#' @param ... Additional arguments passed to `run_nm()`.
+#' 
+#' @details `run_nm_batch` is a variant of `run_nm()` containing a `threads` argument that will submit [run_nm()]'s in
+#' batches and wait for them to complete. If you need all the runs to complete ensure you use a
 #'   [wait_finish()] statement afterwards as R console will only be
 #'   blocked for until the last batch has been submitted which will be before
 #'   all runs have completed
-#'
-#' @seealso [run_nm()]
 #' @export
 
 run_nm_batch <- function(m, threads = 10, ...){

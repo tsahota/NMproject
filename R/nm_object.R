@@ -102,12 +102,11 @@ nm <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
 
 #'Create a new (parent) nm object
 #'
-#'@description `r lifecycle::badge("stable")`
+#'  escription `r lifecycle::badge("stable")`
 #'
-#'  Wrapper function around [nm()] to create a new parent `nm` object.  Normally
-#'  the first NONMEM you create will be using this functions.  Subsequent
-#'  objects created with the [child()] function will inherit the properties of
-#'  the parent run.
+#'  Create a new parent `nm` object.  Normally the first NONMEM you create will
+#'  be using this functions.  Subsequent objects created with the [child()]
+#'  function will inherit the properties of the parent run.
 #'
 #'@param based_on Character. Prior ctl file to base run on
 #'@param run_id Character. Run identifier
@@ -122,8 +121,11 @@ nm <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
 #'  fields and if these change value like when the `child()` function is used to
 #'  create a separate child object, the `cmd` field will update automatically.
 #'
-#'@section object fields (see [nm_getsetters()] for accessing):
+#'@section object fields:
 #'
+#'  Each field has a corresponding function (documented in [nm_getsetters]) of the same name to access and
+#'  modify it's value.
+#'  
 #'  \describe{ 
 #'  \item{type}{
 #'    The PsN run type.  Default is `execute`.
@@ -799,21 +801,34 @@ fill_dollar_data <- function(m, data_name){
 }
 
 #' Fill $INPUT
-#' 
-#' Uses dataset to fill $INPUT in ctl_contents
-#' 
+#'
+#' @description
+#'
+#' `r lifecycle::badge("stable")`
+#'
+#' Uses dataset to automatically fill $INPUT in control file.
+#'
 #' @param m nm object
 #' @param ... either keep, drop, rename
-#' 
-#' @examples 
+#'
+#' @details If a new dataset with different columns is assigned to an `nm`
+#'   object, `$INPUT` will not be correct and so it may necessary to apply
+#'   `fill_input()` again.
+#'
+#' @examples
 #' \dontrun{
-#' 
-#'  m1 <- m1 %>% fill_input(rename = c("DAT0" = "DATE"))
-#'  m1 %>% dollar("INPUT") ## view $INPUT
-#' 
+#'
+#'  m1 <- m1 %>% fill_input() m1 %>% dollar("INPUT") ## view $INPUT
+#'
+#'  ## following will will drop the "RATE" column
 #'  m1 <- m1 %>% fill_input(drop = "RATE")
 #'  m1 %>% dollar("INPUT")
-#'  
+#'
+#'  ## following will rename "DATE" to be "DAT0"
+#'  m1 <- m1 %>% fill_input(rename = c("DAT0" = "DATE"))
+#'  m1 %>% dollar("INPUT") ## view $INPUT
+#'
+#'
 #' }
 #' @export
 fill_input <- function(m, ...){
@@ -2064,6 +2079,12 @@ print.nm_subroutine <- function(x, ...){
 
 #' Get/set initial parameters
 #' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")
+#' 
+#' These functions are useful to obtain and modify initial values of `$THETA`, `$OMEGA` and `$SIGMA`.
+#' 
 #' @param m nm object
 #' @param replace optional tibble for replacement
 #' @param ... mutate init_theta
@@ -2071,25 +2092,38 @@ print.nm_subroutine <- function(x, ...){
 #' @examples
 #' \dontrun{
 #' 
-#'  ## fix THETA on KA
-#'   ip <- init_theta(m1)
-#'   ip[[1]]$FIX[ip[[1]]$name %in% "KA"] <- TRUE
-#'   m1 <- m1 %>% init_theta(ip)
+#' ## set initial values
+#' 
+#' m1 <- new_nm(run_id = "m1",
+#'              based_on = "staging/Models/ADVAN2.mod",
+#'              data_path = "DerivedData/data.csv") %>%
+#'       fill_input() %>%
+#'       init_theta(init = c(-2, 0.5, 1)) %>%
+#'       init_sigma(init = c(0.1, 0.1)) %>%
+#'       run_nm()
+#'       
+#' init_theta(m1)  ## display current $THETA in tibble-form
+#' init_omega(m1)  ## display current $OMEGA in tibble-form
+#' 
+#' ## fix THETA on KA
+#' ip <- init_theta(m1)[[1]]
+#' ip$FIX[ip$name %in% "KA"] <- TRUE
+#' m1 <- m1 %>% init_theta(ip)
 #'   
-#'  ## fix OMEGA on KA to 0.0225
-#'   ip <- init_omega(m1)
-#'   ip[[1]]$init[ip[[1]]$name %in% "IIV_KA"] <- 0.0225
-#'   ip[[1]]$FIX[ip[[1]]$name %in% "IIV_KA"] <- TRUE
-#'   m1 <- m1 %>% init_omega(ip)
+#' ## fix OMEGA on KA to 0.0225
+#' ip <- init_omega(m1)[[1]]
+#' ip$init[ip$name %in% "IIV_KA"] <- 0.0225
+#' ip$FIX[ip$name %in% "IIV_KA"] <- TRUE
+#' m1 <- m1 %>% init_omega(ip)
 #'   
-#'  ## perturb all log transformed parameters by ~10%
-#'   m1 <- m1 %>% init_theta(
+#' ## perturb all log transformed parameters by ~10%
+#' m1 <- m1 %>% init_theta(
 #'     init = ifelse(
-#'       trans %in% "LOG",
-#'       rnorm(length(init), mean = init, sd = 0.1),
-#'       init
-#'     )
+#'     trans %in% "LOG",
+#'     rnorm(length(init), mean = init, sd = 0.1),
+#'     init
 #'   )
+#' )
 #' 
 #' }
 #' @name init_theta

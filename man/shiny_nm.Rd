@@ -7,13 +7,19 @@
 shiny_nm(m, envir = .GlobalEnv)
 }
 \arguments{
-\item{m}{either nm_list object, or data.frame or list or environment contain nm_lists}
+\item{m}{Either an nm object, or data.frame or list or environment contain
+nm_lists.}
 
-\item{envir}{if missing, the environment to search}
+\item{envir}{If missing, the environment to search.}
 }
 \description{
-Interactively monitor NONMEM runs.  This interface is intentionally limited to monitoring
-activities only.  Running and post processing should be scripted
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Interactively monitor NONMEM runs.  This interface is intentionally limited
+to monitoring runs, and does not include the ability to create, modify,
+launch or post-process runs since actions performed in the shiny app are not
+traceable/reproducible and not part of the workflow you create when
+scripting.
 }
 \examples{
 \dontrun{

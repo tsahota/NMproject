@@ -1,10 +1,18 @@
 #' Run monitor & summary app
 #' 
-#' Interactively monitor NONMEM runs.  This interface is intentionally limited to monitoring
-#'  activities only.  Running and post processing should be scripted
+#' @description 
 #' 
-#' @param m either nm_list object, or data.frame or list or environment contain nm_lists
-#' @param envir if missing, the environment to search
+#' `r lifecycle::badge("stable")`
+#' 
+#' Interactively monitor NONMEM runs.  This interface is intentionally limited
+#' to monitoring runs, and does not include the ability to create, modify,
+#' launch or post-process runs since actions performed in the shiny app are not
+#' traceable/reproducible and not part of the workflow you create when
+#' scripting.
+#' 
+#' @param m Either an nm object, or data.frame or list or environment contain
+#'   nm_lists.
+#' @param envir If missing, the environment to search.
 #' @examples
 #' \dontrun{
 #'
