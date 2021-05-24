@@ -40,11 +40,7 @@
 
 
 <meta property="og:title" content="Create a new (parent) nm object — new_nm" />
-<meta property="og:description" content="
-Wrapper function around nm() to create a new parent nm object.  Normally
-the first NONMEM you create will be using this functions.  Subsequent
-objects created with the child() function will inherit the properties of
-the parent run." />
+<meta property="og:description" content="escription " />
 
 
 
@@ -124,11 +120,7 @@ the parent run." />
     </div>
 
     <div class="ref-description">
-    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
-<p>Wrapper function around <code><a href='nm.html'>nm()</a></code> to create a new parent <code>nm</code> object.  Normally
-the first NONMEM you create will be using this functions.  Subsequent
-objects created with the <code><a href='child.html'>child()</a></code> function will inherit the properties of
-the parent run.</p>
+    <p>escription <a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
     </div>
 
     <pre class="usage"><span class='fu'>new_nm</span><span class='op'>(</span><span class='va'>based_on</span>, run_id <span class='op'>=</span> <span class='cn'>NA_character_</span>, <span class='va'>data_path</span>, <span class='va'>cmd</span><span class='op'>)</span></pre>
@@ -161,15 +153,20 @@ details.</p></td>
     <p>An object of class <code>nm_list</code>.  Attributes</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The <code>cmd</code> field uses <code>glue</code> notation.  So instead of specifying
+    <p>Create a new parent <code>nm</code> object.  Normally the first NONMEM you create will
+be using this functions.  Subsequent objects created with the <code><a href='child.html'>child()</a></code>
+function will inherit the properties of the parent run.</p>
+<p>The <code>cmd</code> field uses <code>glue</code> notation.  So instead of specifying
 <code>execute runm1.mod -dir=m1</code>, it is best to specify <code>execute {ctl_name} -dir={run_dir}</code>.  The values of <code>ctl_name</code> and <code>run_dir</code> refer to object
 fields and if these change value like when the <code><a href='child.html'>child()</a></code> function is used to
 create a separate child object, the <code>cmd</code> field will update automatically.</p>
-    <h2 class="hasAnchor" id="object-fields-see-nm-getsetters-for-accessing-"><a class="anchor" href="#object-fields-see-nm-getsetters-for-accessing-"></a>object fields (see <code><a href='nm_getsetters.html'>nm_getsetters()</a></code> for accessing)</h2>
+    <h2 class="hasAnchor" id="object-fields"><a class="anchor" href="#object-fields"></a>object fields</h2>
 
     
 
 
+<p>Each field has a corresponding function (documented in <a href='nm_getsetters.html'>nm_getsetters</a>) of the same name to access and
+modify it's value.</p>
 <dl>
 <dt>type</dt><dd><p>The PsN run type.  Default is <code>execute</code>.</p></dd>
 <dt>run_id</dt><dd><p>The run identifier.  E.g. <code>m1</code>.</p></dd>

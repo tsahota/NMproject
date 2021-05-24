@@ -238,9 +238,6 @@
     <loc>https://tsahota.github.io/NMproject/reference/nm_list_gather.html</loc>
   </url>
   <url>
-    <loc>https://tsahota.github.io/NMproject/reference/nm_list_render.html</loc>
-  </url>
-  <url>
     <loc>https://tsahota.github.io/NMproject/reference/nm_output.html</loc>
   </url>
   <url>
@@ -350,9 +347,6 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/run_nm.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/reference/run_nm_batch.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/search_raw.html</loc>

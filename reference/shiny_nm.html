@@ -40,8 +40,12 @@
 
 
 <meta property="og:title" content="Run monitor &amp; summary app — shiny_nm" />
-<meta property="og:description" content="Interactively monitor NONMEM runs.  This interface is intentionally limited to monitoring
-activities only.  Running and post processing should be scripted" />
+<meta property="og:description" content="
+Interactively monitor NONMEM runs.  This interface is intentionally limited
+to monitoring runs, and does not include the ability to create, modify,
+launch or post-process runs since actions performed in the shiny app are not
+traceable/reproducible and not part of the workflow you create when
+scripting." />
 
 
 
@@ -121,8 +125,12 @@ activities only.  Running and post processing should be scripted" />
     </div>
 
     <div class="ref-description">
-    <p>Interactively monitor NONMEM runs.  This interface is intentionally limited to monitoring
-activities only.  Running and post processing should be scripted</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Interactively monitor NONMEM runs.  This interface is intentionally limited
+to monitoring runs, and does not include the ability to create, modify,
+launch or post-process runs since actions performed in the shiny app are not
+traceable/reproducible and not part of the workflow you create when
+scripting.</p>
     </div>
 
     <pre class="usage"><span class='fu'>shiny_nm</span><span class='op'>(</span><span class='va'>m</span>, envir <span class='op'>=</span> <span class='va'>.GlobalEnv</span><span class='op'>)</span></pre>
@@ -132,11 +140,12 @@ activities only.  Running and post processing should be scripted</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>m</th>
-      <td><p>either nm_list object, or data.frame or list or environment contain nm_lists</p></td>
+      <td><p>Either an nm object, or data.frame or list or environment contain
+nm_lists.</p></td>
     </tr>
     <tr>
       <th>envir</th>
-      <td><p>if missing, the environment to search</p></td>
+      <td><p>If missing, the environment to search.</p></td>
     </tr>
     </table>
 

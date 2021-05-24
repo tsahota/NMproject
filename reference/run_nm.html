@@ -135,7 +135,9 @@ Run nm objects.  Uses system_nm() to submit the cmd() value of object." />
   cache_ignore_cmd <span class='op'>=</span> <span class='cn'>FALSE</span>,
   cache_ignore_ctl <span class='op'>=</span> <span class='cn'>FALSE</span>,
   cache_ignore_data <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+<span class='op'>)</span>
+
+<span class='fu'>run_nm_batch</span><span class='op'>(</span><span class='va'>m</span>, threads <span class='op'>=</span> <span class='fl'>10</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -180,6 +182,14 @@ contents with cache?</p></td>
       <td><p>Logical (default = FALSE). Should check dataset with
 cache?</p></td>
     </tr>
+    <tr>
+      <th>threads</th>
+      <td><p>Numeric.  Number of threads to run concurrently.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Additional arguments passed to <code>run_nm()</code>.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -193,11 +203,16 @@ RStudio addin prior to executing this code.</p>
 run_nm() will not execute and will just return the <code>nm</code> object.</p>
 <p>For vector <code>nm</code> objects of length more than 1, all runs will be launched at
 the same time.  This could overwhelm resources if not in a grid
-environment.  In this case see <code><a href='run_nm_batch.html'>run_nm_batch()</a></code> for batched execution of a
+environment.  In this case see <code>run_nm_batch()</code> for batched execution of a
 vector valued <code>nm</code> object.</p>
+<p><code>run_nm_batch</code> is a variant of <code>run_nm()</code> containing a <code>threads</code> argument that will submit <code>run_nm()</code>'s in
+batches and wait for them to complete. If you need all the runs to complete ensure you use a
+<code><a href='wait_finish.html'>wait_finish()</a></code> statement afterwards as R console will only be
+blocked for until the last batch has been submitted which will be before
+all runs have completed</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='nm_tran.html'>nm_tran()</a></code>, <code><a href='run_nm_batch.html'>run_nm_batch()</a></code></p></div>
+    <div class='dont-index'><p><code><a href='nm_tran.html'>nm_tran()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
