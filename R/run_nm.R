@@ -3,21 +3,52 @@
 NULL
 
 #' Run NONMEM jobs
-#' 
-#' Run nm objects.  Uses `system_nm()` to submit the `cmd()` value of object
-#' 
-#' @param m nm objects
-#' @param ignore.stdout logical (default=TRUE). Parameter passed to system()
-#' @param ignore.stderr logical (default=TRUE). Parameter passed to system()
-#' @param quiet logical (default=FALSE). should system_nm output be piped to screen
-#' @param intern logical. intern arg to be passed to system
-#' @param force logical (default = FALSE).  Force run even results unchanged
-#' @param cache_ignore_cmd logical (default = FALSE). Should check `cmd` field with cache?
-#' @param cache_ignore_ctl logical (default = FALSE). Should check control file contents with cache?
-#' @param cache_ignore_data logical (default = FALSE). Should check dataset with cache? 
+#'
+#' @description
+#'
+#' `r lifecycle::badge("stable")`
+#'
+#' Run nm objects.  Uses `system_nm()` to submit the `cmd()` value of object.
+#'
+#' @param m An nm object.
+#' @param ignore.stdout Logical (default=TRUE). Parameter passed to `system_nm()`.
+#' @param ignore.stderr Logical (default=TRUE). Parameter passed to `system_nm()`.
+#' @param quiet Logical (default=FALSE). Should `system_nm()` output be piped to
+#'   screen?
+#' @param intern Logical. `intern` arg to be passed to `system_nm()`.
+#' @param force Logical (default = FALSE).  Force run even results unchanged.
+#' @param cache_ignore_cmd Logical (default = FALSE). Should check `cmd` field
+#'   with cache?
+#' @param cache_ignore_ctl Logical (default = FALSE). Should check control file
+#'   contents with cache?
+#' @param cache_ignore_data Logical (default = FALSE). Should check dataset with
+#'   cache?
+#'
+#' @details In grid environment it is recommended to run [nm_tran()] via the
+#'   RStudio addin prior to executing this code.
+#'
+#'   By default, when highlighting code and evaluating it via an RStudio app,
+#'   run_nm() will not execute and will just return the `nm` object.
+#'
+#'   For vector `nm` objects of length more than 1, all runs will be launched at
+#'   the same time.  This could overwhelm resources if not in a grid
+#'   environment.  In this case see [run_nm_batch()] for batched execution of a
+#'   vector valued `nm` object.
 #'
 #' @return m with `job_info` fields populated.
 #'
+#' @seealso [nm_tran()], [run_nm_batch()]
+#'
+#' @examples
+#' \dontrun{
+#' m1 <- new_nm(run_id = "m1",
+#'              based_on = "staging/Models/ADVAN2.mod",
+#'              data_path = "DerivedData/data.csv") %>%
+#'       cmd("execute {ctl_name} -dir={run_dir}") %>%
+#'       fill_input() %>%
+#'       run_nm()
+#'
+#' }
 #' @export
 run_nm <- function(m,
                    ignore.stdout = TRUE, ignore.stderr = TRUE,

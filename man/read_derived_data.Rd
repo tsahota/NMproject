@@ -16,6 +16,8 @@ read_derived_data(name, na = ".", silent = FALSE, ...)
 \item{...}{additional arguments to be passed to read.csv}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Read the derived data directly instead of via the nm object which is what
 \code{\link[=input_data]{input_data()}} does.
 }

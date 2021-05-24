@@ -15,6 +15,8 @@ save to DerivedData directory.}
 \item{...}{Additional arguments to be passed to \code{\link[utils:write.table]{utils::write.csv()}}.}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Will write a dataset and an .RDS version of it to the (by default)
 "DerivedData" directory.  The main benefit of the .RDS dataset is that
 functions like \code{\link[=input_data]{input_data()}} and \code{\link[=output_table]{output_table()}} can

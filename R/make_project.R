@@ -103,12 +103,37 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
 
 #' Stage files in project staging area ready for import
 #'
-#' @param files character vector. path of files to stage
-#' @param root_dir character path to root directory of `files`. Staged files
+#' @description
+#'
+#' `r lifecycle::badge("superseded")
+#'
+#' Staging is a preliminary step of bringing code from external to the project
+#' into the project.  The intent is it remains a snapshot of code as it was at
+#' the time of `import`ing.  This aids in reproducibility because if that
+#' external code is changed, the staged code will remain fixed.
+#'
+#' In practice, this function will rarely need to be used directly.  The easiest
+#' way to bring code is via the `code library` RStudio addin shiny app.
+#'
+#' @param files Character vector. path of files to stage.
+#' @param root_dir Character path to root directory of `files`. Staged files
 #'   relative to `staging` directory will be same as `files` to `root_dir`. If
 #'   this is not specified, will guess based on presense of `nm_default_dirs`
-#' @param overwrite logical (default = FALSE).
-#' @param silent logical (default = FALSE)
+#' @param overwrite Logical (default = FALSE).
+#' @param silent Logical (default = FALSE).
+#'
+#' @seealso [code_library()], [import()]
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' ls_code_library("Models/ADVAN2.mod") %>%
+#'   stage() %>%
+#'   import()
+#' }
+#'
+#'
 #' @export
 stage <- function(files, root_dir,
                   overwrite = FALSE, silent = FALSE){

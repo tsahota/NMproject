@@ -7,16 +7,38 @@
 stage(files, root_dir, overwrite = FALSE, silent = FALSE)
 }
 \arguments{
-\item{files}{character vector. path of files to stage}
+\item{files}{Character vector. path of files to stage.}
 
-\item{root_dir}{character path to root directory of \code{files}. Staged files
+\item{root_dir}{Character path to root directory of \code{files}. Staged files
 relative to \code{staging} directory will be same as \code{files} to \code{root_dir}. If
 this is not specified, will guess based on presense of \code{nm_default_dirs}}
 
-\item{overwrite}{logical (default = FALSE).}
+\item{overwrite}{Logical (default = FALSE).}
 
-\item{silent}{logical (default = FALSE)}
+\item{silent}{Logical (default = FALSE).}
 }
 \description{
-Stage files in project staging area ready for import
+`r lifecycle::badge("superseded")
+
+Staging is a preliminary step of bringing code from external to the project
+into the project.  The intent is it remains a snapshot of code as it was at
+the time of \code{import}ing.  This aids in reproducibility because if that
+external code is changed, the staged code will remain fixed.
+
+In practice, this function will rarely need to be used directly.  The easiest
+way to bring code is via the \verb{code library} RStudio addin shiny app.
+}
+\examples{
+
+\dontrun{
+
+ls_code_library("Models/ADVAN2.mod") \%>\%
+  stage() \%>\%
+  import()
+}
+
+
+}
+\seealso{
+\code{\link[=code_library]{code_library()}}, \code{\link[=import]{import()}}
 }

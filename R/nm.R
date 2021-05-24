@@ -67,18 +67,25 @@ ctl_table_files.default <- function(ctl){
 
 #' Setup demo in current directory
 #'
+#' @description
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
 #' Following through the demo is the fastest way to learn the syntax of
-#' NMproject. The default demo is the Theophylline demo "theopp".  Scripts will
-#' be copied numbered s01_XXX.Rmd, s02_XXX.Rmd in the "Scripts" directory and a
-#' dataset into "SourceData". The "staging" area will also be pre-filled with
-#' the code library model, "ADVAN2.mod".  To practice copying this yourself, see
+#' NMproject. The default demo is a Theophylline ("theopp") pharmacometric analysis.  Scripts will
+#' be copied numbered `s01_XXX.Rmd`, `s02_XXX.Rmd` in the `"Scripts"` directory and a
+#' dataset into `"SourceData"`. The `"staging"` area will also be pre-filled with
+#' the code library model, `"ADVAN2.mod"`.  To practice copying this yourself, see
 #' [code_library()] for how the app works.
 #'
-#' @param demo_name character. Name of demo. Default = "theopp"
-#' @param overwrite logical. Default changed to FALSE.
-#' @param additional_demo_locations character vector. default = NULL. locations
-#'   for demo directories
+#' @param demo_name Character. Name of demo. Default = "theopp".  See details to find other demos
+#' @param overwrite Logical. Default changed to FALSE.
+#' @param additional_demo_locations Character vector. default = NULL. Locations
+#'   for demo directories.
 #'   
+#' @details Available `demo_name` correspond to directory locations in 
+#' `system.file("extdata","examples",package = "NMproject")`
+#' 
 #' @seealso [code_library()]
 #' @export
 

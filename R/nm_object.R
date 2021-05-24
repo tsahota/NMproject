@@ -2578,6 +2578,10 @@ ppc_histogram_plot <- function(d, var1, var2, statistic = "statistic"){
 
 #' Write derived data file
 #'
+#' @description
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
 #' Will write a dataset and an .RDS version of it to the (by default)
 #' "DerivedData" directory.  The main benefit of the .RDS dataset is that
 #' functions like [input_data()] and [output_table()] can
@@ -2668,6 +2672,11 @@ write_derived_data.list <- function (d, name, ...)
 
 #' Read derived data
 #'
+#'
+#' @description
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
 #' Read the derived data directly instead of via the nm object which is what
 #' [input_data()] does.
 #'

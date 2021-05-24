@@ -11,20 +11,26 @@ setup_nm_demo(
 )
 }
 \arguments{
-\item{demo_name}{character. Name of demo. Default = "theopp"}
+\item{demo_name}{Character. Name of demo. Default = "theopp".  See details to find other demos}
 
-\item{overwrite}{logical. Default changed to FALSE.}
+\item{overwrite}{Logical. Default changed to FALSE.}
 
-\item{additional_demo_locations}{character vector. default = NULL. locations
-for demo directories}
+\item{additional_demo_locations}{Character vector. default = NULL. Locations
+for demo directories.}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Following through the demo is the fastest way to learn the syntax of
-NMproject. The default demo is the Theophylline demo "theopp".  Scripts will
-be copied numbered s01_XXX.Rmd, s02_XXX.Rmd in the "Scripts" directory and a
-dataset into "SourceData". The "staging" area will also be pre-filled with
-the code library model, "ADVAN2.mod".  To practice copying this yourself, see
+NMproject. The default demo is a Theophylline ("theopp") pharmacometric analysis.  Scripts will
+be copied numbered \code{s01_XXX.Rmd}, \code{s02_XXX.Rmd} in the \code{"Scripts"} directory and a
+dataset into \code{"SourceData"}. The \code{"staging"} area will also be pre-filled with
+the code library model, \code{"ADVAN2.mod"}.  To practice copying this yourself, see
 \code{\link[=code_library]{code_library()}} for how the app works.
+}
+\details{
+Available \code{demo_name} correspond to directory locations in
+\code{system.file("extdata","examples",package = "NMproject")}
 }
 \seealso{
 \code{\link[=code_library]{code_library()}}

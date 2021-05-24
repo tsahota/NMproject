@@ -1,5 +1,17 @@
 #' Preview code_library file
+#'
+#' @description
+#'
+#' `r lifecycle::badge("superseded")`
+#'
+#' This is now primarily a back end function.  Easiest way to preview parts of
+#' the code library is use the `code library` RStudio addin and use the
+#' `preview` button in the shiny interface
+#'
 #' @param name character indicating script in code_library to preview
+#'
+#' @seealso [code_library()]
+#' @keywords internal
 #' @export
 preview <- function(name) {
   ## preview files in code_library
