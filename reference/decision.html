@@ -162,10 +162,10 @@ decision on and stop for users to remake decision if inputs change</p>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>There are two ways to use `decision`:</p>
-<p>Automatic: An `auto` decision (see examples below) works like `stopifnot()`.  It requires a logical (TRUE/FALSE) condition.  Doing this this way ensures that 
+    <p>There are two ways to use <code>decision</code>:</p>
+<p>Automatic: An <code>auto</code> decision (see examples below) works like <code><a href='https://rdrr.io/r/base/stopifnot.html'>stopifnot()</a></code>.  It requires a logical (TRUE/FALSE) condition.  Doing this this way ensures that
 creates fewer points in your workflow where at the cost of removing.  If updating a workflow (e.g. with an updated dataset), so long as the TRUE/FALSE is TRUE, the workflow will proceed uninterrupted.  If the condition flips to FALSE the workflow will stop as it will be assumed that subsequent steps will no longer be valid.</p>
-<p>Manual: Requires specification of either `input` or `file_inputs` (or both) AND `outcome`.  Inputs represent information you have considered in your decision and `outcome` is a text description of the resulting decision.  The assumption made is that if inputs have not changed since the last decision was made.</p>
+<p>Manual: Requires specification of either <code>input</code> or <code>file_inputs</code> (or both) AND <code>outcome</code>.  Inputs represent information you have considered in your decision and <code>outcome</code> is a text description of the resulting decision.  The assumption made is that if inputs have not changed since the last decision was made.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>

@@ -135,38 +135,38 @@
 
 
 <dl>
- <dt>system_cmd</dt><dd><p>See <code><a href='system_cmd.html'>?system_cmd</a></code>.</p></dd>
- <dt>system_nm</dt><dd><p>See <code><a href='system_nm.html'>?system_nm</a></code>.</p></dd>
- <dt>quiet_run</dt><dd><p>Sets the default value for the <code>quiet</code> argument in <code>run_nm</code>.</p></dd>
- <dt>intern</dt><dd><p>Sets the default value for the <code>intern</code> argument in <code>run_nm</code>.</p></dd>
- <dt>available_nm_types</dt><dd><p>A list of NONMEM subroutine names.
-   This is modifiable in case future versions of NONMEM contain new 
-   subroutines.</p></dd>
- <dt>nm_default_dirs</dt><dd><p>A optional (partially) named list of directories 
-   to be used by <code>nm_create_analysis_project</code> to create the project
-   directory structure when making a new analysis projct. 
-   Required names are "models", "scripts" and "results".
-   By default these will be set to "Models", "Scripts" and "Results",
-   respectively.  Additional characters (e.g. "SourceData") will ensure 
-   that those directories are presente in new projects.</p></dd>
- <dt>kill_job</dt><dd><p>An option function to kill jobs before they are started.
-   This is useful in infrastructures, where repeating a job conflicts with 
-   other jobs writing into the same directories.  For example, in slurm grids
-   this could be a function wrapper around a <code><a href='https://rdrr.io/r/base/system.html'>system("scancel ...")</a></code> 
-   call.</p></dd>
- <dt>nm.overwrite_behaviour</dt><dd><p>See <code><a href='overwrite_behaviour.html'>?overwrite_behaviour</a></code>.</p></dd>
- <dt>nm.force_render</dt><dd><p>Sets default value for the <code>force</code> argument in See <code>nm_render</code>.</p></dd>
- <dt>nm.cmd_default</dt><dd><p>Sets default <code>cmd</code> field for all nm objects.  
-   See <code><a href='nm_getsetters.html'>?cmd</a></code> for more information.
-   The default value is "execute ctl_name -dir=run_dir".
-   However in environments where a different command is needed, this is the 
-   place to change it.</p></dd>
- <dt>nmtran_exe_path</dt><dd><p>Sets the value of the NMTRAN.exe program.  This may be deprecated in future
-   it is recommended to use <code><a href='nm_tran_command.html'>nm_tran_command()</a></code>.
-   See <code><a href='nm_tran_command.html'>?nm_tran_command</a></code> for more information.</p></dd>
- <dt>code_library_path</dt><dd><p>Path to code library.  By default this will point to the code library 
-   within the NMproject installation directory.  
-   See <code><a href='code_library.html'>?code_library</a></code> for more information.</p></dd>
+<dt>system_cmd</dt><dd><p>See <code><a href='system_cmd.html'>?system_cmd</a></code>.</p></dd>
+<dt>system_nm</dt><dd><p>See <code><a href='system_nm.html'>?system_nm</a></code>.</p></dd>
+<dt>quiet_run</dt><dd><p>Sets the default value for the <code>quiet</code> argument in <code>run_nm</code>.</p></dd>
+<dt>intern</dt><dd><p>Sets the default value for the <code>intern</code> argument in <code>run_nm</code>.</p></dd>
+<dt>available_nm_types</dt><dd><p>A list of NONMEM subroutine names.
+This is modifiable in case future versions of NONMEM contain new
+subroutines.</p></dd>
+<dt>nm_default_dirs</dt><dd><p>A optional (partially) named list of directories
+to be used by <code>nm_create_analysis_project</code> to create the project
+directory structure when making a new analysis projct.
+Required names are "models", "scripts" and "results".
+By default these will be set to "Models", "Scripts" and "Results",
+respectively.  Additional characters (e.g. "SourceData") will ensure
+that those directories are presente in new projects.</p></dd>
+<dt>kill_job</dt><dd><p>An option function to kill jobs before they are started.
+This is useful in infrastructures, where repeating a job conflicts with
+other jobs writing into the same directories.  For example, in slurm grids
+this could be a function wrapper around a <code><a href='https://rdrr.io/r/base/system.html'>system("scancel ...")</a></code>
+call.</p></dd>
+<dt>nm.overwrite_behaviour</dt><dd><p>See <code><a href='overwrite_behaviour.html'>?overwrite_behaviour</a></code>.</p></dd>
+<dt>nm.force_render</dt><dd><p>Sets default value for the <code>force</code> argument in See <code>nm_render</code>.</p></dd>
+<dt>nm.cmd_default</dt><dd><p>Sets default <code>cmd</code> field for all nm objects.
+See <code><a href='nm_getsetters.html'>?cmd</a></code> for more information.
+The default value is "execute ctl_name -dir=run_dir".
+However in environments where a different command is needed, this is the
+place to change it.</p></dd>
+<dt>nmtran_exe_path</dt><dd><p>Sets the value of the NMTRAN.exe program.  This may be deprecated in future
+it is recommended to use <code><a href='nm_tran_command.html'>nm_tran_command()</a></code>.
+See <code><a href='nm_tran_command.html'>?nm_tran_command</a></code> for more information.</p></dd>
+<dt>code_library_path</dt><dd><p>Path to code library.  By default this will point to the code library
+within the NMproject installation directory.
+See <code><a href='code_library.html'>?code_library</a></code> for more information.</p></dd>
 
 </dl>
 

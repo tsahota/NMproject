@@ -42,7 +42,7 @@
 <meta property="og:title" content="Add a covariate to a NONMEM model — add_cov" />
 <meta property="og:description" content="Follows PsN coding conventions to add covariates into a model.  The advantage
 is no need to create a .scm file, just directly modify the ctl file contents.
-This function is used by covariate_step_tibble for stepwise
+This function is used by covariate_step_tibble() for stepwise
 covariate model development." />
 
 
@@ -125,7 +125,7 @@ covariate model development." />
     <div class="ref-description">
     <p>Follows PsN coding conventions to add covariates into a model.  The advantage
 is no need to create a .scm file, just directly modify the ctl file contents.
-This function is used by <code><a href='covariate_step_tibble.html'>covariate_step_tibble</a></code> for stepwise
+This function is used by <code><a href='covariate_step_tibble.html'>covariate_step_tibble()</a></code> for stepwise
 covariate model development.</p>
     </div>
 
@@ -212,8 +212,8 @@ parameters</p></td>
 
     <p>available states: "2" or "linear": PARCOV= ( 1 + THETA(1)*(COV -
 median))</p>
-<p>"3" or "hockey-stick": IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV -
-median)) IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))</p>
+<p>"3" or "hockey-stick": IF(COV.LE.median) PARCOV = ( 1 + THETA(1)<em>(COV -
+median)) IF(COV.GT.median) PARCOV = ( 1 + THETA(2)</em>(COV - median))</p>
 <p>"4" or "exponential": PARCOV= EXP(THETA(1)*(COV - median))</p>
 <p>"5" or "power": PARCOV= ((COV/median)**THETA(1))</p>
 <p>"power1": PARCOV= ((COV/median))</p>
@@ -221,7 +221,7 @@ median)) IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))</p>
 <p>"6" or "log-linear": PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='covariate_step_tibble.html'>covariate_step_tibble</a></code>, <code><a href='test_relations.html'>test_relations</a></code></p></div>
+    <div class='dont-index'><p><code><a href='covariate_step_tibble.html'>covariate_step_tibble()</a></code>, <code><a href='test_relations.html'>test_relations()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>

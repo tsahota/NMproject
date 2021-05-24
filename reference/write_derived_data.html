@@ -42,7 +42,7 @@
 <meta property="og:title" content="Write derived data file — write_derived_data" />
 <meta property="og:description" content="Will write a dataset and an .RDS version of it to the (by default)
 &quot;DerivedData&quot; directory.  The main benefit of the .RDS dataset is that
-functions like input_data and output_table can
+functions like input_data() and output_table() can
 use it for rapid reading speeding up overall function." />
 
 
@@ -125,7 +125,7 @@ use it for rapid reading speeding up overall function." />
     <div class="ref-description">
     <p>Will write a dataset and an .RDS version of it to the (by default)
 "DerivedData" directory.  The main benefit of the .RDS dataset is that
-functions like <code><a href='input_data.html'>input_data</a></code> and <code><a href='output_table.html'>output_table</a></code> can
+functions like <code><a href='input_data.html'>input_data()</a></code> and <code><a href='output_table.html'>output_table()</a></code> can
 use it for rapid reading speeding up overall function.</p>
     </div>
 
@@ -145,18 +145,18 @@ save to DerivedData directory.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional arguments to be passed to <code><a href='https://rdrr.io/r/utils/write.table.html'>write.csv</a></code>.</p></td>
+      <td><p>Additional arguments to be passed to <code><a href='https://rdrr.io/r/utils/write.table.html'>utils::write.csv()</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>If there is no "DerivedData" data directory and you are using a
-  different structure the argument <code>name</code> must be a (relative) path to
-  an existing directory where you want your NONMEM ready dataset to be stored.</p>
+different structure the argument <code>name</code> must be a (relative) path to
+an existing directory where you want your NONMEM ready dataset to be stored.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='read_derived_data.html'>read_derived_data</a></code>, <code><a href='input_data.html'>input_data</a></code></p></div>
+    <div class='dont-index'><p><code><a href='read_derived_data.html'>read_derived_data()</a></code>, <code><a href='input_data.html'>input_data()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
