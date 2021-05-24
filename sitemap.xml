@@ -10,10 +10,10 @@
     <loc>https://tsahota.github.io/NMproject/reference/NONMEM_version.html</loc>
   </url>
   <url>
-    <loc>https://tsahota.github.io/NMproject/reference/add_cov.html</loc>
+    <loc>https://tsahota.github.io/NMproject/reference/add_mixed_param.html</loc>
   </url>
   <url>
-    <loc>https://tsahota.github.io/NMproject/reference/add_mixed_param.html</loc>
+    <loc>https://tsahota.github.io/NMproject/reference/add_remove_covs.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/append_nonmem_var.html</loc>
@@ -323,9 +323,6 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/relative_path.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/reference/remove_cov.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/remove_parameter.html</loc>
