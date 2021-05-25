@@ -28,16 +28,13 @@
     <loc>https://tsahota.github.io/NMproject/reference/as_nm_list.html</loc>
   </url>
   <url>
-    <loc>https://tsahota.github.io/NMproject/reference/attach_code_library.html</loc>
-  </url>
-  <url>
     <loc>https://tsahota.github.io/NMproject/reference/based_on.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/bind_covariate_results.html</loc>
   </url>
   <url>
-    <loc>https://tsahota.github.io/NMproject/reference/block.html</loc>
+    <loc>https://tsahota.github.io/NMproject/reference/block-omega-sigma.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/boot_to_csv.html</loc>
@@ -407,9 +404,6 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/theta_nm2r.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/reference/unblock.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/uncomment.html</loc>

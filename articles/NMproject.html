@@ -76,7 +76,7 @@
       <h1 data-toc-skip>NMproject</h1>
                         <h4 class="author">Tarj Sahota</h4>
             
-            <h4 class="date">2021-05-24</h4>
+            <h4 class="date">2021-05-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/tsahota/NMproject/blob/master/vignettes/NMproject.Rmd"><code>vignettes/NMproject.Rmd</code></a></small>
       <div class="hidden name"><code>NMproject.Rmd</code></div>
@@ -372,7 +372,7 @@
 ## 5         5        1</code></pre>
 <p>Note that <code>io</code> is a list of a data.frame. This makes manipulation a bit more difficult, but referring to <code>io[[1]]</code> instead <code>io</code> will allows you to manipulate io with R’s standard data.frame manipulation functions. There are also built in functions like <code>block</code> and <code>unblock</code> (to create $OMEGA BLOCKS for correlated random effects).</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">io</span> <span class="op">&lt;-</span> <span class="va">io</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/block.html">block</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>  <span class="co">## make block out ETA 2 and 3</span>
+<code class="sourceCode R"><span class="va">io</span> <span class="op">&lt;-</span> <span class="va">io</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/block-omega-sigma.html">block</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>  <span class="co">## make block out ETA 2 and 3</span>
 
 <span class="co">## put modified io wit</span>
 <span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/init_theta.html">init_omega</a></span><span class="op">(</span><span class="va">io</span><span class="op">)</span>
@@ -386,7 +386,7 @@
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## for demo purposes we'll reverse the process with unblock()</span>
 <span class="va">io</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/init_theta.html">init_omega</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">io</span> <span class="op">&lt;-</span> <span class="va">io</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/unblock.html">unblock</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>
+<span class="va">io</span> <span class="op">&lt;-</span> <span class="va">io</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/block-omega-sigma.html">unblock</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>
 <span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/init_theta.html">init_omega</a></span><span class="op">(</span><span class="va">io</span><span class="op">)</span>
 <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"OMEGA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/m1`

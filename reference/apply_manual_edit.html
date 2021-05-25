@@ -40,7 +40,11 @@
 
 
 <meta property="og:title" content="Apply a manual edit patch — apply_manual_edit" />
-<meta property="og:description" content="Best to allow the &quot;manual edit&quot; RStudio addin to write this function for you" />
+<meta property="og:description" content="
+Best to allow the &quot;manual edit&quot; RStudio addin to write this function in
+your script for you.  After a tracked manual edit is performed, a patch file
+is created and saved in Models/patches.  This function applies the patch to
+the object." />
 
 
 
@@ -120,7 +124,11 @@
     </div>
 
     <div class="ref-description">
-    <p>Best to allow the "manual edit" RStudio addin to write this function for you</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Best to allow the <code>"manual edit"</code> RStudio addin to write this function in
+your script for you.  After a tracked manual edit is performed, a patch file
+is created and saved in <code>Models/patches</code>.  This function applies the patch to
+the object.</p>
     </div>
 
     <pre class="usage"><span class='fu'>apply_manual_edit</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>patch_name</span><span class='op'>)</span></pre>

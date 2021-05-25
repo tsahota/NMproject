@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Add run results into a covariate tibble — bind_covariate_results" />
-<meta property="og:description" content="Add run results into a covariate tibble" />
+<meta property="og:description" content="
+Extracts results from completed covariate runs and combines them into the covariate tibble()." />
 
 
 
@@ -120,7 +121,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Add run results into a covariate tibble</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Extracts results from completed covariate runs and combines them into the covariate <code>tibble()</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>bind_covariate_results</span><span class='op'>(</span><span class='va'>dsc</span>, nm_col <span class='op'>=</span> <span class='st'>"m"</span>, parameters <span class='op'>=</span> <span class='st'>"new"</span><span class='op'>)</span></pre>
@@ -130,15 +132,15 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>dsc</th>
-      <td><p>a covariate tibble (see <code><a href='covariate_step_tibble.html'>covariate_step_tibble()</a></code>)</p></td>
+      <td><p>A covariate tibble (see <code><a href='covariate_step_tibble.html'>covariate_step_tibble()</a></code>).</p></td>
     </tr>
     <tr>
       <th>nm_col</th>
-      <td><p>character (default = "m"). name of column to store nm objects</p></td>
+      <td><p>Character (default = "m"). Name of column to store nm objects.</p></td>
     </tr>
     <tr>
       <th>parameters</th>
-      <td><p>character (default = "new").  Passed to <code><a href='summary_wide.html'>summary_wide()</a></code></p></td>
+      <td><p>Character (default = "new").  Passed to <code><a href='summary_wide.html'>summary_wide()</a></code>.</p></td>
     </tr>
     </table>
 
@@ -157,6 +159,8 @@
 
 <span class='co'>## run all models greedily</span>
 <span class='va'>dsm1</span><span class='op'>$</span><span class='va'>m</span> <span class='op'>&lt;-</span> <span class='va'>dsm1</span><span class='op'>$</span><span class='va'>m</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='run_nm.html'>run_nm</a></span><span class='op'>(</span><span class='op'>)</span>
+
+<span class='fu'><a href='wait_finish.html'>wait_finish</a></span><span class='op'>(</span><span class='va'>dsm1</span><span class='op'>$</span><span class='va'>m</span><span class='op'>)</span>
 
 <span class='co'>## extract results and put into tibble</span>
 <span class='va'>dsm1</span> <span class='op'>&lt;-</span> <span class='va'>dsm1</span> <span class='op'>%&gt;%</span> <span class='fu'>bind_covariate_results</span><span class='op'>(</span><span class='op'>)</span>

@@ -40,9 +40,12 @@
 
 
 <meta property="og:title" content="Include NONMEM variables in output table — append_nonmem_var" />
-<meta property="og:description" content="Experimental function - designed to be used in situation where you don't want
-to rerun NONMEM, but need a variable in the dataset that wasn't specified in
-$TABLE" />
+<meta property="og:description" content="
+This is designed to be used in situations where you don't want to rerun
+NONMEM, but need a variable defined in the control file.  This will parse the
+$PK/`$PRED`` and compute it as an additional row in R.  Safest way is to
+just rerun the model with the variable in $TABLE, but this is for those who
+are too time constrained.  It is advisable to QC the output." />
 
 
 
@@ -122,9 +125,12 @@ $TABLE" />
     </div>
 
     <div class="ref-description">
-    <p>Experimental function - designed to be used in situation where you don't want
-to rerun NONMEM, but need a variable in the dataset that wasn't specified in
-$TABLE</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
+<p>This is designed to be used in situations where you don't want to rerun
+NONMEM, but need a variable defined in the control file.  This will parse the
+<code>$PK</code>/`$PRED`` and compute it as an additional row in R.  Safest way is to
+just rerun the model with the variable in $TABLE, but this is for those who
+are too time constrained.  It is advisable to QC the output.</p>
     </div>
 
     <pre class="usage"><span class='fu'>append_nonmem_var</span><span class='op'>(</span><span class='va'>output_table</span>, <span class='va'>r</span>, <span class='va'>var</span><span class='op'>)</span></pre>
@@ -134,15 +140,15 @@ $TABLE</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>output_table</th>
-      <td><p>output from output_table()</p></td>
+      <td><p>Output from <code><a href='output_table.html'>output_table()</a></code>.</p></td>
     </tr>
     <tr>
       <th>r</th>
-      <td><p>nm object</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     <tr>
       <th>var</th>
-      <td><p>character. name of variable to compute (needs to be defined in
+      <td><p>Character. Name of variable to extract (needs to be defined in
 $PK/$PRED)</p></td>
     </tr>
     </table>

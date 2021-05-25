@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fill $INPUT — fill_input • NMproject</title>
+<title>Create or remove $OMEGA/$SIGMA BLOCKs — block-omega-sigma • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="Fill $INPUT — fill_input" />
+<meta property="og:title" content="Create or remove $OMEGA/$SIGMA BLOCKs — block-omega-sigma" />
 <meta property="og:description" content="
-Uses dataset to automatically fill $INPUT in control file." />
+Manipulate $OMEGA (and $SIGMA) BLOCKs to introduce or remove correlations." />
 
 
 
@@ -115,53 +115,59 @@ Uses dataset to automatically fill $INPUT in control file." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fill $INPUT</h1>
+    <h1>Create or remove $OMEGA/$SIGMA BLOCKs</h1>
     <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/nm_object.R'><code>R/nm_object.R</code></a></small>
-    <div class="hidden name"><code>fill_input.Rd</code></div>
+    <div class="hidden name"><code>block-omega-sigma.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
-<p>Uses dataset to automatically fill $INPUT in control file.</p>
+<p>Manipulate $OMEGA (and $SIGMA) BLOCKs to introduce or remove correlations.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>fill_input</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>block</span><span class='op'>(</span><span class='va'>iomega</span>, eta_numbers <span class='op'>=</span> <span class='cn'>NA</span>, diag_init <span class='op'>=</span> <span class='fl'>0.01</span><span class='op'>)</span>
+
+<span class='fu'>unblock</span><span class='op'>(</span><span class='va'>iomega</span>, <span class='va'>eta_numbers</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>m</th>
-      <td><p>nm object</p></td>
+      <th>iomega</th>
+      <td><p>Tibble output from <code><a href='init_theta.html'>init_omega()</a></code> or <code><a href='init_theta.html'>init_sigma()</a></code></p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>either keep, drop, rename</p></td>
+      <th>eta_numbers</th>
+      <td><p>Numeric vector.  ETA numbers to put into a block or
+unblock for <code>block()</code> and <code>unblock()</code>, respectively. Must be contiguous</p></td>
+    </tr>
+    <tr>
+      <th>diag_init</th>
+      <td><p>numeric. Default value for off diagonal elements</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>If a new dataset with different columns is assigned to an <code>nm</code>
-object, <code>$INPUT</code> will not be correct and so it may necessary to apply
-<code>fill_input()</code> again.</p>
+    <div class='dont-index'><p><code><a href='init_theta.html'>init_theta()</a></code>, <code><a href='init_theta.html'>init_omega()</a></code>, <code><a href='init_theta.html'>init_sigma()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-
- <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>fill_input</span><span class='op'>(</span><span class='op'>)</span> 
- <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"INPUT"</span><span class='op'>)</span> <span class='co'>## view $INPUT</span>
-
- <span class='co'>## following will will drop the "RATE" column</span>
- <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>fill_input</span><span class='op'>(</span>drop <span class='op'>=</span> <span class='st'>"RATE"</span><span class='op'>)</span>
- <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"INPUT"</span><span class='op'>)</span>
-
- <span class='co'>## following will rename "DATE" to be "DAT0"</span>
- <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>fill_input</span><span class='op'>(</span>rename <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"DAT0"</span> <span class='op'>=</span> <span class='st'>"DATE"</span><span class='op'>)</span><span class='op'>)</span>
- <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"INPUT"</span><span class='op'>)</span> <span class='co'>## view $INPUT</span>
-
-
+    <pre class="examples"><div class='input'>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>io</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='init_theta.html'>init_omega</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>io</span> <span class='op'>&lt;-</span> <span class='va'>io</span> <span class='op'>%&gt;%</span> <span class='fu'>block</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='init_theta.html'>init_omega</a></span><span class='op'>(</span><span class='va'>io</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"OMEGA"</span><span class='op'>)</span> <span class='co'>## to display $OMEGA</span>
 <span class='op'>}</span>
+
+
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>io</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='init_theta.html'>init_omega</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>io</span> <span class='op'>&lt;-</span> <span class='va'>io</span> <span class='op'>%&gt;%</span> <span class='fu'>unblock</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='init_theta.html'>init_omega</a></span><span class='op'>(</span><span class='va'>io</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"OMEGA"</span><span class='op'>)</span> <span class='co'>## to display $OMEGA</span>
+<span class='op'>}</span>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

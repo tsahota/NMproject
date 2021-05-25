@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Make child nm object from parent — child" />
-<meta property="og:description" content="Child objects inherit attributes of parent but with a new run_id. The control
+<meta property="og:description" content="
+Child objects inherit attributes of parent but with a new run_id. The control
 file will be inherited too with $TABLEs updated" />
 
 
@@ -121,7 +122,8 @@ file will be inherited too with $TABLEs updated" />
     </div>
 
     <div class="ref-description">
-    <p>Child objects inherit attributes of parent but with a new run_id. The control
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Child objects inherit attributes of parent but with a new run_id. The control
 file will be inherited too with $TABLEs updated</p>
     </div>
 
@@ -138,40 +140,40 @@ file will be inherited too with $TABLEs updated</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>m</th>
-      <td><p>parent nm object</p></td>
+      <td><p>Parent nm object.</p></td>
     </tr>
     <tr>
       <th>run_id</th>
-      <td><p>character.  New run id to assign to child object</p></td>
+      <td><p>Character.  New run id to assign to child object.</p></td>
     </tr>
     <tr>
       <th>type</th>
-      <td><p>character (default = "execute"). type of child object</p></td>
+      <td><p>Character (default = "execute"). type of child object.</p></td>
     </tr>
     <tr>
       <th>parent</th>
-      <td><p>optional (default = nm(NA)) nm object. Parent object will by
+      <td><p>Optional nm object (default = nm(NA)) . Parent object will by
 default be <code>m</code>, but this argument will force parent to be a different
-object</p></td>
+object.</p></td>
     </tr>
     <tr>
       <th>silent</th>
-      <td><p>logical (default = FALSE). Should warn if conflicts detected</p></td>
+      <td><p>Logical (default = FALSE). Should warn if conflicts detected.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Specifying <code>parent</code> will run the function <code>change_parent</code> to force
-parent to be different from <code>m</code>.  This is useful in piping when a parent
-object is modified prior to being used in the child object.</p>
+    <p>Specifying <code>parent</code> will force parent to be different from <code>m</code>. This
+is useful in piping when a parent object is modified prior to being used in
+the child object.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
 <span class='va'>m2</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>child</span><span class='op'>(</span><span class='st'>"m2"</span><span class='op'>)</span>
 
-<span class='co'>## use parent object to ensure child object retain </span>
+<span class='co'>## use parent object to ensure child object retain</span>
 <span class='co'>## correct parent-child structure</span>
 <span class='va'>m2</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='va'>c</span>
   <span class='fu'><a href='update_parameters.html'>update_parameters</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>  <span class='co'>## modifying parent object</span>
