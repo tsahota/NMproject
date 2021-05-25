@@ -350,13 +350,19 @@ ctl_contents_simple <- function(m, ctl_ob, ...){
   ctl_contents(m, ctl_ob, update_numbering = FALSE, update_dollar_data = FALSE, ...)
 }
 
-#' Add a prior ctl file contents to object
+#' Use file to set control file contents in nm object
 #'
-#' @param m nm object
-#' @param ctl_ob path to control file
-#' @param update_numbering logical. Should table numbers and author fields be updated
-#' @param update_dollar_data logical. Should $DATA in control file be updated
-#' @param ... additional arguments
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#'
+#' @param m An nm object.
+#' @param ctl_ob Path to control file.
+#' @param update_numbering Logical. Should table numbers and author fields be updated.
+#' @param update_dollar_data Logical. Should $DATA in control file be updated.
+#' @param ... Additional arguments.
+#' 
+#' @keywords internal
 #' 
 #' @export
 

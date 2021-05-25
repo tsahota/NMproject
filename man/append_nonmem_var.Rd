@@ -7,15 +7,19 @@
 append_nonmem_var(output_table, r, var)
 }
 \arguments{
-\item{output_table}{output from output_table()}
+\item{output_table}{Output from \code{\link[=output_table]{output_table()}}.}
 
-\item{r}{nm object}
+\item{r}{An nm object.}
 
-\item{var}{character. name of variable to compute (needs to be defined in
+\item{var}{Character. Name of variable to extract (needs to be defined in
 $PK/$PRED)}
 }
 \description{
-Experimental function - designed to be used in situation where you don't want
-to rerun NONMEM, but need a variable in the dataset that wasn't specified in
-$TABLE
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+This is designed to be used in situations where you don't want to rerun
+NONMEM, but need a variable defined in the control file.  This will parse the
+\verb{$PK}/`$PRED`` and compute it as an additional row in R.  Safest way is to
+just rerun the model with the variable in $TABLE, but this is for those who
+are too time constrained.  It is advisable to QC the output.
 }

@@ -208,27 +208,31 @@ is.na.nm_list <- function(x) is.na(run_id(x))
 
 #' Make child nm object from parent
 #'
+#' @description
+#'
+#' `r lifecycle::badge("stable")`
+#'
 #' Child objects inherit attributes of parent but with a new run_id. The control
 #' file will be inherited too with $TABLEs updated
 #'
-#' @param m parent nm object
-#' @param run_id character.  New run id to assign to child object
-#' @param type character (default = "execute"). type of child object
-#' @param parent optional (default = nm(NA)) nm object. Parent object will by
+#' @param m Parent nm object.
+#' @param run_id Character.  New run id to assign to child object.
+#' @param type Character (default = "execute"). type of child object.
+#' @param parent Optional nm object (default = nm(NA)) . Parent object will by
 #'   default be `m`, but this argument will force parent to be a different
-#'   object
-#' @param silent logical (default = FALSE). Should warn if conflicts detected
+#'   object.
+#' @param silent Logical (default = FALSE). Should warn if conflicts detected.
 #'
-#' @details Specifying `parent` will run the function `change_parent` to force
-#' parent to be different from `m`.  This is useful in piping when a parent
-#' object is modified prior to being used in the child object.
+#' @details Specifying `parent` will force parent to be different from `m`. This
+#'   is useful in piping when a parent object is modified prior to being used in
+#'   the child object.
 #'
 #' @examples
 #' \dontrun{
 #'
 #' m2 <- m1 %>% child("m2")
 #'
-#' ## use parent object to ensure child object retain 
+#' ## use parent object to ensure child object retain
 #' ## correct parent-child structure
 #' m2 <- m1 %>% c
 #'   update_parameters() %>%  ## modifying parent object
@@ -314,17 +318,21 @@ increment_run_id <- function(run_id){
 }
 
 #' Change parent object
-#' 
-#' Useful when create a `child()` of a modified run
-#' 
+#'
+#' When a `child()` has been created by a modified parent sometimes adoption is
+#' the answer.  This will force parenthood to the specified object.
+#'
 #' @param m nm object
 #' @param mparent new parent object to child
 #' @param silent logical (default = TRUE). Should warn if conflicts detected
-#' @export
+#'
+#' @seealso [child()]
+#'
+#' @keywords internal
 change_parent <- function(m, mparent, silent = TRUE){
   UseMethod("change_parent")
 }
-#' @export
+
 change_parent.nm_generic <- function(m, mparent, silent = TRUE){
   
   m <- m %>% parent_run_id(run_id(mparent))
@@ -346,7 +354,7 @@ change_parent.nm_generic <- function(m, mparent, silent = TRUE){
   
   m
 }
-#' @export
+
 change_parent.nm_list <- Vectorize_nm_list(change_parent.nm_generic, SIMPLIFY = FALSE)
 
 #' @export
@@ -738,11 +746,15 @@ text.nm_list <- Vectorize_nm_list(text.nm_generic, SIMPLIFY = FALSE, vectorize.a
 
 #' Get/set path to dataset
 #' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
 #' Mainly used to associate a dataset with an nm object.
 #' Requires ctl_contents to already be specified.
 #' 
-#' @param m nm object
-#' @param text (optional) character. Path to input dataset
+#' @param m An nm object.
+#' @param text Optional character. Path to input dataset.
 #' 
 #' @return if text is not specified, will return the data_path name
 #'  otherwise will set data_path to the text provided
@@ -750,14 +762,9 @@ text.nm_list <- Vectorize_nm_list(text.nm_generic, SIMPLIFY = FALSE, vectorize.a
 #' @examples 
 #' \dontrun{
 #' 
-#' ## The following assumes a ctl file exists in the staging area:
-#' ##  staging/Models/ADVAN2.mod
-#' ## and a dataset
-#' ##  DerivedData/data.csv
-#' 
-#' m1 <- nm(run_id = "m1") %>%
-#'       based_on("staging/Models/ADVAN2.mod") %>%
-#'       data_path("DerivedData/data.csv")
+#' m1 <- new_nm(run_id = "m1",
+#'              based_on = "staging/Models/ADVAN2.mod",
+#'              data_path = "DerivedData/data.csv") %>%
 #'       
 #' data_path(m1)  ## display data name
 #' 
@@ -818,7 +825,8 @@ fill_dollar_data <- function(m, data_name){
 #' @examples
 #' \dontrun{
 #'
-#'  m1 <- m1 %>% fill_input() m1 %>% dollar("INPUT") ## view $INPUT
+#'  m1 <- m1 %>% fill_input() 
+#'  m1 %>% dollar("INPUT") ## view $INPUT
 #'
 #'  ## following will will drop the "RATE" column
 #'  m1 <- m1 %>% fill_input(drop = "RATE")
@@ -1305,8 +1313,8 @@ grab_variables <- function(m, pattern){
 #' @examples 
 #' \dontrun{
 #' 
-#' m1 <- nm(run_id = "m1") %>%
-#'   based_on("staging/Models/run1.mod")
+#' m1 <- new_nm(run_id = "m1",
+#'              based_on = "staging/Models/run1.mod")
 #' 
 #' m2 <- m1 %>% child(run_id = "m2") %>%
 #'   subroutine(advan = 2, trans = 2)
@@ -2281,17 +2289,22 @@ update_variable_in_text_numbers <- function(m, before_number, after_number){
   m
 }
 
-
-#' Create $OMEGA/$SIGMA BLOCK from init_omega and init_sigma output
+#' @name block-omega-sigma
+#' @rdname block-omega-sigma
+#' @title Create or remove $OMEGA/$SIGMA BLOCKs
 #'
-#' @param iomega tibble.  Output from [init_omega()] and
-#'   [init_sigma()]
-#' @param eta_numbers numeric vector.  ETA numbers to put into a block. Must be
-#'   contiguous
+#' @description
+#'
+#' `r lifecycle::badge("stable")`
+#'
+#' Manipulate $OMEGA (and $SIGMA) BLOCKs to introduce or remove correlations.
+#'
+#' @param iomega Tibble output from [init_omega()] or [init_sigma()]
+#' @param eta_numbers Numeric vector.  ETA numbers to put into a block or
+#'   unblock for `block()` and `unblock()`, respectively. Must be contiguous
 #' @param diag_init numeric. Default value for off diagonal elements
 #'
-#' @seealso [unblock()], [init_theta()],
-#'   [init_omega()], [init_sigma()]
+#' @seealso [init_theta()], [init_omega()], [init_sigma()]
 #'
 #' @examples
 #'
@@ -2396,12 +2409,7 @@ block <- function(iomega,
 
 block <- Vectorize(block, vectorize.args = "iomega", SIMPLIFY = FALSE)
 
-#' Remove $OMEGA/$SIGMA BLOCK from init_omega and init_sigma output
-#' 
-#' @param iomega tibble.  Output from init_omega() and init_sigma()
-#' @param eta_numbers numeric vector.  ETA numbers to unblock. Must be contiguous
-#' 
-#' @seealso [block()], [init_theta()]
+#' @rdname block-omega-sigma
 #' 
 #' @examples 
 #' 

@@ -25,8 +25,8 @@ Displaying diffs provides a means of manually checking.
 \examples{
 \dontrun{
 
-m1 <- nm(run_id = "m1") \%>\%
-  based_on("staging/Models/run1.mod")
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/run1.mod")
 
 m2 <- m1 \%>\% child(run_id = "m2") \%>\%
   subroutine(advan = 2, trans = 2)

@@ -7,14 +7,16 @@
 bind_covariate_results(dsc, nm_col = "m", parameters = "new")
 }
 \arguments{
-\item{dsc}{a covariate tibble (see \code{\link[=covariate_step_tibble]{covariate_step_tibble()}})}
+\item{dsc}{A covariate tibble (see \code{\link[=covariate_step_tibble]{covariate_step_tibble()}}).}
 
-\item{nm_col}{character (default = "m"). name of column to store nm objects}
+\item{nm_col}{Character (default = "m"). Name of column to store nm objects.}
 
-\item{parameters}{character (default = "new").  Passed to \code{\link[=summary_wide]{summary_wide()}}}
+\item{parameters}{Character (default = "new").  Passed to \code{\link[=summary_wide]{summary_wide()}}.}
 }
 \description{
-Add run results into a covariate tibble
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Extracts results from completed covariate runs and combines them into the covariate \code{\link[=tibble]{tibble()}}.
 }
 \examples{
 \dontrun{
@@ -27,6 +29,8 @@ dsm1 <- m1 \%>\% covariate_step_tibble(
 
 ## run all models greedily
 dsm1$m <- dsm1$m \%>\% run_nm()
+
+wait_finish(dsm1$m)
 
 ## extract results and put into tibble
 dsm1 <- dsm1 \%>\% bind_covariate_results()

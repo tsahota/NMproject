@@ -24,7 +24,8 @@ object, \verb{$INPUT} will not be correct and so it may necessary to apply
 \examples{
 \dontrun{
 
- m1 <- m1 \%>\% fill_input() m1 \%>\% dollar("INPUT") ## view $INPUT
+ m1 <- m1 \%>\% fill_input() 
+ m1 \%>\% dollar("INPUT") ## view $INPUT
 
  ## following will will drop the "RATE" column
  m1 <- m1 \%>\% fill_input(drop = "RATE")

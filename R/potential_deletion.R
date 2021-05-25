@@ -1,5 +1,9 @@
 if(0){
 
+  attach_code_library <- function(path) {
+    options(code_library_path = unique(c(path, getOption("code_library_path"))))
+  }
+  
   ctl_list.nmexecute <- function(r){
     ctl <- ctl_character(r)
     file_name <- attributes(ctl)$file_name

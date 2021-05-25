@@ -2,21 +2,22 @@
 % Please edit documentation in R/nm_gettersetters.R
 \name{based_on}
 \alias{based_on}
-\title{Add a prior ctl file contents to object}
+\title{Use file to set control file contents in nm object}
 \usage{
 based_on(m, ctl_ob, update_numbering = TRUE, update_dollar_data = TRUE, ...)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{ctl_ob}{path to control file}
+\item{ctl_ob}{Path to control file.}
 
-\item{update_numbering}{logical. Should table numbers and author fields be updated}
+\item{update_numbering}{Logical. Should table numbers and author fields be updated.}
 
-\item{update_dollar_data}{logical. Should $DATA in control file be updated}
+\item{update_dollar_data}{Logical. Should $DATA in control file be updated.}
 
-\item{...}{additional arguments}
+\item{...}{Additional arguments.}
 }
 \description{
-Add a prior ctl file contents to object
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
+\keyword{internal}

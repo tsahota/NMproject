@@ -4,7 +4,14 @@ NULL
 
 #' Apply a manual edit patch
 #'
-#' Best to allow the "manual edit" RStudio addin to write this function for you
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Best to allow the `"manual edit"` RStudio addin to write this function in
+#' your script for you.  After a tracked manual edit is performed, a patch file
+#' is created and saved in `Models/patches`.  This function applies the patch to
+#' the object.
 #'
 #' @param m nm object
 #' @param patch_name character name of patch

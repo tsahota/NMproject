@@ -14,5 +14,10 @@ change_parent(m, mparent, silent = TRUE)
 \item{silent}{logical (default = TRUE). Should warn if conflicts detected}
 }
 \description{
-Useful when create a \code{child()} of a modified run
+When a \code{child()} has been created by a modified parent sometimes adoption is
+the answer.  This will force parenthood to the specified object.
 }
+\seealso{
+\code{\link[=child]{child()}}
+}
+\keyword{internal}

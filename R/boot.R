@@ -1,16 +1,16 @@
 #' Save bootstrap datasets to disk
+#'
+#' Used by `make_boot_datasets()`, run once per bootstrap sample
 #' 
-#' Internal function used by `make_boot_datasets()`, 
-#'   run once per bootstrap sample
+#' @param d Dataset to merge.
+#' @param rsplit Splits object from rsample.
+#' @param data_name Name of dataset.
+#' @param data_folder Path to bootstrap datasets.
+#' @param id_var Character (default = "ID"). Name of ID column.
+#' @param oob Logical.  Should out of bag dataset be written (default = FALSE).
+#' @param overwrite Should datasets be overwritten.
 #' 
-#' @param d dataset to merge
-#' @param rsplit splits object from rsample
-#' @param data_name name of dataset
-#' @param data_folder path to bootstrap datasets
-#' @param id_var character (default = "ID"). Name of ID column
-#' @param oob logical.  Should out of bag dataset be written (default = FALSE)
-#' @param overwrite should datasets be overwritten
-#' 
+#' @keywords internal
 boot_to_csv <- function(d,
                         rsplit, 
                         data_name,

@@ -473,16 +473,6 @@ code_library <- function(extn = NULL, fields = "Description", viewer = TRUE, sil
 #' @export
 code_library_path <- function() getOption("code_library_path")
 
-#' Attach code library
-#'
-#' Attaches a path(s) to to the code library search path
-#'
-#' @param path character vector with paths to attach to
-
-attach_code_library <- function(path) {
-  options(code_library_path = unique(c(path, getOption("code_library_path"))))
-}
-
 short_path <- function(x) {
   split_paths <- strsplit(x, .Platform$file.sep)  #[[1]]
   short_paths <- lapply(split_paths, function(split_path) {

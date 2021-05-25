@@ -12,7 +12,12 @@ apply_manual_edit(m, patch_name)
 \item{patch_name}{character name of patch}
 }
 \description{
-Best to allow the "manual edit" RStudio addin to write this function for you
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Best to allow the \code{"manual edit"} RStudio addin to write this function in
+your script for you.  After a tracked manual edit is performed, a patch file
+is created and saved in \code{Models/patches}.  This function applies the patch to
+the object.
 }
 \details{
 Generally best to to apply patches before automatic edits and

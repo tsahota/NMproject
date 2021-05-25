@@ -183,9 +183,15 @@ covariate_step_tibble <- function(base, run_id, run_in = nm_default_dir("models"
 
 #' Add run results into a covariate tibble
 #' 
-#' @param dsc a covariate tibble (see [covariate_step_tibble()])
-#' @param nm_col character (default = "m"). name of column to store nm objects
-#' @param parameters character (default = "new").  Passed to [summary_wide()]
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Extracts results from completed covariate runs and combines them into the covariate [tibble()].
+#' 
+#' @param dsc A covariate tibble (see [covariate_step_tibble()]).
+#' @param nm_col Character (default = "m"). Name of column to store nm objects.
+#' @param parameters Character (default = "new").  Passed to [summary_wide()].
 #' 
 #' @seealso [covariate_step_tibble()]
 #' 
@@ -200,6 +206,8 @@ covariate_step_tibble <- function(base, run_id, run_in = nm_default_dir("models"
 #' 
 #' ## run all models greedily
 #' dsm1$m <- dsm1$m %>% run_nm()
+#' 
+#' wait_finish(dsm1$m)
 #' 
 #' ## extract results and put into tibble
 #' dsm1 <- dsm1 %>% bind_covariate_results()

@@ -13,33 +13,35 @@ child(
 )
 }
 \arguments{
-\item{m}{parent nm object}
+\item{m}{Parent nm object.}
 
-\item{run_id}{character.  New run id to assign to child object}
+\item{run_id}{Character.  New run id to assign to child object.}
 
-\item{type}{character (default = "execute"). type of child object}
+\item{type}{Character (default = "execute"). type of child object.}
 
-\item{parent}{optional (default = nm(NA)) nm object. Parent object will by
+\item{parent}{Optional nm object (default = nm(NA)) . Parent object will by
 default be \code{m}, but this argument will force parent to be a different
-object}
+object.}
 
-\item{silent}{logical (default = FALSE). Should warn if conflicts detected}
+\item{silent}{Logical (default = FALSE). Should warn if conflicts detected.}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Child objects inherit attributes of parent but with a new run_id. The control
 file will be inherited too with $TABLEs updated
 }
 \details{
-Specifying \code{parent} will run the function \code{change_parent} to force
-parent to be different from \code{m}.  This is useful in piping when a parent
-object is modified prior to being used in the child object.
+Specifying \code{parent} will force parent to be different from \code{m}. This
+is useful in piping when a parent object is modified prior to being used in
+the child object.
 }
 \examples{
 \dontrun{
 
 m2 <- m1 \%>\% child("m2")
 
-## use parent object to ensure child object retain 
+## use parent object to ensure child object retain
 ## correct parent-child structure
 m2 <- m1 \%>\% c
   update_parameters() \%>\%  ## modifying parent object

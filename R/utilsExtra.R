@@ -21,8 +21,12 @@ is_nm_list <- function(x){
 }
 
 #' Coerce object into nm_list
-#' 
-#' @param m nm object
+#'
+#' This may be relegated to a back end function soon.  Create an nm_list from an
+#' nm_generic or list or other object coercible into an nm_list.
+#'
+#' @param m An object coercible into an nm object
+#' @keywords internal
 #' @export
 as_nm_list <- function(m){
   UseMethod("as_nm_list")
@@ -60,11 +64,11 @@ is_nm_generic <- function(x){
 
 #' Convert nm object to nm_generic
 #'
-#' Mainly an internal function to be used where methods for nm_list don't exist
-#' or aren't appropriate>
+#' Used where methods for nm_list don't exist or aren't appropriate.
 #'
 #' @param m An nm object.
 #'
+#' @keywords internal
 #' @export
 as_nm_generic <- function(m){
   UseMethod("as_nm_generic")

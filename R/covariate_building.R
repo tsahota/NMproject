@@ -545,13 +545,19 @@ cov_forest_plot <- function(d){
 
 #' Include NONMEM variables in output table
 #'
-#' Experimental function - designed to be used in situation where you don't want
-#' to rerun NONMEM, but need a variable in the dataset that wasn't specified in
-#' $TABLE
+#' @description 
+#' 
+#' `r lifecycle::badge("experimental")`
 #'
-#' @param output_table output from output_table()
-#' @param r nm object
-#' @param var character. name of variable to compute (needs to be defined in
+#' This is designed to be used in situations where you don't want to rerun
+#' NONMEM, but need a variable defined in the control file.  This will parse the
+#' `$PK`/`$PRED`` and compute it as an additional row in R.  Safest way is to
+#' just rerun the model with the variable in $TABLE, but this is for those who
+#' are too time constrained.  It is advisable to QC the output.
+#'
+#' @param output_table Output from [output_table()].
+#' @param r An nm object.
+#' @param var Character. Name of variable to extract (needs to be defined in
 #'   $PK/$PRED)
 #'
 #' @export

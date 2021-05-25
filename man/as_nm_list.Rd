@@ -7,8 +7,10 @@
 as_nm_list(m)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An object coercible into an nm object}
 }
 \description{
-Coerce object into nm_list
+This may be relegated to a back end function soon.  Create an nm_list from an
+nm_generic or list or other object coercible into an nm_list.
 }
+\keyword{internal}

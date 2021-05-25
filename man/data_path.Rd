@@ -7,29 +7,26 @@
 data_path(m, text)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{text}{(optional) character. Path to input dataset}
+\item{text}{Optional character. Path to input dataset.}
 }
 \value{
 if text is not specified, will return the data_path name
 otherwise will set data_path to the text provided
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Mainly used to associate a dataset with an nm object.
 Requires ctl_contents to already be specified.
 }
 \examples{
 \dontrun{
 
-## The following assumes a ctl file exists in the staging area:
-##  staging/Models/ADVAN2.mod
-## and a dataset
-##  DerivedData/data.csv
-
-m1 <- nm(run_id = "m1") \%>\%
-      based_on("staging/Models/ADVAN2.mod") \%>\%
-      data_path("DerivedData/data.csv")
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv") \%>\%
       
 data_path(m1)  ## display data name
 

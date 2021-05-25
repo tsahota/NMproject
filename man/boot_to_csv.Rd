@@ -15,21 +15,21 @@ boot_to_csv(
 )
 }
 \arguments{
-\item{d}{dataset to merge}
+\item{d}{Dataset to merge.}
 
-\item{rsplit}{splits object from rsample}
+\item{rsplit}{Splits object from rsample.}
 
-\item{data_name}{name of dataset}
+\item{data_name}{Name of dataset.}
 
-\item{data_folder}{path to bootstrap datasets}
+\item{data_folder}{Path to bootstrap datasets.}
 
-\item{id_var}{character (default = "ID"). Name of ID column}
+\item{id_var}{Character (default = "ID"). Name of ID column.}
 
-\item{oob}{logical.  Should out of bag dataset be written (default = FALSE)}
+\item{oob}{Logical.  Should out of bag dataset be written (default = FALSE).}
 
-\item{overwrite}{should datasets be overwritten}
+\item{overwrite}{Should datasets be overwritten.}
 }
 \description{
-Internal function used by \code{make_boot_datasets()},
-run once per bootstrap sample
+Used by \code{make_boot_datasets()}, run once per bootstrap sample
 }
+\keyword{internal}
