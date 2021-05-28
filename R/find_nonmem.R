@@ -117,15 +117,15 @@ NONMEM_version <- function(){
   
   if(length(psn_nm_version) == 0) psn_nm_version <- "not found"
   
-  nm_compiler_version <- system_nm("gfortran --version", intern = TRUE)[1]
+  nm_compiler_version <- system_nm("gfortran --version", intern = TRUE, ignore.stderr = TRUE, wait = TRUE)[1]
   if(length(nm_compiler_version) == 0) {
     nm_compiler_version <- "not found"
   }
   
-  psn_version <- system_nm("psn --version", intern = TRUE)
+  psn_version <- system_nm("psn --version", intern = TRUE, ignore.stderr = TRUE, wait = TRUE)
   if(length(psn_version) == 0) psn_version <- "not found"
   
-  perl_version <- system_nm("perl --version", intern = TRUE)
+  perl_version <- system_nm("perl --version", intern = TRUE, ignore.stderr = TRUE, wait = TRUE)
   perl_version <- perl_version[grepl("This is", perl_version)]
   perl_version <- gsub("^.*\\((v.*)\\).*$","\\1",perl_version)
   if(length(perl_version) == 0) perl_version <- "not found"
