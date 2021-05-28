@@ -40,9 +40,17 @@
 
 
 <meta property="og:title" content="Make decision point — decision" />
-<meta property="og:description" content="Formalise process of decision making.  Creates a decision point in the
-workflow where subsequent parts of your workflow depend on this decision, e.g. if you compare a 1 compartment and 2 compartment and decide based on the OFV and goodness of fit plots that the 1 compartment model is better and subsequent steps will build off of this, it is worth putting a decision point in your code so that if you are to rerun the workflow with a new/updated dataset, the decision can be revisted prior to moving onto the parts of the workflow that depend on the 1 compartment decision.  The function requests inputs (values and files) that you base a
-decision on and stop for users to remake decision if inputs change" />
+<meta property="og:description" content="
+Formalise process of decision making.  Creates a decision point in the
+workflow where subsequent parts of your workflow depend on this decision,
+e.g. if you compare a 1 compartment and 2 compartment and decide based on the
+OFV and goodness of fit plots that the 1 compartment model is better and
+subsequent steps will build off of this, it is worth putting a decision point
+in your code so that if you are to rerun the workflow with a new/updated
+dataset, the decision can be revisted prior to moving onto the parts of the
+workflow that depend on the 1 compartment decision.  The function requests
+inputs (values and files) that you base a decision on and stop for users
+to remake decision if inputs change." />
 
 
 
@@ -122,9 +130,17 @@ decision on and stop for users to remake decision if inputs change" />
     </div>
 
     <div class="ref-description">
-    <p>Formalise process of decision making.  Creates a decision point in the
-workflow where subsequent parts of your workflow depend on this decision, e.g. if you compare a 1 compartment and 2 compartment and decide based on the OFV and goodness of fit plots that the 1 compartment model is better and subsequent steps will build off of this, it is worth putting a decision point in your code so that if you are to rerun the workflow with a new/updated dataset, the decision can be revisted prior to moving onto the parts of the workflow that depend on the 1 compartment decision.  The function requests inputs (<code>values</code> and <code>files</code>) that you base a
-decision on and stop for users to remake decision if inputs change</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
+<p>Formalise process of decision making.  Creates a decision point in the
+workflow where subsequent parts of your workflow depend on this decision,
+e.g. if you compare a 1 compartment and 2 compartment and decide based on the
+OFV and goodness of fit plots that the 1 compartment model is better and
+subsequent steps will build off of this, it is worth putting a decision point
+in your code so that if you are to rerun the workflow with a new/updated
+dataset, the decision can be revisted prior to moving onto the parts of the
+workflow that depend on the 1 compartment decision.  The function requests
+inputs (<code>values</code> and <code>files</code>) that you base a decision on and stop for users
+to remake decision if inputs change.</p>
     </div>
 
     <pre class="usage"><span class='fu'>decision</span><span class='op'>(</span>
@@ -140,45 +156,60 @@ decision on and stop for users to remake decision if inputs change</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>inputs</th>
-      <td><p>(optional) non file names upon which decision depends</p></td>
+      <td><p>Optional non file names upon which decision depends.</p></td>
     </tr>
     <tr>
       <th>file_inputs</th>
-      <td><p>(optional) file names upon which decision depends</p></td>
+      <td><p>Optional file names upon which decision depends.</p></td>
     </tr>
     <tr>
       <th>auto</th>
-      <td><p>(optional) logical. logical statement for automatic decisions</p></td>
+      <td><p>Optional logical. logical statement for automatic decisions.</p></td>
     </tr>
     <tr>
       <th>outcome</th>
-      <td><p>character. Description of the decision outcome</p></td>
+      <td><p>Character. Description of the decision outcome.</p></td>
     </tr>
     <tr>
       <th>force</th>
-      <td><p>logical (default = FALSE). Force a stop in the workflow so decision has been remade</p></td>
+      <td><p>Logical (default = <code>FALSE</code>). Force a stop in the workflow so
+decision has been remade.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>There are two ways to use <code>decision</code>:</p>
-<p>Automatic: An <code>auto</code> decision (see examples below) works like <code><a href='https://rdrr.io/r/base/stopifnot.html'>stopifnot()</a></code>.  It requires a logical (TRUE/FALSE) condition.  Doing this this way ensures that
-creates fewer points in your workflow where at the cost of removing.  If updating a workflow (e.g. with an updated dataset), so long as the TRUE/FALSE is TRUE, the workflow will proceed uninterrupted.  If the condition flips to FALSE the workflow will stop as it will be assumed that subsequent steps will no longer be valid.</p>
-<p>Manual: Requires specification of either <code>input</code> or <code>file_inputs</code> (or both) AND <code>outcome</code>.  Inputs represent information you have considered in your decision and <code>outcome</code> is a text description of the resulting decision.  The assumption made is that if inputs have not changed since the last decision was made.</p>
+<dl>
+<dt>Automatic:</dt><dd><p>An <code>auto</code> decision (see examples below) works
+like <code><a href='https://rdrr.io/r/base/stopifnot.html'>stopifnot()</a></code>. It requires a logical (TRUE/FALSE) condition. Doing this
+this way ensures that creates fewer points in your workflow where at the cost
+of removing.  If updating a workflow (e.g. with an updated dataset), so long
+as the TRUE/FALSE is TRUE, the workflow will proceed uninterrupted.  If the
+condition flips to FALSE the workflow will stop as it will be assumed that
+subsequent steps will no longer be valid.</p></dd>
+<dt>Manual:</dt><dd><p>Manual: Requires
+specification of either <code>input</code> or <code>file_inputs</code> (or both) AND <code>outcome</code>.
+Inputs represent information you have considered in your decision and
+<code>outcome</code> is a text description of the resulting decision.  The assumption
+made is that if inputs have not changed since the last decision was made.</p></dd>
+
+
+</dl>
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
 <span class='co'>## a decision based on summary statistics</span>
-<span class='fu'>decision</span><span class='op'>(</span>inputs <span class='op'>=</span> <span class='fu'><a href='summary_wide.html'>summary_wide</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m2</span>, <span class='va'>m2WT</span><span class='op'>)</span><span class='op'>)</span>, 
+<span class='fu'>decision</span><span class='op'>(</span>inputs <span class='op'>=</span> <span class='fu'><a href='summary_wide.html'>summary_wide</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m2</span>, <span class='va'>m2WT</span><span class='op'>)</span><span class='op'>)</span>,
          outcome <span class='op'>=</span> <span class='st'>"m1 is better"</span><span class='op'>)</span> <span class='co'># next line must be end of chunk</span>
 
 <span class='co'>## a decision based also on goodness of fit plots</span>
-<span class='fu'>decision</span><span class='op'>(</span>inputs <span class='op'>=</span> <span class='fu'><a href='summary_wide.html'>summary_wide</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m2</span>, <span class='va'>m2WT</span><span class='op'>)</span><span class='op'>)</span>, 
+<span class='fu'>decision</span><span class='op'>(</span>inputs <span class='op'>=</span> <span class='fu'><a href='summary_wide.html'>summary_wide</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m2</span>, <span class='va'>m2WT</span><span class='op'>)</span><span class='op'>)</span>,
          file_inputs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Results/basic_gof.m1.nb.html"</span>,
-                         <span class='st'>"Results/basic_gof.m2.nb.html"</span><span class='op'>)</span>, 
+                         <span class='st'>"Results/basic_gof.m2.nb.html"</span><span class='op'>)</span>,
          outcome <span class='op'>=</span> <span class='st'>"m1 is better"</span><span class='op'>)</span> <span class='co'># next line must be end of chunk</span>
 
 <span class='co'>## a decision based on an automatic TRUE/FALSE criteria</span>
