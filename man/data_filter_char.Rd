@@ -7,10 +7,11 @@
 data_filter_char(r, ...)
 }
 \arguments{
-\item{r}{object coercible into ctl_list}
+\item{r}{Object coercible into ctl_list.}
 
-\item{...}{arguments passed to data_ignore_char}
+\item{...}{Arguments passed to data_ignore_char.}
 }
 \description{
-Opposite of data_ignore_char
+Opposite of data_ignore_char.
 }
+\keyword{internal}

@@ -7,8 +7,9 @@
 param_info(ctl)
 }
 \arguments{
-\item{ctl}{character. Path to control file}
+\item{ctl}{Character. Path to control file.}
 }
 \description{
 Get parameter information
 }
+\keyword{internal}

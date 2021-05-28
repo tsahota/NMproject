@@ -133,9 +133,9 @@ run_all_scripts <- function(quiet = FALSE){
 #'
 #' This combines $TABLE output with the input data, allowing text columns to be retained for plotting/summaries.
 #'
-#' @param r data.frame.  object of class nmexecute
-#' @param dorig data.frame. optional NONMEM input dataset.
-#' @param ... additional arguments to pass on to read.csv
+#' @param r An object of class `nmexecute`
+#' @param dorig Optional data.frame. NONMEM input dataset.
+#' @param ... Additional arguments to pass on to [read.csv()].
 #' @export
 
 nm_output <- function(r,dorig,...){
@@ -143,8 +143,10 @@ nm_output <- function(r,dorig,...){
 }
 
 #' Get ignore statement
-#' @param r object coercible into ctl_list
-#' @param data data.frame (default = missing) optional input dataset from r
+#' 
+#' @param r An object coercible into ctl_list
+#' @param data A data.frame (default = missing) optional input dataset from R.
+#' @keywords internal
 #' @export
 data_ignore_char <- function(r, data){
   UseMethod("data_ignore_char")
@@ -153,10 +155,11 @@ data_ignore_char <- function(r, data){
 
 #' Get filter statement
 #' 
-#' Opposite of data_ignore_char 
+#' Opposite of data_ignore_char.
 #' 
-#' @param r object coercible into ctl_list
-#' @param ... arguments passed to data_ignore_char
+#' @param r Object coercible into ctl_list.
+#' @param ... Arguments passed to data_ignore_char.
+#' @keywords internal
 #' @export
 data_filter_char <- function(r, ...){
   ignore_char <- data_ignore_char(r, ...)

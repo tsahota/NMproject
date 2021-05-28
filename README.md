@@ -67,7 +67,8 @@ See the
 for instructions on how to get started.
 
 The easiest way to familiarise your with NMproject is to follow through
-the demo.
+the
+[demo](https://tsahota.github.io/NMproject/articles/NMproject.html#demo-1).
 
 ## Example code
 

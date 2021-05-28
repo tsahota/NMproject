@@ -14,3 +14,16 @@ cond_num(r)
 
 Extracts condition number from .ext file.
 }
+\examples{
+
+\dontrun{
+
+is_finished(m1)  ## should be TRUE
+cond_num(m1) ## displays condition number
+
+}
+
+}
+\seealso{
+\code{\link[=ofv]{ofv()}}, \code{\link[=rr]{rr()}}
+}

@@ -280,6 +280,18 @@ coef.nm_list <- function(object,trans=TRUE,...){
 #' Extracts condition number from .ext file.
 #' 
 #' @param r An nm object
+#' 
+#' @seealso [ofv()], [rr()]
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' is_finished(m1)  ## should be TRUE
+#' cond_num(m1) ## displays condition number
+#' 
+#' }
+#' 
 #' @export
 cond_num <- function(r){
   UseMethod("cond_num")

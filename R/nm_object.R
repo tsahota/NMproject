@@ -2367,13 +2367,34 @@ nm_list2list <- function(m){
 
 #' Convert a NONMEM run to a simulation
 #' 
-#' replaces $EST with $SIM
+#' @description 
 #' 
-#' @param m nm object
-#' @param seed numeric (default = 12345). seed value to include in $SIM
-#' @param subpr numeric (default = 1). SUBPR value to include in $SIM
+#' `r lifecycle::badge("stable")`
 #' 
-#' @details will only change $EST/$SIM, therefore it will not be sufficient to change a categorical estimation control file to simulation 
+#' Replaces $EST with $SIM.
+#' 
+#' @param m A nm object.
+#' @param seed Numeric (default = 12345). seed value to include in $SIM.
+#' @param subpr Numeric (default = 1). SUBPR value to include in $SIM.
+#' 
+#' @details Will only change $EST/$SIM, therefore it will not be sufficient to
+#'   change a categorical estimation control file to simulation. You will likely
+#'   need to perform a `manual edit` for categorical data simulation.
+#'   
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' m2s <- m2 %>% child(run_id = "m2s") %>%
+#'          update_parameters(m2) %>%
+#'          convert_to_simulation(subpr = 50) %>%
+#'          run_nm()
+#' 
+#' m2s %>% nm_render("Scripts/basic_vpc.Rmd")
+#' m2s %>% nm_render("Scripts/basic_ppc.Rmd")
+#' 
+#' }
+#' 
 #' @export
 convert_to_simulation <- function(m, seed = 12345, subpr = 1){
   UseMethod("convert_to_simulation")

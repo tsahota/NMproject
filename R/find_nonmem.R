@@ -95,10 +95,15 @@ find_nm_tran_path <- function(name = "default", warn = TRUE){
 
 #' NONMEM version info
 #' 
-#' Gets version information about the NONMEM installation, PsN installation and compilers.
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Gets version information about the NONMEM installation, PsN installation and
+#' compilers.  Can be useful for documentation purposes.
 #' 
 #' @return Returns list with version info for NONMEM, PsN, perl and
-#' fortran compiler (only gfortran currently)
+#' fortran compiler (only gfortran currently).
 #' 
 #' @export
 

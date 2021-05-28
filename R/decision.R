@@ -1,43 +1,68 @@
 #' Make decision point
 #'
-#' Formalise process of decision making.  Creates a decision point in the
-#' workflow where subsequent parts of your workflow depend on this decision, e.g. if you compare a 1 compartment and 2 compartment and decide based on the OFV and goodness of fit plots that the 1 compartment model is better and subsequent steps will build off of this, it is worth putting a decision point in your code so that if you are to rerun the workflow with a new/updated dataset, the decision can be revisted prior to moving onto the parts of the workflow that depend on the 1 compartment decision.  The function requests inputs (`values` and `files`) that you base a
-#' decision on and stop for users to remake decision if inputs change
+#' @description
 #'
-#' @param inputs (optional) non file names upon which decision depends
-#' @param file_inputs (optional) file names upon which decision depends
-#' @param auto (optional) logical. logical statement for automatic decisions
-#' @param outcome character. Description of the decision outcome
-#' @param force logical (default = FALSE). Force a stop in the workflow so decision has been remade
-#' 
-#' @details 
-#' There are two ways to use `decision`:
-#' 
-#' Automatic: An `auto` decision (see examples below) works like `stopifnot()`.  It requires a logical (TRUE/FALSE) condition.  Doing this this way ensures that 
-#' creates fewer points in your workflow where at the cost of removing.  If updating a workflow (e.g. with an updated dataset), so long as the TRUE/FALSE is TRUE, the workflow will proceed uninterrupted.  If the condition flips to FALSE the workflow will stop as it will be assumed that subsequent steps will no longer be valid.
-#' 
-#' Manual: Requires specification of either `input` or `file_inputs` (or both) AND `outcome`.  Inputs represent information you have considered in your decision and `outcome` is a text description of the resulting decision.  The assumption made is that if inputs have not changed since the last decision was made.
-#' 
-#' @examples 
-#' 
+#' `r lifecycle::badge("experimental")`
+#'
+#' Formalise process of decision making.  Creates a decision point in the
+#' workflow where subsequent parts of your workflow depend on this decision,
+#' e.g. if you compare a 1 compartment and 2 compartment and decide based on the
+#' OFV and goodness of fit plots that the 1 compartment model is better and
+#' subsequent steps will build off of this, it is worth putting a decision point
+#' in your code so that if you are to rerun the workflow with a new/updated
+#' dataset, the decision can be revisted prior to moving onto the parts of the
+#' workflow that depend on the 1 compartment decision.  The function requests
+#' inputs (`values` and `files`) that you base a decision on and stop for users
+#' to remake decision if inputs change.
+#'
+#' @param inputs Optional non file names upon which decision depends.
+#' @param file_inputs Optional file names upon which decision depends.
+#' @param auto Optional logical. logical statement for automatic decisions.
+#' @param outcome Character. Description of the decision outcome.
+#' @param force Logical (default = `FALSE`). Force a stop in the workflow so
+#'   decision has been remade.
+#'
+#' @details There are two ways to use `decision`:
+#'
+#' \describe{ 
+#' \item{Automatic:}{ 
+#' An `auto` decision (see examples below) works
+#' like `stopifnot()`. It requires a logical (TRUE/FALSE) condition. Doing this
+#' this way ensures that creates fewer points in your workflow where at the cost
+#' of removing.  If updating a workflow (e.g. with an updated dataset), so long
+#' as the TRUE/FALSE is TRUE, the workflow will proceed uninterrupted.  If the
+#' condition flips to FALSE the workflow will stop as it will be assumed that
+#' subsequent steps will no longer be valid. 
+#' } 
+#' \item{Manual:}{ Manual: Requires
+#' specification of either `input` or `file_inputs` (or both) AND `outcome`.
+#' Inputs represent information you have considered in your decision and
+#' `outcome` is a text description of the resulting decision.  The assumption
+#' made is that if inputs have not changed since the last decision was made. }
+#'
+#' }
+#'
+#'
+#' @examples
+#'
 #' \dontrun{
-#' 
+#'
 #' ## a decision based on summary statistics
-#' decision(inputs = summary_wide(c(m1, m2, m2WT)), 
+#' decision(inputs = summary_wide(c(m1, m2, m2WT)),
 #'          outcome = "m1 is better") # next line must be end of chunk
-#' 
+#'
 #' ## a decision based also on goodness of fit plots
-#' decision(inputs = summary_wide(c(m1, m2, m2WT)), 
+#' decision(inputs = summary_wide(c(m1, m2, m2WT)),
 #'          file_inputs = c("Results/basic_gof.m1.nb.html",
-#'                          "Results/basic_gof.m2.nb.html"), 
+#'                          "Results/basic_gof.m2.nb.html"),
 #'          outcome = "m1 is better") # next line must be end of chunk
-#' 
+#'
 #' ## a decision based on an automatic TRUE/FALSE criteria
 #' ## here we're ensuring m1 has the lowest AIC
 #' decision(auto = (AIC(m1) == min(AIC(m1, m2, m3))))
-#' 
+#'
 #' }
-#' 
+#'
 #' @export
 decision <- function(inputs = c(), 
                      file_inputs = c(), 

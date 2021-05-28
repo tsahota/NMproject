@@ -7,11 +7,12 @@
 ctl_list(r)
 }
 \arguments{
-\item{r}{either class nmexecute, character, ctl_list, ctl_character}
+\item{r}{Either class nmexecute, character, ctl_list, ctl_character.}
 }
 \value{
-object of class ctl_list
+Object of class ctl_list.
 }
 \description{
-Internal function
+Constructor/converter to ctl_list
 }
+\keyword{internal}

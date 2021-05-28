@@ -8,8 +8,11 @@ NONMEM_version()
 }
 \value{
 Returns list with version info for NONMEM, PsN, perl and
-fortran compiler (only gfortran currently)
+fortran compiler (only gfortran currently).
 }
 \description{
-Gets version information about the NONMEM installation, PsN installation and compilers.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Gets version information about the NONMEM installation, PsN installation and
+compilers.  Can be useful for documentation purposes.
 }

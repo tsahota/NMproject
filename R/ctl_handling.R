@@ -63,10 +63,9 @@ ctl_character <- function(r){
 
 #' Constructor/converter to ctl_list
 #' 
-#' Internal function
-#' 
-#' @param r either class nmexecute, character, ctl_list, ctl_character
-#' @return object of class ctl_list
+#' @param r Either class nmexecute, character, ctl_list, ctl_character.
+#' @return Object of class ctl_list.
+#' @keywords internal
 
 ctl_list <- function(r){
   UseMethod("ctl_list")
@@ -94,13 +93,6 @@ ctl_list.character <- function(r){
     return(ctl)
   } else stop("cannot coerce to ctl_list")
 }
-
-#' Convert controls stream to first abstraction layer
-#' 
-#' Internal function
-#' 
-#' @param ctl character vector with NONMEM control stream contents
-#' @return object of class r.ctl
 
 ctl_nm2r <- function(ctl){
 
@@ -166,20 +158,11 @@ ctl_nm2r <- function(ctl){
   ctl
 }
 
-#' Convert first abstraction layer to control stream
-#' @param x object of class r.ctl
-#' @return character vector with control stream contents
-
 ctl_r2nm <- function(x) {
   ctl <- unlist(x,use.names = FALSE)
   class(ctl) <- c("ctl_character")
   ctl
 }
-
-#' Convert $THETA to R abstraction layer
-#' @param x Character vector with $THETA information.
-#' @return Object abstracting $THETA contents.
-#' @keywords internal
 
 theta_nm2r <- function(x){
   x <- rem_dollars(x)
@@ -245,8 +228,9 @@ rem_trailing_spaces <- function(x){
 
 #' Get parameter information
 #'
-#' @param ctl character. Path to control file
-#' @export
+#' @param ctl Character. Path to control file.
+#' @keywords internal
+
 param_info <- function(ctl){
   UseMethod("param_info")
 }

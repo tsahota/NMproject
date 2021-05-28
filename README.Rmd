@@ -62,7 +62,7 @@ library(NMproject)
 
 See the [vignette](https://tsahota.github.io/NMproject/articles/NMproject.html) for instructions on how to get started.
 
-The easiest way to familiarise your with NMproject is to follow through the demo. 
+The easiest way to familiarise your with NMproject is to follow through the [demo](https://tsahota.github.io/NMproject/articles/NMproject.html#demo-1). 
 
 ## Example code
 
