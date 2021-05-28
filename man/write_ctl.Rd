@@ -7,10 +7,15 @@
 write_ctl(m, force = FALSE)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{force}{logical (default = FALSE), force write, don't ask (ignore behaviour)}
+\item{force}{Logical (default = \code{FALSE}), force write, don't ask.}
 }
 \description{
-Normally used by other functions
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Not designed to be used directly.  \code{\link[=run_nm]{run_nm()}} and other functions will use
+this to write the control file contents to the \code{ctl_path()} prior to
+execution.
 }
+\keyword{internal}

@@ -27,32 +27,6 @@ file.exists2 <- function(x){ ## only true is file exists and is not a directory
   !file.info(x)$isdir
 }
 
-#' Condition number of run
-#' 
-#' @param r object of class nm
-#' @export
-
-cond_num <- function(r){
-  UseMethod("cond_num")
-}
-
-#' @export
-cond_num.default <- function(r){
-  if(is_single_na(r)) return(as.numeric(NA))
-  if(is.data.frame(r)){
-    dc <- r
-    ans <- as.numeric(dc$FINAL[dc$parameter %in% "CONDNUM"])
-    if(length(ans) == 0) ans <- as.numeric(NA)
-    return(ans)
-  }
-  stop("don't know how to get cond_num of this")
-}
-
-#' @export
-cond_num.list <- function(r){
-  sapply(r, cond_num)
-}
-
 ctl_table_files <- function(ctl){
   UseMethod("ctl_table_files") 
 }

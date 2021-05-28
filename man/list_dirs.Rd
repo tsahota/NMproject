@@ -13,17 +13,19 @@ list_dirs(
 )
 }
 \arguments{
-\item{path}{same as list.dirs()}
+\item{path}{Same as \code{list.dirs()}.}
 
-\item{full.names}{same as list.dirs()}
+\item{full.names}{Same as \code{list.dirs()}.}
 
-\item{recursive}{same as list.dirs()}
+\item{recursive}{Same as \code{list.dirs()}.}
 
-\item{maxdepth}{integer (default = 1) maximum depth to search}
+\item{maxdepth}{Integer (default = 1) maximum depth to search.}
 
-\item{pattern}{character (default = missing) regex pattern match on directory name}
+\item{pattern}{Optional character (default is missing) regex pattern match on directory
+name.}
 }
 \description{
-Wrapper around list.dirs() but includes maxdepth and pattern arguments
-and removes full.names argument, always return full names.
+Wrapper around list.dirs() but includes maxdepth and pattern arguments and
+removes full.names argument, always return full names.
 }
+\keyword{internal}

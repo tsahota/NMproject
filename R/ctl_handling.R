@@ -22,10 +22,15 @@ setup_dollar <- function(x, type, add_dollar_text = TRUE){
 
 #' Constructor/converter to ctl_character
 #' 
-#' Internal function
+#' @description 
 #' 
-#' @param r either class nmexecute, character, ctl_list, ctl_character
-#' @return object of class ctl_character
+#' `r lifecycle::badge("stable")`
+#' 
+#' Convert a variety of objects into a `ctl_character` class
+#' 
+#' @param r Either class nmexecute, character, ctl_list, ctl_character.
+#' @return Object of class ctl_character.
+#' @keywords internal
 
 ctl_character <- function(r){
   if(inherits(r, "ctl_character")) return(r)
@@ -628,22 +633,27 @@ nonmem_code_to_r <- function(code, eta_to_0 = TRUE){
 }
 
 
-#' Comment lines of control file
+#' @rdname comment_out
+#' @name comment_out
+#' @title Comment lines of control file
 #' 
-#' @param m nm object
-#' @param pattern optional character regex.  Passed to gsub
+#' @description 
 #' 
-#' @seealso [uncomment()], @seealso [gsub_ctl()]
+#' `r lifecycle::badge("stable")`
+#' 
+#' Comment out lines of code with that are matched by a patter string.
+#' 
+#' @param m An nm object.
+#' @param pattern Character regex. Passed to gsub.
+#' 
+#' @seealso [gsub_ctl()], [target()]
 #' @export
 comment_out <- function(m, pattern = ".*"){
   m %>% gsub_ctl(paste0("(",pattern,")"), "; \\1")
 }
 
-#' Uncomment lines of control file
+#' @rdname comment_out
 #' 
-#' @param m nm object
-#' @param pattern optional character regex.  Passed to gsub
-#' @seealso [comment()], @seealso [gsub_ctl()]
 #' @export
 uncomment <- function(m, pattern = ".*"){
   m %>% gsub_ctl(paste0("^;+\\s*(",pattern,")"), "\\1")

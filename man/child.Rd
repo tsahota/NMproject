@@ -28,7 +28,7 @@ object.}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-Child objects inherit attributes of parent but with a new run_id. The control
+Child objects inherit attributes of parent but with a new \code{run_id}. The control
 file will be inherited too with $TABLEs updated
 }
 \details{

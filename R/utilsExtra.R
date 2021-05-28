@@ -25,7 +25,7 @@ is_nm_list <- function(x){
 #' This may be relegated to a back end function soon.  Create an nm_list from an
 #' nm_generic or list or other object coercible into an nm_list.
 #'
-#' @param m An object coercible into an nm object
+#' @param m An object coercible into an nm object.
 #' @keywords internal
 #' @export
 as_nm_list <- function(m){

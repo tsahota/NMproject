@@ -7,7 +7,7 @@
 as_nm_list(m)
 }
 \arguments{
-\item{m}{An object coercible into an nm object}
+\item{m}{An object coercible into an nm object.}
 }
 \description{
 This may be relegated to a back end function soon.  Create an nm_list from an

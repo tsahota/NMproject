@@ -2,18 +2,23 @@
 % Please edit documentation in R/ctl_handling.R
 \name{comment_out}
 \alias{comment_out}
+\alias{uncomment}
 \title{Comment lines of control file}
 \usage{
 comment_out(m, pattern = ".*")
+
+uncomment(m, pattern = ".*")
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{pattern}{optional character regex.  Passed to gsub}
+\item{pattern}{Character regex. Passed to gsub.}
 }
 \description{
-Comment lines of control file
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Comment out lines of code with that are matched by a patter string.
 }
 \seealso{
-\code{\link[=uncomment]{uncomment()}}, @seealso \code{\link[=gsub_ctl]{gsub_ctl()}}
+\code{\link[=gsub_ctl]{gsub_ctl()}}, \code{\link[=target]{target()}}
 }

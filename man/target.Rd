@@ -2,17 +2,23 @@
 % Please edit documentation in R/nm_object.R
 \name{target}
 \alias{target}
+\alias{untarget}
 \title{Target part of control object for further modification}
 \usage{
 target(m, dollar, lines)
+
+untarget(m, dollar)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{dollar}{character. name of subroutine to target}
+\item{dollar}{Sharacter. Name of subroutine to target.}
 
-\item{lines}{optional character.  Assignment of lines}
+\item{lines}{Optional character.  Assignment of lines.}
 }
 \description{
-Target part of control object for further modification
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Intended mostly for internal use.  Used with \code{\link[=text]{text()}} to target control file
+modifications to specific NONMEM subroutines
 }

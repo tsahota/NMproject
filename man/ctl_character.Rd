@@ -7,11 +7,14 @@
 ctl_character(r)
 }
 \arguments{
-\item{r}{either class nmexecute, character, ctl_list, ctl_character}
+\item{r}{Either class nmexecute, character, ctl_list, ctl_character.}
 }
 \value{
-object of class ctl_character
+Object of class ctl_character.
 }
 \description{
-Internal function
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Convert a variety of objects into a \code{ctl_character} class
 }
+\keyword{internal}

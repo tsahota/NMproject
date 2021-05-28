@@ -7,12 +7,27 @@
 system_cmd(cmd, dir = ".", ...)
 }
 \arguments{
-\item{cmd}{character. command to send to shell}
+\item{cmd}{Character. Command to send to shell.}
 
-\item{dir}{character. directory to run command in}
+\item{dir}{Optional character. Directory to run command in (default = current
+working directory)}
 
-\item{...}{other arguments passed to system command}
+\item{...}{Other arguments passed to system command.}
 }
 \description{
-System/shell command wrapper
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Will run \code{getOption("system_cmd")}.  A OS agnostic interface to the system
+terminal.  Most of the time this will be the same as \code{system_nm} except when
+the PsN/NONMEM execution server is location in a different location to the
+RStudio server.
+}
+\examples{
+
+\dontrun{
+
+system_cmd("pwd")
+
+}
+
 }

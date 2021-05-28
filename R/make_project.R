@@ -408,26 +408,28 @@ ls_code_library <- function(pattern = ".") {
 
 #' Code Library
 #'
-#' Function not designed for direct use.  Instead use the RStudio "addin" on the
-#' Addins menu. In the shiny, select the file, and click "preview" to view and
-#' [stage()] to bring into the "staging" area of your project.  See
-#' vignette at <https://tsahota.github.io/NMproject/> for a video showing use
-#' of the app. Non-NONMEM code can then be imported into the project separately
-#' with the the [import()] function.
+#' Function not designed for direct use.  Instead use the RStudio `code library`
+#' addin on the Addins menu. This will open the shiny app. Select the file, and
+#' click "preview" to view and [import()] to bring into the "staging" area of
+#' your project.  See vignette at <https://tsahota.github.io/NMproject/> for a
+#' video showing use of the app. NONMEM control files will intentionally not be
+#' imported straight in the "Models" directory and instead go into
+#' "staging/Models".  This staging location can be referred to when creating
+#' `nm` objects with `new_nm(..., based_on = "staging/Models/[filename]")`
 #'
-#' @param extn vector string of extensions to include
-#' @param fields character vector of fields to extract
-#' @param viewer logical indicating if viewer should be used to display results
-#'   (default=FALSE)
-#' @param silent logical indicating if messages should be silenced
-#'   (default=FALSE)
-#' @param return_info logical (default = FALSE). Return data.frame of results
-#'   (FALSE= returns file paths)
+#' @param extn Vector string of extensions to include (default = `NULL` includes
+#'   all).
+#' @param fields Character vector of fields to extract.
+#' @param viewer Logical indicating if viewer should be used to display results
+#'   (default=`FALSE`).
+#' @param silent Logical indicating if messages should be silenced
+#'   (default=`FALSE`)
+#' @param return_info Logical (default = `FALSE`). Return data.frame of results
+#'   (FALSE= returns file paths).
 #'
 #' @details requires `getOption("code_library_path")` to be set
 #'
-#' @seealso [ls_code_library()], [preview()],
-#'   [stage()], [import()]
+#' @seealso [ls_code_library()], [preview()], [stage()], [import()]
 #'
 #' @export
 code_library <- function(extn = NULL, fields = "Description", viewer = TRUE, silent = FALSE, 
@@ -468,11 +470,6 @@ code_library <- function(extn = NULL, fields = "Description", viewer = TRUE, sil
 }
 
 
-#' Display code library search path
-#'
-#' @export
-code_library_path <- function() getOption("code_library_path")
-
 short_path <- function(x) {
   split_paths <- strsplit(x, .Platform$file.sep)  #[[1]]
   short_paths <- lapply(split_paths, function(split_path) {
@@ -486,9 +483,28 @@ short_path <- function(x) {
 
 #' System/shell command wrapper
 #'
-#' @param cmd character. command to send to shell
-#' @param dir character. directory to run command in
-#' @param ... other arguments passed to system command
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Will run `getOption("system_cmd")`.  A OS agnostic interface to the system
+#' terminal.  Most of the time this will be the same as `system_nm` except when
+#' the PsN/NONMEM execution server is location in a different location to the
+#' RStudio server.
+#'
+#' @param cmd Character. Command to send to shell.
+#' @param dir Optional character. Directory to run command in (default = current
+#'   working directory)
+#' @param ... Other arguments passed to system command.
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' system_cmd("pwd")
+#'
+#' }
+#'
 #' @export
 system_cmd <- function(cmd,dir=".",...){
   if(!dir %in% ".") if(file.exists(dir)) {currentwd <- getwd(); setwd(dir) ; on.exit(setwd(currentwd))} else
@@ -497,17 +513,18 @@ system_cmd <- function(cmd,dir=".",...){
 }
 
 #' List directories
-#' 
-#' Wrapper around list.dirs() but includes maxdepth and pattern arguments
-#'  and removes full.names argument, always return full names.
-#' 
-#' @param path same as list.dirs()
-#' @param full.names same as list.dirs()
-#' @param recursive same as list.dirs()
-#' @param maxdepth integer (default = 1) maximum depth to search
-#' @param pattern character (default = missing) regex pattern match on directory name
-#' 
-#' @export
+#'
+#' Wrapper around list.dirs() but includes maxdepth and pattern arguments and
+#' removes full.names argument, always return full names.
+#'
+#' @param path Same as `list.dirs()`.
+#' @param full.names Same as `list.dirs()`.
+#' @param recursive Same as `list.dirs()`.
+#' @param maxdepth Integer (default = 1) maximum depth to search.
+#' @param pattern Optional character (default is missing) regex pattern match on directory
+#'   name.
+#'
+#' @keywords internal
 list_dirs <- function(path = ".", full.names = TRUE, recursive = FALSE, maxdepth = 1, pattern){
   
   dirs <- list()

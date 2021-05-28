@@ -212,7 +212,7 @@ is.na.nm_list <- function(x) is.na(run_id(x))
 #'
 #' `r lifecycle::badge("stable")`
 #'
-#' Child objects inherit attributes of parent but with a new run_id. The control
+#' Child objects inherit attributes of parent but with a new `run_id`. The control
 #' file will be inherited too with $TABLEs updated
 #'
 #' @param m Parent nm object.
@@ -613,11 +613,21 @@ ctl_list2.nm_generic <- function(r) r[["ctl_contents"]]
 
 ctl_list2.nm_list <- Vectorize_nm_list(ctl_list2.nm_generic, SIMPLIFY = FALSE)
 
-#' Target part of control object for further modification
+#' @rdname target
+#' @name target
 #' 
-#' @param m nm object
-#' @param dollar character. name of subroutine to target
-#' @param lines optional character.  Assignment of lines
+#' @title Target part of control object for further modification
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Intended mostly for internal use.  Used with [text()] to target control file
+#' modifications to specific NONMEM subroutines
+#' 
+#' @param m An nm object.
+#' @param dollar Sharacter. Name of subroutine to target.
+#' @param lines Optional character.  Assignment of lines.
 #' @export
 target <- function(m, dollar, lines){
   UseMethod("target")
@@ -627,9 +637,6 @@ target.nm_generic <- function(m, dollar, lines){
   if(missing(dollar)){
     if(length(m[["target"]]) > 0) return(m[["target"]]) else return(NA_character_)
   }
-  
-  ## TODO: expand to be able to target lines instead
-  ## TODO: step 1 - make it vectorised
   
   #if(!missing(dollar) & !missing(lines)){
   #  stop("can't have both 'dollar' and 'lines' arguments")
@@ -656,10 +663,8 @@ target.nm_generic <- function(m, dollar, lines){
 target.nm_list <- Vectorize_nm_list(target.nm_generic, replace_arg = "dollar")
 #target.nm_list <- Vectorize_nm_list(target.nm_generic, SIMPLIFY = FALSE, replace_arg = "dollar")
 
-#' Remove target on control object
+#' @rdname target
 #' 
-#' @param m nm object
-#' @param dollar character. name of subroutine to target
 #' @export
 untarget <- function(m, dollar){
   UseMethod("untarget")
@@ -1052,193 +1057,6 @@ cache_history.nm_list <- Vectorize_nm_list(cache_history.nm_generic, SIMPLIFY = 
 cache_current <- function(m) run_checksums(m)
 
 clear_cache <- function() unlink(".cache", recursive = TRUE)
-
-#' Get all temp files
-#'
-#' list all tempfiles (normally for deletion)
-#'
-#' @param object nm object or path to project (default = ".")
-#' @param output_loc character either "run_dir" (default) for psn runs or "base" for nmfe runs
-#' @param run_files optional character with NM_run* file paths
-#' @param include_grid_files logical (default = TRUE) should slurm files be included
-#' @param ctl_extension character. Extension of control file (default = "mod")
-#' @param remove_psn_exports logical (default = FALSE). should psn exports be considered temporary
-#'
-#' @details
-#' Having `remove_psn_exposure = TRUE` will break pirana and xpose capability
-#'   as these software use exported files 
-#'
-#' @export
-ls_tempfiles <- function(object = ".", output_loc = c("run_dir", "base"),
-                         run_files = NA_character_, include_grid_files = TRUE,
-                         ctl_extension = "mod",
-                         remove_psn_exports = FALSE){
-  
-  UseMethod("ls_tempfiles")
-  
-}
-
-#' @export
-ls_tempfiles.default <- function(object = ".", output_loc = c("run_dir", "base"),
-                                 run_files = NA_character_, include_grid_files = TRUE,
-                                 ctl_extension = "mod",
-                                 remove_psn_exports = FALSE){
-  
-  output_loc <- match.arg(output_loc)
-  
-  ## get all_run_files (in NM_run1 dir)
-  if(identical(run_files, NA_character_)){
-    all_run_dirs <- list_dirs(
-      object, 
-      pattern = "NM_run[0-9]+", 
-      recursive = TRUE, full.names = TRUE, maxdepth = Inf
-    )
-    
-    all_run_files <- dir(all_run_dirs, full.names = TRUE)
-    
-    all_outside_run_dirs <- file.path(all_run_dirs, "..")
-    all_outside_run_files <- dir(all_outside_run_dirs, full.names = TRUE)
-    
-    all_run_files <- c(all_run_files, all_outside_run_files)
-    
-  } else {
-    all_run_files <- run_files 
-  }
-  
-  ## eliminate files we don't want
-  
-  temp_files <- c()
-  non_temp_files <- c()
-  
-  all_psn.mod <- all_run_files[basename(all_run_files) == "psn.mod"]
-  non_temp_files <- c(non_temp_files, all_psn.mod)
-  
-  all_run_dir_table_files <- 
-    lapply(all_psn.mod, function(psn.mod){
-      file.path(dirname(psn.mod), ctl_table_files(psn.mod))
-    })
-  all_run_dir_table_files <- unlist(all_run_dir_table_files)
-  non_temp_files <- c(non_temp_files, all_run_dir_table_files)
-  
-  all_base_tables <- all_run_dir_table_files
-  all_base_table_dir <- dirname(all_base_tables)
-  all_base_table_dir <- file.path(all_base_table_dir, "..", "..")
-  all_base_table_dir <- normalizePath(all_base_table_dir)
-  
-  if(output_loc == "run_dir"){ ## add base tables to temp files
-    all_base_tables <- file.path(all_base_table_dir, basename(all_run_dir_table_files))
-    all_base_tables <- all_base_tables[file.exists(all_base_tables)]
-    if(remove_psn_exports) temp_files <- c(temp_files, all_base_tables)
-    
-    all_base_mod_files <- dir(unique(all_base_table_dir),
-                              pattern = paste0("\\.", ctl_extension, "$"),
-                              full.names = TRUE)
-    
-    all_base_stubs <- tools::file_path_sans_ext(all_base_mod_files)
-    
-    all_base_psn_files <- lapply(all_base_stubs, function(base_mod_stub){
-      base_dir <- dirname(base_mod_stub)
-      stub <- basename(base_mod_stub)
-      dir(base_dir, pattern = paste0("^", stub, "\\..*"), full.names = TRUE)
-    })
-    all_base_psn_files <- unlist(all_base_psn_files)
-    
-    all_base_psn_files <- all_base_psn_files[
-      ## exclude mod and lst files
-      !tools::file_ext(all_base_psn_files) %in% c("mod", "lst")
-    ]
-    if(remove_psn_exports) temp_files <- c(temp_files, all_base_psn_files)
-    
-  }
-  
-  ## temp_dir is temp
-  temp_files <- c(temp_files, all_run_files[grepl("temp_dir", all_run_files)])
-  
-  ## .o, .f90, Rmd, csv
-  temp_files <- c(temp_files, all_run_files[tools::file_ext(basename(all_run_files)) %in% c("o", "f90", "Rmd", "csv")])
-  
-  ## specific name exclusions:
-  temp_files <- c(temp_files, 
-                  all_run_files[basename(all_run_files) %in% 
-                                  c("INTER", 
-                                    "fort.2002",
-                                    "model_NMrun_translation.txt",
-                                    "modelfit.log",
-                                    "raw_results_structure",
-                                    "version_and_option_info.txt")])
-  
-  #####
-  temp_files <- setdiff(temp_files, non_temp_files)
-  
-  ## expand the directories into files
-  
-  temp_dirs <- temp_files[file.info(temp_files)$isdir]
-  
-  temp_dir_files <- dir(temp_dirs, full.names = TRUE, recursive = TRUE)
-  
-  temp_files <- c(temp_files[!temp_files %in% temp_dirs],
-                  temp_dir_files)
-  
-  if(length(temp_files) == 0) return(character()) ## if none return empty
-  
-  relative_path(temp_files, getwd())
-  
-  
-}
-
-#' @export
-ls_tempfiles.nm_list <- function(object = ".", output_loc = c("run_dir", "base"),
-                                 run_files = NA_character_, include_grid_files = TRUE,
-                                 ctl_extension = "mod",
-                                 remove_psn_exports = FALSE){
-  
-  output_loc <- match.arg(output_loc)
-  
-  if(output_loc %in% "run_dir"){
-    all_run_dirs <- list_dirs(
-      run_dir_path(object), 
-      pattern = "NM_run[0-9]+", 
-      full.names = TRUE) 
-  } else {
-    all_run_dirs <- list_dirs(
-      run_in(object),
-      full.names = TRUE) 
-  }
-  
-  all_run_files <- dir(all_run_dirs, full.names = TRUE)
-  
-  ls_tempfiles(run_files = all_run_files, output_loc = output_loc, 
-               ctl_extension = tools::file_ext(ctl_name(object)),
-               remove_psn_exports = remove_psn_exports)
-  
-}
-
-
-psn_exported_files <- function(r, minimal = FALSE){
-  UseMethod("psn_exported_files")
-}
-
-psn_exported_files.nm_generic <- function(r, minimal = FALSE){
-  ## do not include scm or mod
-  if(minimal){
-    output_files <- paste0(tools::file_path_sans_ext(ctl_path(r)),
-                           c(".ext"))
-  } else {
-    output_files <- paste0(tools::file_path_sans_ext(ctl_path(r)),
-                           c(".phi", ".ext", ".cov", ".coi", ".cor", ".lst"))
-  }
-  
-  if(minimal){
-    ctl_out_files <- c(output_files)
-  }  else {
-    exported_table_paths <- file.path(run_in(r), ctl_table_files(ctl_contents(r)))
-    ctl_out_files <- c(output_files, exported_table_paths)
-  }
-  
-  ctl_out_files
-}
-
-psn_exported_files.nm_list <- Vectorize_nm_list(psn_exported_files.nm_generic, SIMPLIFY = FALSE)
 
 #' Get/set existing subroutine
 #'

@@ -13,31 +13,33 @@ code_library(
 )
 }
 \arguments{
-\item{extn}{vector string of extensions to include}
+\item{extn}{Vector string of extensions to include (default = \code{NULL} includes
+all).}
 
-\item{fields}{character vector of fields to extract}
+\item{fields}{Character vector of fields to extract.}
 
-\item{viewer}{logical indicating if viewer should be used to display results
-(default=FALSE)}
+\item{viewer}{Logical indicating if viewer should be used to display results
+(default=\code{FALSE}).}
 
-\item{silent}{logical indicating if messages should be silenced
-(default=FALSE)}
+\item{silent}{Logical indicating if messages should be silenced
+(default=\code{FALSE})}
 
-\item{return_info}{logical (default = FALSE). Return data.frame of results
-(FALSE= returns file paths)}
+\item{return_info}{Logical (default = \code{FALSE}). Return data.frame of results
+(FALSE= returns file paths).}
 }
 \description{
-Function not designed for direct use.  Instead use the RStudio "addin" on the
-Addins menu. In the shiny, select the file, and click "preview" to view and
-\code{\link[=stage]{stage()}} to bring into the "staging" area of your project.  See
-vignette at \url{https://tsahota.github.io/NMproject/} for a video showing use
-of the app. Non-NONMEM code can then be imported into the project separately
-with the the \code{\link[=import]{import()}} function.
+Function not designed for direct use.  Instead use the RStudio \verb{code library}
+addin on the Addins menu. This will open the shiny app. Select the file, and
+click "preview" to view and \code{\link[=import]{import()}} to bring into the "staging" area of
+your project.  See vignette at \url{https://tsahota.github.io/NMproject/} for a
+video showing use of the app. NONMEM control files will intentionally not be
+imported straight in the "Models" directory and instead go into
+"staging/Models".  This staging location can be referred to when creating
+\code{nm} objects with \code{new_nm(..., based_on = "staging/Models/[filename]")}
 }
 \details{
 requires \code{getOption("code_library_path")} to be set
 }
 \seealso{
-\code{\link[=ls_code_library]{ls_code_library()}}, \code{\link[=preview]{preview()}},
-\code{\link[=stage]{stage()}}, \code{\link[=import]{import()}}
+\code{\link[=ls_code_library]{ls_code_library()}}, \code{\link[=preview]{preview()}}, \code{\link[=stage]{stage()}}, \code{\link[=import]{import()}}
 }

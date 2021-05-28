@@ -271,6 +271,37 @@ coef.nm_list <- function(object,trans=TRUE,...){
   d
 }
 
+#' Condition number of run
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Extracts condition number from .ext file.
+#' 
+#' @param r An nm object
+#' @export
+cond_num <- function(r){
+  UseMethod("cond_num")
+}
+
+#' @export
+cond_num.default <- function(r){
+  if(is_single_na(r)) return(as.numeric(NA))
+  if(is.data.frame(r)){
+    dc <- r
+    ans <- as.numeric(dc$FINAL[dc$parameter %in% "CONDNUM"])
+    if(length(ans) == 0) ans <- as.numeric(NA)
+    return(ans)
+  }
+  stop("don't know how to get cond_num of this")
+}
+
+#' @export
+cond_num.list <- function(r){
+  sapply(r, cond_num)
+}
+
 #' @export
 cond_num.nm_generic <- function(r){
   dc <- try(coef(r, trans = FALSE), silent = TRUE)
@@ -348,11 +379,24 @@ rr.nm_generic <- function(m, trans = TRUE){
   rr(as_nm_list(m), trans = trans)
 }
 
-#' Coef (in wide format)
+#' @rdname coef_widelong
+#' @name coef_widelong
+#' @title Extract parameter values
 #' 
-#' @param m nm object
-#' @param trans logical (default = TRUE) should transform parameters?
+#' @description 
+#'
+#' `r lifecycle::badge("stable")`
 #' 
+#' Pulls parameters, standard errors, OFVs and condition numbers out of ext
+#' files, applies tranformations.  This function is useful when numeric values
+#' are needed. `rr` is easier to read, however it returns characters.  A wide
+#' and long format is available via two different functions.
+#' 
+#' @param m A nm object
+#' @param trans Logical (default = `TRUE`). Transform parameters using comments
+#'   in $THETA/$OMEGA/$SIGMA.
+#' 
+#' @seealso [rr()]
 #' @export
 coef_wide <- function(m, trans = TRUE){
   
@@ -386,11 +430,7 @@ coef_wide <- function(m, trans = TRUE){
   
 }
 
-#' Coef (in long format)
-#' 
-#' @param m nm object
-#' @param trans logical (default = TRUE) should transform parameters?
-#' 
+#' @rdname coef_widelong 
 #' @export
 coef_long <- function(m, trans = TRUE){
   d <- coef(m, trans = trans)
