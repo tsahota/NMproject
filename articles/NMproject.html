@@ -243,10 +243,26 @@
 <p>To view all runs in the workspace and track progress:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/shiny_nm.html">shiny_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>To do basic goodness of fit open the post processing Rmarkdown template, follow instructions, customise your template save it (e.g. as <code>Scripts/basic_gof.Rmd</code>) and run in your log script with</p>
+</div>
+<div id="diagnostics" class="section level3">
+<h3 class="hasAnchor">
+<a href="#diagnostics" class="anchor"></a>Diagnostics</h3>
+<p>Use markdown templates to create a customised set of diagnostics to reuse on multiple models. In the demo an example is shown in <code>Scripts/basic_gof.Rmd</code>, but ideally you’ll create your own customised version with everything you need to evaluate your model. To create a rmarkdown diagnostic template go to <code>FILE</code> -&gt; <code>New File</code> -&gt; <code>R markdown</code> -&gt; <code>From Template</code> then select from one of the following:</p>
+<ul>
+<li><p><code>model diagnostic</code></p></li>
+<li><p><code>VPC diagnostic</code></p></li>
+<li><p><code>PPC diagnostic</code></p></li>
+<li><p><code>bootstrap results</code></p></li>
+</ul>
+<p><em>PLACEHOLDER: short youtube video of opening, customizing, saving and running a template.</em></p>
+<p>A template will appear in the script window for you to customise. Instructions are the at the top. Save the file (e.g. as <code>Scripts/basic_gof.Rmd</code>) and run in your log script with:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_gof.Rmd"</span><span class="op">)</span></code></pre></div>
-<p>It will create the output in <code>Results</code> (or results_dir(m1))</p>
+<p>It will create the output in <code>Results</code> (or <code><a href="../reference/nm_getsetters.html">results_dir(m1)</a></code>)</p>
+</div>
+<div id="automatic-edits" class="section level3">
+<h3 class="hasAnchor">
+<a href="#automatic-edits" class="anchor"></a>Automatic edits</h3>
 <p>If we already have a parent run <code>m1</code> using <code>ADVAN2 TRANS1</code>, we can create a <code><a href="../reference/child.html">child()</a></code> run that uses <code>TRANS2</code> using <code><a href="../reference/subroutine.html">subroutine()</a></code>:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
