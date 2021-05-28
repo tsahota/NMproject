@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Make child nm object from parent — child • NMproject</title>
+<title>Remove temporary NONMEM files — temp_files • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,12 @@
 
 
 
-<meta property="og:title" content="Make child nm object from parent — child" />
+<meta property="og:title" content="Remove temporary NONMEM files — temp_files" />
 <meta property="og:description" content="
-Child objects inherit attributes of parent but with a new run_id. The control
-file will be inherited too with $TABLEs updated" />
+NONMEM produces a lot of temporary files which can add up to a lot of disk
+space.  One strategy to remove this is to use the clean option in the PsN
+command.  However, this can autoamtically remove files as soon as the run
+finishes that may be useful for debugging.  ls_tempfiles()`` allows you to list the paths of all temporary files, for a single run or for all runs for inspection and deletion. clean_run()is a wrapper function that runsls_tempfiles()and deletes everything returned.  For safety is limited to only deleting files associated withnm` objects though." />
 
 
 
@@ -116,70 +118,91 @@ file will be inherited too with $TABLEs updated" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Make child nm object from parent</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/nm_object.R'><code>R/nm_object.R</code></a></small>
-    <div class="hidden name"><code>child.Rd</code></div>
+    <h1>Remove temporary NONMEM files</h1>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/run_nm.R'><code>R/run_nm.R</code></a></small>
+    <div class="hidden name"><code>temp_files.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
-<p>Child objects inherit attributes of parent but with a new <code>run_id</code>. The control
-file will be inherited too with $TABLEs updated</p>
+<p>NONMEM produces a lot of temporary files which can add up to a lot of disk
+space.  One strategy to remove this is to use the <code>clean</code> option in the PsN
+command.  However, this can autoamtically remove files as soon as the run
+finishes that may be useful for debugging.  <code>ls_tempfiles()`` allows you to list the paths of all temporary files, for a single run or for all runs for inspection and deletion. </code>clean_run()<code>is a wrapper function that runs</code>ls_tempfiles()<code>and deletes everything returned.  For safety is limited to only deleting files associated with</code>nm` objects though.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>child</span><span class='op'>(</span>
-  <span class='va'>m</span>,
-  run_id <span class='op'>=</span> <span class='cn'>NA_character_</span>,
-  type <span class='op'>=</span> <span class='st'>"execute"</span>,
-  parent <span class='op'>=</span> <span class='fu'><a href='nm.html'>nm</a></span><span class='op'>(</span><span class='cn'>NA</span><span class='op'>)</span>,
-  silent <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>ls_tempfiles</span><span class='op'>(</span>
+  object <span class='op'>=</span> <span class='st'>"."</span>,
+  output_loc <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"run_dir"</span>, <span class='st'>"base"</span><span class='op'>)</span>,
+  run_files <span class='op'>=</span> <span class='cn'>NA_character_</span>,
+  include_slurm_files <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  ctl_extension <span class='op'>=</span> <span class='st'>"mod"</span>,
+  include_psn_exports <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
+
+<span class='fu'>clean_run</span><span class='op'>(</span><span class='va'>m</span>, output_loc <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"run_dir"</span>, <span class='st'>"base"</span><span class='op'>)</span>, include_slurm_files <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>object</th>
+      <td><p>Either an nm object or path to project (default = <code>"."</code>).  If a
+path is specified, the function will look for all runs in the directory
+(including subdirectories).</p></td>
+    </tr>
+    <tr>
+      <th>output_loc</th>
+      <td><p>Optional character for locating files. Either <code>"run_dir"</code>
+(default) for PsN execution or <code>"base"</code> for nmfe execution.</p></td>
+    </tr>
+    <tr>
+      <th>run_files</th>
+      <td><p>Optional character vector.  Search amongst only these files
+instead.  Default value <code>NA</code> searches based on <code>object</code>.</p></td>
+    </tr>
+    <tr>
+      <th>include_slurm_files</th>
+      <td><p>Logical (default = <code>TRUE</code>). Include files
+generated by slurm.</p></td>
+    </tr>
+    <tr>
+      <th>ctl_extension</th>
+      <td><p>Character. Extension of control file (default = <code>"mod"</code>)</p></td>
+    </tr>
+    <tr>
+      <th>include_psn_exports</th>
+      <td><p>Logical (default = <code>FALSE</code>). Considers files that
+PsN exports to the <code>run_in</code> directory as temporary</p></td>
+    </tr>
+    <tr>
       <th>m</th>
-      <td><p>Parent nm object.</p></td>
-    </tr>
-    <tr>
-      <th>run_id</th>
-      <td><p>Character.  New run id to assign to child object.</p></td>
-    </tr>
-    <tr>
-      <th>type</th>
-      <td><p>Character (default = "execute"). type of child object.</p></td>
-    </tr>
-    <tr>
-      <th>parent</th>
-      <td><p>Optional nm object (default = nm(NA)) . Parent object will by
-default be <code>m</code>, but this argument will force parent to be a different
-object.</p></td>
-    </tr>
-    <tr>
-      <th>silent</th>
-      <td><p>Logical (default = FALSE). Should warn if conflicts detected.</p></td>
+      <td><p>An nm object</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Specifying <code>parent</code> will force parent to be different from <code>m</code>. This
-is useful in piping when a parent object is modified prior to being used in
-the child object.</p>
+    <p>Setting <code>include_psn_exports = TRUE</code> will break pirana and xpose
+capability as these software use exported files.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples"><div class='input'>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
-<span class='va'>m2</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>child</span><span class='op'>(</span><span class='st'>"m2"</span><span class='op'>)</span>
+<span class='fu'>ls_tempfiles</span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span> <span class='co'>## display all temp files associated with m1</span>
 
-<span class='co'>## use parent object to ensure child object retain</span>
-<span class='co'>## correct parent-child structure</span>
-<span class='va'>m2</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='va'>c</span>
-  <span class='fu'><a href='update_parameters.html'>update_parameters</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>  <span class='co'>## modifying parent object</span>
-  <span class='fu'>child</span><span class='op'>(</span><span class='st'>"m2"</span>, parent <span class='op'>=</span> <span class='va'>m1</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>ls_tempfiles</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span><span class='op'>(</span><span class='op'>)</span>  <span class='co'>## delete all m1 tempfiles</span>
+
+<span class='co'>## above line is equivalent to:</span>
+<span class='fu'>clean_run</span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span>
+
+<span class='fu'>ls_tempfiles</span><span class='op'>(</span><span class='op'>)</span> <span class='co'>## display all temp files in analysis project</span>
+
+<span class='fu'>ls_tempfiles</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span><span class='op'>(</span><span class='op'>)</span> <span class='co'>## remove all temp files in analysis project</span>
 
 <span class='op'>}</span>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

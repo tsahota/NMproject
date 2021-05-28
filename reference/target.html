@@ -40,7 +40,9 @@
 
 
 <meta property="og:title" content="Target part of control object for further modification — target" />
-<meta property="og:description" content="Target part of control object for further modification" />
+<meta property="og:description" content="
+Intended mostly for internal use.  Used with text() to target control file
+modifications to specific NONMEM subroutines" />
 
 
 
@@ -120,25 +122,29 @@
     </div>
 
     <div class="ref-description">
-    <p>Target part of control object for further modification</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Intended mostly for internal use.  Used with <code><a href='https://rdrr.io/r/graphics/text.html'>text()</a></code> to target control file
+modifications to specific NONMEM subroutines</p>
     </div>
 
-    <pre class="usage"><span class='fu'>target</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>dollar</span>, <span class='va'>lines</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>target</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>dollar</span>, <span class='va'>lines</span><span class='op'>)</span>
+
+<span class='fu'>untarget</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>dollar</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>m</th>
-      <td><p>nm object</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     <tr>
       <th>dollar</th>
-      <td><p>character. name of subroutine to target</p></td>
+      <td><p>Sharacter. Name of subroutine to target.</p></td>
     </tr>
     <tr>
       <th>lines</th>
-      <td><p>optional character.  Assignment of lines</p></td>
+      <td><p>Optional character.  Assignment of lines.</p></td>
     </tr>
     </table>
 

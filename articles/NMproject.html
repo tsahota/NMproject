@@ -76,7 +76,7 @@
       <h1 data-toc-skip>NMproject</h1>
                         <h4 class="author">Tarj Sahota</h4>
             
-            <h4 class="date">2021-05-25</h4>
+            <h4 class="date">2021-05-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/tsahota/NMproject/blob/master/vignettes/NMproject.Rmd"><code>vignettes/NMproject.Rmd</code></a></small>
       <div class="hidden name"><code>NMproject.Rmd</code></div>
@@ -300,13 +300,13 @@
 <h3 class="hasAnchor">
 <a href="#clean-up-runs" class="anchor"></a>Clean up runs</h3>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/ls_tempfiles.html">ls_tempfiles</a></span><span class="op">(</span><span class="op">)</span> <span class="co">## will list all temporary files associate with run m1</span>
+<code class="sourceCode R"><span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/temp_files.html">ls_tempfiles</a></span><span class="op">(</span><span class="op">)</span> <span class="co">## will list all temporary files associate with run m1</span>
 
 <span class="co">## remove all temporary files associated with m1</span>
-<span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/ls_tempfiles.html">ls_tempfiles</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/temp_files.html">ls_tempfiles</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="co">## Not specifying an argument will list temporary files of all runs</span>
-<span class="fu"><a href="../reference/ls_tempfiles.html">ls_tempfiles</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/temp_files.html">ls_tempfiles</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="running-nonmem-in-parallel" class="section level3">
 <h3 class="hasAnchor">

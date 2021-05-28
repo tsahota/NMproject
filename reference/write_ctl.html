@@ -40,7 +40,10 @@
 
 
 <meta property="og:title" content="Write control file to disk — write_ctl" />
-<meta property="og:description" content="Normally used by other functions" />
+<meta property="og:description" content="
+Not designed to be used directly.  run_nm() and other functions will use
+this to write the control file contents to the ctl_path() prior to
+execution." />
 
 
 
@@ -120,7 +123,10 @@
     </div>
 
     <div class="ref-description">
-    <p>Normally used by other functions</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Not designed to be used directly.  <code><a href='run_nm.html'>run_nm()</a></code> and other functions will use
+this to write the control file contents to the <code><a href='ctl_path.html'>ctl_path()</a></code> prior to
+execution.</p>
     </div>
 
     <pre class="usage"><span class='fu'>write_ctl</span><span class='op'>(</span><span class='va'>m</span>, force <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
@@ -130,11 +136,11 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>m</th>
-      <td><p>nm object</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     <tr>
       <th>force</th>
-      <td><p>logical (default = FALSE), force write, don't ask (ignore behaviour)</p></td>
+      <td><p>Logical (default = <code>FALSE</code>), force write, don't ask.</p></td>
     </tr>
     </table>
 

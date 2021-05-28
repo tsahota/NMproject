@@ -46,19 +46,10 @@
     <loc>https://tsahota.github.io/NMproject/reference/child.html</loc>
   </url>
   <url>
-    <loc>https://tsahota.github.io/NMproject/reference/clean_run.html</loc>
-  </url>
-  <url>
     <loc>https://tsahota.github.io/NMproject/reference/code_library.html</loc>
   </url>
   <url>
-    <loc>https://tsahota.github.io/NMproject/reference/code_library_path.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/reference/coef_long.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/reference/coef_wide.html</loc>
+    <loc>https://tsahota.github.io/NMproject/reference/coef_widelong.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/comment_out.html</loc>
@@ -197,9 +188,6 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/ls_scripts.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/reference/ls_tempfiles.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/make_OCC_every_dose.html</loc>
@@ -400,16 +388,13 @@
     <loc>https://tsahota.github.io/NMproject/reference/target.html</loc>
   </url>
   <url>
+    <loc>https://tsahota.github.io/NMproject/reference/temp_files.html</loc>
+  </url>
+  <url>
     <loc>https://tsahota.github.io/NMproject/reference/test_relations.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/theta_nm2r.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/reference/uncomment.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/reference/untarget.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/update_parameters.html</loc>

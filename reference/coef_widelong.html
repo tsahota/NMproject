@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Coerce object into nm_list — as_nm_list • NMproject</title>
+<title>Extract parameter values — coef_widelong • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,12 @@
 
 
 
-<meta property="og:title" content="Coerce object into nm_list — as_nm_list" />
-<meta property="og:description" content="This may be relegated to a back end function soon.  Create an nm_list from an
-nm_generic or list or other object coercible into an nm_list." />
+<meta property="og:title" content="Extract parameter values — coef_widelong" />
+<meta property="og:description" content="
+Pulls parameters, standard errors, OFVs and condition numbers out of ext
+files, applies tranformations.  This function is useful when numeric values
+are needed. rr is easier to read, however it returns characters.  A wide
+and long format is available via two different functions." />
 
 
 
@@ -115,27 +118,40 @@ nm_generic or list or other object coercible into an nm_list." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Coerce object into nm_list</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/utilsExtra.R'><code>R/utilsExtra.R</code></a></small>
-    <div class="hidden name"><code>as_nm_list.Rd</code></div>
+    <h1>Extract parameter values</h1>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/run_record.R'><code>R/run_record.R</code></a></small>
+    <div class="hidden name"><code>coef_widelong.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This may be relegated to a back end function soon.  Create an nm_list from an
-nm_generic or list or other object coercible into an nm_list.</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Pulls parameters, standard errors, OFVs and condition numbers out of ext
+files, applies tranformations.  This function is useful when numeric values
+are needed. <code>rr</code> is easier to read, however it returns characters.  A wide
+and long format is available via two different functions.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>as_nm_list</span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>coef_wide</span><span class='op'>(</span><span class='va'>m</span>, trans <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+
+<span class='fu'>coef_long</span><span class='op'>(</span><span class='va'>m</span>, trans <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>m</th>
-      <td><p>An object coercible into an nm object.</p></td>
+      <td><p>A nm object</p></td>
+    </tr>
+    <tr>
+      <th>trans</th>
+      <td><p>Logical (default = <code>TRUE</code>). Transform parameters using comments
+in $THETA/$OMEGA/$SIGMA.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='rr.html'>rr()</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

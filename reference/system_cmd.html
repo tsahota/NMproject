@@ -40,7 +40,11 @@
 
 
 <meta property="og:title" content="System/shell command wrapper — system_cmd" />
-<meta property="og:description" content="System/shell command wrapper" />
+<meta property="og:description" content="
+Will run getOption(&quot;system_cmd&quot;).  A OS agnostic interface to the system
+terminal.  Most of the time this will be the same as system_nm except when
+the PsN/NONMEM execution server is location in a different location to the
+RStudio server." />
 
 
 
@@ -120,7 +124,11 @@
     </div>
 
     <div class="ref-description">
-    <p>System/shell command wrapper</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Will run <code><a href='https://rdrr.io/r/base/options.html'>getOption("system_cmd")</a></code>.  A OS agnostic interface to the system
+terminal.  Most of the time this will be the same as <code>system_nm</code> except when
+the PsN/NONMEM execution server is location in a different location to the
+RStudio server.</p>
     </div>
 
     <pre class="usage"><span class='fu'>system_cmd</span><span class='op'>(</span><span class='va'>cmd</span>, dir <span class='op'>=</span> <span class='st'>"."</span>, <span class='va'>...</span><span class='op'>)</span></pre>
@@ -130,19 +138,29 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>cmd</th>
-      <td><p>character. command to send to shell</p></td>
+      <td><p>Character. Command to send to shell.</p></td>
     </tr>
     <tr>
       <th>dir</th>
-      <td><p>character. directory to run command in</p></td>
+      <td><p>Optional character. Directory to run command in (default = current
+working directory)</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>other arguments passed to system command</p></td>
+      <td><p>Other arguments passed to system command.</p></td>
     </tr>
     </table>
 
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+
+<span class='fu'>system_cmd</span><span class='op'>(</span><span class='st'>"pwd"</span><span class='op'>)</span>
+
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
