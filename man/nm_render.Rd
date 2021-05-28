@@ -45,14 +45,13 @@ execution.}
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 A wrapper around \code{rmarkdown::render} for nm objects.  Use markdown templates
-to create a customised set of diagnostics to reuse on multiple models.
-Ideally, your model selection criteria in your run diagnostics.  To create a
-rmarkdown diagnostic template go to \code{FILE} -> \verb{New File} -> \verb{R markdown} ->
-\verb{From Template} the select from one of the following:
+to create a customised set of diagnostics to reuse on multiple models. In the
+demo an example is shown in \code{Scripts/basic_gof.Rmd}, but ideally you'll
+create your own customised version with everything you need to evaluate your
+model. To create a rmarkdown diagnostic template go to \code{FILE} -> \verb{New File}
+-> \verb{R markdown} -> \verb{From Template} the select from one of the following:
 
-\itemize{
-\item model diagnostic
-\item VPC diagnostic
+\itemize{ \item model diagnostic \item VPC diagnostic
 \item PPC diagnostic
 \item bootstrap results (\code{nm_list_render})
 }

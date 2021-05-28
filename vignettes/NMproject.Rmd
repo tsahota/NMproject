@@ -238,13 +238,29 @@ To view all runs in the workspace and track progress:
 shiny_nm()
 ```
 
-To do basic goodness of fit open the post processing Rmarkdown template, follow instructions, customise your template save it (e.g. as `Scripts/basic_gof.Rmd`) and run in your log script with
+### Diagnostics
+
+Use markdown templates to create a customised set of diagnostics to reuse on multiple models.  In the demo an example is shown in `Scripts/basic_gof.Rmd`, but ideally you'll create your own customised version with everything you need to evaluate your model. To create a rmarkdown diagnostic template go to `FILE` -> `New File` -> `R markdown` -> `From Template` then select from one of the following:
+
+- `model diagnostic`
+
+- `VPC diagnostic`
+
+- `PPC diagnostic`
+
+- `bootstrap results`
+
+*PLACEHOLDER: short youtube video of opening, customizing, saving and running a template.*
+
+A template will appear in the script window for you to customise.  Instructions are the at the top.  Save the file (e.g. as `Scripts/basic_gof.Rmd`) and run in your log script with:
 
 ```{r eval=FALSE}
 m1 <- m1 %>% nm_render("Scripts/basic_gof.Rmd")
 ```
 
-It will create the output in `Results` (or results_dir(m1))
+It will create the output in `Results` (or `results_dir(m1)`)
+
+### Automatic edits
 
 If we already have a parent run `m1` using `ADVAN2 TRANS1`, we can create a `child()` run that uses `TRANS2` using `subroutine()`:
 
