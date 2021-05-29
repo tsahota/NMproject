@@ -40,9 +40,9 @@
 
 
 <meta property="og:title" content="Create analysis project — nm_create_analysis_project" />
-<meta property="og:description" content="Easiest way to use this function is via RStudio menus (FILE -&amp;gt; New Project -&amp;gt;
-New Directory -&amp;gt; New NMproject).  However the function can be used directly
-too." />
+<meta property="og:description" content="This is the underlying function used by: File -&amp;gt; New Project -&amp;gt;
+New Directory -&amp;gt; New NMproject.  It creates a new analysis working
+directory with a directory structure similar to an R package." />
 
 
 
@@ -122,9 +122,9 @@ too." />
     </div>
 
     <div class="ref-description">
-    <p>Easiest way to use this function is via RStudio menus (FILE -&gt; New Project -&gt;
-New Directory -&gt; New NMproject).  However the function can be used directly
-too.</p>
+    <p>This is the underlying function used by: <code>File</code> -&gt; <code>New Project</code> -&gt;
+<code>New Directory</code> -&gt; <code>New NMproject</code>.  It creates a new analysis working
+directory with a directory structure similar to an R package.</p>
     </div>
 
     <pre class="usage"><span class='fu'>nm_create_analysis_project</span><span class='op'>(</span>
@@ -140,26 +140,26 @@ too.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>path</th>
-      <td><p>character path (relative or absolute) to project.  If just
+      <td><p>Character path (relative or absolute) to project.  If just
 specifying a name, this will create the analysis project in the current
-working directory</p></td>
+working directory.</p></td>
     </tr>
     <tr>
       <th>dirs</th>
-      <td><p>character list or vector.  Default = <code><a href='nm_default_dirs.html'>nm_default_dirs()</a></code></p></td>
+      <td><p>Character list or vector.  Default = <code><a href='nm_default_dirs.html'>nm_default_dirs()</a></code></p></td>
     </tr>
     <tr>
       <th>style</th>
-      <td><p>character. Currently only "simple" See details</p></td>
+      <td><p>Character. Currently only "simple" See details.</p></td>
     </tr>
     <tr>
       <th>use_renv</th>
-      <td><p>logical (default = FALSE). should renv be used or not in
+      <td><p>Logical (default = <code>FALSE</code>). Should <code>renv</code> be used or not in
 project.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>deprecated</p></td>
+      <td><p>Deprecated.</p></td>
     </tr>
     </table>
 
@@ -170,6 +170,27 @@ project.</p></td>
 name.  It is therefore possible to violate R package naming conventions.
 This is to cater to users who like underscores and aren't interested in
 creating a package.</p>
+    <h2 class="hasAnchor" id="default-modelling-directories"><a class="anchor" href="#default-modelling-directories"></a>Default modelling directories</h2>
+
+    
+
+
+<p>Default modelling directories can be modified with <code>nm_default_dirs</code> option
+(see <code><a href='https://rdrr.io/r/base/options.html'>options()</a></code> for information on how to modify this). A (partially) named
+list of directories to be used by <code>nm_create_analysis_project</code> Required names
+are <code>"models"</code>, <code>"scripts"</code> and <code>"results"</code>. By default these are set to
+<code>"Models"</code>, <code>"Scripts"</code> and <code>"Results"</code>, respectively. Additional nameless
+characters (e.g. <code>"SourceData"</code>) correspond to additional modelling
+directories.</p>
+<dl>
+<dt>"SourceData":</dt><dd><p>intended for unmodified source datasets entering the analysis project.</p></dd>
+<dt>"DerivedData":</dt><dd><p>intended for cleaned and processed NONMEM ready datasets</p></dd>
+<dt>"Scripts":</dt><dd><p>intended for all R scripts</p></dd>
+<dt>"Models":</dt><dd><p>intended for all NONMEM modelling</p></dd>
+<dt>"Results":</dt><dd><p>intended as default location for run diagnostics, plots and tables</p></dd>
+
+</dl>
+
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
