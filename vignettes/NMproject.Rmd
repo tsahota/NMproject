@@ -164,7 +164,7 @@ The model will be in the staging area: `staging/Models/ADVAN2.mod`, not `Models/
 
 `File` -> `New File` -> `New Rmarkdown...` -> `From Template` -> `Model development` will get you started with a model development log file.
 
-## NM objects
+## The core nm object
 
 The core nm object is created via the `new_nm()`.  Subsequent child objects are created via the `child()` function. All interactions with NONMEM occur through the this object.  It contains metadata about the NONMEM run and contain the contents of what will writtent as the control file (also called model file).
 
@@ -250,7 +250,7 @@ m1 <- new_nm(run_id = "m1",
 
 ```
 
-## executing NONMEM
+## Executing NONMEM
 
 Thus far, we have not executed NONMEM nor saved the control file to the file system.  To execute, we simply pipe into the `run_nm()` function which will often form the last step of the chain and then run the command.
 
@@ -275,7 +275,7 @@ In a cluster environment it is especially important to be able to diagnose data 
 
 ## Manual edits
 
-Often there will not be the functions to do the control file manipulation you want.  Although it is preferable to stick to automatic control file manipulation functions, you can do full tracked `manual_edit`s via the addin menu.  Again, just highlight the code, click the addin and follow the instructions:
+Often there will not be the functions to do the control file manipulation you want.  Although it is preferable to stick to automatic control file manipulation functions, you can do fully tracked `manual edit`s via the addin menu.  Again, just highlight the code, click the addin and follow the instructions:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/HyCHeAAiwy4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
