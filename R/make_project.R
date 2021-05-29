@@ -1,24 +1,52 @@
 #' Create analysis project
 #'
-#' Easiest way to use this function is via RStudio menus (FILE -> New Project ->
-#' New Directory -> New NMproject).  However the function can be used directly
-#' too.
+#' This is the underlying function used by: `File` -> `New Project` -> 
+#' `New Directory` -> `New NMproject`.  It creates a new analysis working 
+#' directory with a directory structure similar to an R package.
 #'
-#' @param path character path (relative or absolute) to project.  If just
+#' @param path Character path (relative or absolute) to project.  If just
 #'   specifying a name, this will create the analysis project in the current
-#'   working directory
-#' @param dirs character list or vector.  Default = `nm_default_dirs()`
-#' @param style character. Currently only "simple" See details
-#' @param use_renv logical (default = FALSE). should renv be used or not in
+#'   working directory.
+#' @param dirs Character list or vector.  Default = `nm_default_dirs()`
+#' @param style Character. Currently only "simple" See details.
+#' @param use_renv Logical (default = `FALSE`). Should `renv` be used or not in
 #'   project.
-#' @param ... deprecated
+#' @param ... Deprecated.
 #'
 #' @details The function works like as is inspired by
 #'   `starters::create_analysis_project`. There is no restriction on directory
 #'   name.  It is therefore possible to violate R package naming conventions.
 #'   This is to cater to users who like underscores and aren't interested in
 #'   creating a package.
+#'   
+#' @section Default modelling directories:
 #'
+#' Default modelling directories can be modified with `nm_default_dirs` option
+#' (see [options()] for information on how to modify this). A (partially) named
+#' list of directories to be used by `nm_create_analysis_project` Required names
+#' are `"models"`, `"scripts"` and `"results"`. By default these are set to
+#' `"Models"`, `"Scripts"` and `"Results"`, respectively. Additional nameless
+#' characters (e.g. `"SourceData"`) correspond to additional modelling
+#' directories.
+#' 
+#' \describe{
+#'   \item{"SourceData":}{
+#'   intended for unmodified source datasets entering the analysis project.
+#'   }
+#'   \item{"DerivedData":}{
+#'   intended for cleaned and processed NONMEM ready datasets
+#'   }
+#'   \item{"Scripts":}{
+#'   intended for all R scripts
+#'   }
+#'   \item{"Models":}{
+#'   intended for all NONMEM modelling
+#'   }
+#'   \item{"Results":}{
+#'   intended as default location for run diagnostics, plots and tables
+#'   }
+#' }
+#' 
 #' @export
 
 nm_create_analysis_project <- function(path, dirs = nm_default_dirs(), 

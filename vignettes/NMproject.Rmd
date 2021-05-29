@@ -9,9 +9,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-## Why NMproject?
+# Why NMproject?
 
-### History
+## History
 
 NMproject's initial outing (the "alpha" interface) was developed in AZ and internally had 83% voluntary user retention ("user" = someone with 5+ separate model development workflows) across 100s of analyses in all TAs.  It was a prototype R package produced to demonstrate the concept of industrialising pharmacometric analyses via script based model development.  Key benefits included:
 
@@ -23,7 +23,7 @@ NMproject's initial outing (the "alpha" interface) was developed in AZ and inter
 
 4. installable in a wide variety of infrastructures in multiple organisations, from standalone windows installations to large unix based clusters
 
-### New interface
+## New interface
 
 This is the new "beta" interface.  A completely redesigned syntax that address several shortcoming of the previous syntax and expands functionality.  Why the redesign?
 
@@ -49,7 +49,7 @@ This is the new "beta" interface.  A completely redesigned syntax that address s
 
 NMproject has been used to conduct exploratory analyses and submission work.  Model based power calculations were performed with NMproject in collaboration with biostatistics to demonstrate feasibility, design (sample size and dose), and to plan interim decision points of a recently published oncology dose finding study using pharmacometric endpoints: [video presentation](https://youtu.be/QVw28Im3Zz0)
 
-### Prerequisites
+## Prerequisites
 
 NMproject targetted towards mid to upper level R users. If you know what a pipe is, what knitr is, you should be good.  NMproject does not hide NONMEM from the user so users should be familiar with NONMEM coding.  For advanced functionality, knowledge of dplyr will help to create complex workflows.
 
@@ -85,14 +85,13 @@ orig_dir <- getwd()
 
 ```
 
+# Demo: Learning by doing
 
-## Demo
-
-The easiest way to familiarise your with NMproject is to follow through the demo.
+The easiest way to familiarise your with NMproject is to run through the demo.  Here's a short YouTube video on running the demo
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/nAkcEFz0RLg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-First create a new NMproject (`FILE` -> `New Project` -> `New Directory` -> `New NMproject`). You'll see a clean analysis directory with empty subfolders.  Run the following in the new R session:
+Run the following in the new R session:
 
 ```{r eval = FALSE}
 library(NMproject)
@@ -101,19 +100,43 @@ setup_nm_demo()
 
 This will population the `Scripts` directory with scripts, and deposit the Theopp dataset into the `SourceData` subdirectory.
 
-The scripts are numbered s01.....Rmd, s02....Rmd etc., and are designed to be read and run in order.  This is the best way to familiarize yourself.  The scripts can also be used as template for your own model development
+The scripts are numbered `s01.....Rmd`, `s02....Rmd` etc., and are designed to be read and run in order.  The scripts can also be used as template for your own model development
 
-## NMproject Usage
+# Code and data preparation
 
-### Creating new R markdowns
+## Creating Analysis Project 
+
+It is recommended to work in structured.  Create a new analysis project via the RStudio menu items: `FILE` -> `New Project` -> `New Directory` -> `New NMproject`.  The underlying function being used to create this analysis project is `nm_create_analysis_project()`.  See documentation for detailed information including how to modify the structure to suit your preferences.
+
+Follow through the instructions, you'll be asked for a location, a name and whether you want to use `renv` to manage project library directories.  See `renv` documentation for more information.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/nAkcEFz0RLg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+Once created you'll see a clean analysis directory with empty subfolders.
+
+Default the subdirectories for model development (these can be modified - see `nm_create_analysis_project()` documentation):
+
+- SourceData : intended for unmodified source datasets entering the analysis project
+
+- DerivedData : intended for cleaned and processed NONMEM ready datasets
+
+- Scripts : intended for all R scripts
+
+- Models : intended for all NONMEM modelling
+
+- Results : intended as default location for run diagnostics, plots and tables
+
+## Creating new R markdowns
 
 There is nothing mandating the use of R markdown in NMproject.  You can use scripts.  However R markdown documents produce nice sharable model development logs which provide a readable description of what steps were performed and in what order.
 
-It is advisable to always start from a template.  Templates can be accessed in `New Rmarkdown` -> `From Template`.  One example template is `model generic` which can be used to get started with our dataset cleaning and exploratory plotting.
+It is advisable to always start from a template.  Templates can be accessed in `File` -> `New File` -> `Rmarkdown...` -> `From Template`.  Two to get started with are `NMproject generic` which we'll use as a generic template for data processing and cleaning and `model development` for our model development notebook.
 
-### Data cleaning
+## Data cleaning
 
-Your first script in performing an analysis will probably be a dataset assembly or dataset cleaning.  The intent of the `SourceData` directory is to serve as an entry point of raw or externally produced dataset into your analysis directory.
+Your first script in performing an analysis will probably be a dataset assembly or dataset cleaning.  It's easiest to start with the generic `NMproject generic` R markdown template.
+
+The intent of the `SourceData` directory is to serve as an entry point of raw or externally produced dataset into your analysis directory.
 
 It is *best practice* to use relative paths in your code where possible and to avoid using `setwd()` commands to change the working directory.  E.g. to read a data set in the `SourceData` directory, use `read.csv("SourceData/data.csv")`.
 
@@ -127,9 +150,7 @@ d %>% write_derived_data("DerivedData/data.csv")
 
 See the demo for how/why to create bootstrapped datasets before beginning model development.
 
-### Model development
-
-`New Rmarkdown` -> `From Template` -> `Model development` will get you started with a model development log file.
+## Code Library
 
 It's always best to start with NONMEM template too.  Search the code library and bring into staging area of analysis project using the `code_library` addin:
 
@@ -139,9 +160,17 @@ One of the templates is `Models/ADVAN2.mod`.  Select it, `preview` it and then `
 
 The model will be in the staging area: `staging/Models/ADVAN2.mod`, not `Models/ADVAN2.mod`.  Files in the staging area are not to be modified. It's similar to the `SourceData` directory in that sense.  This is to ensure that we can make changes to `ADVAN2.mod` in the code library without breaking old analyses that depended on it.
 
-The other important component to understand is that control files are only written to the `Models` subdirectory just before running nonmem via the `run_nm()` command.  Prior to this, control file information is stored within the object itself.
+# Model development
 
-Let's create our first NONMEM object with `new_nm()`.  This will be a parent run to all other runs and thus requires more set up than other runs. Subsequent child objects will inherits characteristics of the parent.
+`File` -> `New File` -> `New Rmarkdown...` -> `From Template` -> `Model development` will get you started with a model development log file.
+
+## NM objects
+
+The core nm object is created via the `new_nm()`.  Subsequent child objects are created via the `child()` function. All interactions with NONMEM occur through the this object.  It contains metadata about the NONMEM run and contain the contents of what will writtent as the control file (also called model file).
+
+NONMEM control files are only written to the `Models` sub-directory just before running NONMEM via the `run_nm()` command
+
+Let's create our first NONMEM object with `new_nm()`.  This will be a parent run to all other runs and thus requires more set up than other runs. Subsequent child objects created with `child()` will inherits characteristics of the parent.
 
 Three arguments are required to create the parent, a run identifier, `run_id`, a control file it's based on, `based_on`, and a (relative) dataset path `data_path`:
 
@@ -174,19 +203,21 @@ m1 <- new_nm(run_id = "m1",
 
 ```
 
-will run all models in a subdirectory of a subdirectory `NONMEM/base_model` instead.  Any field can by modified using a similar heuristic.
+will run all models in a subdirectory of a subdirectory `NONMEM/base_model/` instead (the $DATA (relative) path to the dataset will be automatically be updated to reflect the new location of the control file).  Any field can by modified using a similar heuristic.
+
+Piping is encouraged because it enables you to read the sequence of events in the order that they occur.  Here we just have a single pipe, but you'll see that we will frequently pipe longer chains of commands together.  Each step is applying a transformation to the core nm object.  The chain can be partially run in the console to see what each transformation is doing.  The rest of this document is full of pipes so if you are unfamiliar with pipes, please consult the `magrittr` documentation.
 
 To extract a field (rather than set a field) use the same function without additional arguments:
 
 ```{r}
 
-m1 %>% run_in()
+run_in(m1)
 
 ```
 
-For now though, lets stay with the default `run_in` location.  
+For now though, we'll remove the last piped command and stay with the default `run_in` location.  
 
-*NOTE:* the field `ctl_name` refers to the name of the control that will be created.  This will only be created when it the model is run with the `run_nm()` function (described later).  For now, the control file contents reside inside the object.  To view these you can use `show_ctl(m1)`, or `text(m1)`.
+*NOTE:* the field `ctl_name` refers to the name of the control that will be created.  This will only be created when it the model is run with the `run_nm()` function (described later).  For now, the control file contents reside inside the object.  To view these you can use `show model/ctl file` addin , or `text(m1)`.
 
 A few automatic edits from the staged control file and a compact representation of these changes can be shown by highlighting the above code and selecting the `nm_diff` addin which show what has been changed.
 
@@ -205,7 +236,23 @@ m1 <- new_nm(run_id = "m1",
 
 ```
 
-The final steps to gets the NONMEM model ready is to fill in the remaining blanks in the template.  They are the `$INPUT` and `$THETA`, `$OMEGA`.  For this we will use the `fill_input()` and `init_theta()` and `init_omega()` before piping into our `run_nm()` command.
+The final steps to gets the NONMEM model ready is to fill in the remaining blanks in the template.  They are the `$INPUT` and `$THETA`, `$OMEGA`.  For this we will use the `fill_input()` and `init_theta()` and `init_omega()`.
+
+```{r eval=FALSE}
+
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv") %>%
+  cmd("execute {ctl_name} -dir={run_dir}") %>%
+  fill_input() %>%
+  init_theta(init = c(-2, 0.5, 1)) %>%
+  init_sigma(init = c(0.1, 0.1))
+
+```
+
+## executing NONMEM
+
+Thus far, we have not executed NONMEM nor saved the control file to the file system.  To execute, we simply pipe into the `run_nm()` function which will often form the last step of the chain and then run the command.
 
 ```{r eval=FALSE}
 
@@ -220,17 +267,19 @@ m1 <- new_nm(run_id = "m1",
 
 ```
 
-### Fast NMTRAN checks
+## Fast NMTRAN checks
+
+PLACEHOLDER: YouTube video showing nm tran addin in action.
 
 In a cluster environment it is especially important to be able to diagnose data and control file issues before sending jobs off to the grid.  Otherwise, you often need to wait minutes for errors that can be spotted immediately.  It's therefore highly recommended to make use of the `nm_tran` addin.  This will only run NMTRAN checks to find control file syntax errors and dataset errors.  It will not run nonmem itself.  To use this addin, highlight the above code and select the `nm_tran` addin near the top of the RStudio GUI.
 
-### Manual edits
+## Manual edits
 
 Often there will not be the functions to do the control file manipulation you want.  Although it is preferable to stick to automatic control file manipulation functions, you can do full tracked `manual_edit`s via the addin menu.  Again, just highlight the code, click the addin and follow the instructions:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/HyCHeAAiwy4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-### Shiny run monitor
+## Shiny run monitor
 
 To view all runs in the workspace and track progress:
 
@@ -238,7 +287,7 @@ To view all runs in the workspace and track progress:
 shiny_nm()
 ```
 
-### Diagnostics
+## Diagnostics
 
 Use markdown templates to create a customised set of diagnostics to reuse on multiple models.  In the demo an example is shown in `Scripts/basic_gof.Rmd`, but ideally you'll create your own customised version with everything you need to evaluate your model. To create a rmarkdown diagnostic template go to `FILE` -> `New File` -> `R markdown` -> `From Template` then select from one of the following:
 
@@ -260,9 +309,9 @@ m1 <- m1 %>% nm_render("Scripts/basic_gof.Rmd")
 
 It will create the output in `Results` (or `results_dir(m1)`)
 
-### Automatic edits
+## Automatic edits
 
-If we already have a parent run `m1` using `ADVAN2 TRANS1`, we can create a `child()` run that uses `TRANS2` using `subroutine()`:
+NMproject contains several functions for automatic control file edits.  We have already seen `fill_input()` and `init_theta()` etc.  There are higher order functions which make multiple changes to your control stream, one of which is the `subroutine()`.  If we already have a parent run `m1` using `ADVAN2 TRANS1`, we can create a `child()` run that uses `TRANS2` using:
 
 ```{r include=FALSE}
 
@@ -326,7 +375,9 @@ covariance_plot(m2)
 
 However these are better placed inside templates to enable rapid and consistent re-use.
 
-Create a simulation run using `update_parameters()` and `convert_to_simulation()`.  Apply vpc and ppc diagnostics
+## Simulation based diagnostics
+
+Create simulation based diagnostics first by running a simulation using `update_parameters()` and `convert_to_simulation()`.  Then use the `ppc diagnostics` and `vpc diagnostics` R markdown templates to generate customisable vpc and ppc diagnostics reports.
   
 ```{r eval=FALSE}
 m2s <- m2 %>% child(run_id = "m2s") %>%
@@ -341,7 +392,7 @@ m2s %>% nm_render("Scripts/basic_ppc.Rmd")
 
 Don't forget to comment your code with your decision making.
 
-### Clean up runs
+## Clean up runs
 
 ```{r eval=FALSE}
 
@@ -355,7 +406,7 @@ ls_tempfiles()
 
 ```
 
-### Running NONMEM in parallel
+## Running NONMEM with parallel processing
 
 Two fields `parafile` and `cores` when combined with a suitable `cmd` can enable runs to be executed in parallel using PsN.
 
@@ -377,7 +428,7 @@ m1 <- m1 %>%
   cores(4)
 ```
 
-### Bootstraps
+## Bootstraps
 
 The package `rsample` can be used to create bootstrap datasets in your initial data manipulation scripts.  The following is an example bootstrap dataset being prepared with stratification on `SEX` and bodyweight `WTC` categorised in two categories  
 
@@ -414,6 +465,85 @@ m1_boot$m %>% nm_list_render("Scripts/basic_boot.Rmd")
 
 Results can be viewed in `Results/basic_boot.m1.html`.
 
+## Stepwise covariate selection
+
+Covariate analysis in NMproject is part way between PsN's SCM and completely manual process to allow you to apply your full model selection criteria to each forward and backward elimination step rather than being constrained to log-likelihood ratio tests.  The syntax of how covariates are included is the same as PsN's SCM routine - See PsN documentation for more information there.
+
+Relationships to tests are defined using the `test_relations()` function.  Below we test `BWT` and `AGE` on all parameters in both `linear` and `power` fashion and all parameters are test with the categorical covariate `SEX`.
+
+```{r eval = FALSE}
+
+dtest <- test_relations(param = c("KA", "K", "V"),
+                        cov = c("BWT", "AGE"),
+                        state = c("linear", "power"),
+                        continuous = TRUE)
+dtest <- dtest %>%
+             test_relations(param = c("KA", "K", "V"),
+                            cov = "SEX",
+                            state = "linear",
+                            continuous = FALSE)
+
+```
+
+The workflow for forward (and backward) steps then becomes
+
+1. create a `tibble` of runs for the next step with `covariate_step_tibble()`
+2. run all with `run_nm()`
+3. collect results with `bind_covariate_results()`
+4. evaluate top performing runs
+5. Either select a run to take to the next step (go back to step 1) OR stop.
+
+Here are steps 1-3 in action:
+
+```{r eval = FALSE}
+
+## create tibble of covariate step with model objects as column m
+dsm1 <- m1 %>% covariate_step_tibble(
+  run_id = "m1_f1",
+  dtest = dtest,
+  direction = "forward"
+)
+
+## run all models greedily
+dsm1$m <- dsm1$m %>% run_nm()
+
+## extract results and put into tibble
+dsm1 <- dsm1 %>% bind_covariate_results()
+
+
+```
+
+Here are steps 4-5: evaluate and select
+
+```{r eval = FALSE}
+
+## sort by BIC (for example) and view
+dsm1 <- dsm1 %>% arrange(BIC)
+dsm1
+
+## check condition number, covariance,...
+
+## run diagnostic reports on the top three
+dsm1$m[1:3] %>% nm_render("Scripts/basic_gof.Rmd")
+
+## In this case we selec the first: dsm1$m[1]
+m1_f1 <- dsm1$m[1]   ## select most signifcant BIC
+
+```
+
+Do next forward step
+
+```{r eval = FALSE}
+
+dsm2 <- m1_f1 %>% covariate_step_tibble(
+  run_id = "m1_f2",
+  dtest = dtest,
+  direction = "forward"
+)
+
+```
+
+continue for as many steps as needed
 
 ```{r include=FALSE}
 m1 <- dir(".cache", full.names = TRUE) %>%
@@ -421,7 +551,7 @@ m1 <- dir(".cache", full.names = TRUE) %>%
   {as_nm_list(readRDS(.)$object)}
 ```
 
-### Setting initial estimates
+## Setting initial estimates
 
 The functions `init_theta`, `init_omega` and `init_sigma` can be used to get and set initial estimation, parameter bounds, names, units, etc.  The work much like the functions used to access fields of the nm object
 
@@ -455,7 +585,7 @@ m1 %>% dollar("OMEGA")
 
 ```
 
-### Perturbing initial parameters
+## Perturbing initial parameters
 
 To modify initial estimates, we'll use the `mutate` like behaviour of `init_*` functions.  We will modify the `init` by referencing itself.  We'll modified all our fixed effects (log transformed) by 30%
 
@@ -473,7 +603,9 @@ m1 <- m1 %>% init_theta(init = rnorm(init, mean = init, sd = 0.3))
 
 View with `m1 %>% dollar("THETA")`.
 
-## Advanced usage
+# Advanced topics
+
+## Vectorization
 
 The basic nm object is fully vectorized.  To see this compare the following two outputs
 
@@ -525,7 +657,7 @@ The reset of the code in this vignette will use the dplyr layout.
 
 Note that here the functions `init_theta`, `dollar` and `run_nm` were all operating in a vectorized fashion
 
-### Automating model checking
+## Automating model checking
 
 Lets expand the earlier subroutine example to build a vector of runs that test multiple different `ADVAN`s and `TRANS` at the same time.
 
@@ -571,7 +703,7 @@ dt$m %>%
 
 ```
 
-### Parallel efficiency test
+## Parallel efficiency test
 
 Often you'll want to know the right level of parallelisation to run your model to maximise speed without wasting too many resources.  The following creates multiple runes with different levels of parallelisation. We'll just test it across 1, 3, 10, and 30 cores, but this can be any vector.
 
@@ -605,7 +737,7 @@ dc$m %>%
   
 ```
 
-### Simulation re-estimation
+## Simulation re-estimation
 
 There will soon a be a simple wrapper for the code below, as with the bootstrap and step wise covariate functionaliy above, but for now the code below is a good example of how the flexibility of the vectorized object can be used to create complex workflows whilst still providing granular control of runs.
 
@@ -651,7 +783,7 @@ dsr$mest %>% run_nm() %>%
 
 
 
-## FAQ
+# FAQ
 
 ### + I have a pre-prepared model and dataset. What's the fastest way to make an nm object and make use of the objects functionality for scripting, post processing etc.
 

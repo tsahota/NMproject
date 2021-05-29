@@ -13,6 +13,8 @@ Industrialisation of 'NONMEM'
 \section{Package options}{
 
 
+See \code{\link[=options]{options()}} for information on how to modify these:
+
 \describe{
 \item{system_cmd}{
 See \code{?system_cmd}.
@@ -32,16 +34,16 @@ This is modifiable in case future versions of NONMEM contain new
 subroutines.
 }
 \item{nm_default_dirs}{
-A optional (partially) named list of directories
+An optional (partially) named list of directories
 to be used by \code{nm_create_analysis_project} to create the project
-directory structure when making a new analysis projct.
-Required names are "models", "scripts" and "results".
-By default these will be set to "Models", "Scripts" and "Results",
-respectively.  Additional characters (e.g. "SourceData") will ensure
-that those directories are presente in new projects.
+directory structure when making a new analysis project.
+Required names are \code{"models"}, \code{"scripts"} and \code{"results"}.
+By default these will be set to \code{"Models"}, \code{"Scripts"} and \code{"Results"},
+respectively.  Additional characters (e.g. \code{"SourceData"}) correspond to
+additional modelling directories to be created.
 }
 \item{kill_job}{
-An option function to kill jobs before they are started.
+An optional function to kill jobs before they are started.
 This is useful in infrastructures, where repeating a job conflicts with
 other jobs writing into the same directories.  For example, in slurm grids
 this could be a function wrapper around a \code{system("scancel ...")}

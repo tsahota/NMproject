@@ -49,9 +49,10 @@ rlang::.data
 
 #' Compute path relative to reference
 #'
-#' @param path Path of desired directory or file
-#' @param relative_path Path of directory to travel from
+#' @param path Path of desired directory or file.
+#' @param relative_path Path of directory to travel from.
 #'
+#' @keywords internal
 #' @export
 
 relative_path <- function(path, relative_path){

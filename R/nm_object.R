@@ -100,31 +100,38 @@ To use the alpha interface, install NMproject 0.3.2",
 #' @export
 nm <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
 
-#'Create a new (parent) nm object
+#' Create a new (parent) nm object
 #'
-#'  escription `r lifecycle::badge("stable")`
+#' @description `r lifecycle::badge("stable")`
 #'
-#'  Create a new parent `nm` object.  Normally the first NONMEM you create will
-#'  be using this functions.  Subsequent objects created with the [child()]
-#'  function will inherit the properties of the parent run.
+#' Create a new parent `nm` object.  Normally the first NONMEM object you create
+#' will be using this function.  Subsequent objects created with the [child()]
+#' function will inherit the properties of the parent run.
 #'
-#'@param based_on Character. Prior ctl file to base run on
-#'@param run_id Character. Run identifier
-#'@param data_path Character. Path to dataset
-#'@param cmd Optional character. PsN command to use. If unspecified will use
-#'  `getOption("nm.cmd_default")`. Use glue notation for inheritance.  See
-#'  details.
+#' @param based_on Character. Relative path to an existing control file from
+#'   which to base this run.  NMproject will not modify or run this control
+#'   file.  Instead it will create a new control file specified by the
+#' `ctl_name` field (see Details below).
+#' @param run_id Character. Run identifier. This is used to name the run and
+#'   output files such as $TABLE outputs.
+#' @param data_path Character. Path to dataset. If this is not specified,
+#'   NMproject will try to guess based on the current $DATA components of the
+#'   file specified in `based_on`.  However it is recommended to specify this
+#'   explicitly as a relative path.
+#' @param cmd Optional character. PsN command to use. If unspecified will use
+#'   `getOption("nm.cmd_default")`. Use glue notation for inheritance.  See
+#'   details.
 #'
-#'@details The `cmd` field uses `glue` notation.  So instead of specifying
+#' @details The `cmd` field uses `glue` notation.  So instead of specifying
 #'  `execute runm1.mod -dir=m1`, it is best to specify `execute {ctl_name}
 #'  -dir={run_dir}`.  The values of `ctl_name` and `run_dir` refer to object
 #'  fields and if these change value like when the `child()` function is used to
 #'  create a separate child object, the `cmd` field will update automatically.
 #'
-#'@section object fields:
+#' @section object fields:
 #'
-#'  Each field has a corresponding function (documented in [nm_getsetters]) of the same name to access and
-#'  modify it's value.
+#'  Each field has a corresponding function (documented in [nm_getsetters]) of
+#'  the same name to access and modify it's value.
 #'  
 #'  \describe{ 
 #'  \item{type}{
@@ -169,8 +176,8 @@ nm <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
 #'  }
 #'  }
 #'
-#'@return An object of class `nm_list`.  Attributes
-#'@seealso [nm_getsetters()], [child()]
+#' @return An object of class `nm_list`.  Attributes
+#' @seealso [nm_getsetters()], [child()]
 #' @examples
 #' \dontrun{
 #'
@@ -186,8 +193,8 @@ nm <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
 #' ctl_name(m1)
 #' run_dir(m1)
 #'
-#'}
-#'@export
+#' }
+#' @export
 new_nm <- function(based_on,
                    run_id = NA_character_, 
                    data_path, 

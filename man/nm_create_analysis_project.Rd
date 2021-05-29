@@ -13,23 +13,23 @@ nm_create_analysis_project(
 )
 }
 \arguments{
-\item{path}{character path (relative or absolute) to project.  If just
+\item{path}{Character path (relative or absolute) to project.  If just
 specifying a name, this will create the analysis project in the current
-working directory}
+working directory.}
 
-\item{dirs}{character list or vector.  Default = \code{nm_default_dirs()}}
+\item{dirs}{Character list or vector.  Default = \code{nm_default_dirs()}}
 
-\item{style}{character. Currently only "simple" See details}
+\item{style}{Character. Currently only "simple" See details.}
 
-\item{use_renv}{logical (default = FALSE). should renv be used or not in
+\item{use_renv}{Logical (default = \code{FALSE}). Should \code{renv} be used or not in
 project.}
 
-\item{...}{deprecated}
+\item{...}{Deprecated.}
 }
 \description{
-Easiest way to use this function is via RStudio menus (FILE -> New Project ->
-New Directory -> New NMproject).  However the function can be used directly
-too.
+This is the underlying function used by: \code{File} -> \verb{New Project} ->
+\verb{New Directory} -> \verb{New NMproject}.  It creates a new analysis working
+directory with a directory structure similar to an R package.
 }
 \details{
 The function works like as is inspired by
@@ -38,3 +38,33 @@ name.  It is therefore possible to violate R package naming conventions.
 This is to cater to users who like underscores and aren't interested in
 creating a package.
 }
+\section{Default modelling directories}{
+
+
+Default modelling directories can be modified with \code{nm_default_dirs} option
+(see \code{\link[=options]{options()}} for information on how to modify this). A (partially) named
+list of directories to be used by \code{nm_create_analysis_project} Required names
+are \code{"models"}, \code{"scripts"} and \code{"results"}. By default these are set to
+\code{"Models"}, \code{"Scripts"} and \code{"Results"}, respectively. Additional nameless
+characters (e.g. \code{"SourceData"}) correspond to additional modelling
+directories.
+
+\describe{
+\item{"SourceData":}{
+intended for unmodified source datasets entering the analysis project.
+}
+\item{"DerivedData":}{
+intended for cleaned and processed NONMEM ready datasets
+}
+\item{"Scripts":}{
+intended for all R scripts
+}
+\item{"Models":}{
+intended for all NONMEM modelling
+}
+\item{"Results":}{
+intended as default location for run diagnostics, plots and tables
+}
+}
+}
+

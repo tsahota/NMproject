@@ -7,11 +7,18 @@
 new_nm(based_on, run_id = NA_character_, data_path, cmd)
 }
 \arguments{
-\item{based_on}{Character. Prior ctl file to base run on}
+\item{based_on}{Character. Relative path to an existing control file from
+which to base this run.  NMproject will not modify or run this control
+file.  Instead it will create a new control file specified by the
+\code{ctl_name} field (see Details below).}
 
-\item{run_id}{Character. Run identifier}
+\item{run_id}{Character. Run identifier. This is used to name the run and
+output files such as $TABLE outputs.}
 
-\item{data_path}{Character. Path to dataset}
+\item{data_path}{Character. Path to dataset. If this is not specified,
+NMproject will try to guess based on the current $DATA components of the
+file specified in \code{based_on}.  However it is recommended to specify this
+explicitly as a relative path.}
 
 \item{cmd}{Optional character. PsN command to use. If unspecified will use
 \code{getOption("nm.cmd_default")}. Use glue notation for inheritance.  See
@@ -21,13 +28,13 @@ details.}
 An object of class \code{nm_list}.  Attributes
 }
 \description{
-escription \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Create a new parent \code{nm} object.  Normally the first NONMEM object you create
+will be using this function.  Subsequent objects created with the \code{\link[=child]{child()}}
+function will inherit the properties of the parent run.
 }
 \details{
-Create a new parent \code{nm} object.  Normally the first NONMEM you create will
-be using this functions.  Subsequent objects created with the \code{\link[=child]{child()}}
-function will inherit the properties of the parent run.
-
 The \code{cmd} field uses \code{glue} notation.  So instead of specifying
 \verb{execute runm1.mod -dir=m1}, it is best to specify \verb{execute \{ctl_name\} -dir=\{run_dir\}}.  The values of \code{ctl_name} and \code{run_dir} refer to object
 fields and if these change value like when the \code{child()} function is used to
@@ -36,8 +43,8 @@ create a separate child object, the \code{cmd} field will update automatically.
 \section{object fields}{
 
 
-Each field has a corresponding function (documented in \link{nm_getsetters}) of the same name to access and
-modify it's value.
+Each field has a corresponding function (documented in \link{nm_getsetters}) of
+the same name to access and modify it's value.
 
 \describe{
 \item{type}{
