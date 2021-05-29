@@ -187,9 +187,9 @@
 <h1 class="hasAnchor">
 <a href="#model-development" class="anchor"></a>Model development</h1>
 <p><code>File</code> -&gt; <code>New File</code> -&gt; <code>New Rmarkdown...</code> -&gt; <code>From Template</code> -&gt; <code>Model development</code> will get you started with a model development log file.</p>
-<div id="nm-objects" class="section level2">
+<div id="the-core-nm-object" class="section level2">
 <h2 class="hasAnchor">
-<a href="#nm-objects" class="anchor"></a>NM objects</h2>
+<a href="#the-core-nm-object" class="anchor"></a>The core nm object</h2>
 <p>The core nm object is created via the <code><a href="../reference/new_nm.html">new_nm()</a></code>. Subsequent child objects are created via the <code><a href="../reference/child.html">child()</a></code> function. All interactions with NONMEM occur through the this object. It contains metadata about the NONMEM run and contain the contents of what will writtent as the control file (also called model file).</p>
 <p>NONMEM control files are only written to the <code>Models</code> sub-directory just before running NONMEM via the <code><a href="../reference/run_nm.html">run_nm()</a></code> command</p>
 <p>Let’s create our first NONMEM object with <code><a href="../reference/new_nm.html">new_nm()</a></code>. This will be a parent run to all other runs and thus requires more set up than other runs. Subsequent child objects created with <code><a href="../reference/child.html">child()</a></code> will inherits characteristics of the parent.</p>
@@ -254,7 +254,7 @@
 </div>
 <div id="executing-nonmem" class="section level2">
 <h2 class="hasAnchor">
-<a href="#executing-nonmem" class="anchor"></a>executing NONMEM</h2>
+<a href="#executing-nonmem" class="anchor"></a>Executing NONMEM</h2>
 <p>Thus far, we have not executed NONMEM nor saved the control file to the file system. To execute, we simply pipe into the <code><a href="../reference/run_nm.html">run_nm()</a></code> function which will often form the last step of the chain and then run the command.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>,
@@ -275,7 +275,7 @@
 <div id="manual-edits" class="section level2">
 <h2 class="hasAnchor">
 <a href="#manual-edits" class="anchor"></a>Manual edits</h2>
-<p>Often there will not be the functions to do the control file manipulation you want. Although it is preferable to stick to automatic control file manipulation functions, you can do full tracked <code>manual_edit</code>s via the addin menu. Again, just highlight the code, click the addin and follow the instructions:</p>
+<p>Often there will not be the functions to do the control file manipulation you want. Although it is preferable to stick to automatic control file manipulation functions, you can do fully tracked <code>manual edit</code>s via the addin menu. Again, just highlight the code, click the addin and follow the instructions:</p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/HyCHeAAiwy4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 </div>
