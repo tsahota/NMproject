@@ -279,38 +279,6 @@ Often there will not be the functions to do the control file manipulation you wa
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/HyCHeAAiwy4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-## Shiny run monitor
-
-To view all runs in the workspace and track progress:
-
-```{r eval=FALSE}
-shiny_nm()
-```
-
-PLACEHOLDER: video showing shiny_nm()
-
-## Diagnostics
-
-Use markdown templates to create a customised set of diagnostics to reuse on multiple models.  In the demo an example is shown in `Scripts/basic_gof.Rmd`, but ideally you'll create your own customised version with everything you need to evaluate your model. To create a rmarkdown diagnostic template go to `FILE` -> `New File` -> `R markdown` -> `From Template` then select from one of the following:
-
-- `model diagnostic`
-
-- `VPC diagnostic`
-
-- `PPC diagnostic`
-
-- `bootstrap results`
-
-*PLACEHOLDER: short youtube video of opening, customizing, saving and running a template.*
-
-A template will appear in the script window for you to customise.  Instructions are the at the top.  Save the file (e.g. as `Scripts/basic_gof.Rmd`) and run in your log script with:
-
-```{r eval=FALSE}
-m1 <- m1 %>% nm_render("Scripts/basic_gof.Rmd")
-```
-
-It will create the output in `Results` (or `results_dir(m1)`)
-
 ## Automatic edits
 
 NMproject contains several functions for automatic control file edits.  We have already seen `fill_input()` and `init_theta()` etc.  There are higher order functions which make multiple changes to your control stream, one of which is the `subroutine()`.  If we already have a parent run `m1` using `ADVAN2 TRANS1`, we can create a `child()` run that uses `TRANS2` using:
@@ -356,12 +324,43 @@ m2WT <- m2 %>% child(run_id = "m2WT") %>%
 
 ```
 
+## Shiny run monitor
+
+To view all runs in the workspace and track progress:
+
+```{r eval=FALSE}
+shiny_nm()
+```
+
+PLACEHOLDER: video showing shiny_nm()
+
+## Diagnostics
+
+Use markdown templates to create a customised set of diagnostics to reuse on multiple models.  In the demo an example is shown in `Scripts/basic_gof.Rmd`, but ideally you'll create your own customised version with everything you need to evaluate your model. To create a rmarkdown diagnostic template go to `FILE` -> `New File` -> `R markdown` -> `From Template` then select from one of the following:
+
+- `model diagnostic`
+
+- `VPC diagnostic`
+
+- `PPC diagnostic`
+
+- `bootstrap results`
+
+*PLACEHOLDER: short youtube video of opening, customizing, saving and running a template.*
+
+A template will appear in the script window for you to customise.  Instructions are the at the top.  Save the file (e.g. as `Scripts/basic_gof.Rmd`) and run in your log script with:
+
+```{r eval=FALSE}
+m1 <- m1 %>% nm_render("Scripts/basic_gof.Rmd")
+```
+
+It will create the output in `Results` (or `results_dir(m1)`)
+
 Apply a fully editable goodness of fit R markdown template to both runs `m2` and `m3`:
 
 ```{r eval=FALSE}
 
 c(m1, m2) %>% nm_render("Scripts/basic_gof.Rmd")
-## will produce two run specific html reports in the "Results" directory for run evaluation
 
 ```
 
@@ -556,7 +555,7 @@ m1 <- dir(".cache", full.names = TRUE) %>%
   {as_nm_list(readRDS(.)$object)}
 ```
 
-## Manipulating $THETA/$OMEGA/$SIGMA
+## Manipulating \$THETA/\$OMEGA/\$SIGMA
 
 The functions `init_theta`, `init_omega` and `init_sigma` can be used to get and set initial estimation, parameter bounds, names, units, etc.  The work much like the functions used to access fields of the nm object
 
@@ -568,7 +567,9 @@ io
 
 ```
 
-Note that `io` is a list of a data.frame.  This makes manipulation a bit more difficult, but referring to `io[[1]]` instead `io` will allows you to manipulate io with R's standard data.frame manipulation functions.  There are also built in functions like `block` and `unblock` (to create $OMEGA BLOCKS for correlated random effects).
+Note that this is a list of a `data.frame`.  We will now manipulate this with the built in functions like `block` and `unblock` (to create $OMEGA BLOCKS for correlated random effects).
+
+For other manipulations, it is easier in R to work with `data.frame`s.  In that case use, use the function `dplyr::first()` after `init_omega()` will convert it to a `tibble`.  Here it is not needed though.
 
 ```{r}
 
