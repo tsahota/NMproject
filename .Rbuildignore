@@ -14,3 +14,5 @@
 ^codecov\.yml$
 ^\.covrignore$
 ^LICENSE\.md$
+^doc$
+^Meta$
