@@ -85,9 +85,9 @@ orig_dir <- getwd()
 
 ```
 
-# Demo: Learning by doing
+# Demo: Learn by doing
 
-The easiest way to familiarise your with NMproject is to run through the demo.  Here's a short YouTube video on running the demo
+The easiest way to familiarise your with NMproject is to run through the demo scripts line by line.  Here's a short YouTube video on running the demo
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/nAkcEFz0RLg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 

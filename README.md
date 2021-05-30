@@ -62,13 +62,13 @@ library(NMproject)
 
 ## Getting started with NMproject
 
-See the
-[vignette](https://tsahota.github.io/NMproject/articles/NMproject.html)
-for instructions on how to get started.
-
 The easiest way to familiarise your with NMproject is to follow through
 the
-[demo](https://tsahota.github.io/NMproject/articles/NMproject.html#demo-1).
+[demo](https://tsahota.github.io/NMproject/articles/NMproject.html#demo-learn-by-doing-1).
+
+See the
+[vignette](https://tsahota.github.io/NMproject/articles/NMproject.html)
+for overall package documentation.
 
 ## Example code
 
