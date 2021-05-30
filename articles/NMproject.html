@@ -76,7 +76,7 @@
       <h1 data-toc-skip>NMproject</h1>
                         <h4 class="author">Tarj Sahota</h4>
             
-            <h4 class="date">2021-05-29</h4>
+            <h4 class="date">2021-05-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/tsahota/NMproject/blob/master/vignettes/NMproject.Rmd"><code>vignettes/NMproject.Rmd</code></a></small>
       <div class="hidden name"><code>NMproject.Rmd</code></div>
@@ -279,11 +279,26 @@
 <iframe width="560" height="315" src="https://www.youtube.com/embed/HyCHeAAiwy4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 </div>
+<div id="automatic-edits" class="section level2">
+<h2 class="hasAnchor">
+<a href="#automatic-edits" class="anchor"></a>Automatic edits</h2>
+<p>NMproject contains several functions for automatic control file edits. We have already seen <code><a href="../reference/fill_input.html">fill_input()</a></code> and <code><a href="../reference/init_theta.html">init_theta()</a></code> etc. There are higher order functions which make multiple changes to your control stream, one of which is the <code><a href="../reference/subroutine.html">subroutine()</a></code>. If we already have a parent run <code>m1</code> using <code>ADVAN2 TRANS1</code>, we can create a <code><a href="../reference/child.html">child()</a></code> run that uses <code>TRANS2</code> using:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">m2</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/subroutine.html">subroutine</a></span><span class="op">(</span>trans <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p>View exactly what’s been changed by highlighting the above code in RStudio and clicking the <code>nm_diff</code> addin to see what’s been changed before running. Here, changes will be in the <code>$SUB</code>, <code>$PK</code> and <code>$THETA</code>.</p>
+<p>To add a covariate using PsN coding conventions use <code><a href="../reference/add_remove_covs.html">add_cov()</a></code>:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">m2WT</span> <span class="op">&lt;-</span> <span class="va">m2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m2WT"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/add_remove_covs.html">add_cov</a></span><span class="op">(</span>param <span class="op">=</span> <span class="st">"CL"</span>, cov <span class="op">=</span> <span class="st">"WT"</span>, state <span class="op">=</span> <span class="st">"linear"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+</div>
 <div id="shiny-run-monitor" class="section level2">
 <h2 class="hasAnchor">
 <a href="#shiny-run-monitor" class="anchor"></a>Shiny run monitor</h2>
 <p>To view all runs in the workspace and track progress:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/shiny_nm.html">shiny_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>PLACEHOLDER: video showing shiny_nm()</p>
 </div>
@@ -299,28 +314,12 @@
 </ul>
 <p><em>PLACEHOLDER: short youtube video of opening, customizing, saving and running a template.</em></p>
 <p>A template will appear in the script window for you to customise. Instructions are the at the top. Save the file (e.g. as <code>Scripts/basic_gof.Rmd</code>) and run in your log script with:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_gof.Rmd"</span><span class="op">)</span></code></pre></div>
 <p>It will create the output in <code>Results</code> (or <code><a href="../reference/nm_getsetters.html">results_dir(m1)</a></code>)</p>
-</div>
-<div id="automatic-edits" class="section level2">
-<h2 class="hasAnchor">
-<a href="#automatic-edits" class="anchor"></a>Automatic edits</h2>
-<p>NMproject contains several functions for automatic control file edits. We have already seen <code><a href="../reference/fill_input.html">fill_input()</a></code> and <code><a href="../reference/init_theta.html">init_theta()</a></code> etc. There are higher order functions which make multiple changes to your control stream, one of which is the <code><a href="../reference/subroutine.html">subroutine()</a></code>. If we already have a parent run <code>m1</code> using <code>ADVAN2 TRANS1</code>, we can create a <code><a href="../reference/child.html">child()</a></code> run that uses <code>TRANS2</code> using:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">m2</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/subroutine.html">subroutine</a></span><span class="op">(</span>trans <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>View exactly what’s been changed by highlighting the above code in RStudio and clicking the <code>nm_diff</code> addin to see what’s been changed before running. Here, changes will be in the <code>$SUB</code>, <code>$PK</code> and <code>$THETA</code>.</p>
-<p>To add a covariate using PsN coding conventions use <code><a href="../reference/add_remove_covs.html">add_cov()</a></code>:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">m2WT</span> <span class="op">&lt;-</span> <span class="va">m2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m2WT"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/add_remove_covs.html">add_cov</a></span><span class="op">(</span>param <span class="op">=</span> <span class="st">"CL"</span>, cov <span class="op">=</span> <span class="st">"WT"</span>, state <span class="op">=</span> <span class="st">"linear"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>Apply a fully editable goodness of fit R markdown template to both runs <code>m2</code> and <code>m3</code>:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">m1</span>, <span class="va">m2</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_gof.Rmd"</span><span class="op">)</span>
-<span class="co">## will produce two run specific html reports in the "Results" directory for run evaluation</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">m1</span>, <span class="va">m2</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_gof.Rmd"</span><span class="op">)</span></code></pre></div>
 <p>Note: <code><a href="https://rdrr.io/r/base/c.html">c(m1, m3)</a></code> is a vector object of 2 NONMEM runs. We’ll touch more on this later.</p>
 <p>Evaluate and compare runs on the fly with the following commands</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
@@ -497,7 +496,7 @@
 </div>
 <div id="manipulating-thetaomegasigma" class="section level2">
 <h2 class="hasAnchor">
-<a href="#manipulating-thetaomegasigma" class="anchor"></a>Manipulating <span class="math inline">\(THETA/\)</span>OMEGA/$SIGMA</h2>
+<a href="#manipulating-thetaomegasigma" class="anchor"></a>Manipulating $THETA/$OMEGA/$SIGMA</h2>
 <p>The functions <code>init_theta</code>, <code>init_omega</code> and <code>init_sigma</code> can be used to get and set initial estimation, parameter bounds, names, units, etc. The work much like the functions used to access fields of the nm object</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## return a tibble version of $OMEGA with init_omega()</span>
@@ -516,7 +515,8 @@
 ## 3         3        1
 ## 4         4        1
 ## 5         5        1</code></pre>
-<p>Note that <code>io</code> is a list of a data.frame. This makes manipulation a bit more difficult, but referring to <code>io[[1]]</code> instead <code>io</code> will allows you to manipulate io with R’s standard data.frame manipulation functions. There are also built in functions like <code>block</code> and <code>unblock</code> (to create $OMEGA BLOCKS for correlated random effects).</p>
+<p>Note that this is a list of a <code>data.frame</code>. We will now manipulate this with the built in functions like <code>block</code> and <code>unblock</code> (to create $OMEGA BLOCKS for correlated random effects).</p>
+<p>For other manipulations, it is easier in R to work with <code>data.frame</code>s. In that case use, use the function <code><a href="https://dplyr.tidyverse.org/reference/nth.html">dplyr::first()</a></code> after <code><a href="../reference/init_theta.html">init_omega()</a></code> will convert it to a <code>tibble</code>. Here it is not needed though.</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">io</span> <span class="op">&lt;-</span> <span class="va">io</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/block-omega-sigma.html">block</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>  <span class="co">## make block out ETA 2 and 3</span>
 
