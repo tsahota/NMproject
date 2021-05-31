@@ -21,7 +21,21 @@ coverage](https://codecov.io/gh/tsahota/NMproject/branch/master/graph/badge.svg)
 v0.3.2 (see releases)*
 
 The intent of NMproject is to allow for fully script based NONMEM model
-development:
+development.
+
+Have you ever tried to continue some model development work (a
+colleague’s or even your own) but struggled to remember what was
+previously done and in which order? Have you ever wished you could
+repeat your entire model building at the push of a button e.g. because
+the source data has been updated, or because of a mistake carried
+forward?
+
+The end-to-end workflows you create with NMproject reduce the time it
+takes to get a working model, drastically reduce the time to
+update/repeat prior analyses, enable the repurposing of prior analyses
+to new problems, and enable pre-programming of complex workflows before
+data becomes available so that when it does become available we can
+react to decision points in stats-like timelines.
 
 History: NMproject was previously an internal AstraZeneca project. It is
 being reimplemented here as a community version to be compatible with a
