@@ -235,6 +235,8 @@ import <- function(copy_table, overwrite = FALSE, silent = FALSE,
   ## Code in Models/. not to be copied - this will be handled by nm() %>% ctl("staging/...")
   ## everything else copied as is
   
+  copy_table_orig <- copy_table
+  
   if(is.character(copy_table)){
     copy_table <- stage(copy_table, overwrite = overwrite, silent = silent)
   }
@@ -262,13 +264,16 @@ import <- function(copy_table, overwrite = FALSE, silent = FALSE,
   dirs <- unique(dirs)
   for(path in dirs) dir.create(path, recursive = TRUE, showWarnings = FALSE)
   
-  file.copy(d_R$staging, d_R$destination, overwrite = overwrite)
-  file.copy(d_other$staging, d_other$destination, overwrite = overwrite)
+  R_copy <- file.copy(d_R$staging, d_R$destination, overwrite = overwrite)
+  other_copy <- file.copy(d_other$staging, d_other$destination, overwrite = overwrite)
   
-  message("Files imported:\n ",
-          paste(copy_table$destination, collapse = "\n "))
+  if(!silent) message("Files imported:\n ",
+                      paste(copy_table$destination, collapse = "\n "))
   
-  invisible()
+  copy_table_orig$imported <- copy_table_orig$destination %in%
+    copy_table$destination
+  
+  invisible(copy_table_orig)
   
 }
 

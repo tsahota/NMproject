@@ -45,15 +45,40 @@ function(input, output, session) {
         title = "Error",
         "Select a row first"
       )))
-    NMproject::stage(NMproject::ls_code_library(objects()$NAME), overwrite = TRUE) %>%
-      NMproject::import()
+
+    stage_ob <- NMproject::stage(
+      NMproject::ls_code_library(objects()$NAME), 
+      overwrite = TRUE,
+      silent = TRUE
+    )
+    import_ob <- NMproject::import(stage_ob, silent = TRUE)
+    
+    destinations <- ifelse(import_ob$imported, 
+                           import_ob$destination, 
+                           import_ob$staging)
+    
+    new_nm_text <- character()
+    if(any(!import_ob$imported)) 
+      new_nm_text <- paste0(
+        "Create nm objects based on this file with:\n ",
+        "<code>new_nm(.... , based_on = \"", 
+        import_ob$staging[!import_ob$imported],
+        "\", ....)</code>\n\n"
+      )
+    
+    popup_text <- paste0(
+      "File has been imported into following location:\n ",
+      "<code>",paste0(destinations, collapse = " \n"), "</code>\n\n",
+      new_nm_text,
+      "Close browser to go back to RStudio or press \"Dismiss\" to import more"
+    )
+
+    popup_text <- HTML(gsub("\n", "<br>", popup_text))
+    
     return(showModal(modalDialog(
-      title = "file imported",
-      "File has been imported into project.
-      Model files are in the \"staging\" area and can be referred to with 
-      new_nm(.... , based_on = \"staging/path/to/file\", ....).  
-      Close shiny app to go back to console."
+      title = "file imported", popup_text
     )))
+    
   })
   
   observeEvent(input$import, eval(import_expr))
