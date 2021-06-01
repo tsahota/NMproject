@@ -37,6 +37,18 @@ m1 <- readRDS("Results/m1.RDS")
 
 ### Setting initial estimates
 
+You've already seen how setting an `init` vector allows setting of values,  We can also give named vectors like so:
+
+```{r}
+
+m1 <- m1 %>% init_theta(init = c(KA = 1), 
+                        FIX = c(KA = TRUE))
+
+m1 %>% dollar("THETA")
+
+```
+
+
 ```{r}
 
 ## return a tibble version of $OMEGA with init_omega()
