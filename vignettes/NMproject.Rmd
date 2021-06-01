@@ -326,6 +326,50 @@ m2WT <- m2 %>% child(run_id = "m2WT") %>%
 
 ```
 
+## Initial estimates
+
+We saw a little at how the functions `init_theta`, `init_omega` and `init_sigma` can be used to set inital estimates earlier.  The functions actually allow manipulation of initial estimates, parameter bounds, names, units, etc.
+
+```{r}
+
+## display R representaton of $THETA
+it <- m1 %>% init_theta() %>% dplyr::first()
+it
+
+```
+
+Note that the use of `dplyr::first()` is because `init_theta` returns a list of a `data.frame` and since we want to manipulate `io`, it's easier if it's a `data.frame` or `tibble` as then we can use R extensive `data.frame` manipulation functions. We use the same init_theta with the modified `tibble` to update the nm object like so:
+
+```{r}
+
+it$init <- c(0, 1, 2)
+m1 <- m1 %>% init_theta(it) 
+m1 %>% dollar("THETA")
+
+```
+
+This is quite inconvenient though as it requires 3 lines of R code.  Knowing the columns of the tibble though, we can manipulate values directly like so:
+
+```{r}
+
+## Reset in one line to what we set it to earlier
+m1 <- m1 %>% init_theta(init = c(-2, 0.5, 1)) 
+m1 %>% dollar("THETA")
+
+## This however requires knowing the order of parameters
+## here we supply a named vector in a different order
+m1 <- m1 %>% init_theta(init = c(KA = -2, V = 1))
+m1 %>% dollar("THETA")
+
+## can also manipulate other aspects (like the FIX column) similarly
+m1 <- m1 %>% init_theta(init = c(KA = -2, V = 1),
+                        FIX = c(KA = TRUE))
+m1 %>% dollar("THETA")
+
+```
+
+It works similarly for \$OMEGA and \$SIGMA with init_omega and init_sigma, respectively.
+
 ## Shiny run monitor
 
 To view all runs in the workspace and track progress:
@@ -557,23 +601,14 @@ m1 <- dir(".cache", full.names = TRUE) %>%
   {as_nm_list(readRDS(.)$object)}
 ```
 
-## Manipulating \$THETA/\$OMEGA/\$SIGMA
+## Working with \$OMEGA/\$SIGMA BLOCKS
 
-The functions `init_theta`, `init_omega` and `init_sigma` can be used to get and set initial estimation, parameter bounds, names, units, etc.  The work much like the functions used to access fields of the nm object
+We can include and remove \$OMEGA blocks with the functions `block` and `unblock` (to create $OMEGA BLOCKS for correlated random effects).
 
 ```{r}
 
-## return a tibble version of $OMEGA with init_omega()
-io <- m1 %>% init_omega()
+io <- m1 %>% init_omega()  ## note we dont need dplyr::first as block()/unblock() also work on lists of tibbles.
 io 
-
-```
-
-Note that this is a list of a `data.frame`.  We will now manipulate this with the built in functions like `block` and `unblock` (to create $OMEGA BLOCKS for correlated random effects).
-
-For other manipulations, it is easier in R to work with `data.frame`s.  In that case use, use the function `dplyr::first()` after `init_omega()` will convert it to a `tibble`.  Here it is not needed though.
-
-```{r}
 
 io <- io %>% block(c(2,3))  ## make block out ETA 2 and 3
 
