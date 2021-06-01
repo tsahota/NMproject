@@ -1,8 +1,39 @@
 #' Get job stats for a completed NONMEM run
 #' 
-#' Gets attributes of the run like run time, queue time
+#' @description 
 #' 
-#' @param m nm object
+#' `r lifecycle::badge("experimental")`
+#' 
+#' Gets attributes of the run like run time, queue time.
+#' 
+#' @param m An nm object.
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' dc <- tibble(cores = c(1, 3, 10, 30)) %>% 
+#' mutate(m = m1 %>% 
+#'   child(run_id = cores) %>%  
+#'   run_in("Models/m1_coretest") %>% 
+#'   cmd("execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}") %>%
+#'   parafile("/opt/NONMEM/nm75/run/mpilinux8.pnm") %>%
+#'   cores(cores)
+#' )
+#' 
+#' dc$m %>% cmd()
+#' 
+#' dc$m %>% run_nm() %>% wait_finish()
+#' 
+#' ## extract job statistics and plot cores vs Rtime or Ttime 
+#' ## to get plots of run time and total time vs number of CPUs
+#' 
+#' dc$m %>%
+#'   job_stats() %>%
+#'   ggplot(aes(x = cores, y = Rtime)) + theme_bw() +
+#'   geom_point()
+#' 
+#' }
 #' 
 #' @export
 job_stats <- function(m){

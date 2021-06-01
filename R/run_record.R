@@ -789,13 +789,31 @@ summary.nm_generic <- function(object, ref_model = NA, parameters = c("none", "n
   summary(object = as_nm_list(object), ref_model = ref_model, parameters = parameters, keep_m = keep_m, ...)
 }
 
-#' Generate a wide summary of NONMEM results
+#' @rdname nm_summary
+#' @name nm_summary
+#' @title Generate a summary of NONMEM results
 #' 
-#' @param ... arguments passed to summary(), usually a vector of nm object + options
-#' @param include_fields character
-#' @param parameters character. either \"none\" (default), \"new\", or \"all\"
-#' @param m logical (default = TRUE). should model object be included as m column
-#' @param trans logical (default = TRUE). should parameters be transformed 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Get wide (or a long) `tibble` showing summary results.
+#'
+#' @param ... Arguments passed to [summary()], usually a vector of nm object +
+#'   options.
+#' @param include_fields Character vector of nm object fields to include as
+#'   columns in the output. Default is empty.
+#' @param parameters Character. Either `"none"` (default), `"new"`, or `"all"`
+#'   indicating whether parameter values should be included in the summary
+#'   `tibble`.  Specifying `"new"` means that only parameters that aren't in the
+#'   `parent` run are included in outputs.  This is useful if wanting to know
+#'   the value of an added parameter but not all the parameters (e.g. in a
+#'   covariate analysis).
+#' @param m Logical (default = `TRUE`). Should model object be included as the
+#'   `m` column.
+#' @param trans Logical (default = `TRUE`). Should parameters be transformed in
+#'   accordance with $THETA/$OMEGA/$SIGMA comments.  This is only valid if
+#'   `parameters` is `"new"` or `"all`.
 #' @export
 summary_wide <- function(..., include_fields = character(), parameters = c("none", "new", "all"), m = TRUE, trans = TRUE){
   parameters <- match.arg(parameters)
@@ -808,10 +826,7 @@ summary_wide <- function(..., include_fields = character(), parameters = c("none
   d
 }
 
-#' Generate a long summary of NONMEM results
-#' 
-#' @param ... arguments passed to summary(), usually a vector of nm object + options
-#' @param parameters character. either \"none\" (default), \"new\", or \"all\"
+#' @rdname nm_summary
 #' @export
 summary_long <- function(..., parameters = c("none", "new", "all")){
   parameters <- match.arg(parameters)
@@ -830,22 +845,53 @@ summary_long <- function(..., parameters = c("none", "new", "all")){
 
 #' @name output_table
 #' @rdname output_table
-#' @title Get processed output table
+#' @title Reads all $TABLE outputs and merge with input dataset
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("experimental")`
 #'
-#' @param r object of class nm
-#' @param only_append optional character vector. If missing will append all,
-#'   otherwise will append only those variables requested
-#' @param ... optional additional arguments to pass on to read.csv of orig data
-
-NULL
-
-#' @rdname output_table
-#' @return [output_table()] will return a list of tibbles with merged version
+#' Produces a single merged output dataset will all columns of $INPUT dataset.
+#' This is useful for reuse of exploratory data plots as diagnostic plots as all
+#' columns including text columns used for `ggplot` facetting will be present.
+#' 
+#' @param r An object of class nm.
+#' @param only_append Optional character vector. If missing will append all,
+#'   otherwise will append only those variables requested.
+#' @param ... Optional additional arguments to pass on to read.csv of orig data.
+#' 
+#' @return `output_table()` will return a list of tibbles with merged version
 #'   of all output $TABLEs and the input data.  Additional columns will be
 #'   `INNONMEM` which will be TRUE for rows that were not ignored by
 #'   NONMEM.  For simulation control files there is also `DV_OUT` which
 #'   will contain simulated `DV` values. `DV` will always be
-#'   unmodified from the input dataset
+#'   unmodified from the input dataset.
+#'
+#' @seealso [nm_render()], [input_data()]
+#'
+#' @examples 
+#' 
+#' \dontrun{
+#'
+#' ## exploratory data plot 
+#' read_derived_data("DerivedData/data.csv") %>%
+#'   ggplot(aes(x=TIME, y=DV)) + theme_bw() +
+#'   geom_point() +
+#'   geom_line(aes(group = ID)) +
+#'   facet_wrap(~STUDYTXT)
+#'   
+#' m1 %>%
+#'   output_table_first() %>%
+#'   ggplot(aes(x=TIME, y=DV)) + theme_bw() +
+#'   geom_point() +
+#'   geom_line(aes(group = ID)) +
+#'   facet_wrap(~STUDYTXT) +
+#' ## additional layer for overlaying IPRED curves
+#'   geom_line(aes(y = IPRED, group = ID))
+#'   
+#' 
+#' }
+#' 
 #' @export
 output_table <- function(r, only_append = c(), ...){
   UseMethod("output_table") 
@@ -872,7 +918,6 @@ output_table.nm_generic <- output_table.default
 output_table.nm_list <- Vectorize_nm_list(output_table.nm_generic, SIMPLIFY = FALSE)
 
 #' @rdname output_table
-#'
 #' @return `output_table_first` will return a tibble with a single run.
 #' @export
 output_table_first <- function(r, ...){
@@ -887,10 +932,19 @@ output_table_first.nm_list <- function(r, ...){
   outtab
 }
 
-#' Plot covariance matrix
+#' Plot $COV matrix
 #' 
-#' @param r nm object
-#' @param trans logical (default = TRUE)
+#' Plots the correlation plot from the $COV NONMEM output.
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' @param r An nm object.
+#' @param trans Logical (default = TRUE).  Applies the transformations specified
+#'   in $THETA/$OMEGA/$SIGMA comments before plotting.
+#' 
+#' @return A `ggplot2` object
 #' 
 #' @export
 

@@ -7,8 +7,38 @@
 job_stats(m)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 }
 \description{
-Gets attributes of the run like run time, queue time
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+Gets attributes of the run like run time, queue time.
+}
+\examples{
+
+\dontrun{
+
+dc <- tibble(cores = c(1, 3, 10, 30)) \%>\% 
+mutate(m = m1 \%>\% 
+  child(run_id = cores) \%>\%  
+  run_in("Models/m1_coretest") \%>\% 
+  cmd("execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}") \%>\%
+  parafile("/opt/NONMEM/nm75/run/mpilinux8.pnm") \%>\%
+  cores(cores)
+)
+
+dc$m \%>\% cmd()
+
+dc$m \%>\% run_nm() \%>\% wait_finish()
+
+## extract job statistics and plot cores vs Rtime or Ttime 
+## to get plots of run time and total time vs number of CPUs
+
+dc$m \%>\%
+  job_stats() \%>\%
+  ggplot(aes(x = cores, y = Rtime)) + theme_bw() +
+  geom_point()
+
+}
+
 }

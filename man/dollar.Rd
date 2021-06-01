@@ -7,19 +7,20 @@
 dollar(m, dollar, ..., add_dollar_text = TRUE)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{dollar}{character.  Subroutine to target}
+\item{dollar}{Character. Name of NONMEM subroutine to target.}
 
-\item{...}{arguments to be passed to text()}
+\item{...}{Additional arguments to be passed to \code{text()}.  If specified these
+will set the contents of the subroutine.  See examples below.}
 
-\item{add_dollar_text}{logical (default = TRUE). Should the $XXXX be added to
-text}
+\item{add_dollar_text}{Logical (default = TRUE). Should the $XXXX string be
+added to text}
 }
 \description{
-The fast way to see the contents of a particular subroutine. This can be used
-in place of manual edits to (re)write the contents of a NONMEM subroutine
-from within R
+The fast way to see the contents of a particular subroutine directly in the R
+console. It can also be used to set the contents of a NONMEM subroutine in
+place of manual edits
 }
 \examples{
 \dontrun{

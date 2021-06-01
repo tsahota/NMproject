@@ -12,7 +12,7 @@ append_nonmem_var(output_table, r, var)
 \item{r}{An nm object.}
 
 \item{var}{Character. Name of variable to extract (needs to be defined in
-$PK/$PRED)}
+$PK/$PRED).}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

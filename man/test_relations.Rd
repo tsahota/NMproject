@@ -7,57 +7,75 @@
 test_relations(dtest, param, cov, state, continuous)
 }
 \arguments{
-\item{dtest}{(optional) existing dtest to append (from an previous use test_relations())}
+\item{dtest}{Optional existing \code{dtest} to append (from an previous use
+\code{\link[=test_relations]{test_relations()}})}
 
-\item{param}{character. Name of parameter}
+\item{param}{Character. Name of parameter(s).}
 
-\item{cov}{character. Name of covariate}
+\item{cov}{Character. Name of covariate(s).}
 
-\item{state}{numeric or character. Number/name of state (see details)}
+\item{state}{Numeric or character. Number/name of state (see details).}
 
-\item{continuous}{logical (default = TRUE). is covariate continuous?}
+\item{continuous}{Logical (default = \code{TRUE}). If \code{FALSE}, will treat the
+covariate as categorical.}
 }
 \description{
-Generate tibble of relations to test
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Generate list of covariate relationships to test (with
+\code{\link[=covariate_step_tibble]{covariate_step_tibble()}}).
 }
 \details{
-available states (see also \code{\link[=add_cov]{add_cov()}}):
-"2" or "linear":
-PARCOV= ( 1 + THETA(1)*(COV - median))
+Setting vector values for \code{param}, \code{cov}, and \code{state}, will expand the grid
+to test each value with every other value greedily.  This is similar to
+\code{\link[=expand.grid]{expand.grid()}} available states (see also \code{\link[=add_cov]{add_cov()}}):
 
-"3" or "hockey-stick":
-IF(COV.LE.median) PARCOV = ( 1 + THETA(1)\emph{(COV - median))
-IF(COV.GT.median) PARCOV = ( 1 + THETA(2)}(COV - median))
+\describe{
 
-"4" or "exponential":
+\item{"2" or "linear"}{
+PARCOV= ( 1 + THETA(1)*(COV -median))
+}
+
+\item{"3" or "hockey-stick"}{
+IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))
+IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))
+}
+
+\item{"4" or "exponential"}{
 PARCOV= EXP(THETA(1)*(COV - median))
+}
 
-"5" or "power":
+\item{"5" or "power"}{
 PARCOV= ((COV/median)**THETA(1))
+}
 
-"power1":
+\item{"power1"}{
 PARCOV= ((COV/median))
+}
 
-"power0.75":
+\item{"power0.75"}{
 PARCOV= ((COV/median)**0.75)
+}
 
-"6" or "log-linear":
+\item{"6" or "log-linear"}{
 PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
+}
+
+}
 }
 \examples{
 
-\dontrun{
 dtest <- test_relations(param = c("KA", "K", "V"),
                         cov = c("LIN1", "LIN2", "LIN3", "RND1", "RND2", "RND3"), 
                         state = c("linear", "power"), 
                         continuous = TRUE)
-dtest <- dtest \%>\% 
-             test_relations(param = c("KA", "K", "V"),
-                            cov = "BN1",
-                            state = "linear",
-                            continuous = FALSE)
+dtest <- dtest \%>\% test_relations(param = c("KA", "K", "V"),
+                                  cov = "BN1",
+                                  state = "linear",
+                                  continuous = FALSE)
 
-}
+dtest
+
 }
 \seealso{
 \code{\link[=add_cov]{add_cov()}}, \code{\link[=covariate_step_tibble]{covariate_step_tibble()}}

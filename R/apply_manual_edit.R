@@ -8,16 +8,21 @@ NULL
 #' 
 #' `r lifecycle::badge("stable")`
 #' 
-#' Best to allow the `"manual edit"` RStudio addin to write this function in
-#' your script for you.  After a tracked manual edit is performed, a patch file
-#' is created and saved in `Models/patches`.  This function applies the patch to
-#' the object.
+#' It is best to allow the `"manual edit"` RStudio addin to write this function
+#' in your script for you.  After a tracked manual edit is performed, a patch
+#' file is created and saved in the "patches" subdirectory of
+#' `nm_default_dir("models")`.  This function applies the patch to the object.
 #'
-#' @param m nm object
-#' @param patch_name character name of patch
-#'
+#' @param m An nm object.
+#' @param patch_name Character name of patch.  Corresponds to the file name in
+#'   the "patches" subdirectory of `nm_default_dir("models")`.
+#'   
 #' @details Generally best to to apply patches before automatic edits and
-#'   changes in directories e.g. via `run_in()`
+#'   changes in directories e.g. via `run_in()`.  If patches are applied to
+#'   NONMEM control file sections that are likely to change in the future, the
+#'   patch may fail to apply.  In this case, it is best to view the patch (via
+#'   the "view patch" RStudio addin) and manually re-implement the changes again
+#'   in a new manual edit.
 #'
 #' @export
 apply_manual_edit <- function(m, patch_name){

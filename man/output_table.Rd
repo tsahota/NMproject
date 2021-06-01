@@ -3,30 +3,61 @@
 \name{output_table}
 \alias{output_table}
 \alias{output_table_first}
-\title{Get processed output table}
+\title{Reads all $TABLE outputs and merge with input dataset}
 \usage{
 output_table(r, only_append = c(), ...)
 
 output_table_first(r, ...)
 }
 \arguments{
-\item{r}{object of class nm}
+\item{r}{An object of class nm.}
 
-\item{only_append}{optional character vector. If missing will append all,
-otherwise will append only those variables requested}
+\item{only_append}{Optional character vector. If missing will append all,
+otherwise will append only those variables requested.}
 
-\item{...}{optional additional arguments to pass on to read.csv of orig data}
+\item{...}{Optional additional arguments to pass on to read.csv of orig data.}
 }
 \value{
-\code{\link[=output_table]{output_table()}} will return a list of tibbles with merged version
+\code{output_table()} will return a list of tibbles with merged version
 of all output $TABLEs and the input data.  Additional columns will be
 \code{INNONMEM} which will be TRUE for rows that were not ignored by
 NONMEM.  For simulation control files there is also \code{DV_OUT} which
 will contain simulated \code{DV} values. \code{DV} will always be
-unmodified from the input dataset
+unmodified from the input dataset.
 
 \code{output_table_first} will return a tibble with a single run.
 }
 \description{
-Get processed output table
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+Produces a single merged output dataset will all columns of $INPUT dataset.
+This is useful for reuse of exploratory data plots as diagnostic plots as all
+columns including text columns used for \code{ggplot} facetting will be present.
+}
+\examples{
+
+\dontrun{
+
+## exploratory data plot 
+read_derived_data("DerivedData/data.csv") \%>\%
+  ggplot(aes(x=TIME, y=DV)) + theme_bw() +
+  geom_point() +
+  geom_line(aes(group = ID)) +
+  facet_wrap(~STUDYTXT)
+  
+m1 \%>\%
+  output_table_first() \%>\%
+  ggplot(aes(x=TIME, y=DV)) + theme_bw() +
+  geom_point() +
+  geom_line(aes(group = ID)) +
+  facet_wrap(~STUDYTXT) +
+## additional layer for overlaying IPRED curves
+  geom_line(aes(y = IPRED, group = ID))
+  
+
+}
+
+}
+\seealso{
+\code{\link[=nm_render]{nm_render()}}, \code{\link[=input_data]{input_data()}}
 }

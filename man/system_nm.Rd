@@ -7,12 +7,32 @@
 system_nm(cmd, dir = nm_default_dir("models"), ...)
 }
 \arguments{
-\item{cmd}{character. command to send to shell}
+\item{cmd}{Character. System call to be sent to the terminal.}
 
-\item{dir}{character. directory to run command in}
+\item{dir}{Character. Directory (relative path) to run command in.  By
+default this will be the "models" directory (\code{nm_default_dir("models")}).}
 
-\item{...}{other arguments passed to system command}
+\item{...}{Additional args to be passed to \code{system()} or \code{shell()}.}
 }
 \description{
-System command for NONMEM execution
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Not intended to be used directly in most cases.  This is the function used by
+\code{run_nm()}.  It can also be used directly to launch other PsN commands like
+\code{sumo}.
+}
+\examples{
+
+system_nm("hostname")
+
+\dontrun{
+
+system_nm("psn --versions")
+system_nm("sumo run1.mod")
+
+}
+
+}
+\seealso{
+\code{\link[=run_nm]{run_nm()}}
 }

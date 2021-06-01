@@ -3,9 +3,14 @@
 
 NULL
 
-#' Path to NONMEM control file
+#' Get and set path to NONMEM control file
 #' 
-#' Get and set path to control file.
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Similar to [ctl_name()] & [run_in()], this allows you to retrieve and specify
+#' the relative path to the control file that will be written by the [run_nm()].
 #' 
 #' @param m An nm object.
 #' @param text Optional character. Name of path to control file (see details).
@@ -44,6 +49,10 @@ ctl_path <- function(m, text) {
 #'
 #' @title Functions to access and modify fields of nm objects
 #'
+#' @description
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
 #' The fields of an object can be viewed by printing the object.  Each field has
 #' a corresponding function of the same name to access and modify it's value.
 #' 

@@ -7,26 +7,35 @@
 nm_tran_command(text)
 }
 \arguments{
-\item{text}{Optional character. If specified will set \code{nm_tran_command}.}
+\item{text}{Optional character. If specified will set \code{nm_tran_command}
+otherwise it will display the current option value.}
 }
 \value{
-if \code{text} is missing will get and return the current NMTRAN command
+If \code{text} is missing will get and return the current NMTRAN command.
 }
 \description{
-\code{nm_tran} needs the location of NMTRAN.exe on your system.  This
-is guessed on package load, assuming PsN is on the $PATH environmental
-variable, if this is not the case, then you can manually set the path and
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+The function \code{\link[=nm_tran]{nm_tran()}} needs the location of \code{NMTRAN.exe} to function.
+This is guessed at package load, assuming PsN is on the $PATH environmental
+variable. If this is not the case, then you can manually set the path and
 command used.
 }
 \details{
-\code{text} can just be the path to NMTRAN.exe.  In this case
+\code{text} can just be the path to \code{NMTRAN.exe} in which case
 \code{nm_tran_command} will use the format \verb{/path/to/NMTRAN.exe < \{ctl_name\}} to
-launch NMTRAN.exe where \code{{ctl_name}} is the name of the control file \code{text}
-can use the \code{{ctl_name}} glue field however for more complicated commands.
-See examples
+launch \code{NMTRAN.exe} where \code{{ctl_name}} is the name of the control file.
+Specifying
 
-Set this up either at the beginning of your script, in your \code{.Rprofile} or
-for all users in \code{Rprofile.site}
+\code{nm_tran_command("/path/to/NMTRAN.exe < {ctl_name}")} is equivalent to:
+\code{nm_tran_command("/path/to/NMTRAN.exe")}
+
+More complicated formats are possible with different installations which
+can be seen examples.
+
+As with all NMproject configuration options set this up either at the
+beginning of your script, in your \code{.Rprofile} or for all users in
+\code{Rprofile.site}.  See FAQ for setting up configuration options permanently.
 }
 \examples{
 \dontrun{
@@ -38,5 +47,5 @@ for all users in \code{Rprofile.site}
 }
 }
 \seealso{
-\code{\link[=find_nm_tran_path]{find_nm_tran_path()}}
+\code{\link[=find_nm_tran_path]{find_nm_tran_path()}}, \code{\link[=nm_tran]{nm_tran()}}
 }

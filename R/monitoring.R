@@ -124,10 +124,29 @@ is_successful <- function(r) {
 
 #' Wait for runs to finish
 #' 
-#' blocks subsequent r execution until run(s) are finished
+#' @description 
 #' 
-#' @param r nm object
-#' @param timeout numeric seconds to wait before timeout
+#' `r lifecycle::badge("stable")`
+#'
+#' Blocks subsequent r execution until run(s) are finished.  This is useful for
+#' when subequent relies on outputs from completed NONMEM jobs.  It is normally
+#' a good idea to include this in post processing R markdown templates, to
+#' ensure they wait for runs to complete before executing.
+#' 
+#' @param r An nm object.
+#' @param timeout Numeric seconds to wait before timeout.
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' m1 %>% run_nm() %>% wait_finish()
+#' 
+#' ## following requires run to be completed.
+#' covariance_plot(m1)
+#' 
+#' }
+#' 
 #' @export
 wait_finish <- function(r, timeout=NA){
   UseMethod("wait_finish")

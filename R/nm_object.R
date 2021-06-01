@@ -827,13 +827,16 @@ fill_dollar_data <- function(m, data_name){
 #'
 #' Uses dataset to automatically fill $INPUT in control file.
 #'
-#' @param m nm object
-#' @param ... either keep, drop, rename
+#' @param m An nm object.
+#' @param ... Either `keep`, `drop`, or `rename` arguments.  See examples.
 #'
 #' @details If a new dataset with different columns is assigned to an `nm`
 #'   object, `$INPUT` will not be correct and so it may necessary to apply
 #'   `fill_input()` again.
 #'
+#'   See examples for how to use `drop` and `rename` arguments to control how
+#'   `$INPUT` is written.
+#'   
 #' @examples
 #' \dontrun{
 #'
@@ -1067,16 +1070,17 @@ clear_cache <- function() unlink(".cache", recursive = TRUE)
 
 #' Get/set existing subroutine
 #'
-#' The fast way to see the contents of a particular subroutine. This can be used
-#' in place of manual edits to (re)write the contents of a NONMEM subroutine
-#' from within R
+#' The fast way to see the contents of a particular subroutine directly in the R
+#' console. It can also be used to set the contents of a NONMEM subroutine in
+#' place of manual edits
 #'
-#' @param m nm object
-#' @param dollar character.  Subroutine to target
-#' @param ... arguments to be passed to text()
-#' @param add_dollar_text logical (default = TRUE). Should the $XXXX be added to
-#'   text
-#'
+#' @param m An nm object.
+#' @param dollar Character. Name of NONMEM subroutine to target.
+#' @param ... Additional arguments to be passed to `text()`.  If specified these
+#'   will set the contents of the subroutine.  See examples below.
+#' @param add_dollar_text Logical (default = TRUE). Should the $XXXX string be
+#'   added to text
+#'   
 #' @seealso [insert_dollar()]
 #'
 #' @examples
@@ -1197,17 +1201,22 @@ remove_parameter <- function(m, name){
 }
 
 
-#' add a mixed effect parameter to $PK (or $PRED)
+#' Add a mixed effect parameter to $PK (or $PRED)
 #' 
-#' This will (by default) add a parameter (mixed effect) to your code
+#' @description 
 #' 
-#' @param m nm object
-#' @param name character. name of NONMEM variable to create
-#' @param init numeric. initial value of fixed effect
-#' @param unit character. unit of variable
-#' @param trans character. tranformation to log scale?
-#' @param position integer. not used
-#' @param after character. patter to match and include the mixed effect after
+#' `r lifecycle::badge("stable")`
+#' 
+#' Primarly an internal function. This will (by default) add a parameter (mixed
+#' effect) to your code $PK/$PRED and $THETA/$OMEGA.
+#' 
+#' @param m An nm object.
+#' @param name Character. Name of NONMEM variable to create.
+#' @param init Numeric (default = `1`). Initial value of fixed effect.
+#' @param unit Character (default = `""`). Unit of variable.
+#' @param trans Character (default = `"LOG"`). Tranformation of the variable.
+#' @param position Integer. Not used.
+#' @param after Character. Pattern to match and include the mixed effect after.
 #' 
 #' @export
 add_mixed_param <- function(m, name, 
@@ -1914,7 +1923,7 @@ print.nm_subroutine <- function(x, ...){
 #' 
 #' @description 
 #' 
-#' `r lifecycle::badge("stable")
+#' `r lifecycle::badge("stable")`
 #' 
 #' These functions are useful to obtain and modify initial values of `$THETA`, `$OMEGA` and `$SIGMA`.
 #' 

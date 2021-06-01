@@ -20,10 +20,7 @@
 \alias{run_in}
 \alias{run_id}
 \alias{result_files}
-\title{Functions to access and modify fields of nm objects
-
-The fields of an object can be viewed by printing the object.  Each field has
-a corresponding function of the same name to access and modify it's value.}
+\title{Functions to access and modify fields of nm objects}
 \usage{
 run_dir(m, text)
 
@@ -69,7 +66,7 @@ modify field (of same name as function) otherwise will return value of
 field (of same name as function).}
 }
 \description{
-Functions to access and modify fields of nm objects
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 The fields of an object can be viewed by printing the object.  Each field has
 a corresponding function of the same name to access and modify it's value.

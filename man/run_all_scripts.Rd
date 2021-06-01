@@ -4,12 +4,9 @@
 \alias{run_all_scripts}
 \title{Run all project scripts sequentially}
 \usage{
-run_all_scripts(index, quiet = FALSE)
+run_all_scripts(quiet = FALSE)
 }
 \arguments{
-\item{index}{Numeric or logical vector (needs to be same length of number of
-scripts) for subsetting or reordering scripts to execute}
-
 \item{quiet}{Argument passed to \code{rmarkdown::render}}
 }
 \description{

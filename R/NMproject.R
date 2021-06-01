@@ -154,24 +154,35 @@ sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_f
 
 #' Get/set nm_tran_command
 #'
-#' `nm_tran` needs the location of NMTRAN.exe on your system.  This
-#' is guessed on package load, assuming PsN is on the $PATH environmental
-#' variable, if this is not the case, then you can manually set the path and
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#'
+#' The function [nm_tran()] needs the location of `NMTRAN.exe` to function.
+#' This is guessed at package load, assuming PsN is on the $PATH environmental
+#' variable. If this is not the case, then you can manually set the path and
 #' command used.
 #'
-#' @param text Optional character. If specified will set `nm_tran_command`.
-#'
-#' @details `text` can just be the path to NMTRAN.exe.  In this case
+#' @param text Optional character. If specified will set `nm_tran_command`
+#'   otherwise it will display the current option value.
+#'   
+#' @details `text` can just be the path to `NMTRAN.exe` in which case
 #'   `nm_tran_command` will use the format `/path/to/NMTRAN.exe < {ctl_name}` to
-#'   launch NMTRAN.exe where `{ctl_name}` is the name of the control file `text`
-#'   can use the `{ctl_name}` glue field however for more complicated commands.
-#'   See examples
+#'   launch `NMTRAN.exe` where `{ctl_name}` is the name of the control file.
+#'   Specifying
 #'
-#'   Set this up either at the beginning of your script, in your `.Rprofile` or
-#'   for all users in `Rprofile.site`
+#'   `nm_tran_command("/path/to/NMTRAN.exe < {ctl_name}")` is equivalent to:
+#'   `nm_tran_command("/path/to/NMTRAN.exe")`
 #'
-#' @return if `text` is missing will get and return the current NMTRAN command
-#' @seealso [find_nm_tran_path()]
+#'   More complicated formats are possible with different installations which
+#'   can be seen examples.
+#'
+#'   As with all NMproject configuration options set this up either at the
+#'   beginning of your script, in your `.Rprofile` or for all users in
+#'   `Rprofile.site`.  See FAQ for setting up configuration options permanently.
+#'
+#' @return If `text` is missing will get and return the current NMTRAN command.
+#' @seealso [find_nm_tran_path()], [nm_tran()]
 #' @examples
 #' \dontrun{
 #'
@@ -192,12 +203,20 @@ nm_tran_command <- function(text){
   invisible()
 }
 
-#' Default system_nm
+#' Default system_nm function
 #'
-#' Not intended to be used directly in most cases.
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
 #'
-#' @param cmd Character. system call.
-#' @param ... Additional args to be passed to system.
+#' Not intended to be used directly in most cases.  This is called by
+#' `[system_nm()]`
+#'
+#' @param cmd Character. System call to be sent to the terminal.
+#' @param ... Additional args to be passed to `system()` or `shell()`.
+#'   
+#' @seealso [system_nm()], [run_nm()]
+#' 
 #' @export
 
 system_nm_default <- function(cmd, ...) {
@@ -224,10 +243,33 @@ system_nm_default <- function(cmd, ...) {
 
 #' System command for NONMEM execution
 #'
-#' @param cmd character. command to send to shell
-#' @param dir character. directory to run command in
-#' @param ... other arguments passed to system command
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Not intended to be used directly in most cases.  This is the function used by
+#' `run_nm()`.  It can also be used directly to launch other PsN commands like
+#' `sumo`.
+#'
+#' @param cmd Character. System call to be sent to the terminal.
+#' @param dir Character. Directory (relative path) to run command in.  By
+#'   default this will be the "models" directory (`nm_default_dir("models")`).
+#' @param ... Additional args to be passed to `system()` or `shell()`.
+#' @seealso [run_nm()]
+#'
+#' @examples 
+#' 
+#' system_nm("hostname")
+#' 
+#' \dontrun{
+#' 
+#' system_nm("psn --versions")
+#' system_nm("sumo run1.mod")
+#' 
+#' }
+#' 
 #' @export
+#' 
 system_nm <- function(cmd,dir=nm_default_dir("models"),...){
   if(is.null(dir) | !file.exists(dir)) dir <- "."
   if(file.exists(dir)) {currentwd <- getwd(); setwd(dir) ; on.exit(setwd(currentwd))} else

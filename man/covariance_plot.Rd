@@ -2,15 +2,22 @@
 % Please edit documentation in R/run_record.R
 \name{covariance_plot}
 \alias{covariance_plot}
-\title{Plot covariance matrix}
+\title{Plot $COV matrix}
 \usage{
 covariance_plot(r, trans = TRUE)
 }
 \arguments{
-\item{r}{nm object}
+\item{r}{An nm object.}
 
-\item{trans}{logical (default = TRUE)}
+\item{trans}{Logical (default = TRUE).  Applies the transformations specified
+in $THETA/$OMEGA/$SIGMA comments before plotting.}
+}
+\value{
+A \code{ggplot2} object
 }
 \description{
-Plot covariance matrix
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+}
+\details{
+Plots the correlation plot from the $COV NONMEM output.
 }

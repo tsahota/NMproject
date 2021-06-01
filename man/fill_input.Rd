@@ -7,9 +7,9 @@
 fill_input(m, ...)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{...}{either keep, drop, rename}
+\item{...}{Either \code{keep}, \code{drop}, or \code{rename} arguments.  See examples.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
@@ -20,6 +20,9 @@ Uses dataset to automatically fill $INPUT in control file.
 If a new dataset with different columns is assigned to an \code{nm}
 object, \verb{$INPUT} will not be correct and so it may necessary to apply
 \code{fill_input()} again.
+
+See examples for how to use \code{drop} and \code{rename} arguments to control how
+\verb{$INPUT} is written.
 }
 \examples{
 \dontrun{

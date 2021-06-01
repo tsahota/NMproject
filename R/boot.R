@@ -52,12 +52,52 @@ boot_to_csv <- function(d,
 
 #' Write bootstrap datasets
 #' 
-#' @param m nm object
-#' @param samples number of samples
-#' @param data_folder folder to store datasets
-#' @param overwrite overwrite or not
-#' @param id_var character (default = "ID"). Name of ID column
-#' @param ... arguments passed to fill_input
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#'
+#' Creates bootstrap datasets and returns corresponding `nm` objects. Requires
+#' the necessary `rsample` splitting objects to be present. See examples.
+#' 
+#' @param m An nm object.
+#' @param samples Number of samples.
+#' @param data_folder Folder (relative path) to store datasets.
+#' @param overwrite Logical (default = `FALSE`). Overwrites previous files.
+#' @param id_var Character (default = `"ID"`). Name of ID column in dataset.
+#' @param ... Arguments passed to [fill_input()]
+#'   
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' ## in your dataset production script 
+#' 
+#' d <- d %>%
+#' mutate(WT_C = cut(WT, breaks = 2, labels = FALSE),
+#'        STRATA = paste(SEX, WT_C, sep = "_"))
+#' 
+#' d_id <- d %>% distinct(ID, STRATA)
+#' 
+#' set.seed(123)
+#' 
+#' ## create large set of resamples (to enable simulation to grow
+#' ## without ruining seed)
+#' bootsplits <- rsample::bootstraps(d_id, 100, strata = "STRATA")
+#' 
+#' dir.create("DerivedData", showWarnings = FALSE)
+#' bootsplits %>% saveRDS("DerivedData/bootsplit_data.csv.RData")
+#'
+#' ## In a model development script, the following, performs a 
+#' ## 100 sample bootstrap of model m1
+#' 
+#' m1_boot <- m1 %>% make_boot_datasets(samples = 100, overwrite = TRUE)
+#' 
+#' m1_boot$m %>% run_nm()
+#' 
+#' ## the following bootstrap template will wait for results to complete
+#' m1_boot$m %>% nm_list_render("Scripts/basic_boot.Rmd")
+#' 
+#' }
 #' 
 #' @export
 make_boot_datasets <- function(m,

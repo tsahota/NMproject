@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_gettersetters.R
 \name{ctl_path}
 \alias{ctl_path}
-\title{Path to NONMEM control file}
+\title{Get and set path to NONMEM control file}
 \usage{
 ctl_path(m, text)
 }
@@ -14,7 +14,10 @@ Typically, this file does not yet normally exist, but will house the code
 code for this run.}
 }
 \description{
-Get and set path to control file.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Similar to \code{\link[=ctl_name]{ctl_name()}} & \code{\link[=run_in]{run_in()}}, this allows you to retrieve and specify
+the relative path to the control file that will be written by the \code{\link[=run_nm]{run_nm()}}.
 }
 \details{
 "text" can contain "{run_id}" string.  E.g. "Models/run{run_id}.mod"

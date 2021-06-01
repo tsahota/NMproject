@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_object.R
 \name{add_mixed_param}
 \alias{add_mixed_param}
-\title{add a mixed effect parameter to $PK (or $PRED)}
+\title{Add a mixed effect parameter to $PK (or $PRED)}
 \usage{
 add_mixed_param(
   m,
@@ -15,20 +15,23 @@ add_mixed_param(
 )
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{name}{character. name of NONMEM variable to create}
+\item{name}{Character. Name of NONMEM variable to create.}
 
-\item{init}{numeric. initial value of fixed effect}
+\item{init}{Numeric (default = \code{1}). Initial value of fixed effect.}
 
-\item{unit}{character. unit of variable}
+\item{unit}{Character (default = \code{""}). Unit of variable.}
 
-\item{trans}{character. tranformation to log scale?}
+\item{trans}{Character (default = \code{"LOG"}). Tranformation of the variable.}
 
-\item{position}{integer. not used}
+\item{position}{Integer. Not used.}
 
-\item{after}{character. patter to match and include the mixed effect after}
+\item{after}{Character. Pattern to match and include the mixed effect after.}
 }
 \description{
-This will (by default) add a parameter (mixed effect) to your code
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Primarly an internal function. This will (by default) add a parameter (mixed
+effect) to your code $PK/$PRED and $THETA/$OMEGA.
 }

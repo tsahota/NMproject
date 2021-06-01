@@ -26,19 +26,25 @@ gen_sim_path <- function(dsc, start_dir, include_names = TRUE){
 
 #' Prepare forward covariate step
 #'
-#' @param base nm object
-#' @param run_id base run_id to construct run_ids of covariate runs
-#' @param run_in character.  See [run_in()]
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#'
+#' Takes a base nm object and a set of relationships to test (from
+#' [test_relations()]) and prepares a `tibble` of NONMEM runs.
+#' 
+#' @param base An nm object.
+#' @param run_id Base run_id to construct run_ids of covariate runs.
+#' @param run_in Character.  See [run_in()].
 #' @param dtest `dplyr::tibble` with testing relations (from
-#'   [test_relations()])
-#' @param direction character. "forward" (default) or "backward"
-#' @param ... additional arguments passed to [add_cov()]
+#'   [test_relations()]).
+#' @param direction Character. `"forward"` (default) or `"backward"`.
+#' @param ... Additional arguments passed to [add_cov()].
 #'
-#' @return Will return `dtest` a `dplyr::tibble` with appended columns
-#'
-#' @seealso [test_relations()], [covariate_step_tibble()],
-#'   [bind_covariate_results()], [add_cov()]
-#'
+#' @return Will return `dtest` a `dplyr::tibble` with appended columns.
+#'   
+#' @seealso [test_relations()], [bind_covariate_results()], [add_cov()]
+#'   
 #' @examples
 #' \dontrun{
 #'
@@ -226,52 +232,76 @@ bind_covariate_results <- function(dsc, nm_col = "m", parameters = "new"){
 
 #' Generate tibble of relations to test
 #'
-#' @param dtest (optional) existing dtest to append (from an previous use test_relations())
-#' @param param character. Name of parameter
-#' @param cov character. Name of covariate
-#' @param state numeric or character. Number/name of state (see details)
-#' @param continuous logical (default = TRUE). is covariate continuous?
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Generate list of covariate relationships to test (with
+#' [covariate_step_tibble()]).
 #'
+#' @param dtest Optional existing `dtest` to append (from an previous use
+#'   [test_relations()])
+#' @param param Character. Name of parameter(s).
+#' @param cov Character. Name of covariate(s).
+#' @param state Numeric or character. Number/name of state (see details).
+#' @param continuous Logical (default = `TRUE`). If `FALSE`, will treat the
+#'   covariate as categorical.
+#'   
 #' @details 
-#' available states (see also [add_cov()]):
-#' "2" or "linear":
-#'   PARCOV= ( 1 + THETA(1)*(COV - median))
+#'
+#' Setting vector values for `param`, `cov`, and `state`, will expand the grid
+#' to test each value with every other value greedily.  This is similar to
+#' [expand.grid()] available states (see also [add_cov()]):
 #' 
-#' "3" or "hockey-stick":
-#'   IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))
-#'   IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))
-#'                     
-#' "4" or "exponential":
-#'    PARCOV= EXP(THETA(1)*(COV - median))
+#' \describe{
 #' 
-#' "5" or "power":
-#'    PARCOV= ((COV/median)**THETA(1))
-#'    
-#' "power1":
-#'    PARCOV= ((COV/median))
-#'    
-#' "power0.75":
-#'    PARCOV= ((COV/median)**0.75)
+#'  \item{"2" or "linear"}{
+#'   PARCOV= ( 1 + THETA(1)*(COV -median))
+#'  }
+#'
+#'  \item{"3" or "hockey-stick"}{
+#'   IF(COV.LE.median) PARCOV = ( 1 + THETA(1)&ast;(COV - median)) 
+#'   IF(COV.GT.median) PARCOV = ( 1 + THETA(2)&ast;(COV - median))
+#'  }
+#'
+#'  \item{"4" or "exponential"}{
+#'   PARCOV= EXP(THETA(1)*(COV - median))
+#'  }
+#'  
+#'  \item{"5" or "power"}{
+#'   PARCOV= ((COV/median)**THETA(1))
+#'  }
+#'  
+#'  \item{"power1"}{
+#'   PARCOV= ((COV/median))
+#'  }
+#'  
+#'  \item{"power0.75"}{
+#'   PARCOV= ((COV/median)**0.75)
+#'  }
+#'  
+#'  \item{"6" or "log-linear"}{
+#'   PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
+#'  }
+#'  
+#' }
 #' 
-#' "6" or "log-linear":
-#'    PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
 #'    
 #' @seealso [add_cov()], [covariate_step_tibble()] 
 #'    
 #' @examples 
 #' 
-#' \dontrun{
 #' dtest <- test_relations(param = c("KA", "K", "V"),
 #'                         cov = c("LIN1", "LIN2", "LIN3", "RND1", "RND2", "RND3"), 
 #'                         state = c("linear", "power"), 
 #'                         continuous = TRUE)
-#' dtest <- dtest %>% 
-#'              test_relations(param = c("KA", "K", "V"),
-#'                             cov = "BN1",
-#'                             state = "linear",
-#'                             continuous = FALSE)
+#' dtest <- dtest %>% test_relations(param = c("KA", "K", "V"),
+#'                                   cov = "BN1",
+#'                                   state = "linear",
+#'                                   continuous = FALSE)
 #' 
-#' }
+#' dtest
+#' 
 #' @export
 test_relations <- function(dtest, param, cov, state, continuous){
   

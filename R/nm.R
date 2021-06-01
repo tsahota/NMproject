@@ -100,16 +100,14 @@ setup_nm_demo <- function(demo_name = "theopp",
 #' Run all project scripts sequentially
 #'
 #' Runs all scripts s01_XXX, s02_XXX in the designated "scripts" directory
-#'
-#' @param index Numeric or logical vector (needs to be same length of number of
-#'   scripts) for subsetting or reordering scripts to execute
+#' 
 #' @param quiet Argument passed to `rmarkdown::render`
 #'
 #' @details works with .R and .Rmd extensions.  Behaviour is to `source` .R
 #'   files and use `rmarkdown::render` on .Rmd files
 #'
 #' @export
-run_all_scripts <- function(index, quiet = FALSE){
+run_all_scripts <- function(quiet = FALSE){
   
   script_files <- dir(nm_default_dir("scripts"), "s[0-9]+_.*?\\.R(md)?$", full.names = TRUE)
   
@@ -122,8 +120,6 @@ run_all_scripts <- function(index, quiet = FALSE){
                    paste0("rmarkdown::render(\"",script_files,"\", quiet = ", quiet, ")"),
                    paste0("source(\"",script_files,"\")"))
     )
-  
-  if(!missing(index)) dplan <- dplan[index, ]
   
   exprs <- rlang::parse_exprs(dplan$cmd)
   

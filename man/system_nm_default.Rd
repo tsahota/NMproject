@@ -2,15 +2,21 @@
 % Please edit documentation in R/NMproject.R
 \name{system_nm_default}
 \alias{system_nm_default}
-\title{Default system_nm}
+\title{Default system_nm function}
 \usage{
 system_nm_default(cmd, ...)
 }
 \arguments{
-\item{cmd}{Character. system call.}
+\item{cmd}{Character. System call to be sent to the terminal.}
 
-\item{...}{Additional args to be passed to system.}
+\item{...}{Additional args to be passed to \code{system()} or \code{shell()}.}
 }
 \description{
-Not intended to be used directly in most cases.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Not intended to be used directly in most cases.  This is called by
+\verb{[system_nm()]}
+}
+\seealso{
+\code{\link[=system_nm]{system_nm()}}, \code{\link[=run_nm]{run_nm()}}
 }

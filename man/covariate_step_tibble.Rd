@@ -14,24 +14,27 @@ covariate_step_tibble(
 )
 }
 \arguments{
-\item{base}{nm object}
+\item{base}{An nm object.}
 
-\item{run_id}{base run_id to construct run_ids of covariate runs}
+\item{run_id}{Base run_id to construct run_ids of covariate runs.}
 
-\item{run_in}{character.  See \code{\link[=run_in]{run_in()}}}
+\item{run_in}{Character.  See \code{\link[=run_in]{run_in()}}.}
 
 \item{dtest}{\code{dplyr::tibble} with testing relations (from
-\code{\link[=test_relations]{test_relations()}})}
+\code{\link[=test_relations]{test_relations()}}).}
 
-\item{direction}{character. "forward" (default) or "backward"}
+\item{direction}{Character. \code{"forward"} (default) or \code{"backward"}.}
 
-\item{...}{additional arguments passed to \code{\link[=add_cov]{add_cov()}}}
+\item{...}{Additional arguments passed to \code{\link[=add_cov]{add_cov()}}.}
 }
 \value{
-Will return \code{dtest} a \code{dplyr::tibble} with appended columns
+Will return \code{dtest} a \code{dplyr::tibble} with appended columns.
 }
 \description{
-Prepare forward covariate step
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Takes a base nm object and a set of relationships to test (from
+\code{\link[=test_relations]{test_relations()}}) and prepares a \code{tibble} of NONMEM runs.
 }
 \examples{
 \dontrun{
@@ -87,6 +90,5 @@ dsm2 <- m1_f1 \%>\% covariate_step_tibble(
 }
 }
 \seealso{
-\code{\link[=test_relations]{test_relations()}}, \code{\link[=covariate_step_tibble]{covariate_step_tibble()}},
-\code{\link[=bind_covariate_results]{bind_covariate_results()}}, \code{\link[=add_cov]{add_cov()}}
+\code{\link[=test_relations]{test_relations()}}, \code{\link[=bind_covariate_results]{bind_covariate_results()}}, \code{\link[=add_cov]{add_cov()}}
 }

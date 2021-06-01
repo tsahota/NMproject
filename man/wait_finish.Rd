@@ -7,10 +7,27 @@
 wait_finish(r, timeout = NA)
 }
 \arguments{
-\item{r}{nm object}
+\item{r}{An nm object.}
 
-\item{timeout}{numeric seconds to wait before timeout}
+\item{timeout}{Numeric seconds to wait before timeout.}
 }
 \description{
-blocks subsequent r execution until run(s) are finished
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Blocks subsequent r execution until run(s) are finished.  This is useful for
+when subequent relies on outputs from completed NONMEM jobs.  It is normally
+a good idea to include this in post processing R markdown templates, to
+ensure they wait for runs to complete before executing.
+}
+\examples{
+
+\dontrun{
+
+m1 \%>\% run_nm() \%>\% wait_finish()
+
+## following requires run to be completed.
+covariance_plot(m1)
+
+}
+
 }
