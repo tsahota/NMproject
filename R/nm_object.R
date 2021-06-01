@@ -1998,7 +1998,7 @@ init_theta.nm_generic <- function(m, replace, ...){
             names(entry_eval) <- NULL
             if(length(replace[replace$name %in% par_name, col_name]) == 0)
               stop("parameter name not found, must be one of the following:\n ", 
-                   paste(na.omit(replace$name), collapse = ", "), call. = FALSE)
+                   paste(stats::na.omit(replace$name), collapse = ", "), call. = FALSE)
             replace[replace$name %in% par_name, col_name] <- entry_eval
           }
         }
@@ -2085,7 +2085,7 @@ init_omega.nm_generic <- function(m, replace, ...){
             names(entry_eval) <- NULL
             if(length(replace[replace$name %in% par_name, col_name]) == 0)
               stop("parameter name not found, must be one of the following:\n ", 
-                   paste(na.omit(replace$name), collapse = ", "), call. = FALSE)
+                   paste(stats::na.omit(replace$name), collapse = ", "), call. = FALSE)
             replace[replace$name %in% par_name, col_name] <- entry_eval
           }
         }
@@ -2160,7 +2160,7 @@ init_sigma.nm_generic <- function(m, replace, ...){
             names(entry_eval) <- NULL
             if(length(replace[replace$name %in% par_name, col_name]) == 0)
               stop("parameter name not found, must be one of the following:\n ", 
-                   paste(na.omit(replace$name), collapse = ", "), call. = FALSE)
+                   paste(stats::na.omit(replace$name), collapse = ", "), call. = FALSE)
             replace[replace$name %in% par_name, col_name] <- entry_eval
           }
         }
