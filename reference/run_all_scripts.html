@@ -123,11 +123,16 @@
     <p>Runs all scripts s01_XXX, s02_XXX in the designated "scripts" directory</p>
     </div>
 
-    <pre class="usage"><span class='fu'>run_all_scripts</span><span class='op'>(</span>quiet <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>run_all_scripts</span><span class='op'>(</span><span class='va'>index</span>, quiet <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>index</th>
+      <td><p>Numeric or logical vector (needs to be same length of number of
+scripts) for subsetting or reordering scripts to execute</p></td>
+    </tr>
     <tr>
       <th>quiet</th>
       <td><p>Argument passed to <code><a href='https://pkgs.rstudio.com/rmarkdown/reference/render.html'>rmarkdown::render</a></code></p></td>
