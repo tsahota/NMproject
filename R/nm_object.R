@@ -1974,7 +1974,36 @@ init_theta.nm_generic <- function(m, replace, ...){
   if(missing(replace)){  ## get
     if(length(mutate_args) > 0){
       current_init <- init_theta(m)
-      replace <- current_init %>% dplyr::mutate(!!!mutate_args)
+      
+      ## determine quosures produces named lists
+      mutate_style <- rep(TRUE, length(mutate_args))
+      
+      args_eval <- try(lapply(mutate_args, rlang::eval_tidy), silent = TRUE)
+      if(!inherits(args_eval, "try-error")){
+        ## evaluation worked, see if names are present
+        arg_names <- sapply(args_eval, function(x) length(names(x)))
+        mutate_style <- arg_names == 0
+      }
+      
+      replace <- current_init %>% dplyr::mutate(!!!(mutate_args)[mutate_style])
+      
+      ## handle mutate_args[!mutate_style]
+      ## use names to subset
+      if(!inherits(args_eval, "try-error")){
+        ## do simple replace of non mutate args
+        ## loop through columns and parameter values
+        for(col_name in names(args_eval)){
+          for(par_name in names(args_eval[[col_name]])){
+            entry_eval <- args_eval[[col_name]][par_name]
+            names(entry_eval) <- NULL
+            if(length(replace[replace$name %in% par_name, col_name]) == 0)
+              stop("parameter name not found, must be one of the following:\n ", 
+                   paste(na.omit(replace$name), collapse = ", "), call. = FALSE)
+            replace[replace$name %in% par_name, col_name] <- entry_eval
+          }
+        }
+      }
+      
       replace <- replace %>% dplyr::mutate_if(is.numeric, ~signif(., 5))
     } else {
       d <- d[!is.na(d$parameter), ]
@@ -1997,10 +2026,25 @@ init_theta.nm_generic <- function(m, replace, ...){
 }
 
 #' @export
-init_theta.nm_list <- Vectorize_nm_list(init_theta.nm_generic, SIMPLIFY = FALSE, 
+init_theta.nm_list <- Vectorize_nm_list(init_theta.nm_generic, SIMPLIFY = FALSE,
                                         replace_arg = "replace",
-                                        exclude_classes = c("data.frame"))
+                                        exclude_classes = c("data.frame"),
+                                        non_lazy_eval = c("m", "replace"))
 
+
+# init_theta.nm_list <- function(m, replace, ...){
+#   current_call <- match.call()
+#   calling_env <- parent.frame()
+#   result <- lapply(m, function(m){
+#     current_call[[1]] <- as.symbol("init_theta")
+#     current_call[[2]] <- m
+#     eval(current_call, envir = calling_env)
+#   })
+#   if(is_nm_list(result)){
+#     result <- as_nm_list(result)
+#   }
+#   result
+# }
 
 #' @rdname init_theta
 #' @export
@@ -2017,7 +2061,36 @@ init_omega.nm_generic <- function(m, replace, ...){
   if(missing(replace)){  ## get
     if(length(mutate_args) > 0){
       current_init <- init_omega(m)
-      replace <- current_init %>% mutate_cond(!is.na(current_init$name), !!!mutate_args)
+      
+      ## determine quosures produces named lists
+      mutate_style <- rep(TRUE, length(mutate_args))
+      
+      args_eval <- try(lapply(mutate_args, rlang::eval_tidy), silent = TRUE)
+      if(!inherits(args_eval, "try-error")){
+        ## evaluation worked, see if names are present
+        arg_names <- sapply(args_eval, function(x) length(names(x)))
+        mutate_style <- arg_names == 0
+      }
+      
+      replace <- current_init %>% mutate_cond(!is.na(current_init$name), !!!(mutate_args)[mutate_style])
+      
+      ## handle mutate_args[!mutate_style]
+      ## use names to subset
+      if(!inherits(args_eval, "try-error")){
+        ## do simple replace of non mutate args
+        ## loop through columns and parameter values
+        for(col_name in names(args_eval)){
+          for(par_name in names(args_eval[[col_name]])){
+            entry_eval <- args_eval[[col_name]][par_name]
+            names(entry_eval) <- NULL
+            if(length(replace[replace$name %in% par_name, col_name]) == 0)
+              stop("parameter name not found, must be one of the following:\n ", 
+                   paste(na.omit(replace$name), collapse = ", "), call. = FALSE)
+            replace[replace$name %in% par_name, col_name] <- entry_eval
+          }
+        }
+      }
+      
       replace <- replace %>% dplyr::mutate_if(is.numeric, ~signif(., 5))
     } else {
       d$value <- NULL
@@ -2046,7 +2119,8 @@ init_omega.nm_generic <- function(m, replace, ...){
 #' @export
 init_omega.nm_list <- Vectorize_nm_list(init_omega.nm_generic, SIMPLIFY = FALSE, 
                                         replace_arg = "replace",
-                                        exclude_classes = c("data.frame"))
+                                        exclude_classes = c("data.frame"),
+                                        non_lazy_eval = c("m", "replace"))
 
 #' @name init_theta
 #' @export
@@ -2063,7 +2137,35 @@ init_sigma.nm_generic <- function(m, replace, ...){
   if(missing(replace)){  ## get
     if(length(mutate_args) > 0){
       current_init <- init_sigma(m)
-      replace <- current_init %>% mutate_cond(!is.na(current_init$name), !!!mutate_args)
+      ## determine quosures produces named lists
+      mutate_style <- rep(TRUE, length(mutate_args))
+      
+      args_eval <- try(lapply(mutate_args, rlang::eval_tidy), silent = TRUE)
+      if(!inherits(args_eval, "try-error")){
+        ## evaluation worked, see if names are present
+        arg_names <- sapply(args_eval, function(x) length(names(x)))
+        mutate_style <- arg_names == 0
+      }
+      
+      replace <- current_init %>% mutate_cond(!is.na(current_init$name), !!!(mutate_args)[mutate_style])
+      
+      ## handle mutate_args[!mutate_style]
+      ## use names to subset
+      if(!inherits(args_eval, "try-error")){
+        ## do simple replace of non mutate args
+        ## loop through columns and parameter values
+        for(col_name in names(args_eval)){
+          for(par_name in names(args_eval[[col_name]])){
+            entry_eval <- args_eval[[col_name]][par_name]
+            names(entry_eval) <- NULL
+            if(length(replace[replace$name %in% par_name, col_name]) == 0)
+              stop("parameter name not found, must be one of the following:\n ", 
+                   paste(na.omit(replace$name), collapse = ", "), call. = FALSE)
+            replace[replace$name %in% par_name, col_name] <- entry_eval
+          }
+        }
+      }
+      
       replace <- replace %>% dplyr::mutate_if(is.numeric, ~signif(., 5))
     } else {
       d$value <- NULL
@@ -2091,7 +2193,8 @@ init_sigma.nm_generic <- function(m, replace, ...){
 #' @export
 init_sigma.nm_list <- Vectorize_nm_list(init_sigma.nm_generic, SIMPLIFY = FALSE, 
                                         replace_arg = "replace",
-                                        exclude_classes = c("data.frame"))
+                                        exclude_classes = c("data.frame"),
+                                        non_lazy_eval = c("m", "replace"))
 
 
 update_variable_in_text_numbers <- function(m, before_number, after_number){

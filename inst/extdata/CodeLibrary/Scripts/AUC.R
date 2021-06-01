@@ -1,7 +1,39 @@
-## Description: Basic NCA AUC function
-## Key words: NCA, AUC, function
-## Author: Tarj Sahota, Peter Lawrence
-## Run interactively: FALSE
+#' @title Calculate AUC
+#'
+#' @description Computes AUC by trapezoidal rule.
+#'
+#' @author Tarj Sahota, Peter Lawrence
+#'
+#' @param time Numeric vector of times to integrate over.
+#' @param conc Numeric vector of concentrations to integrate.
+#' @param loq Numeric value (default = 0).  Conc values below this will be set
+#'   to 0.
+#' @param method Character indicating calculation method of trapezoidal area.
+#'
+#' @return Will return a single number for the AUC.  This function is most
+#'   useful using `dplyr`.
+#'
+#' @seealso [NMproject::ppc_data()]
+#' @examples
+#'
+#' \dontrun{
+#'
+#' AUC(d$TIME, d$DV)  ## return AUC number
+#'
+#' ## data.frame with AUC value for each ID (one row per ID)
+#' d %>% group_by(ID) %>%
+#'   summarise(AUC = AUC(TIME, DV),
+#'             CMAX = max(DV),
+#'             TMAX = TIME[which.max(DV)])
+#'
+#' ## Add exposure columns to a dataset
+#' d %>% group_by(ID) %>%
+#'   mutate(AUC = AUC(TIME, DV),
+#'             CMAX = max(DV),
+#'             TMAX = TIME[which.max(DV)])
+#'
+#' }
+#' @export
 
 AUC <- function(time, conc, loq=0,method=c("linuplogdown","linuplogdowntmax","linear"))
 {

@@ -32,7 +32,7 @@ test_that("run and post",{
 
   ## run all scripts
   overwrite_behaviour("skip")
-  
+
   res <- tryCatch(run_all_scripts(), error = function(e){
     on.exit({
       dump.frames(to.file = TRUE)
@@ -95,8 +95,35 @@ test_that("run and post",{
   expect_true(nrow(df) > 0 & nrow(df) < nrow(d))
 
   it <- m1 %>% init_theta() %>% dplyr::first()
-  it$init[1] <- 1
   m1 <- m1 %>% init_theta(it)
+  
+  ## test out 
+  m1 <- readRDS("Results/m1.RDS")
+  
+  expect_true(identical(0.5, it$init[it$name %in% "KA"]))
+  
+  it <- m1 %>% init_theta(init = c(KA = 1)) %>% 
+    init_theta() %>% dplyr::first()
+  expect_true(identical(1, it$init[it$name %in% "KA"]))
+  
+  it <- m1 %>% init_theta(init = rnorm(init, mean=init, sd = 0.3)) %>% 
+    init_theta() %>% dplyr::first()
+  expect_true(!identical(0.5, it$init[it$name %in% "KA"]))
+  
+  expect_error(m1 %>% init_omega(init = c(FAKENAME = 1)))
+  
+  io <- m1 %>% init_omega(init = c(IIV_KA = 1)) %>% 
+    init_omega() %>% dplyr::first()
+  expect_true(identical(1, io$init[io$name %in% "IIV_KA"]))
+
+  io <- m1 %>% init_omega(init = runif(init, min = init/2, max = init*2)) %>% 
+    init_omega() %>% dplyr::first()
+  expect_true(!identical(0.1, io$init[io$name %in% "IIV_KA"]))
+  
+  is <- m1 %>% init_sigma(init = c("prop error" = 0.3)) %>% 
+    init_sigma() %>% dplyr::first()
+  expect_true(identical(0.3, is$init[is$name %in% "prop error"]))
+  
   ##################
   ## omega block/unblock test - can delete this, it's in demo
   io <- m1 %>% init_omega()

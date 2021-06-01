@@ -1,10 +1,14 @@
 Vectorize_nm_list <- function (FUN, vectorize.args = arg.names, SIMPLIFY = FALSE, USE.NAMES = TRUE, 
                                invisible = FALSE, replace_arg = "text", pre_glue = FALSE,
-                               exclude_classes = c("ggplot"))
+                               exclude_classes = c("ggplot"),
+                               lazy_eval = c(),
+                               non_lazy_eval = c())
 {
   ## used create nm_list methods
   ## rule = if single arg, it will simplify (unlist) output i.e. get
   ##  otherwise it will set
+  if(length(lazy_eval) > 0 & length(non_lazy_eval) > 0)
+    stop("cannot have both lazy_eval and non_lazy_eval specified")
   
   missing_SIMPLIFY <- missing(SIMPLIFY)
   arg.names <- as.list(formals(FUN))
@@ -21,7 +25,13 @@ Vectorize_nm_list <- function (FUN, vectorize.args = arg.names, SIMPLIFY = FALSE
     stop(sQuote("FUN"), " may not have argument(s) named ", 
          paste(sQuote(arg.names[collisions]), collapse = ", "))
   FUNV <- function() {
-    args <- lapply(as.list(match.call())[-1L], eval, parent.frame())
+    args <- as.list(match.call())[-1L]
+    ## if non_lazy_eval is specified, convert to lazy_eval
+    if(length(non_lazy_eval) > 0) lazy_eval <- setdiff(names(args), non_lazy_eval)
+    
+    args_eval <- lapply(args[!names(args) %in% lazy_eval], eval, parent.frame())
+    args_lazy <- args[names(args) %in% lazy_eval] 
+    args <- c(args_eval, args_lazy)[names(args)]
     ## MODIFIED: additional line to ensure if no args, the function is executed once
     if(length(args) == 0) args = formals(FUN)
     names <- if (is.null(names(args))) 
