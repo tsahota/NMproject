@@ -7,13 +7,18 @@
 nm_default_dirs(dir_list)
 }
 \arguments{
-\item{dir_list}{optional named list or vector. Names "scripts_dir" and "models_dir" must be present.  Rest can be unnamed}
+\item{dir_list}{Optional named list or vector. Names \code{"scripts"} and
+\code{"models"} must be present.  The rest can be unnamed.}
 }
 \value{
-if \code{dir_list} is missing, will return value of \code{getOption("nm_default_dirs")} otherwise will set option \code{nm_default_dirs}
+if \code{dir_list} is missing, will return value of
+\code{getOption("nm_default_dirs")} otherwise will set option \code{nm_default_dirs}.
 }
 \description{
-This allows organisations/individuals with their own directory to customize their directory structure
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+This allows organisations/individuals with their own directory to customize
+their directory structure
 }
 \examples{
 \dontrun{

@@ -7,9 +7,18 @@ suppressWarnings(
 )
 
 #' Fast read of NONMEM output table
-#'
-#' @param file file argument - see ?read.table help for details
-#' @param ... other arguments to be passed to read.table()
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Reads in $TABLE outputs rapidly.  [output_table()] is a higher level function
+#' for reading output files and combining with input datasets.
+#' 
+#' @param file File argument from `utils::read.table()`.
+#' @param ... Other arguments to be passed to `utils::read.table()`.
+#' 
+#' @seealso [output_table()]
 #' @export
 
 nm_read_table <- function(file,...){

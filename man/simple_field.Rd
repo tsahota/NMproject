@@ -2,31 +2,24 @@
 % Please edit documentation in R/nm_object.R
 \name{simple_field}
 \alias{simple_field}
-\title{Get/set simple fields of nm objects}
+\title{Interface for getting and setting your own simple fields in nm objects}
 \usage{
 simple_field(m, ...)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{...}{arguments to get/set fields}
+\item{...}{Arguments to get/set fields.}
 }
 \description{
-Get/set simple fields of nm objects
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \examples{
 \dontrun{
 
-core_list <- c(1,4,12)
-
-mc <- m1 \%>\% child(run_id = paste0(corelist)) \%>\%
-  simple_field(cores = corelist) \%>\%
-  cmd("qpsn -c {cores} -t 59 -- execute {ctl_name} -dir={run_dir}")
-  
-mc \%>\% simple_field(cores)  ## retrieve field from object
-
 mc <- mc \%>\% simple_field(stars = 3)
 mc \%>\% simple_field(stars)
+mc ## see that stars is a field of the nm object.
 
 }
 }

@@ -7,12 +7,14 @@
 nm_output(r, dorig, ...)
 }
 \arguments{
-\item{r}{An object of class \code{nmexecute}}
+\item{r}{An nm object.}
 
-\item{dorig}{Optional data.frame. NONMEM input dataset.}
+\item{dorig}{Optional \code{data.frame}. NONMEM input dataset.}
 
 \item{...}{Additional arguments to pass on to \code{\link[=read.csv]{read.csv()}}.}
 }
 \description{
-This combines $TABLE output with the input data, allowing text columns to be retained for plotting/summaries.
+This function may become deprecated soon. The function \code{\link[=output_table]{output_table()}} is a
+more user friendly wrapper for this function.
 }
+\keyword{internal}

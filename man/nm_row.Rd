@@ -7,8 +7,11 @@
 nm_row(m)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 }
 \description{
-used mainly internally, but this could find use with advanced users
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Primarily an internal function. Converts an \code{nm_list} object to a \code{tibble}.
 }
+\keyword{internal}

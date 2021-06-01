@@ -542,8 +542,12 @@ consider using the default with state \"linear\" or use additional_state_text")
 }
 
 #' Get objective function value (OFV)
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
 #'
-#' @param r object of class nm
+#' @param r An nm object.
 #' @include nm.R
 #' 
 #' @examples 
@@ -576,10 +580,14 @@ ofv.list <- function(r){
 
 #' Convert nonmem code to R ready
 #' 
-#' This is a developer function
+#' Parses NONMEM code and attempts to make it evaluable as R code.
 #' 
-#' @param code character vector of NONMEM code block
-#' @param eta_to_0 logical (default = TRUE) set all etas to 0
+#' @param code Character vector of NONMEM code block.
+#' @param eta_to_0 Logical (default = `TRUE`). Should all etas be set to 0.
+#' 
+#' @return Character vector of R code.
+#' 
+#' @keywords internal
 
 nonmem_code_to_r <- function(code, eta_to_0 = TRUE){
   pk_block <- rem_comment(code)

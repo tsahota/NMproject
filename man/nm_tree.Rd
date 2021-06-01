@@ -7,10 +7,12 @@
 nm_tree(..., summary = FALSE)
 }
 \arguments{
-\item{...}{arguments passed to nm_list_gather(...)}
+\item{...}{Arguments passed to \code{\link[=nm_list_gather]{nm_list_gather()}}}
 
-\item{summary}{logical (default = FALSE) should summary_wide variables be appended}
+\item{summary}{Logical (default = \code{FALSE}). Should \code{\link[=summary_wide]{summary_wide()}} variables be appended.}
 }
 \description{
-Make data.tree object
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+Draw a tree diagram showing model development path.
 }

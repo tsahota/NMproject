@@ -330,13 +330,17 @@ cond_num.nm_list <- function(r){
 
 #' Run record
 #'
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#'
 #' Displays the transformed parameters of a completed or running model.
 #' Normally used inside of a diagnostic template, but can be useful for quickly
-#' seeing parameter estimates of several models
+#' seeing parameter estimates of several models.
 #'
-#' @param m nm object
-#' @param trans logical. if TRUE (default) will transform using control file
-#'   $THETA/OMEGA conventions
+#' @param m An nm object.
+#' @param trans Logical. If `TRUE` (default) will transform using control file
+#'   $THETA/OMEGA conventions.
 #'
 #' @seealso [nm_render()]
 #' @examples
@@ -506,11 +510,18 @@ rr2 <- function(m, trans = TRUE){
   d 
 }
 
-#' Find an output file
+#' Find an output file associated with a run
 #' 
-#' @param m nm object
-#' @param extn character. name of extension
-#' @param file_name optional character. name of file name
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' This is primarily a backend function used to identify output file paths
+#' associated with nm objects.
+#' 
+#' @param m An nm object.
+#' @param extn Character. Name of extension.
+#' @param file_name Optional character. Name of file name.
 #' 
 #' @examples
 #' \dontrun{
@@ -1003,8 +1014,28 @@ covariance_plot <- function(r,trans=TRUE){
 }
 
 #' Get OMEGA matrix from run
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("experimental")`
+#' 
+#' Obtain in matrix form the OMEGA matrix.  This is primarily to feed into other
+#' packages such as `mrgsolve`.
 #'
-#' @param r object of class nm
+#' @param r An nm object.
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' ## matrix of initial estimates
+#' m1 %>% omega_matrix()
+#' 
+#' ## matrix of final estimates  
+#' m1 %>% update_parameters() %>% omega_matrix()
+#' 
+#' }
+#' 
 #' @export
 omega_matrix <- function(r){
   dc <- coef(r,trans=FALSE)

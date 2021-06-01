@@ -7,10 +7,10 @@
 parent_run(m, n = 1L)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{n}{numeric. generation of parent (default = 1)}
+\item{n}{Numeric. generation of parent (default = 1).}
 }
 \description{
-Get parent object of nm object
+Will pull the parent run of an nm object from the run cache.
 }

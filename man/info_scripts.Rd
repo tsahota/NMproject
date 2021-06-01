@@ -14,25 +14,29 @@ info_scripts(
 )
 }
 \arguments{
-\item{files}{vector string of file names/paths}
+\item{files}{Vector string of file names/paths.}
 
-\item{fields}{vector string of field tags to display}
+\item{fields}{Vector string of field tags to display.}
 
-\item{viewer}{logical indicating if Rstudio viewer should be used (default = TRUE)}
+\item{viewer}{Logical indicating if Rstudio viewer should be used (default =
+\code{TRUE}).}
 
-\item{silent}{run in quiet mode (default=FALSE)}
+\item{silent}{Run in quiet mode (default=\code{FALSE}).}
 
-\item{base_dirs}{character vector. group files together that belong to these directory paths}
+\item{base_dirs}{Character vector. group files together that belong to these
+directory paths.}
 
-\item{shorten_paths}{logical. Default = TRUE. Long paths will be shortened if true in displayed output (not returned object)}
+\item{shorten_paths}{Logical (default = \code{TRUE}). Long paths will be shortened
+if true in displayed output (not returned object).}
 }
 \description{
 List information about scripts
 }
 \examples{
 \dontrun{
-ls_scripts('~/AZD6094/PK_liver4/') \%>\%
+ls_scripts('~/path/to/directory/') \%>\%
   info_scripts('Description') \%>\%
   filter(grepl('mod',DESCRIPTION))
 }
 }
+\keyword{internal}

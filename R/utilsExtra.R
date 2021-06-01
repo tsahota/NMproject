@@ -3,9 +3,14 @@
 
 NULL
 
-#' Test if object is an nm_list object
+#' @rdname is_nm
+#' @name is_nm
 #' 
-#' @param x object
+#' @title Test if object is an nm coercible object
+#' 
+#' @description Mostly internal functions.
+#' 
+#' @param x Object.
 #' 
 #' @export
 is_nm_list <- function(x){
@@ -52,9 +57,7 @@ as_nm_list.nm_generic <- function(m){
   as_nm_list.list(m)
 }
 
-#' Test if object is an nm_generic object
-#' 
-#' @param x object
+#' @rdname is_nm
 #' 
 #' @export
 

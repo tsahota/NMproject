@@ -279,14 +279,19 @@ import <- function(copy_table, overwrite = FALSE, silent = FALSE,
 
 #' List scripts
 #'
-#' @param folder string describing folder to search recursively in
-#' @param extn character (can be regex) giving extension to limit search to
-#' @param recursive by default TRUE
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' @param folder String describing folder to search recursively in.
+#' @param extn Character (can be regex) giving extension to limit search to.
+#' @param recursive Logical (default = `TRUE`).  Should directories be searched
+#'   recursively.
 #' @examples
 #' \dontrun{
-#' ls_scripts('~/AZD6094/PK_liver4/') %>%
-#'   info_scripts('Description') %>%
-#'   filter(grepl('mod',DESCRIPTION))
+#' 
+#' ## find all scripts with the string "AUC("
+#' ls_scripts('~/path/to/analysis/Scripts') %>% search_raw("AUC\\(")
 #' }
 #' @export
 
@@ -302,19 +307,23 @@ ls_scripts <- function(folder = ".", extn = "r|R|Rmd|rmd", recursive = TRUE) {
 
 #' List information about scripts
 #'
-#' @param files vector string of file names/paths
-#' @param fields vector string of field tags to display
-#' @param viewer logical indicating if Rstudio viewer should be used (default = TRUE)
-#' @param silent run in quiet mode (default=FALSE)
-#' @param base_dirs character vector. group files together that belong to these directory paths
-#' @param shorten_paths logical. Default = TRUE. Long paths will be shortened if true in displayed output (not returned object)
+#' @param files Vector string of file names/paths.
+#' @param fields Vector string of field tags to display.
+#' @param viewer Logical indicating if Rstudio viewer should be used (default =
+#'   `TRUE`).
+#' @param silent Run in quiet mode (default=`FALSE`).
+#' @param base_dirs Character vector. group files together that belong to these
+#'   directory paths.
+#' @param shorten_paths Logical (default = `TRUE`). Long paths will be shortened
+#'   if true in displayed output (not returned object).
 #' @examples
 #' \dontrun{
-#' ls_scripts('~/AZD6094/PK_liver4/') %>%
+#' ls_scripts('~/path/to/directory/') %>%
 #'   info_scripts('Description') %>%
 #'   filter(grepl('mod',DESCRIPTION))
 #' }
-#' @export
+#' @keywords internal
+
 info_scripts <- function(files, fields = c("Description"), viewer = TRUE, silent = FALSE, 
                          base_dirs = NULL, shorten_paths = TRUE) {
   if (length(fields) > 0) {
@@ -380,10 +389,18 @@ info_scripts <- function(files, fields = c("Description"), viewer = TRUE, silent
 
 #' Search for files matching raw text search
 #'
-#' @param files vector string of file names/paths
-#' @param text string (can be regex) to search for
-#' @param search_title logical (default=TRUE). should matching occur in title
-#' @param search_contents logical (default=TRUE). should matching occur in file contents
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#'
+#' Searches through the list of supplied for matching strings of text.  Useful
+#' in finding files that you know contain certain text snippets.
+#'
+#' @param files Vector string of file names/paths/
+#' @param text String (can be regex) to search for.
+#' @param search_title Logical (default=`TRUE`). Should matching occur in title.
+#' @param search_contents Logical (default=`TRUE`). Should matching occur in
+#'   file contents.
 #' 
 #' @seealso [ls_scripts()], [ls_code_library()], [stage()]
 #' 
@@ -396,8 +413,9 @@ info_scripts <- function(files, fields = c("Description"), viewer = TRUE, silent
 #' ## regex match find instances of AUC() function being used
 #' ls_scripts("Scripts") %>% search_raw("AUC\\(")
 #' 
-#' ## bring file(s) into staging area of project
-#' ls_scripts("Scripts") %>% search_raw("AUC\\(") %>% stage()
+#' ## bring file(s) into project
+#' ls_scripts("/path/to/other/analysis/scripts/dir") %>% 
+#'   search_raw("AUC\\(") %>% import()
 #' 
 #' }
 #' 
@@ -418,6 +436,13 @@ search_raw <- function(files, text, search_title=TRUE, search_contents=TRUE) {
 }
 
 #' List files in code library
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' A low level function to interact with the code library.  It is easier in most
+#' cases to use the code library shiny addin.
 #'
 #' @param pattern optional character. filter the code library use regex
 #' 

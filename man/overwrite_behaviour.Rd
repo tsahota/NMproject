@@ -7,8 +7,11 @@
 overwrite_behaviour(txt = c("ask", "overwrite", "stop", "skip"))
 }
 \arguments{
-\item{txt}{character either "run", "stop", "skip"}
+\item{txt}{Character either \code{"run"}, \code{"stop"}, or \code{"skip"}.}
 }
 \description{
-Requires setting "nm.overwrite_behaviour" \code{option()}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+This is best used via the "overwrite behaviour" RStudio addin.  Sets the
+strategy for how to handle overwriting of previously executed control files.
 }

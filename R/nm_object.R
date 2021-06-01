@@ -519,24 +519,21 @@ get_simple_field <- function(m, field){
   
 }
 
-#' Get/set simple fields of nm objects
+#' Interface for getting and setting your own simple fields in nm objects
 #' 
-#' @param m nm object
-#' @param ... arguments to get/set fields
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' @param m An nm object.
+#' @param ... Arguments to get/set fields.
 #' 
 #' @examples 
 #' \dontrun{
 #' 
-#' core_list <- c(1,4,12)
-#' 
-#' mc <- m1 %>% child(run_id = paste0(corelist)) %>%
-#'   simple_field(cores = corelist) %>%
-#'   cmd("qpsn -c {cores} -t 59 -- execute {ctl_name} -dir={run_dir}")
-#'   
-#' mc %>% simple_field(cores)  ## retrieve field from object
-#' 
 #' mc <- mc %>% simple_field(stars = 3)
 #' mc %>% simple_field(stars)
+#' mc ## see that stars is a field of the nm object.
 #' 
 #' }
 #' @export
@@ -1006,10 +1003,24 @@ param_info2 <- function(m){
 }
 
 
-#' Update parameters from a control stream
+#' Update initial estimates to final estimates
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
 #'
-#' @param ctl object coercible into ctl_list
-#' @param from class nm. object from which to extract results
+#' @param ctl An nm object.
+#' @param from Optional nm object. The completed object from which to extract results.  If not specified, `from` will be taken to be `ctl`.
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' m1 %>% dollar("THETA")
+#' m1 <- m1 %>% update_parameters() 
+#' m1 %>% dollar("THETA")
+#' 
+#' }
 #' @export
 
 update_parameters <- function(ctl, from){
@@ -1129,14 +1140,24 @@ grab_variables <- function(m, pattern){
 
 #' Compute diff between two NONMEM runs
 #' 
-#' NMproject's control file manipulation functions (e.g. subroutine())
-#'  may not work for all control files. It is the responsibilty of 
-#'  the user to check automatic manipulations are done properly.
-#'  Displaying diffs provides a means of manually checking.
+#' @description 
 #' 
-#' @param m nm object
-#' @param ref_m nm object (base/reference object)
-#' @param format character (default = "raw") argument passed to diffobj::diffChr
+#' `r lifecycle::badge("stable")`
+#' 
+#' The easiest way to use this function is via the "view diff" RStudio addin.
+#' 
+#' NMproject's control file manipulation functions (e.g. subroutine())
+#'  may not work for all control files. It is the responsibility of 
+#'  the user to check automatic manipulations are done properly.
+#'  Displaying diffs provides a means of manually checking what was done.
+#' 
+#' @param m An nm object.
+#' @param ref_m An optional nm object (base/reference object).  If not
+#'   specified, it will compute the diff the initial control file contents
+#'   associated with the object at the time of object create.  This information
+#'   is stored in the `ctl_orig` field.
+#' @param format Character (default = `"raw"`) argument passed to
+#'   [diffobj::diffChr()]
 #' 
 #' @return diff object
 #' @examples 
@@ -1817,10 +1838,15 @@ param_r2nm_extra <- function(d){
 
 #' Convert nm objects to a rowwise tibble/data.frame
 #'
-#' used mainly internally, but this could find use with advanced users
+#' @description 
 #'
-#' @param m nm object
+#' `r lifecycle::badge("stable")`
 #'
+#' Primarily an internal function. Converts an `nm_list` object to a `tibble`.
+#'
+#' @param m An nm object.
+#' 
+#' @keywords internal
 #' @export
 nm_row <- function(m){
   UseMethod("nm_row")
@@ -2439,8 +2465,10 @@ ctl_table_paths.nm_list <- Vectorize_nm_list(ctl_table_paths.nm_generic, SIMPLIF
 
 #' Get parent object of nm object
 #' 
-#' @param m nm object
-#' @param n numeric. generation of parent (default = 1)
+#' Will pull the parent run of an nm object from the run cache.
+#' 
+#' @param m An nm object.
+#' @param n Numeric. generation of parent (default = 1).
 #'  
 #' @export
 parent_run <- function(m, n = 1L){
@@ -2751,8 +2779,17 @@ read_derived_data <- function(name, na = ".", silent = FALSE, ...){
 
 #' Get all nm_list objects
 #' 
-#' @param x environment (default = .GlobalEnv) to search
-#'   or data.frame with (nm_list column) or nm_list
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Get all nm objects in an environment.  By default this is the global
+#' workspace.
+#' 
+#' @param x environment (default = `.GlobalEnv`) to search
+#'   or data.frame with (`nm_list` column) or `nm_list`
+#'   
+#' @return A single `nm_list` object with all model objects
 #' @export
 nm_list_gather <- function(x = .GlobalEnv){
   UseMethod("nm_list_gather")

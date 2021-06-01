@@ -7,10 +7,10 @@
 is_full_path(x)
 }
 \arguments{
-\item{x}{string giving file/path name}
+\item{x}{String giving file/path name.}
 }
 \value{
-TRUE only when path starts with ~, /, \\ or X: (i.e. when x is a full path), FALSE otherwise
+\code{TRUE} only when path starts with ~, /, \\ or X: (i.e. when x is a full path), FALSE otherwise.
 }
 \description{
 Test if full path
@@ -21,3 +21,4 @@ is_full_path('file.text.ext')
 is_full_path('/path/to/file.text.ext')
 }
 }
+\keyword{internal}

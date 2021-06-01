@@ -7,8 +7,9 @@
 view_patch(patch_name)
 }
 \arguments{
-\item{patch_name}{character. name of patch}
+\item{patch_name}{Character. Name of patch}
 }
 \description{
-Internal function. Use the addin for viewing patches instead
+Internal function. Use the addin for viewing patches instead.
 }
+\keyword{internal}

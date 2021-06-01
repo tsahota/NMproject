@@ -7,10 +7,10 @@
 ofv(r)
 }
 \arguments{
-\item{r}{object of class nm}
+\item{r}{An nm object.}
 }
 \description{
-Get objective function value (OFV)
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \examples{
 \dontrun{

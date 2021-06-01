@@ -1,14 +1,3 @@
-#' Get job information (if it exists)
-#'
-#' Requires 'get_job_info' to be defined as an option - function that takes stdout console output
-#' from a job and returns a character
-#'
-#' @param m object class nm
-#' @param text optional character to set job_info
-#' @export
-job_info <- function(m, text){
-  UseMethod("job_info")  
-}
 
 search_ctl_name <- function(r, models_dir=nm_default_dir("models")){
   if(inherits(r,"nm")) ctl_name <- r$ctl
@@ -131,11 +120,14 @@ run_all_scripts <- function(quiet = FALSE){
 
 #' Get NONMEM output tables
 #'
-#' This combines $TABLE output with the input data, allowing text columns to be retained for plotting/summaries.
+#' This function may become deprecated soon. The function [output_table()] is a
+#' more user friendly wrapper for this function.
 #'
-#' @param r An object of class `nmexecute`
-#' @param dorig Optional data.frame. NONMEM input dataset.
+#' @param r An nm object.
+#' @param dorig Optional `data.frame`. NONMEM input dataset.
 #' @param ... Additional arguments to pass on to [read.csv()].
+#' 
+#' @keywords internal
 #' @export
 
 nm_output <- function(r,dorig,...){

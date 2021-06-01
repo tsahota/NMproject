@@ -9,3 +9,4 @@ is_rstudio()
 \description{
 Logical flag for detecting if R session is on rstudio not
 }
+\keyword{internal}

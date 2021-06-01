@@ -7,10 +7,16 @@
 nm_read_table(file, ...)
 }
 \arguments{
-\item{file}{file argument - see ?read.table help for details}
+\item{file}{File argument from \code{utils::read.table()}.}
 
-\item{...}{other arguments to be passed to read.table()}
+\item{...}{Other arguments to be passed to \code{utils::read.table()}.}
 }
 \description{
-Fast read of NONMEM output table
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Reads in $TABLE outputs rapidly.  \code{\link[=output_table]{output_table()}} is a higher level function
+for reading output files and combining with input datasets.
+}
+\seealso{
+\code{\link[=output_table]{output_table()}}
 }

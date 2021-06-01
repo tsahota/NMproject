@@ -2,19 +2,22 @@
 % Please edit documentation in R/run_record.R
 \name{nm_output_path}
 \alias{nm_output_path}
-\title{Find an output file}
+\title{Find an output file associated with a run}
 \usage{
 nm_output_path(m, extn, file_name)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{extn}{character. name of extension}
+\item{extn}{Character. Name of extension.}
 
-\item{file_name}{optional character. name of file name}
+\item{file_name}{Optional character. Name of file name.}
 }
 \description{
-Find an output file
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+This is primarily a backend function used to identify output file paths
+associated with nm objects.
 }
 \examples{
 \dontrun{

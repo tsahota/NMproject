@@ -7,8 +7,9 @@
 tail_lst(r)
 }
 \arguments{
-\item{r}{nm object}
+\item{r}{An nm object.}
 }
 \description{
-Tail of lst file
+Used by the shiny run monitor to show the tail end of the .lst file.
 }
+\keyword{internal}

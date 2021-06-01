@@ -70,6 +70,7 @@ Collate:
     'developer_funs.R'
     'dollar_input.R'
     'find_nonmem.R'
+    'job_info.R'
     'job_stats.R'
     'make_OCC_every_dose.R'
     'make_project.R'

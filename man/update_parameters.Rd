@@ -2,15 +2,25 @@
 % Please edit documentation in R/nm_object.R
 \name{update_parameters}
 \alias{update_parameters}
-\title{Update parameters from a control stream}
+\title{Update initial estimates to final estimates}
 \usage{
 update_parameters(ctl, from)
 }
 \arguments{
-\item{ctl}{object coercible into ctl_list}
+\item{ctl}{An nm object.}
 
-\item{from}{class nm. object from which to extract results}
+\item{from}{Optional nm object. The completed object from which to extract results.  If not specified, \code{from} will be taken to be \code{ctl}.}
 }
 \description{
-Update parameters from a control stream
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+}
+\examples{
+
+\dontrun{
+
+m1 \%>\% dollar("THETA")
+m1 <- m1 \%>\% update_parameters() 
+m1 \%>\% dollar("THETA")
+
+}
 }

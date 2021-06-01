@@ -2,7 +2,7 @@
 % Please edit documentation in R/make_OCC_every_dose.R
 \name{make_OCC_every_dose}
 \alias{make_OCC_every_dose}
-\title{Experimental function to make an OCC column for NONMEM IOV use}
+\title{Make an OCC column for NONMEM IOV use}
 \usage{
 make_OCC_every_dose(d, dose_trigger, new_OCC_trigger)
 }

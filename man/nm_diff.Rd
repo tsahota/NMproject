@@ -7,20 +7,28 @@
 nm_diff(m, ref_m, format = "raw")
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{ref_m}{nm object (base/reference object)}
+\item{ref_m}{An optional nm object (base/reference object).  If not
+specified, it will compute the diff the initial control file contents
+associated with the object at the time of object create.  This information
+is stored in the \code{ctl_orig} field.}
 
-\item{format}{character (default = "raw") argument passed to diffobj::diffChr}
+\item{format}{Character (default = \code{"raw"}) argument passed to
+\code{\link[diffobj:diffChr]{diffobj::diffChr()}}}
 }
 \value{
 diff object
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+The easiest way to use this function is via the "view diff" RStudio addin.
+
 NMproject's control file manipulation functions (e.g. subroutine())
-may not work for all control files. It is the responsibilty of
+may not work for all control files. It is the responsibility of
 the user to check automatic manipulations are done properly.
-Displaying diffs provides a means of manually checking.
+Displaying diffs provides a means of manually checking what was done.
 }
 \examples{
 \dontrun{

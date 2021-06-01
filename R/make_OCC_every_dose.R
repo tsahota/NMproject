@@ -1,4 +1,4 @@
-#' Experimental function to make an OCC column for NONMEM IOV use
+#' Make an OCC column for NONMEM IOV use
 #'
 #' @description
 #'

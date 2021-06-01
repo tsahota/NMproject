@@ -10,7 +10,10 @@ ls_code_library(pattern = ".")
 \item{pattern}{optional character. filter the code library use regex}
 }
 \description{
-List files in code library
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+A low level function to interact with the code library.  It is easier in most
+cases to use the code library shiny addin.
 }
 \examples{
 

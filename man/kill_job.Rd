@@ -7,8 +7,16 @@
 kill_job(m)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 }
 \description{
-Requires setting "kill_job" \code{option()}
+Can be useful in conjuction with a modified \code{\link[=system_nm]{system_nm()}}.  Requires setting \code{"kill_job"} option.
 }
+\details{
+The option \code{"kill_job"} needs to be defined as a function that kills
+a cluster job.
+}
+\seealso{
+\code{\link[=system_nm]{system_nm()}}, \code{\link[=job_info]{job_info()}}
+}
+\keyword{internal}

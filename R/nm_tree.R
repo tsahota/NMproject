@@ -1,7 +1,13 @@
 #' Make data.tree object
 #' 
-#' @param ... arguments passed to nm_list_gather(...)
-#' @param summary logical (default = FALSE) should summary_wide variables be appended
+#' @description 
+#' 
+#' `r lifecycle::badge("experimental")`
+#' 
+#' Draw a tree diagram showing model development path.
+#' 
+#' @param ... Arguments passed to [nm_list_gather()]
+#' @param summary Logical (default = `FALSE`). Should [summary_wide()] variables be appended.
 #' @export
 nm_tree <- function(..., summary = FALSE){
   

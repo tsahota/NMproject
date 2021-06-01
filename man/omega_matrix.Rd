@@ -7,8 +7,24 @@
 omega_matrix(r)
 }
 \arguments{
-\item{r}{object of class nm}
+\item{r}{An nm object.}
 }
 \description{
-Get OMEGA matrix from run
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+Obtain in matrix form the OMEGA matrix.  This is primarily to feed into other
+packages such as \code{mrgsolve}.
+}
+\examples{
+
+\dontrun{
+
+## matrix of initial estimates
+m1 \%>\% omega_matrix()
+
+## matrix of final estimates  
+m1 \%>\% update_parameters() \%>\% omega_matrix()
+
+}
+
 }

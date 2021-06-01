@@ -7,10 +7,14 @@
 nonmem_code_to_r(code, eta_to_0 = TRUE)
 }
 \arguments{
-\item{code}{character vector of NONMEM code block}
+\item{code}{Character vector of NONMEM code block.}
 
-\item{eta_to_0}{logical (default = TRUE) set all etas to 0}
+\item{eta_to_0}{Logical (default = \code{TRUE}). Should all etas be set to 0.}
+}
+\value{
+Character vector of R code.
 }
 \description{
-This is a developer function
+Parses NONMEM code and attempts to make it evaluable as R code.
 }
+\keyword{internal}

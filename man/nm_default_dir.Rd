@@ -7,12 +7,13 @@
 nm_default_dir(name = c("scripts", "models", "results"), ...)
 }
 \arguments{
-\item{name}{character. Directory type}
+\item{name}{Character. Directory type.  Should be either \code{"scripts"},
+\code{"models"} or \code{"results"}.}
 
-\item{...}{not used yet}
+\item{...}{Not used.}
 }
 \description{
-Get a default directory
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \examples{
 nm_default_dir("scripts")

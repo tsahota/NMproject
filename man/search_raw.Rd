@@ -7,16 +7,20 @@
 search_raw(files, text, search_title = TRUE, search_contents = TRUE)
 }
 \arguments{
-\item{files}{vector string of file names/paths}
+\item{files}{Vector string of file names/paths/}
 
-\item{text}{string (can be regex) to search for}
+\item{text}{String (can be regex) to search for.}
 
-\item{search_title}{logical (default=TRUE). should matching occur in title}
+\item{search_title}{Logical (default=\code{TRUE}). Should matching occur in title.}
 
-\item{search_contents}{logical (default=TRUE). should matching occur in file contents}
+\item{search_contents}{Logical (default=\code{TRUE}). Should matching occur in
+file contents.}
 }
 \description{
-Search for files matching raw text search
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Searches through the list of supplied for matching strings of text.  Useful
+in finding files that you know contain certain text snippets.
 }
 \examples{
 
@@ -27,8 +31,9 @@ ls_scripts("Scripts") \%>\% search_raw("AUC")  ## finds all scripts containing s
 ## regex match find instances of AUC() function being used
 ls_scripts("Scripts") \%>\% search_raw("AUC\\\\(")
 
-## bring file(s) into staging area of project
-ls_scripts("Scripts") \%>\% search_raw("AUC\\\\(") \%>\% stage()
+## bring file(s) into project
+ls_scripts("/path/to/other/analysis/scripts/dir") \%>\% 
+  search_raw("AUC\\\\(") \%>\% import()
 
 }
 

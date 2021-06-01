@@ -210,15 +210,6 @@ lst_path <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "lst_path") else custom_1d_field(m, "lst_path", text, glue = TRUE)
 }
 
-#' @export
-job_info.nm_generic <- function(m, text) {
-  if(missing(text)) custom_1d_field(m, "job_info") else custom_1d_field(m, "job_info", as.character(text))
-}
-
-#' @export
-job_info.nm_list <- Vectorize_nm_list(job_info.nm_generic)
-
-
 #' @rdname nm_getsetters
 #' @export
 run_in <- function(m, text)

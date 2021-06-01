@@ -93,10 +93,11 @@ diff_manual_edit <- function(m, res){
 
 #' View a patch
 #' 
-#' Internal function. Use the addin for viewing patches instead
+#' Internal function. Use the addin for viewing patches instead.
 #' 
-#' @param patch_name character. name of patch
+#' @param patch_name Character. Name of patch
 #' 
+#' @keywords internal
 #' @export
 view_patch <- function(patch_name){
   patch_path <- file.path(nm_default_dir("models"), "patches", patch_name)  

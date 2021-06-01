@@ -7,19 +7,20 @@
 ls_scripts(folder = ".", extn = "r|R|Rmd|rmd", recursive = TRUE)
 }
 \arguments{
-\item{folder}{string describing folder to search recursively in}
+\item{folder}{String describing folder to search recursively in.}
 
-\item{extn}{character (can be regex) giving extension to limit search to}
+\item{extn}{Character (can be regex) giving extension to limit search to.}
 
-\item{recursive}{by default TRUE}
+\item{recursive}{Logical (default = \code{TRUE}).  Should directories be searched
+recursively.}
 }
 \description{
-List scripts
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \examples{
 \dontrun{
-ls_scripts('~/AZD6094/PK_liver4/') \%>\%
-  info_scripts('Description') \%>\%
-  filter(grepl('mod',DESCRIPTION))
+
+## find all scripts with the string "AUC("
+ls_scripts('~/path/to/analysis/Scripts') \%>\% search_raw("AUC\\\\(")
 }
 }

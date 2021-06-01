@@ -37,12 +37,18 @@ set_nm_opts <- function(){
 
 #' Setup analysis subdirectories
 #' 
-#' This allows organisations/individuals with their own directory to customize their directory structure
+#' @description 
 #' 
-#' @param dir_list optional named list or vector. Names "scripts_dir" and "models_dir" must be present.  Rest can be unnamed
+#' `r lifecycle::badge("stable")`
 #' 
-#' @return
-#' if `dir_list` is missing, will return value of `getOption("nm_default_dirs")` otherwise will set option `nm_default_dirs`
+#' This allows organisations/individuals with their own directory to customize
+#' their directory structure
+#'
+#' @param dir_list Optional named list or vector. Names `"scripts"` and
+#'   `"models"` must be present.  The rest can be unnamed.
+#'
+#' @return if `dir_list` is missing, will return value of
+#' `getOption("nm_default_dirs")` otherwise will set option `nm_default_dirs`.
 #' @examples
 #' \dontrun{
 #' 
@@ -61,6 +67,28 @@ nm_default_dirs <- function(dir_list){
     validate_dir_list(dir_list)
     options(nm_default_dirs = dir_list)
   }
+}
+
+#' Get a default directory
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' @param name Character. Directory type.  Should be either `"scripts"`,
+#'   `"models"` or `"results"`.
+#' @param ... Not used.
+#'
+#' @examples 
+#' nm_default_dir("scripts")
+#' nm_default_dir("models")
+#' nm_default_dir("results")
+#' @export
+
+nm_default_dir <- function(name = c("scripts", "models", "results"), ...){
+  if(missing(name)) stop("need argument")
+  name < match.arg(name)
+  nm_default_dirs()[[name]]
 }
 
 validate_dir_list <- function(dir_list){
@@ -106,23 +134,6 @@ set_default_dirs_in_rprofile <- function(path = ".Rprofile", dir_list = nm_defau
   writeLines(txt, path)
   usethis::ui_done("setting {usethis::ui_path('nm_default_dirs')} in {usethis::ui_path('.Rprofile')}")
   
-}
-
-#' Get a default directory
-#' 
-#' @param name character. Directory type
-#' @param ... not used yet
-#' 
-#' @examples 
-#' nm_default_dir("scripts")
-#' nm_default_dir("models")
-#' nm_default_dir("results")
-#' @export
-
-nm_default_dir <- function(name = c("scripts", "models", "results"), ...){
-  if(missing(name)) stop("need argument")
-  name < match.arg(name)
-  nm_default_dirs()[[name]]
 }
 
 #' Generic execute command for SGE grids
@@ -277,22 +288,35 @@ system_nm <- function(cmd,dir=nm_default_dir("models"),...){
   getOption("system_nm")(cmd,...)
 }
 
-
 #' Kill cluster job
-#' 
-#' Requires setting "kill_job" `option()`
 #'
-#' @param m nm object 
+#' Can be useful in conjuction with a modified [system_nm()].  Requires setting `"kill_job"` option.
+#'
+#' @param m An nm object.
+#' 
+#' @details The option `"kill_job"` needs to be defined as a function that kills
+#'   a cluster job.
+#' 
+#' @seealso [system_nm()], [job_info()]
+#' 
+#' @keywords internal
 #' @export
+
 kill_job <- function(m){
   getOption("kill_job")(m)
 }
 
 #' Overwrite behaviour of NMproject
 #' 
-#' Requires setting "nm.overwrite_behaviour" `option()`
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' This is best used via the "overwrite behaviour" RStudio addin.  Sets the
+#' strategy for how to handle overwriting of previously executed control files.
 #'
-#' @param txt character either "run", "stop", "skip" 
+#' @param txt Character either `"run"`, `"stop"`, or `"skip"`.
+#' 
 #' @export
 overwrite_behaviour <- function(txt = c("ask", 
                                         "overwrite", 

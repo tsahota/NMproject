@@ -7,15 +7,17 @@
 rr(m, trans = TRUE)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{trans}{logical. if TRUE (default) will transform using control file
-$THETA/OMEGA conventions}
+\item{trans}{Logical. If \code{TRUE} (default) will transform using control file
+$THETA/OMEGA conventions.}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Displays the transformed parameters of a completed or running model.
 Normally used inside of a diagnostic template, but can be useful for quickly
-seeing parameter estimates of several models
+seeing parameter estimates of several models.
 }
 \examples{
 \dontrun{
