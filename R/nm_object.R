@@ -1938,18 +1938,20 @@ print.nm_subroutine <- function(x, ...){
 #' init_theta(m1)  ## display current $THETA in tibble-form
 #' init_omega(m1)  ## display current $OMEGA in tibble-form
 #' 
-#' ## fix THETA on KA
-#' ip <- init_theta(m1)[[1]]
-#' ip$FIX[ip$name %in% "KA"] <- TRUE
-#' m1 <- m1 %>% init_theta(ip)
+#' 
+#' ## here we supply a named vector in a different order
+#' m1 <- m1 %>% init_theta(init = c(KA = -2, V = 1))
+#' m1 %>% dollar("THETA")
+#' 
+#' ## can also manipulate other aspects (like the FIX column) similarly
+#' m1 <- m1 %>% init_theta(init = c(KA = -2, V = 1),
+#'                         FIX = c(KA = TRUE))
+#' m1 %>% dollar("THETA")
 #'   
-#' ## fix OMEGA on KA to 0.0225
-#' ip <- init_omega(m1)[[1]]
-#' ip$init[ip$name %in% "IIV_KA"] <- 0.0225
-#' ip$FIX[ip$name %in% "IIV_KA"] <- TRUE
-#' m1 <- m1 %>% init_omega(ip)
-#'   
-#' ## perturb all log transformed parameters by ~10%
+#' ## perturb all parameters by ~10%
+#' m1 <- m1 %>% init_theta(init = rnorm(length(init), mean = init, sd = 0.1))
+#' 
+#' ## perturb only log transformed parameters by ~10%
 #' m1 <- m1 %>% init_theta(
 #'     init = ifelse(
 #'     trans %in% "LOG",
