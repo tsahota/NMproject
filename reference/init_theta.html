@@ -165,18 +165,20 @@ These functions are useful to obtain and modify initial values of $THETA, $OMEGA
 <span class='fu'>init_theta</span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span>  <span class='co'>## display current $THETA in tibble-form</span>
 <span class='fu'>init_omega</span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span>  <span class='co'>## display current $OMEGA in tibble-form</span>
 
-<span class='co'>## fix THETA on KA</span>
-<span class='va'>ip</span> <span class='op'>&lt;-</span> <span class='fu'>init_theta</span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
-<span class='va'>ip</span><span class='op'>$</span><span class='va'>FIX</span><span class='op'>[</span><span class='va'>ip</span><span class='op'>$</span><span class='va'>name</span> <span class='op'>%in%</span> <span class='st'>"KA"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>TRUE</span>
-<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>init_theta</span><span class='op'>(</span><span class='va'>ip</span><span class='op'>)</span>
+
+<span class='co'>## here we supply a named vector in a different order</span>
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>init_theta</span><span class='op'>(</span>init <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>KA <span class='op'>=</span> <span class='op'>-</span><span class='fl'>2</span>, V <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"THETA"</span><span class='op'>)</span>
+
+<span class='co'>## can also manipulate other aspects (like the FIX column) similarly</span>
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>init_theta</span><span class='op'>(</span>init <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>KA <span class='op'>=</span> <span class='op'>-</span><span class='fl'>2</span>, V <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>,
+                        FIX <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>KA <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"THETA"</span><span class='op'>)</span>
   
-<span class='co'>## fix OMEGA on KA to 0.0225</span>
-<span class='va'>ip</span> <span class='op'>&lt;-</span> <span class='fu'>init_omega</span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>
-<span class='va'>ip</span><span class='op'>$</span><span class='va'>init</span><span class='op'>[</span><span class='va'>ip</span><span class='op'>$</span><span class='va'>name</span> <span class='op'>%in%</span> <span class='st'>"IIV_KA"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fl'>0.0225</span>
-<span class='va'>ip</span><span class='op'>$</span><span class='va'>FIX</span><span class='op'>[</span><span class='va'>ip</span><span class='op'>$</span><span class='va'>name</span> <span class='op'>%in%</span> <span class='st'>"IIV_KA"</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>TRUE</span>
-<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>init_omega</span><span class='op'>(</span><span class='va'>ip</span><span class='op'>)</span>
-  
-<span class='co'>## perturb all log transformed parameters by ~10%</span>
+<span class='co'>## perturb all parameters by ~10%</span>
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>init_theta</span><span class='op'>(</span>init <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>init</span><span class='op'>)</span>, mean <span class='op'>=</span> <span class='va'>init</span>, sd <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='co'>## perturb only log transformed parameters by ~10%</span>
 <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>init_theta</span><span class='op'>(</span>
     init <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span>
     <span class='va'>trans</span> <span class='op'>%in%</span> <span class='st'>"LOG"</span>,
