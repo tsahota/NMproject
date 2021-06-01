@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>add a mixed effect parameter to $PK (or $PRED) — add_mixed_param • NMproject</title>
+<title>Add a mixed effect parameter to $PK (or $PRED) — add_mixed_param • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="add a mixed effect parameter to $PK (or $PRED) — add_mixed_param" />
-<meta property="og:description" content="This will (by default) add a parameter (mixed effect) to your code" />
+<meta property="og:title" content="Add a mixed effect parameter to $PK (or $PRED) — add_mixed_param" />
+<meta property="og:description" content="
+Primarly an internal function. This will (by default) add a parameter (mixed
+effect) to your code $PK/$PRED and $THETA/$OMEGA." />
 
 
 
@@ -114,13 +116,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>add a mixed effect parameter to $PK (or $PRED)</h1>
+    <h1>Add a mixed effect parameter to $PK (or $PRED)</h1>
     <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/nm_object.R'><code>R/nm_object.R</code></a></small>
     <div class="hidden name"><code>add_mixed_param.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This will (by default) add a parameter (mixed effect) to your code</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Primarly an internal function. This will (by default) add a parameter (mixed
+effect) to your code $PK/$PRED and $THETA/$OMEGA.</p>
     </div>
 
     <pre class="usage"><span class='fu'>add_mixed_param</span><span class='op'>(</span>
@@ -138,31 +142,31 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>m</th>
-      <td><p>nm object</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     <tr>
       <th>name</th>
-      <td><p>character. name of NONMEM variable to create</p></td>
+      <td><p>Character. Name of NONMEM variable to create.</p></td>
     </tr>
     <tr>
       <th>init</th>
-      <td><p>numeric. initial value of fixed effect</p></td>
+      <td><p>Numeric (default = <code>1</code>). Initial value of fixed effect.</p></td>
     </tr>
     <tr>
       <th>unit</th>
-      <td><p>character. unit of variable</p></td>
+      <td><p>Character (default = <code>""</code>). Unit of variable.</p></td>
     </tr>
     <tr>
       <th>trans</th>
-      <td><p>character. tranformation to log scale?</p></td>
+      <td><p>Character (default = <code>"LOG"</code>). Tranformation of the variable.</p></td>
     </tr>
     <tr>
       <th>position</th>
-      <td><p>integer. not used</p></td>
+      <td><p>Integer. Not used.</p></td>
     </tr>
     <tr>
       <th>after</th>
-      <td><p>character. patter to match and include the mixed effect after</p></td>
+      <td><p>Character. Pattern to match and include the mixed effect after.</p></td>
     </tr>
     </table>
 

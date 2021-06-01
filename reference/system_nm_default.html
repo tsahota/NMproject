@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Default system_nm — system_nm_default • NMproject</title>
+<title>Default system_nm function — system_nm_default • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="Default system_nm — system_nm_default" />
-<meta property="og:description" content="Not intended to be used directly in most cases." />
+<meta property="og:title" content="Default system_nm function — system_nm_default" />
+<meta property="og:description" content="
+Not intended to be used directly in most cases.  This is called by
+[system_nm()]" />
 
 
 
@@ -114,13 +116,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Default system_nm</h1>
+    <h1>Default system_nm function</h1>
     <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/NMproject.R'><code>R/NMproject.R</code></a></small>
     <div class="hidden name"><code>system_nm_default.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Not intended to be used directly in most cases.</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Not intended to be used directly in most cases.  This is called by
+<code>[system_nm()]</code></p>
     </div>
 
     <pre class="usage"><span class='fu'>system_nm_default</span><span class='op'>(</span><span class='va'>cmd</span>, <span class='va'>...</span><span class='op'>)</span></pre>
@@ -130,14 +134,17 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>cmd</th>
-      <td><p>Character. system call.</p></td>
+      <td><p>Character. System call to be sent to the terminal.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional args to be passed to system.</p></td>
+      <td><p>Additional args to be passed to <code><a href='https://rdrr.io/r/base/system.html'>system()</a></code> or <code><a href='https://rdrr.io/r/base/system.html'>shell()</a></code>.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='system_nm.html'>system_nm()</a></code>, <code><a href='run_nm.html'>run_nm()</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

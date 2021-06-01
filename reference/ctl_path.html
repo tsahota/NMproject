@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Path to NONMEM control file — ctl_path • NMproject</title>
+<title>Get and set path to NONMEM control file — ctl_path • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="Path to NONMEM control file — ctl_path" />
-<meta property="og:description" content="Get and set path to control file." />
+<meta property="og:title" content="Get and set path to NONMEM control file — ctl_path" />
+<meta property="og:description" content="
+Similar to ctl_name() &amp;amp; run_in(), this allows you to retrieve and specify
+the relative path to the control file that will be written by the run_nm()." />
 
 
 
@@ -114,13 +116,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Path to NONMEM control file</h1>
+    <h1>Get and set path to NONMEM control file</h1>
     <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/nm_gettersetters.R'><code>R/nm_gettersetters.R</code></a></small>
     <div class="hidden name"><code>ctl_path.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Get and set path to control file.</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Similar to <code><a href='nm_getsetters.html'>ctl_name()</a></code> &amp; <code><a href='nm_getsetters.html'>run_in()</a></code>, this allows you to retrieve and specify
+the relative path to the control file that will be written by the <code><a href='run_nm.html'>run_nm()</a></code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>ctl_path</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span></pre>

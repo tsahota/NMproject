@@ -147,7 +147,7 @@
         <td>
           <p><code><a href="add_mixed_param.html">add_mixed_param()</a></code> </p>
         </td>
-        <td><p>add a mixed effect parameter to $PK (or $PRED)</p></td>
+        <td><p>Add a mixed effect parameter to $PK (or $PRED)</p></td>
       </tr><tr>
         
         <td>
@@ -237,7 +237,7 @@
         <td>
           <p><code><a href="covariance_plot.html">covariance_plot()</a></code> </p>
         </td>
-        <td><p>Plot covariance matrix</p></td>
+        <td><p>Plot $COV matrix</p></td>
       </tr><tr>
         
         <td>
@@ -255,7 +255,7 @@
         <td>
           <p><code><a href="ctl_path.html">ctl_path()</a></code> </p>
         </td>
-        <td><p>Path to NONMEM control file</p></td>
+        <td><p>Get and set path to NONMEM control file</p></td>
       </tr><tr>
         
         <td>
@@ -477,10 +477,7 @@
         <td>
           <p><code><a href="nm_getsetters.html">run_dir()</a></code> <code><a href="nm_getsetters.html">cmd()</a></code> <code><a href="nm_getsetters.html">type()</a></code> <code><a href="nm_getsetters.html">parent_run_id()</a></code> <code><a href="nm_getsetters.html">parent_run_in()</a></code> <code><a href="nm_getsetters.html">parent_ctl_name()</a></code> <code><a href="nm_getsetters.html">parent_results_dir()</a></code> <code><a href="nm_getsetters.html">unique_id()</a></code> <code><a href="nm_getsetters.html">ctl_name()</a></code> <code><a href="nm_getsetters.html">results_dir()</a></code> <code><a href="nm_getsetters.html">cores()</a></code> <code><a href="nm_getsetters.html">parafile()</a></code> <code><a href="nm_getsetters.html">walltime()</a></code> <code><a href="nm_getsetters.html">executed()</a></code> <code><a href="nm_getsetters.html">lst_path()</a></code> <code><a href="nm_getsetters.html">run_in()</a></code> <code><a href="nm_getsetters.html">run_id()</a></code> <code><a href="nm_getsetters.html">result_files()</a></code> </p>
         </td>
-        <td><p>Functions to access and modify fields of nm objects
-
-The fields of an object can be viewed by printing the object.  Each field has
-a corresponding function of the same name to access and modify it's value.</p></td>
+        <td><p>Functions to access and modify fields of nm objects</p></td>
       </tr><tr>
         
         <td>
@@ -517,6 +514,12 @@ a corresponding function of the same name to access and modify it's value.</p></
           <p><code><a href="nm_row.html">nm_row()</a></code> </p>
         </td>
         <td><p>Convert nm objects to a rowwise tibble/data.frame</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="nm_summary.html">summary_wide()</a></code> <code><a href="nm_summary.html">summary_long()</a></code> </p>
+        </td>
+        <td><p>Generate a summary of NONMEM results</p></td>
       </tr><tr>
         
         <td>
@@ -564,7 +567,7 @@ a corresponding function of the same name to access and modify it's value.</p></
         <td>
           <p><code><a href="output_table.html">output_table()</a></code> <code><a href="output_table.html">output_table_first()</a></code> </p>
         </td>
-        <td><p>Get processed output table</p></td>
+        <td><p>Reads all $TABLE outputs and merge with input dataset</p></td>
       </tr><tr>
         
         <td>
@@ -742,18 +745,6 @@ a corresponding function of the same name to access and modify it's value.</p></
       </tr><tr>
         
         <td>
-          <p><code><a href="summary_long.html">summary_long()</a></code> </p>
-        </td>
-        <td><p>Generate a long summary of NONMEM results</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="summary_wide.html">summary_wide()</a></code> </p>
-        </td>
-        <td><p>Generate a wide summary of NONMEM results</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="system_cmd.html">system_cmd()</a></code> </p>
         </td>
         <td><p>System/shell command wrapper</p></td>
@@ -768,7 +759,7 @@ a corresponding function of the same name to access and modify it's value.</p></
         <td>
           <p><code><a href="system_nm_default.html">system_nm_default()</a></code> </p>
         </td>
-        <td><p>Default system_nm</p></td>
+        <td><p>Default system_nm function</p></td>
       </tr><tr>
         
         <td>

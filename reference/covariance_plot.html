@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot covariance matrix — covariance_plot • NMproject</title>
+<title>Plot $COV matrix — covariance_plot • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Plot covariance matrix — covariance_plot" />
-<meta property="og:description" content="Plot covariance matrix" />
+<meta property="og:title" content="Plot $COV matrix — covariance_plot" />
+<meta property="og:description" content="" />
 
 
 
@@ -114,13 +114,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot covariance matrix</h1>
+    <h1>Plot $COV matrix</h1>
     <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/run_record.R'><code>R/run_record.R</code></a></small>
     <div class="hidden name"><code>covariance_plot.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Plot covariance matrix</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
     </div>
 
     <pre class="usage"><span class='fu'>covariance_plot</span><span class='op'>(</span><span class='va'>r</span>, trans <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
@@ -130,14 +130,21 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>r</th>
-      <td><p>nm object</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     <tr>
       <th>trans</th>
-      <td><p>logical (default = TRUE)</p></td>
+      <td><p>Logical (default = TRUE).  Applies the transformations specified
+in $THETA/$OMEGA/$SIGMA comments before plotting.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A <code>ggplot2</code> object</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Plots the correlation plot from the $COV NONMEM output.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

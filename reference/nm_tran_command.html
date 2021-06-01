@@ -40,9 +40,10 @@
 
 
 <meta property="og:title" content="Get/set nm_tran_command — nm_tran_command" />
-<meta property="og:description" content="nm_tran needs the location of NMTRAN.exe on your system.  This
-is guessed on package load, assuming PsN is on the $PATH environmental
-variable, if this is not the case, then you can manually set the path and
+<meta property="og:description" content="
+The function nm_tran() needs the location of NMTRAN.exe to function.
+This is guessed at package load, assuming PsN is on the $PATH environmental
+variable. If this is not the case, then you can manually set the path and
 command used." />
 
 
@@ -123,9 +124,10 @@ command used." />
     </div>
 
     <div class="ref-description">
-    <p><code>nm_tran</code> needs the location of NMTRAN.exe on your system.  This
-is guessed on package load, assuming PsN is on the $PATH environmental
-variable, if this is not the case, then you can manually set the path and
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>The function <code><a href='nm_tran.html'>nm_tran()</a></code> needs the location of <code>NMTRAN.exe</code> to function.
+This is guessed at package load, assuming PsN is on the $PATH environmental
+variable. If this is not the case, then you can manually set the path and
 command used.</p>
     </div>
 
@@ -136,25 +138,30 @@ command used.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>text</th>
-      <td><p>Optional character. If specified will set <code>nm_tran_command</code>.</p></td>
+      <td><p>Optional character. If specified will set <code>nm_tran_command</code>
+otherwise it will display the current option value.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>if <code>text</code> is missing will get and return the current NMTRAN command</p>
+    <p>If <code>text</code> is missing will get and return the current NMTRAN command.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>text</code> can just be the path to NMTRAN.exe.  In this case
+    <p><code>text</code> can just be the path to <code>NMTRAN.exe</code> in which case
 <code>nm_tran_command</code> will use the format <code>/path/to/NMTRAN.exe &lt; {ctl_name}</code> to
-launch NMTRAN.exe where <code>{ctl_name}</code> is the name of the control file <code>text</code>
-can use the <code>{ctl_name}</code> glue field however for more complicated commands.
-See examples</p>
-<p>Set this up either at the beginning of your script, in your <code>.Rprofile</code> or
-for all users in <code>Rprofile.site</code></p>
+launch <code>NMTRAN.exe</code> where <code>{ctl_name}</code> is the name of the control file.
+Specifying</p>
+<p><code>nm_tran_command("/path/to/NMTRAN.exe &lt; {ctl_name}")</code> is equivalent to:
+<code>nm_tran_command("/path/to/NMTRAN.exe")</code></p>
+<p>More complicated formats are possible with different installations which
+can be seen examples.</p>
+<p>As with all NMproject configuration options set this up either at the
+beginning of your script, in your <code>.Rprofile</code> or for all users in
+<code>Rprofile.site</code>.  See FAQ for setting up configuration options permanently.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='find_nm_tran_path.html'>find_nm_tran_path()</a></code></p></div>
+    <div class='dont-index'><p><code><a href='find_nm_tran_path.html'>find_nm_tran_path()</a></code>, <code><a href='nm_tran.html'>nm_tran()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>

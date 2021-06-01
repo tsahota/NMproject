@@ -41,10 +41,10 @@
 
 <meta property="og:title" content="Apply a manual edit patch — apply_manual_edit" />
 <meta property="og:description" content="
-Best to allow the &quot;manual edit&quot; RStudio addin to write this function in
-your script for you.  After a tracked manual edit is performed, a patch file
-is created and saved in Models/patches.  This function applies the patch to
-the object." />
+It is best to allow the &quot;manual edit&quot; RStudio addin to write this function
+in your script for you.  After a tracked manual edit is performed, a patch
+file is created and saved in the &quot;patches&quot; subdirectory of
+nm_default_dir(&quot;models&quot;).  This function applies the patch to the object." />
 
 
 
@@ -125,10 +125,10 @@ the object." />
 
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
-<p>Best to allow the <code>"manual edit"</code> RStudio addin to write this function in
-your script for you.  After a tracked manual edit is performed, a patch file
-is created and saved in <code>Models/patches</code>.  This function applies the patch to
-the object.</p>
+<p>It is best to allow the <code>"manual edit"</code> RStudio addin to write this function
+in your script for you.  After a tracked manual edit is performed, a patch
+file is created and saved in the "patches" subdirectory of
+<code><a href='nm_default_dir.html'>nm_default_dir("models")</a></code>.  This function applies the patch to the object.</p>
     </div>
 
     <pre class="usage"><span class='fu'>apply_manual_edit</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>patch_name</span><span class='op'>)</span></pre>
@@ -138,18 +138,23 @@ the object.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>m</th>
-      <td><p>nm object</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     <tr>
       <th>patch_name</th>
-      <td><p>character name of patch</p></td>
+      <td><p>Character name of patch.  Corresponds to the file name in
+the "patches" subdirectory of <code><a href='nm_default_dir.html'>nm_default_dir("models")</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Generally best to to apply patches before automatic edits and
-changes in directories e.g. via <code><a href='nm_getsetters.html'>run_in()</a></code></p>
+changes in directories e.g. via <code><a href='nm_getsetters.html'>run_in()</a></code>.  If patches are applied to
+NONMEM control file sections that are likely to change in the future, the
+patch may fail to apply.  In this case, it is best to view the patch (via
+the "view patch" RStudio addin) and manually re-implement the changes again
+in a new manual edit.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

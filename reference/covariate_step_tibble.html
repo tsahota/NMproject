@@ -40,7 +40,9 @@
 
 
 <meta property="og:title" content="Prepare forward covariate step — covariate_step_tibble" />
-<meta property="og:description" content="Prepare forward covariate step" />
+<meta property="og:description" content="
+Takes a base nm object and a set of relationships to test (from
+test_relations()) and prepares a tibble of NONMEM runs." />
 
 
 
@@ -120,7 +122,9 @@
     </div>
 
     <div class="ref-description">
-    <p>Prepare forward covariate step</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Takes a base nm object and a set of relationships to test (from
+<code><a href='test_relations.html'>test_relations()</a></code>) and prepares a <code>tibble</code> of NONMEM runs.</p>
     </div>
 
     <pre class="usage"><span class='fu'>covariate_step_tibble</span><span class='op'>(</span>
@@ -137,38 +141,37 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>base</th>
-      <td><p>nm object</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     <tr>
       <th>run_id</th>
-      <td><p>base run_id to construct run_ids of covariate runs</p></td>
+      <td><p>Base run_id to construct run_ids of covariate runs.</p></td>
     </tr>
     <tr>
       <th>run_in</th>
-      <td><p>character.  See <code><a href='nm_getsetters.html'>run_in()</a></code></p></td>
+      <td><p>Character.  See <code><a href='nm_getsetters.html'>run_in()</a></code>.</p></td>
     </tr>
     <tr>
       <th>dtest</th>
       <td><p><code><a href='https://tibble.tidyverse.org/reference/tibble.html'>dplyr::tibble</a></code> with testing relations (from
-<code><a href='test_relations.html'>test_relations()</a></code>)</p></td>
+<code><a href='test_relations.html'>test_relations()</a></code>).</p></td>
     </tr>
     <tr>
       <th>direction</th>
-      <td><p>character. "forward" (default) or "backward"</p></td>
+      <td><p>Character. <code>"forward"</code> (default) or <code>"backward"</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>additional arguments passed to <code><a href='add_remove_covs.html'>add_cov()</a></code></p></td>
+      <td><p>Additional arguments passed to <code><a href='add_remove_covs.html'>add_cov()</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Will return <code>dtest</code> a <code><a href='https://tibble.tidyverse.org/reference/tibble.html'>dplyr::tibble</a></code> with appended columns</p>
+    <p>Will return <code>dtest</code> a <code><a href='https://tibble.tidyverse.org/reference/tibble.html'>dplyr::tibble</a></code> with appended columns.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='test_relations.html'>test_relations()</a></code>, <code>covariate_step_tibble()</code>,
-<code><a href='bind_covariate_results.html'>bind_covariate_results()</a></code>, <code><a href='add_remove_covs.html'>add_cov()</a></code></p></div>
+    <div class='dont-index'><p><code><a href='test_relations.html'>test_relations()</a></code>, <code><a href='bind_covariate_results.html'>bind_covariate_results()</a></code>, <code><a href='add_remove_covs.html'>add_cov()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>

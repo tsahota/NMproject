@@ -40,7 +40,11 @@
 
 
 <meta property="og:title" content="Wait for runs to finish — wait_finish" />
-<meta property="og:description" content="blocks subsequent r execution until run(s) are finished" />
+<meta property="og:description" content="
+Blocks subsequent r execution until run(s) are finished.  This is useful for
+when subequent relies on outputs from completed NONMEM jobs.  It is normally
+a good idea to include this in post processing R markdown templates, to
+ensure they wait for runs to complete before executing." />
 
 
 
@@ -120,7 +124,11 @@
     </div>
 
     <div class="ref-description">
-    <p>blocks subsequent r execution until run(s) are finished</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Blocks subsequent r execution until run(s) are finished.  This is useful for
+when subequent relies on outputs from completed NONMEM jobs.  It is normally
+a good idea to include this in post processing R markdown templates, to
+ensure they wait for runs to complete before executing.</p>
     </div>
 
     <pre class="usage"><span class='fu'>wait_finish</span><span class='op'>(</span><span class='va'>r</span>, timeout <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></pre>
@@ -130,15 +138,27 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>r</th>
-      <td><p>nm object</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     <tr>
       <th>timeout</th>
-      <td><p>numeric seconds to wait before timeout</p></td>
+      <td><p>Numeric seconds to wait before timeout.</p></td>
     </tr>
     </table>
 
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+
+<span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='run_nm.html'>run_nm</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>wait_finish</span><span class='op'>(</span><span class='op'>)</span>
+
+<span class='co'>## following requires run to be completed.</span>
+<span class='fu'><a href='covariance_plot.html'>covariance_plot</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span>
+
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -40,9 +40,9 @@
 
 
 <meta property="og:title" content="Get/set existing subroutine — dollar" />
-<meta property="og:description" content="The fast way to see the contents of a particular subroutine. This can be used
-in place of manual edits to (re)write the contents of a NONMEM subroutine
-from within R" />
+<meta property="og:description" content="The fast way to see the contents of a particular subroutine directly in the R
+console. It can also be used to set the contents of a NONMEM subroutine in
+place of manual edits" />
 
 
 
@@ -122,9 +122,9 @@ from within R" />
     </div>
 
     <div class="ref-description">
-    <p>The fast way to see the contents of a particular subroutine. This can be used
-in place of manual edits to (re)write the contents of a NONMEM subroutine
-from within R</p>
+    <p>The fast way to see the contents of a particular subroutine directly in the R
+console. It can also be used to set the contents of a NONMEM subroutine in
+place of manual edits</p>
     </div>
 
     <pre class="usage"><span class='fu'>dollar</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>dollar</span>, <span class='va'>...</span>, add_dollar_text <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
@@ -134,20 +134,21 @@ from within R</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>m</th>
-      <td><p>nm object</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     <tr>
       <th>dollar</th>
-      <td><p>character.  Subroutine to target</p></td>
+      <td><p>Character. Name of NONMEM subroutine to target.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>arguments to be passed to text()</p></td>
+      <td><p>Additional arguments to be passed to <code><a href='https://rdrr.io/r/graphics/text.html'>text()</a></code>.  If specified these
+will set the contents of the subroutine.  See examples below.</p></td>
     </tr>
     <tr>
       <th>add_dollar_text</th>
-      <td><p>logical (default = TRUE). Should the $XXXX be added to
-text</p></td>
+      <td><p>Logical (default = TRUE). Should the $XXXX string be
+added to text</p></td>
     </tr>
     </table>
 

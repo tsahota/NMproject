@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Run all project scripts sequentially — run_all_scripts • NMproject</title>
+<title>Generate a summary of NONMEM results — nm_summary • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Run all project scripts sequentially — run_all_scripts" />
-<meta property="og:description" content="Runs all scripts s01_XXX, s02_XXX in the designated &quot;scripts&quot; directory" />
+<meta property="og:title" content="Generate a summary of NONMEM results — nm_summary" />
+<meta property="og:description" content="
+Get wide (or a long) tibble showing summary results." />
 
 
 
@@ -114,30 +115,61 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Run all project scripts sequentially</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/nm.R'><code>R/nm.R</code></a></small>
-    <div class="hidden name"><code>run_all_scripts.Rd</code></div>
+    <h1>Generate a summary of NONMEM results</h1>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/run_record.R'><code>R/run_record.R</code></a></small>
+    <div class="hidden name"><code>nm_summary.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Runs all scripts s01_XXX, s02_XXX in the designated "scripts" directory</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Get wide (or a long) <code>tibble</code> showing summary results.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>run_all_scripts</span><span class='op'>(</span>quiet <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>summary_wide</span><span class='op'>(</span>
+  <span class='va'>...</span>,
+  include_fields <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>character</a></span><span class='op'>(</span><span class='op'>)</span>,
+  parameters <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"none"</span>, <span class='st'>"new"</span>, <span class='st'>"all"</span><span class='op'>)</span>,
+  m <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  trans <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span>
+
+<span class='fu'>summary_long</span><span class='op'>(</span><span class='va'>...</span>, parameters <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"none"</span>, <span class='st'>"new"</span>, <span class='st'>"all"</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>quiet</th>
-      <td><p>Argument passed to <code><a href='https://pkgs.rstudio.com/rmarkdown/reference/render.html'>rmarkdown::render</a></code></p></td>
+      <th>...</th>
+      <td><p>Arguments passed to <code><a href='https://rdrr.io/r/base/summary.html'>summary()</a></code>, usually a vector of nm object +
+options.</p></td>
+    </tr>
+    <tr>
+      <th>include_fields</th>
+      <td><p>Character vector of nm object fields to include as
+columns in the output. Default is empty.</p></td>
+    </tr>
+    <tr>
+      <th>parameters</th>
+      <td><p>Character. Either <code>"none"</code> (default), <code>"new"</code>, or <code>"all"</code>
+indicating whether parameter values should be included in the summary
+<code>tibble</code>.  Specifying <code>"new"</code> means that only parameters that aren't in the
+<code>parent</code> run are included in outputs.  This is useful if wanting to know
+the value of an added parameter but not all the parameters (e.g. in a
+covariate analysis).</p></td>
+    </tr>
+    <tr>
+      <th>m</th>
+      <td><p>Logical (default = <code>TRUE</code>). Should model object be included as the
+<code>m</code> column.</p></td>
+    </tr>
+    <tr>
+      <th>trans</th>
+      <td><p>Logical (default = <code>TRUE</code>). Should parameters be transformed in
+accordance with $THETA/$OMEGA/$SIGMA comments.  This is only valid if
+<code>parameters</code> is <code>"new"</code> or <code>"all</code>.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>works with .R and .Rmd extensions.  Behaviour is to <code>source</code> .R
-files and use <code><a href='https://pkgs.rstudio.com/rmarkdown/reference/render.html'>rmarkdown::render</a></code> on .Rmd files</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

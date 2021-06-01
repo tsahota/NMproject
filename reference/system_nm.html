@@ -40,7 +40,10 @@
 
 
 <meta property="og:title" content="System command for NONMEM execution — system_nm" />
-<meta property="og:description" content="System command for NONMEM execution" />
+<meta property="og:description" content="
+Not intended to be used directly in most cases.  This is the function used by
+run_nm().  It can also be used directly to launch other PsN commands like
+sumo." />
 
 
 
@@ -120,7 +123,10 @@
     </div>
 
     <div class="ref-description">
-    <p>System command for NONMEM execution</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Not intended to be used directly in most cases.  This is the function used by
+<code><a href='run_nm.html'>run_nm()</a></code>.  It can also be used directly to launch other PsN commands like
+<code>sumo</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>system_nm</span><span class='op'>(</span><span class='va'>cmd</span>, dir <span class='op'>=</span> <span class='fu'><a href='nm_default_dir.html'>nm_default_dir</a></span><span class='op'>(</span><span class='st'>"models"</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span></pre>
@@ -130,19 +136,35 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>cmd</th>
-      <td><p>character. command to send to shell</p></td>
+      <td><p>Character. System call to be sent to the terminal.</p></td>
     </tr>
     <tr>
       <th>dir</th>
-      <td><p>character. directory to run command in</p></td>
+      <td><p>Character. Directory (relative path) to run command in.  By
+default this will be the "models" directory (<code><a href='nm_default_dir.html'>nm_default_dir("models")</a></code>).</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>other arguments passed to system command</p></td>
+      <td><p>Additional args to be passed to <code><a href='https://rdrr.io/r/base/system.html'>system()</a></code> or <code><a href='https://rdrr.io/r/base/system.html'>shell()</a></code>.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
+    <div class='dont-index'><p><code><a href='run_nm.html'>run_nm()</a></code></p></div>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='fu'>system_nm</span><span class='op'>(</span><span class='st'>"hostname"</span><span class='op'>)</span>
+
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+
+<span class='fu'>system_nm</span><span class='op'>(</span><span class='st'>"psn --versions"</span><span class='op'>)</span>
+<span class='fu'>system_nm</span><span class='op'>(</span><span class='st'>"sumo run1.mod"</span><span class='op'>)</span>
+
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

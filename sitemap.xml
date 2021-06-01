@@ -232,6 +232,9 @@
     <loc>https://tsahota.github.io/NMproject/reference/nm_row.html</loc>
   </url>
   <url>
+    <loc>https://tsahota.github.io/NMproject/reference/nm_summary.html</loc>
+  </url>
+  <url>
     <loc>https://tsahota.github.io/NMproject/reference/nm_tran.html</loc>
   </url>
   <url>
@@ -356,12 +359,6 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/subroutine.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/reference/summary_long.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/reference/summary_wide.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/system_cmd.html</loc>
