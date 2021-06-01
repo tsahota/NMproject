@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Find an output file — nm_output_path • NMproject</title>
+<title>Find an output file associated with a run — nm_output_path • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="Find an output file — nm_output_path" />
-<meta property="og:description" content="Find an output file" />
+<meta property="og:title" content="Find an output file associated with a run — nm_output_path" />
+<meta property="og:description" content="
+This is primarily a backend function used to identify output file paths
+associated with nm objects." />
 
 
 
@@ -114,13 +116,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Find an output file</h1>
+    <h1>Find an output file associated with a run</h1>
     <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/run_record.R'><code>R/run_record.R</code></a></small>
     <div class="hidden name"><code>nm_output_path.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Find an output file</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>This is primarily a backend function used to identify output file paths
+associated with nm objects.</p>
     </div>
 
     <pre class="usage"><span class='fu'>nm_output_path</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>extn</span>, <span class='va'>file_name</span><span class='op'>)</span></pre>
@@ -130,15 +134,15 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>m</th>
-      <td><p>nm object</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     <tr>
       <th>extn</th>
-      <td><p>character. name of extension</p></td>
+      <td><p>Character. Name of extension.</p></td>
     </tr>
     <tr>
       <th>file_name</th>
-      <td><p>optional character. name of file name</p></td>
+      <td><p>Optional character. Name of file name.</p></td>
     </tr>
     </table>
 

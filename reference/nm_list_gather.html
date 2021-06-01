@@ -40,7 +40,9 @@
 
 
 <meta property="og:title" content="Get all nm_list objects — nm_list_gather" />
-<meta property="og:description" content="Get all nm_list objects" />
+<meta property="og:description" content="
+Get all nm objects in an environment.  By default this is the global
+workspace." />
 
 
 
@@ -120,7 +122,9 @@
     </div>
 
     <div class="ref-description">
-    <p>Get all nm_list objects</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Get all nm objects in an environment.  By default this is the global
+workspace.</p>
     </div>
 
     <pre class="usage"><span class='fu'>nm_list_gather</span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>.GlobalEnv</span><span class='op'>)</span></pre>
@@ -130,11 +134,14 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>environment (default = .GlobalEnv) to search
-or data.frame with (nm_list column) or nm_list</p></td>
+      <td><p>environment (default = <code>.GlobalEnv</code>) to search
+or data.frame with (<code>nm_list</code> column) or <code>nm_list</code></p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A single <code>nm_list</code> object with all model objects</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Convert nonmem code to R ready — nonmem_code_to_r" />
-<meta property="og:description" content="This is a developer function" />
+<meta property="og:description" content="Parses NONMEM code and attempts to make it evaluable as R code." />
 
 
 
@@ -120,7 +120,7 @@
     </div>
 
     <div class="ref-description">
-    <p>This is a developer function</p>
+    <p>Parses NONMEM code and attempts to make it evaluable as R code.</p>
     </div>
 
     <pre class="usage"><span class='fu'>nonmem_code_to_r</span><span class='op'>(</span><span class='va'>code</span>, eta_to_0 <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
@@ -130,14 +130,17 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>code</th>
-      <td><p>character vector of NONMEM code block</p></td>
+      <td><p>Character vector of NONMEM code block.</p></td>
     </tr>
     <tr>
       <th>eta_to_0</th>
-      <td><p>logical (default = TRUE) set all etas to 0</p></td>
+      <td><p>Logical (default = <code>TRUE</code>). Should all etas be set to 0.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Character vector of R code.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

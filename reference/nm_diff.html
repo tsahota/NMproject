@@ -40,10 +40,12 @@
 
 
 <meta property="og:title" content="Compute diff between two NONMEM runs — nm_diff" />
-<meta property="og:description" content="NMproject's control file manipulation functions (e.g. subroutine())
-may not work for all control files. It is the responsibilty of
+<meta property="og:description" content="
+The easiest way to use this function is via the &quot;view diff&quot; RStudio addin.
+NMproject's control file manipulation functions (e.g. subroutine())
+may not work for all control files. It is the responsibility of
 the user to check automatic manipulations are done properly.
-Displaying diffs provides a means of manually checking." />
+Displaying diffs provides a means of manually checking what was done." />
 
 
 
@@ -123,10 +125,12 @@ Displaying diffs provides a means of manually checking." />
     </div>
 
     <div class="ref-description">
-    <p>NMproject's control file manipulation functions (e.g. subroutine())
-may not work for all control files. It is the responsibilty of
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>The easiest way to use this function is via the "view diff" RStudio addin.</p>
+<p>NMproject's control file manipulation functions (e.g. subroutine())
+may not work for all control files. It is the responsibility of
 the user to check automatic manipulations are done properly.
-Displaying diffs provides a means of manually checking.</p>
+Displaying diffs provides a means of manually checking what was done.</p>
     </div>
 
     <pre class="usage"><span class='fu'>nm_diff</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>ref_m</span>, format <span class='op'>=</span> <span class='st'>"raw"</span><span class='op'>)</span></pre>
@@ -136,15 +140,19 @@ Displaying diffs provides a means of manually checking.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>m</th>
-      <td><p>nm object</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     <tr>
       <th>ref_m</th>
-      <td><p>nm object (base/reference object)</p></td>
+      <td><p>An optional nm object (base/reference object).  If not
+specified, it will compute the diff the initial control file contents
+associated with the object at the time of object create.  This information
+is stored in the <code>ctl_orig</code> field.</p></td>
     </tr>
     <tr>
       <th>format</th>
-      <td><p>character (default = "raw") argument passed to diffobj::diffChr</p></td>
+      <td><p>Character (default = <code>"raw"</code>) argument passed to
+<code><a href='https://rdrr.io/pkg/diffobj/man/diffChr.html'>diffobj::diffChr()</a></code></p></td>
     </tr>
     </table>
 

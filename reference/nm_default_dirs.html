@@ -40,7 +40,9 @@
 
 
 <meta property="og:title" content="Setup analysis subdirectories — nm_default_dirs" />
-<meta property="og:description" content="This allows organisations/individuals with their own directory to customize their directory structure" />
+<meta property="og:description" content="
+This allows organisations/individuals with their own directory to customize
+their directory structure" />
 
 
 
@@ -120,7 +122,9 @@
     </div>
 
     <div class="ref-description">
-    <p>This allows organisations/individuals with their own directory to customize their directory structure</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>This allows organisations/individuals with their own directory to customize
+their directory structure</p>
     </div>
 
     <pre class="usage"><span class='fu'>nm_default_dirs</span><span class='op'>(</span><span class='va'>dir_list</span><span class='op'>)</span></pre>
@@ -130,13 +134,15 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>dir_list</th>
-      <td><p>optional named list or vector. Names "scripts_dir" and "models_dir" must be present.  Rest can be unnamed</p></td>
+      <td><p>Optional named list or vector. Names <code>"scripts"</code> and
+<code>"models"</code> must be present.  The rest can be unnamed.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>if <code>dir_list</code> is missing, will return value of <code><a href='https://rdrr.io/r/base/options.html'>getOption("nm_default_dirs")</a></code> otherwise will set option <code>nm_default_dirs</code></p>
+    <p>if <code>dir_list</code> is missing, will return value of
+<code><a href='https://rdrr.io/r/base/options.html'>getOption("nm_default_dirs")</a></code> otherwise will set option <code>nm_default_dirs</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>

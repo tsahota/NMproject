@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Kill cluster job — kill_job" />
-<meta property="og:description" content="Requires setting &quot;kill_job&quot; option()" />
+<meta property="og:description" content="Can be useful in conjuction with a modified system_nm().  Requires setting &quot;kill_job&quot; option." />
 
 
 
@@ -120,7 +120,7 @@
     </div>
 
     <div class="ref-description">
-    <p>Requires setting "kill_job" <code><a href='https://rdrr.io/r/base/options.html'>option()</a></code></p>
+    <p>Can be useful in conjuction with a modified <code><a href='system_nm.html'>system_nm()</a></code>.  Requires setting <code>"kill_job"</code> option.</p>
     </div>
 
     <pre class="usage"><span class='fu'>kill_job</span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span></pre>
@@ -130,10 +130,17 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>m</th>
-      <td><p>nm object</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The option <code>"kill_job"</code> needs to be defined as a function that kills
+a cluster job.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='system_nm.html'>system_nm()</a></code>, <code><a href='job_info.html'>job_info()</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

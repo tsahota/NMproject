@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get job information (if it exists) — job_info • NMproject</title>
+<title>Test if object is an nm coercible object — is_nm • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Get job information (if it exists) — job_info" />
-<meta property="og:description" content="Can be useful for storing job numbers with a modified system_nm()." />
+<meta property="og:title" content="Test if object is an nm coercible object — is_nm" />
+<meta property="og:description" content="Mostly internal functions." />
 
 
 
@@ -114,33 +114,28 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get job information (if it exists)</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/job_info.R'><code>R/job_info.R</code></a></small>
-    <div class="hidden name"><code>job_info.Rd</code></div>
+    <h1>Test if object is an nm coercible object</h1>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/utilsExtra.R'><code>R/utilsExtra.R</code></a></small>
+    <div class="hidden name"><code>is_nm.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Can be useful for storing job numbers with a modified <code><a href='system_nm.html'>system_nm()</a></code>.</p>
+    <p>Mostly internal functions.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>job_info</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>is_nm_list</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
+
+<span class='fu'>is_nm_generic</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>m</th>
-      <td><p>An nm object.</p></td>
-    </tr>
-    <tr>
-      <th>text</th>
-      <td><p>Optional character to set job_info.</p></td>
+      <th>x</th>
+      <td><p>Object.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='system_nm.html'>system_nm()</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

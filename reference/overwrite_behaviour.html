@@ -40,7 +40,9 @@
 
 
 <meta property="og:title" content="Overwrite behaviour of NMproject — overwrite_behaviour" />
-<meta property="og:description" content="Requires setting &quot;nm.overwrite_behaviour&quot; option()" />
+<meta property="og:description" content="
+This is best used via the &quot;overwrite behaviour&quot; RStudio addin.  Sets the
+strategy for how to handle overwriting of previously executed control files." />
 
 
 
@@ -120,7 +122,9 @@
     </div>
 
     <div class="ref-description">
-    <p>Requires setting "nm.overwrite_behaviour" <code><a href='https://rdrr.io/r/base/options.html'>option()</a></code></p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>This is best used via the "overwrite behaviour" RStudio addin.  Sets the
+strategy for how to handle overwriting of previously executed control files.</p>
     </div>
 
     <pre class="usage"><span class='fu'>overwrite_behaviour</span><span class='op'>(</span>txt <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ask"</span>, <span class='st'>"overwrite"</span>, <span class='st'>"stop"</span>, <span class='st'>"skip"</span><span class='op'>)</span><span class='op'>)</span></pre>
@@ -130,7 +134,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>txt</th>
-      <td><p>character either "run", "stop", "skip"</p></td>
+      <td><p>Character either <code>"run"</code>, <code>"stop"</code>, or <code>"skip"</code>.</p></td>
     </tr>
     </table>
 

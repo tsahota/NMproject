@@ -337,12 +337,6 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="info_scripts.html">info_scripts()</a></code> </p>
-        </td>
-        <td><p>List information about scripts</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="init_theta.html">init_theta()</a></code> <code><a href="init_theta.html">init_omega()</a></code> <code><a href="init_theta.html">init_sigma()</a></code> </p>
         </td>
         <td><p>Get/set initial parameters</p></td>
@@ -367,27 +361,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="is_full_path.html">is_full_path()</a></code> </p>
+          <p><code><a href="is_nm.html">is_nm_list()</a></code> <code><a href="is_nm.html">is_nm_generic()</a></code> </p>
         </td>
-        <td><p>Test if full path</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is_nm_generic.html">is_nm_generic()</a></code> </p>
-        </td>
-        <td><p>Test if object is an nm_generic object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is_nm_list.html">is_nm_list()</a></code> </p>
-        </td>
-        <td><p>Test if object is an nm_list object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is_rstudio.html">is_rstudio()</a></code> </p>
-        </td>
-        <td><p>Logical flag for detecting if R session is on rstudio not</p></td>
+        <td><p>Test if object is an nm coercible object</p></td>
       </tr><tr>
         
         <td>
@@ -397,21 +373,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="job_info.html">job_info()</a></code> </p>
-        </td>
-        <td><p>Get job information (if it exists)</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="job_stats.html">job_stats()</a></code> </p>
         </td>
         <td><p>Get job stats for a completed NONMEM run</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="kill_job.html">kill_job()</a></code> </p>
-        </td>
-        <td><p>Kill cluster job</p></td>
       </tr><tr>
         
         <td>
@@ -429,7 +393,7 @@
         <td>
           <p><code><a href="make_OCC_every_dose.html">make_OCC_every_dose()</a></code> </p>
         </td>
-        <td><p>Experimental function to make an OCC column for NONMEM IOV use</p></td>
+        <td><p>Make an OCC column for NONMEM IOV use</p></td>
       </tr><tr>
         
         <td>
@@ -487,15 +451,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="nm_output.html">nm_output()</a></code> </p>
-        </td>
-        <td><p>Get NONMEM output tables</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="nm_output_path.html">nm_output_path()</a></code> </p>
         </td>
-        <td><p>Find an output file</p></td>
+        <td><p>Find an output file associated with a run</p></td>
       </tr><tr>
         
         <td>
@@ -508,12 +466,6 @@
           <p><code><a href="nm_render.html">nm_render()</a></code> <code><a href="nm_render.html">nm_list_render()</a></code> </p>
         </td>
         <td><p>Create run reports</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="nm_row.html">nm_row()</a></code> </p>
-        </td>
-        <td><p>Convert nm objects to a rowwise tibble/data.frame</p></td>
       </tr><tr>
         
         <td>
@@ -544,12 +496,6 @@
           <p><code><a href="nmsave.html">nmsave_plot()</a></code> <code><a href="nmsave.html">nmsave_table()</a></code> </p>
         </td>
         <td><p>Save plots in results_dir</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="nonmem_code_to_r.html">nonmem_code_to_r()</a></code> </p>
-        </td>
-        <td><p>Convert nonmem code to R ready</p></td>
       </tr><tr>
         
         <td>
@@ -711,7 +657,7 @@
         <td>
           <p><code><a href="simple_field.html">simple_field()</a></code> </p>
         </td>
-        <td><p>Get/set simple fields of nm objects</p></td>
+        <td><p>Interface for getting and setting your own simple fields in nm objects</p></td>
       </tr><tr>
         
         <td>
@@ -763,12 +709,6 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="tail_lst.html">tail_lst()</a></code> </p>
-        </td>
-        <td><p>Tail of lst file</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="target.html">target()</a></code> <code><a href="target.html">untarget()</a></code> </p>
         </td>
         <td><p>Target part of control object for further modification</p></td>
@@ -789,13 +729,7 @@
         <td>
           <p><code><a href="update_parameters.html">update_parameters()</a></code> </p>
         </td>
-        <td><p>Update parameters from a control stream</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="view_patch.html">view_patch()</a></code> </p>
-        </td>
-        <td><p>View a patch</p></td>
+        <td><p>Update initial estimates to final estimates</p></td>
       </tr><tr>
         
         <td>
