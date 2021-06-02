@@ -260,24 +260,27 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE){
     
     ## add KXY definitions to $PK
     
-    for(i in seq_len(nrow(dold))){
-      if(!is.na(dold$inv_relation[i])){
-        inv_relation <- dold$inv_relation[i]
-        for(j in seq_len(nrow(dold))){
-          inv_relation <- gsub(dold$base_name[j], dold$nm_name[j], inv_relation)
+    if(!old_advan %in% c(5, 6, 7, 8, 9, 13)){
+      ## not needed if already KXTY type advan
+      for(i in seq_len(nrow(dold))){
+        if(!is.na(dold$inv_relation[i])){
+          inv_relation <- dold$inv_relation[i]
+          for(j in seq_len(nrow(dold))){
+            inv_relation <- gsub(dold$base_name[j], dold$nm_name[j], inv_relation)
+          }
+          definition_to_add <- paste0(
+            gsub("R", "K", dold$base_name[i]), " = ", inv_relation, "\n"
+          )
+        } else {
+          definition_to_add <- paste0(
+            gsub("R", "K", dold$base_name[i]), " = ", dold$nm_name[i], "\n"
+          )
         }
-        definition_to_add <- paste0(
-          gsub("R", "K", dold$base_name[i]), " = ", inv_relation, "\n"
-        )
-      } else {
-        definition_to_add <- paste0(
-          gsub("R", "K", dold$base_name[i]), " = ", dold$nm_name[i], "\n"
-        )
-      }
-      
-      m <- m %>% target("PK") %>%
-        text(definition_to_add, append = TRUE) %>%
-        untarget()
+        
+        m <- m %>% target("PK") %>%
+          text(definition_to_add, append = TRUE) %>%
+          untarget()
+      } 
     }
     
   }
@@ -474,23 +477,62 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE){
       n_current_compartments <- 
         length(which(grepl("\\=", models_text)))
       
-      if(n_current_compartments != n_compartments){
-        m <- m %>% delete_dollar("MODEL") 
+      if(!old_advan %in% c(5, 6, 7, 8, 9, 13)){
+        
+        if(n_current_compartments != n_compartments){
+          m <- m %>% delete_dollar("MODEL") 
+        }
       }
     } else {
       ## no $MODEL, create
       models_text <- paste0("COMP = (COMP", seq_len(n_compartments), ")")
       models_text <- c("$MODEL", models_text)
       
-      m <- m %>% insert_dollar("MODEL", models_text, 
-                               after_dollar = "SUB")
+      if(!old_advan %in% c(5, 6, 7, 8, 9, 13)){
+        
+        m <- m %>% insert_dollar("MODEL", models_text, 
+                                 after_dollar = "SUB")
+      }
       
     }
     
     if(new_advan %in% c(6, 7, 8, 9, 13)){ ## insert $DES
       
-      stop("not yet implemented")
+      lhs <- paste0("DADT(",seq_len(n_current_compartments),")")
       
+      basic_param_names <- R_names
+      basic_param_names <- gsub("R([0-9]+)T([0-9]+)", "K\\1T\\2", 
+                                basic_param_names)
+      
+      d_param <- data.frame(
+        name = basic_param_names,
+        comp_from,
+        comp_to
+      )
+      
+      rhs <- sapply(seq_len(n_current_compartments), function(comp){
+        
+        positive_terms <- 
+          paste(d_param$name[d_param$comp_to %in% comp], collapse = " + ")
+        
+        negative_terms <- 
+          paste(d_param$name[d_param$comp_from %in% comp], collapse = " -")
+        
+        if(nchar(negative_terms) > 0) negative_terms <- paste0("-", negative_terms)
+        
+        if(nchar(positive_terms) + nchar(negative_terms) < 80){
+          paste(positive_terms, negative_terms)
+        } else {
+          paste(positive_terms, "\n", negative_terms)
+        }
+      })
+      
+      des_text <- paste(lhs, " = ", rhs)
+      des_text <- c("$DES", des_text)
+      
+      m <- m %>% delete_dollar("DES")
+      
+      m <- m %>% insert_dollar("DES", des_text, after_dollar = "PK")
       
     } else {
       if(any(grepl("\\s*\\$DES", text(m))))
@@ -550,6 +592,9 @@ advan.nm_generic <- function(m, text){
   }
   if(text %in% c(13)){ ## $DES 
     m <- m %>% tol(12)
+  }
+  if(!text %in% c(6, 8, 9, 13)){
+    m <- m %>% tol(NA)
   }
   
   m
@@ -637,12 +682,18 @@ tol.nm_generic <- function(m, text){
   m <- m %>% target("SUB")
   
   if(any(grepl("TOL", text(m)))){ ## TOL already exists
-    m <- m %>% gsub_ctl("TOL[0-9]+", paste0("TOL", text))
+    if(!is.na(text)){
+      m <- m %>% gsub_ctl("TOL[0-9]+", paste0("TOL", text)) 
+    } else {
+      m <- m %>% gsub_ctl("TOL[0-9]+", "") 
+    }
   } else {
-    existing_text <- text(m)
-    existing_text[grepl("ADVAN", existing_text)] <- 
-      paste(existing_text[grepl("ADVAN", existing_text)], paste0("TOL", text))
-    m <- m %>% text(existing_text)
+    if(!is.na(text)){
+      existing_text <- text(m)
+      existing_text[grepl("ADVAN", existing_text)] <- 
+        paste(existing_text[grepl("ADVAN", existing_text)], paste0("TOL", text))
+      m <- m %>% text(existing_text)
+    } 
   }
   
   m <- m %>% target(old_target)

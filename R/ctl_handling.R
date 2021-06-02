@@ -15,6 +15,10 @@ setup_dollar <- function(x, type, add_dollar_text = TRUE){
       }
     }    
   }
+  x <- strsplit(x, "\n")
+  x <- sapply(x, function(i){ ## strsplt turns "" -> character(), convert back
+    if(length(i) == 0) "" else i
+  })
   names(x) <- NULL
   class(x) <- c(paste0("nm.",tolower(gsub("^\\$","",type))),"nm_subroutine")
   x

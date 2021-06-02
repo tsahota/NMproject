@@ -48,6 +48,9 @@ test_that("run and post",{
   
   expect_true(res)
   
+  #################################
+  ## basic check on output file sizes
+  
   res_files <- dir("Results", pattern = "\\.html", full.names = TRUE)
   expect_true(length(res_files) > 0)
   expect_true(min(file.info(res_files)$size) > 1e5)
@@ -56,7 +59,9 @@ test_that("run and post",{
   expect_true(length(script_res_files) > 0)
   expect_true(min(file.info(script_res_files)$size) > 1e5)
   
-  ## additional tests
+  #######################################
+  ## additional tests on the directory, created objects 
+  ## and other functions
   
   all_temp_files <- ls_tempfiles()
   ## apart from some exceptions shouldn't be any tempfiles in zip
@@ -70,36 +75,37 @@ test_that("run and post",{
   gfs <- glue_fields(m1)
   expect_true(length(gfs) > 0)
   
-  ## custom_vector_field
+  ## custom_vector_field tests
   dummy_list <- list(a = 1, b = 1:2)
   m1 <- m1 %>% custom_vector_field("test field", dummy_list)
   extracted_list <- m1 %>% custom_vector_field("test field") %>% dplyr::first()
   expect_identical(dummy_list, extracted_list)
-  
+
+  ## simple field test
+  m1 <- m1 %>% simple_field(test_field = 3)
+  expect_true(simple_field(m1, test_field) == 3)
+
+  ## input data test
   dataset <- data_name(ctl_path(m1))
   expect_true(file.exists(file.path(run_in(m1), dataset)))
-  
   d <- input_data(m1)
-
+  
+  ## $IGNORE/input_data test
+  m1 <- m1 %>% ignore("ID > 10")
+  df <- input_data(m1, filter = TRUE)
+  d <- input_data(m1)
+  expect_true(nrow(df) > 0 & nrow(df) < nrow(d))
+  
+  ## exclude outliers test
   dexcl <- d %>% filter(ID < 3)
   dnew <- d %>% exclude_rows(dexcl)
   expect_true(max(dnew$ID[dnew$EXCL %in% 1]) < 3)
   
-  m1 <- m1 %>% simple_field(test_field = 3)
-  expect_true(simple_field(m1, test_field) == 3)
-  
-  m1 <- m1 %>% ignore("ID > 10")
-  df <- input_data(m1, filter = TRUE)
-  d <- input_data(m1)
-  
-  expect_true(nrow(df) > 0 & nrow(df) < nrow(d))
-
+  ## $THETA/$OMEGA/$SIGMA test
   it <- m1 %>% init_theta() %>% dplyr::first()
   m1 <- m1 %>% init_theta(it)
   
-  ## test out 
   m1 <- readRDS("Results/m1.RDS")
-  
   expect_true(identical(0.5, it$init[it$name %in% "KA"]))
   
   it <- m1 %>% init_theta(init = c(KA = 1)) %>% 
@@ -139,23 +145,34 @@ test_that("run and post",{
   expect_true(!any(grepl("BLOCK", om_text)))
   ###################
   
+  ## output file tests
+  
   unlink(file.path(run_dir_path(m1), "NMout.RDS"))
   
   m1 <- readRDS("Results/m1.RDS")
   expect_true(is_successful(m1))
   
+  ## omega matrix test
   om_matrix <- m1 %>% omega_matrix() %>% dplyr::first()
   expect_true(inherits(om_matrix, "matrix"))
   expect_true(nrow(om_matrix) > 0)
   expect_true(nrow(om_matrix) == ncol(om_matrix))
   
+  ## output file tests
   d <- output_table_first(m1)
   expect_true(nrow(d) > 0)
   
   d <- d %>% append_nonmem_var(m1, "K")
   expect_true(!is.null(d$K))
   
+  m1 <- readRDS("Results/m1.RDS")
+  coef_wide(m1)
+  expect_true(is.numeric(ofv(m1)))
+  expect_true(is.numeric(AIC(m1)))
+  expect_true(is.numeric(BIC(m1)))
+  expect_true(is.numeric(cond_num(m1)))
   
+  ## ctl manipulation tests  
   m1 <- readRDS("Results/m1.RDS")
   m1 <- m1 %>% insert_dollar("DES", "
   $DES
@@ -167,12 +184,7 @@ test_that("run and post",{
   expect_false(any(grepl("\\$DES", text(m1)[[1]])))
   
   m1 <- readRDS("Results/m1.RDS")
-  coef_wide(m1)
-  expect_true(is.numeric(ofv(m1)))
-  expect_true(is.numeric(AIC(m1)))
-  expect_true(is.numeric(BIC(m1)))
-  expect_true(is.numeric(cond_num(m1)))
-  
+
   m1 <- m1 %>% rename_parameter("DUMPARAM" = "K")
   expect_true(any(grepl("\\bDUMPARAM\\b", m1 %>% dollar("PK"))))
   m1 <- m1 %>% remove_parameter("DUMPARAM")
@@ -181,23 +193,35 @@ test_that("run and post",{
   new_tol <- m1 %>% advan(13) %>% tol(12) %>% tol()
   expect_true(new_tol %in% 12)
   
+  ## subroutine tests
   m1 <- readRDS("Results/m1.RDS")
+
+  ### advan 5 conversion
+  m1a5 <- m1 %>% subroutine(advan = 5)
+  expect_true(any(grepl("K1T2", text(m1a5)[[1]])))
   
+  ### advan 13 conversion
+  m1a13 <- m1 %>% subroutine(advan = 13)
+  expect_true(any(grepl("K1T2", text(m1a13)[[1]])))
+  expect_true(any(grepl("\\$DES", text(m1a13)[[1]])))
+  
+  m1reverse <- m1a13 %>% subroutine(advan = 2)
+  
+  ## cache tests
+  m1 <- readRDS("Results/m1.RDS")
   cache_history(m1)
   cache_current(m1)
   
   ## shouldn't be any temp files for m1 in zip
   expect_true(length(ls_tempfiles(m1)) == 0)
   
+  ## clean up tests
   clean_run(m1) ## remove non-temp
   wipe_run(m1)  ## remove all
   expect_true(!file.exists(run_dir_path(m1)))
   
   clear_cache()
   expect_true(!file.exists(".cache"))
-  
-  ## can't test job_stats as xmls are removed
-  #d <- job_stats(m1)
   
   
 })
