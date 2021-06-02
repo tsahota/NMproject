@@ -7,10 +7,11 @@
 run_dir_path(m)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 }
 \description{
-Get path to run_dir
+The function \code{\link[=run_dir]{run_dir()}} gives the directory name.  This function gets the
+(relative) path of \code{\link[=run_dir]{run_dir()}}.
 }
 \seealso{
 \code{\link[=nm_getsetters]{nm_getsetters()}}

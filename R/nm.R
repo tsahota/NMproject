@@ -118,52 +118,7 @@ run_all_scripts <- function(quiet = FALSE){
 }
 
 
-#' Get NONMEM output tables
-#'
-#' This function may become deprecated soon. The function [output_table()] is a
-#' more user friendly wrapper for this function.
-#'
-#' @param r An nm object.
-#' @param dorig Optional `data.frame`. NONMEM input dataset.
-#' @param ... Additional arguments to pass on to [read.csv()].
-#' 
-#' @keywords internal
-#' @export
 
-nm_output <- function(r,dorig,...){
-  UseMethod("nm_output")  
-}
-
-#' Get ignore statement
-#' 
-#' @param r An object coercible into ctl_list
-#' @param data A data.frame (default = missing) optional input dataset from R.
-#' @keywords internal
-#' @export
-data_ignore_char <- function(r, data){
-  UseMethod("data_ignore_char")
-}
-
-
-#' Get filter statement
-#' 
-#' Opposite of data_ignore_char.
-#' 
-#' @param r Object coercible into ctl_list.
-#' @param ... Arguments passed to data_ignore_char.
-#' @keywords internal
-#' @export
-data_filter_char <- function(r, ...){
-  ignore_char <- data_ignore_char(r, ...)
-  if(ignore_char == "FALSE") return("TRUE")
-  ignored <- !grepl("^!\\((.*)\\)", ignore_char)
-  accepted <- !ignored
-  if(accepted){
-    return(gsub("^!\\((.*)\\)", "\\1", ignore_char) )
-  } else {
-    return(paste0("!(",ignore_char,")"))
-  }
-}
 
 update_ignore <- function(ctl, ignore_char){
   ctl <- ctl_list(ctl)

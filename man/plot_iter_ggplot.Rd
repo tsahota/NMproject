@@ -7,8 +7,14 @@
 plot_iter_ggplot(d)
 }
 \arguments{
-\item{d}{data.frame. output from plot_iter_data}
+\item{d}{A \code{data.frame}. Output from \code{\link[=plot_iter_data]{plot_iter_data()}}.}
 }
 \description{
-Plot iterations vs parameters/OBJ (ggplot2)
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Used in shiny app and as a backend function.
 }
+\seealso{
+\code{\link[=plot_iter_data]{plot_iter_data()}}
+}
+\keyword{internal}

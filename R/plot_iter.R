@@ -1,9 +1,26 @@
 #' Get data for iterations vs parameters/OBJ plots
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Used in shiny app and as a backend function.
 #'
-#' @param r object of class nmexecute
-#' @param trans logical. should parameter transformations be performed
-#' @param skip numeric (default 0). how many iterations to skip when plotting
-#' @param yvar character (default = "OBJ"). Name of variable/parameter to display
+#' @param r An nm object.
+#' @param trans Logical (default = `TRUE`). Should parameter transformations be
+#'   performed in accordance with $THETA/$OMEGA/$SIGMA comments
+#' @param skip Numeric (default = 0). The number of iterations to skip when
+#'   plotting.  For observing stationarity it is often useful to remove the
+#'   beginning iterations where the OFV and parameters may move a lot.
+#' @param yvar Character (default = `"OBJ"`). Name of variable/parameter to
+#'   display.
+#'
+#' @return Returns `data.frame` suitable for use in [plot_iter_ggplot()].
+#'
+#' @seealso [plot_iter_ggplot()]
+#'
+#' @keywords internal
+#'
 #' @export
 
 plot_iter_data <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
@@ -66,8 +83,17 @@ plot_iter_data.nm_list <- function(r, trans = TRUE, skip = 0, yvar = "OBJ"){
 }
 
 #' Plot iterations vs parameters/OBJ (ggplot2)
-#'
-#' @param d data.frame. output from plot_iter_data
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Used in shiny app and as a backend function.
+#' 
+#' @param d A `data.frame`. Output from [plot_iter_data()].
+#' 
+#' @seealso [plot_iter_data()]
+#' @keywords internal
 #' @export
 
 plot_iter_ggplot <- function(d){
@@ -88,11 +114,26 @@ plot_iter_ggplot <- function(d){
 }
 
 #' Plot iterations vs parameters/OBJ
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Non interactive `ggplot2` based version of the OFV/parameter vs iteration
+#' plot in shiny run monitor [shiny_nm()].  Used mainly for inclusion in
+#' diagnostic reports.
 #'
-#' @param r object of class nmexecute
-#' @param trans logical. should parameter transformations be performed
-#' @param skip numeric (default 0). how many iterations to skip when plotting
-#' @param yvar character (default = "OBJ"). Name of variable/parameter to display
+#' @param r An nm object.
+#' @param trans Logical (default = `TRUE`). Should parameter transformations be
+#'   performed in accordance with $THETA/$OMEGA/$SIGMA comments
+#' @param skip Numeric (default = 0). The number of iterations to skip when
+#'   plotting.  For observing stationarity it is often useful to remove the
+#'   beginning iterations where the OFV and parameters may move a lot.
+#' @param yvar Character (default = `"OBJ"`). Name of variable/parameter to
+#'   display.
+#' 
+#' @seealso [shiny_nm()], [nm_render()]
+#' 
 #' @export
 plot_iter <- function(r,trans=TRUE,skip=0,yvar="OBJ"){
   d <- plot_iter_data(r=r,trans=trans,skip=skip,yvar=yvar)

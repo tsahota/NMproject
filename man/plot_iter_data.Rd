@@ -7,14 +7,27 @@
 plot_iter_data(r, trans = TRUE, skip = 0, yvar = "OBJ")
 }
 \arguments{
-\item{r}{object of class nmexecute}
+\item{r}{An nm object.}
 
-\item{trans}{logical. should parameter transformations be performed}
+\item{trans}{Logical (default = \code{TRUE}). Should parameter transformations be
+performed in accordance with $THETA/$OMEGA/$SIGMA comments}
 
-\item{skip}{numeric (default 0). how many iterations to skip when plotting}
+\item{skip}{Numeric (default = 0). The number of iterations to skip when
+plotting.  For observing stationarity it is often useful to remove the
+beginning iterations where the OFV and parameters may move a lot.}
 
-\item{yvar}{character (default = "OBJ"). Name of variable/parameter to display}
+\item{yvar}{Character (default = \code{"OBJ"}). Name of variable/parameter to
+display.}
+}
+\value{
+Returns \code{data.frame} suitable for use in \code{\link[=plot_iter_ggplot]{plot_iter_ggplot()}}.
 }
 \description{
-Get data for iterations vs parameters/OBJ plots
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Used in shiny app and as a backend function.
 }
+\seealso{
+\code{\link[=plot_iter_ggplot]{plot_iter_ggplot()}}
+}
+\keyword{internal}
