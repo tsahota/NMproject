@@ -112,7 +112,13 @@ is_finished.nm_list <- Vectorize_nm_list(is_finished.nm_generic)
 
 #' Test if NONMEM ran without errors
 #' 
-#' @param r nm object
+#' @description 
+#' 
+#' `r lifecycle::badge("experimental")`
+#' 
+#' @param r An nm object.
+#' 
+#' @return `TRUE` if run was successful, `FALSE` otherwise.
 #' 
 #' @export
 is_successful <- function(r) {

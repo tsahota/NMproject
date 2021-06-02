@@ -7,10 +7,12 @@
 plot_iter_dygraph(m, trans = TRUE)
 }
 \arguments{
-\item{m}{object of class nmexecute}
+\item{m}{An nm object}
 
-\item{trans}{logical. should parameter transformations be performed}
+\item{trans}{Logical (default = \code{TRUE}). Should parameter transformations be
+performed in accordance with $THETA/$OMEGA comments.}
 }
 \description{
-Plot iterations vs parameters/OBJ with dygraphs
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
+\keyword{internal}

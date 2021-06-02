@@ -7,8 +7,11 @@
 is_successful(r)
 }
 \arguments{
-\item{r}{nm object}
+\item{r}{An nm object.}
+}
+\value{
+\code{TRUE} if run was successful, \code{FALSE} otherwise.
 }
 \description{
-Test if NONMEM ran without errors
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 }

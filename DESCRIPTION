@@ -33,7 +33,7 @@ Imports:
     rmarkdown,
     magrittr,
     usethis,
-    lifecycle
+    lifecycle (>= 1.0.0)
 RoxygenNote: 7.1.1
 Suggests:
     testthat,
@@ -72,7 +72,6 @@ Collate:
     'dollar_input.R'
     'find_nonmem.R'
     'init_funs.R'
-    'job_info.R'
     'job_stats.R'
     'make_OCC_every_dose.R'
     'make_project.R'
@@ -102,6 +101,7 @@ Collate:
     'sim_diagnostics.R'
     'stepwise_covariate.R'
     'subroutine.R'
+    'system_hooks.R'
     'text.R'
     'update_parameters.R'
     'zzz.R'

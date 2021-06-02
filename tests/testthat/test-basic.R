@@ -13,7 +13,16 @@ test_that("Project has basic functionality",{
   })
   setwd(proj_path)
 
+  ## unset options
+  named_list <- lapply(getOption("nm.options"), function(x) NULL)
+  names(named_list) <- getOption("nm.options")
+  options(named_list)
+  
+  expect_true(is.null(getOption("code_library_path")))
+  
   NMproject:::set_nm_opts()
+  
+  expect_true(!is.null(getOption("code_library_path")))
   
   cmd_test <- system_nm("echo test", intern = TRUE)
   

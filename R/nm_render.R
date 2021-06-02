@@ -111,6 +111,7 @@ nm_render.nm_generic <- function(m,
   }
   
   if(async){
+    if(!requireNamespace("future")) stop("install future package", call. = FALSE)
     f0 <- future::future({
       rmarkdown::render(input = input,
                         output_file = output_file,

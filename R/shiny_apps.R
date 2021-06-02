@@ -83,8 +83,15 @@ overwrite_behaviour_app <- function() {
 
 #' Plot iterations vs parameters/OBJ with dygraphs
 #'
-#' @param m object of class nmexecute
-#' @param trans logical. should parameter transformations be performed
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' @param m An nm object
+#' @param trans Logical (default = `TRUE`). Should parameter transformations be
+#'   performed in accordance with $THETA/$OMEGA comments.
+#'
+#' @keywords internal
 #' @export
 plot_iter_dygraph <- function(m, trans = TRUE){
   if(!requireNamespace("dygraphs")) stop("install dygraphs")

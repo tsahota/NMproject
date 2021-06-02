@@ -2,19 +2,36 @@
 % Please edit documentation in R/nm_object.R
 \name{input_data}
 \alias{input_data}
-\title{Read input dataset}
+\title{Read input dataset of an nm object}
 \usage{
 input_data(m, filter = FALSE, na = ".", ...)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{filter}{logical (default = FALSE). should NONMEM ignore statement be applied}
+\item{filter}{Logical (default = \code{FALSE}). Applies NONMEM ignore statement to
+filter dataset.}
 
-\item{na}{character. passed to read.csv}
+\item{na}{Character. Passed to \code{\link[utils:read.table]{utils::read.csv()}}}
 
-\item{...}{additional arguments passed to either read_derived_data or read.csv}
+\item{...}{Additional arguments passed to either \code{\link[=read_derived_data]{read_derived_data()}} (if
+\code{\link[=write_derived_data]{write_derived_data()}} was used to create derived dataset) or
+\code{\link[utils:read.table]{utils::read.csv()}}}
 }
 \description{
-Read input dataset
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Uses \code{data_path} field of object to locate data and read in.
+}
+\examples{
+
+\dontrun{
+
+d <- input_data(m1)
+
+## only non-ignored rows
+d_nonignore <- input_data(m1, filter = TRUE)
+
+}
+
 }

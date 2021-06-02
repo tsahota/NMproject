@@ -712,12 +712,32 @@ fill_input.nm_generic <- function(m, ...){
 fill_input.nm_list <- Vectorize_nm_list(fill_input.nm_generic, SIMPLIFY = FALSE)
 
 
-#' Read input dataset
+#' Read input dataset of an nm object
 #' 
-#' @param m nm object
-#' @param filter logical (default = FALSE). should NONMEM ignore statement be applied
-#' @param na character. passed to read.csv
-#' @param ... additional arguments passed to either read_derived_data or read.csv
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Uses `data_path` field of object to locate data and read in.
+#' 
+#' @param m An nm object.
+#' @param filter Logical (default = `FALSE`). Applies NONMEM ignore statement to
+#'   filter dataset.
+#' @param na Character. Passed to [utils::read.csv()]
+#' @param ... Additional arguments passed to either [read_derived_data()] (if
+#'   [write_derived_data()] was used to create derived dataset) or
+#'   [utils::read.csv()]
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' d <- input_data(m1)
+#' 
+#' ## only non-ignored rows
+#' d_nonignore <- input_data(m1, filter = TRUE)
+#' 
+#' }
 #' 
 #' @export
 input_data <- function(m, filter = FALSE, na = ".", ...){

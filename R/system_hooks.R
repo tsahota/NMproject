@@ -1,3 +1,21 @@
+#' Kill cluster job
+#'
+#' Can be useful in conjuction with a modified [system_nm()].  Requires setting `"kill_job"` option.
+#'
+#' @param m An nm object.
+#' 
+#' @details The option `"kill_job"` needs to be defined as a function that kills
+#'   a cluster job.
+#' 
+#' @seealso [system_nm()], [job_info()]
+#' 
+#' @keywords internal
+#' @export
+
+kill_job <- function(m){
+  getOption("kill_job")(m)
+}
+
 #' Get job information (if it exists)
 #'
 #' Can be useful for storing job numbers with a modified [system_nm()].

@@ -30,7 +30,13 @@ set_nm_opts <- function(){
   
   if(is.null(getOption("code_library_path")))
     options(code_library_path=system.file("extdata", "CodeLibrary", package = "NMproject"))
-  
+
+  options("nm.options" = c(
+    "system_cmd", "system_nm", "quiet_run", "intern", "available_nm_types",
+    "nm_default_dirs", "kill_job", "nm.overwrite_behaviour",
+    "nm.force_render", "nm.cmd_default", "nmtran_exe_path",
+    "code_library_path"
+  ))
   
 }
 
@@ -286,24 +292,6 @@ system_nm <- function(cmd,dir=nm_default_dir("models"),...){
   if(file.exists(dir)) {currentwd <- getwd(); setwd(dir) ; on.exit(setwd(currentwd))} else
     stop(paste0("Directory \"",dir,"\" doesn't exist."))
   getOption("system_nm")(cmd,...)
-}
-
-#' Kill cluster job
-#'
-#' Can be useful in conjuction with a modified [system_nm()].  Requires setting `"kill_job"` option.
-#'
-#' @param m An nm object.
-#' 
-#' @details The option `"kill_job"` needs to be defined as a function that kills
-#'   a cluster job.
-#' 
-#' @seealso [system_nm()], [job_info()]
-#' 
-#' @keywords internal
-#' @export
-
-kill_job <- function(m){
-  getOption("kill_job")(m)
 }
 
 #' Overwrite behaviour of NMproject
