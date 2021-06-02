@@ -71,6 +71,8 @@ test_that("run and post",{
   
   expect_true(length(nm_list_gather(environment())) == 1)
   expect_true(length(nm_list_gather(m1)) == 1)
+
+  expect_true(length(cached_object(m1)) == 1)
   
   print(as_nm_generic(m1))
   gfs <- glue_fields(m1)
@@ -232,7 +234,7 @@ test_that("run and post",{
   clean_run(m1) ## remove non-temp
   wipe_run(m1)  ## remove all
   expect_true(!file.exists(run_dir_path(m1)))
-  
+
   clear_cache()
   expect_true(!file.exists(".cache"))
   
