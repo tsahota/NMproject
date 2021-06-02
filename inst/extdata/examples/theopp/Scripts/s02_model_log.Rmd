@@ -185,6 +185,12 @@ Make a decision point in the script.  This will enable us to skip past decisions
 In this case we are making a decision that `m1` is better than `m2`, and `m2WT` and we're basing that decision on the `summary_wide` information. We can also include the goodness of fit diagnostics via specifying the file names in the `file_inputs` argument.  We can force a stop in the workflow for a decision to be remade by specifying `force = TRUE`.
 
 ```{r decision1}
+
+## Gonna make a decision based on m1, m2, and m2WT
+## first make sure they're finished
+wait_finish(c(c(m1, m2, m2WT))) 
+
+## now make the decision
 decision(inputs = summary_wide(c(m1, m2, m2WT), m = FALSE), 
          outcome = "m1 is better") # next line must be end of chunk
 ```
