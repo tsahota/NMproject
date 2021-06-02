@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>PPC functions: process data from simulation and plot — ppc • NMproject</title>
+<title>PPC functions: process data from simulation and plot — ppc_data • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="PPC functions: process data from simulation and plot — ppc" />
+<meta property="og:title" content="PPC functions: process data from simulation and plot — ppc_data" />
 <meta property="og:description" content="PPC functions: process data from simulation and plot" />
 
 
@@ -115,7 +115,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>PPC functions: process data from simulation and plot</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/nm_object.R'><code>R/nm_object.R</code></a>, <a href='https://github.com/tsahota/NMproject/blob/master/R/sim_reestExtra.R'><code>R/sim_reestExtra.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/sim_diagnostics.R'><code>R/sim_diagnostics.R</code></a></small>
     <div class="hidden name"><code>ppc.Rd</code></div>
     </div>
 
@@ -123,11 +123,7 @@
     <p>PPC functions: process data from simulation and plot</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ppc_whisker_plot</span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>group</span>, <span class='va'>var1</span>, <span class='va'>var2</span>, statistic <span class='op'>=</span> <span class='st'>"statistic"</span><span class='op'>)</span>
-
-<span class='fu'>ppc_histogram_plot</span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>var1</span>, <span class='va'>var2</span>, statistic <span class='op'>=</span> <span class='st'>"statistic"</span><span class='op'>)</span>
-
-<span class='fu'>ppc_data</span><span class='op'>(</span>
+    <pre class="usage"><span class='fu'>ppc_data</span><span class='op'>(</span>
   <span class='va'>r</span>,
   <span class='va'>FUN</span>,
   <span class='va'>...</span>,
@@ -135,24 +131,15 @@
   max_mod_no <span class='op'>=</span> <span class='cn'>NA</span>,
   DV <span class='op'>=</span> <span class='st'>"DV"</span>,
   statistic <span class='op'>=</span> <span class='st'>"statistic"</span>
-<span class='op'>)</span></pre>
+<span class='op'>)</span>
+
+<span class='fu'>ppc_whisker_plot</span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>group</span>, <span class='va'>var1</span>, <span class='va'>var2</span>, statistic <span class='op'>=</span> <span class='st'>"statistic"</span><span class='op'>)</span>
+
+<span class='fu'>ppc_histogram_plot</span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>var1</span>, <span class='va'>var2</span>, statistic <span class='op'>=</span> <span class='st'>"statistic"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>d</th>
-      <td><p>dataset</p></td>
-    </tr>
-    <tr>
-      <th>group, var1, var2</th>
-      <td><p>grouping variables for plotting</p></td>
-    </tr>
-    <tr>
-      <th>statistic</th>
-      <td><p>character (default = "statistic") name of statistic column
-returned by FUN</p></td>
-    </tr>
     <tr>
       <th>r</th>
       <td><p>nm object (simulation)</p></td>
@@ -177,6 +164,19 @@ returns data.frame with a column "statistic"</p></td>
     <tr>
       <th>DV</th>
       <td><p>character (default = "DV")</p></td>
+    </tr>
+    <tr>
+      <th>statistic</th>
+      <td><p>character (default = "statistic") name of statistic column
+returned by FUN</p></td>
+    </tr>
+    <tr>
+      <th>d</th>
+      <td><p>dataset</p></td>
+    </tr>
+    <tr>
+      <th>group, var1, var2</th>
+      <td><p>grouping variables for plotting</p></td>
     </tr>
     </table>
 

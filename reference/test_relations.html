@@ -117,7 +117,7 @@ covariate_step_tibble())." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Generate tibble of relations to test</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/sim_reestExtra.R'><code>R/sim_reestExtra.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/stepwise_covariate.R'><code>R/stepwise_covariate.R</code></a></small>
     <div class="hidden name"><code>test_relations.Rd</code></div>
     </div>
 
@@ -190,11 +190,11 @@ IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))</p></dd>
 <span class='va'>dtest</span> <span class='op'>&lt;-</span> <span class='fu'>test_relations</span><span class='op'>(</span>param <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"KA"</span>, <span class='st'>"K"</span>, <span class='st'>"V"</span><span class='op'>)</span>,
                         cov <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"LIN1"</span>, <span class='st'>"LIN2"</span>, <span class='st'>"LIN3"</span>, <span class='st'>"RND1"</span>, <span class='st'>"RND2"</span>, <span class='st'>"RND3"</span><span class='op'>)</span>, 
                         state <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"linear"</span>, <span class='st'>"power"</span><span class='op'>)</span>, 
-                        continuous <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='va'>dtest</span> <span class='op'>&lt;-</span> <span class='va'>dtest</span> <span class='op'>%&gt;%</span> <span class='fu'>test_relations</span><span class='op'>(</span>param <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"KA"</span>, <span class='st'>"K"</span>, <span class='st'>"V"</span><span class='op'>)</span>,
-                                  cov <span class='op'>=</span> <span class='st'>"BN1"</span>,
-                                  state <span class='op'>=</span> <span class='st'>"linear"</span>,
-                                  continuous <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+                        continuous <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+         <span class='fu'>test_relations</span><span class='op'>(</span>param <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"KA"</span>, <span class='st'>"K"</span>, <span class='st'>"V"</span><span class='op'>)</span>,
+                        cov <span class='op'>=</span> <span class='st'>"BN1"</span>,
+                        state <span class='op'>=</span> <span class='st'>"linear"</span>,
+                        continuous <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 
 <span class='va'>dtest</span>
 </div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 39 x 4</span>

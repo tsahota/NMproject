@@ -40,7 +40,13 @@
 
 
 <meta property="og:title" content="Remove parameter from NONMEM control file — remove_parameter" />
-<meta property="og:description" content="Remove parameter from NONMEM control file" />
+<meta property="og:description" content="
+Attempts to remove a parameter from the NONMEM control assuming it has been
+written according to NMproject conventions (i.e. TVPARAM notation and TVPARAM
+IIV_PARAM comments in $THETA/$OMEGA).  The presence of any code that
+depends on the removed parameter will cause the control file to break.
+
+" />
 
 
 
@@ -115,12 +121,18 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Remove parameter from NONMEM control file</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/nm_object.R'><code>R/nm_object.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/param_manipulate.R'><code>R/param_manipulate.R</code></a></small>
     <div class="hidden name"><code>remove_parameter.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Remove parameter from NONMEM control file</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Attempts to remove a parameter from the NONMEM control assuming it has been
+written according to NMproject conventions (i.e. TVPARAM notation and TVPARAM</p><ul>
+<li><p>IIV_PARAM comments in $THETA/$OMEGA).  The presence of any code that
+depends on the removed parameter will cause the control file to break.</p></li>
+</ul>
+
     </div>
 
     <pre class="usage"><span class='fu'>remove_parameter</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>name</span><span class='op'>)</span></pre>
@@ -130,11 +142,11 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>m</th>
-      <td><p>nm object</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     <tr>
       <th>name</th>
-      <td><p>character. Parameter to remove</p></td>
+      <td><p>Character. Parameter name to remove.</p></td>
     </tr>
     </table>
 
