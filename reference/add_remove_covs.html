@@ -138,7 +138,7 @@ covariate model development.</p>
   state <span class='op'>=</span> <span class='fl'>2</span>,
   continuous <span class='op'>=</span> <span class='cn'>TRUE</span>,
   <span class='va'>time_varying</span>,
-  <span class='va'>additional_state_text</span>,
+  additional_state_text <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
   id_var <span class='op'>=</span> <span class='st'>"ID"</span>,
   force <span class='op'>=</span> <span class='cn'>FALSE</span>,
   force_TV_var <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -154,7 +154,6 @@ covariate model development.</p>
   state <span class='op'>=</span> <span class='fl'>2</span>,
   continuous <span class='op'>=</span> <span class='cn'>TRUE</span>,
   <span class='va'>time_varying</span>,
-  <span class='va'>additional_state_text</span>,
   id_var <span class='op'>=</span> <span class='st'>"ID"</span>
 <span class='op'>)</span></pre>
 
@@ -187,8 +186,8 @@ covariate model development.</p>
     </tr>
     <tr>
       <th>additional_state_text</th>
-      <td><p>Optional character. custom state variable to be
-passed to <code>param_cov_text</code>.</p></td>
+      <td><p>Optional character (default = empty). custom
+state variable to be passed to <code>param_cov_text</code>.</p></td>
     </tr>
     <tr>
       <th>id_var</th>
