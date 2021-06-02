@@ -14,9 +14,9 @@ param_cov_text <- function(param,cov,state,data,theta_n_start,continuous = TRUE,
                              "power0.75" = "PARCOV= ((COV/median)**0.75)",
                              "6" = "PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))",
                              "log-linear" = "PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))"),
-                           additional_state_text, ...){
+                           additional_state_text = list(), ...){
   
-  if(!missing(additional_state_text)) {
+  if(length(additional_state_text)>0) {
     if(is.null(names(additional_state_text))) stop("additional_state_text needs to be a named list")
     if(any(names(additional_state_text) %in% names(state_text)))
       stop("additional_state_text entries cannot overwrite base states:\n ",
@@ -118,8 +118,8 @@ consider using the default with state \"linear\" or use additional_state_text")
 #' @param state Numeric or character. Number or name of state (see details).
 #' @param continuous Logical (default = TRUE). is covariate continuous?
 #' @param time_varying Optional logical. is the covariate time varying?
-#' @param additional_state_text Optional character. custom state variable to be
-#'   passed to `param_cov_text`.
+#' @param additional_state_text Optional character (default = empty). custom
+#'   state variable to be passed to `param_cov_text`.
 #' @param id_var Character (default = "ID"). Needed if time_varying is missing.
 #' @param force Logical (default = FALSE). Force covariate in even if missing
 #'   values found.
@@ -186,7 +186,7 @@ consider using the default with state \"linear\" or use additional_state_text")
 #' @export
 
 add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
-                    time_varying, additional_state_text, id_var = "ID",
+                    time_varying, additional_state_text = list(), id_var = "ID",
                     force = FALSE, force_TV_var = FALSE, 
                     init, lower, upper){
   UseMethod("add_cov")
@@ -194,7 +194,7 @@ add_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
 
 #' @export
 add_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
-                               time_varying, additional_state_text, id_var = "ID",
+                               time_varying, additional_state_text = list(), id_var = "ID",
                                force = FALSE, force_TV_var = FALSE,
                                init, lower, upper){
   
@@ -205,26 +205,21 @@ add_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
   state <- as.character(state)
   continuous <- as.logical(continuous)
   
-  if("PK" %in% names(ctl)) dol_PK <- "PK" else dol_PK <- "PRED"
+  dol_PK <- "PRED"
+  if("PK" %in% names(ctl)) dol_PK <- "PK"
   
   PK_section <- rem_comment(ctl[[dol_PK]])
   
   data <- suppressMessages(input_data(m, filter = TRUE))
   
   if(!cov %in% names(data)) {
-    if(force) {
-      warning("can't find ",cov," in data", call. = FALSE)
-    } else {
-      stop("can't find ",cov," in data", call. = FALSE)
-    }
+    stop_txt <- paste0("can't find ",cov," in data")
+    if(force) warning(stop_txt, call.=FALSE) else stop(stop_txt, call.=FALSE)
   }
   
   if(any(is.na(data[[cov]]))) {
-    if(force) {
-      warning("missing values in ",cov," detected", call. = FALSE)
-    } else {
-      stop("missing values in ",cov," detected", call. = FALSE)
-    }
+    stop_txt <- paste0("missing values in ",cov," detected")
+    if(force) warning(stop_txt, call.=FALSE) else stop(stop_txt, call.=FALSE)
   }
   
   if(length(unique(data[[cov]])) > 5 & !continuous)
@@ -299,18 +294,11 @@ add_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
   }
   
   ## use state to get the relationship in there.
-  if(!missing(additional_state_text)) {
-    param_cov_text <- param_cov_text(param=tvparam,cov=cov,state = state,
-                                     data = data,
-                                     theta_n_start = theta_n_start,
-                                     continuous = continuous,
-                                     additional_state_text = additional_state_text)
-  } else {
-    param_cov_text <- param_cov_text(param=tvparam,cov=cov,state = state,
-                                     data = data,
-                                     theta_n_start = theta_n_start,
-                                     continuous = continuous)
-  }
+  param_cov_text <- param_cov_text(param=tvparam,cov=cov,state = state,
+                                   data = data,
+                                   theta_n_start = theta_n_start,
+                                   continuous = continuous,
+                                   additional_state_text = additional_state_text)
   
   ctl[[dol_PK]] <- c(ctl[[dol_PK]][1],"",
                      definition_start_txt,
@@ -379,13 +367,13 @@ add_cov.nm_list <- Vectorize_nm_list(add_cov.nm_generic, SIMPLIFY = FALSE)
 #' @export
 
 remove_cov <- function(ctl, param, cov, state = 2, continuous = TRUE,
-                       time_varying, additional_state_text, id_var = "ID"){
+                       time_varying, id_var = "ID"){
   UseMethod("remove_cov")
 }
 
 #' @export
 remove_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
-                                  time_varying, additional_state_text, id_var = "ID"){
+                                  time_varying, id_var = "ID"){
   
   m <- ctl
   ctl <- ctl_contents(m)

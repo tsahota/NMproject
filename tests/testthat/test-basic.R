@@ -19,10 +19,13 @@ test_that("Project has basic functionality",{
   options(named_list)
   
   expect_true(is.null(getOption("code_library_path")))
+  expect_error(code_library(viewer = FALSE, return_info = TRUE))
   
   NMproject:::set_nm_opts()
   
   expect_true(!is.null(getOption("code_library_path")))
+  d <- code_library(viewer = FALSE, return_info = TRUE)
+  expect_true(nrow(d) > 10)
   
   cmd_test <- system_nm("echo test", intern = TRUE)
   
@@ -59,9 +62,6 @@ test_that("set up",{
 
   expect_error(nm("execute run1.mod -dir=m1"))
   
-  d <- code_library(viewer = FALSE, return_info = TRUE)
-  expect_true(nrow(d) > 10)
-  
   ls_code_library("Models/ADVAN2.mod") %>%
     stage()
   
@@ -71,5 +71,12 @@ test_that("set up",{
     search_raw("TVK")
   
   expect_true(length(TVK_files) > 0)
+  
+  ## wait test
+  stime <- system.time(wait_for({
+    Sys.sleep(1)
+    TRUE
+  }))
+  expect_true(stime['elapsed'] >= 1)
   
 })

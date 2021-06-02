@@ -1,5 +1,16 @@
 if(0){
 
+  result_file <- function(m, name){
+    UseMethod("result_file")
+  }
+
+  result_file.nm_generic <- function(m, name){
+    name <- glue_text_nm(m, name)
+    file.path(results_dir(m), name)
+  }
+
+  result_file.nm_list <- Vectorize_nm_list(result_file.nm_generic)
+  
   attach_code_library <- function(path) {
     options(code_library_path = unique(c(path, getOption("code_library_path"))))
   }

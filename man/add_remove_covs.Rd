@@ -13,7 +13,7 @@ add_cov(
   state = 2,
   continuous = TRUE,
   time_varying,
-  additional_state_text,
+  additional_state_text = list(),
   id_var = "ID",
   force = FALSE,
   force_TV_var = FALSE,
@@ -29,7 +29,6 @@ remove_cov(
   state = 2,
   continuous = TRUE,
   time_varying,
-  additional_state_text,
   id_var = "ID"
 )
 }
@@ -46,8 +45,8 @@ remove_cov(
 
 \item{time_varying}{Optional logical. is the covariate time varying?}
 
-\item{additional_state_text}{Optional character. custom state variable to be
-passed to \code{param_cov_text}.}
+\item{additional_state_text}{Optional character (default = empty). custom
+state variable to be passed to \code{param_cov_text}.}
 
 \item{id_var}{Character (default = "ID"). Needed if time_varying is missing.}
 

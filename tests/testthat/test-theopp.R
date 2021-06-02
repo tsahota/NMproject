@@ -70,6 +70,7 @@ test_that("run and post",{
   m1 <- readRDS("Results/m1.RDS")
   
   expect_true(length(nm_list_gather(environment())) == 1)
+  expect_true(length(nm_list_gather(m1)) == 1)
   
   print(as_nm_generic(m1))
   gfs <- glue_fields(m1)
@@ -199,6 +200,10 @@ test_that("run and post",{
   ### advan 5 conversion
   m1a5 <- m1 %>% subroutine(advan = 5)
   expect_true(any(grepl("K1T2", text(m1a5)[[1]])))
+
+  ### diff tests
+  expect_true(length(nm_diff(m1, m1a5)) > 0)
+  expect_true(length(nm_diff(m1, text(m1a5)[[1]])) > 0)
   
   ### advan 13 conversion
   m1a13 <- m1 %>% subroutine(advan = 13)
@@ -211,6 +216,14 @@ test_that("run and post",{
   m1 <- readRDS("Results/m1.RDS")
   cache_history(m1)
   cache_current(m1)
+  
+  ## covariate tests
+  m1 <- readRDS("Results/m1.RDS")
+  
+  expect_true(nrow(test_relations()) == 0)
+  expect_error(m1 %>% add_cov(param = "DUMMYPARAM", cov = "WT"))
+  expect_error(m1 %>% add_cov(param = "K", cov = "DUMMY"))
+  expect_error(m1 %>% add_cov(param = "K", cov = "WT", state = "2", additional_state_text = c("2" = "nonsense")))
   
   ## shouldn't be any temp files for m1 in zip
   expect_true(length(ls_tempfiles(m1)) == 0)

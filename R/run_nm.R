@@ -74,8 +74,7 @@ run_nm.nm_generic <- function(m,
   ctl <- ctl_contents(m)
   if(length(ctl) == 1){
     if(is.na(ctl)){
-      warning("no ctl_contents defined.
-              Use ctl_contents() e.g. m <- m %>% ctl_contents(\"/path/to/ctl/file\")")
+      warning("no ctl_contents defined. Use ?based_on")
       return(m)
     }
   }
@@ -140,7 +139,7 @@ run_nm.nm_generic <- function(m,
   
   message(paste0("Running: ",type(m),":",ctl_path(m)))
   stdout0 <- system_nm(cmd = cmd(m), dir = run_in(m), wait = FALSE,
-                       ignore.stdout = FALSE, ignore.stderr = FALSE,
+                       ignore.stdout = FALSE, ignore.stderr = FALSE, 
                        intern=intern)
   
   if(intern) {

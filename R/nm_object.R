@@ -866,22 +866,6 @@ param_info2 <- function(m){
   p_info[!is.na(p_info$parameter),]
 }
 
-#' Name of result file
-#' 
-#' @param m nm object
-#' @param name character. path
-#' @export
-result_file <- function(m, name){
-  UseMethod("result_file")
-}
-#' @export
-result_file.nm_generic <- function(m, name){
-  name <- glue_text_nm(m, name)
-  file.path(results_dir(m), name)
-}
-#' @export
-result_file.nm_list <- Vectorize_nm_list(result_file.nm_generic)
-
 cache_history <- function(r){
   UseMethod("cache_history")
 }
