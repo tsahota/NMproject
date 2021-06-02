@@ -30,7 +30,7 @@ The function \code{find_nm_install_path()} will attempt to use a locally availab
 installation to get this information.  If the PsN installation is on a
 remote server, this function will not work (it will return a \code{NULL})
 
-The function \code{find_nm_tran_path} will attempt to use a locally
+The function \code{find_nm_tran_path()} will attempt to use a locally
 available PsN installation to get this information.  If the PsN
 installation is on a remote server, this function will not work (it will
 return a \code{NULL}). This is normally used to set \code{\link[=nm_tran_command]{nm_tran_command()}}.  If
