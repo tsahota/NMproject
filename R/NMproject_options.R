@@ -227,13 +227,14 @@ nm_tran_command <- function(text){
 #' `r lifecycle::badge("stable")`
 #'
 #' Not intended to be used directly in most cases.  This is called by
-#' `[system_nm()]`
-#'
+#' [system_nm()]
+#' 
 #' @param cmd Character. System call to be sent to the terminal.
 #' @param ... Additional args to be passed to `system()` or `shell()`.
 #'   
 #' @seealso [system_nm()], [run_nm()]
 #' 
+#' @keywords internal
 #' @export
 
 system_nm_default <- function(cmd, ...) {

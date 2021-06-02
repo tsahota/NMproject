@@ -15,8 +15,9 @@ system_nm_default(cmd, ...)
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 Not intended to be used directly in most cases.  This is called by
-\verb{[system_nm()]}
+\code{\link[=system_nm]{system_nm()}}
 }
 \seealso{
 \code{\link[=system_nm]{system_nm()}}, \code{\link[=run_nm]{run_nm()}}
 }
+\keyword{internal}

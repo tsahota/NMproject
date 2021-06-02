@@ -1,16 +1,23 @@
 psn_available <- function() Sys.which("psn") != ""
 
-#' Find location of NONMEM installation
+#' @rdname find_nonmem
+#' @name find_nonmem
+#' @title Find location of NONMEM installation
 #'
+#' @description 
+#' 
+#' `r lifecycle::badge("experimental")`
+#' 
 #' Attempts to find location of NONMEM installation directory used by PsN.  Can
 #' be useful for finding the location of parafiles etc.
 #'
-#' @param name character name of nonmem installation (according PsN)
-#' @details The function will attempt to use a locally available PsN
+#' @param name Character name of NONMEM installation (according PsN).
+#' 
+#' @details The function `find_nm_install_path()` will attempt to use a locally available PsN
 #'   installation to get this information.  If the PsN installation is on a
 #'   remote server, this function will not work (it will return a `NULL`)
-#' @return If cannot find installation will return `NULL` without errors or
-#'   warnings
+#' @return If functions cannot find installation they will return `NULL` without
+#'   errors or warnings
 #'
 #' @export
 find_nm_install_path <- function(name = "default"){
@@ -36,20 +43,15 @@ find_nm_install_path <- function(name = "default"){
   path
 }
 
-#' Find location of NMTRAN
-#'
-#' Attempts to find location of NMTRAN used by PsN.
-#'
-#' @param name character name of nonmem installation (according PsN)
-#' @param warn logical (default = TRUE), should warning be given if fail to find
-#'   NMTRAN.exe
-#' @details The function will attempt to use a locally available PsN
-#'   installation to get this information.  If the PsN installation is on a
-#'   remote server, this function will not work (it will return a `NULL`). If
-#'   cannot find installation, you will need to set
-#'   [nm_tran_command()], manually
-#' @return If cannot find installation will return `NULL` without errors. Will
-#'   emit warnings `warm = TRUE`.
+#' @rdname find_nonmem
+#' @param warn Logical (default = `TRUE`) to warn if fails to find NMTRAN.exe
+#' 
+#' @details The function `find_nm_tran_path` will attempt to use a locally
+#'   available PsN installation to get this information.  If the PsN
+#'   installation is on a remote server, this function will not work (it will
+#'   return a `NULL`). This is normally used to set [nm_tran_command()].  If
+#'   this function cannot find installation, you will need to set
+#'   [nm_tran_command()], manually.
 #'
 #' @seealso [nm_tran_command()]
 #' @export
