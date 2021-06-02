@@ -10,3 +10,4 @@ docs
 .DS_Store
 doc
 Meta
+tests/testthat/test_nmproject.zip
