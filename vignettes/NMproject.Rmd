@@ -960,6 +960,22 @@ NMproject doesn't change PsN's default directory structure, everything in the "M
 
 If it's something you think really should be part of NMproject, open a github "issue" and ask for the feature.
 
+### + That's all well and good that NMproject has it's own boostrap/vpc/... methods, but I just want to run/rerun a bootstrap/vpc/... in PsN.  Can I do this through NMproject?
+
+Yes, just change `cmd` to reflect the proper PsN command.
+
+```{r eval=FALSE}
+
+m1psnboot <- m1 %>% child("m1psnboot") %>%
+  cmd("bootstrap {ctl_name} -samples=50 -dir={run_dir}") %>%
+  run_nm()
+
+m1psnvpc <- m1 %>% child("m1psnvpc") %>%
+  cmd("vpc {ctl_name} -samples=50 -dir={run_dir}") %>%
+  run_nm()
+
+```
+
 ### + I don't want to use NMproject on my analysis project any more, can I go back to submitting runs on the command line
 
 Yes, NMproject has been built to reduce as much as possible the barrier-to-exit to ensure all usage is a voluntary as possible.  NMproject doesn't change PsN's default directory structure, so you can go back to running PsN via command line or using Pirana etc., at any point.
