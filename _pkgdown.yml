@@ -1,1 +1,140 @@
 url: https://tsahota.github.io/NMproject
+
+template:
+  params:
+    bootswatch: flatly
+
+reference:
+- title: "Directory management"
+- contents:
+  - nm_create_analysis_project
+  - setup_nm_demo
+  - run_all_scripts
+  - temp_files
+- title: "Importing code"
+- contents:
+  - code_library
+  - ls_code_library
+  - ls_scripts
+  - preview
+  - stage
+  - import
+  - search_raw
+- title: "Pre-modelling functions"
+- contents:
+  - read_derived_data
+  - write_derived_data
+  - exclude_rows
+  - make_OCC_every_dose
+- title: "Core object"
+- contents:
+  - new_nm
+  - child
+  - nm_getsetters
+  - data_path
+  - input_data
+  - nm_list_gather
+  - parent_run
+  - run_dir_path
+  - ctl_path
+  - simple_field
+  - is_nm
+- title: "NONMEM code manipulation"
+- contents:
+  - apply_manual_edit
+  - nm_diff
+  - show_ctl
+  - dollar
+  - fill_input
+  - subroutine
+  - update_parameters
+  - init_theta
+  - init_omega
+  - init_sigma
+  - block-omega-sigma
+  - gsub_ctl
+  - comment_out
+  - ignore
+  - dollar_subroutine
+  - delete_dollar
+  - insert_dollar
+  - add_mixed_param
+  - remove_parameter
+  - rename_parameter
+  - target
+  - untarget
+  - ctl_contents
+- title: "Execution"
+- contents:
+  - run_nm
+  - run_nm_batch
+  - nm_tran
+  - shiny_nm
+  - status
+  - status_table
+  - wait_finish
+  - wait_for
+  - is_finished
+  - is_successful
+  - sge_parallel_execute
+  - system_nm
+  - system_cmd
+  - kill_job
+  - wipe_run
+  - nm_getsetters_execution
+  - job_stats
+- title: "NONMEM postprocessing"
+- contents:
+  - show_out
+  - nm_render
+  - nm_list_render
+  - plot_iter
+  - decision
+  - rr
+  - nm_summary
+  - coef_widelong
+  - output_table
+  - nm_read_table
+  - nm_tree
+  - covariance_plot
+  - ofv
+  - cond_num
+  - omega_matrix
+  - nmsave_plot
+  - nmsave_table
+  - param_cov_diag
+  - nm_output_path
+- title: "Simulations"
+- contents:
+  - convert_to_simulation
+  - ppc_data
+  - ppc_whisker_plot
+  - ppc_histogram_plot
+- title: "Covariate modelling"
+- contents:
+  - cov_cov_plot
+  - add_remove_covs
+  - test_relations
+  - covariate_step_tibble
+  - bind_covariate_results
+  - cov_forest_data
+  - cov_forest_plot
+  - psn_style_scm
+  - append_nonmem_var
+- title: "Bootstrap"
+- contents:
+  - make_boot_datasets
+  - make_xv_datasets
+- title: "Configuration"
+- contents:
+  - nm_tran_command
+  - nm_default_dirs
+  - nm_default_dir
+  - overwrite_behaviour
+  - find_nonmem
+  - NONMEM_version
+  
+   
+
+  
+  
