@@ -3,11 +3,16 @@
 This is the first CRAN release of NMproject.  Here are the major changes here 
 relative to 0.5.1:
 
-* Deprecation and removal of tidyproject dependency. Project libraries are now
-  handled with `renv` and project creation with `usethis` packages.  The code 
-  library has been moved to NMproject.
+* Removal of tidyproject as an NMproject dependency. Project libraries are now
+  handled with `renv` and project creation has been moved to NMproject with
+  light wrappers around `usethis` project creation functionality.  The code 
+  library has been moved to NMproject.  The tidyproject package is now 
+  deprecated.
   
-* New shiny interface to code library available via RStudio addins.
+* Expanded demo based on theophylline and new vignette based around same demo.
+  
+* New shiny interface to code library available via RStudio addins.  The code
+  library has been restructured to match NMproject analysis directory structure.
 
 * `new_nm()` function to create parent `nm_list` objects.
 
@@ -16,9 +21,9 @@ relative to 0.5.1:
   the form of reusable patches.
 
 * Fully vectorized functions and compatibility of `nm_list` objects with 
-  `dplyr`. NMproject is the only R package (known to the author) with a 
-  vectorized model object allowing groups of runs to be operated on using the 
-  same syntax as single runs.
+  `dplyr`. NMproject is the only pharmacometric package (known to the author) 
+  with a vectorized model object allowing groups of runs to be operated on using
+  the same syntax as single runs.
 
 * Custom NMproject implementations of PsN's bootstrap, cross-validation, 
   stepwise covariate selection, simulation-re-estimation, and PPCs. All 
