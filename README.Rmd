@@ -17,15 +17,12 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Travis-CI Build Status](https://travis-ci.org/tsahota/NMproject.svg?branch=master)](https://travis-ci.org/tsahota/NMproject)
-[![Coverage Status](https://coveralls.io/repos/github/tsahota/NMproject/badge.svg?branch=master)](https://coveralls.io/github/tsahota/NMproject?branch=master)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/tsahota/NMproject?branch=master&svg=true)](https://ci.appveyor.com/project/tsahota/NMproject)
-[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![Coverage Status](https://coveralls.io/repos/github/tsahota/NMproject/badge.svg?branch=master)](https://coveralls.io/github/tsahota/NMproject?branch=master)
 [![Codecov test coverage](https://codecov.io/gh/tsahota/NMproject/branch/master/graph/badge.svg)](https://codecov.io/gh/tsahota/NMproject?branch=master)
+[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![CRAN status](https://www.r-pkg.org/badges/version/NMproject)](https://CRAN.R-project.org/package=NMproject)
 <!-- badges: end -->
-
-*This is the newer beta interface.  To use the older interface, install v0.3.2 (see releases)*
-
-The intent of NMproject is to allow for fully script based NONMEM model development.
 
 Have you ever tried to continue some model development work (a colleague’s or even your own) but struggled to remember what was previously done and in which order? Have you ever wished you could repeat your entire model building at the push of a button e.g. because the source data has been updated, or because of a mistake carried forward?
 
