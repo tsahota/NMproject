@@ -44,7 +44,7 @@ find_nm_install_path <- function(name = "default"){
 }
 
 #' @rdname find_nonmem
-#' @param warn Logical (default = `TRUE`) to warn if fails to find NMTRAN.exe
+#' @param warn Logical (default = `TRUE`) to warn if fails to find NMTRAN.exe.
 #' 
 #' @details The function `find_nm_tran_path()` will attempt to use a locally
 #'   available PsN installation to get this information.  If the PsN

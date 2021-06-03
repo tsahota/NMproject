@@ -302,7 +302,7 @@ nonmem_code_to_r <- function(code, eta_to_0 = TRUE){
 #' Comment out lines of code with that are matched by a patter string.
 #' 
 #' @param m An nm object.
-#' @param pattern Character regex. Passed to gsub.
+#' @param pattern Character regex. Passed to [gsub()].
 #' 
 #' @seealso [gsub_ctl()], [target()]
 #' @export
@@ -317,26 +317,41 @@ uncomment <- function(m, pattern = ".*"){
   m %>% gsub_ctl(paste0("^;+\\s*(",pattern,")"), "\\1")
 }
 
-#' Pattern replacement for ctl file
+#' Pattern replacement for control file contents
 #'
-#' A wrapper around `gsub` so that control files may be modified using
-#' `gsub` syntax.
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
 #'
-#' @param ctl object coercible into ctl_character
-#' @param pattern argument passed to gsub
-#' @param replacement argument passed to gsub
-#' @param ... additional arguments passed to gsub
-#' @param dollar character name of subroutine
+#' A wrapper around `gsub` so that control files may be modified using `gsub`
+#' syntax.  Can be useful for simple find replace operations in a control
+#' stream.  Ensure you use the "view diff" app afterwards to make sure the find
+#' replace proceeded as intented.
+#'
+#' @param m An nm object.
+#' @param pattern Argument passed to [gsub()].
+#' @param replacement Argument passed to [gsub()].
+#' @param ... Additional arguments passed to [gsub()].
+#' @param dollar Character name of subroutine.
+#' 
+#' @seealso [apply_manual_edit()]
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' m1 %>% gsub_ctl("ISAMPLE=300", "ISAMPLE=600")
+#' 
+#' }
+#' 
 #' @export
 
-gsub_ctl <- function(ctl, pattern, replacement, ..., dollar = NA_character_){
+gsub_ctl <- function(m, pattern, replacement, ..., dollar = NA_character_){
   UseMethod("gsub_ctl")
 }
 
 #' @export
-gsub_ctl.nm_generic <- function(ctl, pattern, replacement, ..., dollar = NA_character_){
-  m <- ctl
-  
+gsub_ctl.nm_generic <- function(m, pattern, replacement, ..., dollar = NA_character_){
+
   text <- get_target_text(m)
   text <- gsub(pattern, replacement, text, ...)
   

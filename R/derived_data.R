@@ -10,15 +10,15 @@
 #' use it for rapid reading speeding up overall function.
 #'
 #' @param d A data.frame. Data frame to be saved.
-#' @param name Character. Name of file (without extension). If not a path, will
-#'   save to DerivedData directory.
+#' @param name Character. Name of file (with or without extension). If not a
+#'   path, will save to DerivedData directory.
 #' @param ...  Additional arguments to be passed to [utils::write.csv()].
 #'
 #' @details If there is no "DerivedData" data directory and you are using a
 #'   different structure the argument `name` must be a (relative) path to
 #'   an existing directory where you want your NONMEM ready dataset to be stored.
 #'
-#' @seealso [read_derived_data()], [input_data()]
+#' @seealso [read_derived_data()], [input_data()], [exclude_rows()]
 #'
 #' @examples
 #' \dontrun{
@@ -94,7 +94,6 @@ write_derived_data.list <- function (d, name, ...)
 
 #' Read derived data
 #'
-#'
 #' @description
 #' 
 #' `r lifecycle::badge("stable")`
@@ -102,11 +101,11 @@ write_derived_data.list <- function (d, name, ...)
 #' Read the derived data directly instead of via the nm object which is what
 #' [input_data()] does.
 #'
-#' @param name name of file (without extension)
-#' @param na character to be passed to read.csv
-#' @param silent logical (default = TRUE). should messages be suppressed
-#' @param ...  additional arguments to be passed to read.csv
-#' @seealso [write_derived_data()], [input_data()]
+#' @param name Name or path of file (with or without extension).
+#' @param na Character to be passed to [utils::read.csv()].
+#' @param silent Logical (default = `TRUE`). Should messages be suppressed.
+#' @param ...  Additional arguments to be passed to [utils::read.csv()].
+#' @seealso [write_derived_data()], [input_data()], [exclude_rows()].
 #'
 #' @examples
 #' \dontrun{

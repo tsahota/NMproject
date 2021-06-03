@@ -13,11 +13,11 @@
 #' @param r An nm object.
 #' @param object A list of plotting objects.
 #' @param file_name Character. Name of results file.
-#' @param directory Character (default = results_dir(r)). Where to save.
-#' @param width Passed to ggsave.
-#' @param height Passed to ggsave.
-#' @param dpi Passed to ggsave.
-#' @param ... Passed to ggsave.
+#' @param directory Character (default = `results_dir(r)`). Where to save.
+#' @param width Passed to [ggplot2::ggsave()].
+#' @param height Passed to [ggplot2::ggsave()].
+#' @param dpi Passed to [ggplot2::ggsave()].
+#' @param ... Passed to [ggplot2::ggsave()].
 #' @export
 nmsave_plot <- function(r, object, file_name, directory = results_dir(r), 
                         width = 7, height = 5, dpi = 300, ...){

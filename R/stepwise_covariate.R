@@ -509,17 +509,22 @@ remove_cov.nm_list <- Vectorize_nm_list(remove_cov.nm_generic, SIMPLIFY = FALSE)
 
 #' Generate paths for simulation runs
 #' 
-#' Internal function
+#' @description 
 #' 
-#' @param dsc `dplyr::tibble` with experimental factors to vary
-#' @param start_dir directory name within which all runs should take place.
-#' @param include_names logical (default = TRUE). 
+#' `r lifecycle::badge("experimental")`
+#' 
+#' Internal function to create nested directory structure paths.
+#'
+#' @param dsc A `tibble` with experimental factors to vary.
+#' @param start_dir Directory name within which all runs should take place.
+#' @param include_names Logical (default = TRUE). Should names be included.
 #' @examples 
 #' \dontrun{
 #' 
 #' dsc$location <- gen_sim_path(dsc, ...)
 #' 
 #' }
+#' @keywords internal
 
 gen_sim_path <- function(dsc, start_dir, include_names = TRUE){
   
@@ -541,6 +546,22 @@ gen_sim_path <- function(dsc, start_dir, include_names = TRUE){
 #'
 #' Takes a base nm object and a set of relationships to test (from
 #' [test_relations()]) and prepares a `tibble` of NONMEM runs.
+#' 
+#' The goal of NMproject's covariate modelling functions is to provide a
+#' stepwise covariate method *with manual decision* making.  This important to
+#' ensure that the full model selection/evaluation criteria (should be defined
+#' in statistical analysis plans) can be applied at every step rather than just
+#' log likelihood ratio testing, where the most significant model may be
+#' unstable, may worsen model predictions or may only be slightly more
+#' significant than a more physiologically plausible covariate relationship.
+#' 
+#' The functions [test_relations()], [covariate_step_tibble()],
+#' [bind_covariate_results()] together comprise NMproject stepwise covariate
+#' method with manual decision.  The goal is to be part way between PsN's SCM
+#' and completely manual process at each forward and backward elimination step.
+#' The syntax of how covariates are included is the same as PsN's SCM routine -
+#' See [PsN documentation](https://uupharmacometrics.github.io/PsN/docs.html)
+#' for more information.
 #' 
 #' @param base An nm object.
 #' @param run_id Base run_id to construct run_ids of covariate runs.
@@ -702,7 +723,24 @@ covariate_step_tibble <- function(base, run_id, run_in = nm_default_dir("models"
 #' 
 #' `r lifecycle::badge("stable")`
 #' 
-#' Extracts results from completed covariate runs and combines them into the covariate [tibble()].
+#' Extracts results from completed covariate runs and combines them into the
+#' covariate [tibble()].
+#'
+#' The goal of NMproject's covariate modelling functions is to provide a
+#' stepwise covariate method *with manual decision* making.  This important to
+#' ensure that the full model selection/evaluation criteria (should be defined
+#' in statistical analysis plans) can be applied at every step rather than just
+#' log likelihood ratio testing, where the most significant model may be
+#' unstable, may worsen model predictions or may only be slightly more
+#' significant than a more physiologically plausible covariate relationship.
+#'
+#' The functions [test_relations()], [covariate_step_tibble()],
+#' [bind_covariate_results()] together comprise NMproject stepwise covariate
+#' method with manual decision.  The goal is to be part way between PsN's SCM
+#' and completely manual process at each forward and backward elimination step.
+#' The syntax of how covariates are included is the same as PsN's SCM routine -
+#' See [PsN documentation](https://uupharmacometrics.github.io/PsN/docs.html)
+#' for more information.
 #' 
 #' @param dsc A covariate tibble (see [covariate_step_tibble()]).
 #' @param nm_col Character (default = "m"). Name of column to store nm objects.
@@ -739,14 +777,27 @@ bind_covariate_results <- function(dsc, nm_col = "m", parameters = "new"){
     dplyr::arrange(.data$p_chisq)
 }
 
-#' Generate tibble of relations to test
+#' Generate tibble of covariate relations to test
 #'
 #' @description 
 #' 
 #' `r lifecycle::badge("stable")`
 #' 
-#' Generate list of covariate relationships to test (with
-#' [covariate_step_tibble()]).
+#' The goal of NMproject's covariate modelling functions is to provide a
+#' stepwise covariate method *with manual decision* making.  This important to
+#' ensure that the full model selection/evaluation criteria (should be defined
+#' in statistical analysis plans) can be applied at every step rather than just
+#' log likelihood ratio testing, where the most significant model may be
+#' unstable, may worsen model predictions or may only be slightly more
+#' significant than a more physiologically plausible covariate relationship.
+#' 
+#' The functions [test_relations()], [covariate_step_tibble()],
+#' [bind_covariate_results()] together comprise NMproject stepwise covariate
+#' method with manual decision.  The goal is to be part way between PsN's SCM
+#' and completely manual process at each forward and backward elimination step.
+#' The syntax of how covariates are included is the same as PsN's SCM routine -
+#' See [PsN documentation](https://uupharmacometrics.github.io/PsN/docs.html)
+#' for more information.
 #'
 #' @param dtest Optional existing `dtest` to append (from an previous use
 #'   [test_relations()])
@@ -796,7 +847,7 @@ bind_covariate_results <- function(dsc, nm_col = "m", parameters = "new"){
 #' }
 #' 
 #'    
-#' @seealso [add_cov()], [covariate_step_tibble()] 
+#' @seealso [add_cov()], [covariate_step_tibble()], [bind_covariate_results()]
 #'    
 #' @examples 
 #' 

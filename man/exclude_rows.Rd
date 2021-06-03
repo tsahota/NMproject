@@ -7,14 +7,29 @@
 exclude_rows(d, dexcl, exclude_col = "EXCL")
 }
 \arguments{
-\item{d}{data.frame for NONMEM dataset}
+\item{d}{A \code{data.frame} for containing the full NONMEM dataset.  Should
+contain a column for identifying excluded rows named with the \code{exclude_col}
+argument.}
 
-\item{dexcl}{data.frame consisting of rows to be ignored}
+\item{dexcl}{A smaller \code{data.frame} consisting of rows to be ignored.  Need
+not contain all columns of \code{d} but each column should be present in \code{d}.}
 
-\item{exclude_col}{character.  Name of exclude column in d}
+\item{exclude_col}{Character (default = \code{"EXCL"}). Name of a binary exclude
+column in \code{d}. This should be accompanied with a \code{IGNORE=(EXCL.GT.0)}
+statement in $DATA.}
+}
+\value{
+A modified version of \code{d} with \code{exclude_col} set to \code{1} for rows
+coinciding with \code{dexcl}.
 }
 \description{
-Exclude rows of NONMEM dataset
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+A mechanism for excluding outliers during data cleaning.  Create exploratory
+plots, identify rows of the dataset to be considered outliers for exclusion,
+and then feed that filtered dataset into this function to exclude them from
+the dataset.  Requires a corresponding \code{IGNORE} statement - see argument
+descriptions for more details.
 }
 \examples{
 \dontrun{
@@ -23,4 +38,7 @@ dexcl <- d \%>\% filter(ID == 23, TIME > 18, TIME < 24) \%>\% select(ID, TIME, D
 dexcl  ## view rows to be excluded
 d <- d \%>\% exclude_rows(dexcl)
 }
+}
+\seealso{
+\code{\link[=read_derived_data]{read_derived_data()}}, \code{\link[=write_derived_data]{write_derived_data()}}
 }

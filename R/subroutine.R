@@ -557,11 +557,15 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE){
 subroutine.nm_list <- Vectorize_nm_list(subroutine.nm_generic, SIMPLIFY = FALSE)
 
 #' Get/set $SUBROUTINE values in control file
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
 #'
-#' These functions will make simple ADVAN/TRANS/TOL adjustments to the NONMEM
-#' control file.  No other file changes outside $SUBROUTINE will be made which
-#' makes `advan` and `trans` less useful than [subroutine()]
-#' which performs multiple control file changes.
+#' These are mostly back end functions used by [subroutine()] and will make
+#' simple ADVAN/TRANS/TOL adjustments to the NONMEM control file.  No other file
+#' changes outside $SUBROUTINE will be made which makes `advan` and `trans` less
+#' useful than the higher level [subroutine()] function.
 #'
 #' @param m An nm object.
 #' @param text Optional number/character number to set to.

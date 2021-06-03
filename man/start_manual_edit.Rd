@@ -7,10 +7,13 @@
 start_manual_edit(m, combine_patch = NA_character_)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object}
 
-\item{combine_patch}{logical. should patch be added first before edit}
+\item{combine_patch}{Logical. Should patch be added first before edit.}
 }
 \description{
-Internal function. Needed for addin functionality
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Internal function. Needed for "manual edit" addin functionality.
 }
+\keyword{internal}

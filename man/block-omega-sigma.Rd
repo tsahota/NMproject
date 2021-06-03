@@ -11,12 +11,12 @@ block(iomega, eta_numbers = NA, diag_init = 0.01)
 unblock(iomega, eta_numbers)
 }
 \arguments{
-\item{iomega}{Tibble output from \code{\link[=init_omega]{init_omega()}} or \code{\link[=init_sigma]{init_sigma()}}}
+\item{iomega}{A \code{tibble} output from \code{\link[=init_omega]{init_omega()}} or \code{\link[=init_sigma]{init_sigma()}}.}
 
 \item{eta_numbers}{Numeric vector.  ETA numbers to put into a block or
-unblock for \code{block()} and \code{unblock()}, respectively. Must be contiguous}
+unblock for \code{block()} and \code{unblock()}, respectively. Must be contiguous.}
 
-\item{diag_init}{numeric. Default value for off diagonal elements}
+\item{diag_init}{Numeric. Default value for off diagonal elements.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

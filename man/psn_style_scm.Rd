@@ -7,17 +7,17 @@
 psn_style_scm(base, run_in, dtest, alpha_forward = 0.05, alpha_backward = 0.01)
 }
 \arguments{
-\item{base}{nm object (base model)}
+\item{base}{An nm object (base model).}
 
-\item{run_in}{directory to run in}
+\item{run_in}{A directory to run in.}
 
-\item{dtest}{output of test_relations}
+\item{dtest}{Output of \code{\link[=test_relations]{test_relations()}}.}
 
-\item{alpha_forward}{numeric (default = 0.05). alpha level for forward
-inclusion}
+\item{alpha_forward}{Numeric (default = \code{0.05}). Alpha level for forward
+inclusion.}
 
-\item{alpha_backward}{numeric (default = 0.01). alpha level for backward
-deletion}
+\item{alpha_backward}{Numeric (default = \code{0.01}). Alpha level for backward
+deletion.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
@@ -25,4 +25,8 @@ deletion}
 Intent is not to replicate PsN SCM.  This is mainly here for illustrative and
 comparison purposes. Should replicate the model selection in PsN's SCM
 functionality with greedy setting.
+}
+\seealso{
+\code{\link[=test_relations]{test_relations()}}, \code{\link[=covariate_step_tibble]{covariate_step_tibble()}},
+\code{\link[=bind_covariate_results]{bind_covariate_results()}}.
 }

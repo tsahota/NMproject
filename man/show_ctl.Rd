@@ -7,8 +7,13 @@
 show_ctl(r)
 }
 \arguments{
-\item{r}{nm object}
+\item{r}{An nm object.}
 }
 \description{
-Show an uneditable version of the control file
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Opens a read-only version of the NONMEM control file for browsing.
+}
+\seealso{
+\code{\link[=show_out]{show_out()}}.
 }

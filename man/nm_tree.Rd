@@ -7,7 +7,7 @@
 nm_tree(..., summary = FALSE)
 }
 \arguments{
-\item{...}{Arguments passed to \code{\link[=nm_list_gather]{nm_list_gather()}}}
+\item{...}{Arguments passed to \code{\link[=nm_list_gather]{nm_list_gather()}}.}
 
 \item{summary}{Logical (default = \code{FALSE}). Should \code{\link[=summary_wide]{summary_wide()}} variables be appended.}
 }

@@ -7,13 +7,13 @@
 read_derived_data(name, na = ".", silent = FALSE, ...)
 }
 \arguments{
-\item{name}{name of file (without extension)}
+\item{name}{Name or path of file (with or without extension).}
 
-\item{na}{character to be passed to read.csv}
+\item{na}{Character to be passed to \code{\link[utils:read.table]{utils::read.csv()}}.}
 
-\item{silent}{logical (default = TRUE). should messages be suppressed}
+\item{silent}{Logical (default = \code{TRUE}). Should messages be suppressed.}
 
-\item{...}{additional arguments to be passed to read.csv}
+\item{...}{Additional arguments to be passed to \code{\link[utils:read.table]{utils::read.csv()}}.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
@@ -43,5 +43,5 @@ d <- input_data(m1)
 }
 }
 \seealso{
-\code{\link[=write_derived_data]{write_derived_data()}}, \code{\link[=input_data]{input_data()}}
+\code{\link[=write_derived_data]{write_derived_data()}}, \code{\link[=input_data]{input_data()}}, \code{\link[=exclude_rows]{exclude_rows()}}.
 }

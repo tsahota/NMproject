@@ -11,8 +11,10 @@ An object of class \code{character} of length 1.
 sge_parallel_execute
 }
 \description{
-Character to be used with the \code{\link[=cmd]{cmd()}} function to launch a
-parallelised job on SGE
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Character to be used with the \code{\link[=cmd]{cmd()}} function to launch a parallelised job
+on SGE.
 }
 \details{
 Requires \code{cores} and \code{parafile} fields to be set.
@@ -33,6 +35,6 @@ sge_parallel_execute ## view the character to see how psn interfaces with SGE
 }
 }
 \seealso{
-\code{\link[=nm_getsetters]{nm_getsetters()}}
+\code{\link[=nm_getsetters]{nm_getsetters()}}.
 }
 \keyword{datasets}

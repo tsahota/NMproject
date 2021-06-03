@@ -8,7 +8,11 @@ NULL
 #' 
 #' @title Test if object is an nm coercible object
 #' 
-#' @description Mostly internal functions.
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Mostly internal functions to test object types.
 #' 
 #' @param x Object.
 #' 

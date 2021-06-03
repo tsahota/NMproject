@@ -15,21 +15,21 @@ child(
 \arguments{
 \item{m}{Parent nm object.}
 
-\item{run_id}{Character.  New run id to assign to child object.}
+\item{run_id}{Character.  New \code{run_id} to assign to child object.}
 
-\item{type}{Character (default = "execute"). type of child object.}
+\item{type}{Character (default = \code{"execute"}). Type of child object.}
 
-\item{parent}{Optional nm object (default = nm(NA)) . Parent object will by
+\item{parent}{Optional nm object (default = \code{nm(NA)}) . Parent object will by
 default be \code{m}, but this argument will force parent to be a different
 object.}
 
-\item{silent}{Logical (default = FALSE). Should warn if conflicts detected.}
+\item{silent}{Logical (default = \code{FALSE}). Should warn if conflicts detected.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 Child objects inherit attributes of parent but with a new \code{run_id}. The control
-file will be inherited too with $TABLEs updated
+file will be inherited too with $TABLEs updated.
 }
 \details{
 Specifying \code{parent} will force parent to be different from \code{m}. This

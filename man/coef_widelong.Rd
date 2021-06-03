@@ -11,7 +11,7 @@ coef_wide(m, trans = TRUE)
 coef_long(m, trans = TRUE)
 }
 \arguments{
-\item{m}{A nm object}
+\item{m}{An nm object.}
 
 \item{trans}{Logical (default = \code{TRUE}). Transform parameters using comments
 in $THETA/$OMEGA/$SIGMA.}

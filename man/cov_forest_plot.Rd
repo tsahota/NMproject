@@ -7,14 +7,16 @@
 cov_forest_plot(d)
 }
 \arguments{
-\item{d}{data.frame from \code{\link[=cov_forest_data]{cov_forest_data()}}}
+\item{d}{A \code{data.frame} from \code{\link[=cov_forest_data]{cov_forest_data()}}.}
 }
 \value{
-a \code{ggplot2} forest plot
+A \code{ggplot2} forest plot.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Uses \code{ggplot2} to take outputs from \code{\link[=cov_forest_data]{cov_forest_data()}}
-and display a forest plot
+and display a forest plot.
 }
 \examples{
 \dontrun{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/boot.R
 \name{make_xv_datasets}
 \alias{make_xv_datasets}
-\title{Write xv datasets}
+\title{Write (bootstrap) cross validation datasets}
 \usage{
 make_xv_datasets(
   dboot,
@@ -12,14 +12,20 @@ make_xv_datasets(
 )
 }
 \arguments{
-\item{dboot}{output from make_boot_dataset()}
+\item{dboot}{Output from \code{\link[=make_boot_datasets]{make_boot_datasets()}}.}
 
-\item{data_folder}{folder to store datasets}
+\item{data_folder}{Folder to store datasets.}
 
-\item{overwrite}{overwrite or not}
+\item{overwrite}{Logical. Overwrite previous files or not.}
 
-\item{id_var}{character (default = "ID"). Name of ID column}
+\item{id_var}{character (default = \code{"ID"}). Name of ID column.}
+}
+\value{
+A \code{tibble} of nm objects similar to \code{\link[=make_boot_datasets]{make_boot_datasets()}} output
 }
 \description{
-Write xv datasets
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+Similar to \code{\link[=make_boot_datasets]{make_boot_datasets()}}, but sets up "out of bag" datasets for model
+evaluation.
 }

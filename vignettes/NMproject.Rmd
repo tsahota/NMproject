@@ -514,7 +514,9 @@ Results can be viewed in `Results/basic_boot.m1.html`.
 
 ## Stepwise covariate selection
 
-Covariate analysis in NMproject is part way between PsN's SCM and completely manual process to allow you to apply your full model selection criteria to each forward and backward elimination step rather than being constrained to log-likelihood ratio tests.  The syntax of how covariates are included is the same as PsN's SCM routine - See PsN documentation for more information there.
+The goal of NMproject's covariate modelling functions is to provide a stepwise covariate method *with manual decision* making.  This important to ensure that the full model selection/evaluation criteria (should be defined in statistical analysis plans) can be applied at every step rather than just log likelihood ratio testing, where the most significant model may be unstable, may worsen model predictions or may only be slightly more significant than a more physiologically plausible covariate relationship.
+
+The functions `test_relations()`, `covariate_step_tibble()`, `bind_covariate_results()` together comprise NMproject stepwise covariate method with manual decision.  The goal is to be part way between PsN's SCM and completely manual process at each forward and backward elimination step.  The syntax of how covariates are included is the same as PsN's SCM routine - See [PsN documentation](https://uupharmacometrics.github.io/PsN/docs.html) for more information.
 
 Relationships to tests are defined using the `test_relations()` function.  Below we test `BWT` and `AGE` on all parameters in both `linear` and `power` fashion and all parameters are test with the categorical covariate `SEX`.
 

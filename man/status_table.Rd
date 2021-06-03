@@ -7,8 +7,12 @@
 status_table(m)
 }
 \arguments{
-\item{m}{nm objects}
+\item{m}{An nm object.}
 }
 \description{
-Get status of multiple runs in form of table
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+A more friendly version of \code{\link[=status]{status()}} for vector valued nm objects.  Useful
+after bootstraps, or stepwise covariate method steps, or any situation
+dealing with groups of NONMEM runs.
 }

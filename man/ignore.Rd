@@ -2,15 +2,26 @@
 % Please edit documentation in R/nm_object.R
 \name{ignore}
 \alias{ignore}
-\title{Get/set ignore statement from ctl_contents}
+\title{Get/set ignore statement from control file contents}
 \usage{
 ignore(ctl, ignore_char)
 }
 \arguments{
-\item{ctl}{nm object}
+\item{ctl}{An nm object.}
 
-\item{ignore_char}{optional character. Ignore statement}
+\item{ignore_char}{Optional character. Ignore statement to set in $DATA.}
 }
 \description{
-Get/set ignore statement from ctl_contents
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+}
+\examples{
+
+\dontrun{
+
+ignore(m1)  ## display ignore statement
+
+m1 \%>\% ignore("ID > 10") ## changes ignore to ignore IDs > 10.
+
+}
+
 }

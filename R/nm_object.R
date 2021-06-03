@@ -220,15 +220,15 @@ is.na.nm_list <- function(x) is.na(run_id(x))
 #' `r lifecycle::badge("stable")`
 #'
 #' Child objects inherit attributes of parent but with a new `run_id`. The control
-#' file will be inherited too with $TABLEs updated
+#' file will be inherited too with $TABLEs updated.
 #'
 #' @param m Parent nm object.
-#' @param run_id Character.  New run id to assign to child object.
-#' @param type Character (default = "execute"). type of child object.
-#' @param parent Optional nm object (default = nm(NA)) . Parent object will by
+#' @param run_id Character.  New `run_id` to assign to child object.
+#' @param type Character (default = `"execute"`). Type of child object.
+#' @param parent Optional nm object (default = `nm(NA)`) . Parent object will by
 #'   default be `m`, but this argument will force parent to be a different
 #'   object.
-#' @param silent Logical (default = FALSE). Should warn if conflicts detected.
+#' @param silent Logical (default = `FALSE`). Should warn if conflicts detected.
 #'
 #' @details Specifying `parent` will force parent to be different from `m`. This
 #'   is useful in piping when a parent object is modified prior to being used in
@@ -769,10 +769,25 @@ input_data.nm_list <- function(m, filter = FALSE, na = ".", ...){
   d
 }
 
-#' Get/set ignore statement from ctl_contents
+#' Get/set ignore statement from control file contents
 #' 
-#' @param ctl nm object
-#' @param ignore_char optional character. Ignore statement
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' @param ctl An nm object.
+#' @param ignore_char Optional character. Ignore statement to set in $DATA.
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' ignore(m1)  ## display ignore statement
+#' 
+#' m1 %>% ignore("ID > 10") ## changes ignore to ignore IDs > 10.
+#' 
+#' }
+#' 
 #' @export
 ignore <- function(ctl, ignore_char){
   UseMethod("ignore")
@@ -792,10 +807,14 @@ ignore.nm_generic <- function(ctl, ignore_char){
 ignore.nm_list <- Vectorize_nm_list(ignore.nm_generic, replace_arg = "ignore_char")
 
 
-#' Delete a $ subroutine from ctl_contents
+#' Delete a NONMEM subroutine from control file contents
 #' 
-#' @param m nm object
-#' @param dollar character. Name of subroutine
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' @param m An nm object.
+#' @param dollar Character. Name of subroutine.
 #' @export
 delete_dollar <- function(m, dollar){
   UseMethod("delete_dollar")
@@ -811,12 +830,32 @@ delete_dollar.nm_generic <- function(m, dollar){
 #' @export
 delete_dollar.nm_list <- Vectorize_nm_list(delete_dollar.nm_generic, SIMPLIFY = FALSE)
 
-#' Insert a new subroutine into ctl_contents
+#' Insert a new subroutine into control file_contents
 #' 
-#' @param m nm object
-#' @param dollar character. Name of subroutine
-#' @param text character vector. Text to fill
-#' @param after_dollar character. Positioning of subroutine
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Mostly a back end function used by other functions.
+#' 
+#' @param m An nm object.
+#' @param dollar Character. Name of subroutine to insert.
+#' @param text Character vector. Text to fill.
+#' @param after_dollar Character name of preceding subroutine. The new
+#'   subroutine will be inserted immediately after it.
+#'   
+#'   
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' m <- m %>% insert_dollar("MODEL", "
+#' $MODEL
+#' COMP = (CENTRAL)
+#' ", after_dollar = "SUB")
+#'                                  
+#' }
+#' 
 #' @export
 insert_dollar <- function(m, dollar, text, after_dollar){
   UseMethod("insert_dollar")
@@ -882,6 +921,10 @@ clear_cache <- function() unlink(".cache", recursive = TRUE)
 
 #' Get/set existing subroutine
 #'
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#'
 #' The fast way to see the contents of a particular subroutine directly in the R
 #' console. It can also be used to set the contents of a NONMEM subroutine in
 #' place of manual edits
@@ -890,10 +933,10 @@ clear_cache <- function() unlink(".cache", recursive = TRUE)
 #' @param dollar Character. Name of NONMEM subroutine to target.
 #' @param ... Additional arguments to be passed to `text()`.  If specified these
 #'   will set the contents of the subroutine.  See examples below.
-#' @param add_dollar_text Logical (default = TRUE). Should the $XXXX string be
-#'   added to text
+#' @param add_dollar_text Logical (default = `TRUE`). Should the $XXXX string be
+#'   added to text.
 #'   
-#' @seealso [insert_dollar()]
+#' @seealso [insert_dollar()], [delete_dollar()]
 #'
 #' @examples
 #' \dontrun{
@@ -903,8 +946,8 @@ clear_cache <- function() unlink(".cache", recursive = TRUE)
 #' m1 <- m1 %>% dollar("DES",
 #' "
 #' DADT(1) = -K*A(1)
-#' "
-#' )  
+#' ")
+#' 
 #' ## This will rewrite an existing $DES
 #' ## if control file doesn't already have a $DES
 #' ## use insert_dollar() instead
@@ -1048,11 +1091,15 @@ rr_row <- function(m){
 
 #' Get path to run_dir
 #'
-#' The function [run_dir()] gives the directory name.  This function gets the
-#' (relative) path of [run_dir()].
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#'
+#' The function [run_dir()] gives the directory name, whereas this function gets
+#' the (relative) path of [run_dir()].
 #'
 #' @param m An nm object.
-#' @seealso [nm_getsetters()]
+#' @seealso [nm_getsetters()].
 #' @export
 run_dir_path <- function(m) file.path(run_in(m), run_dir(m))
 
@@ -1103,10 +1150,15 @@ ctl_table_paths.nm_list <- Vectorize_nm_list(ctl_table_paths.nm_generic, SIMPLIF
 
 #' Get parent object of nm object
 #' 
-#' Will pull the parent run of an nm object from the run cache.
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Will pull the parent run of an nm object from the run cache.  Run needs to
+#' have been executed for this to work.
 #' 
 #' @param m An nm object.
-#' @param n Numeric. generation of parent (default = 1).
+#' @param n Numeric. Generation of parent (default = `1`).
 #'  
 #' @export
 parent_run <- function(m, n = 1L){

@@ -12,7 +12,7 @@ uncomment(m, pattern = ".*")
 \arguments{
 \item{m}{An nm object.}
 
-\item{pattern}{Character regex. Passed to gsub.}
+\item{pattern}{Character regex. Passed to \code{\link[=gsub]{gsub()}}.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

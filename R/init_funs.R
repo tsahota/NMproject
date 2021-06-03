@@ -794,10 +794,10 @@ init_sigma.nm_list <- Vectorize_nm_list(init_sigma.nm_generic, SIMPLIFY = FALSE,
 #'
 #' Manipulate $OMEGA (and $SIGMA) BLOCKs to introduce or remove correlations.
 #'
-#' @param iomega Tibble output from [init_omega()] or [init_sigma()]
+#' @param iomega A `tibble` output from [init_omega()] or [init_sigma()].
 #' @param eta_numbers Numeric vector.  ETA numbers to put into a block or
-#'   unblock for `block()` and `unblock()`, respectively. Must be contiguous
-#' @param diag_init numeric. Default value for off diagonal elements
+#'   unblock for `block()` and `unblock()`, respectively. Must be contiguous.
+#' @param diag_init Numeric. Default value for off diagonal elements.
 #'
 #' @seealso [init_theta()], [init_omega()], [init_sigma()]
 #'

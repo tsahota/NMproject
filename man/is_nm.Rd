@@ -14,5 +14,7 @@ is_nm_generic(x)
 \item{x}{Object.}
 }
 \description{
-Mostly internal functions.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Mostly internal functions to test object types.
 }

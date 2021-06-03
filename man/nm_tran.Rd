@@ -2,18 +2,42 @@
 % Please edit documentation in R/nm_tran.R
 \name{nm_tran}
 \alias{nm_tran}
-\title{Run NMTRAN step only}
+\title{Run NMTRAN step of a NONMEM job}
 \usage{
 nm_tran(x)
 }
 \arguments{
-\item{x}{nm object}
+\item{x}{An nm object.}
 }
 \description{
-Runs initial part of NONMEM where control file and dataset checks are performed.
-Stops before running NONMEM.  Useful especially on grid infrastructures where
-it may take a while for NONMEM to start return ctl/dataset errors
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+This is the function behind the "nm_tran" RStudio addin, which is the
+recommended way to use this functionality.  Highlight your code (e.g see
+examples below for a code segment), and then open the "nm_tran" addin.
+
+Useful especially on grid infrastructures where it may take a while for
+NONMEM to start return control file and dataset errors. Runs initial NMTRAN
+step of NONMEM in a temporary directory where control file and dataset checks
+are performed. Stops before running NONMEM.
 }
-\details{
-Requires \code{options("nmtran_exe_path")} to be set.
+\examples{
+
+\dontrun{
+
+## highlight the code below and use the "nm_tran" RStudio addin
+
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv") \%>\%
+      cmd("execute {ctl_name} -dir={run_dir}") \%>\%
+      fill_input() \%>\%
+      init_theta(init = c(-2, 0.5, 1)) \%>\%
+      init_sigma(init = c(0.1, 0.1)) \%>\%
+      run_nm()
+      
+}
+}
+\seealso{
+\code{\link[=run_nm]{run_nm()}}, \code{\link[=nm_tran_command]{nm_tran_command()}} for configuration.
 }

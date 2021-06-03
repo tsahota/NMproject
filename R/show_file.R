@@ -12,8 +12,15 @@ edit_file <- function(file_name){
 }
 
 #' Show an uneditable version of the lst file
-#'
-#' @param r nm object
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Opens a read-only version of the NONMEM control file for browsing.
+#' 
+#' @param r An nm object.
+#' @seealso [show_ctl()].
 #' @export
 show_out <- function(r){
   UseMethod("show_out")
@@ -32,7 +39,14 @@ show_out.nm_list <- show_out.nm_generic
 
 #' Show an uneditable version of the control file
 #'
-#' @param r nm object
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Opens a read-only version of the NONMEM control file for browsing.
+#'
+#' @param r An nm object.
+#' @seealso [show_out()].
 #' @export
 show_ctl <- function(r) {
   UseMethod("show_ctl")

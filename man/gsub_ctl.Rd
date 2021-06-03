@@ -2,22 +2,38 @@
 % Please edit documentation in R/ctl_handling.R
 \name{gsub_ctl}
 \alias{gsub_ctl}
-\title{Pattern replacement for ctl file}
+\title{Pattern replacement for control file contents}
 \usage{
-gsub_ctl(ctl, pattern, replacement, ..., dollar = NA_character_)
+gsub_ctl(m, pattern, replacement, ..., dollar = NA_character_)
 }
 \arguments{
-\item{ctl}{object coercible into ctl_character}
+\item{m}{An nm object.}
 
-\item{pattern}{argument passed to gsub}
+\item{pattern}{Argument passed to \code{\link[=gsub]{gsub()}}.}
 
-\item{replacement}{argument passed to gsub}
+\item{replacement}{Argument passed to \code{\link[=gsub]{gsub()}}.}
 
-\item{...}{additional arguments passed to gsub}
+\item{...}{Additional arguments passed to \code{\link[=gsub]{gsub()}}.}
 
-\item{dollar}{character name of subroutine}
+\item{dollar}{Character name of subroutine.}
 }
 \description{
-A wrapper around \code{gsub} so that control files may be modified using
-\code{gsub} syntax.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+A wrapper around \code{gsub} so that control files may be modified using \code{gsub}
+syntax.  Can be useful for simple find replace operations in a control
+stream.  Ensure you use the "view diff" app afterwards to make sure the find
+replace proceeded as intented.
+}
+\examples{
+
+\dontrun{
+
+m1 \%>\% gsub_ctl("ISAMPLE=300", "ISAMPLE=600")
+
+}
+
+}
+\seealso{
+\code{\link[=apply_manual_edit]{apply_manual_edit()}}
 }

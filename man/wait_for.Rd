@@ -2,17 +2,35 @@
 % Please edit documentation in R/make_project.R
 \name{wait_for}
 \alias{wait_for}
-\title{Wait for statement to be true}
+\title{Wait for statement to be TRUE}
 \usage{
 wait_for(x, timeout = NULL, interval = 1)
 }
 \arguments{
-\item{x}{expression to evaluate}
+\item{x}{Boolean expression to evaluate.}
 
-\item{timeout}{numeric. Maximum time (seconds) to wait}
+\item{timeout}{Numeric. Maximum time (seconds) to wait.}
 
-\item{interval}{numeric. Number of seconds (default=1s) to wait till rechecking}
+\item{interval}{Numeric. Number of seconds (default=1s) to wait till
+rechecking.}
 }
 \description{
-Wait for statement to be true
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Will block R console until an expression evaluates to be \code{TRUE}.
+}
+\examples{
+
+\dontrun{
+
+## the following are identical
+
+wait_finish(m1)
+wait_for(is_finished(m1))
+
+}
+
+}
+\seealso{
+\code{\link[=wait_finish]{wait_finish()}}.
 }

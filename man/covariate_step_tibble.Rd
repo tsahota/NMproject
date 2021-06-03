@@ -35,6 +35,22 @@ Will return \code{dtest} a \code{dplyr::tibble} with appended columns.
 
 Takes a base nm object and a set of relationships to test (from
 \code{\link[=test_relations]{test_relations()}}) and prepares a \code{tibble} of NONMEM runs.
+
+The goal of NMproject's covariate modelling functions is to provide a
+stepwise covariate method \emph{with manual decision} making.  This important to
+ensure that the full model selection/evaluation criteria (should be defined
+in statistical analysis plans) can be applied at every step rather than just
+log likelihood ratio testing, where the most significant model may be
+unstable, may worsen model predictions or may only be slightly more
+significant than a more physiologically plausible covariate relationship.
+
+The functions \code{\link[=test_relations]{test_relations()}}, \code{\link[=covariate_step_tibble]{covariate_step_tibble()}},
+\code{\link[=bind_covariate_results]{bind_covariate_results()}} together comprise NMproject stepwise covariate
+method with manual decision.  The goal is to be part way between PsN's SCM
+and completely manual process at each forward and backward elimination step.
+The syntax of how covariates are included is the same as PsN's SCM routine -
+See \href{https://uupharmacometrics.github.io/PsN/docs.html}{PsN documentation}
+for more information.
 }
 \examples{
 \dontrun{

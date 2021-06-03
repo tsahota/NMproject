@@ -9,8 +9,8 @@ write_derived_data(d, name, ...)
 \arguments{
 \item{d}{A data.frame. Data frame to be saved.}
 
-\item{name}{Character. Name of file (without extension). If not a path, will
-save to DerivedData directory.}
+\item{name}{Character. Name of file (with or without extension). If not a
+path, will save to DerivedData directory.}
 
 \item{...}{Additional arguments to be passed to \code{\link[utils:write.table]{utils::write.csv()}}.}
 }
@@ -49,5 +49,5 @@ d <- input_data(m1)
 }
 }
 \seealso{
-\code{\link[=read_derived_data]{read_derived_data()}}, \code{\link[=input_data]{input_data()}}
+\code{\link[=read_derived_data]{read_derived_data()}}, \code{\link[=input_data]{input_data()}}, \code{\link[=exclude_rows]{exclude_rows()}}
 }

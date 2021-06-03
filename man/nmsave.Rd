@@ -26,15 +26,15 @@ nmsave_table(r, object, file_name, directory = results_dir(r), ...)
 
 \item{file_name}{Character. Name of results file.}
 
-\item{directory}{Character (default = results_dir(r)). Where to save.}
+\item{directory}{Character (default = \code{results_dir(r)}). Where to save.}
 
-\item{width}{Passed to ggsave.}
+\item{width}{Passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.}
 
-\item{height}{Passed to ggsave.}
+\item{height}{Passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.}
 
-\item{dpi}{Passed to ggsave.}
+\item{dpi}{Passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.}
 
-\item{...}{Passed to ggsave.}
+\item{...}{Passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

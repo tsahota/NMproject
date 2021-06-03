@@ -13,7 +13,7 @@ find_nm_tran_path(name = "default", warn = TRUE)
 \arguments{
 \item{name}{Character name of NONMEM installation (according PsN).}
 
-\item{warn}{Logical (default = \code{TRUE}) to warn if fails to find NMTRAN.exe}
+\item{warn}{Logical (default = \code{TRUE}) to warn if fails to find NMTRAN.exe.}
 }
 \value{
 If functions cannot find installation they will return \code{NULL} without

@@ -114,7 +114,7 @@ BIC.nm_list <- Vectorize_nm_list(BIC.nm_generic)
 #' 
 #' Extracts condition number from .ext file.
 #' 
-#' @param r An nm object
+#' @param r An nm object.
 #' 
 #' @seealso [ofv()], [rr()]
 #' 

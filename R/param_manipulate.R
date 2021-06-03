@@ -5,9 +5,9 @@
 #' `r lifecycle::badge("stable")`
 #' 
 #' Attempts to remove a parameter from the NONMEM control assuming it has been
-#' written according to NMproject conventions (i.e. TVPARAM notation and TVPARAM
-#' + IIV_PARAM comments in $THETA/$OMEGA).  The presence of any code that
-#' depends on the removed parameter will cause the control file to break.
+#' written according to NMproject conventions (i.e. TVPARAM notation and 
+#' TVPARAM + IIV_PARAM comments in $THETA/$OMEGA).  The presence of any code 
+#' that depends on the removed parameter will cause the control file to break.
 #' 
 #' @param m An nm object.
 #' @param name Character. Parameter name to remove.
@@ -122,13 +122,17 @@ rename_parameter_.nm_list <- Vectorize_nm_list(rename_parameter_.nm_generic, SIM
 
 #' Rename a parameter in NONMEM control stream
 #' 
-#' @param m nm object
-#' @param ... renaming arguments
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' @param m An nm object.
+#' @param ... Named arguments with character values indicated old names.
 #' 
 #' @examples 
 #' \dontrun{
 #' 
-#' m1 %>% rename_parameter("CL" = "KE")
+#' m1 %>% rename_parameter(CL = "KE")
 #' ## renames KE to CL
 #' 
 #' }

@@ -14,18 +14,21 @@ cov_cov_plot(
 )
 }
 \arguments{
-\item{d}{dataset with covariates}
+\item{d}{Dataset with covariates.}
 
-\item{cov}{vector of length 2 for covariate names}
+\item{cov}{Vector of length 2 for covariate names.}
 
-\item{continuous}{logical vector of length 2 for whether cov is continuous or not}
+\item{continuous}{Logical vector of length 2 for whether cov is continuous or
+not.}
 
-\item{log_transform_plot}{should plot be log transformed or not}
+\item{log_transform_plot}{Should plot be log transformed or not.}
 
-\item{dcov_info}{option dataframe with covariate information}
+\item{dcov_info}{Optional \code{data.frame} with covariate information.}
 
-\item{by}{character (default = "ID") variable to split over}
+\item{by}{Character (default = \code{"ID"}) variable to split over.}
 }
 \description{
-Plot correlation between two covariates
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Useful for exploratory plots.
 }

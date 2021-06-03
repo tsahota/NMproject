@@ -6,7 +6,7 @@
 #' 
 #' Draw a tree diagram showing model development path.
 #' 
-#' @param ... Arguments passed to [nm_list_gather()]
+#' @param ... Arguments passed to [nm_list_gather()].
 #' @param summary Logical (default = `FALSE`). Should [summary_wide()] variables be appended.
 #' @export
 nm_tree <- function(..., summary = FALSE){

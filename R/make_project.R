@@ -1,5 +1,9 @@
 #' Create analysis project
 #'
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#'
 #' This is the underlying function used by: `File` -> `New Project` -> 
 #' `New Directory` -> `New NMproject`.  It creates a new analysis working 
 #' directory with a directory structure similar to an R package.
@@ -133,7 +137,7 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
 #'
 #' @description
 #'
-#' `r lifecycle::badge("superseded")
+#' `r lifecycle::badge("stable")`
 #'
 #' Staging is a preliminary step of bringing code from external to the project
 #' into the project.  The intent is it remains a snapshot of code as it was at
@@ -157,8 +161,8 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
 #' \dontrun{
 #'
 #' ls_code_library("Models/ADVAN2.mod") %>%
-#'   stage() %>%
-#'   import()
+#'   stage()
+#'   
 #' }
 #'
 #'
@@ -219,12 +223,40 @@ stage <- function(files, root_dir,
 
 #' Import staged files into project
 #'
-#' @param copy_table data frame or character.
-#'   if data.frame should be output from `stage()`
-#'   if character path, result will be `stage()`d first
-#' @param overwrite logical (default = FALSE)
-#' @param silent logical (default = FALSE)
-#' @param skip character (default = "\\.mod$"). pattern to skip
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#'
+#' This function is used by the "code libary" RStudio addin to bring external
+#' code into your project.
+#'
+#' @param copy_table A `data frame` or character. if `data.frame` should be
+#'   output from `stage()`, if character path, result will be `stage()`d first.
+#' @param overwrite Logical (default = `FALSE`).
+#' @param silent Logical (default = `FALSE`).
+#' @param skip Character (default = `"\\.mod$"`). Pattern to skip.  Model files
+#'   will be imported directly into the project in order to avoid conflicts and
+#'   will instead reside only in the staging area.
+#' 
+#' @seealso [code_library()], [stage()]
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' ## both of these following operations are easier in the shiny code library 
+#' ## RStudio addin.
+#' 
+#' ls_code_library("Models/ADVAN2.mod") %>%
+#'   import() ## ends up in "staging/Models"
+#'   
+#' ls_code_library("Scripts/AUC.R") %>%
+#'   import()  ## ends up "scripts" directory
+#'   
+#' }
+#' 
+#' @export
+#' 
 #' @export
 import <- function(copy_table, overwrite = FALSE, silent = FALSE,
                    skip = "\\.mod$"){
@@ -473,7 +505,7 @@ ls_code_library <- function(pattern = ".") {
 #' video showing use of the app. NONMEM control files will intentionally not be
 #' imported straight in the "Models" directory and instead go into
 #' "staging/Models".  This staging location can be referred to when creating
-#' `nm` objects with `new_nm(..., based_on = "staging/Models/[filename]")`
+#' `nm` objects with `new_nm(..., based_on = "staging/Models/[filename]")`.
 #'
 #' @param extn Vector string of extensions to include (default = `NULL` includes
 #'   all).
@@ -481,11 +513,11 @@ ls_code_library <- function(pattern = ".") {
 #' @param viewer Logical indicating if viewer should be used to display results
 #'   (default=`FALSE`).
 #' @param silent Logical indicating if messages should be silenced
-#'   (default=`FALSE`)
+#'   (default=`FALSE`).
 #' @param return_info Logical (default = `FALSE`). Return data.frame of results
 #'   (FALSE= returns file paths).
 #'
-#' @details requires `getOption("code_library_path")` to be set
+#' @details Requires `getOption("code_library_path")` to be set.
 #'
 #' @seealso [ls_code_library()], [preview()], [stage()], [import()]
 #'
@@ -619,11 +651,32 @@ list_dirs <- function(path = ".", full.names = TRUE, recursive = FALSE, maxdepth
   
 }
 
-#' Wait for statement to be true
+#' Wait for statement to be TRUE
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
 #'
-#' @param x expression to evaluate
-#' @param timeout numeric. Maximum time (seconds) to wait
-#' @param interval numeric. Number of seconds (default=1s) to wait till rechecking
+#' Will block R console until an expression evaluates to be `TRUE`.
+#'
+#' @param x Boolean expression to evaluate.
+#' @param timeout Numeric. Maximum time (seconds) to wait.
+#' @param interval Numeric. Number of seconds (default=1s) to wait till
+#'   rechecking.
+#' 
+#' @seealso [wait_finish()].
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' ## the following are identical
+#' 
+#' wait_finish(m1)
+#' wait_for(is_finished(m1))
+#' 
+#' }
+#' 
 #' @export
 wait_for <- function(x,timeout=NULL,interval=1){
   x <- substitute(x)

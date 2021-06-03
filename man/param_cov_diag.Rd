@@ -7,21 +7,27 @@
 param_cov_diag(r, param, cov, ..., categorical = FALSE, plot_tv = TRUE)
 }
 \arguments{
-\item{r}{nm object}
+\item{r}{An nm object.}
 
-\item{param}{character. Name of parameter}
+\item{param}{Character. Name of parameter.}
 
-\item{cov}{character. Name of covariate}
+\item{cov}{Character. Name of covariate.}
 
-\item{...}{additional arguments passed to dplyr::mutate()}
+\item{...}{Additional arguments passed to \code{\link[dplyr:mutate]{dplyr::mutate()}}.}
 
-\item{categorical}{logical (default = FALSE)}
+\item{categorical}{Logical (default = \code{FALSE}).}
 
-\item{plot_tv}{logical}
+\item{plot_tv}{Logical.}
+}
+\value{
+A \code{ggplot2} plot object.
 }
 \description{
-Plot relationship between a parameter and covariate
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Plots posthoc parameter-covariate relationships from NONMEM run.
 }
 \details{
-the mutate statement is to add variables not included in original $TABLE
+The mutate statement is to add variables not included in original
+$TABLE.
 }

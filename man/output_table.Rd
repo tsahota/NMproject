@@ -28,7 +28,7 @@ unmodified from the input dataset.
 \code{output_table_first} will return a \code{tibble} with a single run.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 Produces a single merged output dataset will all columns of $INPUT dataset.
 This is useful for reuse of exploratory data plots as diagnostic plots as all

@@ -1,8 +1,23 @@
 
 #' Produce dataset for covariate forest plotting
 #'
-#' @param m nm object
-#' @param covariate_scenarios data.frame. need names "cov", "value" and (optional) "text"
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' The main workhorse for computing uncertainty quantiles of covariate effects
+#' in different subpopulations.
+#' 
+#' @param m An nm object.
+#' @param covariate_scenarios A `data.frame`. Need columns `cov`, `value`
+#'   and (optional) `text`.  See details for more information.
+#'   
+#' @details The column `cov` in `covariate_scenarios` refers to covariate
+#'   variables in the dataset. The column `value` refers to covariate values of
+#'   importance.  Typically these will be quantiles of continuous variables and
+#'   categories (for categorical covariates). The column `text` is option but is
+#'   a labelling column for [cov_forest_plot()] to adjust how the covariate
+#'   scenarios are printed on the axis
 #' 
 #' @examples 
 #' \dontrun{
@@ -200,12 +215,16 @@ cov_forest_data <- function(m, covariate_scenarios){
 
 #' Plot covariate forest plots
 #'
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#'
 #' Uses `ggplot2` to take outputs from [cov_forest_data()]
-#' and display a forest plot
+#' and display a forest plot.
 #'
-#' @param d data.frame from [cov_forest_data()]
+#' @param d A `data.frame` from [cov_forest_data()].
 #'
-#' @return a `ggplot2` forest plot
+#' @return A `ggplot2` forest plot.
 #' @seealso [cov_forest_data()]
 #' @examples 
 #' \dontrun{
@@ -296,19 +315,28 @@ append_nonmem_var <- function(output_table, r, var){
 
 #' Plot relationship between a parameter and covariate
 #' 
-#' @param r nm object
-#' @param param character. Name of parameter
-#' @param cov character. Name of covariate
-#' @param ... additional arguments passed to dplyr::mutate()
-#' @param categorical logical (default = FALSE)
-#' @param plot_tv logical
+#' @description 
 #' 
-#' @details the mutate statement is to add variables not included in original $TABLE
+#' `r lifecycle::badge("stable")`
 #' 
+#' Plots posthoc parameter-covariate relationships from NONMEM run.
+#' 
+#' @param r An nm object.
+#' @param param Character. Name of parameter.
+#' @param cov Character. Name of covariate.
+#' @param ... Additional arguments passed to [dplyr::mutate()].
+#' @param categorical Logical (default = `FALSE`).
+#' @param plot_tv Logical.
+#'
+#' @details The mutate statement is to add variables not included in original
+#'   $TABLE.
+#'   
+#' @return A `ggplot2` plot object.
+#'   
 #' @export
 param_cov_diag <- function(r, param, cov, ..., categorical = FALSE, plot_tv = TRUE){
   
-  requireNamespace("ggplot2")
+  if(!requireNamespace("ggplot2")) stop("install ggplot2")
   r <- as_nm_generic(r)
   
   tvparam <- paste0("TV",param)
@@ -371,12 +399,19 @@ param_cov_diag <- function(r, param, cov, ..., categorical = FALSE, plot_tv = TR
 
 #' Plot correlation between two covariates
 #' 
-#' @param d dataset with covariates
-#' @param cov vector of length 2 for covariate names
-#' @param continuous logical vector of length 2 for whether cov is continuous or not
-#' @param log_transform_plot should plot be log transformed or not
-#' @param dcov_info option dataframe with covariate information
-#' @param by character (default = "ID") variable to split over
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Useful for exploratory plots.
+#' 
+#' @param d Dataset with covariates.
+#' @param cov Vector of length 2 for covariate names.
+#' @param continuous Logical vector of length 2 for whether cov is continuous or
+#'   not.
+#' @param log_transform_plot Should plot be log transformed or not.
+#' @param dcov_info Optional `data.frame` with covariate information.
+#' @param by Character (default = `"ID"`) variable to split over.
 #' 
 #' @export
 cov_cov_plot <- function(d,

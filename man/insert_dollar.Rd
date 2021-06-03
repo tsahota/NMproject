@@ -2,19 +2,34 @@
 % Please edit documentation in R/nm_object.R
 \name{insert_dollar}
 \alias{insert_dollar}
-\title{Insert a new subroutine into ctl_contents}
+\title{Insert a new subroutine into control file_contents}
 \usage{
 insert_dollar(m, dollar, text, after_dollar)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{dollar}{character. Name of subroutine}
+\item{dollar}{Character. Name of subroutine to insert.}
 
-\item{text}{character vector. Text to fill}
+\item{text}{Character vector. Text to fill.}
 
-\item{after_dollar}{character. Positioning of subroutine}
+\item{after_dollar}{Character name of preceding subroutine. The new
+subroutine will be inserted immediately after it.}
 }
 \description{
-Insert a new subroutine into ctl_contents
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Mostly a back end function used by other functions.
+}
+\examples{
+
+\dontrun{
+
+m <- m \%>\% insert_dollar("MODEL", "
+$MODEL
+COMP = (CENTRAL)
+", after_dollar = "SUB")
+                                 
+}
+
 }

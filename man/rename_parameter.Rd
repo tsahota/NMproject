@@ -7,17 +7,17 @@
 rename_parameter(m, ...)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{...}{renaming arguments}
+\item{...}{Named arguments with character values indicated old names.}
 }
 \description{
-Rename a parameter in NONMEM control stream
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \examples{
 \dontrun{
 
-m1 \%>\% rename_parameter("CL" = "KE")
+m1 \%>\% rename_parameter(CL = "KE")
 ## renames KE to CL
 
 }

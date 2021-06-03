@@ -27,6 +27,8 @@ project.}
 \item{...}{Deprecated.}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 This is the underlying function used by: \code{File} -> \verb{New Project} ->
 \verb{New Directory} -> \verb{New NMproject}.  It creates a new analysis working
 directory with a directory structure similar to an R package.

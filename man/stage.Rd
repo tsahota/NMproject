@@ -18,7 +18,7 @@ this is not specified, will guess based on presense of \code{nm_default_dirs}}
 \item{silent}{Logical (default = FALSE).}
 }
 \description{
-`r lifecycle::badge("superseded")
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 Staging is a preliminary step of bringing code from external to the project
 into the project.  The intent is it remains a snapshot of code as it was at
@@ -33,8 +33,8 @@ way to bring code is via the \verb{code library} RStudio addin shiny app.
 \dontrun{
 
 ls_code_library("Models/ADVAN2.mod") \%>\%
-  stage() \%>\%
-  import()
+  stage()
+  
 }
 
 

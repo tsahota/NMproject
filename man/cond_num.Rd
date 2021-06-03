@@ -7,7 +7,7 @@
 cond_num(r)
 }
 \arguments{
-\item{r}{An nm object}
+\item{r}{An nm object.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

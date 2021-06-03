@@ -2,13 +2,20 @@
 % Please edit documentation in R/monitoring.R
 \name{status}
 \alias{status}
-\title{Get status of a run}
+\title{Get status of NONMEM runs}
 \usage{
 status(x)
 }
 \arguments{
-\item{x}{nm object}
+\item{x}{An nm object.}
+}
+\value{
+A character with the status of the run with values \code{"non started"},
+\code{"running"}, \code{"finished"}, or \code{"error"}
 }
 \description{
-Get status of a run
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+}
+\seealso{
+\code{\link[=status_table]{status_table()}}.
 }

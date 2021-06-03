@@ -7,12 +7,24 @@
 cov_forest_data(m, covariate_scenarios)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{covariate_scenarios}{data.frame. need names "cov", "value" and (optional) "text"}
+\item{covariate_scenarios}{A \code{data.frame}. Need columns \code{cov}, \code{value}
+and (optional) \code{text}.  See details for more information.}
 }
 \description{
-Produce dataset for covariate forest plotting
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+The main workhorse for computing uncertainty quantiles of covariate effects
+in different subpopulations.
+}
+\details{
+The column \code{cov} in \code{covariate_scenarios} refers to covariate
+variables in the dataset. The column \code{value} refers to covariate values of
+importance.  Typically these will be quantiles of continuous variables and
+categories (for categorical covariates). The column \code{text} is option but is
+a labelling column for \code{\link[=cov_forest_plot]{cov_forest_plot()}} to adjust how the covariate
+scenarios are printed on the axis
 }
 \examples{
 \dontrun{

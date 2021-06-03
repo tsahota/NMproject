@@ -325,7 +325,7 @@ rr.nm_generic <- function(m, trans = TRUE){
 #' are needed. `rr` is easier to read, however it returns characters.  A wide
 #' and long format is available via two different functions.
 #' 
-#' @param m A nm object
+#' @param m An nm object.
 #' @param trans Logical (default = `TRUE`). Transform parameters using comments
 #'   in $THETA/$OMEGA/$SIGMA.
 #' 

@@ -1,10 +1,15 @@
 #' Start manual edit
 #' 
-#' Internal function. Needed for addin functionality
+#' @description 
 #' 
-#' @param m nm object
-#' @param combine_patch logical. should patch be added first before edit
+#' `r lifecycle::badge("stable")`
 #' 
+#' Internal function. Needed for "manual edit" addin functionality.
+#' 
+#' @param m An nm object
+#' @param combine_patch Logical. Should patch be added first before edit.
+#' 
+#' @keywords internal
 #' @export
 start_manual_edit <- function(m, combine_patch = NA_character_){
   # if(.Platform$OS.type != "unix") 

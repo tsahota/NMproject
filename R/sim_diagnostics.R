@@ -7,8 +7,8 @@
 #' Replaces $EST with $SIM.
 #' 
 #' @param m A nm object.
-#' @param seed Numeric (default = 12345). seed value to include in $SIM.
-#' @param subpr Numeric (default = 1). SUBPR value to include in $SIM.
+#' @param seed Numeric (default = `12345`). seed value to include in $SIM.
+#' @param subpr Numeric (default = `1`). SUBPR value to include in $SIM.
 #' 
 #' @details Will only change $EST/$SIM, therefore it will not be sufficient to
 #'   change a categorical estimation control file to simulation. You will likely
@@ -49,22 +49,27 @@ convert_to_simulation.nm_generic <- function(m, seed = 12345, subpr = 1){
   m
 }
 #' @export
-convert_to_simulation.nm_list <- Vectorize_nm_list(convert_to_simulation.nm_generic, SIMPLIFY = FALSE)
+convert_to_simulation.nm_list <- Vectorize_nm_list(
+  convert_to_simulation.nm_generic, 
+  SIMPLIFY = FALSE)
 
 
 #' PPC functions: process data from simulation and plot
 #' 
-#' @param r nm object (simulation)
-#' @param FUN statistic function with NONMEM dataset as arg and
-#'   returns data.frame with a column "statistic"
-#' @param ... additional arguments for FUN
-#' @param pre_proc function to mutate dataset prior to compute statistics
-#' @param max_mod_no integer. Maximum model number to read (set low for debugging)
-#' @param DV character (default = "DV")
-#' @param statistic character (default = "statistic") name of statistic column
-#'   returned by FUN
-#' @param group,var1,var2 grouping variables for plotting
-#' @param d dataset
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' @param r An nm object (a simulation run).
+#' @param FUN Statistic function with NONMEM dataset as arg and
+#'   returns `data.frame` with a column `"statistic"`.
+#' @param ... Additional arguments for `FUN`.
+#' @param pre_proc Function to apply to dataset prior to compute statistics.
+#' @param max_mod_no Integer. Maximum model number to read (set low for debugging).
+#' @param DV Character (default = `"DV"`).
+#' @param statistic Character (default = `"statistic"`). Name of statistic column
+#'   returned by FUN.
+#' @param group,var1,var2 Grouping variables for plotting.
 #'   
 #' @seealso [nm_render()]
 #' @examples 
@@ -169,6 +174,7 @@ ppc_data <- function(r,  FUN, ..., pre_proc = identity, max_mod_no = NA, DV = "D
 }
 
 #' @name ppc
+#' @param d Output from [ppc_data()].
 #' @export
 ppc_whisker_plot <- function(d, group, var1, var2, statistic = "statistic"){
   requireNamespace("ggplot2")

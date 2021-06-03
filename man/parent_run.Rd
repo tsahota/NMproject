@@ -9,8 +9,11 @@ parent_run(m, n = 1L)
 \arguments{
 \item{m}{An nm object.}
 
-\item{n}{Numeric. generation of parent (default = 1).}
+\item{n}{Numeric. Generation of parent (default = \code{1}).}
 }
 \description{
-Will pull the parent run of an nm object from the run cache.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Will pull the parent run of an nm object from the run cache.  Run needs to
+have been executed for this to work.
 }

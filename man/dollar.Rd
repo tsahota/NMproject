@@ -14,10 +14,12 @@ dollar(m, dollar, ..., add_dollar_text = TRUE)
 \item{...}{Additional arguments to be passed to \code{text()}.  If specified these
 will set the contents of the subroutine.  See examples below.}
 
-\item{add_dollar_text}{Logical (default = TRUE). Should the $XXXX string be
-added to text}
+\item{add_dollar_text}{Logical (default = \code{TRUE}). Should the $XXXX string be
+added to text.}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 The fast way to see the contents of a particular subroutine directly in the R
 console. It can also be used to set the contents of a NONMEM subroutine in
 place of manual edits
@@ -30,8 +32,8 @@ m1 \%>\% dollar("PK")  ## displays existing $PK
 m1 <- m1 \%>\% dollar("DES",
 "
 DADT(1) = -K*A(1)
-"
-)  
+")
+
 ## This will rewrite an existing $DES
 ## if control file doesn't already have a $DES
 ## use insert_dollar() instead
@@ -40,5 +42,5 @@ DADT(1) = -K*A(1)
 
 }
 \seealso{
-\code{\link[=insert_dollar]{insert_dollar()}}
+\code{\link[=insert_dollar]{insert_dollar()}}, \code{\link[=delete_dollar]{delete_dollar()}}
 }

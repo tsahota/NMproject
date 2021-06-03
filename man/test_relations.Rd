@@ -2,7 +2,7 @@
 % Please edit documentation in R/stepwise_covariate.R
 \name{test_relations}
 \alias{test_relations}
-\title{Generate tibble of relations to test}
+\title{Generate tibble of covariate relations to test}
 \usage{
 test_relations(dtest, param, cov, state, continuous)
 }
@@ -22,8 +22,21 @@ covariate as categorical.}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-Generate list of covariate relationships to test (with
-\code{\link[=covariate_step_tibble]{covariate_step_tibble()}}).
+The goal of NMproject's covariate modelling functions is to provide a
+stepwise covariate method \emph{with manual decision} making.  This important to
+ensure that the full model selection/evaluation criteria (should be defined
+in statistical analysis plans) can be applied at every step rather than just
+log likelihood ratio testing, where the most significant model may be
+unstable, may worsen model predictions or may only be slightly more
+significant than a more physiologically plausible covariate relationship.
+
+The functions \code{\link[=test_relations]{test_relations()}}, \code{\link[=covariate_step_tibble]{covariate_step_tibble()}},
+\code{\link[=bind_covariate_results]{bind_covariate_results()}} together comprise NMproject stepwise covariate
+method with manual decision.  The goal is to be part way between PsN's SCM
+and completely manual process at each forward and backward elimination step.
+The syntax of how covariates are included is the same as PsN's SCM routine -
+See \href{https://uupharmacometrics.github.io/PsN/docs.html}{PsN documentation}
+for more information.
 }
 \details{
 Setting vector values for \code{param}, \code{cov}, and \code{state}, will expand the grid
@@ -78,5 +91,5 @@ dtest
 
 }
 \seealso{
-\code{\link[=add_cov]{add_cov()}}, \code{\link[=covariate_step_tibble]{covariate_step_tibble()}}
+\code{\link[=add_cov]{add_cov()}}, \code{\link[=covariate_step_tibble]{covariate_step_tibble()}}, \code{\link[=bind_covariate_results]{bind_covariate_results()}}
 }

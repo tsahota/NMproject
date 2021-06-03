@@ -141,12 +141,21 @@ make_boot_datasets <- function(m,
   dboots
 }
 
-#' Write xv datasets
+#' Write (bootstrap) cross validation datasets
 #' 
-#' @param dboot output from make_boot_dataset()
-#' @param data_folder folder to store datasets
-#' @param overwrite overwrite or not
-#' @param id_var character (default = "ID"). Name of ID column
+#' @description 
+#' 
+#' `r lifecycle::badge("experimental")`
+#' 
+#' Similar to [make_boot_datasets()], but sets up "out of bag" datasets for model
+#' evaluation.
+#' 
+#' @param dboot Output from [make_boot_datasets()].
+#' @param data_folder Folder to store datasets.
+#' @param overwrite Logical. Overwrite previous files or not.
+#' @param id_var character (default = `"ID"`). Name of ID column.
+#' 
+#' @return A `tibble` of nm objects similar to [make_boot_datasets()] output
 #' 
 #' @export
 make_xv_datasets <- function(dboot,

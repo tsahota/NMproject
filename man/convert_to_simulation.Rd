@@ -9,9 +9,9 @@ convert_to_simulation(m, seed = 12345, subpr = 1)
 \arguments{
 \item{m}{A nm object.}
 
-\item{seed}{Numeric (default = 12345). seed value to include in $SIM.}
+\item{seed}{Numeric (default = \code{12345}). seed value to include in $SIM.}
 
-\item{subpr}{Numeric (default = 1). SUBPR value to include in $SIM.}
+\item{subpr}{Numeric (default = \code{1}). SUBPR value to include in $SIM.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

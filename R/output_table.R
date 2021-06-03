@@ -99,7 +99,7 @@ nm_output.nm_list <- nm_output.nm_generic
 #' 
 #' @description 
 #' 
-#' `r lifecycle::badge("experimental")`
+#' `r lifecycle::badge("stable")`
 #'
 #' Produces a single merged output dataset will all columns of $INPUT dataset.
 #' This is useful for reuse of exploratory data plots as diagnostic plots as all

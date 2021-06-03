@@ -22,28 +22,28 @@ ppc_whisker_plot(d, group, var1, var2, statistic = "statistic")
 ppc_histogram_plot(d, var1, var2, statistic = "statistic")
 }
 \arguments{
-\item{r}{nm object (simulation)}
+\item{r}{An nm object (a simulation run).}
 
-\item{FUN}{statistic function with NONMEM dataset as arg and
-returns data.frame with a column "statistic"}
+\item{FUN}{Statistic function with NONMEM dataset as arg and
+returns \code{data.frame} with a column \code{"statistic"}.}
 
-\item{...}{additional arguments for FUN}
+\item{...}{Additional arguments for \code{FUN}.}
 
-\item{pre_proc}{function to mutate dataset prior to compute statistics}
+\item{pre_proc}{Function to apply to dataset prior to compute statistics.}
 
-\item{max_mod_no}{integer. Maximum model number to read (set low for debugging)}
+\item{max_mod_no}{Integer. Maximum model number to read (set low for debugging).}
 
-\item{DV}{character (default = "DV")}
+\item{DV}{Character (default = \code{"DV"}).}
 
-\item{statistic}{character (default = "statistic") name of statistic column
-returned by FUN}
+\item{statistic}{Character (default = \code{"statistic"}). Name of statistic column
+returned by FUN.}
 
-\item{d}{dataset}
+\item{d}{Output from \code{\link[=ppc_data]{ppc_data()}}.}
 
-\item{group, var1, var2}{grouping variables for plotting}
+\item{group, var1, var2}{Grouping variables for plotting.}
 }
 \description{
-PPC functions: process data from simulation and plot
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \examples{
 \dontrun{

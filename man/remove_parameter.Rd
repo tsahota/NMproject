@@ -15,9 +15,7 @@ remove_parameter(m, name)
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 Attempts to remove a parameter from the NONMEM control assuming it has been
-written according to NMproject conventions (i.e. TVPARAM notation and TVPARAM
-\itemize{
-\item IIV_PARAM comments in $THETA/$OMEGA).  The presence of any code that
-depends on the removed parameter will cause the control file to break.
-}
+written according to NMproject conventions (i.e. TVPARAM notation and
+TVPARAM + IIV_PARAM comments in $THETA/$OMEGA).  The presence of any code
+that depends on the removed parameter will cause the control file to break.
 }

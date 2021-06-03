@@ -19,10 +19,12 @@ tol(m, text)
 \item{text}{Optional number/character number to set to.}
 }
 \description{
-These functions will make simple ADVAN/TRANS/TOL adjustments to the NONMEM
-control file.  No other file changes outside $SUBROUTINE will be made which
-makes \code{advan} and \code{trans} less useful than \code{\link[=subroutine]{subroutine()}}
-which performs multiple control file changes.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+These are mostly back end functions used by \code{\link[=subroutine]{subroutine()}} and will make
+simple ADVAN/TRANS/TOL adjustments to the NONMEM control file.  No other file
+changes outside $SUBROUTINE will be made which makes \code{advan} and \code{trans} less
+useful than the higher level \code{\link[=subroutine]{subroutine()}} function.
 }
 \examples{
 \dontrun{

@@ -1,6 +1,15 @@
-#' Get status of a run
+#' Get status of NONMEM runs
 #' 
-#' @param x nm object
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' @param x An nm object.
+#' @return A character with the status of the run with values `"non started"`,
+#'   `"running"`, `"finished"`, or `"error"`
+#' 
+#' @seealso [status_table()].
+#' 
 #' @export
 
 status <- function(x) {
@@ -64,7 +73,15 @@ status.nm_list <- Vectorize_nm_list(status.nm_generic)
 
 #' Get status of multiple runs in form of table
 #' 
-#' @param m nm objects
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' A more friendly version of [status()] for vector valued nm objects.  Useful
+#' after bootstraps, or stepwise covariate method steps, or any situation
+#' dealing with groups of NONMEM runs.
+#' 
+#' @param m An nm object.
 #' 
 #' @export
 status_table <- function(m){
@@ -77,9 +94,14 @@ status_table <- function(m){
 
 #' Tests if job is finished
 #'
-#' @param r object class nm
-#' @param initial_timeout numeric. time in seconds.
-#' time period to give up on a run if directory hasn't been created.
+#' @description
+#' 
+#' `r lifecycle::badge("stable")`
+#'
+#' @param r An nm object.
+#' @param initial_timeout Deprecated.  See [wait_finish()].
+#'   
+#' @return A logical vector.
 #' @export
 is_finished <- function(r, initial_timeout=NA){
   UseMethod("is_finished")

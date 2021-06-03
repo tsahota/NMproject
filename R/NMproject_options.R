@@ -81,12 +81,18 @@ nm_default_dirs <- function(dir_list){
 #' 
 #' `r lifecycle::badge("stable")`
 #' 
+#' Get subdirectory (relative) paths in a configuration independent way.  The
+#' configuration can be modified with [nm_default_dirs()].  Can be useful in
+#' scripts, where you need to refer to locations of model files or output files.
+#'
 #' @param name Character. Directory type.  Should be either `"scripts"`,
 #'   `"models"` or `"results"`.
-#' @param ... Not used.
+#' @param ... Deprecated.
+#'
+#' @seealso [nm_default_dirs()]
 #'
 #' @examples 
-#' nm_default_dir("scripts")
+#' nm_default_dir("scripts")  ## will return the path to the "scripts" directory
 #' nm_default_dir("models")
 #' nm_default_dir("results")
 #' @export
@@ -144,11 +150,15 @@ set_default_dirs_in_rprofile <- function(path = ".Rprofile", dir_list = nm_defau
 
 #' Generic execute command for SGE grids
 #'
-#' Character to be used with the [cmd()] function to launch a
-#' parallelised job on SGE
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Character to be used with the [cmd()] function to launch a parallelised job
+#' on SGE.
 #'
 #' @details Requires `cores` and `parafile` fields to be set.
-#' @seealso [nm_getsetters()]
+#' @seealso [nm_getsetters()].
 #'
 #' @examples
 #' \dontrun{

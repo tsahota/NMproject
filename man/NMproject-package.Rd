@@ -85,11 +85,12 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Tarj Sahota \email{t.sahota0@gmail.com}
+\strong{Maintainer}: Tarj Sahota \email{t.sahota0@gmail.com} [copyright holder]
 
 Other contributors:
 \itemize{
   \item AstraZeneca [copyright holder]
+  \item GlaxoSmithKline [copyright holder]
 }
 
 }

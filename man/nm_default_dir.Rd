@@ -10,13 +10,20 @@ nm_default_dir(name = c("scripts", "models", "results"), ...)
 \item{name}{Character. Directory type.  Should be either \code{"scripts"},
 \code{"models"} or \code{"results"}.}
 
-\item{...}{Not used.}
+\item{...}{Deprecated.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Get subdirectory (relative) paths in a configuration independent way.  The
+configuration can be modified with \code{\link[=nm_default_dirs]{nm_default_dirs()}}.  Can be useful in
+scripts, where you need to refer to locations of model files or output files.
 }
 \examples{
-nm_default_dir("scripts")
+nm_default_dir("scripts")  ## will return the path to the "scripts" directory
 nm_default_dir("models")
 nm_default_dir("results")
+}
+\seealso{
+\code{\link[=nm_default_dirs]{nm_default_dirs()}}
 }

@@ -2,15 +2,15 @@
 % Please edit documentation in R/nm_object.R
 \name{delete_dollar}
 \alias{delete_dollar}
-\title{Delete a $ subroutine from ctl_contents}
+\title{Delete a NONMEM subroutine from control file contents}
 \usage{
 delete_dollar(m, dollar)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{dollar}{character. Name of subroutine}
+\item{dollar}{Character. Name of subroutine.}
 }
 \description{
-Delete a $ subroutine from ctl_contents
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }

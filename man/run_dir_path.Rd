@@ -10,9 +10,11 @@ run_dir_path(m)
 \item{m}{An nm object.}
 }
 \description{
-The function \code{\link[=run_dir]{run_dir()}} gives the directory name.  This function gets the
-(relative) path of \code{\link[=run_dir]{run_dir()}}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+The function \code{\link[=run_dir]{run_dir()}} gives the directory name, whereas this function gets
+the (relative) path of \code{\link[=run_dir]{run_dir()}}.
 }
 \seealso{
-\code{\link[=nm_getsetters]{nm_getsetters()}}
+\code{\link[=nm_getsetters]{nm_getsetters()}}.
 }

@@ -7,13 +7,16 @@
 #' comparison purposes. Should replicate the model selection in PsN's SCM
 #' functionality with greedy setting.
 #'
-#' @param base nm object (base model)
-#' @param run_in directory to run in
-#' @param dtest output of test_relations
-#' @param alpha_forward numeric (default = 0.05). alpha level for forward
-#'   inclusion
-#' @param alpha_backward numeric (default = 0.01). alpha level for backward
-#'   deletion
+#' @param base An nm object (base model).
+#' @param run_in A directory to run in.
+#' @param dtest Output of [test_relations()].
+#' @param alpha_forward Numeric (default = `0.05`). Alpha level for forward
+#'   inclusion.
+#' @param alpha_backward Numeric (default = `0.01`). Alpha level for backward
+#'   deletion.
+#'
+#' @seealso [test_relations()], [covariate_step_tibble()],
+#'   [bind_covariate_results()].
 #'
 #' @export
 psn_style_scm <- function(base, run_in, dtest,

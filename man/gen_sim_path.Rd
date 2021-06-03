@@ -7,14 +7,16 @@
 gen_sim_path(dsc, start_dir, include_names = TRUE)
 }
 \arguments{
-\item{dsc}{\code{dplyr::tibble} with experimental factors to vary}
+\item{dsc}{A \code{tibble} with experimental factors to vary.}
 
-\item{start_dir}{directory name within which all runs should take place.}
+\item{start_dir}{Directory name within which all runs should take place.}
 
-\item{include_names}{logical (default = TRUE).}
+\item{include_names}{Logical (default = TRUE). Should names be included.}
 }
 \description{
-Internal function
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+Internal function to create nested directory structure paths.
 }
 \examples{
 \dontrun{
@@ -23,3 +25,4 @@ dsc$location <- gen_sim_path(dsc, ...)
 
 }
 }
+\keyword{internal}

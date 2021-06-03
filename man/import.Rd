@@ -7,16 +7,39 @@
 import(copy_table, overwrite = FALSE, silent = FALSE, skip = "\\\\.mod$")
 }
 \arguments{
-\item{copy_table}{data frame or character.
-if data.frame should be output from \code{stage()}
-if character path, result will be \code{stage()}d first}
+\item{copy_table}{A \verb{data frame} or character. if \code{data.frame} should be
+output from \code{stage()}, if character path, result will be \code{stage()}d first.}
 
-\item{overwrite}{logical (default = FALSE)}
+\item{overwrite}{Logical (default = \code{FALSE}).}
 
-\item{silent}{logical (default = FALSE)}
+\item{silent}{Logical (default = \code{FALSE}).}
 
-\item{skip}{character (default = "\\.mod$"). pattern to skip}
+\item{skip}{Character (default = \code{"\\\\.mod$"}). Pattern to skip.  Model files
+will be imported directly into the project in order to avoid conflicts and
+will instead reside only in the staging area.}
 }
 \description{
-Import staged files into project
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+This function is used by the "code libary" RStudio addin to bring external
+code into your project.
+}
+\examples{
+
+\dontrun{
+
+## both of these following operations are easier in the shiny code library 
+## RStudio addin.
+
+ls_code_library("Models/ADVAN2.mod") \%>\%
+  import() ## ends up in "staging/Models"
+  
+ls_code_library("Scripts/AUC.R") \%>\%
+  import()  ## ends up "scripts" directory
+  
+}
+
+}
+\seealso{
+\code{\link[=code_library]{code_library()}}, \code{\link[=stage]{stage()}}
 }
