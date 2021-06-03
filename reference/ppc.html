@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="PPC functions: process data from simulation and plot — ppc_data" />
-<meta property="og:description" content="PPC functions: process data from simulation and plot" />
+<meta property="og:description" content="" />
 
 
 
@@ -120,7 +120,7 @@
     </div>
 
     <div class="ref-description">
-    <p>PPC functions: process data from simulation and plot</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
     </div>
 
     <pre class="usage"><span class='fu'>ppc_data</span><span class='op'>(</span>
@@ -142,41 +142,41 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>r</th>
-      <td><p>nm object (simulation)</p></td>
+      <td><p>An nm object (a simulation run).</p></td>
     </tr>
     <tr>
       <th>FUN</th>
-      <td><p>statistic function with NONMEM dataset as arg and
-returns data.frame with a column "statistic"</p></td>
+      <td><p>Statistic function with NONMEM dataset as arg and
+returns <code>data.frame</code> with a column <code>"statistic"</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>additional arguments for FUN</p></td>
+      <td><p>Additional arguments for <code>FUN</code>.</p></td>
     </tr>
     <tr>
       <th>pre_proc</th>
-      <td><p>function to mutate dataset prior to compute statistics</p></td>
+      <td><p>Function to apply to dataset prior to compute statistics.</p></td>
     </tr>
     <tr>
       <th>max_mod_no</th>
-      <td><p>integer. Maximum model number to read (set low for debugging)</p></td>
+      <td><p>Integer. Maximum model number to read (set low for debugging).</p></td>
     </tr>
     <tr>
       <th>DV</th>
-      <td><p>character (default = "DV")</p></td>
+      <td><p>Character (default = <code>"DV"</code>).</p></td>
     </tr>
     <tr>
       <th>statistic</th>
-      <td><p>character (default = "statistic") name of statistic column
-returned by FUN</p></td>
+      <td><p>Character (default = <code>"statistic"</code>). Name of statistic column
+returned by FUN.</p></td>
     </tr>
     <tr>
       <th>d</th>
-      <td><p>dataset</p></td>
+      <td><p>Output from <code>ppc_data()</code>.</p></td>
     </tr>
     <tr>
       <th>group, var1, var2</th>
-      <td><p>grouping variables for plotting</p></td>
+      <td><p>Grouping variables for plotting.</p></td>
     </tr>
     </table>
 

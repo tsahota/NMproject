@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Write xv datasets — make_xv_datasets • NMproject</title>
+<title>Write (bootstrap) cross validation datasets — make_xv_datasets • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="Write xv datasets — make_xv_datasets" />
-<meta property="og:description" content="Write xv datasets" />
+<meta property="og:title" content="Write (bootstrap) cross validation datasets — make_xv_datasets" />
+<meta property="og:description" content="
+Similar to make_boot_datasets(), but sets up &quot;out of bag&quot; datasets for model
+evaluation." />
 
 
 
@@ -114,13 +116,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Write xv datasets</h1>
+    <h1>Write (bootstrap) cross validation datasets</h1>
     <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/boot.R'><code>R/boot.R</code></a></small>
     <div class="hidden name"><code>make_xv_datasets.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Write xv datasets</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
+<p>Similar to <code><a href='make_boot_datasets.html'>make_boot_datasets()</a></code>, but sets up "out of bag" datasets for model
+evaluation.</p>
     </div>
 
     <pre class="usage"><span class='fu'>make_xv_datasets</span><span class='op'>(</span>
@@ -135,22 +139,25 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>dboot</th>
-      <td><p>output from make_boot_dataset()</p></td>
+      <td><p>Output from <code><a href='make_boot_datasets.html'>make_boot_datasets()</a></code>.</p></td>
     </tr>
     <tr>
       <th>data_folder</th>
-      <td><p>folder to store datasets</p></td>
+      <td><p>Folder to store datasets.</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
-      <td><p>overwrite or not</p></td>
+      <td><p>Logical. Overwrite previous files or not.</p></td>
     </tr>
     <tr>
       <th>id_var</th>
-      <td><p>character (default = "ID"). Name of ID column</p></td>
+      <td><p>character (default = <code>"ID"</code>). Name of ID column.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A <code>tibble</code> of nm objects similar to <code><a href='make_boot_datasets.html'>make_boot_datasets()</a></code> output</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

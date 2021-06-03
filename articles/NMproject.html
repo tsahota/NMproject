@@ -76,7 +76,7 @@
       <h1 data-toc-skip>NMproject</h1>
                         <h4 class="author">Tarj Sahota</h4>
             
-            <h4 class="date">2021-06-02</h4>
+            <h4 class="date">2021-06-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/tsahota/NMproject/blob/master/vignettes/NMproject.Rmd"><code>vignettes/NMproject.Rmd</code></a></small>
       <div class="hidden name"><code>NMproject.Rmd</code></div>
@@ -470,7 +470,8 @@
 <div id="stepwise-covariate-selection" class="section level2">
 <h2 class="hasAnchor">
 <a href="#stepwise-covariate-selection" class="anchor"></a>Stepwise covariate selection</h2>
-<p>Covariate analysis in NMproject is part way between PsN’s SCM and completely manual process to allow you to apply your full model selection criteria to each forward and backward elimination step rather than being constrained to log-likelihood ratio tests. The syntax of how covariates are included is the same as PsN’s SCM routine - See PsN documentation for more information there.</p>
+<p>The goal of NMproject’s covariate modelling functions is to provide a stepwise covariate method <em>with manual decision</em> making. This important to ensure that the full model selection/evaluation criteria (should be defined in statistical analysis plans) can be applied at every step rather than just log likelihood ratio testing, where the most significant model may be unstable, may worsen model predictions or may only be slightly more significant than a more physiologically plausible covariate relationship.</p>
+<p>The functions <code><a href="../reference/test_relations.html">test_relations()</a></code>, <code><a href="../reference/covariate_step_tibble.html">covariate_step_tibble()</a></code>, <code><a href="../reference/bind_covariate_results.html">bind_covariate_results()</a></code> together comprise NMproject stepwise covariate method with manual decision. The goal is to be part way between PsN’s SCM and completely manual process at each forward and backward elimination step. The syntax of how covariates are included is the same as PsN’s SCM routine - See <a href="https://uupharmacometrics.github.io/PsN/docs.html">PsN documentation</a> for more information.</p>
 <p>Relationships to tests are defined using the <code><a href="../reference/test_relations.html">test_relations()</a></code> function. Below we test <code>BWT</code> and <code>AGE</code> on all parameters in both <code>linear</code> and <code>power</code> fashion and all parameters are test with the categorical covariate <code>SEX</code>.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dtest</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/test_relations.html">test_relations</a></span><span class="op">(</span>param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"KA"</span>, <span class="st">"K"</span>, <span class="st">"V"</span><span class="op">)</span>,
@@ -559,17 +560,17 @@
 <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"THETA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/m1`
 ##   1| $THETA
-##   2| 0.40381   ; KA ; h-1 ; LOG
-##   3| -2.1468   ; K ; h-1 ; LOG
-##   4| -0.4381   ; V ; L ; LOG</code></pre>
+##   2| 0.65358   ; KA ; h-1 ; LOG
+##   3| -3.0208   ; K ; h-1 ; LOG
+##   4| -0.64302   ; V ; L ; LOG</code></pre>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/init_theta.html">init_omega</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="va">init</span>, min <span class="op">=</span> <span class="va">init</span><span class="op">/</span><span class="fl">2</span>, max <span class="op">=</span> <span class="va">init</span><span class="op">*</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>
 <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"OMEGA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/m1`
 ##   1| $OMEGA
-##   2| 0.18069   ;  IIV_KA ; LOG
-##   3| 0.083477   ;  IIV_K ; LOG
-##   4| 0.16169   ;  IIV_V ; LOG</code></pre>
+##   2| 0.18361   ;  IIV_KA ; LOG
+##   3| 0.17298   ;  IIV_K ; LOG
+##   4| 0.094762   ;  IIV_V ; LOG</code></pre>
 </div>
 <div id="working-with-omegasigma-blocks" class="section level2">
 <h2 class="hasAnchor">
@@ -581,9 +582,9 @@
 <pre><code>## $`execute.Models/m1`
 ##     name omega1 omega2 lower     init upper block mblock   FIX unit trans line
 ## 1   &lt;NA&gt;     NA     NA    NA       NA    NA     1     NA FALSE &lt;NA&gt;  &lt;NA&gt;    1
-## 2 IIV_KA      1      1    NA 0.180690    NA     1      1 FALSE &lt;NA&gt;   LOG    2
-## 3  IIV_K      2      2    NA 0.083477    NA     2      1 FALSE &lt;NA&gt;   LOG    3
-## 4  IIV_V      3      3    NA 0.161690    NA     3      1 FALSE &lt;NA&gt;   LOG    4
+## 2 IIV_KA      1      1    NA 0.183610    NA     1      1 FALSE &lt;NA&gt;   LOG    2
+## 3  IIV_K      2      2    NA 0.172980    NA     2      1 FALSE &lt;NA&gt;   LOG    3
+## 4  IIV_V      3      3    NA 0.094762    NA     3      1 FALSE &lt;NA&gt;   LOG    4
 ##   pos orig_line orig_pos
 ## 1   1         1        1
 ## 2   1         2        1
@@ -597,10 +598,10 @@
 <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"OMEGA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/m1`
 ##   1| $OMEGA
-##   2| 0.18069   ;   IIV_KA ; LOG
+##   2| 0.18361   ;   IIV_KA ; LOG
 ##   3| $OMEGA BLOCK (2)
-##   4| 0.083477   ;   IIV_K ; LOG
-##   5| 0.01 0.16169   ;   IIV_V ; LOG</code></pre>
+##   4| 0.17298   ;   IIV_K ; LOG
+##   5| 0.01 0.094762   ;   IIV_V ; LOG</code></pre>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## for demo purposes we'll reverse the process with unblock()</span>
 <span class="va">io</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/init_theta.html">init_omega</a></span><span class="op">(</span><span class="op">)</span>
@@ -609,9 +610,9 @@
 <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"OMEGA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/m1`
 ##   1| $OMEGA
-##   2| 0.18069   ;    IIV_KA ; LOG
-##   3| 0.083477   ;    IIV_K ; LOG
-##   4| 0.16169   ;    IIV_V ; LOG</code></pre>
+##   2| 0.18361   ;    IIV_KA ; LOG
+##   3| 0.17298   ;    IIV_K ; LOG
+##   4| 0.094762   ;    IIV_V ; LOG</code></pre>
 </div>
 </div>
 <div id="advanced-topics" class="section level1">
@@ -704,33 +705,33 @@
 <span class="va">dp</span><span class="op">$</span><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"THETA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/1`
 ##   1| $THETA
-##   2| 0.47075   ; KA ; h-1 ; LOG
-##   3| -2.0535   ; K ; h-1 ; LOG
-##   4| 0.11739   ; V ; L ; LOG
+##   2| 0.6233   ; KA ; h-1 ; LOG
+##   3| -2.6803   ; K ; h-1 ; LOG
+##   4| -0.7995   ; V ; L ; LOG
 ## 
 ## $`execute.Models/2`
 ##   1| $THETA
-##   2| 0.28971   ; KA ; h-1 ; LOG
-##   3| -2.1116   ; K ; h-1 ; LOG
-##   4| -0.47883   ; V ; L ; LOG
+##   2| 0.41006   ; KA ; h-1 ; LOG
+##   3| -3.2758   ; K ; h-1 ; LOG
+##   4| -0.6471   ; V ; L ; LOG
 ## 
 ## $`execute.Models/3`
 ##   1| $THETA
-##   2| 0.47111   ; KA ; h-1 ; LOG
-##   3| -2.0234   ; K ; h-1 ; LOG
-##   4| -0.5402   ; V ; L ; LOG
+##   2| 0.83083   ; KA ; h-1 ; LOG
+##   3| -2.9926   ; K ; h-1 ; LOG
+##   4| -0.48074   ; V ; L ; LOG
 ## 
 ## $`execute.Models/4`
 ##   1| $THETA
-##   2| 0.38039   ; KA ; h-1 ; LOG
-##   3| -2.1357   ; K ; h-1 ; LOG
-##   4| -0.34265   ; V ; L ; LOG
+##   2| 1.1023   ; KA ; h-1 ; LOG
+##   3| -2.9263   ; K ; h-1 ; LOG
+##   4| -0.27056   ; V ; L ; LOG
 ## 
 ## $`execute.Models/5`
 ##   1| $THETA
-##   2| 0.15704   ; KA ; h-1 ; LOG
-##   3| -2.0631   ; K ; h-1 ; LOG
-##   4| -0.14833   ; V ; L ; LOG</code></pre>
+##   2| 0.62358   ; KA ; h-1 ; LOG
+##   3| -2.8062   ; K ; h-1 ; LOG
+##   4| -0.867   ; V ; L ; LOG</code></pre>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## run all runs in dp$m with the normal syntax </span>
 <span class="va">dp</span><span class="op">$</span><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>

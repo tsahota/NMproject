@@ -40,7 +40,9 @@
 
 
 <meta property="og:title" content="Produce dataset for covariate forest plotting — cov_forest_data" />
-<meta property="og:description" content="Produce dataset for covariate forest plotting" />
+<meta property="og:description" content="
+The main workhorse for computing uncertainty quantiles of covariate effects
+in different subpopulations." />
 
 
 
@@ -120,7 +122,9 @@
     </div>
 
     <div class="ref-description">
-    <p>Produce dataset for covariate forest plotting</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>The main workhorse for computing uncertainty quantiles of covariate effects
+in different subpopulations.</p>
     </div>
 
     <pre class="usage"><span class='fu'>cov_forest_data</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>covariate_scenarios</span><span class='op'>)</span></pre>
@@ -130,14 +134,23 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>m</th>
-      <td><p>nm object</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     <tr>
       <th>covariate_scenarios</th>
-      <td><p>data.frame. need names "cov", "value" and (optional) "text"</p></td>
+      <td><p>A <code>data.frame</code>. Need columns <code>cov</code>, <code>value</code>
+and (optional) <code>text</code>.  See details for more information.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The column <code>cov</code> in <code>covariate_scenarios</code> refers to covariate
+variables in the dataset. The column <code>value</code> refers to covariate values of
+importance.  Typically these will be quantiles of continuous variables and
+categories (for categorical covariates). The column <code>text</code> is option but is
+a labelling column for <code><a href='cov_forest_plot.html'>cov_forest_plot()</a></code> to adjust how the covariate
+scenarios are printed on the axis</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>

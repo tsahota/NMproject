@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Stage files in project staging area ready for import — stage" />
-<meta property="og:description" content="`r lifecycle::badge(&quot;superseded&quot;)
+<meta property="og:description" content="
 Staging is a preliminary step of bringing code from external to the project
 into the project.  The intent is it remains a snapshot of code as it was at
 the time of importing.  This aids in reproducibility because if that
@@ -126,7 +126,7 @@ way to bring code is via the code library RStudio addin shiny app." />
     </div>
 
     <div class="ref-description">
-    <p>`r lifecycle::badge("superseded")</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
 <p>Staging is a preliminary step of bringing code from external to the project
 into the project.  The intent is it remains a snapshot of code as it was at
 the time of <code>import</code>ing.  This aids in reproducibility because if that
@@ -169,8 +169,8 @@ this is not specified, will guess based on presense of <code>nm_default_dirs</co
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
 <span class='fu'><a href='ls_code_library.html'>ls_code_library</a></span><span class='op'>(</span><span class='st'>"Models/ADVAN2.mod"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>stage</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='import.html'>import</a></span><span class='op'>(</span><span class='op'>)</span>
+  <span class='fu'>stage</span><span class='op'>(</span><span class='op'>)</span>
+  
 <span class='op'>}</span>
 
 

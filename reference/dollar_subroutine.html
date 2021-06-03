@@ -40,10 +40,11 @@
 
 
 <meta property="og:title" content="Get/set $SUBROUTINE values in control file — dollar_subroutine" />
-<meta property="og:description" content="These functions will make simple ADVAN/TRANS/TOL adjustments to the NONMEM
-control file.  No other file changes outside $SUBROUTINE will be made which
-makes advan and trans less useful than subroutine()
-which performs multiple control file changes." />
+<meta property="og:description" content="
+These are mostly back end functions used by subroutine() and will make
+simple ADVAN/TRANS/TOL adjustments to the NONMEM control file.  No other file
+changes outside $SUBROUTINE will be made which makes advan and trans less
+useful than the higher level subroutine() function." />
 
 
 
@@ -123,10 +124,11 @@ which performs multiple control file changes." />
     </div>
 
     <div class="ref-description">
-    <p>These functions will make simple ADVAN/TRANS/TOL adjustments to the NONMEM
-control file.  No other file changes outside $SUBROUTINE will be made which
-makes <code>advan</code> and <code>trans</code> less useful than <code><a href='subroutine.html'>subroutine()</a></code>
-which performs multiple control file changes.</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>These are mostly back end functions used by <code><a href='subroutine.html'>subroutine()</a></code> and will make
+simple ADVAN/TRANS/TOL adjustments to the NONMEM control file.  No other file
+changes outside $SUBROUTINE will be made which makes <code>advan</code> and <code>trans</code> less
+useful than the higher level <code><a href='subroutine.html'>subroutine()</a></code> function.</p>
     </div>
 
     <pre class="usage"><span class='fu'>advan</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>

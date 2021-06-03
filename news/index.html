@@ -117,21 +117,29 @@
       <small>Source: <a href='https://github.com/tsahota/NMproject/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="nmproject-060" class="section level1">
+<h1 class="page-header" data-toc-text="0.6.0">
+<a href="#nmproject-060" class="anchor"></a>NMproject 0.6.0</h1>
+<p>This is the first CRAN release of NMproject. Here are the major changes here relative to 0.5.1:</p>
+<ul>
+<li><p>Removal of tidyproject as an NMproject dependency. Project libraries are now handled with <code>renv</code> and project creation has been moved to NMproject with light wrappers around <code>usethis</code> project creation functionality. The code library has been moved to NMproject. The tidyproject package is now deprecated.</p></li>
+<li><p>Expanded demo based on theophylline and new vignette based around same demo.</p></li>
+<li><p>New shiny interface to code library available via RStudio addins. The code library has been restructured to match NMproject analysis directory structure.</p></li>
+<li><p><code><a href="../reference/new_nm.html">new_nm()</a></code> function to create parent <code>nm_list</code> objects.</p></li>
+<li><p>New manual edit interface via RStudio addins. NMproject is the only NONMEM interface (known to the author) that tracks manual edits to NONMEM code in the form of reusable patches.</p></li>
+<li><p>Fully vectorized functions and compatibility of <code>nm_list</code> objects with <code>dplyr</code>. NMproject is the only pharmacometric package (known to the author) with a vectorized model object allowing groups of runs to be operated on using the same syntax as single runs.</p></li>
+<li><p>Custom NMproject implementations of PsN’s bootstrap, cross-validation, stepwise covariate selection, simulation-re-estimation, and PPCs. All controllable and subsettable via vectorized syntax.</p></li>
+</ul>
+</div>
     <div id="nmproject-051-beta-interface-pre-release" class="section level1">
 <h1 class="page-header" data-toc-text="0.5.1">
 <a href="#nmproject-051-beta-interface-pre-release" class="anchor"></a>NMproject 0.5.1 (beta interface pre-release)</h1>
-<ul>
-<li>This version is not backward compatible with alpha release</li>
-<li>added new interface</li>
-</ul>
+<p>This is the last version of NMproject to be developed at AZ. It has is a developmental version of the newer “beta”" interface.</p>
 </div>
     <div id="nmproject-032-alpha" class="section level1">
 <h1 class="page-header" data-toc-text="0.3.2">
 <a href="#nmproject-032-alpha" class="anchor"></a>NMproject 0.3.2 (alpha)</h1>
-<ul>
-<li>First NEWS item</li>
-<li>This is the last release of the alpha interface</li>
-</ul>
+<p>This is the last release of the alpha interface developed at AZ.</p>
 </div>
   </div>
 

@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Plot relationship between a parameter and covariate — param_cov_diag" />
-<meta property="og:description" content="Plot relationship between a parameter and covariate" />
+<meta property="og:description" content="
+Plots posthoc parameter-covariate relationships from NONMEM run." />
 
 
 
@@ -120,7 +121,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Plot relationship between a parameter and covariate</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Plots posthoc parameter-covariate relationships from NONMEM run.</p>
     </div>
 
     <pre class="usage"><span class='fu'>param_cov_diag</span><span class='op'>(</span><span class='va'>r</span>, <span class='va'>param</span>, <span class='va'>cov</span>, <span class='va'>...</span>, categorical <span class='op'>=</span> <span class='cn'>FALSE</span>, plot_tv <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
@@ -130,33 +132,37 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>r</th>
-      <td><p>nm object</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     <tr>
       <th>param</th>
-      <td><p>character. Name of parameter</p></td>
+      <td><p>Character. Name of parameter.</p></td>
     </tr>
     <tr>
       <th>cov</th>
-      <td><p>character. Name of covariate</p></td>
+      <td><p>Character. Name of covariate.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>additional arguments passed to dplyr::mutate()</p></td>
+      <td><p>Additional arguments passed to <code><a href='https://dplyr.tidyverse.org/reference/mutate.html'>dplyr::mutate()</a></code>.</p></td>
     </tr>
     <tr>
       <th>categorical</th>
-      <td><p>logical (default = FALSE)</p></td>
+      <td><p>Logical (default = <code>FALSE</code>).</p></td>
     </tr>
     <tr>
       <th>plot_tv</th>
-      <td><p>logical</p></td>
+      <td><p>Logical.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A <code>ggplot2</code> plot object.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>the mutate statement is to add variables not included in original $TABLE</p>
+    <p>The mutate statement is to add variables not included in original
+$TABLE.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

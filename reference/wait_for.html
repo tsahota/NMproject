@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Wait for statement to be true — wait_for • NMproject</title>
+<title>Wait for statement to be TRUE — wait_for • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,9 @@
 
 
 
-<meta property="og:title" content="Wait for statement to be true — wait_for" />
-<meta property="og:description" content="Wait for statement to be true" />
+<meta property="og:title" content="Wait for statement to be TRUE — wait_for" />
+<meta property="og:description" content="
+Will block R console until an expression evaluates to be TRUE." />
 
 
 
@@ -114,13 +115,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Wait for statement to be true</h1>
+    <h1>Wait for statement to be TRUE</h1>
     <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/make_project.R'><code>R/make_project.R</code></a></small>
     <div class="hidden name"><code>wait_for.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Wait for statement to be true</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Will block R console until an expression evaluates to be <code>TRUE</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>wait_for</span><span class='op'>(</span><span class='va'>x</span>, timeout <span class='op'>=</span> <span class='cn'>NULL</span>, interval <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span></pre>
@@ -130,19 +132,35 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>expression to evaluate</p></td>
+      <td><p>Boolean expression to evaluate.</p></td>
     </tr>
     <tr>
       <th>timeout</th>
-      <td><p>numeric. Maximum time (seconds) to wait</p></td>
+      <td><p>Numeric. Maximum time (in seconds) to wait.</p></td>
     </tr>
     <tr>
       <th>interval</th>
-      <td><p>numeric. Number of seconds (default=1s) to wait till rechecking</p></td>
+      <td><p>Numeric. Number of seconds (default=<code>1</code>) to wait before
+rechecking.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
+    <div class='dont-index'><p><code><a href='wait_finish.html'>wait_finish()</a></code>.</p></div>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+
+<span class='co'>## the following are identical</span>
+
+<span class='fu'><a href='wait_finish.html'>wait_finish</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span>
+<span class='fu'>wait_for</span><span class='op'>(</span><span class='fu'><a href='is_finished.html'>is_finished</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

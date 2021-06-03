@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Generate paths for simulation runs — gen_sim_path" />
-<meta property="og:description" content="Internal function" />
+<meta property="og:description" content="
+Internal function to create nested directory structure paths." />
 
 
 
@@ -120,7 +121,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Internal function</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
+<p>Internal function to create nested directory structure paths.</p>
     </div>
 
     <pre class="usage"><span class='fu'>gen_sim_path</span><span class='op'>(</span><span class='va'>dsc</span>, <span class='va'>start_dir</span>, include_names <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
@@ -130,15 +132,15 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>dsc</th>
-      <td><p><code><a href='https://tibble.tidyverse.org/reference/tibble.html'>dplyr::tibble</a></code> with experimental factors to vary</p></td>
+      <td><p>A <code>tibble</code> with experimental factors to vary.</p></td>
     </tr>
     <tr>
       <th>start_dir</th>
-      <td><p>directory name within which all runs should take place.</p></td>
+      <td><p>Directory name within which all runs should take place.</p></td>
     </tr>
     <tr>
       <th>include_names</th>
-      <td><p>logical (default = TRUE).</p></td>
+      <td><p>Logical (default = TRUE). Should names be included.</p></td>
     </tr>
     </table>
 

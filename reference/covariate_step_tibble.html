@@ -42,7 +42,21 @@
 <meta property="og:title" content="Prepare forward covariate step — covariate_step_tibble" />
 <meta property="og:description" content="
 Takes a base nm object and a set of relationships to test (from
-test_relations()) and prepares a tibble of NONMEM runs." />
+test_relations()) and prepares a tibble of NONMEM runs.
+The goal of NMproject's covariate modelling functions is to provide a
+stepwise covariate method with manual decision making.  This important to
+ensure that the full model selection/evaluation criteria (should be defined
+in statistical analysis plans) can be applied at every step rather than just
+log likelihood ratio testing, where the most significant model may be
+unstable, may worsen model predictions or may only be slightly more
+significant than a more physiologically plausible covariate relationship.
+The functions test_relations(), covariate_step_tibble(),
+bind_covariate_results() together comprise NMproject stepwise covariate
+method with manual decision.  The goal is to be part way between PsN's SCM
+and completely manual process at each forward and backward elimination step.
+The syntax of how covariates are included is the same as PsN's SCM routine -
+See PsN documentation
+for more information." />
 
 
 
@@ -125,6 +139,20 @@ test_relations()) and prepares a tibble of NONMEM runs." />
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
 <p>Takes a base nm object and a set of relationships to test (from
 <code><a href='test_relations.html'>test_relations()</a></code>) and prepares a <code>tibble</code> of NONMEM runs.</p>
+<p>The goal of NMproject's covariate modelling functions is to provide a
+stepwise covariate method <em>with manual decision</em> making.  This important to
+ensure that the full model selection/evaluation criteria (should be defined
+in statistical analysis plans) can be applied at every step rather than just
+log likelihood ratio testing, where the most significant model may be
+unstable, may worsen model predictions or may only be slightly more
+significant than a more physiologically plausible covariate relationship.</p>
+<p>The functions <code><a href='test_relations.html'>test_relations()</a></code>, <code>covariate_step_tibble()</code>,
+<code><a href='bind_covariate_results.html'>bind_covariate_results()</a></code> together comprise NMproject stepwise covariate
+method with manual decision.  The goal is to be part way between PsN's SCM
+and completely manual process at each forward and backward elimination step.
+The syntax of how covariates are included is the same as PsN's SCM routine -
+See <a href='https://uupharmacometrics.github.io/PsN/docs.html'>PsN documentation</a>
+for more information.</p>
     </div>
 
     <pre class="usage"><span class='fu'>covariate_step_tibble</span><span class='op'>(</span>

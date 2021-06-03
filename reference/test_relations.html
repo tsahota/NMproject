@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generate tibble of relations to test — test_relations • NMproject</title>
+<title>Generate tibble of covariate relations to test — test_relations • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,22 @@
 
 
 
-<meta property="og:title" content="Generate tibble of relations to test — test_relations" />
+<meta property="og:title" content="Generate tibble of covariate relations to test — test_relations" />
 <meta property="og:description" content="
-Generate list of covariate relationships to test (with
-covariate_step_tibble())." />
+The goal of NMproject's covariate modelling functions is to provide a
+stepwise covariate method with manual decision making.  This important to
+ensure that the full model selection/evaluation criteria (should be defined
+in statistical analysis plans) can be applied at every step rather than just
+log likelihood ratio testing, where the most significant model may be
+unstable, may worsen model predictions or may only be slightly more
+significant than a more physiologically plausible covariate relationship.
+The functions test_relations(), covariate_step_tibble(),
+bind_covariate_results() together comprise NMproject stepwise covariate
+method with manual decision.  The goal is to be part way between PsN's SCM
+and completely manual process at each forward and backward elimination step.
+The syntax of how covariates are included is the same as PsN's SCM routine -
+See PsN documentation
+for more information." />
 
 
 
@@ -116,15 +128,27 @@ covariate_step_tibble())." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generate tibble of relations to test</h1>
+    <h1>Generate tibble of covariate relations to test</h1>
     <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/stepwise_covariate.R'><code>R/stepwise_covariate.R</code></a></small>
     <div class="hidden name"><code>test_relations.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
-<p>Generate list of covariate relationships to test (with
-<code><a href='covariate_step_tibble.html'>covariate_step_tibble()</a></code>).</p>
+<p>The goal of NMproject's covariate modelling functions is to provide a
+stepwise covariate method <em>with manual decision</em> making.  This important to
+ensure that the full model selection/evaluation criteria (should be defined
+in statistical analysis plans) can be applied at every step rather than just
+log likelihood ratio testing, where the most significant model may be
+unstable, may worsen model predictions or may only be slightly more
+significant than a more physiologically plausible covariate relationship.</p>
+<p>The functions <code>test_relations()</code>, <code><a href='covariate_step_tibble.html'>covariate_step_tibble()</a></code>,
+<code><a href='bind_covariate_results.html'>bind_covariate_results()</a></code> together comprise NMproject stepwise covariate
+method with manual decision.  The goal is to be part way between PsN's SCM
+and completely manual process at each forward and backward elimination step.
+The syntax of how covariates are included is the same as PsN's SCM routine -
+See <a href='https://uupharmacometrics.github.io/PsN/docs.html'>PsN documentation</a>
+for more information.</p>
     </div>
 
     <pre class="usage"><span class='fu'>test_relations</span><span class='op'>(</span><span class='va'>dtest</span>, <span class='va'>param</span>, <span class='va'>cov</span>, <span class='va'>state</span>, <span class='va'>continuous</span><span class='op'>)</span></pre>
@@ -183,7 +207,7 @@ IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))</p></dd>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='add_remove_covs.html'>add_cov()</a></code>, <code><a href='covariate_step_tibble.html'>covariate_step_tibble()</a></code></p></div>
+    <div class='dont-index'><p><code><a href='add_remove_covs.html'>add_cov()</a></code>, <code><a href='covariate_step_tibble.html'>covariate_step_tibble()</a></code>, <code><a href='bind_covariate_results.html'>bind_covariate_results()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>

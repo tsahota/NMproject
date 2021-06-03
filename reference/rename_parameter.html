@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Rename a parameter in NONMEM control stream — rename_parameter" />
-<meta property="og:description" content="Rename a parameter in NONMEM control stream" />
+<meta property="og:description" content="" />
 
 
 
@@ -120,7 +120,7 @@
     </div>
 
     <div class="ref-description">
-    <p>Rename a parameter in NONMEM control stream</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
     </div>
 
     <pre class="usage"><span class='fu'>rename_parameter</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>...</span><span class='op'>)</span></pre>
@@ -130,11 +130,11 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>m</th>
-      <td><p>nm object</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>renaming arguments</p></td>
+      <td><p>Named arguments with character values indicated old names.</p></td>
     </tr>
     </table>
 
@@ -142,7 +142,7 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
-<span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>rename_parameter</span><span class='op'>(</span><span class='st'>"CL"</span> <span class='op'>=</span> <span class='st'>"KE"</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>rename_parameter</span><span class='op'>(</span>CL <span class='op'>=</span> <span class='st'>"KE"</span><span class='op'>)</span>
 <span class='co'>## renames KE to CL</span>
 
 <span class='op'>}</span>

@@ -42,11 +42,9 @@
 <meta property="og:title" content="Remove parameter from NONMEM control file — remove_parameter" />
 <meta property="og:description" content="
 Attempts to remove a parameter from the NONMEM control assuming it has been
-written according to NMproject conventions (i.e. TVPARAM notation and TVPARAM
-IIV_PARAM comments in $THETA/$OMEGA).  The presence of any code that
-depends on the removed parameter will cause the control file to break.
-
-" />
+written according to NMproject conventions (i.e. TVPARAM notation and
+TVPARAM + IIV_PARAM comments in $THETA/$OMEGA).  The presence of any code
+that depends on the removed parameter will cause the control file to break." />
 
 
 
@@ -128,11 +126,9 @@ depends on the removed parameter will cause the control file to break.
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
 <p>Attempts to remove a parameter from the NONMEM control assuming it has been
-written according to NMproject conventions (i.e. TVPARAM notation and TVPARAM</p><ul>
-<li><p>IIV_PARAM comments in $THETA/$OMEGA).  The presence of any code that
-depends on the removed parameter will cause the control file to break.</p></li>
-</ul>
-
+written according to NMproject conventions (i.e. TVPARAM notation and
+TVPARAM + IIV_PARAM comments in $THETA/$OMEGA).  The presence of any code
+that depends on the removed parameter will cause the control file to break.</p>
     </div>
 
     <pre class="usage"><span class='fu'>remove_parameter</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>name</span><span class='op'>)</span></pre>

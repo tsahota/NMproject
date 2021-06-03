@@ -40,7 +40,9 @@
 
 
 <meta property="og:title" content="Run all project scripts sequentially — run_all_scripts" />
-<meta property="og:description" content="Runs all scripts s01_XXX, s02_XXX in the designated &quot;scripts&quot; directory" />
+<meta property="og:description" content="
+Runs/renders all scripts s01_XXX, s02_XXX in the designated &quot;scripts&quot;
+directory." />
 
 
 
@@ -120,24 +122,30 @@
     </div>
 
     <div class="ref-description">
-    <p>Runs all scripts s01_XXX, s02_XXX in the designated "scripts" directory</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Runs/renders all scripts <code>s01_XXX</code>, <code>s02_XXX</code> in the designated "scripts"
+directory.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>run_all_scripts</span><span class='op'>(</span>quiet <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>run_all_scripts</span><span class='op'>(</span><span class='va'>index</span>, quiet <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>index</th>
+      <td><p>Numeric index for subsetting list of scripts before running.</p></td>
+    </tr>
+    <tr>
       <th>quiet</th>
-      <td><p>Argument passed to <code><a href='https://pkgs.rstudio.com/rmarkdown/reference/render.html'>rmarkdown::render</a></code></p></td>
+      <td><p>Argument passed to <code><a href='https://pkgs.rstudio.com/rmarkdown/reference/render.html'>rmarkdown::render()</a></code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>works with .R and .Rmd extensions.  Behaviour is to <code>source</code> .R
-files and use <code><a href='https://pkgs.rstudio.com/rmarkdown/reference/render.html'>rmarkdown::render</a></code> on .Rmd files</p>
+    <p>Works with .R and .Rmd extensions.  Behaviour is to <code><a href='https://rdrr.io/r/base/source.html'>source()</a></code> .R
+files and use <code><a href='https://pkgs.rstudio.com/rmarkdown/reference/render.html'>rmarkdown::render()</a></code> on .Rmd files</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

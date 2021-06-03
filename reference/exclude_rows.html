@@ -40,7 +40,12 @@
 
 
 <meta property="og:title" content="Exclude rows of NONMEM dataset — exclude_rows" />
-<meta property="og:description" content="Exclude rows of NONMEM dataset" />
+<meta property="og:description" content="
+A mechanism for excluding outliers during data cleaning.  Create exploratory
+plots, identify rows of the dataset to be considered outliers for exclusion,
+and then feed that filtered dataset into this function to exclude them from
+the dataset.  Requires a corresponding IGNORE statement - see argument
+descriptions for more details." />
 
 
 
@@ -120,7 +125,12 @@
     </div>
 
     <div class="ref-description">
-    <p>Exclude rows of NONMEM dataset</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>A mechanism for excluding outliers during data cleaning.  Create exploratory
+plots, identify rows of the dataset to be considered outliers for exclusion,
+and then feed that filtered dataset into this function to exclude them from
+the dataset.  Requires a corresponding <code>IGNORE</code> statement - see argument
+descriptions for more details.</p>
     </div>
 
     <pre class="usage"><span class='fu'>exclude_rows</span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>dexcl</span>, exclude_col <span class='op'>=</span> <span class='st'>"EXCL"</span><span class='op'>)</span></pre>
@@ -130,18 +140,30 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>d</th>
-      <td><p>data.frame for NONMEM dataset</p></td>
+      <td><p>A <code>data.frame</code> for containing the full NONMEM dataset.  Should
+contain a column for identifying excluded rows named with the <code>exclude_col</code>
+argument.</p></td>
     </tr>
     <tr>
       <th>dexcl</th>
-      <td><p>data.frame consisting of rows to be ignored</p></td>
+      <td><p>A smaller <code>data.frame</code> consisting of rows to be ignored.  Need
+not contain all columns of <code>d</code> but each column should be present in <code>d</code>.</p></td>
     </tr>
     <tr>
       <th>exclude_col</th>
-      <td><p>character.  Name of exclude column in d</p></td>
+      <td><p>Character (default = <code>"EXCL"</code>). Name of a binary exclude
+column in <code>d</code>. This should be accompanied with a <code>IGNORE=(EXCL.GT.0)</code>
+statement in $DATA.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A modified version of <code>d</code> with <code>exclude_col</code> set to <code>1</code> for rows
+coinciding with <code>dexcl</code>.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='read_derived_data.html'>read_derived_data()</a></code>, <code><a href='write_derived_data.html'>write_derived_data()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>

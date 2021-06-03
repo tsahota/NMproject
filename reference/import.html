@@ -40,7 +40,9 @@
 
 
 <meta property="og:title" content="Import staged files into project — import" />
-<meta property="og:description" content="Import staged files into project" />
+<meta property="og:description" content="
+This function is used by the &quot;code libary&quot; RStudio addin to bring external
+code into your project." />
 
 
 
@@ -120,7 +122,9 @@
     </div>
 
     <div class="ref-description">
-    <p>Import staged files into project</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>This function is used by the "code libary" RStudio addin to bring external
+code into your project.</p>
     </div>
 
     <pre class="usage"><span class='fu'>import</span><span class='op'>(</span><span class='va'>copy_table</span>, overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span>, skip <span class='op'>=</span> <span class='st'>"\\.mod$"</span><span class='op'>)</span></pre>
@@ -130,25 +134,45 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>copy_table</th>
-      <td><p>data frame or character.
-if data.frame should be output from <code><a href='stage.html'>stage()</a></code>
-if character path, result will be <code><a href='stage.html'>stage()</a></code>d first</p></td>
+      <td><p>A <code>data frame</code> or character. if <code>data.frame</code> should be
+output from <code><a href='stage.html'>stage()</a></code>, if character path, result will be <code><a href='stage.html'>stage()</a></code>d first.</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
-      <td><p>logical (default = FALSE)</p></td>
+      <td><p>Logical (default = <code>FALSE</code>).</p></td>
     </tr>
     <tr>
       <th>silent</th>
-      <td><p>logical (default = FALSE)</p></td>
+      <td><p>Logical (default = <code>FALSE</code>).</p></td>
     </tr>
     <tr>
       <th>skip</th>
-      <td><p>character (default = "\.mod$"). pattern to skip</p></td>
+      <td><p>Character (default = <code>"\\.mod$"</code>). Pattern to skip.  Model files
+will be imported directly into the project in order to avoid conflicts and
+will instead reside only in the staging area.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
+    <div class='dont-index'><p><code><a href='code_library.html'>code_library()</a></code>, <code><a href='stage.html'>stage()</a></code></p></div>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+
+<span class='co'>## both of these following operations are easier in the shiny code library </span>
+<span class='co'>## RStudio addin.</span>
+
+<span class='fu'><a href='ls_code_library.html'>ls_code_library</a></span><span class='op'>(</span><span class='st'>"Models/ADVAN2.mod"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>import</span><span class='op'>(</span><span class='op'>)</span> <span class='co'>## ends up in "staging/Models"</span>
+  
+<span class='fu'><a href='ls_code_library.html'>ls_code_library</a></span><span class='op'>(</span><span class='st'>"Scripts/AUC.R"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>import</span><span class='op'>(</span><span class='op'>)</span>  <span class='co'>## ends up "scripts" directory</span>
+  
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
