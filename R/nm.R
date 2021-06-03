@@ -88,15 +88,21 @@ setup_nm_demo <- function(demo_name = "theopp",
 
 #' Run all project scripts sequentially
 #'
-#' Runs all scripts s01_XXX, s02_XXX in the designated "scripts" directory
+#' @description 
 #' 
-#' @param quiet Argument passed to `rmarkdown::render`
+#' `r lifecycle::badge("stable")`
 #'
-#' @details works with .R and .Rmd extensions.  Behaviour is to `source` .R
-#'   files and use `rmarkdown::render` on .Rmd files
+#' Runs/renders all scripts `s01_XXX`, `s02_XXX` in the designated "scripts"
+#' directory.
+#' 
+#' @param index Numeric index for subsetting list of scripts before running.
+#' @param quiet Argument passed to [rmarkdown::render()].
+#'
+#' @details Works with .R and .Rmd extensions.  Behaviour is to [source()] .R
+#'   files and use [rmarkdown::render()] on .Rmd files
 #'
 #' @export
-run_all_scripts <- function(quiet = FALSE){
+run_all_scripts <- function(index, quiet = FALSE){
   
   script_files <- dir(nm_default_dir("scripts"), "s[0-9]+_.*?\\.R(md)?$", full.names = TRUE)
   
@@ -107,8 +113,11 @@ run_all_scripts <- function(quiet = FALSE){
     dplyr::mutate(
       cmd = ifelse(.data$rmd, 
                    paste0("rmarkdown::render(\"",script_files,"\", quiet = ", quiet, ")"),
-                   paste0("source(\"",script_files,"\")"))
+
+                                      paste0("source(\"",script_files,"\")"))
     )
+  
+  if(!missing(index)) dplan <- dplan[index, ]
   
   exprs <- rlang::parse_exprs(dplan$cmd)
   
@@ -161,7 +170,7 @@ update_ignore <- function(ctl, ignore_char){
 #' @param d data.frame for NONMEM dataset
 #' @param dexcl data.frame consisting of rows to be ignored
 #' @param exclude_col character.  Name of exclude column in d
-#' @examples 
+#' @examples
 #' \dontrun{
 #' ## use with dplyr
 #' dexcl <- d %>% filter(ID == 23, TIME > 18, TIME < 24) %>% select(ID, TIME, DV, EXCL)

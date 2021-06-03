@@ -4,15 +4,20 @@
 \alias{run_all_scripts}
 \title{Run all project scripts sequentially}
 \usage{
-run_all_scripts(quiet = FALSE)
+run_all_scripts(index, quiet = FALSE)
 }
 \arguments{
-\item{quiet}{Argument passed to \code{rmarkdown::render}}
+\item{index}{Numeric index for subsetting list of scripts before running.}
+
+\item{quiet}{Argument passed to \code{\link[rmarkdown:render]{rmarkdown::render()}}.}
 }
 \description{
-Runs all scripts s01_XXX, s02_XXX in the designated "scripts" directory
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Runs/renders all scripts \code{s01_XXX}, \code{s02_XXX} in the designated "scripts"
+directory.
 }
 \details{
-works with .R and .Rmd extensions.  Behaviour is to \code{source} .R
-files and use \code{rmarkdown::render} on .Rmd files
+Works with .R and .Rmd extensions.  Behaviour is to \code{\link[=source]{source()}} .R
+files and use \code{\link[rmarkdown:render]{rmarkdown::render()}} on .Rmd files
 }
