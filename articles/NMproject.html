@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NMproject • NMproject</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -435,8 +435,8 @@
              based_on <span class="op">=</span> <span class="st">"staging/Models/ADVAN2.mod"</span>,
              data_path <span class="op">=</span> <span class="st">"DerivedData/data.csv"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/nm_getsetters.html">parafile</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm750/run/mpilinux8.pnm"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/nm_getsetters.html">cores</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/nm_getsetters_execution.html">parafile</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm750/run/mpilinux8.pnm"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/nm_getsetters_execution.html">cores</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="bootstraps" class="section level2">
@@ -560,17 +560,17 @@
 <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"THETA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/m1`
 ##   1| $THETA
-##   2| 0.98779   ; KA ; h-1 ; LOG
-##   3| -2.3076   ; K ; h-1 ; LOG
-##   4| -0.25193   ; V ; L ; LOG</code></pre>
+##   2| 0.51168   ; KA ; h-1 ; LOG
+##   3| -2.5843   ; K ; h-1 ; LOG
+##   4| -0.87311   ; V ; L ; LOG</code></pre>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/init_theta.html">init_omega</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="va">init</span>, min <span class="op">=</span> <span class="va">init</span><span class="op">/</span><span class="fl">2</span>, max <span class="op">=</span> <span class="va">init</span><span class="op">*</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>
 <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"OMEGA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/m1`
 ##   1| $OMEGA
-##   2| 0.10463   ;  IIV_KA ; LOG
-##   3| 0.12195   ;  IIV_K ; LOG
-##   4| 0.10911   ;  IIV_V ; LOG</code></pre>
+##   2| 0.16782   ;  IIV_KA ; LOG
+##   3| 0.15493   ;  IIV_K ; LOG
+##   4| 0.10409   ;  IIV_V ; LOG</code></pre>
 </div>
 <div id="working-with-omegasigma-blocks" class="section level2">
 <h2 class="hasAnchor">
@@ -582,9 +582,9 @@
 <pre><code>## $`execute.Models/m1`
 ##     name omega1 omega2 lower    init upper block mblock   FIX unit trans line
 ## 1   &lt;NA&gt;     NA     NA    NA      NA    NA     1     NA FALSE &lt;NA&gt;  &lt;NA&gt;    1
-## 2 IIV_KA      1      1    NA 0.10463    NA     1      1 FALSE &lt;NA&gt;   LOG    2
-## 3  IIV_K      2      2    NA 0.12195    NA     2      1 FALSE &lt;NA&gt;   LOG    3
-## 4  IIV_V      3      3    NA 0.10911    NA     3      1 FALSE &lt;NA&gt;   LOG    4
+## 2 IIV_KA      1      1    NA 0.16782    NA     1      1 FALSE &lt;NA&gt;   LOG    2
+## 3  IIV_K      2      2    NA 0.15493    NA     2      1 FALSE &lt;NA&gt;   LOG    3
+## 4  IIV_V      3      3    NA 0.10409    NA     3      1 FALSE &lt;NA&gt;   LOG    4
 ##   pos orig_line orig_pos
 ## 1   1         1        1
 ## 2   1         2        1
@@ -598,10 +598,10 @@
 <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"OMEGA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/m1`
 ##   1| $OMEGA
-##   2| 0.10463   ;   IIV_KA ; LOG
+##   2| 0.16782   ;   IIV_KA ; LOG
 ##   3| $OMEGA BLOCK (2)
-##   4| 0.12195   ;   IIV_K ; LOG
-##   5| 0.01 0.10911   ;   IIV_V ; LOG</code></pre>
+##   4| 0.15493   ;   IIV_K ; LOG
+##   5| 0.01 0.10409   ;   IIV_V ; LOG</code></pre>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## for demo purposes we'll reverse the process with unblock()</span>
 <span class="va">io</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/init_theta.html">init_omega</a></span><span class="op">(</span><span class="op">)</span>
@@ -610,9 +610,9 @@
 <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"OMEGA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/m1`
 ##   1| $OMEGA
-##   2| 0.10463   ;    IIV_KA ; LOG
-##   3| 0.12195   ;    IIV_K ; LOG
-##   4| 0.10911   ;    IIV_V ; LOG</code></pre>
+##   2| 0.16782   ;    IIV_KA ; LOG
+##   3| 0.15493   ;    IIV_K ; LOG
+##   4| 0.10409   ;    IIV_V ; LOG</code></pre>
 </div>
 </div>
 <div id="advanced-topics" class="section level1">
@@ -705,33 +705,33 @@
 <span class="va">dp</span><span class="op">$</span><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"THETA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/1`
 ##   1| $THETA
-##   2| 0.59745   ; KA ; h-1 ; LOG
-##   3| -2.3358   ; K ; h-1 ; LOG
-##   4| -0.81699   ; V ; L ; LOG
+##   2| 0.72441   ; KA ; h-1 ; LOG
+##   3| -2.6839   ; K ; h-1 ; LOG
+##   4| -0.70212   ; V ; L ; LOG
 ## 
 ## $`execute.Models/2`
 ##   1| $THETA
-##   2| 1.093   ; KA ; h-1 ; LOG
-##   3| -2.2264   ; K ; h-1 ; LOG
-##   4| -0.62268   ; V ; L ; LOG
+##   2| 0.57995   ; KA ; h-1 ; LOG
+##   3| -2.5275   ; K ; h-1 ; LOG
+##   4| -1.1628   ; V ; L ; LOG
 ## 
 ## $`execute.Models/3`
 ##   1| $THETA
-##   2| 0.65468   ; KA ; h-1 ; LOG
-##   3| -2.1672   ; K ; h-1 ; LOG
-##   4| -0.23454   ; V ; L ; LOG
+##   2| 0.6648   ; KA ; h-1 ; LOG
+##   3| -2.023   ; K ; h-1 ; LOG
+##   4| -0.90278   ; V ; L ; LOG
 ## 
 ## $`execute.Models/4`
 ##   1| $THETA
-##   2| 1.3301   ; KA ; h-1 ; LOG
-##   3| -2.161   ; K ; h-1 ; LOG
-##   4| -0.27389   ; V ; L ; LOG
+##   2| 0.40107   ; KA ; h-1 ; LOG
+##   3| -2.6689   ; K ; h-1 ; LOG
+##   4| -0.65208   ; V ; L ; LOG
 ## 
 ## $`execute.Models/5`
 ##   1| $THETA
-##   2| 0.60877   ; KA ; h-1 ; LOG
-##   3| -2.2052   ; K ; h-1 ; LOG
-##   4| 0.14936   ; V ; L ; LOG</code></pre>
+##   2| 0.21068   ; KA ; h-1 ; LOG
+##   3| -2.2567   ; K ; h-1 ; LOG
+##   4| -0.56772   ; V ; L ; LOG</code></pre>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## run all runs in dp$m with the normal syntax </span>
 <span class="va">dp</span><span class="op">$</span><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
@@ -987,8 +987,8 @@
            <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="va">cores</span><span class="op">)</span> <span class="op">%&gt;%</span>  <span class="co">## use "cores" as run_id (object is now 3 models)</span>
            <span class="fu"><a href="../reference/nm_getsetters.html">run_in</a></span><span class="op">(</span><span class="st">"Models/m1_coretest"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## run them all in m1_coretest</span>
            <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## parallelized execute</span>
-           <span class="fu"><a href="../reference/nm_getsetters.html">parafile</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm75/run/mpilinux8.pnm"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-           <span class="fu"><a href="../reference/nm_getsetters.html">cores</a></span><span class="op">(</span><span class="va">cores</span><span class="op">)</span> <span class="co">## and finally set the cores to the "cores" vector</span>
+           <span class="fu"><a href="../reference/nm_getsetters_execution.html">parafile</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm75/run/mpilinux8.pnm"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+           <span class="fu"><a href="../reference/nm_getsetters_execution.html">cores</a></span><span class="op">(</span><span class="va">cores</span><span class="op">)</span> <span class="co">## and finally set the cores to the "cores" vector</span>
          <span class="op">)</span>
 
 <span class="va">dc</span><span class="op">$</span><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
@@ -1106,8 +1106,8 @@
 <div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="va">sge_parallel_execute</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/nm_getsetters.html">parafile</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm75/run/mpilinux8.pnm"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/nm_getsetters.html">cores</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/nm_getsetters_execution.html">parafile</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm75/run/mpilinux8.pnm"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/nm_getsetters_execution.html">cores</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>Note that child object will inherit the same <code>cmd</code> structure, <code>cores</code> and <code>parafile</code>.</p>
 </div>

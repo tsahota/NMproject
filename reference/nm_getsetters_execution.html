@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tail of lst file — tail_lst • NMproject</title>
+<title>Execution related functions to access and modify fields of nm objects — nm_getsetters_execution • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="Tail of lst file — tail_lst" />
-<meta property="og:description" content="Used by the shiny run monitor to show the tail end of the .lst file." />
+<meta property="og:title" content="Execution related functions to access and modify fields of nm objects — nm_getsetters_execution" />
+<meta property="og:description" content="
+The fields of an object can be viewed by printing the object.  Each field has
+a corresponding function of the same name to access and modify it's value." />
 
 
 
@@ -114,26 +116,51 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Tail of lst file</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/shiny_apps.R'><code>R/shiny_apps.R</code></a></small>
-    <div class="hidden name"><code>tail_lst.Rd</code></div>
+    <h1>Execution related functions to access and modify fields of nm objects</h1>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/nm_gettersetters.R'><code>R/nm_gettersetters.R</code></a></small>
+    <div class="hidden name"><code>nm_getsetters_execution.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Used by the shiny run monitor to show the tail end of the .lst file.</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>The fields of an object can be viewed by printing the object.  Each field has
+a corresponding function of the same name to access and modify it's value.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>tail_lst</span><span class='op'>(</span><span class='va'>r</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>cores</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
+
+<span class='fu'>parafile</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
+
+<span class='fu'>walltime</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span>
+
+<span class='fu'>executed</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>text</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>r</th>
+      <th>m</th>
       <td><p>An nm object.</p></td>
+    </tr>
+    <tr>
+      <th>text</th>
+      <td><p>Optional character for replacing field. If present function will
+modify field (of same name as function) otherwise will return value of
+field (of same name as function).</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Easiest way to see all fields of an object is to type the object
+into the console and hit enter. This will display the value of each field.
+some fields like <code>cmd</code> are glue fields.  In these cases inserting
+expressions inside braces in <code>text</code> will evaluate the expression</p>
+<p>The fundamental structure of all these functions is the same:</p>
+<p>To access the value of a field:
+<code>m %&gt;% fieldname()</code> or equivalently <code>fieldname(m)</code></p>
+<p>To modify the value of a field:
+<code>m &lt;- m %&gt;% fieldname("newvalue")</code></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

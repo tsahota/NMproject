@@ -12,8 +12,8 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
@@ -127,7 +127,7 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
+          <h2 id="section-directory-management" class="hasAnchor"><a href="#section-directory-management" class="anchor"></a>Directory management</h2>
           <p class="section-desc"></p>
         </th>
       </tr>
@@ -139,231 +139,46 @@
       <tr>
         
         <td>
-          <p><code><a href="NONMEM_version.html">NONMEM_version()</a></code> </p>
+          <p><code><a href="nm_create_analysis_project.html">nm_create_analysis_project()</a></code> </p>
         </td>
-        <td><p>NONMEM version info</p></td>
+        <td><p>Create analysis project</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="add_mixed_param.html">add_mixed_param()</a></code> </p>
+          <p><code><a href="setup_nm_demo.html">setup_nm_demo()</a></code> </p>
         </td>
-        <td><p>Add a mixed effect parameter to $PK (or $PRED)</p></td>
+        <td><p>Setup demo in current directory</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="add_remove_covs.html">add_cov()</a></code> <code><a href="add_remove_covs.html">remove_cov()</a></code> </p>
+          <p><code><a href="run_all_scripts.html">run_all_scripts()</a></code> </p>
         </td>
-        <td><p>Add/remove a covariate to a NONMEM model</p></td>
+        <td><p>Run all project scripts sequentially</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="append_nonmem_var.html">append_nonmem_var()</a></code> </p>
+          <p><code><a href="temp_files.html">ls_tempfiles()</a></code> <code><a href="temp_files.html">clean_run()</a></code> </p>
         </td>
-        <td><p>Include NONMEM variables in output table</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="apply_manual_edit.html">apply_manual_edit()</a></code> </p>
-        </td>
-        <td><p>Apply a manual edit patch</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="bind_covariate_results.html">bind_covariate_results()</a></code> </p>
-        </td>
-        <td><p>Add run results into a covariate tibble</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="block-omega-sigma.html">block()</a></code> <code><a href="block-omega-sigma.html">unblock()</a></code> </p>
-        </td>
-        <td><p>Create or remove $OMEGA/$SIGMA BLOCKs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="child.html">child()</a></code> </p>
-        </td>
-        <td><p>Make child nm object from parent</p></td>
-      </tr><tr>
+        <td><p>Remove temporary NONMEM files</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-importing-code" class="hasAnchor"><a href="#section-importing-code" class="anchor"></a>Importing code</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
         
         <td>
           <p><code><a href="code_library.html">code_library()</a></code> </p>
         </td>
         <td><p>Code Library</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="coef_widelong.html">coef_wide()</a></code> <code><a href="coef_widelong.html">coef_long()</a></code> </p>
-        </td>
-        <td><p>Extract parameter values</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="comment_out.html">comment_out()</a></code> <code><a href="comment_out.html">uncomment()</a></code> </p>
-        </td>
-        <td><p>Comment lines of control file</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cond_num.html">cond_num()</a></code> </p>
-        </td>
-        <td><p>Condition number of run</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="convert_to_simulation.html">convert_to_simulation()</a></code> </p>
-        </td>
-        <td><p>Convert a NONMEM run to a simulation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cov_cov_plot.html">cov_cov_plot()</a></code> </p>
-        </td>
-        <td><p>Plot correlation between two covariates</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cov_forest_data.html">cov_forest_data()</a></code> </p>
-        </td>
-        <td><p>Produce dataset for covariate forest plotting</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cov_forest_plot.html">cov_forest_plot()</a></code> </p>
-        </td>
-        <td><p>Plot covariate forest plots</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="covariance_plot.html">covariance_plot()</a></code> </p>
-        </td>
-        <td><p>Plot $COV matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="covariate_step_tibble.html">covariate_step_tibble()</a></code> </p>
-        </td>
-        <td><p>Prepare forward covariate step</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ctl_contents.html">ctl_contents()</a></code> </p>
-        </td>
-        <td><p>Get/set control file object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ctl_path.html">ctl_path()</a></code> </p>
-        </td>
-        <td><p>Get and set path to NONMEM control file</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="data_path.html">data_path()</a></code> </p>
-        </td>
-        <td><p>Get/set path to dataset</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="decision.html">decision()</a></code> </p>
-        </td>
-        <td><p>Make decision point</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="delete_dollar.html">delete_dollar()</a></code> </p>
-        </td>
-        <td><p>Delete a NONMEM subroutine from control file contents</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="dollar.html">dollar()</a></code> </p>
-        </td>
-        <td><p>Get/set existing subroutine</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="dollar_subroutine.html">advan()</a></code> <code><a href="dollar_subroutine.html">trans()</a></code> <code><a href="dollar_subroutine.html">tol()</a></code> </p>
-        </td>
-        <td><p>Get/set $SUBROUTINE values in control file</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="exclude_rows.html">exclude_rows()</a></code> </p>
-        </td>
-        <td><p>Exclude rows of NONMEM dataset</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fill_input.html">fill_input()</a></code> </p>
-        </td>
-        <td><p>Fill $INPUT</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="find_nonmem.html">find_nm_install_path()</a></code> <code><a href="find_nonmem.html">find_nm_tran_path()</a></code> </p>
-        </td>
-        <td><p>Find location of NONMEM installation</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="gsub_ctl.html">gsub_ctl()</a></code> </p>
-        </td>
-        <td><p>Pattern replacement for control file contents</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ignore.html">ignore()</a></code> </p>
-        </td>
-        <td><p>Get/set ignore statement from control file contents</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="import.html">import()</a></code> </p>
-        </td>
-        <td><p>Import staged files into project</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="init_theta.html">init_theta()</a></code> <code><a href="init_theta.html">init_omega()</a></code> <code><a href="init_theta.html">init_sigma()</a></code> </p>
-        </td>
-        <td><p>Get/set initial parameters</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="input_data.html">input_data()</a></code> </p>
-        </td>
-        <td><p>Read input dataset of an nm object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="insert_dollar.html">insert_dollar()</a></code> </p>
-        </td>
-        <td><p>Insert a new subroutine into control file_contents</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is_finished.html">is_finished()</a></code> </p>
-        </td>
-        <td><p>Tests if job is finished</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is_nm.html">is_nm_list()</a></code> <code><a href="is_nm.html">is_nm_generic()</a></code> </p>
-        </td>
-        <td><p>Test if object is an nm coercible object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is_successful.html">is_successful()</a></code> </p>
-        </td>
-        <td><p>Test if NONMEM ran without errors</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="job_stats.html">job_stats()</a></code> </p>
-        </td>
-        <td><p>Get job stats for a completed NONMEM run</p></td>
       </tr><tr>
         
         <td>
@@ -379,22 +194,78 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="preview.html">preview()</a></code> </p>
+        </td>
+        <td><p>Preview code_library file</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="stage.html">stage()</a></code> </p>
+        </td>
+        <td><p>Stage files in project staging area ready for import</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="import.html">import()</a></code> </p>
+        </td>
+        <td><p>Import staged files into project</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="search_raw.html">search_raw()</a></code> </p>
+        </td>
+        <td><p>Search for files matching raw text search</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-pre-modelling-functions" class="hasAnchor"><a href="#section-pre-modelling-functions" class="anchor"></a>Pre-modelling functions</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="read_derived_data.html">read_derived_data()</a></code> </p>
+        </td>
+        <td><p>Read derived data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="write_derived_data.html">write_derived_data()</a></code> </p>
+        </td>
+        <td><p>Write derived data file</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="exclude_rows.html">exclude_rows()</a></code> </p>
+        </td>
+        <td><p>Exclude rows of NONMEM dataset</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="make_OCC_every_dose.html">make_OCC_every_dose()</a></code> </p>
         </td>
         <td><p>Make an OCC column for NONMEM IOV use</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="make_boot_datasets.html">make_boot_datasets()</a></code> </p>
-        </td>
-        <td><p>Write bootstrap datasets</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="make_xv_datasets.html">make_xv_datasets()</a></code> </p>
-        </td>
-        <td><p>Write (bootstrap) cross validation datasets</p></td>
-      </tr><tr>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-core-object" class="hasAnchor"><a href="#section-core-object" class="anchor"></a>Core object</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
         
         <td>
           <p><code><a href="new_nm.html">new_nm()</a></code> </p>
@@ -403,33 +274,27 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="nm_create_analysis_project.html">nm_create_analysis_project()</a></code> </p>
+          <p><code><a href="child.html">child()</a></code> </p>
         </td>
-        <td><p>Create analysis project</p></td>
+        <td><p>Make child nm object from parent</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="nm_default_dir.html">nm_default_dir()</a></code> </p>
-        </td>
-        <td><p>Get a default directory</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="nm_default_dirs.html">nm_default_dirs()</a></code> </p>
-        </td>
-        <td><p>Setup analysis subdirectories</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="nm_diff.html">nm_diff()</a></code> </p>
-        </td>
-        <td><p>Compute diff between two NONMEM runs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="nm_getsetters.html">run_dir()</a></code> <code><a href="nm_getsetters.html">cmd()</a></code> <code><a href="nm_getsetters.html">type()</a></code> <code><a href="nm_getsetters.html">parent_run_id()</a></code> <code><a href="nm_getsetters.html">parent_run_in()</a></code> <code><a href="nm_getsetters.html">parent_ctl_name()</a></code> <code><a href="nm_getsetters.html">parent_results_dir()</a></code> <code><a href="nm_getsetters.html">unique_id()</a></code> <code><a href="nm_getsetters.html">ctl_name()</a></code> <code><a href="nm_getsetters.html">results_dir()</a></code> <code><a href="nm_getsetters.html">cores()</a></code> <code><a href="nm_getsetters.html">parafile()</a></code> <code><a href="nm_getsetters.html">walltime()</a></code> <code><a href="nm_getsetters.html">executed()</a></code> <code><a href="nm_getsetters.html">lst_path()</a></code> <code><a href="nm_getsetters.html">run_in()</a></code> <code><a href="nm_getsetters.html">run_id()</a></code> <code><a href="nm_getsetters.html">result_files()</a></code> </p>
+          <p><code><a href="nm_getsetters.html">run_dir()</a></code> <code><a href="nm_getsetters.html">cmd()</a></code> <code><a href="nm_getsetters.html">type()</a></code> <code><a href="nm_getsetters.html">parent_run_id()</a></code> <code><a href="nm_getsetters.html">parent_run_in()</a></code> <code><a href="nm_getsetters.html">parent_ctl_name()</a></code> <code><a href="nm_getsetters.html">parent_results_dir()</a></code> <code><a href="nm_getsetters.html">unique_id()</a></code> <code><a href="nm_getsetters.html">ctl_name()</a></code> <code><a href="nm_getsetters.html">results_dir()</a></code> <code><a href="nm_getsetters.html">lst_path()</a></code> <code><a href="nm_getsetters.html">run_in()</a></code> <code><a href="nm_getsetters.html">run_id()</a></code> <code><a href="nm_getsetters.html">result_files()</a></code> </p>
         </td>
         <td><p>Functions to access and modify fields of nm objects</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="data_path.html">data_path()</a></code> </p>
+        </td>
+        <td><p>Get/set path to dataset</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="input_data.html">input_data()</a></code> </p>
+        </td>
+        <td><p>Read input dataset of an nm object</p></td>
       </tr><tr>
         
         <td>
@@ -439,111 +304,142 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="nm_output_path.html">nm_output_path()</a></code> </p>
-        </td>
-        <td><p>Find an output file associated with a run</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="nm_read_table.html">nm_read_table()</a></code> </p>
-        </td>
-        <td><p>Fast read of NONMEM output table</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="nm_render.html">nm_render()</a></code> <code><a href="nm_render.html">nm_list_render()</a></code> </p>
-        </td>
-        <td><p>Create run reports</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="nm_summary.html">summary_wide()</a></code> <code><a href="nm_summary.html">summary_long()</a></code> </p>
-        </td>
-        <td><p>Generate a summary of NONMEM results</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="nm_tran.html">nm_tran()</a></code> </p>
-        </td>
-        <td><p>Run NMTRAN step of a NONMEM job</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="nm_tran_command.html">nm_tran_command()</a></code> </p>
-        </td>
-        <td><p>Get/set nm_tran_command</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="nm_tree.html">nm_tree()</a></code> </p>
-        </td>
-        <td><p>Make data.tree object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="nmsave.html">nmsave_plot()</a></code> <code><a href="nmsave.html">nmsave_table()</a></code> </p>
-        </td>
-        <td><p>Save plots in results_dir</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ofv.html">ofv()</a></code> </p>
-        </td>
-        <td><p>Get objective function value (OFV)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="omega_matrix.html">omega_matrix()</a></code> </p>
-        </td>
-        <td><p>Get OMEGA matrix from run</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="output_table.html">output_table()</a></code> <code><a href="output_table.html">output_table_first()</a></code> </p>
-        </td>
-        <td><p>Reads all $TABLE outputs and merge with input dataset</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="overwrite_behaviour.html">overwrite_behaviour()</a></code> </p>
-        </td>
-        <td><p>Overwrite behaviour of NMproject</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="param_cov_diag.html">param_cov_diag()</a></code> </p>
-        </td>
-        <td><p>Plot relationship between a parameter and covariate</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="parent_run.html">parent_run()</a></code> </p>
         </td>
         <td><p>Get parent object of nm object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plot_iter.html">plot_iter()</a></code> </p>
+          <p><code><a href="run_dir_path.html">run_dir_path()</a></code> </p>
         </td>
-        <td><p>Plot iterations vs parameters/OBJ</p></td>
+        <td><p>Get path to run_dir</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="ppc.html">ppc_data()</a></code> <code><a href="ppc.html">ppc_whisker_plot()</a></code> <code><a href="ppc.html">ppc_histogram_plot()</a></code> </p>
+          <p><code><a href="ctl_path.html">ctl_path()</a></code> </p>
         </td>
-        <td><p>PPC functions: process data from simulation and plot</p></td>
+        <td><p>Get and set path to NONMEM control file</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="psn_style_scm.html">psn_style_scm()</a></code> </p>
+          <p><code><a href="simple_field.html">simple_field()</a></code> </p>
         </td>
-        <td><p>PsN style stepwise covariate method</p></td>
+        <td><p>Interface for getting and setting your own simple fields in nm objects</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="read_derived_data.html">read_derived_data()</a></code> </p>
+          <p><code><a href="is_nm.html">is_nm_list()</a></code> <code><a href="is_nm.html">is_nm_generic()</a></code> </p>
         </td>
-        <td><p>Read derived data</p></td>
+        <td><p>Test if object is an nm coercible object</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-nonmem-code-manipulation" class="hasAnchor"><a href="#section-nonmem-code-manipulation" class="anchor"></a>NONMEM code manipulation</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="apply_manual_edit.html">apply_manual_edit()</a></code> </p>
+        </td>
+        <td><p>Apply a manual edit patch</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="nm_diff.html">nm_diff()</a></code> </p>
+        </td>
+        <td><p>Compute diff between two NONMEM runs</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="show_ctl.html">show_ctl()</a></code> </p>
+        </td>
+        <td><p>Show an uneditable version of the control file</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="dollar.html">dollar()</a></code> </p>
+        </td>
+        <td><p>Get/set existing subroutine</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="fill_input.html">fill_input()</a></code> </p>
+        </td>
+        <td><p>Fill $INPUT</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="subroutine.html">subroutine()</a></code> </p>
+        </td>
+        <td><p>Subroutine</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="update_parameters.html">update_parameters()</a></code> </p>
+        </td>
+        <td><p>Update initial estimates to final estimates</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="init_theta.html">init_theta()</a></code> <code><a href="init_theta.html">init_omega()</a></code> <code><a href="init_theta.html">init_sigma()</a></code> </p>
+        </td>
+        <td><p>Get/set initial parameters</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="block-omega-sigma.html">block()</a></code> <code><a href="block-omega-sigma.html">unblock()</a></code> </p>
+        </td>
+        <td><p>Create or remove $OMEGA/$SIGMA BLOCKs</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="gsub_ctl.html">gsub_ctl()</a></code> </p>
+        </td>
+        <td><p>Pattern replacement for control file contents</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="comment_out.html">comment_out()</a></code> <code><a href="comment_out.html">uncomment()</a></code> </p>
+        </td>
+        <td><p>Comment lines of control file</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ignore.html">ignore()</a></code> </p>
+        </td>
+        <td><p>Get/set ignore statement from control file contents</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="dollar_subroutine.html">advan()</a></code> <code><a href="dollar_subroutine.html">trans()</a></code> <code><a href="dollar_subroutine.html">tol()</a></code> </p>
+        </td>
+        <td><p>Get/set $SUBROUTINE values in control file</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="delete_dollar.html">delete_dollar()</a></code> </p>
+        </td>
+        <td><p>Delete a NONMEM subroutine from control file contents</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="insert_dollar.html">insert_dollar()</a></code> </p>
+        </td>
+        <td><p>Insert a new subroutine into control file_contents</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_mixed_param.html">add_mixed_param()</a></code> </p>
+        </td>
+        <td><p>Add a mixed effect parameter to $PK (or $PRED)</p></td>
       </tr><tr>
         
         <td>
@@ -559,22 +455,29 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="rr.html">rr()</a></code> </p>
+          <p><code><a href="target.html">target()</a></code> <code><a href="target.html">untarget()</a></code> </p>
         </td>
-        <td><p>Run record</p></td>
+        <td><p>Target part of control object for further modification</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="run_all_scripts.html">run_all_scripts()</a></code> </p>
+          <p><code><a href="ctl_contents.html">ctl_contents()</a></code> </p>
         </td>
-        <td><p>Run all project scripts sequentially</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="run_dir_path.html">run_dir_path()</a></code> </p>
-        </td>
-        <td><p>Get path to run_dir</p></td>
-      </tr><tr>
+        <td><p>Get/set control file object</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-execution" class="hasAnchor"><a href="#section-execution" class="anchor"></a>Execution</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
         
         <td>
           <p><code><a href="run_nm.html">run_nm()</a></code> <code><a href="run_nm.html">run_nm_batch()</a></code> </p>
@@ -583,51 +486,15 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="search_raw.html">search_raw()</a></code> </p>
+          <p><code><a href="nm_tran.html">nm_tran()</a></code> </p>
         </td>
-        <td><p>Search for files matching raw text search</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="setup_nm_demo.html">setup_nm_demo()</a></code> </p>
-        </td>
-        <td><p>Setup demo in current directory</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="sge_parallel_execute.html">sge_parallel_execute</a></code> </p>
-        </td>
-        <td><p>Generic execute command for SGE grids</p></td>
+        <td><p>Run NMTRAN step of a NONMEM job</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="shiny_nm.html">shiny_nm()</a></code> </p>
         </td>
         <td><p>Run monitor &amp; summary app</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="show_ctl.html">show_ctl()</a></code> </p>
-        </td>
-        <td><p>Show an uneditable version of the control file</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="show_out.html">show_out()</a></code> </p>
-        </td>
-        <td><p>Show an uneditable version of the lst file</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="simple_field.html">simple_field()</a></code> </p>
-        </td>
-        <td><p>Interface for getting and setting your own simple fields in nm objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="stage.html">stage()</a></code> </p>
-        </td>
-        <td><p>Stage files in project staging area ready for import</p></td>
       </tr><tr>
         
         <td>
@@ -643,48 +510,6 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="subroutine.html">subroutine()</a></code> </p>
-        </td>
-        <td><p>Subroutine</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="system_cmd.html">system_cmd()</a></code> </p>
-        </td>
-        <td><p>System/shell command wrapper</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="system_nm.html">system_nm()</a></code> </p>
-        </td>
-        <td><p>System command for NONMEM execution</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="target.html">target()</a></code> <code><a href="target.html">untarget()</a></code> </p>
-        </td>
-        <td><p>Target part of control object for further modification</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="temp_files.html">ls_tempfiles()</a></code> <code><a href="temp_files.html">clean_run()</a></code> </p>
-        </td>
-        <td><p>Remove temporary NONMEM files</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="test_relations.html">test_relations()</a></code> </p>
-        </td>
-        <td><p>Generate tibble of covariate relations to test</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="update_parameters.html">update_parameters()</a></code> </p>
-        </td>
-        <td><p>Update initial estimates to final estimates</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="wait_finish.html">wait_finish()</a></code> </p>
         </td>
         <td><p>Wait for runs to finish</p></td>
@@ -697,15 +522,338 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="is_finished.html">is_finished()</a></code> </p>
+        </td>
+        <td><p>Tests if job is finished</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="is_successful.html">is_successful()</a></code> </p>
+        </td>
+        <td><p>Test if NONMEM ran without errors</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sge_parallel_execute.html">sge_parallel_execute</a></code> </p>
+        </td>
+        <td><p>Generic execute command for SGE grids</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="system_nm.html">system_nm()</a></code> </p>
+        </td>
+        <td><p>System command for NONMEM execution</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="system_cmd.html">system_cmd()</a></code> </p>
+        </td>
+        <td><p>System/shell command wrapper</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="kill_job.html">kill_job()</a></code> </p>
+        </td>
+        <td><p>Kill cluster job</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="wipe_run.html">wipe_run()</a></code> </p>
         </td>
         <td><p>Wipe previous run files</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="write_derived_data.html">write_derived_data()</a></code> </p>
+          <p><code><a href="nm_getsetters_execution.html">cores()</a></code> <code><a href="nm_getsetters_execution.html">parafile()</a></code> <code><a href="nm_getsetters_execution.html">walltime()</a></code> <code><a href="nm_getsetters_execution.html">executed()</a></code> </p>
         </td>
-        <td><p>Write derived data file</p></td>
+        <td><p>Execution related functions to access and modify fields of nm objects</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="job_stats.html">job_stats()</a></code> </p>
+        </td>
+        <td><p>Get job stats for a completed NONMEM run</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-nonmem-postprocessing" class="hasAnchor"><a href="#section-nonmem-postprocessing" class="anchor"></a>NONMEM postprocessing</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="show_out.html">show_out()</a></code> </p>
+        </td>
+        <td><p>Show an uneditable version of the lst file</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="nm_render.html">nm_render()</a></code> <code><a href="nm_render.html">nm_list_render()</a></code> </p>
+        </td>
+        <td><p>Create run reports</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plot_iter.html">plot_iter()</a></code> </p>
+        </td>
+        <td><p>Plot iterations vs parameters/OBJ</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="decision.html">decision()</a></code> </p>
+        </td>
+        <td><p>Make decision point</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="rr.html">rr()</a></code> </p>
+        </td>
+        <td><p>Run record</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="nm_summary.html">summary_wide()</a></code> <code><a href="nm_summary.html">summary_long()</a></code> </p>
+        </td>
+        <td><p>Generate a summary of NONMEM results</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="coef_widelong.html">coef_wide()</a></code> <code><a href="coef_widelong.html">coef_long()</a></code> </p>
+        </td>
+        <td><p>Extract parameter values</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="output_table.html">output_table()</a></code> <code><a href="output_table.html">output_table_first()</a></code> </p>
+        </td>
+        <td><p>Reads all $TABLE outputs and merge with input dataset</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="nm_read_table.html">nm_read_table()</a></code> </p>
+        </td>
+        <td><p>Fast read of NONMEM output table</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="nm_tree.html">nm_tree()</a></code> </p>
+        </td>
+        <td><p>Make data.tree object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="covariance_plot.html">covariance_plot()</a></code> </p>
+        </td>
+        <td><p>Plot $COV matrix</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ofv.html">ofv()</a></code> </p>
+        </td>
+        <td><p>Get objective function value (OFV)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cond_num.html">cond_num()</a></code> </p>
+        </td>
+        <td><p>Condition number of run</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="omega_matrix.html">omega_matrix()</a></code> </p>
+        </td>
+        <td><p>Get OMEGA matrix from run</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="nmsave.html">nmsave_plot()</a></code> <code><a href="nmsave.html">nmsave_table()</a></code> </p>
+        </td>
+        <td><p>Save plots in results_dir</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="param_cov_diag.html">param_cov_diag()</a></code> </p>
+        </td>
+        <td><p>Plot relationship between a parameter and covariate</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="nm_output_path.html">nm_output_path()</a></code> </p>
+        </td>
+        <td><p>Find an output file associated with a run</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-simulations" class="hasAnchor"><a href="#section-simulations" class="anchor"></a>Simulations</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="convert_to_simulation.html">convert_to_simulation()</a></code> </p>
+        </td>
+        <td><p>Convert a NONMEM run to a simulation</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ppc.html">ppc_data()</a></code> <code><a href="ppc.html">ppc_whisker_plot()</a></code> <code><a href="ppc.html">ppc_histogram_plot()</a></code> </p>
+        </td>
+        <td><p>PPC functions: process data from simulation and plot</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-covariate-modelling" class="hasAnchor"><a href="#section-covariate-modelling" class="anchor"></a>Covariate modelling</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="cov_cov_plot.html">cov_cov_plot()</a></code> </p>
+        </td>
+        <td><p>Plot correlation between two covariates</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_remove_covs.html">add_cov()</a></code> <code><a href="add_remove_covs.html">remove_cov()</a></code> </p>
+        </td>
+        <td><p>Add/remove a covariate to a NONMEM model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="test_relations.html">test_relations()</a></code> </p>
+        </td>
+        <td><p>Generate tibble of covariate relations to test</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="covariate_step_tibble.html">covariate_step_tibble()</a></code> </p>
+        </td>
+        <td><p>Prepare forward covariate step</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="bind_covariate_results.html">bind_covariate_results()</a></code> </p>
+        </td>
+        <td><p>Add run results into a covariate tibble</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cov_forest_data.html">cov_forest_data()</a></code> </p>
+        </td>
+        <td><p>Produce dataset for covariate forest plotting</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cov_forest_plot.html">cov_forest_plot()</a></code> </p>
+        </td>
+        <td><p>Plot covariate forest plots</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="psn_style_scm.html">psn_style_scm()</a></code> </p>
+        </td>
+        <td><p>PsN style stepwise covariate method</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="append_nonmem_var.html">append_nonmem_var()</a></code> </p>
+        </td>
+        <td><p>Include NONMEM variables in output table</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-bootstrap" class="hasAnchor"><a href="#section-bootstrap" class="anchor"></a>Bootstrap</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="make_boot_datasets.html">make_boot_datasets()</a></code> </p>
+        </td>
+        <td><p>Write bootstrap datasets</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="make_xv_datasets.html">make_xv_datasets()</a></code> </p>
+        </td>
+        <td><p>Write (bootstrap) cross validation datasets</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-configuration" class="hasAnchor"><a href="#section-configuration" class="anchor"></a>Configuration</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="nm_tran_command.html">nm_tran_command()</a></code> </p>
+        </td>
+        <td><p>Get/set nm_tran_command</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="nm_default_dirs.html">nm_default_dirs()</a></code> </p>
+        </td>
+        <td><p>Setup analysis subdirectories</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="nm_default_dir.html">nm_default_dir()</a></code> </p>
+        </td>
+        <td><p>Get a default directory</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="overwrite_behaviour.html">overwrite_behaviour()</a></code> </p>
+        </td>
+        <td><p>Overwrite behaviour of NMproject</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="find_nonmem.html">find_nm_install_path()</a></code> <code><a href="find_nonmem.html">find_nm_tran_path()</a></code> </p>
+        </td>
+        <td><p>Find location of NONMEM installation</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="NONMEM_version.html">NONMEM_version()</a></code> </p>
+        </td>
+        <td><p>NONMEM version info</p></td>
       </tr>
     </tbody>
     </table>
