@@ -9,9 +9,9 @@ wait_for(x, timeout = NULL, interval = 1)
 \arguments{
 \item{x}{Boolean expression to evaluate.}
 
-\item{timeout}{Numeric. Maximum time (seconds) to wait.}
+\item{timeout}{Numeric. Maximum time (in seconds) to wait.}
 
-\item{interval}{Numeric. Number of seconds (default=1s) to wait till
+\item{interval}{Numeric. Number of seconds (default=\code{1}) to wait before
 rechecking.}
 }
 \description{

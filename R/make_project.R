@@ -660,8 +660,8 @@ list_dirs <- function(path = ".", full.names = TRUE, recursive = FALSE, maxdepth
 #' Will block R console until an expression evaluates to be `TRUE`.
 #'
 #' @param x Boolean expression to evaluate.
-#' @param timeout Numeric. Maximum time (seconds) to wait.
-#' @param interval Numeric. Number of seconds (default=1s) to wait till
+#' @param timeout Numeric. Maximum time (in seconds) to wait.
+#' @param interval Numeric. Number of seconds (default=`1`) to wait before
 #'   rechecking.
 #' 
 #' @seealso [wait_finish()].
