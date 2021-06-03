@@ -21,9 +21,9 @@ data_ignore_char.nm_generic <- function(r, data){
   dol_data <- gsub("IGNORE\\s*=\\s*#", "", dol_data)
   
   if(any(grepl("IGNORE\\s*=\\s*C\\b",dol_data)))
-    stop("NMproject currently doesn't work with IGNORE=C type runs.
+    warning("NMproject currently doesn't work with IGNORE=C type runs.
        It is recommended to modify the control file to use IGNORE=@ instead.",
-         call. = FALSE)
+            call. = FALSE)
   
   ignore_present <- any(grepl(".*IGNORE\\s*=\\s*\\(",dol_data))
   accept_present <- any(grepl(".*ACCEPT\\s*=\\s*\\(",dol_data))
