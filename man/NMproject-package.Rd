@@ -90,7 +90,6 @@ Useful links:
 Other contributors:
 \itemize{
   \item AstraZeneca [copyright holder]
-  \item GlaxoSmithKline [copyright holder]
 }
 
 }

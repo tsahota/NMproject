@@ -7,8 +7,7 @@ Version: 0.5.9.9000
 Authors@R: c(
  person("Tarj", "Sahota", email = "t.sahota0@gmail.com", 
     role = c("aut", "cre", "cph")),
- person("AstraZeneca", role = "cph"),
- person("GlaxoSmithKline", role = "cph"))
+ person("AstraZeneca", role = "cph"))
 Maintainer: Tarj Sahota <t.sahota0@gmail.com>
 Description: Industrialisation of 'NONMEM'
   <https://www.iconplc.com/innovation/nonmem/> model development 

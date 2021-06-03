@@ -73,11 +73,7 @@ ctl_path <- function(m, text) {
 #'   
 #'   To modify the value of a field:
 #'   `m <- m %>% fieldname("newvalue")`
-#
-
-NULL
-
-#' @rdname nm_getsetters
+#'   
 #' @export
 run_dir <- function(m, text) {
   UseMethod("run_dir")
@@ -178,13 +174,42 @@ results_dir <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "results_dir") else custom_1d_field(m, "results_dir", text, glue = TRUE)
 }
 
-#' @rdname nm_getsetters
+#' @name nm_getsetters_execution
+#' @rdname nm_getsetters_execution
+#'
+#' @title Execution related functions to access and modify fields of nm objects
+#'
+#' @description
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' The fields of an object can be viewed by printing the object.  Each field has
+#' a corresponding function of the same name to access and modify it's value.
+#' 
+#' @param m An nm object.
+#' @param text Optional character for replacing field. If present function will
+#'   modify field (of same name as function) otherwise will return value of
+#'   field (of same name as function).
+#'
+#' @details Easiest way to see all fields of an object is to type the object
+#'   into the console and hit enter. This will display the value of each field.
+#'   some fields like `cmd` are glue fields.  In these cases inserting
+#'   expressions inside braces in `text` will evaluate the expression
+#'   
+#'   The fundamental structure of all these functions is the same:
+#'   
+#'   To access the value of a field: 
+#'   `m %>% fieldname()` or equivalently `fieldname(m)`
+#'   
+#'   To modify the value of a field:
+#'   `m <- m %>% fieldname("newvalue")`
+#'   
 #' @export
 cores <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "cores") else custom_1d_field(m, "cores", text)
 }
 
-#' @rdname nm_getsetters
+#' @rdname nm_getsetters_execution
 #' @export
 parafile <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "parafile") else {
@@ -192,13 +217,13 @@ parafile <- function(m, text) {
   }
 }
 
-#' @rdname nm_getsetters
+#' @rdname nm_getsetters_execution
 #' @export
 walltime <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "walltime") else custom_1d_field(m, "walltime", text)
 }
 
-#' @rdname nm_getsetters
+#' @rdname nm_getsetters_execution
 #' @export
 executed <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "executed") else custom_1d_field(m, "executed", text)
