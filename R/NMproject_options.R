@@ -75,6 +75,13 @@ nm_default_dirs <- function(dir_list){
   }
 }
 
+validate_dir_list <- function(dir_list){
+  
+  if(any(!c("scripts", "models", "results") %in% names(dir_list)))
+    stop("names \"scripts\", \"models\", and \"results\" must at least be present")
+  
+}
+
 #' Get a default directory
 #' 
 #' @description 
@@ -101,13 +108,6 @@ nm_default_dir <- function(name = c("scripts", "models", "results"), ...){
   if(missing(name)) stop("need argument")
   name < match.arg(name)
   nm_default_dirs()[[name]]
-}
-
-validate_dir_list <- function(dir_list){
-  if(!"scripts" %in% names(dir_list)) 
-    stop("one entry of the directory needs the name \"scripts\"", call. = FALSE)
-  if(!"models" %in% names(dir_list)) 
-    stop("one entry of the directory needs the name \"models\"", call. = FALSE)  
 }
 
 set_default_dirs_in_rprofile <- function(path = ".Rprofile", dir_list = nm_default_dirs()){
