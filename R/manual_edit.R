@@ -111,8 +111,9 @@ view_patch <- function(patch_name){
 
 new_patch_app <- function(){
 
-  ctx <- rstudioapi::getActiveDocumentContext()
+  ctx <- rstudioapi::getSourceEditorContext()
   selected_text <- ctx$selection[[1]]$text
+  final_pipe_present <- grepl("\\s*%>%\\s*$", selected_text)
   
   m <- get_single_object_for_app()
   
@@ -130,8 +131,14 @@ new_patch_app <- function(){
   
   diff_manual_edit(m, res)
   
-  code_to_add <- paste0(" %>%
+  if(final_pipe_present){
+    code_to_add <- paste0("
   apply_manual_edit(\"", res$patch_name,"\")")
+  } else {
+    code_to_add <- paste0(" %>%
+  apply_manual_edit(\"", res$patch_name,"\")")
+  }
+  
   
   rstudioapi::insertText(ctx$selection[[1]]$range$end, 
                          text = code_to_add,
@@ -143,8 +150,9 @@ new_patch_app <- function(){
 
 modify_patch_app <- function(){
   
-  ctx <- rstudioapi::getActiveDocumentContext()
+  ctx <- rstudioapi::getSourceEditorContext()
   selected_text <- ctx$selection[[1]]$text
+  final_pipe_present <- grepl("\\s*%>%\\s*$", selected_text)
   
   before_edit <- gsub("(.*)%>%.*apply_manual_edit.*", "\\1", selected_text)
   
@@ -165,9 +173,14 @@ modify_patch_app <- function(){
   ## now diff ctl_path(m) and old_file_path
   
   diff_manual_edit(m, res)
-  
-  code_to_add <- paste0(trimws(before_edit), " %>%
+
+  if(final_pipe_present){
+    code_to_add <- paste0(trimws(before_edit), " %>%
+  apply_manual_edit(\"", res$patch_name,"\") %>%")
+  } else {
+    code_to_add <- paste0(trimws(before_edit), " %>%
   apply_manual_edit(\"", res$patch_name,"\")")
+  }
   
   rstudioapi::insertText(text = code_to_add,
                          id = ctx$id)
@@ -180,9 +193,9 @@ make_patch_app <- function(){
   
   check_git_username()
   
-  ctx <- rstudioapi::getActiveDocumentContext()
+  ctx <- rstudioapi::getSourceEditorContext()
   selected_text <- ctx$selection[[1]]$text
-  
+  selected_text <- gsub("\\s*%>%\\s*$", "", selected_text)
   ## see if last function is apply_manual_edit
   
   ## get last function used in piping

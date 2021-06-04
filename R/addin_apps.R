@@ -1,6 +1,7 @@
 get_single_object_for_app <- function(){
-  ctx <- rstudioapi::getActiveDocumentContext()
+  ctx <- rstudioapi::getSourceEditorContext()
   selected_text <- ctx$selection[[1]]$text
+
   if(selected_text == ""){
     line <- ctx$selection[[1]]$range$start[[1]]
     pos <- ctx$selection[[1]]$range$start[[2]]
@@ -19,11 +20,15 @@ get_single_object_for_app <- function(){
       stop("couldn't find object in selected line")
   }
   
+  selected_text <- gsub("%>%\\s*$", "", selected_text)
+  
   old_behaviour <- overwrite_behaviour()
   overwrite_behaviour("skip")
   on.exit(overwrite_behaviour(old_behaviour))
   
-  m <- eval(parse(text = selected_text))  
+  suppressMessages({
+    m <- eval(parse(text = selected_text))  
+  })
   m
 }
 
