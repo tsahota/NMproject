@@ -54,9 +54,9 @@ show_ctl <- function(r) {
 
 #' @export
 show_ctl.nm_generic <- function(r) {
-  rtmp <- r %>% run_in(file.path(run_in(r), "temp"))
-  r %>% write_ctl(force = TRUE)
-  file.show(ctl_path(r))
+  rtmp <- r %>% ctl_name(paste0(ctl_name(r), ".tmp"))
+  rtmp %>% write_ctl(force = TRUE)
+  file.show(ctl_path(rtmp))
 }
 #' @export
 show_ctl.nm_list <- show_ctl.nm_generic
