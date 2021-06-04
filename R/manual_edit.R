@@ -25,8 +25,6 @@ start_manual_edit <- function(m, combine_patch = NA_character_){
   patch_path <- file.path(nm_default_dir("models"), "patches", patch_name)
   dir.create(dirname(patch_path), showWarnings = FALSE, recursive = TRUE)
   
-  ## this isn't used - delete
-  
   temp_ctl_path <- file.path(run_in(m), paste0("manual_", ctl_name(m)))
   mnew <- m %>% ctl_path(temp_ctl_path) %>% write_ctl(force = TRUE)
 
@@ -114,6 +112,7 @@ new_patch_app <- function(){
   ctx <- rstudioapi::getSourceEditorContext()
   selected_text <- ctx$selection[[1]]$text
   final_pipe_present <- grepl("\\s*%>%\\s*$", selected_text)
+  final_newline_present <- grepl("\\n\\s*$", selected_text)
   
   m <- get_single_object_for_app()
   
@@ -130,10 +129,15 @@ new_patch_app <- function(){
   ## now diff ctl_path(m) and old_file_path
   
   diff_manual_edit(m, res)
-  
+
   if(final_pipe_present){
-    code_to_add <- paste0("
-  apply_manual_edit(\"", res$patch_name,"\")")
+    if(final_newline_present){
+      code_to_add <- paste0("  apply_manual_edit(\"", res$patch_name,"\")")
+    } else {
+      code_to_add <- paste0("
+  apply_manual_edit(\"", res$patch_name,"\")")      
+    }
+    
   } else {
     code_to_add <- paste0(" %>%
   apply_manual_edit(\"", res$patch_name,"\")")
@@ -153,6 +157,7 @@ modify_patch_app <- function(){
   ctx <- rstudioapi::getSourceEditorContext()
   selected_text <- ctx$selection[[1]]$text
   final_pipe_present <- grepl("\\s*%>%\\s*$", selected_text)
+  final_newline_present <- grepl("\\n\\s*$", selected_text)
   
   before_edit <- gsub("(.*)%>%.*apply_manual_edit.*", "\\1", selected_text)
   
@@ -175,8 +180,12 @@ modify_patch_app <- function(){
   diff_manual_edit(m, res)
 
   if(final_pipe_present){
-    code_to_add <- paste0(trimws(before_edit), " %>%
+    if(final_newline_present){
+      code_to_add <- paste0(trimws(before_edit), "  apply_manual_edit(\"", res$patch_name,"\") %>%")
+    } else {
+      code_to_add <- paste0(trimws(before_edit), " %>%
   apply_manual_edit(\"", res$patch_name,"\") %>%")
+    }
   } else {
     code_to_add <- paste0(trimws(before_edit), " %>%
   apply_manual_edit(\"", res$patch_name,"\")")
