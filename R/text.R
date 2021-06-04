@@ -6,7 +6,7 @@ ctl_list2.ctl_list <- function(r) r
 
 ctl_list2.character <- function(r){
   if(length(r) == 1){
-    ctl <- readLines(r)
+    ctl <- trimws(readLines(r), which = "right")
   } else {
     ctl <- r
   }
