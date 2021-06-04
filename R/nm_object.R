@@ -46,20 +46,22 @@ To use the alpha interface, install NMproject 0.3.2",
   m$ctl_contents <- NA_character_
   m$ctl_orig <- NA_character_
   m$data_path <- NA_character_
-  m$cmd <- getOption("nm.cmd_default")
+  m$cmd <- NA_character_
   m$cores <- as.integer(1)
   m$parafile <- NA_character_
   m$walltime <- NA_integer_
   
   unique_id <- "{type}.{run_in}{.Platform$file.sep}{run_dir}"
   ## the following is in order of glueing
-  m$glue_fields <- list(run_dir, ctl_name, results_dir, unique_id, lst_path, NA_character_)
-  names(m$glue_fields) <- c("run_dir", "ctl_name", "results_dir", "unique_id", "lst_path", "data_path")
+  m$glue_fields <- list(run_dir, ctl_name, results_dir, unique_id, 
+                        lst_path, NA_character_, getOption("nm.cmd_default"))
+  names(m$glue_fields) <- c("run_dir", "ctl_name", "results_dir", "unique_id", 
+                            "lst_path", "data_path", "cmd")
   
   for(field in names(m$glue_fields)){
     m <- replace_tag(m, field)
   }
-  
+
   m
 }
 
