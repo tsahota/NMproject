@@ -122,7 +122,7 @@ m1s %>% nm_render("Scripts/basic_vpc.Rmd")
 ```
 
 check "Results to view" and it's good to document your thoughts about how well
-the model evalation is so others (including your future self) may follow your
+the model evaluation is so others (including your future self) may follow your
 thinking
 
 ```{r manual_edit}
@@ -131,7 +131,8 @@ thinking
 
 m1s_temp <- m1 %>% child("m1s_temp") %>%  
   update_parameters(m1) %>%
-  apply_manual_edit("patch-tarjinde-2021-04-20-13-50-09")
+  apply_manual_edit("patch-tarjinde-2021-06-04-17-07-24")
+
 
 # try using nm_diff(m1s_temp, m1s) to see the difference between the two
 # approaches.  Note that since we didn't run_nm(), runm1s_temp.mod was never
