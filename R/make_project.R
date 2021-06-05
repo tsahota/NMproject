@@ -213,7 +213,15 @@ stage <- function(files, root_dir,
   
   d <- d[!is.na(d$destination), ]
   dir_names <- unique(dirname(d$staging))
+  ### create staging with usethis
+  current_proj <- try(usethis::proj_get(), silent = TRUE)
+  if (inherits(current_proj, "try-error")) {
+    current_proj <- NULL
+  }
+  usethis::ui_silence(usethis::proj_set(getwd()))
+  on.exit(usethis::ui_silence(usethis::proj_set(current_proj)))
   usethis::use_directory("staging", ignore = TRUE)
+  usethis::ui_silence(usethis::proj_set(current_proj))
   for(dir_name in dir_names) dir.create(dir_name, recursive = TRUE, showWarnings = FALSE)
   
   existing_files <- d$staging[file.exists(d$staging)]
