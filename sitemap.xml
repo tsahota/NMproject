@@ -307,6 +307,9 @@
     <loc>https://tsahota.github.io/NMproject/reference/rename_parameter.html</loc>
   </url>
   <url>
+    <loc>https://tsahota.github.io/NMproject/reference/rmd_to_vignettes.html</loc>
+  </url>
+  <url>
     <loc>https://tsahota.github.io/NMproject/reference/rr.html</loc>
   </url>
   <url>
@@ -377,6 +380,9 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/update_parameters.html</loc>
+  </url>
+  <url>
+    <loc>https://tsahota.github.io/NMproject/reference/valid_package_name.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/view_patch.html</loc>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create analysis project — nm_create_analysis_project • NMproject</title>
+<title>Convert Rmarkdown scripts to vignettes — rmd_to_vignettes • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,11 +39,11 @@
 
 
 
-<meta property="og:title" content="Create analysis project — nm_create_analysis_project" />
+<meta property="og:title" content="Convert Rmarkdown scripts to vignettes — rmd_to_vignettes" />
 <meta property="og:description" content="
-This is the underlying function used by: File -&amp;gt; New Project -&amp;gt;
-New Directory -&amp;gt; New NMproject.  It creates a new analysis working
-directory with a directory structure similar to an R package." />
+Copies (by default) all scripts s01_XXX.Rmd, s02_XXX.Rmd into the
+&quot;vignettes&quot; and reformats so they meet vignette standards.  Use of
+devtools::build_vignettes() can then be used to build vignettes." />
 
 
 
@@ -117,89 +117,39 @@ directory with a directory structure similar to an R package." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create analysis project</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/make_project.R'><code>R/make_project.R</code></a></small>
-    <div class="hidden name"><code>nm_create_analysis_project.Rd</code></div>
+    <h1>Convert Rmarkdown scripts to vignettes</h1>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/nm.R'><code>R/nm.R</code></a></small>
+    <div class="hidden name"><code>rmd_to_vignettes.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
-<p>This is the underlying function used by: <code>File</code> -&gt; <code>New Project</code> -&gt;
-<code>New Directory</code> -&gt; <code>New NMproject</code>.  It creates a new analysis working
-directory with a directory structure similar to an R package.</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
+<p>Copies (by default) all scripts <code>s01_XXX.Rmd</code>, <code>s02_XXX.Rmd</code> into the
+"vignettes" and reformats so they meet vignette standards.  Use of
+<code><a href='https://devtools.r-lib.org//reference/build_vignettes.html'>devtools::build_vignettes()</a></code> can then be used to build vignettes.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>nm_create_analysis_project</span><span class='op'>(</span>
-  <span class='va'>path</span>,
-  dirs <span class='op'>=</span> <span class='fu'><a href='nm_default_dirs.html'>nm_default_dirs</a></span><span class='op'>(</span><span class='op'>)</span>,
-  style <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"analysis"</span>, <span class='st'>"analysis-package"</span><span class='op'>)</span>,
-  use_renv <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  <span class='va'>...</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>rmd_to_vignettes</span><span class='op'>(</span><span class='va'>script_files</span>, overwrite <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>path</th>
-      <td><p>Character path (relative or absolute) to project.  If just
-specifying a name, this will create the analysis project in the current
-working directory.  See details for naming requirements.</p></td>
+      <th>script_files</th>
+      <td><p>Optional character vector of scripts.  If empty will find
+scripting making the <code>s##_XXX.Rmd</code> convention.  Must be .Rmd files</p></td>
     </tr>
     <tr>
-      <th>dirs</th>
-      <td><p>Character list or vector.  Default = <code><a href='nm_default_dirs.html'>nm_default_dirs()</a></code></p></td>
-    </tr>
-    <tr>
-      <th>style</th>
-      <td><p>Character. Either <code>"analysis"</code> or <code>"analysis-package"</code> See
-details for <code>path</code> requirements and function behaviour.</p></td>
-    </tr>
-    <tr>
-      <th>use_renv</th>
-      <td><p>Logical (default = <code>FALSE</code>). Should <code>renv</code> be used or not in
-project.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Deprecated.</p></td>
+      <th>overwrite</th>
+      <td><p>Logical (default = <code>FALSE</code>). Overwrites existing vignettes
+of the same name.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The function works like as is inspired by
-<code>starters::create_analysis_project</code>. There is no restriction on directory
-name.  It is therefore possible to violate R package naming conventions.</p>
-<p>When <code>style = "analysis"</code> is selected, the analysis directory will be
-package-like in structure, with the package name <code>"localanalysis"</code>.
-For <code>style = "analysis-package"</code>, <code>path</code> should contain only (ASCII)
-letters, numbers and dot, have at least two characters and start with a
-letter and not end in a dot.  See <a href='https://cran.r-project.org/doc/manuals/r-release/R-exts.html#The-DESCRIPTION-file'>Description file requirements</a>
-for more information.</p>
-<p>This is to cater to users who like underscores and aren't interested in
-creating a package.</p>
-    <h2 class="hasAnchor" id="default-modelling-directories"><a class="anchor" href="#default-modelling-directories"></a>Default modelling directories</h2>
-
-    
-
-
-<p>Default modelling directories can be modified with <code>nm_default_dirs</code> option
-(see <code><a href='https://rdrr.io/r/base/options.html'>options()</a></code> for information on how to modify this). A (partially) named
-list of directories to be used by <code>nm_create_analysis_project</code> Required names
-are <code>"models"</code>, <code>"scripts"</code> and <code>"results"</code>. By default these are set to
-<code>"Models"</code>, <code>"Scripts"</code> and <code>"Results"</code>, respectively. Additional nameless
-characters (e.g. <code>"SourceData"</code>) correspond to additional modelling
-directories.</p>
-<dl>
-<dt>"SourceData":</dt><dd><p>intended for unmodified source datasets entering the analysis project.</p></dd>
-<dt>"DerivedData":</dt><dd><p>intended for cleaned and processed NONMEM ready datasets</p></dd>
-<dt>"Scripts":</dt><dd><p>intended for all R scripts</p></dd>
-<dt>"Models":</dt><dd><p>intended for all NONMEM modelling</p></dd>
-<dt>"Results":</dt><dd><p>intended as default location for run diagnostics, plots and tables</p></dd>
-
-</dl>
-
+    <p>Uses of <code><a href='decision.html'>decision()</a></code> must pass without stopping so these must have
+been run interactively prior to use of <code><a href='https://devtools.r-lib.org//reference/build_vignettes.html'>devtools::build_vignettes()</a></code>.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
