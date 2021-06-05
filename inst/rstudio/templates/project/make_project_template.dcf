@@ -4,8 +4,8 @@ Title: New NMproject
 Parameter: style
 Widget: SelectInput
 Label: style
-Fields: simple
-Default: simple
+Fields: analysis, analysis-package
+Default: analysis
 Position: left
 
 Parameter: use_renv

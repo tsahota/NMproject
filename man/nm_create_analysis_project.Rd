@@ -7,7 +7,7 @@
 nm_create_analysis_project(
   path,
   dirs = nm_default_dirs(),
-  style = c("simple"),
+  style = c("analysis", "analysis-package"),
   use_renv = FALSE,
   ...
 )
@@ -15,11 +15,12 @@ nm_create_analysis_project(
 \arguments{
 \item{path}{Character path (relative or absolute) to project.  If just
 specifying a name, this will create the analysis project in the current
-working directory.}
+working directory.  See details for naming requirements.}
 
 \item{dirs}{Character list or vector.  Default = \code{nm_default_dirs()}}
 
-\item{style}{Character. Currently only "simple" See details.}
+\item{style}{Character. Either \code{"analysis"} or \code{"analysis-package"} See
+details for \code{path} requirements and function behaviour.}
 
 \item{use_renv}{Logical (default = \code{FALSE}). Should \code{renv} be used or not in
 project.}
@@ -37,6 +38,14 @@ directory with a directory structure similar to an R package.
 The function works like as is inspired by
 \code{starters::create_analysis_project}. There is no restriction on directory
 name.  It is therefore possible to violate R package naming conventions.
+
+When \code{style = "analysis"} is selected, the analysis directory will be
+package-like in structure, with the package name \code{"localanalysis"}.
+For \code{style = "analysis-package"}, \code{path} should contain only (ASCII)
+letters, numbers and dot, have at least two characters and start with a
+letter and not end in a dot.  See \href{https://cran.r-project.org/doc/manuals/r-release/R-exts.html#The-DESCRIPTION-file}{Description file requirements}
+for more information.
+
 This is to cater to users who like underscores and aren't interested in
 creating a package.
 }
