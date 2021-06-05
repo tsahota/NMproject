@@ -95,6 +95,7 @@ Collate:
     'prompt_overwrite.R'
     'psn_style_scm.R'
     'read_ext.R'
+    'rmd_to_vignette.R'
     'run_nm.R'
     'run_record.R'
     'shiny_apps.R'

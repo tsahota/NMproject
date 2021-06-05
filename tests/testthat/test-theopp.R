@@ -225,6 +225,10 @@ test_that("run and post",{
   expect_error(m1 %>% add_cov(param = "K", cov = "DUMMY"))
   expect_error(m1 %>% add_cov(param = "K", cov = "WT", state = "2", additional_state_text = c("2" = "nonsense")))
   
+  ## rmd to vignettes
+  rmd_to_vignettes()
+  expect_true(length(dir("vignettes", pattern = "\\.Rmd$")) >= 5)
+  
   ## shouldn't be any temp files for m1 in zip
   expect_true(length(ls_tempfiles(m1)) == 0)
   
