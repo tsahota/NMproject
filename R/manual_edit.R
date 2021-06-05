@@ -39,7 +39,7 @@ start_manual_edit <- function(m, combine_patch = NA_character_){
   
   if(!is.na(combine_patch)) m <- m %>% apply_manual_edit(combine_patch)
   
-  edit_file(ctl_path(mnew)) ## edit new one
+  usethis::edit_file(ctl_path(mnew)) ## edit new one
   
   res <- list()
   res$new_ctl_path <- temp_ctl_path
