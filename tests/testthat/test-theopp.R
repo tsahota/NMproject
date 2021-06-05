@@ -1,5 +1,3 @@
-context("run and post")
-
 debug <- TRUE
 proj_name <- "test_nmproject"
 proj_path <- file.path(tempdir(), proj_name)

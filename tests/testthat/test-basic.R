@@ -1,5 +1,3 @@
-context("basic NM project setup")
-
 proj_name <- "test_nmproject"
 proj_path <- file.path(tempdir(), proj_name)
 
