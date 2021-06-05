@@ -11,6 +11,7 @@ reference:
   - setup_nm_demo
   - run_all_scripts
   - temp_files
+  - rmd_to_vignettes
 - title: "Importing code"
 - contents:
   - code_library
