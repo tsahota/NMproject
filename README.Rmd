@@ -24,15 +24,16 @@ knitr::opts_chunk$set(
 [![CRAN status](https://www.r-pkg.org/badges/version/NMproject)](https://CRAN.R-project.org/package=NMproject)
 <!-- badges: end -->
 
-Have you ever tried to continue some model development work (a colleague’s or even your own) but struggled to remember what was previously done and in which order? Have you ever wished you could repeat your entire model building at the push of a button e.g. because the source data has been updated, or because of a mistake carried forward?
+Script based model development in RStudio.
 
-The end-to-end workflows you create with NMproject reduce the time it takes to get a working model, drastically reduce the time to update/repeat prior analyses, enable the repurposing of prior analyses to new problems, and enable pre-programming of complex workflows before data becomes available so that when it does become available we can react to decision points in stats-like timelines.
-
-History: NMproject was previously an internal AstraZeneca project.  It is reimplemented here as a community version.
+- NONMEM code library
+- End-to-end script based model development workflows
+- Scale to groups of runs and complex workflows
+- 100% flexibility through tracked manual edits
+- Customisable to multiple infrastructure types
 
 [Two-minute Youtube summary](https://www.youtube.com/watch?v=b7oBb6QZub8)
-*WARNING: this is the prototype "alpha" interface. The new interface has a different syntax. Video to be replaced*
-
+*WARNING: this is the prototype "alpha" interface. The new interface has a different syntax and is not backwards compatible. Video is to be replaced*
 
 <!-- old pictures
 <img src=https://user-images.githubusercontent.com/18026277/26879195-79b6f4c0-4b90-11e7-8228-01b117e64a12.png width=24.6% /><img src=https://user-images.githubusercontent.com/18026277/26879231-a046cfc0-4b90-11e7-9dbf-666086f32b9d.png width=24.5% /><img src=https://user-images.githubusercontent.com/18026277/26879238-a4a94fc0-4b90-11e7-8e8f-1b12a03f912d.png width=24.5% /><img src=https://user-images.githubusercontent.com/18026277/26879240-a7a53ebe-4b90-11e7-80fa-74bef643db29.png width=24.5% />
@@ -40,14 +41,25 @@ History: NMproject was previously an internal AstraZeneca project.  It is reimpl
 
 ## Installation
 
-NONMEM, PsN, and Rstudio are required to be installed prior to these steps.  To install the latest development version from [GitHub](https://github.com/):
+<!-- CRAN install instructions
+
+You can install the released version of NMproject from [CRAN](https://CRAN.R-project.org) with:
+
+```{r eval = FALSE}
+install.packages("NMproject")
+```
+
+-->
+
+To install the latest version of NMproject from [GitHub](https://github.com/):
 
 ```{r eval = FALSE}
 if(!require("devtools")) install.packages("devtools")
 devtools::install_github("tsahota/NMproject")
 ```
 
-To install a specific release (e.g. v0.5.1) use the following command:
+To install a specific release (e.g. v0.5.1) on [GitHub](https://github.com/) 
+use the following command:
 
 ```{r eval = FALSE}
 devtools::install_github("tsahota/NMproject@v0.5.1")
@@ -61,46 +73,88 @@ library(NMproject)
 
 ## Getting started with NMproject
 
-The easiest way to familiarise your with NMproject is to follow through the [demo](https://tsahota.github.io/NMproject/articles/NMproject.html#demo-learn-by-doing-1).
+Two options:
 
-See the [vignette](https://tsahota.github.io/NMproject/articles/NMproject.html) for overall package documentation.
+1. Running the
+[demo](https://tsahota.github.io/NMproject/articles/NMproject.html#demo-learn-by-doing-1)
+is easiest way to familiarise your with NMproject.
+2. Reading the 
+[vignette](https://tsahota.github.io/NMproject/articles/NMproject.html).
 
-## Example code
+## Code snippets
 
-NMprojects works best with pipes `%>%`.  Below we take a parent run, `m1`, create a new child run with the first pipe, then convert it from `ADVAN2 TRANS1` (KA, K, V) to `ADVAN2 TRANS2` (KA, CL, V) by piping into the `subroutine()` function before running with the `run_nm()` function:
+Use of pipes, `%>%`, make it easy to code sequences of operations to model 
+objects.
+
+Following snippet adds covariates to model object, `m2`:
+
+- create a separate child control file
+- add a covariate relationship to it (using PsN SCM syntax)
+- run
 
 ```{r eval=FALSE}
 
-m2 <- m1 %>% child() %>%
-  subroutine(trans = 2) %>%
+m2WT <- m2 %>% child() %>%
+  add_cov(param = "CL", cov = "WT", state = "power") %>%
   run_nm()
 
 ```
 
-To generate diagnostics we create a diagnostic template with help of pre-existing templates, here it's `Scripts/basic_gof.Rmd` and run this on m2.  This will create a project specific run report to evaluate your model.  Can also run `Scripts/basic_gof.Rmd` interactively as a notebook to customise your diagnostics to the problem.
+Graphical RStudio "addins" exist for reviewing the changes that functions like
+`add_cov()` make before execution and performing `nm_tran()` checks.
+
+For more complex operations use fully tracked manual edits.
+
+Apply fully customisable diagnostic reports to one or multiple objects with
+`nm_render()` like so:
 
 ```{r eval = FALSE}
 
-m2 %>% nm_render("Scripts/basic_gof.Rmd")
-
-## run reports will be in "Results" directory of analysis project
+c(m1, m2) %>% nm_render("Scripts/basic_gof.Rmd")
+## Saves html diagnostic reports in "Results" directory
 
 ```
 
-Here's a code snippet creating a running simulation so that vpc and ppc diagnostics can be applied
-  
+The template `Scripts/basic_gof.Rmd` can also be run as an R notebook for
+interactively customising to your specific model evaluation criteria.
+
+Here's a snippet for producing PPCs and VPCs:
+
+- create a new (child) control stream
+- updating initial estimates to final estimates
+- convert it to a simulation control file
+- run
+- generate customised PPCs and VPCs from the outputs
+
 ```{r eval=FALSE}
 m2s <- m2 %>% child(run_id = "m2s") %>%
-              update_parameters(m2) %>%
-              convert_to_simulation(subpr = 50) %>%
-              run_nm()
+  update_parameters(m2) %>%
+  convert_to_simulation(subpr = 50) %>%
+  run_nm()
 
 m2s %>% nm_render("Scripts/basic_vpc.Rmd")
 m2s %>% nm_render("Scripts/basic_ppc.Rmd")
 
-## run reports will be in "Results" directory of analysis project
+```
+
+Advanced functionality enables groups of runs to be handled with the same
+concise syntax (no loops):
+
+- create 5 child runs
+- Perturb the initial estimates of \$THETA and \$OMEGA
+- move them to their own subdirectory
+- run them all
+
+```{r eval = FALSE}
+
+m1rep <- m1 %>% child(1:5) %>% 
+  init_theta(init = rnorm(init, mean = init, sd = 0.3)) %>%
+  init_omega(init = runif(init, min = init/2, max = init/2)) %>%
+  run_in("Models/m1_perturb_inits") %>%
+  run_nm()
 
 ```
 
-
-See the [vignette](https://tsahota.github.io/NMproject/articles/NMproject.html) for more examples
+See the
+[vignette](https://tsahota.github.io/NMproject/articles/NMproject.html) for more
+examples
