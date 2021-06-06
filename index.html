@@ -79,21 +79,36 @@
 <a href="#nmproject" class="anchor"></a>NMproject</h1></div>
 <!-- badges: start -->
 
-<p>Have you ever tried to continue some model development work (a colleague’s or even your own) but struggled to remember what was previously done and in which order? Have you ever wished you could repeat your entire model building at the push of a button e.g. because the source data has been updated, or because of a mistake carried forward?</p>
-<p>The end-to-end workflows you create with NMproject reduce the time it takes to get a working model, drastically reduce the time to update/repeat prior analyses, enable the repurposing of prior analyses to new problems, and enable pre-programming of complex workflows before data becomes available so that when it does become available we can react to decision points in stats-like timelines.</p>
-<p>History: NMproject was previously an internal AstraZeneca project. It is reimplemented here as a community version.</p>
-<p><a href="https://www.youtube.com/watch?v=b7oBb6QZub8">Two-minute Youtube summary</a> <em>WARNING: this is the prototype “alpha” interface. The new interface has a different syntax. Video to be replaced</em></p>
+<p>Script based model development in RStudio.</p>
+<ul>
+<li>NONMEM code library</li>
+<li>End-to-end script based model development workflows</li>
+<li>Scale to groups of runs and complex workflows</li>
+<li>100% flexibility through tracked manual edits</li>
+<li>Customisable to multiple infrastructure types</li>
+</ul>
+<p><a href="https://www.youtube.com/watch?v=b7oBb6QZub8">Two-minute Youtube summary</a> <em>WARNING: this is the prototype “alpha” interface. The new interface has a different syntax and is not backwards compatible. Video is to be replaced</em></p>
 <!-- old pictures
 <img src=https://user-images.githubusercontent.com/18026277/26879195-79b6f4c0-4b90-11e7-8228-01b117e64a12.png width=24.6% /><img src=https://user-images.githubusercontent.com/18026277/26879231-a046cfc0-4b90-11e7-9dbf-666086f32b9d.png width=24.5% /><img src=https://user-images.githubusercontent.com/18026277/26879238-a4a94fc0-4b90-11e7-8e8f-1b12a03f912d.png width=24.5% /><img src=https://user-images.githubusercontent.com/18026277/26879240-a7a53ebe-4b90-11e7-80fa-74bef643db29.png width=24.5% />
 -->
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>NONMEM, PsN, and Rstudio are required to be installed prior to these steps. To install the latest development version from <a href="https://github.com/">GitHub</a>:</p>
+<!-- CRAN install instructions
+
+You can install the released version of NMproject from [CRAN](https://CRAN.R-project.org) with:
+
+
+```r
+install.packages("NMproject")
+```
+
+-->
+<p>To install the latest version of NMproject from <a href="https://github.com/">GitHub</a>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="st"><a href="https://devtools.r-lib.org/">"devtools"</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"tsahota/NMproject"</span><span class="op">)</span></code></pre></div>
-<p>To install a specific release (e.g. v0.5.1) use the following command:</p>
+<p>To install a specific release (e.g. v0.5.1) on <a href="https://github.com/">GitHub</a> use the following command:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"tsahota/NMproject@v0.5.1"</span><span class="op">)</span></code></pre></div>
 <p>Load the package with</p>
@@ -103,33 +118,62 @@
 <div id="getting-started-with-nmproject" class="section level2">
 <h2 class="hasAnchor">
 <a href="#getting-started-with-nmproject" class="anchor"></a>Getting started with NMproject</h2>
-<p>The easiest way to familiarise your with NMproject is to follow through the <a href="https://tsahota.github.io/NMproject/articles/NMproject.html#demo-learn-by-doing-1">demo</a>.</p>
-<p>See the <a href="https://tsahota.github.io/NMproject/articles/NMproject.html">vignette</a> for overall package documentation.</p>
+<p>Two options:</p>
+<ol>
+<li>Running the <a href="https://tsahota.github.io/NMproject/articles/NMproject.html#demo-learn-by-doing-1">demo</a> is easiest way to familiarise your with NMproject.</li>
+<li>Reading the <a href="https://tsahota.github.io/NMproject/articles/NMproject.html">vignette</a>.</li>
+</ol>
 </div>
-<div id="example-code" class="section level2">
+<div id="code-snippets" class="section level2">
 <h2 class="hasAnchor">
-<a href="#example-code" class="anchor"></a>Example code</h2>
-<p>NMprojects works best with pipes <code><a href="reference/%&gt;%.html">%&gt;%</a></code>. Below we take a parent run, <code>m1</code>, create a new child run with the first pipe, then convert it from <code>ADVAN2 TRANS1</code> (KA, K, V) to <code>ADVAN2 TRANS2</code> (KA, CL, V) by piping into the <code><a href="reference/subroutine.html">subroutine()</a></code> function before running with the <code><a href="reference/run_nm.html">run_nm()</a></code> function:</p>
+<a href="#code-snippets" class="anchor"></a>Code snippets</h2>
+<p>Use of pipes, <code><a href="reference/%&gt;%.html">%&gt;%</a></code>, make it easy to code sequences of operations to model objects.</p>
+<p>Following snippet adds covariates to model object, <code>m2</code>:</p>
+<ul>
+<li>create a separate child control file</li>
+<li>add a covariate relationship to it (using PsN SCM syntax)</li>
+<li>run</li>
+</ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">m2</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/child.html">child</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="reference/subroutine.html">subroutine</a></span><span class="op">(</span>trans <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">m2WT</span> <span class="op">&lt;-</span> <span class="va">m2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/child.html">child</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="reference/add_remove_covs.html">add_cov</a></span><span class="op">(</span>param <span class="op">=</span> <span class="st">"CL"</span>, cov <span class="op">=</span> <span class="st">"WT"</span>, state <span class="op">=</span> <span class="st">"power"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>To generate diagnostics we create a diagnostic template with help of pre-existing templates, here it’s <code>Scripts/basic_gof.Rmd</code> and run this on m2. This will create a project specific run report to evaluate your model. Can also run <code>Scripts/basic_gof.Rmd</code> interactively as a notebook to customise your diagnostics to the problem.</p>
+<p>Graphical RStudio “addins” exist for reviewing the changes that functions like <code><a href="reference/add_remove_covs.html">add_cov()</a></code> make before execution and performing <code><a href="reference/nm_tran.html">nm_tran()</a></code> checks.</p>
+<p>For more complex operations use fully tracked manual edits.</p>
+<p>Apply fully customisable diagnostic reports to one or multiple objects with <code><a href="reference/nm_render.html">nm_render()</a></code> like so:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">m2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_gof.Rmd"</span><span class="op">)</span>
-
-<span class="co">## run reports will be in "Results" directory of analysis project</span></code></pre></div>
-<p>Here’s a code snippet creating a running simulation so that vpc and ppc diagnostics can be applied</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">m1</span>, <span class="va">m2</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_gof.Rmd"</span><span class="op">)</span>
+<span class="co">## Saves html diagnostic reports in "Results" directory</span></code></pre></div>
+<p>The template <code>Scripts/basic_gof.Rmd</code> can also be run as an R notebook for interactively customising to your specific model evaluation criteria.</p>
+<p>Here’s a snippet for producing PPCs and VPCs:</p>
+<ul>
+<li>create a new (child) control stream</li>
+<li>updating initial estimates to final estimates</li>
+<li>convert it to a simulation control file</li>
+<li>run</li>
+<li>generate customised PPCs and VPCs from the outputs</li>
+</ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2s</span> <span class="op">&lt;-</span> <span class="va">m2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m2s"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-              <span class="fu"><a href="reference/update_parameters.html">update_parameters</a></span><span class="op">(</span><span class="va">m2</span><span class="op">)</span> <span class="op">%&gt;%</span>
-              <span class="fu"><a href="reference/convert_to_simulation.html">convert_to_simulation</a></span><span class="op">(</span>subpr <span class="op">=</span> <span class="fl">50</span><span class="op">)</span> <span class="op">%&gt;%</span>
-              <span class="fu"><a href="reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="reference/update_parameters.html">update_parameters</a></span><span class="op">(</span><span class="va">m2</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="reference/convert_to_simulation.html">convert_to_simulation</a></span><span class="op">(</span>subpr <span class="op">=</span> <span class="fl">50</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="va">m2s</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_vpc.Rmd"</span><span class="op">)</span>
-<span class="va">m2s</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_ppc.Rmd"</span><span class="op">)</span>
-
-<span class="co">## run reports will be in "Results" directory of analysis project</span></code></pre></div>
+<span class="va">m2s</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_ppc.Rmd"</span><span class="op">)</span></code></pre></div>
+<p>Advanced functionality enables groups of runs to be handled with the same concise syntax (no loops):</p>
+<ul>
+<li>create 5 child runs</li>
+<li>Perturb the initial estimates of $THETA and $OMEGA</li>
+<li>move them to their own subdirectory</li>
+<li>run them all</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">m1rep</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/child.html">child</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="reference/init_theta.html">init_theta</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">init</span>, mean <span class="op">=</span> <span class="va">init</span>, sd <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="reference/init_theta.html">init_omega</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="va">init</span>, min <span class="op">=</span> <span class="va">init</span><span class="op">/</span><span class="fl">2</span>, max <span class="op">=</span> <span class="va">init</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="reference/nm_getsetters.html">run_in</a></span><span class="op">(</span><span class="st">"Models/m1_perturb_inits"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>See the <a href="https://tsahota.github.io/NMproject/articles/NMproject.html">vignette</a> for more examples</p>
 </div>
 </div>
