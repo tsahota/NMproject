@@ -3,17 +3,21 @@
 This is the first CRAN release of NMproject.  Here are the major changes here 
 relative to 0.5.1:
 
-* Removal of tidyproject as an NMproject dependency. Project libraries are now
-  handled with `renv` and project creation has been moved to NMproject with
-  light wrappers around `usethis` project creation functionality.  The code 
-  library has been moved to NMproject.  The tidyproject package is now 
-  deprecated.
-  
-* Expanded demo based on theophylline and new vignette based around same demo.
-  
-* New shiny interface to code library available via RStudio addins.  The code
-  library has been restructured to match NMproject analysis directory structure.
+* Removal and deprecation of tidyproject as an NMproject dependency.
 
+* Project libraries are now handled with `renv`.
+
+* Analysis project creation has been moved to NMproject with
+  light wrappers around `usethis` project creation functionality and RStudio
+  project templates.  Analysis projects have a package-like structure.
+  
+* Expanded demo based on a theophylline pharmacometric analysis and new vignette
+  based around same demo.
+  
+* The code library has been moved to NMproject.  New shiny interface to code 
+  library available via RStudio addins.  The code library has been restructured
+  to match NMproject analysis directory structure.
+  
 * `new_nm()` function to create parent `nm_list` objects.
 
 * New manual edit interface via RStudio addins.  NMproject is the only NONMEM
@@ -26,8 +30,7 @@ relative to 0.5.1:
   the same syntax as single runs.
 
 * Custom NMproject implementations of PsN's bootstrap, cross-validation, 
-  stepwise covariate selection, simulation-re-estimation, and PPCs. All 
-  controllable and subsettable via vectorized syntax.
+  stepwise covariate selection, simulation-re-estimation, and PPCs.
 
 # NMproject 0.5.1 (beta interface pre-release)
 

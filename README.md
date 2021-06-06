@@ -19,12 +19,12 @@ maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lif
 status](https://www.r-pkg.org/badges/version/NMproject)](https://CRAN.R-project.org/package=NMproject)
 <!-- badges: end -->
 
-Script based model development in RStudio.
+Script based ‘NONMEM’ model development in RStudio.
 
 -   NONMEM code library
 -   End-to-end script based model development workflows
 -   Scale to groups of runs and complex workflows
--   100% flexibility through tracked manual edits
+-   100% flexibility through tracked manual edits to model files
 -   Customisable to multiple infrastructure types
 
 [Two-minute Youtube
