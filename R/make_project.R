@@ -67,6 +67,10 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
                                        style = c("analysis", "analysis-package"), 
                                        use_renv = FALSE, ...){
   
+  ## need to normalize path because usethis has different
+  ## home directory, so use use R normalizePath to remove abiguity
+  path <- normalizePath(path, mustWork = FALSE)
+  
   validate_dir_list(dirs)
   
   style <- match.arg(style)
