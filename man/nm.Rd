@@ -19,36 +19,44 @@ nm(
 )
 }
 \arguments{
-\item{run_id}{character vector. Run identifier}
+\item{run_id}{Character vector. Run identifier.}
 
-\item{run_in}{character vector. ctl file and run location}
+\item{run_in}{Character vector. The location to copy the NONMEM control file
+and run location.}
 
-\item{parent_run_id}{character vector (optional). Run identifier of previous run}
+\item{parent_run_id}{Character vector (optional). The run identifier of the
+parent run.}
 
-\item{parent_run_in}{character vector (optional). Run location of previous run}
+\item{parent_run_in}{Character vector (optional). The location of the parent
+run.}
 
-\item{parent_ctl_name}{character vector (optional). Ctl name of previous run}
+\item{parent_ctl_name}{Character vector (optional). The \code{ctl_name} of the
+parent run.}
 
-\item{parent_results_dir}{character vector (optional). results_dir of previous run}
+\item{parent_results_dir}{Character vector (optional). The \code{results_dir} of
+the parent run.}
 
-\item{ctl_name}{character. Name of control file}
+\item{ctl_name}{Character. Name of control file.}
 
-\item{type}{character (default = "execute").  Type of run to run}
+\item{type}{Character (default = \code{"execute"}).  Type of run to run.}
 
-\item{run_dir}{character (default = "{run_id}").  Subdirectory where PsN wll run NONMEM}
+\item{run_dir}{Character (default = \code{"{run_id}"}).  Subdirectory where PsN
+will run NONMEM.}
 
-\item{results_dir}{character (default = "Results").
-Directory to store results of this run}
+\item{results_dir}{Character (default = \code{"Results"}). Directory to store
+results of this run.}
 
-\item{lst_path}{character (default = "{run_dir}/NM_run1/psn.lst") expected location of lst file}
+\item{lst_path}{Character (default = \code{"{run_dir}/NM_run1/psn.lst"}) expected
+location of .lst file.}
 }
 \value{
-An object of class nm_list.  Object is concatenatable.
-Length of object corresponds to length of run_id
+An object of class \code{nm_list}.  Object is concatenatable. Length of
+object corresponds to length of \code{run_id}.
 }
 \description{
-Experimental new nm object interface.  Not compatible with previous system.
-The basic object this package centres around.  Most package functions act on this object.
+Create new nm object. The function \code{\link[=new_nm]{new_nm()}} is more convenient.  This is
+mostly a back end function. This is the basic object this package centres
+around.  Most package functions act on this object.
 }
 \examples{
 \dontrun{

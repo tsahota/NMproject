@@ -61,8 +61,8 @@ convert_to_simulation.nm_list <- Vectorize_nm_list(
 #' `r lifecycle::badge("stable")`
 #' 
 #' @param r An nm object (a simulation run).
-#' @param FUN Statistic function with NONMEM dataset as arg and
-#'   returns `data.frame` with a column `"statistic"`.
+#' @param FUN Statistic function accepting a NONMEM dataset `data.frame` as an
+#'   argument and returns `data.frame` with a column `"statistic"`.
 #' @param ... Additional arguments for `FUN`.
 #' @param pre_proc Function to apply to dataset prior to compute statistics.
 #' @param max_mod_no Integer. Maximum model number to read (set low for debugging).

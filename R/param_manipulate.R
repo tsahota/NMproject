@@ -36,7 +36,7 @@ remove_parameter <- function(m, name){
 #' @param name Character. Name of NONMEM variable to create.
 #' @param init Numeric (default = `1`). Initial value of fixed effect.
 #' @param unit Character (default = `""`). Unit of variable.
-#' @param trans Character (default = `"LOG"`). Tranformation of the variable.
+#' @param trans Character (default = `"LOG"`). Transformation of the variable.
 #' @param position Integer. Not used.
 #' @param after Character. Pattern to match and include the mixed effect after.
 #' 

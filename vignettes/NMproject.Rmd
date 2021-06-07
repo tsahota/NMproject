@@ -168,7 +168,7 @@ The model will be in the staging area: `staging/Models/ADVAN2.mod`, not `Models/
 
 ## The core nm object
 
-The core nm object is created via the `new_nm()`.  Subsequent child objects are created via the `child()` function. All interactions with NONMEM occur through the this object.  It contains metadata about the NONMEM run and contain the contents of what will writtent as the control file (also called model file).
+The core nm object is created via the `new_nm()`.  Subsequent child objects are created via the `child()` function. All interactions with NONMEM occur through the this object.  It contains metadata about the NONMEM run and contain the contents of what will written as the control file (also called model file).
 
 NONMEM control files are only written to the `Models` sub-directory just before running NONMEM via the `run_nm()` command
 
@@ -348,7 +348,7 @@ m1 %>% dollar("THETA")
 
 ```
 
-This is quite inconvenient though as it requires 3 lines of R code.  Knowing the columns of the tibble though, we can manipulate values directly like so:
+This is quite inconvenient though as it requires 3 lines of R code.  Knowing the columns of the 'tibble' though, we can manipulate values directly like so:
 
 ```{r}
 
@@ -392,7 +392,7 @@ Use markdown templates to create a customised set of diagnostics to reuse on mul
 
 - `bootstrap results`
 
-*PLACEHOLDER: short youtube video of opening, customizing, saving and running a template.*
+*PLACEHOLDER: short YouTube video of opening, customizing, saving and running a template.*
 
 A template will appear in the script window for you to customise.  Instructions are the at the top.  Save the file (e.g. as `Scripts/basic_gof.Rmd`) and run in your log script with:
 
@@ -662,7 +662,7 @@ Both are nm objects with length 1 and 2, respectively.  We used the `c(m1, m2)` 
 
 The vectorized nature of the nm object is particularly powerful when used in conjuction with `dplyr`.  To demonstrate, lets repeat the the previous initial perturbation exercise, but create 5 runs each with their own perturbed initial estimates.
 
-The basic idea is to contruct a `tibble` (if you are unfamiliar with `tibble`s, they are a tidyverse expansion of the concept of a `data.frame`), and then use a `dplyr::mutate` statement to construct a column vector of nm objects.  Below the column vector is produced by starting with the parent object `m1` and then supplying a vector rather than a scalar to the `child()` function.  Since the `rep` column is length 5, this will make the nm_object length 5.
+The basic idea is to construct a `tibble` (a `tibble` is a 'tidyverse' expansion of the concept of a `data.frame`), and then use a `dplyr::mutate` statement to construct a column vector of nm objects.  Below the column vector is produced by starting with the parent object `m1` and then supplying a vector rather than a scalar to the `child()` function.  Since the `rep` column is length 5, this will make the nm_object length 5.
 
 ```{r eval = FALSE}
 
@@ -674,7 +674,7 @@ dp$m <- m1 %>% ## start with parent - m1 is length 1
 
 ```
 
-View `dp` to see a tibble with two columsn `rep` and `m`.  View the new `$THETA` statements with `dp$m %>% dollar("THETA")`.
+View `dp` to see a `tibble` with two columns `rep` and `m`.  View the new `$THETA` statements with `dp$m %>% dollar("THETA")`.
 
 An alternative but equivalent way of writing the above is to use dplyrs `mutate` statement to create the `m` column
 
@@ -708,7 +708,7 @@ Note that here the functions `init_theta`, `dollar` and `run_nm` were all operat
 
 Lets expand the earlier subroutine example to build a vector of runs that test multiple different `ADVAN`s and `TRANS` at the same time.
 
-We'll use a similar structure to the previous section using `.available_advans` to list all available advans, `filter` to isolate specific advans, and `mutate` and `subroutine()` to perform the control file manipulation function.
+We'll use a similar structure to the previous section using `.available_advans` to list all available ADVAN/TRANS options, `filter` to isolate specific ADVAN/TRANS options, and `mutate` and `subroutine()` to perform the control file manipulation function.
 
 Then we'll display all the `$PK` subroutines to view the changes.
 
@@ -899,7 +899,7 @@ m1 <- m1 %>%
 
 Note that child object will inherit the same `cmd` structure, `cores` and `parafile`.
 
-### + How do I run this on other clusters like Slurm, LSF, Torque
+### + How do I run this on other clusters like Slurm, LSF, Torque?
 
 The workflow is similar to above where PsN handles the grid submission. You will need to create your own analog character to `sge_parallel_execute` for your respective cluster.  It is recommended to consult PsN documentation to "gridify" your PsN command.  Once you have this, it's just a simple matter of replacing your control file name, run directory, parafile and desired number of cores with the relevant glue field (e.g. `{parafile}`) and then putting it into your parent `cmd()` command to get it running through NMproject.
 
@@ -962,7 +962,7 @@ NMproject doesn't change PsN's default directory structure, everything in the "M
 
 If it's something you think really should be part of NMproject, open a github "issue" and ask for the feature.
 
-### + That's all well and good that NMproject has it's own boostrap/vpc/... methods, but I just want to run/rerun a bootstrap/vpc/... in PsN.  Can I do this through NMproject?
+### + That's all well and good that NMproject has it's own bootstrap/vpc/... methods, but I just want to run/rerun a bootstrap/vpc/... in PsN.  Can I do this through NMproject?
 
 Yes, just change `cmd` to reflect the proper PsN command.
 

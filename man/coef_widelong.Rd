@@ -20,7 +20,7 @@ in $THETA/$OMEGA/$SIGMA.}
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 Pulls parameters, standard errors, OFVs and condition numbers out of ext
-files, applies tranformations.  This function is useful when numeric values
+files, applies transformations.  This function is useful when numeric values
 are needed. \code{rr} is easier to read, however it returns characters.  A wide
 and long format is available via two different functions.
 }

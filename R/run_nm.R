@@ -18,7 +18,7 @@ NULL
 #' @param ignore.stderr Logical (default=TRUE). Parameter passed to `system_nm()`.
 #' @param quiet Logical (default=FALSE). Should `system_nm()` output be piped to
 #'   screen?
-#' @param intern Logical. `intern` arg to be passed to `system_nm()`.
+#' @param intern Logical. `intern` argument to be passed to `system_nm()`.
 #' @param force Logical (default = FALSE).  Force run even results unchanged.
 #' @param cache_ignore_cmd Logical (default = FALSE). Should check `cmd` field
 #'   with cache?
@@ -288,7 +288,7 @@ psn_exported_files.nm_list <- Vectorize_nm_list(psn_exported_files.nm_generic, S
 #'
 #' NONMEM produces a lot of temporary files which can add up to a lot of disk
 #' space.  One strategy to remove this is to use the `clean` option in the PsN
-#' command.  However, this can autoamtically remove files as soon as the run
+#' command.  However, this can automatically remove files as soon as the run
 #' finishes that may be useful for debugging.  `ls_tempfiles()`` allows you to
 #' list the paths of all temporary files, for a single run or for all runs for
 #' inspection and deletion. `clean_run()` is a wrapper function that runs
@@ -308,8 +308,8 @@ psn_exported_files.nm_list <- Vectorize_nm_list(psn_exported_files.nm_generic, S
 #' @param include_psn_exports Logical (default = `FALSE`). Considers files that
 #'   PsN exports to the `run_in` directory as temporary
 #'
-#' @details Setting `include_psn_exports = TRUE` will break pirana and xpose
-#' capability as these software use exported files.
+#' @details Setting `include_psn_exports = TRUE` will break 'Pirana' and 'xpose'
+#'   capability as these software use exported files.
 #'
 #' @examples
 #'
@@ -317,7 +317,7 @@ psn_exported_files.nm_list <- Vectorize_nm_list(psn_exported_files.nm_generic, S
 #'
 #' ls_tempfiles(m1) ## display all temp files associated with m1
 #'
-#' m1 %>% ls_tempfiles() %>% unlink()  ## delete all m1 tempfiles
+#' m1 %>% ls_tempfiles() %>% unlink()  ## delete all m1 temp files
 #'
 #' ## above line is equivalent to:
 #' clean_run(m1)

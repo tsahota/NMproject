@@ -2,14 +2,14 @@
 % Please edit documentation in R/make_project.R
 \name{valid_package_name}
 \alias{valid_package_name}
-\title{Package name validator from usethis}
+\title{Package name validator from \code{usethis}}
 \usage{
 valid_package_name(x)
 }
 \arguments{
-\item{x}{name of package}
+\item{x}{Name of package.}
 }
 \description{
-Package name validator from usethis
+Package name validator from \code{usethis}
 }
 \keyword{internal}

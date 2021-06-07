@@ -67,24 +67,32 @@ To use the alpha interface, install NMproject 0.3.2",
 
 #' Create core NM object
 #' 
-#' Experimental new nm object interface.  Not compatible with previous system.
-#'   The basic object this package centres around.  Most package functions act on this object.
-#' 
-#' @param run_id character vector. Run identifier
-#' @param run_in character vector. ctl file and run location  
-#' @param parent_run_id character vector (optional). Run identifier of previous run 
-#' @param parent_run_in character vector (optional). Run location of previous run 
-#' @param parent_ctl_name character vector (optional). Ctl name of previous run 
-#' @param parent_results_dir character vector (optional). results_dir of previous run 
-#' @param ctl_name character. Name of control file
-#' @param type character (default = "execute").  Type of run to run
-#' @param run_dir character (default = "{run_id}").  Subdirectory where PsN wll run NONMEM
-#' @param results_dir character (default = "Results").
-#'    Directory to store results of this run
-#' @param lst_path character (default = "{run_dir}/NM_run1/psn.lst") expected location of lst file
-#' 
-#' @return An object of class nm_list.  Object is concatenatable.
-#'    Length of object corresponds to length of run_id
+#' Create new nm object. The function [new_nm()] is more convenient.  This is
+#' mostly a back end function. This is the basic object this package centres
+#' around.  Most package functions act on this object.
+#'
+#' @param run_id Character vector. Run identifier.
+#' @param run_in Character vector. The location to copy the NONMEM control file
+#'   and run location.
+#' @param parent_run_id Character vector (optional). The run identifier of the
+#'   parent run.
+#' @param parent_run_in Character vector (optional). The location of the parent
+#'   run.
+#' @param parent_ctl_name Character vector (optional). The `ctl_name` of the
+#'   parent run.
+#' @param parent_results_dir Character vector (optional). The `results_dir` of
+#'   the parent run.
+#' @param ctl_name Character. Name of control file.
+#' @param type Character (default = `"execute"`).  Type of run to run.
+#' @param run_dir Character (default = `"{run_id}"`).  Subdirectory where PsN
+#'   will run NONMEM.
+#' @param results_dir Character (default = `"Results"`). Directory to store
+#'   results of this run.
+#' @param lst_path Character (default = `"{run_dir}/NM_run1/psn.lst"`) expected
+#'   location of .lst file.
+#'
+#' @return An object of class `nm_list`.  Object is concatenatable. Length of
+#'   object corresponds to length of `run_id`.
 #' @examples 
 #' \dontrun{
 #' 

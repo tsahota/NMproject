@@ -240,7 +240,7 @@ nm_tran_command <- function(text){
 #' [system_nm()]
 #' 
 #' @param cmd Character. System call to be sent to the terminal.
-#' @param ... Additional args to be passed to `system()` or `shell()`.
+#' @param ... Additional arguments to be passed to `system()` or `shell()`.
 #'   
 #' @seealso [system_nm()], [run_nm()]
 #' 
@@ -282,9 +282,9 @@ system_nm_default <- function(cmd, ...) {
 #' @param cmd Character. System call to be sent to the terminal.
 #' @param dir Character. Directory (relative path) to run command in.  By
 #'   default this will be the "models" directory (`nm_default_dir("models")`).
-#' @param ... Additional args to be passed to `system()` or `shell()`.
+#' @param ... Additional arguments to be passed to `system()` or `shell()`.
 #' @seealso [run_nm()]
-#'
+#'   
 #' @examples 
 #' 
 #' system_nm("hostname")

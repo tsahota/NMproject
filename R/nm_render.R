@@ -160,7 +160,7 @@ nm_list_render <- function(m,
     )
   
   if("m" %in% names(args))
-    stop("can't have m in arg.  m is reserved for model object")
+    stop("can't have m in \"args\", m is reserved for model object")
   
   args <- c(args, list(m = as_nm_list(m)))
   

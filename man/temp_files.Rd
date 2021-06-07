@@ -43,11 +43,11 @@ PsN exports to the \code{run_in} directory as temporary}
 
 NONMEM produces a lot of temporary files which can add up to a lot of disk
 space.  One strategy to remove this is to use the \code{clean} option in the PsN
-command.  However, this can autoamtically remove files as soon as the run
+command.  However, this can automatically remove files as soon as the run
 finishes that may be useful for debugging.  \verb{ls_tempfiles()`` allows you to list the paths of all temporary files, for a single run or for all runs for inspection and deletion. }clean_run()\verb{is a wrapper function that runs}ls_tempfiles()\verb{and deletes everything returned.  For safety is limited to only deleting files associated with}nm` objects though.
 }
 \details{
-Setting \code{include_psn_exports = TRUE} will break pirana and xpose
+Setting \code{include_psn_exports = TRUE} will break 'Pirana' and 'xpose'
 capability as these software use exported files.
 }
 \examples{
@@ -56,7 +56,7 @@ capability as these software use exported files.
 
 ls_tempfiles(m1) ## display all temp files associated with m1
 
-m1 \%>\% ls_tempfiles() \%>\% unlink()  ## delete all m1 tempfiles
+m1 \%>\% ls_tempfiles() \%>\% unlink()  ## delete all m1 temp files
 
 ## above line is equivalent to:
 clean_run(m1)

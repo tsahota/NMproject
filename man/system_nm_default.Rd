@@ -9,7 +9,7 @@ system_nm_default(cmd, ...)
 \arguments{
 \item{cmd}{Character. System call to be sent to the terminal.}
 
-\item{...}{Additional args to be passed to \code{system()} or \code{shell()}.}
+\item{...}{Additional arguments to be passed to \code{system()} or \code{shell()}.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

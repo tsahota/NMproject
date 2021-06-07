@@ -23,7 +23,7 @@ add_mixed_param(
 
 \item{unit}{Character (default = \code{""}). Unit of variable.}
 
-\item{trans}{Character (default = \code{"LOG"}). Tranformation of the variable.}
+\item{trans}{Character (default = \code{"LOG"}). Transformation of the variable.}
 
 \item{position}{Integer. Not used.}
 

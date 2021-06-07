@@ -106,33 +106,34 @@ consider using the default with state \"linear\" or use additional_state_text")
 #' @description
 #' 
 #' `r lifecycle::badge("stable")`
-#' 
-#' Follows PsN coding conventions to add covariates into a model.  The advantage
-#' is no need to create a .scm file, just directly modify the ctl file contents.
-#' This function is used by [covariate_step_tibble()] for stepwise
-#' covariate model development.
 #'
-#' @param ctl An nm object or an object coercible to ctl_list.
+#' Follows PsN coding conventions to add covariates into a model.  The advantage
+#' is no need to create a .scm file, just directly modify the NONMEM control
+#' file contents. This function is used by [covariate_step_tibble()] for
+#' stepwise covariate model development.
+#'
+#' @param ctl An nm object or an object coercible to `ctl_list`.
 #' @param param Character. Name of parameter.
 #' @param cov Character. Name of covariate.
 #' @param state Numeric or character. Number or name of state (see details).
-#' @param continuous Logical (default = TRUE). is covariate continuous?
+#' @param continuous Logical (default = `TRUE`). Is covariate continuous?
 #' @param time_varying Optional logical. is the covariate time varying?
-#' @param additional_state_text Optional character (default = empty). custom
+#' @param additional_state_text Optional character (default = empty). Custom
 #'   state variable to be passed to `param_cov_text`.
-#' @param id_var Character (default = "ID"). Needed if time_varying is missing.
-#' @param force Logical (default = FALSE). Force covariate in even if missing
+#' @param id_var Character (default = `"ID"`). Needed if time_varying is
+#'   missing.
+#' @param force Logical (default = `FALSE``). Force covariate in even if missing
 #'   values found.
-#' @param force_TV_var Logical (default = FALSE). Force covariates only on TV
-#'   notation parameters.
+#' @param force_TV_var Logical (default = `FALSE`). Force covariates only on
+#'   `TV` notation parameters.
 #' @param init Optional numeric/character vector.  Initial estimate of
 #'   additional parameters.
 #' @param lower Optional numeric/character vector.  lower bound of additional
 #'   parameters.
 #' @param upper Optional numeric/character vector.  Upper bound of additional
 #'   parameters.
-#'
-#' @details available `state`s: 
+#'   
+#' @details Available `state`s: 
 #' 
 #' \describe{
 #' 

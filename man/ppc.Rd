@@ -24,8 +24,8 @@ ppc_histogram_plot(d, var1, var2, statistic = "statistic")
 \arguments{
 \item{r}{An nm object (a simulation run).}
 
-\item{FUN}{Statistic function with NONMEM dataset as arg and
-returns \code{data.frame} with a column \code{"statistic"}.}
+\item{FUN}{Statistic function accepting a NONMEM dataset \code{data.frame} as an
+argument and returns \code{data.frame} with a column \code{"statistic"}.}
 
 \item{...}{Additional arguments for \code{FUN}.}
 

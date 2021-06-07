@@ -933,8 +933,8 @@ unblock <- function(iomega, eta_numbers){
   block_to_dismantle <- iomega$block[iomega$omega1 %in% eta_numbers]
   block_to_dismantle <- unique(block_to_dismantle)
   
-  if(length(block_to_dismantle) > 1) stop("etas belong to multiple blocks", call. = FALSE)
-  if(length(block_to_dismantle) == 0) stop("couldn't find block", call. = FALSE)
+  if(length(block_to_dismantle) > 1) stop("etas belong to multiple BLOCKs", call. = FALSE)
+  if(length(block_to_dismantle) == 0) stop("couldn't find BLOCK", call. = FALSE)
   
   iomega_block <- iomega[iomega$block %in% block_to_dismantle,]
   

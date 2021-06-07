@@ -29,7 +29,7 @@ run_nm_batch(m, threads = 10, ...)
 \item{quiet}{Logical (default=FALSE). Should \code{system_nm()} output be piped to
 screen?}
 
-\item{intern}{Logical. \code{intern} arg to be passed to \code{system_nm()}.}
+\item{intern}{Logical. \code{intern} argument to be passed to \code{system_nm()}.}
 
 \item{force}{Logical (default = FALSE).  Force run even results unchanged.}
 

@@ -12,7 +12,7 @@ system_nm(cmd, dir = nm_default_dir("models"), ...)
 \item{dir}{Character. Directory (relative path) to run command in.  By
 default this will be the "models" directory (\code{nm_default_dir("models")}).}
 
-\item{...}{Additional args to be passed to \code{system()} or \code{shell()}.}
+\item{...}{Additional arguments to be passed to \code{system()} or \code{shell()}.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

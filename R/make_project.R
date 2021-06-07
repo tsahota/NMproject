@@ -140,9 +140,9 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
   return(invisible(path))
 }
 
-#' Package name validator from usethis
+#' Package name validator from `usethis`
 #' 
-#' @param x name of package
+#' @param x Name of package.
 #' @keywords internal
 valid_package_name <- function(x) {
   grepl("^[a-zA-Z][a-zA-Z0-9.]+$", x) && !grepl("\\.$", x)

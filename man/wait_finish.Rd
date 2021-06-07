@@ -15,7 +15,7 @@ wait_finish(r, timeout = NA)
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 Blocks subsequent r execution until run(s) are finished.  This is useful for
-when subequent relies on outputs from completed NONMEM jobs.  It is normally
+when subsequent relies on outputs from completed NONMEM jobs.  It is normally
 a good idea to include this in post processing R markdown templates, to
 ensure they wait for runs to complete before executing.
 }

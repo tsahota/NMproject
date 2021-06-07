@@ -321,7 +321,7 @@ rr.nm_generic <- function(m, trans = TRUE){
 #' `r lifecycle::badge("stable")`
 #' 
 #' Pulls parameters, standard errors, OFVs and condition numbers out of ext
-#' files, applies tranformations.  This function is useful when numeric values
+#' files, applies transformations.  This function is useful when numeric values
 #' are needed. `rr` is easier to read, however it returns characters.  A wide
 #' and long format is available via two different functions.
 #' 
