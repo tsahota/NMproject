@@ -32,8 +32,8 @@ setup_dollar <- function(x, type, add_dollar_text = TRUE){
 #' 
 #' Convert a variety of objects into a `ctl_character` class
 #' 
-#' @param r Either class nmexecute, character, ctl_list, ctl_character.
-#' @return Object of class ctl_character.
+#' @param r Either class `nmexecute`, `character`, `ctl_list`, `ctl_character`.
+#' @return Object of class `ctl_character`.
 #' @keywords internal
 
 ctl_character <- function(r){
@@ -67,8 +67,8 @@ ctl_character <- function(r){
 
 #' Constructor/converter to ctl_list
 #' 
-#' @param r Either class nmexecute, character, ctl_list, ctl_character.
-#' @return Object of class ctl_list.
+#' @param r Either class `nmexecute`, `character`, `ctl_list`, `ctl_character`.
+#' @return Object of class `ctl_list`.
 #' @keywords internal
 
 ctl_list <- function(r){
@@ -244,7 +244,7 @@ param_info.default <- function(ctl){
     return(data.frame())
 }
 
-#' Convert nonmem code to R ready
+#' Convert NONMEM code to R ready
 #' 
 #' Parses NONMEM code and attempts to make it evaluable as R code.
 #' 
@@ -326,7 +326,7 @@ uncomment <- function(m, pattern = ".*"){
 #' A wrapper around `gsub` so that control files may be modified using `gsub`
 #' syntax.  Can be useful for simple find replace operations in a control
 #' stream.  Ensure you use the "view diff" app afterwards to make sure the find
-#' replace proceeded as intented.
+#' replace proceeded as intended.
 #'
 #' @param m An nm object.
 #' @param pattern Argument passed to [gsub()].

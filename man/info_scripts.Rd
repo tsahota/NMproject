@@ -18,7 +18,7 @@ info_scripts(
 
 \item{fields}{Vector string of field tags to display.}
 
-\item{viewer}{Logical indicating if Rstudio viewer should be used (default =
+\item{viewer}{Logical indicating if RStudio viewer should be used (default =
 \code{TRUE}).}
 
 \item{silent}{Run in quiet mode (default=\code{FALSE}).}

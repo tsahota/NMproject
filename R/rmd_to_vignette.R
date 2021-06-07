@@ -1,4 +1,4 @@
-#' Convert Rmarkdown scripts to vignettes
+#' Convert R markdown scripts to vignettes
 #'
 #' @description 
 #' 

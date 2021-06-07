@@ -8,7 +8,7 @@ test_relations(dtest, param, cov, state, continuous)
 }
 \arguments{
 \item{dtest}{Optional existing \code{dtest} to append (from an previous use
-\code{\link[=test_relations]{test_relations()}})}
+\code{\link[=test_relations]{test_relations()}}).}
 
 \item{param}{Character. Name of parameter(s).}
 

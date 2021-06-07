@@ -2,7 +2,7 @@
 % Please edit documentation in R/rmd_to_vignette.R
 \name{rmd_to_vignettes}
 \alias{rmd_to_vignettes}
-\title{Convert Rmarkdown scripts to vignettes}
+\title{Convert R markdown scripts to vignettes}
 \usage{
 rmd_to_vignettes(script_files, overwrite = FALSE)
 }

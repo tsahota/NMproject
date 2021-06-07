@@ -11,7 +11,7 @@ stage(files, root_dir, overwrite = FALSE, silent = FALSE)
 
 \item{root_dir}{Character path to root directory of \code{files}. Staged files
 relative to \code{staging} directory will be same as \code{files} to \code{root_dir}. If
-this is not specified, will guess based on presense of \code{nm_default_dirs}}
+this is not specified, will guess based on presence of \code{nm_default_dirs}}
 
 \item{overwrite}{Logical (default = FALSE).}
 

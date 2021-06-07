@@ -30,7 +30,7 @@ ctl_list2.nm_list <- Vectorize_nm_list(ctl_list2.nm_generic, SIMPLIFY = FALSE)
 #' modifications to specific NONMEM subroutines
 #' 
 #' @param m An nm object.
-#' @param dollar Sharacter. Name of subroutine to target.
+#' @param dollar Character. Name of subroutine to target.
 #' @param lines Optional character.  Assignment of lines.
 #' @export
 target <- function(m, dollar, lines){

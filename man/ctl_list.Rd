@@ -7,10 +7,10 @@
 ctl_list(r)
 }
 \arguments{
-\item{r}{Either class nmexecute, character, ctl_list, ctl_character.}
+\item{r}{Either class \code{nmexecute}, \code{character}, \code{ctl_list}, \code{ctl_character}.}
 }
 \value{
-Object of class ctl_list.
+Object of class \code{ctl_list}.
 }
 \description{
 Constructor/converter to ctl_list

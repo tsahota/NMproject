@@ -165,7 +165,7 @@ valid_package_name <- function(x) {
 #' @param files Character vector. path of files to stage.
 #' @param root_dir Character path to root directory of `files`. Staged files
 #'   relative to `staging` directory will be same as `files` to `root_dir`. If
-#'   this is not specified, will guess based on presense of `nm_default_dirs`
+#'   this is not specified, will guess based on presence of `nm_default_dirs`
 #' @param overwrite Logical (default = FALSE).
 #' @param silent Logical (default = FALSE).
 #'
@@ -365,7 +365,7 @@ ls_scripts <- function(folder = ".", extn = "r|R|Rmd|rmd", recursive = TRUE) {
 #'
 #' @param files Vector string of file names/paths.
 #' @param fields Vector string of field tags to display.
-#' @param viewer Logical indicating if Rstudio viewer should be used (default =
+#' @param viewer Logical indicating if RStudio viewer should be used (default =
 #'   `TRUE`).
 #' @param silent Run in quiet mode (default=`FALSE`).
 #' @param base_dirs Character vector. group files together that belong to these
@@ -452,7 +452,7 @@ info_scripts <- function(files, fields = c("Description"), viewer = TRUE, silent
 #' Searches through the list of supplied for matching strings of text.  Useful
 #' in finding files that you know contain certain text snippets.
 #'
-#' @param files Vector string of file names/paths/
+#' @param files Vector string of files (either names or paths).
 #' @param text String (can be regex) to search for.
 #' @param search_title Logical (default=`TRUE`). Should matching occur in title.
 #' @param search_contents Logical (default=`TRUE`). Should matching occur in
@@ -628,13 +628,13 @@ system_cmd <- function(cmd,dir=".",...){
 
 #' List directories
 #'
-#' Wrapper around list.dirs() but includes maxdepth and pattern arguments and
-#' removes full.names argument, always return full names.
+#' Wrapper around `list.dirs()` but includes `maxdepth` and pattern arguments and
+#' removes `full.names` argument, always return full names.
 #'
 #' @param path Same as `list.dirs()`.
 #' @param full.names Same as `list.dirs()`.
 #' @param recursive Same as `list.dirs()`.
-#' @param maxdepth Integer (default = 1) maximum depth to search.
+#' @param maxdepth Integer (default = `1`) maximum depth to search.
 #' @param pattern Optional character (default is missing) regex pattern match on directory
 #'   name.
 #'

@@ -19,13 +19,13 @@ list_dirs(
 
 \item{recursive}{Same as \code{list.dirs()}.}
 
-\item{maxdepth}{Integer (default = 1) maximum depth to search.}
+\item{maxdepth}{Integer (default = \code{1}) maximum depth to search.}
 
 \item{pattern}{Optional character (default is missing) regex pattern match on directory
 name.}
 }
 \description{
-Wrapper around list.dirs() but includes maxdepth and pattern arguments and
-removes full.names argument, always return full names.
+Wrapper around \code{list.dirs()} but includes \code{maxdepth} and pattern arguments and
+removes \code{full.names} argument, always return full names.
 }
 \keyword{internal}

@@ -35,17 +35,17 @@ This is the new "beta" interface.  A completely redesigned syntax that address s
 
 - (*New*)Import code library templates (via a shiny interface) and get to a working NONMEM model quickly and entirely within R.  See demo.
 
--	(*New*)NMproject is the only R package (known to the author) with a vectorized model object allowing groups of models to be operated on using the same syntax as a single model.
+-	(*New*)NMproject is the only R package (known to the author) with a vectorised model object allowing groups of models to be operated on using the same syntax as a single model.
 
--	(*New*)Custom NMproject implementations of bootstrap, cross-validation, PPCs, stepwise covariate selection, and simulation-re-estimation. All controllable on granular level using vectorized model objects.
+-	(*New*)Custom NMproject implementations of bootstrap, cross-validation, PPCs, stepwise covariate selection, and simulation-re-estimation. All controllable on granular level using vectorised model objects.
 
--	Diagnostics and VPCs using your favourite packages (e.g., xpose, vpc, …)
+-	Diagnostics and VPCs using your favourite packages (e.g., 'xpose', 'vpc', …)
 
 -	(*New*)RStudio 'Addins' to streamline user experience.
 
 -	Monitor runs via shiny app including interactive OFV vs iteration plots for convergence assessment.
 
--	Optional customizable analysis directory structure for consistent code organisation
+-	Optional customisable analysis directory structure for consistent code organisation
 
 - (*New*)R markdown friendly. Pipe friendly
 
@@ -53,7 +53,7 @@ NMproject has been used to conduct exploratory analyses and submission work.  Mo
 
 ## Prerequisites
 
-NMproject targetted towards mid to upper level R users. If you know what a pipe is, what knitr is, you should be good.  NMproject does not hide NONMEM from the user so users should be familiar with NONMEM coding.  For advanced functionality, knowledge of dplyr will help to create complex workflows.
+NMproject targetted towards mid to upper level R users. If you know what a pipe is, what Knitr is, you should be good.  NMproject does not hide NONMEM from the user so users should be familiar with NONMEM coding.  For advanced functionality, knowledge of `dplyr` will help to create complex workflows.
 
 
 ```{r setup, include=FALSE}
@@ -130,9 +130,9 @@ Default the subdirectories for model development (these can be modified - see `n
 
 ## Creating new R markdowns
 
-There is nothing mandating the use of R markdown in NMproject.  You can use scripts.  However R markdown documents produce nice sharable model development logs which provide a readable description of what steps were performed and in what order.
+There is nothing mandating the use of R markdown in NMproject.  You can use scripts.  However R markdown documents produce nice shareable model development logs which provide a readable description of what steps were performed and in what order.
 
-It is advisable to always start from a template.  Templates can be accessed in `File` -> `New File` -> `Rmarkdown...` -> `From Template`.  Two to get started with are `NMproject generic` which we'll use as a generic template for data processing and cleaning and `model development` for our model development notebook.
+It is advisable to always start from a template.  Templates can be accessed in `File` -> `New File` -> `R markdown...` -> `From Template`.  Two to get started with are `NMproject generic` which we'll use as a generic template for data processing and cleaning and `model development` for our model development notebook.
 
 ## Data cleaning
 
@@ -164,7 +164,7 @@ The model will be in the staging area: `staging/Models/ADVAN2.mod`, not `Models/
 
 # Model development
 
-`File` -> `New File` -> `New Rmarkdown...` -> `From Template` -> `Model development` will get you started with a model development log file.
+`File` -> `New File` -> `New R markdown...` -> `From Template` -> `Model development` will get you started with a model development log file.
 
 ## The core nm object
 
@@ -273,7 +273,7 @@ m1 <- new_nm(run_id = "m1",
 
 PLACEHOLDER: YouTube video showing "nm_tran" RStudio 'Addin' in action.
 
-In a cluster environment it is especially important to be able to diagnose data and control file issues before sending jobs off to the grid.  Otherwise, you often need to wait minutes for errors that can be spotted immediately.  It's therefore highly recommended to make use of the "nm_tran" RStudio 'Addin'.  This will only run NMTRAN checks to find control file syntax errors and dataset errors.  It will not run nonmem itself.  To use this 'Addin', highlight the above code and select the "nm_tran" RStudio 'Addin' near the top of the RStudio GUI.
+In a cluster environment it is especially important to be able to diagnose data and control file issues before sending jobs off to the grid.  Otherwise, you often need to wait minutes for errors that can be spotted immediately.  It's therefore highly recommended to make use of the "nm_tran" RStudio 'Addin'.  This will only run NMTRAN checks to find control file syntax errors and dataset errors.  It will not run NONMEM itself.  To use this 'Addin', highlight the above code and select the "nm_tran" RStudio 'Addin' near the top of the RStudio GUI.
 
 ## Manual edits
 
@@ -328,7 +328,7 @@ m2WT <- m2 %>% child(run_id = "m2WT") %>%
 
 ## Initial estimates
 
-We saw a little at how the functions `init_theta`, `init_omega` and `init_sigma` can be used to set inital estimates earlier.  The functions actually allow manipulation of initial estimates, parameter bounds, names, units, etc.
+We saw a little at how the functions `init_theta`, `init_omega` and `init_sigma` can be used to set initial estimates earlier.  The functions actually allow manipulation of initial estimates, parameter bounds, names, units, etc.
 
 ```{r}
 
@@ -382,7 +382,7 @@ PLACEHOLDER: video showing shiny_nm()
 
 ## Diagnostics
 
-Use markdown templates to create a customised set of diagnostics to reuse on multiple models.  In the demo an example is shown in `Scripts/basic_gof.Rmd`, but ideally you'll create your own customised version with everything you need to evaluate your model. To create a rmarkdown diagnostic template go to `FILE` -> `New File` -> `R markdown` -> `From Template` then select from one of the following:
+Use markdown templates to create a customised set of diagnostics to reuse on multiple models.  In the demo an example is shown in `Scripts/basic_gof.Rmd`, but ideally you'll create your own customised version with everything you need to evaluate your model. To create an R markdown diagnostic template go to `FILE` -> `New File` -> `R markdown` -> `From Template` then select from one of the following:
 
 - `model diagnostic`
 
@@ -392,7 +392,7 @@ Use markdown templates to create a customised set of diagnostics to reuse on mul
 
 - `bootstrap results`
 
-*PLACEHOLDER: short YouTube video of opening, customizing, saving and running a template.*
+*PLACEHOLDER: short YouTube video of opening, customising, saving and running a template.*
 
 A template will appear in the script window for you to customise.  Instructions are the at the top.  Save the file (e.g. as `Scripts/basic_gof.Rmd`) and run in your log script with:
 
@@ -424,7 +424,7 @@ However these are better placed inside templates to enable rapid and consistent 
 
 ## Simulation based diagnostics
 
-Create simulation based diagnostics first by running a simulation using `update_parameters()` and `convert_to_simulation()`.  Then use the `ppc diagnostics` and `vpc diagnostics` R markdown templates to generate customisable vpc and ppc diagnostics reports.
+Create simulation based diagnostics first by running a simulation using `update_parameters()` and `convert_to_simulation()`.  Then use the `ppc diagnostics` and `vpc diagnostics` R markdown templates to generate customisable VPC and PPC diagnostics reports.
   
 ```{r eval=FALSE}
 m2s <- m2 %>% child(run_id = "m2s") %>%
@@ -647,9 +647,9 @@ m1 %>% dollar("OMEGA")
 
 # Advanced topics
 
-## Vectorization
+## Vectorisation
 
-The basic nm object is fully vectorized.  To see this compare the following two outputs
+The basic nm object is fully vectorised.  To see this compare the following two outputs
 
 ```{r}
 
@@ -660,7 +660,7 @@ c(m1, m2)
 
 Both are nm objects with length 1 and 2, respectively.  We used the `c(m1, m2)` above when we wanted to use `nm_render()` on both runs.  We didn't need to write any loops or special code to handle this because nm objects and the functions that operate on them have been designed with parallelisation in mind.  This is because in pharmacometrics we are often dealing with multiple models, perhaps moreso than other statistical modelling disciplines.
 
-The vectorized nature of the nm object is particularly powerful when used in conjuction with `dplyr`.  To demonstrate, lets repeat the the previous initial perturbation exercise, but create 5 runs each with their own perturbed initial estimates.
+The vectorised nature of the nm object is particularly powerful when used in conjuction with `dplyr`.  To demonstrate, lets repeat the the previous initial perturbation exercise, but create 5 runs each with their own perturbed initial estimates.
 
 The basic idea is to construct a `tibble` (a `tibble` is a 'tidyverse' expansion of the concept of a `data.frame`), and then use a `dplyr::mutate` statement to construct a column vector of nm objects.  Below the column vector is produced by starting with the parent object `m1` and then supplying a vector rather than a scalar to the `child()` function.  Since the `rep` column is length 5, this will make the nm_object length 5.
 
@@ -669,14 +669,14 @@ The basic idea is to construct a `tibble` (a `tibble` is a 'tidyverse' expansion
 dp <- tibble(rep = 1:5)
 dp$m <- m1 %>% ## start with parent - m1 is length 1
   child(run_id = dp$rep) %>% ## now object is length = length(dp$rep) = 5
-  init_theta(init = rnorm(init, mean = init, sd = 0.3)) %>% ## vectorized operation
+  init_theta(init = rnorm(init, mean = init, sd = 0.3)) %>% ## vectorised operation
   run_nm() ## run all 5 runs
 
 ```
 
 View `dp` to see a `tibble` with two columns `rep` and `m`.  View the new `$THETA` statements with `dp$m %>% dollar("THETA")`.
 
-An alternative but equivalent way of writing the above is to use dplyrs `mutate` statement to create the `m` column
+An alternative but equivalent way of writing the above is to use `dplyr::mutate()` statement to create the `m` column.
 
 ```{r}
 
@@ -700,9 +700,9 @@ dp$m %>% run_nm()
 
 ```
 
-The reset of the code in this vignette will use the dplyr layout.
+The reset of the code in this vignette will use the `dplyr` layout.
 
-Note that here the functions `init_theta`, `dollar` and `run_nm` were all operating in a vectorized fashion
+Note that here the functions `init_theta`, `dollar` and `run_nm` were all operating in a vectorised fashion
 
 ## Automating model checking
 
@@ -786,7 +786,7 @@ dc$m %>%
 
 ## Simulation re-estimation
 
-There will soon a be a simple wrapper for the code below, as with the bootstrap and step wise covariate functionaliy above, but for now the code below is a good example of how the flexibility of the vectorized object can be used to create complex workflows whilst still providing granular control of runs.
+There will soon a be a simple wrapper for the code below, as with the bootstrap and step wise covariate functionality above, but for now the code below is a good example of how the flexibility of the vectorised object can be used to create complex workflows whilst still providing granular control of runs.
 
 It's good advice to start with 1 or 2 replicates and scale up only when you've confirmed your code is working (here we're just using 3 for demo purposes).  You will not waste time because `run_nm()` will skip over runs that have already completed. 
 
@@ -862,7 +862,7 @@ Setting this will ensure all runs produced in the R session will run using the a
 
 ### + How do I set a NMproject configuration option permanently so I don't have to set it for all my future R sessions?
 
-See ?.Rprofile.  In a multiple user environment it's best practice to avoid user specific configurations as your code may run different from user to user.  There are two options, set the option for the project or site wide for all users.
+See `?.Rprofile`.  In a multiple user environment it's best practice to avoid user specific configurations as your code may run different from user to user.  There are two options, set the option for the project or site wide for all users.
 
 To set the option for anyone using the project, include the `options` command (e.g. `options(nm.cmd_default = ....)`) in `.Rprofile`.
 
@@ -920,13 +920,13 @@ m1 %>%
 
 `run_nm()` will then execute NONMEM via the docker container.  All subsequent child objects will inherit the same command structure.  Note the use the glueing object fields `ctl_name` and `run_dir` so child objects can inherit the same command structure to save the command being rewritten for each run)
 
-Set up dockerized NMTRAN checking with:
+Set up dockerised NMTRAN checking with:
 
 ```{r eval=FALSE}
 nm_tran_command("docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn /bin/bash -c '/opt/NONMEM/nm_current/tr/NMTRAN.exe < {ctl_name}'")
 ```
 
-### + My Rstudio Server is on a different linux server to my NONMEM cluster.  How can I set up NMproject to work with this?
+### + My RStudio Server is on a different Linux server to my NONMEM cluster.  How can I set up NMproject to work with this?
 
 You need to ensure your account has passwordless ssh set up.  Then create a `system_nm` option in your `~/.Rprofile` configuration file which appends an ssh statement to the system call e.g. the following will set you up to connect to the host `clustername`:
 
@@ -940,7 +940,7 @@ options(system_nm=function(cmd,...) {
 
 This is not recommended as it requires R working directory being set to a networked drive.  This is very slow.  If you really want to though consider modifying the `system_nm()` option, as in the above FAQ question, to use `plink` to ssh to the server, change to the relevant working directory and submit a command.  This has not been tested however and results are likely to be disappointing.
 
-### + My organisation has a different control file convention to the runXX.mod convention.  Can I change this?
+### + My organisation has a different control file convention to the 'runXX.mod' convention.  Can I change this?
 
 Set it up with `ctl_path` the field of your object, e.g. to change the convention to `nm.XX.con`
 
@@ -956,11 +956,11 @@ system_nm("command_to_run", dir="path/to/dir")
 
 if dir is not specified, this will default to the `Models` directory
 
-### + There is functionality in PsN's runrecord, sumo or Pirana that I would like but is not available in NMproject.
+### + There is functionality in PsN's run record, sumo or Pirana that I would like but is not available in NMproject.
 
-NMproject doesn't change PsN's default directory structure, everything in the "Models" directory is as if you lauched the jobs from the command line.  Therefore you can continue to use PsN functions on the command line.  You can also continue using Pirana by pointing it towards your models directory.
+NMproject doesn't change PsN's default directory structure, everything in the "Models" directory is as if you launched the jobs from the command line.  Therefore you can continue to use PsN functions on the command line.  You can also continue using Pirana by pointing it towards your models directory.
 
-If it's something you think really should be part of NMproject, open a github "issue" and ask for the feature.
+If it's something you think really should be part of NMproject, open a GitHub "issue" and ask for the feature.
 
 ### + That's all well and good that NMproject has it's own bootstrap/vpc/... methods, but I just want to run/rerun a bootstrap/vpc/... in PsN.  Can I do this through NMproject?
 

@@ -23,7 +23,7 @@ gsub_ctl(m, pattern, replacement, ..., dollar = NA_character_)
 A wrapper around \code{gsub} so that control files may be modified using \code{gsub}
 syntax.  Can be useful for simple find replace operations in a control
 stream.  Ensure you use the "view diff" app afterwards to make sure the find
-replace proceeded as intented.
+replace proceeded as intended.
 }
 \examples{
 

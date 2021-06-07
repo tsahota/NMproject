@@ -24,9 +24,9 @@ relative to 0.5.1:
   interface (known to the author) that tracks manual edits to NONMEM code in 
   the form of reusable patches.
 
-* Fully vectorized functions and compatibility of `nm_list` objects with 
+* Fully vectorised functions and compatibility of `nm_list` objects with 
   `dplyr`. NMproject is the only pharmacometric package (known to the author) 
-  with a vectorized model object allowing groups of runs to be operated on using
+  with a vectorised model object allowing groups of runs to be operated on using
   the same syntax as single runs.
 
 * Custom NMproject implementations of PsN's bootstrap, cross-validation, 

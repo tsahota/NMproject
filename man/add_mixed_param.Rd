@@ -32,6 +32,6 @@ add_mixed_param(
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-Primarly an internal function. This will (by default) add a parameter (mixed
+Primarily an internal function. This will (by default) add a parameter (mixed
 effect) to your code $PK/$PRED and $THETA/$OMEGA.
 }

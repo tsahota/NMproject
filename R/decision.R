@@ -10,7 +10,7 @@
 #' OFV and goodness of fit plots that the 1 compartment model is better and
 #' subsequent steps will build off of this, it is worth putting a decision point
 #' in your code so that if you are to rerun the workflow with a new/updated
-#' dataset, the decision can be revisted prior to moving onto the parts of the
+#' dataset, the decision can be revisited prior to moving onto the parts of the
 #' workflow that depend on the 1 compartment decision.  The function requests
 #' inputs (`values` and `files`) that you base a decision on and stop for users
 #' to remake decision if inputs change.

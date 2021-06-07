@@ -7,7 +7,7 @@
 search_raw(files, text, search_title = TRUE, search_contents = TRUE)
 }
 \arguments{
-\item{files}{Vector string of file names/paths/}
+\item{files}{Vector string of files (either names or paths).}
 
 \item{text}{String (can be regex) to search for.}
 

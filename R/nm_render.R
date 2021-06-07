@@ -10,9 +10,9 @@
 #' to create a customised set of diagnostics to reuse on multiple models. In the
 #' demo an example is shown in `Scripts/basic_gof.Rmd`, but ideally you'll
 #' create your own customised version with everything you need to evaluate your
-#' model. To create a rmarkdown diagnostic template go to `FILE` -> `New File`
+#' model. To create an R markdown diagnostic template go to `FILE` -> `New File`
 #' -> `R markdown` -> `From Template` the select from one of the following:
-#'
+#' 
 #' \itemize{ \item model diagnostic \item VPC diagnostic
 #'   \item PPC diagnostic
 #'   \item bootstrap results (`nm_list_render`)

@@ -29,7 +29,7 @@ remove_parameter <- function(m, name){
 #' 
 #' `r lifecycle::badge("stable")`
 #' 
-#' Primarly an internal function. This will (by default) add a parameter (mixed
+#' Primarily an internal function. This will (by default) add a parameter (mixed
 #' effect) to your code $PK/$PRED and $THETA/$OMEGA.
 #' 
 #' @param m An nm object.

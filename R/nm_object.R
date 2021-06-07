@@ -1061,7 +1061,7 @@ nm_diff <- function(m, ref_m, format = "raw"){
   dff
 }
 
-#' Convert nm objects to a rowwise tibble/data.frame
+#' Convert nm objects to a row-wise tibble/data.frame
 #'
 #' @description 
 #'

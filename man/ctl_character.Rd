@@ -7,10 +7,10 @@
 ctl_character(r)
 }
 \arguments{
-\item{r}{Either class nmexecute, character, ctl_list, ctl_character.}
+\item{r}{Either class \code{nmexecute}, \code{character}, \code{ctl_list}, \code{ctl_character}.}
 }
 \value{
-Object of class ctl_character.
+Object of class \code{ctl_character}.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

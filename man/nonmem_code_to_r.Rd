@@ -2,7 +2,7 @@
 % Please edit documentation in R/ctl_handling.R
 \name{nonmem_code_to_r}
 \alias{nonmem_code_to_r}
-\title{Convert nonmem code to R ready}
+\title{Convert NONMEM code to R ready}
 \usage{
 nonmem_code_to_r(code, eta_to_0 = TRUE)
 }
