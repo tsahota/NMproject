@@ -26,7 +26,7 @@ the time of \code{import}ing.  This aids in reproducibility because if that
 external code is changed, the staged code will remain fixed.
 
 In practice, this function will rarely need to be used directly.  The easiest
-way to bring code is via the \verb{code library} RStudio addin shiny app.
+way to bring code is via the "code library" RStudio 'Addin' shiny app.
 }
 \examples{
 

@@ -311,7 +311,7 @@ system_nm <- function(cmd,dir=nm_default_dir("models"),...){
 #' 
 #' `r lifecycle::badge("stable")`
 #' 
-#' This is best used via the "overwrite behaviour" RStudio addin.  Sets the
+#' This is best used via the "overwrite behaviour" RStudio 'Addin'.  Sets the
 #' strategy for how to handle overwriting of previously executed control files.
 #'
 #' @param txt Character either `"run"`, `"stop"`, or `"skip"`.

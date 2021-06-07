@@ -41,7 +41,7 @@ This is the new "beta" interface.  A completely redesigned syntax that address s
 
 -	Diagnostics and VPCs using your favourite packages (e.g., xpose, vpc, …)
 
--	(*New*)RStudio addins to streamline user experience.
+-	(*New*)RStudio 'Addins' to streamline user experience.
 
 -	Monitor runs via shiny app including interactive OFV vs iteration plots for convergence assessment.
 
@@ -154,7 +154,7 @@ See the demo for how/why to create bootstrapped datasets before beginning model 
 
 ## Code Library
 
-It's always best to start with NONMEM template too.  Search the code library and bring into staging area of analysis project using the `code_library` addin:
+It's always best to start with NONMEM template too.  Search the code library and bring into staging area of analysis project using the "code_library" RStudio 'Addin':
 
 One of the templates is `Models/ADVAN2.mod`.  Select it, `preview` it and then `stage` by clicking the buttons and then closing the app.
 
@@ -219,9 +219,9 @@ run_in(m1)
 
 For now though, we'll remove the last piped command and stay with the default `run_in` location.  
 
-*NOTE:* the field `ctl_name` refers to the name of the control that will be created.  This will only be created when it the model is run with the `run_nm()` function (described later).  For now, the control file contents reside inside the object.  To view these you can use `show model/ctl file` addin , or `text(m1)`.
+*NOTE:* the field `ctl_name` refers to the name of the control that will be created.  This will only be created when it the model is run with the `run_nm()` function (described later).  For now, the control file contents reside inside the object.  To view these you can use "show model/ctl file" RStudio 'Addin' , or `text(m1)`.
 
-A few automatic edits from the staged control file and a compact representation of these changes can be shown by highlighting the above code and selecting the `nm_diff` addin which show what has been changed.
+A few automatic edits from the staged control file and a compact representation of these changes can be shown by highlighting the above code and selecting the "nm_diff" RStudio 'Addin' which show what has been changed.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/mYUaKrj0-YE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
@@ -271,13 +271,13 @@ m1 <- new_nm(run_id = "m1",
 
 ## Fast NMTRAN checks
 
-PLACEHOLDER: YouTube video showing nm tran addin in action.
+PLACEHOLDER: YouTube video showing "nm_tran" RStudio 'Addin' in action.
 
-In a cluster environment it is especially important to be able to diagnose data and control file issues before sending jobs off to the grid.  Otherwise, you often need to wait minutes for errors that can be spotted immediately.  It's therefore highly recommended to make use of the `nm_tran` addin.  This will only run NMTRAN checks to find control file syntax errors and dataset errors.  It will not run nonmem itself.  To use this addin, highlight the above code and select the `nm_tran` addin near the top of the RStudio GUI.
+In a cluster environment it is especially important to be able to diagnose data and control file issues before sending jobs off to the grid.  Otherwise, you often need to wait minutes for errors that can be spotted immediately.  It's therefore highly recommended to make use of the "nm_tran" RStudio 'Addin'.  This will only run NMTRAN checks to find control file syntax errors and dataset errors.  It will not run nonmem itself.  To use this 'Addin', highlight the above code and select the "nm_tran" RStudio 'Addin' near the top of the RStudio GUI.
 
 ## Manual edits
 
-Often there will not be the functions to do the control file manipulation you want.  Although it is preferable to stick to automatic control file manipulation functions, you can do fully tracked `manual edit`s via the addin menu.  Again, just highlight the code, click the addin and follow the instructions:
+Often there will not be the functions to do the control file manipulation you want.  Although it is preferable to stick to automatic control file manipulation functions, you can do fully tracked manual edits via the "manual edit" RStudio 'Addins' menu.  Again, just highlight the code, click the 'Addin' and follow the instructions:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/HyCHeAAiwy4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
@@ -314,7 +314,7 @@ m2 <- m1 %>% child() %>%
 
 ```
 
-View exactly what's been changed by highlighting the above code in RStudio and clicking the `nm_diff` addin to see what's been changed before running.  Here, changes will be in the `$SUB`, `$PK` and `$THETA`.
+View exactly what's been changed by highlighting the above code in RStudio and clicking the "nm_diff RStudio 'Addin' to see what's been changed before running.  Here, changes will be in the `$SUB`, `$PK` and `$THETA`.
 
 To add a covariate using PsN coding conventions use `add_cov()`:
 

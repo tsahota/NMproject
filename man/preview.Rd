@@ -13,7 +13,7 @@ preview(name)
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
 
 This is now primarily a back end function.  Easiest way to preview parts of
-the code library is use the \verb{code library} RStudio addin and use the
+the code library is use the "code library" RStudio 'Addin' and use the
 \code{preview} button in the shiny interface
 }
 \seealso{

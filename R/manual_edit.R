@@ -4,7 +4,7 @@
 #' 
 #' `r lifecycle::badge("stable")`
 #' 
-#' Internal function. Needed for "manual edit" addin functionality.
+#' Needed for "manual edit" RStudio 'Addin' functionality.
 #' 
 #' @param m An nm object
 #' @param combine_patch Logical. Should patch be added first before edit.
@@ -96,7 +96,7 @@ diff_manual_edit <- function(m, res){
 
 #' View a patch
 #' 
-#' Internal function. Use the addin for viewing patches instead.
+#' Use the "view patch" RStudio 'Addin' for viewing patches instead.
 #' 
 #' @param patch_name Character. Name of patch
 #' 

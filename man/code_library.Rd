@@ -29,7 +29,7 @@ all).}
 }
 \description{
 Function not designed for direct use.  Instead use the RStudio \verb{code library}
-addin on the Addins menu. This will open the shiny app. Select the file, and
+entry on the RStudio 'Addins' menu. This will open the shiny app. Select the file, and
 click "preview" to view and \code{\link[=import]{import()}} to bring into the "staging" area of
 your project.  See vignette at \url{https://tsahota.github.io/NMproject/} for a
 video showing use of the app. NONMEM control files will intentionally not be

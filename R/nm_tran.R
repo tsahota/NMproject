@@ -11,9 +11,9 @@ update_dollar_data <- function(ctl_name,new_data_name){
 #' 
 #' `r lifecycle::badge("stable")`
 #'
-#' This is the function behind the "nm_tran" RStudio addin, which is the
+#' This is the function behind the "nm_tran" RStudio 'Addin', which is the
 #' recommended way to use this functionality.  Highlight your code (e.g see
-#' examples below for a code segment), and then open the "nm_tran" addin.
+#' examples below for a code segment), and then open the "nm_tran" RStudio 'Addin'.
 #' 
 #' Useful especially on grid infrastructures where it may take a while for
 #' NONMEM to start return control file and dataset errors. Runs initial NMTRAN
@@ -28,7 +28,7 @@ update_dollar_data <- function(ctl_name,new_data_name){
 #' 
 #' \dontrun{
 #' 
-#' ## highlight the code below and use the "nm_tran" RStudio addin
+#' ## highlight the code below and use the "nm_tran" RStudio 'Addin'
 #' 
 #' m1 <- new_nm(run_id = "m1",
 #'              based_on = "staging/Models/ADVAN2.mod",

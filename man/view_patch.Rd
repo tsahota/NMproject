@@ -10,6 +10,6 @@ view_patch(patch_name)
 \item{patch_name}{Character. Name of patch}
 }
 \description{
-Internal function. Use the addin for viewing patches instead.
+Use the "view patch" RStudio 'Addin' for viewing patches instead.
 }
 \keyword{internal}

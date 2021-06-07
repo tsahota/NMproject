@@ -13,7 +13,7 @@ ls_code_library(pattern = ".")
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 A low level function to interact with the code library.  It is easier in most
-cases to use the code library shiny addin.
+cases to use the shiny "code library" RStudio 'Addin'.
 }
 \examples{
 

@@ -23,7 +23,7 @@ diff object
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-The easiest way to use this function is via the "view diff" RStudio addin.
+The easiest way to use this function is via the "view diff" RStudio 'Addin'.
 
 NMproject's control file manipulation functions (e.g. subroutine())
 may not work for all control files. It is the responsibility of

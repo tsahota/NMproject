@@ -14,6 +14,6 @@ start_manual_edit(m, combine_patch = NA_character_)
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-Internal function. Needed for "manual edit" addin functionality.
+Needed for "manual edit" RStudio 'Addin' functionality.
 }
 \keyword{internal}

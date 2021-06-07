@@ -28,7 +28,7 @@ NULL
 #'   cache?
 #'
 #' @details In grid environment it is recommended to run [nm_tran()] via the
-#'   RStudio addin prior to executing this code.
+#'   RStudio 'Addin' prior to executing this code.
 #'
 #'   By default, when highlighting code and evaluating it via an RStudio app,
 #'   run_nm() will not execute and will just return the `nm` object.

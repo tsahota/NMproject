@@ -160,7 +160,7 @@ valid_package_name <- function(x) {
 #' external code is changed, the staged code will remain fixed.
 #'
 #' In practice, this function will rarely need to be used directly.  The easiest
-#' way to bring code is via the `code library` RStudio addin shiny app.
+#' way to bring code is via the "code library" RStudio 'Addin' shiny app.
 #'
 #' @param files Character vector. path of files to stage.
 #' @param root_dir Character path to root directory of `files`. Staged files
@@ -251,7 +251,7 @@ stage <- function(files, root_dir,
 #' 
 #' `r lifecycle::badge("stable")`
 #'
-#' This function is used by the "code libary" RStudio addin to bring external
+#' This function is used by the "code libary" RStudio 'Addin' to bring external
 #' code into your project.
 #'
 #' @param copy_table A `data frame` or character. if `data.frame` should be
@@ -269,7 +269,7 @@ stage <- function(files, root_dir,
 #' \dontrun{
 #' 
 #' ## both of these following operations are easier in the shiny code library 
-#' ## RStudio addin.
+#' ## RStudio 'Addin'.
 #' 
 #' ls_code_library("Models/ADVAN2.mod") %>%
 #'   import() ## ends up in "staging/Models"
@@ -498,7 +498,7 @@ search_raw <- function(files, text, search_title=TRUE, search_contents=TRUE) {
 #' `r lifecycle::badge("stable")`
 #' 
 #' A low level function to interact with the code library.  It is easier in most
-#' cases to use the code library shiny addin.
+#' cases to use the shiny "code library" RStudio 'Addin'.
 #'
 #' @param pattern optional character. filter the code library use regex
 #' 
@@ -523,7 +523,7 @@ ls_code_library <- function(pattern = ".") {
 #' Code Library
 #'
 #' Function not designed for direct use.  Instead use the RStudio `code library`
-#' addin on the Addins menu. This will open the shiny app. Select the file, and
+#' entry on the RStudio 'Addins' menu. This will open the shiny app. Select the file, and
 #' click "preview" to view and [import()] to bring into the "staging" area of
 #' your project.  See vignette at <https://tsahota.github.io/NMproject/> for a
 #' video showing use of the app. NONMEM control files will intentionally not be

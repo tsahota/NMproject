@@ -12,6 +12,6 @@ overwrite_behaviour(txt = c("ask", "overwrite", "stop", "skip"))
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-This is best used via the "overwrite behaviour" RStudio addin.  Sets the
+This is best used via the "overwrite behaviour" RStudio 'Addin'.  Sets the
 strategy for how to handle overwriting of previously executed control files.
 }

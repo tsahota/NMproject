@@ -21,7 +21,7 @@ will instead reside only in the staging area.}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-This function is used by the "code libary" RStudio addin to bring external
+This function is used by the "code libary" RStudio 'Addin' to bring external
 code into your project.
 }
 \examples{
@@ -29,7 +29,7 @@ code into your project.
 \dontrun{
 
 ## both of these following operations are easier in the shiny code library 
-## RStudio addin.
+## RStudio 'Addin'.
 
 ls_code_library("Models/ADVAN2.mod") \%>\%
   import() ## ends up in "staging/Models"
