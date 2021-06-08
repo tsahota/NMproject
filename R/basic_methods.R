@@ -132,44 +132,79 @@ unique.nm_list <- function(x, incomparables = FALSE, ...) {
   val
 }
 
-## experimental - goes against dplyr, maybe delete if not useful
-mutate_cond <- function(.data, condition, ..., envir = parent.frame()) {
-  condition <- eval(substitute(condition), .data, envir)
-  condition <- condition %in% TRUE
-  .data[condition, ] <- .data[condition, ] %>% dplyr::mutate(...)
-  .data
+#' @export
+is.na.nm_generic <- function(x) is.na(run_id(x))
+#' @export
+is.na.nm_list <- function(x) is.na(run_id(x))
+
+#' @export
+print.nm_generic <- function(x, ...){
+  
+  x <- printable_nm_generic(x)
+  
+  str_ob <- utils::capture.output(utils::str(x, ...))
+  str_ob <- gsub("(.*?)\"\\.{3}\\[(NA.*)\\].*", 
+                 paste0("\\1",crayon::underline("\\2")), str_ob)
+  str_ob <- gsub("(.*?)\"\\.{3}\\[(collapsed.*)\\].*", 
+                 paste0("\\1",crayon::green("\\2")), str_ob)
+  cat(str_ob, sep = "\n")
 }
 
-gsub_in_brackets <- function(pattern, replacement, x){
-  x <- gsub("\\(", "~(", x)
-  x <- gsub("\\)", ")~", x)
-  x <- paste0(x, collapse = "\n")
-  x <- strsplit(x, split = "~")[[1]]
-  x[grepl("^\\(.*\\)",x)] <- 
-    gsub(pattern, replacement, x[grepl("^\\(.*\\)",x)])
-  x <- paste(x, collapse = "")
-  x <- paste(x, " ")  ## added to make sure final \n doesn't shorten vector
-  x <- strsplit(x, split = "\n")[[1]]
-  x[length(x)] <- trimws(x[length(x)])
+#' @export
+print.nm_list <- function(x, ...){
+  for(i in seq_along(x)) {
+    x[[i]] <- printable_nm_generic(x[[i]])
+  }
+  
+  str_ob <- utils::capture.output(utils::str(x, ...))
+  ## post str modification
+  str_ob <- gsub(":List of.*", "", str_ob)
+  str_ob <- gsub("(.*?)\"\\.{3}\\[(NA.*)\\].*", 
+                 paste0("\\1",crayon::underline("\\2")), str_ob)
+  str_ob <- gsub("(.*?)\"\\.{3}\\[(collapsed.*)\\].*", 
+                 paste0("\\1",crayon::green("\\2")), str_ob)
+  cat(str_ob, sep = "\n")
+
+}
+
+printable_nm_generic <- function(x){
+  pretty_empty_fields <- c("ctl_contents", "data_path", "cmd")
+  pretty_empty_fill_f <- c("based_on", "data_path", "cmd")
+  
+  ## included even if NA
+  minimum_fields <- c("run_id", pretty_empty_fields)
+  
+  for(field in names(x)){
+    if(!field %in% minimum_fields)
+      if(is_single_na(x[[field]])) x[[field]] <- NULL
+  }
+  
+  ## if ctl_contents is NA, remove ctl_name
+  if(is_single_na(x[["ctl_contents"]])){
+    x[["ctl_name"]] <- NULL
+    x[["glue_fields"]][["ctl_name"]] <- NULL
+  }
+  
+  for(j in seq_along(pretty_empty_fields)){
+    pretty_empty_field <- pretty_empty_fields[j]
+    pretty_empty_f <- pretty_empty_fill_f[j]
+    if(is_single_na(x[[pretty_empty_field]])){
+      x[[pretty_empty_field]] <- 
+        paste0("...[NA - fill with ", pretty_empty_f, "()]...")
+    }
+  }
+  
+  collapse_fields <- c("ctl_contents", "ctl_orig")
+  for(field in collapse_fields){
+    ## special handling of these two    
+    if(field %in% names(x)) 
+      if(length(x[[field]]) > 1)
+        x[[field]] <- paste0("...[collapsed - view with ", field, "()]...")
+  }
+  # remove all raw fields from output
+  remove_fields <- c("glue_fields")
+  for(field in remove_fields) x[[field]] <- NULL
+  
   x
-}
-
-gsub_out_brackets <- function(pattern, replacement, x){
-  x <- gsub("\\(", "~(", x)
-  x <- gsub("\\)", ")~", x)
-  x <- paste0(x, collapse = "\n")
-  x <- strsplit(x, split = "~")[[1]]
-  x[!grepl("^\\(.*\\)",x)] <- 
-    gsub(pattern, replacement, x[!grepl("^\\(.*\\)",x)])
-  x <- paste(x, collapse = "")
-  x <- paste(x, " ")  ## added to make sure final \n doesn't shorten vector
-  x <- strsplit(x, split = "\n")[[1]]
-  x[length(x)] <- trimws(x[length(x)])
-  x
-}
-
-na.locf <- function(x) {
-  v <- !is.na(x)
-  c(NA, x[v])[cumsum(v)+1]
 }
 

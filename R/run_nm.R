@@ -1,7 +1,3 @@
-#' @include utilsExtra.R
-
-NULL
-
 #' @name run_nm
 #' @rdname run_nm
 #'
@@ -276,6 +272,18 @@ psn_exported_files.nm_generic <- function(r, minimal = FALSE){
 
 psn_exported_files.nm_list <- Vectorize_nm_list(psn_exported_files.nm_generic, SIMPLIFY = FALSE)
 
+
+ctl_table_files <- function(ctl){
+  UseMethod("ctl_table_files") 
+}
+
+ctl_table_files.default <- function(ctl){ 
+  ctl <- ctl_character(ctl)
+  s0 <- rem_comment(ctl)
+  s <- grep("FILE\\s*=\\s*(\\S+)",s0,value=TRUE)
+  table_files <- gsub(".*FILE\\s*=\\s*(\\S+)\\s*.*$","\\1", s)
+  table_files
+}
 
 #' @rdname temp_files
 #' @name temp_files

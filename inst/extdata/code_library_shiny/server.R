@@ -24,11 +24,8 @@ function(input, output, session) {
   )
   
   objects <- eventReactive(input$run_table_rows_selected,{
-    #row <- input$run_table_rows_selected
     gen_code_library()[input$run_table_rows_selected, ]
-    #lapply(new_table()$entry[row],function(...)extract_nm(...,.db_name))
   })
-  # 
   
   observeEvent(input$preview, {
     if(length(input$run_table_rows_selected)==0)

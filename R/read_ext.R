@@ -65,3 +65,9 @@ read_ext.default <- function(r,trans=FALSE){
   }
   d
 }
+
+read_ext.nm_list <- function(r,trans=FALSE){
+  exts <- lapply(r, read_ext)
+  names(exts) <- NULL
+  exts
+}

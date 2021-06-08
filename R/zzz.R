@@ -5,7 +5,3 @@
 if(!exists(".sso_env")){
   .sso_env <- new.env(parent=emptyenv())
 }
-
-if(!exists(".db")){
-  .db <- new.env(parent=emptyenv())
-}

@@ -85,6 +85,61 @@ relative_path <- function(path, relative_path){
 
 relative_path <- Vectorize(relative_path, USE.NAMES = FALSE)
 
+file.exists2 <- function(x){ ## only true is file exists and is not a directory
+  if(!file.exists(x)) return(FALSE)
+  !file.info(x)$isdir
+}
+
+#' List directories
+#'
+#' Wrapper around `list.dirs()` but includes `maxdepth` and pattern arguments and
+#' removes `full.names` argument, always return full names.
+#'
+#' @param path Same as `list.dirs()`.
+#' @param full.names Same as `list.dirs()`.
+#' @param recursive Same as `list.dirs()`.
+#' @param maxdepth Integer (default = `1`) maximum depth to search.
+#' @param pattern Optional character (default is missing) regex pattern match on directory
+#'   name.
+#'
+#' @keywords internal
+list_dirs <- function(path = ".", full.names = TRUE, recursive = FALSE, maxdepth = 1, pattern){
+  
+  dirs <- list()
+  dirs[[1]] <- list.dirs(path, full.names = TRUE, recursive = FALSE)
+  
+  missing_pattern <- missing(pattern)
+  
+  return_ready <- function(dirs){ ## prep for return character vector
+    dirs <- unlist(dirs)
+    if(!missing_pattern) dirs <- dirs[grepl(pattern, basename(dirs))]
+    if(!full.names) dirs <- basename(dirs)
+    dirs
+  }
+  
+  if(maxdepth == 1 | !recursive) return(return_ready(dirs))
+  
+  i <- 2
+  while(i <= maxdepth){
+    #for(i in 2:maxdepth){
+    current_dirs <- sapply(dirs[[i-1]], function(path){
+      list.dirs(path, full.names = TRUE, recursive = FALSE)
+    })
+    current_dirs <- unlist(current_dirs)
+    names(current_dirs) <- NULL
+    
+    ## breakpoint if no more dirs
+    if(length(current_dirs) == 0) return(return_ready(dirs))
+    
+    dirs[[i]] <- current_dirs
+    i <- i + 1
+  }
+  
+  return(return_ready(dirs))
+  
+}
+
+
 
 #' Logical flag for detecting if R session is on RStudio
 #' 
@@ -92,3 +147,86 @@ relative_path <- Vectorize(relative_path, USE.NAMES = FALSE)
 #' @export
 is_rstudio <- function() Sys.getenv("RSTUDIO") == "1"
 
+## experimental - goes against dplyr, maybe delete if not useful
+mutate_cond <- function(.data, condition, ..., envir = parent.frame()) {
+  condition <- eval(substitute(condition), .data, envir)
+  condition <- condition %in% TRUE
+  .data[condition, ] <- .data[condition, ] %>% dplyr::mutate(...)
+  .data
+}
+
+gsub_in_brackets <- function(pattern, replacement, x){
+  x <- gsub("\\(", "~(", x)
+  x <- gsub("\\)", ")~", x)
+  x <- paste0(x, collapse = "\n")
+  x <- strsplit(x, split = "~")[[1]]
+  x[grepl("^\\(.*\\)",x)] <- 
+    gsub(pattern, replacement, x[grepl("^\\(.*\\)",x)])
+  x <- paste(x, collapse = "")
+  x <- paste(x, " ")  ## added to make sure final \n doesn't shorten vector
+  x <- strsplit(x, split = "\n")[[1]]
+  x[length(x)] <- trimws(x[length(x)])
+  x
+}
+
+gsub_out_brackets <- function(pattern, replacement, x){
+  x <- gsub("\\(", "~(", x)
+  x <- gsub("\\)", ")~", x)
+  x <- paste0(x, collapse = "\n")
+  x <- strsplit(x, split = "~")[[1]]
+  x[!grepl("^\\(.*\\)",x)] <- 
+    gsub(pattern, replacement, x[!grepl("^\\(.*\\)",x)])
+  x <- paste(x, collapse = "")
+  x <- paste(x, " ")  ## added to make sure final \n doesn't shorten vector
+  x <- strsplit(x, split = "\n")[[1]]
+  x[length(x)] <- trimws(x[length(x)])
+  x
+}
+
+na.locf <- function(x) {
+  v <- !is.na(x)
+  c(NA, x[v])[cumsum(v)+1]
+}
+
+
+#' Wait for statement to be TRUE
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#'
+#' Will block R console until an expression evaluates to be `TRUE`.
+#'
+#' @param x Boolean expression to evaluate.
+#' @param timeout Numeric. Maximum time (in seconds) to wait.
+#' @param interval Numeric. Number of seconds (default=`1`) to wait before
+#'   rechecking.
+#' 
+#' @seealso [wait_finish()].
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' ## the following are identical
+#' 
+#' wait_finish(m1)
+#' wait_for(is_finished(m1))
+#' 
+#' }
+#' 
+#' @export
+wait_for <- function(x,timeout=NULL,interval=1){
+  x <- substitute(x)
+  start.time <- Sys.time()
+  diff.time <- 0
+  while (!eval(x,envir = parent.frame())){
+    diff.time <- difftime(Sys.time(),start.time,units="secs")
+    if(!is.null(timeout))if(diff.time > timeout) {
+      warning(paste("timed out waiting for\n",x,sep=""))
+      return(invisible(FALSE))
+    }
+    Sys.sleep(1)
+  }
+  invisible(TRUE)
+}

@@ -1,3 +1,85 @@
+#' @rdname comment_lines
+#' @name comment_lines
+#' @title Comment and uncomment lines of control file
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Comment out lines of code with that are matched by a patter string.
+#' 
+#' @param m An nm object.
+#' @param pattern Character regex. Passed to [gsub()].
+#' 
+#' @seealso [gsub_ctl()], [target()]
+#' @export
+comment_out <- function(m, pattern = ".*"){
+  m %>% gsub_ctl(paste0("(",pattern,")"), "; \\1")
+}
+
+#' @rdname comment_lines
+#' 
+#' @export
+uncomment <- function(m, pattern = ".*"){
+  m %>% gsub_ctl(paste0("^;+\\s*(",pattern,")"), "\\1")
+}
+
+#' Pattern replacement for control file contents
+#'
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#'
+#' A wrapper around `gsub` so that control files may be modified using `gsub`
+#' syntax.  Can be useful for simple find replace operations in a control
+#' stream.  Ensure you use the "view diff" app afterwards to make sure the find
+#' replace proceeded as intended.
+#'
+#' @param m An nm object.
+#' @param pattern Argument passed to [gsub()].
+#' @param replacement Argument passed to [gsub()].
+#' @param ... Additional arguments passed to [gsub()].
+#' @param dollar Character name of subroutine.
+#' 
+#' @seealso [apply_manual_edit()]
+#' @examples 
+#' 
+#' \dontrun{
+#' 
+#' m1 %>% gsub_ctl("ISAMPLE=300", "ISAMPLE=600")
+#' 
+#' }
+#' 
+#' @export
+
+gsub_ctl <- function(m, pattern, replacement, ..., dollar = NA_character_){
+  UseMethod("gsub_ctl")
+}
+
+#' @export
+gsub_ctl.nm_generic <- function(m, pattern, replacement, ..., dollar = NA_character_){
+  
+  text <- get_target_text(m)
+  text <- gsub(pattern, replacement, text, ...)
+  
+  m <- m %>% set_target_text(text)
+  m
+}
+#' @export
+gsub_ctl.nm_list <- Vectorize_nm_list(gsub_ctl.nm_generic, SIMPLIFY = FALSE)
+
+search_ctl_name <- function(r, models_dir=nm_default_dir("models")){
+  if(inherits(r,"nm")) ctl_name <- r$ctl
+  if(inherits(r,"numeric") | inherits(r,"character")) {
+    r <- as.character(r)
+    rtemp <- normalizePath(r, mustWork = FALSE)
+    if(file.exists2(rtemp)) ctl_name <- rtemp else {
+      stop("cant find ctl_name")
+    }
+  }
+  ctl_name
+}
+
 is_dollar_line <- function(l) grepl("^\\s*;*\\s*\\$",l)
 is_nm_comment_line <- function(l) grepl("^\\s*;",l)
 rem_dollars <- function(s) gsub("\\s*\\$\\S*\\s*","",s)
@@ -244,6 +326,16 @@ param_info.default <- function(ctl){
     return(data.frame())
 }
 
+#' @export
+param_info.nm_generic <- function(ctl){
+  ctl <- ctl_list2(ctl)
+  if("THETA" %in% names(ctl)) return(theta_nm2r(ctl$THETA)) else
+    return(data.frame())
+}
+#' @export
+param_info.nm_list <- function(ctl) param_info(as_nm_generic(ctl))
+
+
 #' Convert NONMEM code to R ready
 #' 
 #' Parses NONMEM code and attempts to make it evaluable as R code.
@@ -290,73 +382,23 @@ nonmem_code_to_r <- function(code, eta_to_0 = TRUE){
   
 }
 
-
-#' @rdname comment_out
-#' @name comment_out
-#' @title Comment lines of control file
-#' 
-#' @description 
-#' 
-#' `r lifecycle::badge("stable")`
-#' 
-#' Comment out lines of code with that are matched by a patter string.
-#' 
-#' @param m An nm object.
-#' @param pattern Character regex. Passed to [gsub()].
-#' 
-#' @seealso [gsub_ctl()], [target()]
 #' @export
-comment_out <- function(m, pattern = ".*"){
-  m %>% gsub_ctl(paste0("(",pattern,")"), "; \\1")
+print.nm_subroutine <- function(x, ...){
+  cat(paste0(format(seq_along(x), width = 3),"| ",x), sep = "\n")
 }
 
-#' @rdname comment_out
-#' 
-#' @export
-uncomment <- function(m, pattern = ".*"){
-  m %>% gsub_ctl(paste0("^;+\\s*(",pattern,")"), "\\1")
-}
 
-#' Pattern replacement for control file contents
-#'
-#' @description 
-#' 
-#' `r lifecycle::badge("stable")`
-#'
-#' A wrapper around `gsub` so that control files may be modified using `gsub`
-#' syntax.  Can be useful for simple find replace operations in a control
-#' stream.  Ensure you use the "view diff" app afterwards to make sure the find
-#' replace proceeded as intended.
-#'
-#' @param m An nm object.
-#' @param pattern Argument passed to [gsub()].
-#' @param replacement Argument passed to [gsub()].
-#' @param ... Additional arguments passed to [gsub()].
-#' @param dollar Character name of subroutine.
-#' 
-#' @seealso [apply_manual_edit()]
-#' @examples 
-#' 
-#' \dontrun{
-#' 
-#' m1 %>% gsub_ctl("ISAMPLE=300", "ISAMPLE=600")
-#' 
-#' }
-#' 
-#' @export
-
-gsub_ctl <- function(m, pattern, replacement, ..., dollar = NA_character_){
-  UseMethod("gsub_ctl")
-}
-
-#' @export
-gsub_ctl.nm_generic <- function(m, pattern, replacement, ..., dollar = NA_character_){
-
-  text <- get_target_text(m)
-  text <- gsub(pattern, replacement, text, ...)
+grab_variables0 <- function(text, pattern){
+  text_separated <- text %>% paste0(collapse = "\n") %>% 
+    stringr::str_split("(\n|\\s|\\+|\\-|\\=|\\*|\\/)") %>% unlist
   
-  m <- m %>% set_target_text(text)
-  m
+  text_separated <- text_separated[grepl(pattern, text_separated)]
+  text_separated <- gsub(paste0(".*(", pattern, ").*"), "\\1", text_separated)
+  unique(text_separated)
 }
-#' @export
-gsub_ctl.nm_list <- Vectorize_nm_list(gsub_ctl.nm_generic, SIMPLIFY = FALSE)
+
+grab_variables <- function(m, pattern){
+  text <- m %>% text
+  grab_variables0(text, pattern)
+}
+

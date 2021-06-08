@@ -2,7 +2,7 @@
 % Please edit documentation in R/ofv.R
 \name{ofv}
 \alias{ofv}
-\title{Get objective function value (OFV)}
+\title{Get Objective Function Value (OFV)}
 \usage{
 ofv(r)
 }
@@ -11,6 +11,8 @@ ofv(r)
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Extracts OFV from .ext file.
 }
 \examples{
 \dontrun{

@@ -49,6 +49,20 @@ cached_object.nm_generic <- function(m){
 cached_object.nm_list <- Vectorize_nm_list(cached_object.nm_generic, SIMPLIFY = FALSE)
 
 
+cache_history <- function(r){
+  UseMethod("cache_history")
+}
+
+cache_history.nm_generic <- function(r){
+  lapply(run_cache_paths(r), readRDS)
+}
+
+cache_history.nm_list <- Vectorize_nm_list(cache_history.nm_generic, SIMPLIFY = FALSE)
+
+cache_current <- function(m) run_checksums(m)
+
+clear_cache <- function() unlink(".cache", recursive = TRUE)
+
 unique_render_cache_path <- function(m, input){
   file.path(".cache", 
             paste0(gsub(.Platform$file.sep, "--", unique_id(m)),

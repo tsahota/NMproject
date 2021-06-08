@@ -144,3 +144,7 @@ rename_parameter <- function(m, ...){
   rename_parameter_(m, new_name, name)
 }
 
+n_thetas <- function(m){
+  param_info <- param_info(m)
+  nrow(param_info[grepl("THETA", param_info$parameter),])
+}

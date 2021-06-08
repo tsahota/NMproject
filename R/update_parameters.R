@@ -112,7 +112,7 @@ update_parameters.nm_generic <- function(ctl, from){
   
   coef_from <- coef(from, trans=FALSE)
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "THETA")
-  #message("bug in updating IOV model parameters - unresolved")
+  #message("cannot update IOV model parameters")
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "OMEGA")
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "SIGMA")
   

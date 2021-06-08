@@ -161,3 +161,49 @@ read_derived_data <- function(name, na = ".", silent = FALSE, ...){
   }
   return(d)
 }
+
+#' Exclude rows of NONMEM dataset
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#'
+#' A mechanism for excluding outliers during data cleaning.  Create exploratory
+#' plots, identify rows of the dataset to be considered outliers for exclusion,
+#' and then feed that filtered dataset into this function to exclude them from
+#' the dataset.  Requires a corresponding `IGNORE` statement - see argument
+#' descriptions for more details.
+#' 
+#' 
+#' @param d A `data.frame` for containing the full NONMEM dataset.  Should
+#'   contain a column for identifying excluded rows named with the `exclude_col`
+#'   argument.
+#' @param dexcl A smaller `data.frame` consisting of rows to be ignored.  Need
+#'   not contain all columns of `d` but each column should be present in `d`.
+#' @param exclude_col Character (default = `"EXCL"`). Name of a binary exclude
+#'   column in `d`. This should be accompanied with a `IGNORE=(EXCL.GT.0)`
+#'   statement in $DATA.
+#'
+#' @return A modified version of `d` with `exclude_col` set to `1` for rows
+#'   coinciding with `dexcl`.
+#' 
+#' @seealso [read_derived_data()], [write_derived_data()]
+#' 
+#' @examples
+#' \dontrun{
+#' ## use with dplyr
+#' dexcl <- d %>% filter(ID == 23, TIME > 18, TIME < 24) %>% select(ID, TIME, DV, EXCL)
+#' dexcl  ## view rows to be excluded
+#' d <- d %>% exclude_rows(dexcl)
+#' }
+#' @export
+
+exclude_rows <- function(d, dexcl, exclude_col = "EXCL"){
+  if(any(!names(dexcl) %in% names(d))) stop("dexcl must contain a subset of the columns of d")
+  excluded <- do.call(paste, d[, names(dexcl)]) %in% do.call(paste, dexcl)
+  if(nrow(dexcl) != length(which(excluded))) stop("couldn't find all rows")
+  if(!exclude_col %in% names(d)) d[[exclude_col]] <- 0
+  d[[exclude_col]][excluded] <- 1
+  d
+}
+

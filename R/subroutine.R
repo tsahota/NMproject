@@ -294,62 +294,6 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE){
     
   }
   
-  
-  # if(0){
-  #   var_K <- m %>% grab_variables("\\bK\\b")
-  #   var_KA <- m %>% grab_variables("\\bKA\\b")
-  #   
-  #   if(length(var_K)){
-  #     m <- m %>% rename_parameter_(new_name = "K20", name = "K")
-  #     ## adjust dp accordingly
-  #     dp$nm_name[dp$advan %in% old_advan & dp$nm_name %in% "K"] <- "K20"
-  #   }
-  #   
-  #   if(length(var_KA)){
-  #     m <- m %>% rename_parameter_(new_name = "K12", name = "KA")
-  #     ## adjust dp accordingly
-  #     dp$nm_name[dp$advan %in% old_advan & dp$nm_name %in% "KA"] <- "K12"
-  #   }
-  #   
-  #   var_KXTY <- m %>% grab_variables("\\bK[0-9]+T[0-9]+\\b")
-  #   
-  #   if(length(var_KXTY)){ ## if any KXTY change all to KXTY notation
-  #     var_KXY <- m %>% grab_variables("\\bK[0-9]{2}\\b")
-  #     var_KXY_new <- gsub("\\bK([0-9])([0-9])\\b", "K\\1T\\2", var_KXY)
-  #     for(i in seq_along(var_KXY)){ 
-  #       m <- m %>% rename_parameter_(new_name = var_KXY_new[i],
-  #                                    name = var_KXY[i])
-  #     }
-  #   }
-  #   
-  #   var_KXY <- m %>% grab_variables("\\bK[0-9]{2}\\b")
-  #   if(!length(var_KXY)){
-  #     var_KXY <- m %>% grab_variables("\\bK[0-9]+T[0-9]+\\b")
-  #   } 
-  #   
-  #   ## make RXY representations
-  #   var_RXY <- var_KXY
-  #   var_RXY <- gsub("K", "R", var_RXY)
-  #   var_RXY <- gsub("\\bR([0-9])([0-9])\\b", "R\\1T\\2", var_RXY)
-  #   
-  #   ##var_KXY is now either KXY or KXTY notation.
-  #   ## modify dp
-  #   
-  #   dp_add <- dplyr::tibble(
-  #     advan = new_advan,
-  #     trans = 1,
-  #     base_name = var_RXY,
-  #     nm_name = var_KXY
-  #   )
-  #   
-  #   dp <- dp[!dp$advan %in% new_advan, ]
-  #   
-  #   dp <- dplyr::bind_rows(dp, dp_add)      
-  # }
-  
-  ## get transformed initial thetas/omegas
-  ## TODO: offload into a common transform function.
-  ##  this is repeating code in coef
   thetas <- raw_init_theta(m)
   thetas$init_trans <- thetas$init
   thetas$init_trans[thetas$trans %in% c("LOG","LOGODDS")] <- 
@@ -360,19 +304,6 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE){
   omegas <- raw_init_omega(m)
   
   d <- dplyr::full_join(dold, dnew, by = "base_name")
-  
-  # if(new_advan %in% c(5, 6, 7, 8, 9)){
-  #   ## do Volumes here
-  #   ## leave names alone otherwise they're strategy="remove"
-  #   volume_rows <- is.na(d$advan.y)
-  #   if(any(volume_rows)){
-  #     d$advan.y[volume_rows] <- unique(d$advan.y[!volume_rows])
-  #     d$trans.y[volume_rows] <- unique(d$trans.y[!volume_rows])
-  #     ## name same as old
-  #     d$nm_name.y[volume_rows] <- d$nm_name.x[volume_rows]
-  #   }
-  #   
-  # }
   
   ## loop through rows
   
@@ -706,3 +637,22 @@ tol.nm_generic <- function(m, text){
 #' @export
 tol.nm_list <- Vectorize_nm_list(tol.nm_generic)
 
+update_variable_in_text_numbers <- function(m, before_number, after_number){
+  
+  before_regex <- paste0("\\b", before_number)
+  before_regex <- gsub("\\(","\\\\(", before_regex)
+  after_regex <- gsub("\\)","\\\\)", after_number)
+  
+  regex <- paste0(before_regex, "([0-9]+)", after_regex)
+  vars <- grab_variables(m, regex)
+  old_n <- as.numeric(gsub(regex, "\\1", vars))
+  vars <- vars[order(old_n)]
+  old_n <- old_n[order(old_n)]
+  vars_new <- paste0(before_number,seq_along(vars),after_number)
+  new_n <- as.numeric(gsub(regex, "\\1", vars_new))
+  for(i in which(vars != vars_new)){
+    m <- m %>% gsub_ctl(paste0(before_regex,old_n[i],after_regex),
+                        paste0(before_number,new_n[i],after_number))
+  }
+  m
+}

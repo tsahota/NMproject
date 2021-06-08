@@ -1,7 +1,3 @@
-#' @include utilsExtra.R
-
-NULL
-
 #' Apply a manual edit patch
 #'
 #' @description 

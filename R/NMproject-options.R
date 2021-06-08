@@ -305,6 +305,37 @@ system_nm <- function(cmd,dir=nm_default_dir("models"),...){
   getOption("system_nm")(cmd,...)
 }
 
+#' System/shell command wrapper
+#'
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' Will run `getOption("system_cmd")`.  A OS agnostic interface to the system
+#' terminal.  Most of the time this will be the same as `system_nm` except when
+#' the PsN/NONMEM execution server is location in a different location to the
+#' RStudio server.
+#'
+#' @param cmd Character. Command to send to shell.
+#' @param dir Optional character. Directory to run command in (default = current
+#'   working directory)
+#' @param ... Other arguments passed to system command.
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' system_cmd("pwd")
+#'
+#' }
+#'
+#' @export
+system_cmd <- function(cmd,dir=".",...){
+  if(!dir %in% ".") if(file.exists(dir)) {currentwd <- getwd(); setwd(dir) ; on.exit(setwd(currentwd))} else
+    stop(paste0("Directory \"",dir,"\" doesn't exist."))
+  getOption("system_cmd")(cmd,...)
+}
+
 #' Overwrite behaviour of NMproject
 #' 
 #' @description 

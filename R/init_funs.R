@@ -1,3 +1,489 @@
+#' Get/set initial parameters
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' These functions are useful to obtain and modify initial values of `$THETA`, `$OMEGA` and `$SIGMA`.
+#' 
+#' @param m nm object
+#' @param replace optional tibble for replacement
+#' @param ... mutate init_theta
+#' 
+#' @examples
+#' \dontrun{
+#' 
+#' ## set initial values
+#' 
+#' m1 <- new_nm(run_id = "m1",
+#'              based_on = "staging/Models/ADVAN2.mod",
+#'              data_path = "DerivedData/data.csv") %>%
+#'       fill_input() %>%
+#'       init_theta(init = c(-2, 0.5, 1)) %>%
+#'       init_sigma(init = c(0.1, 0.1)) %>%
+#'       run_nm()
+#'       
+#' init_theta(m1)  ## display current $THETA in tibble-form
+#' init_omega(m1)  ## display current $OMEGA in tibble-form
+#' 
+#' 
+#' ## here we supply a named vector in a different order
+#' m1 <- m1 %>% init_theta(init = c(KA = -2, V = 1))
+#' m1 %>% dollar("THETA")
+#' 
+#' ## can also manipulate other aspects (like the FIX column) similarly
+#' m1 <- m1 %>% init_theta(init = c(KA = -2, V = 1),
+#'                         FIX = c(KA = TRUE))
+#' m1 %>% dollar("THETA")
+#'   
+#' ## perturb all parameters by ~10%
+#' m1 <- m1 %>% init_theta(init = rnorm(length(init), mean = init, sd = 0.1))
+#' 
+#' ## perturb only log transformed parameters by ~10%
+#' m1 <- m1 %>% init_theta(
+#'     init = ifelse(
+#'     trans %in% "LOG",
+#'     rnorm(length(init), mean = init, sd = 0.1),
+#'     init
+#'   )
+#' )
+#' 
+#' }
+#' @name init_theta
+#' @export
+
+init_theta <- function(m, replace, ...){
+  UseMethod("init_theta")
+}
+
+#' @export
+init_theta.nm_generic <- function(m, replace, ...){
+  d <- raw_init_theta(m)
+  d$orig_line <- d$line
+  mutate_args <- rlang::enquos(...)
+  if(missing(replace)){  ## get
+    if(length(mutate_args) > 0){
+      current_init <- init_theta(m)
+      
+      ## determine quosures produces named lists
+      mutate_style <- rep(TRUE, length(mutate_args))
+      
+      args_eval <- try(lapply(mutate_args, rlang::eval_tidy), silent = TRUE)
+      if(!inherits(args_eval, "try-error")){
+        ## evaluation worked, see if names are present
+        arg_names <- sapply(args_eval, function(x) length(names(x)))
+        mutate_style <- arg_names == 0
+      }
+      
+      replace <- current_init %>% dplyr::mutate(!!!(mutate_args)[mutate_style])
+      
+      ## handle mutate_args[!mutate_style]
+      ## use names to subset
+      if(!inherits(args_eval, "try-error")){
+        ## do simple replace of non mutate args
+        ## loop through columns and parameter values
+        for(col_name in names(args_eval)){
+          for(par_name in names(args_eval[[col_name]])){
+            entry_eval <- args_eval[[col_name]][par_name]
+            names(entry_eval) <- NULL
+            if(length(replace[replace$name %in% par_name, col_name]) == 0)
+              stop("parameter name not found, must be one of the following:\n ", 
+                   paste(stats::na.omit(replace$name), collapse = ", "), call. = FALSE)
+            replace[replace$name %in% par_name, col_name] <- entry_eval
+          }
+        }
+      }
+      
+      replace <- replace %>% dplyr::mutate_if(is.numeric, ~signif(., 5))
+    } else {
+      d <- d[!is.na(d$parameter), ]
+      d$value <- NULL
+      d$comment <- NULL
+      d$SUB <- NULL
+      return(d) 
+    }
+  } else {
+    if(length(mutate_args) > 0) stop("can't specify additional args and replace args at same time") 
+  }
+  d$row <- seq_len(nrow(d))
+  d_new <- dplyr::full_join(d, replace, by = c("line", "pos"))
+  d_new <- d_new[, !grepl("\\.x$", names(d_new))]
+  names(d_new) <- gsub("(.*)\\.y", "\\1", names(d_new))
+  d_new <- d_new[order(d_new$row), ]
+  d_new$row <- NULL
+  m <- m %>% raw_init_theta(d_new)
+  m
+}
+
+#' @export
+init_theta.nm_list <- Vectorize_nm_list(init_theta.nm_generic, SIMPLIFY = FALSE,
+                                        replace_arg = "replace",
+                                        exclude_classes = c("data.frame"),
+                                        non_lazy_eval = c("m", "replace"))
+
+
+# init_theta.nm_list <- function(m, replace, ...){
+#   current_call <- match.call()
+#   calling_env <- parent.frame()
+#   result <- lapply(m, function(m){
+#     current_call[[1]] <- as.symbol("init_theta")
+#     current_call[[2]] <- m
+#     eval(current_call, envir = calling_env)
+#   })
+#   if(is_nm_list(result)){
+#     result <- as_nm_list(result)
+#   }
+#   result
+# }
+
+#' @rdname init_theta
+#' @export
+init_omega <- function(m, replace, ...){
+  UseMethod("init_omega")
+}
+
+#' @export
+init_omega.nm_generic <- function(m, replace, ...){
+  d <- raw_init_omega(m)
+  d$orig_line <- d$line
+  d$orig_pos <- d$pos
+  mutate_args <- rlang::enquos(...)
+  if(missing(replace)){  ## get
+    if(length(mutate_args) > 0){
+      current_init <- init_omega(m)
+      
+      ## determine quosures produces named lists
+      mutate_style <- rep(TRUE, length(mutate_args))
+      
+      args_eval <- try(lapply(mutate_args, rlang::eval_tidy), silent = TRUE)
+      if(!inherits(args_eval, "try-error")){
+        ## evaluation worked, see if names are present
+        arg_names <- sapply(args_eval, function(x) length(names(x)))
+        mutate_style <- arg_names == 0
+      }
+      
+      replace <- current_init %>% mutate_cond(!is.na(current_init$name), !!!(mutate_args)[mutate_style])
+      
+      ## handle mutate_args[!mutate_style]
+      ## use names to subset
+      if(!inherits(args_eval, "try-error")){
+        ## do simple replace of non mutate args
+        ## loop through columns and parameter values
+        for(col_name in names(args_eval)){
+          for(par_name in names(args_eval[[col_name]])){
+            entry_eval <- args_eval[[col_name]][par_name]
+            names(entry_eval) <- NULL
+            if(length(replace[replace$name %in% par_name, col_name]) == 0)
+              stop("parameter name not found, must be one of the following:\n ", 
+                   paste(stats::na.omit(replace$name), collapse = ", "), call. = FALSE)
+            replace[replace$name %in% par_name, col_name] <- entry_eval
+          }
+        }
+      }
+      
+      replace <- replace %>% dplyr::mutate_if(is.numeric, ~signif(., 5))
+    } else {
+      d$value <- NULL
+      d$comment <- NULL
+      d$parameter <- NULL
+      d$SUB <- NULL
+      return(d)
+    }
+  } 
+  ## set
+  ## need to add back in column from raw_init_omega format
+  d_derived <- d[,c("value","comment","parameter","SUB", ## same as what was deleted above
+                    "orig_line", "orig_pos")] 
+  
+  replace <- dplyr::left_join(replace, d_derived, by = c("orig_line", "orig_pos"))
+  if("new_value" %in% names(replace)) {  ## for characters
+    replace$value[!is.na(replace$new_value)] <- as.character(replace$new_value[!is.na(replace$new_value)])
+  }
+  if("new_line" %in% names(replace)) replace$line <- replace$new_line
+  if("new_pos" %in% names(replace)) replace$pos <- replace$new_pos
+  #debugonce(raw_init_omega)
+  m <- m %>% raw_init_omega(replace)
+  m
+}
+
+#' @export
+init_omega.nm_list <- Vectorize_nm_list(init_omega.nm_generic, SIMPLIFY = FALSE, 
+                                        replace_arg = "replace",
+                                        exclude_classes = c("data.frame"),
+                                        non_lazy_eval = c("m", "replace"))
+
+#' @name init_theta
+#' @export
+init_sigma <- function(m, replace, ...){
+  UseMethod("init_sigma")
+}
+
+#' @export
+init_sigma.nm_generic <- function(m, replace, ...){
+  d <- raw_init_sigma(m)
+  d$orig_line <- d$line
+  d$orig_pos <- d$pos
+  mutate_args <- rlang::enquos(...)
+  if(missing(replace)){  ## get
+    if(length(mutate_args) > 0){
+      current_init <- init_sigma(m)
+      ## determine quosures produces named lists
+      mutate_style <- rep(TRUE, length(mutate_args))
+      
+      args_eval <- try(lapply(mutate_args, rlang::eval_tidy), silent = TRUE)
+      if(!inherits(args_eval, "try-error")){
+        ## evaluation worked, see if names are present
+        arg_names <- sapply(args_eval, function(x) length(names(x)))
+        mutate_style <- arg_names == 0
+      }
+      
+      replace <- current_init %>% mutate_cond(!is.na(current_init$name), !!!(mutate_args)[mutate_style])
+      
+      ## handle mutate_args[!mutate_style]
+      ## use names to subset
+      if(!inherits(args_eval, "try-error")){
+        ## do simple replace of non mutate args
+        ## loop through columns and parameter values
+        for(col_name in names(args_eval)){
+          for(par_name in names(args_eval[[col_name]])){
+            entry_eval <- args_eval[[col_name]][par_name]
+            names(entry_eval) <- NULL
+            if(length(replace[replace$name %in% par_name, col_name]) == 0)
+              stop("parameter name not found, must be one of the following:\n ", 
+                   paste(stats::na.omit(replace$name), collapse = ", "), call. = FALSE)
+            replace[replace$name %in% par_name, col_name] <- entry_eval
+          }
+        }
+      }
+      
+      replace <- replace %>% dplyr::mutate_if(is.numeric, ~signif(., 5))
+    } else {
+      d$value <- NULL
+      d$comment <- NULL
+      d$parameter <- NULL
+      d$SUB <- NULL
+      return(d)
+    }
+  } 
+  ## set
+  d_derived <- d[,c("value","comment","parameter","SUB", ## same as what was deleted above
+                    "orig_line", "orig_pos")] 
+  
+  replace <- dplyr::left_join(replace, d_derived, by = c("orig_line", "orig_pos"))
+  if("new_value" %in% names(replace)) {  ## for characters
+    replace$value[!is.na(replace$new_value)] <- as.character(replace$new_value[!is.na(replace$new_value)])
+  }
+  if("new_line" %in% names(replace)) replace$line <- replace$new_line
+  if("new_pos" %in% names(replace)) replace$pos <- replace$new_pos
+  
+  m <- m %>% raw_init_sigma(replace)
+  m
+}
+
+#' @export
+init_sigma.nm_list <- Vectorize_nm_list(init_sigma.nm_generic, SIMPLIFY = FALSE, 
+                                        replace_arg = "replace",
+                                        exclude_classes = c("data.frame"),
+                                        non_lazy_eval = c("m", "replace"))
+
+
+#' @name block-omega-sigma
+#' @rdname block-omega-sigma
+#' @title Create or remove $OMEGA/$SIGMA BLOCKs
+#'
+#' @description
+#'
+#' `r lifecycle::badge("stable")`
+#'
+#' Manipulate $OMEGA (and $SIGMA) BLOCKs to introduce or remove correlations.
+#'
+#' @param iomega A `tibble` output from [init_omega()] or [init_sigma()].
+#' @param eta_numbers Numeric vector.  ETA numbers to put into a block or
+#'   unblock for `block()` and `unblock()`, respectively. Must be contiguous.
+#' @param diag_init Numeric. Default value for off diagonal elements.
+#'
+#' @seealso [init_theta()], [init_omega()], [init_sigma()]
+#'
+#' @examples
+#'
+#' \dontrun{
+#' io <- m1 %>% init_omega()
+#' io <- io %>% block(c(2,3))
+#' m1 <- m1 %>% init_omega(io)
+#' m1 %>% dollar("OMEGA") ## to display $OMEGA
+#' }
+#'
+#' @export
+block <- function(iomega,
+                  eta_numbers = NA,
+                  diag_init = 0.01){
+  
+  eta_numbers <- sort(eta_numbers)
+  
+  if(!all(diff(eta_numbers) == 1)) stop("etas must be adjacent", call. = FALSE)
+  
+  start_eta <- min(eta_numbers)
+  end_eta <- max(eta_numbers)
+  
+  #start_index <- match(iomega$block[iomega$omega1 %in% start_eta], iomega$block)
+  start_index <- match(start_eta, iomega$omega1)
+  end_index <- match(end_eta, iomega$omega1)
+  
+  if(is.na(start_index) | is.na(end_index)) stop("etas not found", call. = FALSE)
+  
+  omega_counts <- iomega$omega1[!is.na(iomega$omega1)]
+  omega_counts <- table(omega_counts)[eta_numbers]
+  
+  if(any(omega_counts > 1)) stop("etas cannot already be a block", call. = FALSE)
+  
+  start_block <- iomega$block[iomega$omega1 %in% start_eta]
+  iomega$remove <- FALSE
+  iomega$remove[iomega$block %in% start_block & is.na(iomega$omega1)] <- TRUE
+  
+  iomega_block <- iomega[start_index:end_index, ]
+  
+  all_indexes <- seq_len(nrow(iomega))  ## defined to save code
+  iomega_pre <- iomega[all_indexes[all_indexes < start_index], ]
+  iomega_post <- iomega[all_indexes[all_indexes > end_index], ]
+  
+  new_block <- min(iomega_block$block)
+  
+  ################################
+  ## insert rows for covariances - match what raw_init_omega does
+  
+  ## add diagonals:
+  
+  ddiag <- expand.grid(omega1 = stats::na.omit(iomega_block$omega1),
+                       omega2 = stats::na.omit(iomega_block$omega1))
+  ddiag <- ddiag[ddiag$omega1 >= ddiag$omega2, ]
+  
+  iomega_block <- merge(ddiag, iomega_block, all = TRUE)
+  diag_index <- (iomega_block$omega1 != iomega_block$omega2) %in% TRUE
+  
+  iomega_block$init[diag_index] <- diag_init
+  iomega_block$block <- new_block
+  
+  block_text_rows <- data.frame(new_value = c("$OMEGA", "BLOCK", 
+                                              paste0("(",length(eta_numbers),")")),
+                                block = new_block,
+                                line = min(iomega_block$line, na.rm = TRUE),
+                                pos = 1:3)
+  
+  iomega_block$line <- rev(na.locf(rev(iomega_block$line)))
+  
+  iomega_block <- iomega_block %>% dplyr::group_by(.data$omega1) %>%
+    dplyr::mutate(pos = 1:length(.data$omega1)) %>% as.data.frame
+  
+  iomega_block$line <- iomega_block$line + 1
+  suppressWarnings({
+    iomega_block$mblock[!is.na(iomega_block$mblock)] <- 
+      max(c(0, max(iomega_pre$mblock, na.rm = TRUE))) + 1
+  })
+  
+  iomega_block <- suppressWarnings(dplyr::bind_rows(block_text_rows, iomega_block))
+  
+  ## post will also be one line shifted
+  iomega_post$line <- iomega_post$line + 1
+  
+  suppressWarnings({
+    should_be <- unique(stats::na.omit(iomega_block$mblock))+1
+    iomega_post$mblock[!is.na(iomega_post$mblock)] <- 
+      iomega_post$mblock[!is.na(iomega_post$mblock)] - 
+      (min(iomega_post$mblock[!is.na(iomega_post$mblock)], na.rm = TRUE) - 
+         should_be)
+  })
+  
+  if(any(!is.na(iomega_post$block))){
+    iomega_post$block <- iomega_post$block - 
+      (min(iomega_post$block, na.rm = TRUE) - (new_block + 1))
+  }
+  ################################
+  iomega <- suppressWarnings(dplyr::bind_rows(iomega_pre, iomega_block, iomega_post))
+  iomega <- iomega[!(iomega$remove %in% TRUE), ]
+  iomega$remove <- NULL
+  iomega
+  
+}
+
+block <- Vectorize(block, vectorize.args = "iomega", SIMPLIFY = FALSE)
+
+#' @rdname block-omega-sigma
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' io <- m1 %>% init_omega()
+#' io <- io %>% unblock(c(2,3))
+#' m1 <- m1 %>% init_omega(io)
+#' m1 %>% dollar("OMEGA") ## to display $OMEGA
+#' }
+#' 
+#' @export
+unblock <- function(iomega, eta_numbers){
+  
+  eta_numbers <- sort(eta_numbers)
+  
+  if(!all(diff(eta_numbers) == 1)) stop("etas must be adjacent", call. = FALSE)
+  
+  start_eta <- min(eta_numbers)
+  end_eta <- max(eta_numbers)
+  
+  start_index <- match(start_eta, iomega$omega1)
+  end_index <- match(end_eta, iomega$omega1)
+  
+  if(is.na(start_index) | is.na(end_index)) stop("etas not found", call. = FALSE)
+  
+  block_to_dismantle <- iomega$block[iomega$omega1 %in% eta_numbers]
+  block_to_dismantle <- unique(block_to_dismantle)
+  
+  if(length(block_to_dismantle) > 1) stop("etas belong to multiple BLOCKs", call. = FALSE)
+  if(length(block_to_dismantle) == 0) stop("couldn't find BLOCK", call. = FALSE)
+  
+  iomega_block <- iomega[iomega$block %in% block_to_dismantle,]
+  
+  iomega_pre <- iomega[iomega$line < min(iomega_block$line, na.rm = TRUE), ]
+  iomega_post <- iomega[iomega$line > max(iomega_block$line, na.rm = TRUE), ]
+  
+  ## remove $OMEGA block lines
+  
+  iomega_block <- iomega_block[!is.na(iomega_block$omega1),]
+  iomega_block <- iomega_block[iomega_block$omega1 == iomega_block$omega2, ]
+  iomega_block$pos <- 1
+  suppressWarnings({
+    iomega_block$block <- seq_along(iomega_block$block) +
+      max(c(0, max(iomega_pre$block, na.rm = TRUE)))
+  })
+  
+  iomega_block$mblock <- max(c(1, iomega_pre$mblock), na.rm = TRUE)
+  
+  if(any(!is.na(iomega_pre$line))){
+    iomega_block$line <- iomega_block$line + 
+      max(iomega_pre$line) + 1 - min(iomega_block$line)
+  }
+  
+  if(any(!is.na(iomega_post$line))){
+    iomega_post$line <- iomega_post$line + max(iomega_block$line) + 1 - min(iomega_post$line)
+  }
+  
+  suppressWarnings({
+    should_be <- max(iomega_block$mblock, na.rm = TRUE)
+    iomega_post$mblock[!is.na(iomega_post$mblock)] <- 
+      iomega_post$mblock[!is.na(iomega_post$mblock)] - 
+      (min(iomega_post$mblock, na.rm = TRUE) - should_be)
+  })
+  
+  if(any(!is.na(iomega_post$block))){
+    iomega_post$block <- iomega_post$block - 
+      (min(iomega_post$block, na.rm = TRUE) - (max(iomega_block$block) + 1))
+  }
+  
+  ################################
+  suppressWarnings(dplyr::bind_rows(iomega_pre, iomega_block, iomega_post))  
+  
+}
+
+unblock <- Vectorize(unblock, vectorize.args = "iomega", SIMPLIFY = FALSE)
+
 raw_init_theta <- function(m, replace){
   
   if(missing(replace)){
@@ -493,490 +979,3 @@ param_r2nm_extra <- function(d){
   d$value
   
 }
-
-
-#' Get/set initial parameters
-#' 
-#' @description 
-#' 
-#' `r lifecycle::badge("stable")`
-#' 
-#' These functions are useful to obtain and modify initial values of `$THETA`, `$OMEGA` and `$SIGMA`.
-#' 
-#' @param m nm object
-#' @param replace optional tibble for replacement
-#' @param ... mutate init_theta
-#' 
-#' @examples
-#' \dontrun{
-#' 
-#' ## set initial values
-#' 
-#' m1 <- new_nm(run_id = "m1",
-#'              based_on = "staging/Models/ADVAN2.mod",
-#'              data_path = "DerivedData/data.csv") %>%
-#'       fill_input() %>%
-#'       init_theta(init = c(-2, 0.5, 1)) %>%
-#'       init_sigma(init = c(0.1, 0.1)) %>%
-#'       run_nm()
-#'       
-#' init_theta(m1)  ## display current $THETA in tibble-form
-#' init_omega(m1)  ## display current $OMEGA in tibble-form
-#' 
-#' 
-#' ## here we supply a named vector in a different order
-#' m1 <- m1 %>% init_theta(init = c(KA = -2, V = 1))
-#' m1 %>% dollar("THETA")
-#' 
-#' ## can also manipulate other aspects (like the FIX column) similarly
-#' m1 <- m1 %>% init_theta(init = c(KA = -2, V = 1),
-#'                         FIX = c(KA = TRUE))
-#' m1 %>% dollar("THETA")
-#'   
-#' ## perturb all parameters by ~10%
-#' m1 <- m1 %>% init_theta(init = rnorm(length(init), mean = init, sd = 0.1))
-#' 
-#' ## perturb only log transformed parameters by ~10%
-#' m1 <- m1 %>% init_theta(
-#'     init = ifelse(
-#'     trans %in% "LOG",
-#'     rnorm(length(init), mean = init, sd = 0.1),
-#'     init
-#'   )
-#' )
-#' 
-#' }
-#' @name init_theta
-#' @export
-
-init_theta <- function(m, replace, ...){
-  UseMethod("init_theta")
-}
-
-#' @export
-init_theta.nm_generic <- function(m, replace, ...){
-  d <- raw_init_theta(m)
-  d$orig_line <- d$line
-  mutate_args <- rlang::enquos(...)
-  if(missing(replace)){  ## get
-    if(length(mutate_args) > 0){
-      current_init <- init_theta(m)
-      
-      ## determine quosures produces named lists
-      mutate_style <- rep(TRUE, length(mutate_args))
-      
-      args_eval <- try(lapply(mutate_args, rlang::eval_tidy), silent = TRUE)
-      if(!inherits(args_eval, "try-error")){
-        ## evaluation worked, see if names are present
-        arg_names <- sapply(args_eval, function(x) length(names(x)))
-        mutate_style <- arg_names == 0
-      }
-      
-      replace <- current_init %>% dplyr::mutate(!!!(mutate_args)[mutate_style])
-      
-      ## handle mutate_args[!mutate_style]
-      ## use names to subset
-      if(!inherits(args_eval, "try-error")){
-        ## do simple replace of non mutate args
-        ## loop through columns and parameter values
-        for(col_name in names(args_eval)){
-          for(par_name in names(args_eval[[col_name]])){
-            entry_eval <- args_eval[[col_name]][par_name]
-            names(entry_eval) <- NULL
-            if(length(replace[replace$name %in% par_name, col_name]) == 0)
-              stop("parameter name not found, must be one of the following:\n ", 
-                   paste(stats::na.omit(replace$name), collapse = ", "), call. = FALSE)
-            replace[replace$name %in% par_name, col_name] <- entry_eval
-          }
-        }
-      }
-      
-      replace <- replace %>% dplyr::mutate_if(is.numeric, ~signif(., 5))
-    } else {
-      d <- d[!is.na(d$parameter), ]
-      d$value <- NULL
-      d$comment <- NULL
-      d$SUB <- NULL
-      return(d) 
-    }
-  } else {
-    if(length(mutate_args) > 0) stop("can't specify additional args and replace args at same time") 
-  }
-  d$row <- seq_len(nrow(d))
-  d_new <- dplyr::full_join(d, replace, by = c("line", "pos"))
-  d_new <- d_new[, !grepl("\\.x$", names(d_new))]
-  names(d_new) <- gsub("(.*)\\.y", "\\1", names(d_new))
-  d_new <- d_new[order(d_new$row), ]
-  d_new$row <- NULL
-  m <- m %>% raw_init_theta(d_new)
-  m
-}
-
-#' @export
-init_theta.nm_list <- Vectorize_nm_list(init_theta.nm_generic, SIMPLIFY = FALSE,
-                                        replace_arg = "replace",
-                                        exclude_classes = c("data.frame"),
-                                        non_lazy_eval = c("m", "replace"))
-
-
-# init_theta.nm_list <- function(m, replace, ...){
-#   current_call <- match.call()
-#   calling_env <- parent.frame()
-#   result <- lapply(m, function(m){
-#     current_call[[1]] <- as.symbol("init_theta")
-#     current_call[[2]] <- m
-#     eval(current_call, envir = calling_env)
-#   })
-#   if(is_nm_list(result)){
-#     result <- as_nm_list(result)
-#   }
-#   result
-# }
-
-#' @rdname init_theta
-#' @export
-init_omega <- function(m, replace, ...){
-  UseMethod("init_omega")
-}
-
-#' @export
-init_omega.nm_generic <- function(m, replace, ...){
-  d <- raw_init_omega(m)
-  d$orig_line <- d$line
-  d$orig_pos <- d$pos
-  mutate_args <- rlang::enquos(...)
-  if(missing(replace)){  ## get
-    if(length(mutate_args) > 0){
-      current_init <- init_omega(m)
-      
-      ## determine quosures produces named lists
-      mutate_style <- rep(TRUE, length(mutate_args))
-      
-      args_eval <- try(lapply(mutate_args, rlang::eval_tidy), silent = TRUE)
-      if(!inherits(args_eval, "try-error")){
-        ## evaluation worked, see if names are present
-        arg_names <- sapply(args_eval, function(x) length(names(x)))
-        mutate_style <- arg_names == 0
-      }
-      
-      replace <- current_init %>% mutate_cond(!is.na(current_init$name), !!!(mutate_args)[mutate_style])
-      
-      ## handle mutate_args[!mutate_style]
-      ## use names to subset
-      if(!inherits(args_eval, "try-error")){
-        ## do simple replace of non mutate args
-        ## loop through columns and parameter values
-        for(col_name in names(args_eval)){
-          for(par_name in names(args_eval[[col_name]])){
-            entry_eval <- args_eval[[col_name]][par_name]
-            names(entry_eval) <- NULL
-            if(length(replace[replace$name %in% par_name, col_name]) == 0)
-              stop("parameter name not found, must be one of the following:\n ", 
-                   paste(stats::na.omit(replace$name), collapse = ", "), call. = FALSE)
-            replace[replace$name %in% par_name, col_name] <- entry_eval
-          }
-        }
-      }
-      
-      replace <- replace %>% dplyr::mutate_if(is.numeric, ~signif(., 5))
-    } else {
-      d$value <- NULL
-      d$comment <- NULL
-      d$parameter <- NULL
-      d$SUB <- NULL
-      return(d)
-    }
-  } 
-  ## set
-  ## need to add back in column from raw_init_omega format
-  d_derived <- d[,c("value","comment","parameter","SUB", ## same as what was deleted above
-                    "orig_line", "orig_pos")] 
-  
-  replace <- dplyr::left_join(replace, d_derived, by = c("orig_line", "orig_pos"))
-  if("new_value" %in% names(replace)) {  ## for characters
-    replace$value[!is.na(replace$new_value)] <- as.character(replace$new_value[!is.na(replace$new_value)])
-  }
-  if("new_line" %in% names(replace)) replace$line <- replace$new_line
-  if("new_pos" %in% names(replace)) replace$pos <- replace$new_pos
-  #debugonce(raw_init_omega)
-  m <- m %>% raw_init_omega(replace)
-  m
-}
-
-#' @export
-init_omega.nm_list <- Vectorize_nm_list(init_omega.nm_generic, SIMPLIFY = FALSE, 
-                                        replace_arg = "replace",
-                                        exclude_classes = c("data.frame"),
-                                        non_lazy_eval = c("m", "replace"))
-
-#' @name init_theta
-#' @export
-init_sigma <- function(m, replace, ...){
-  UseMethod("init_sigma")
-}
-
-#' @export
-init_sigma.nm_generic <- function(m, replace, ...){
-  d <- raw_init_sigma(m)
-  d$orig_line <- d$line
-  d$orig_pos <- d$pos
-  mutate_args <- rlang::enquos(...)
-  if(missing(replace)){  ## get
-    if(length(mutate_args) > 0){
-      current_init <- init_sigma(m)
-      ## determine quosures produces named lists
-      mutate_style <- rep(TRUE, length(mutate_args))
-      
-      args_eval <- try(lapply(mutate_args, rlang::eval_tidy), silent = TRUE)
-      if(!inherits(args_eval, "try-error")){
-        ## evaluation worked, see if names are present
-        arg_names <- sapply(args_eval, function(x) length(names(x)))
-        mutate_style <- arg_names == 0
-      }
-      
-      replace <- current_init %>% mutate_cond(!is.na(current_init$name), !!!(mutate_args)[mutate_style])
-      
-      ## handle mutate_args[!mutate_style]
-      ## use names to subset
-      if(!inherits(args_eval, "try-error")){
-        ## do simple replace of non mutate args
-        ## loop through columns and parameter values
-        for(col_name in names(args_eval)){
-          for(par_name in names(args_eval[[col_name]])){
-            entry_eval <- args_eval[[col_name]][par_name]
-            names(entry_eval) <- NULL
-            if(length(replace[replace$name %in% par_name, col_name]) == 0)
-              stop("parameter name not found, must be one of the following:\n ", 
-                   paste(stats::na.omit(replace$name), collapse = ", "), call. = FALSE)
-            replace[replace$name %in% par_name, col_name] <- entry_eval
-          }
-        }
-      }
-      
-      replace <- replace %>% dplyr::mutate_if(is.numeric, ~signif(., 5))
-    } else {
-      d$value <- NULL
-      d$comment <- NULL
-      d$parameter <- NULL
-      d$SUB <- NULL
-      return(d)
-    }
-  } 
-  ## set
-  d_derived <- d[,c("value","comment","parameter","SUB", ## same as what was deleted above
-                    "orig_line", "orig_pos")] 
-  
-  replace <- dplyr::left_join(replace, d_derived, by = c("orig_line", "orig_pos"))
-  if("new_value" %in% names(replace)) {  ## for characters
-    replace$value[!is.na(replace$new_value)] <- as.character(replace$new_value[!is.na(replace$new_value)])
-  }
-  if("new_line" %in% names(replace)) replace$line <- replace$new_line
-  if("new_pos" %in% names(replace)) replace$pos <- replace$new_pos
-  
-  m <- m %>% raw_init_sigma(replace)
-  m
-}
-
-#' @export
-init_sigma.nm_list <- Vectorize_nm_list(init_sigma.nm_generic, SIMPLIFY = FALSE, 
-                                        replace_arg = "replace",
-                                        exclude_classes = c("data.frame"),
-                                        non_lazy_eval = c("m", "replace"))
-
-
-#' @name block-omega-sigma
-#' @rdname block-omega-sigma
-#' @title Create or remove $OMEGA/$SIGMA BLOCKs
-#'
-#' @description
-#'
-#' `r lifecycle::badge("stable")`
-#'
-#' Manipulate $OMEGA (and $SIGMA) BLOCKs to introduce or remove correlations.
-#'
-#' @param iomega A `tibble` output from [init_omega()] or [init_sigma()].
-#' @param eta_numbers Numeric vector.  ETA numbers to put into a block or
-#'   unblock for `block()` and `unblock()`, respectively. Must be contiguous.
-#' @param diag_init Numeric. Default value for off diagonal elements.
-#'
-#' @seealso [init_theta()], [init_omega()], [init_sigma()]
-#'
-#' @examples
-#'
-#' \dontrun{
-#' io <- m1 %>% init_omega()
-#' io <- io %>% block(c(2,3))
-#' m1 <- m1 %>% init_omega(io)
-#' m1 %>% dollar("OMEGA") ## to display $OMEGA
-#' }
-#'
-#' @export
-block <- function(iomega,
-                  eta_numbers = NA,
-                  diag_init = 0.01){
-  
-  eta_numbers <- sort(eta_numbers)
-  
-  if(!all(diff(eta_numbers) == 1)) stop("etas must be adjacent", call. = FALSE)
-  
-  start_eta <- min(eta_numbers)
-  end_eta <- max(eta_numbers)
-  
-  #start_index <- match(iomega$block[iomega$omega1 %in% start_eta], iomega$block)
-  start_index <- match(start_eta, iomega$omega1)
-  end_index <- match(end_eta, iomega$omega1)
-  
-  if(is.na(start_index) | is.na(end_index)) stop("etas not found", call. = FALSE)
-  
-  omega_counts <- iomega$omega1[!is.na(iomega$omega1)]
-  omega_counts <- table(omega_counts)[eta_numbers]
-  
-  if(any(omega_counts > 1)) stop("etas cannot already be a block", call. = FALSE)
-  
-  start_block <- iomega$block[iomega$omega1 %in% start_eta]
-  iomega$remove <- FALSE
-  iomega$remove[iomega$block %in% start_block & is.na(iomega$omega1)] <- TRUE
-  
-  iomega_block <- iomega[start_index:end_index, ]
-  
-  all_indexes <- seq_len(nrow(iomega))  ## defined to save code
-  iomega_pre <- iomega[all_indexes[all_indexes < start_index], ]
-  iomega_post <- iomega[all_indexes[all_indexes > end_index], ]
-  
-  new_block <- min(iomega_block$block)
-  
-  ################################
-  ## insert rows for covariances - match what raw_init_omega does
-  
-  ## add diagonals:
-  
-  ddiag <- expand.grid(omega1 = stats::na.omit(iomega_block$omega1),
-                       omega2 = stats::na.omit(iomega_block$omega1))
-  ddiag <- ddiag[ddiag$omega1 >= ddiag$omega2, ]
-  
-  iomega_block <- merge(ddiag, iomega_block, all = TRUE)
-  diag_index <- (iomega_block$omega1 != iomega_block$omega2) %in% TRUE
-  
-  iomega_block$init[diag_index] <- diag_init
-  iomega_block$block <- new_block
-  
-  block_text_rows <- data.frame(new_value = c("$OMEGA", "BLOCK", 
-                                              paste0("(",length(eta_numbers),")")),
-                                block = new_block,
-                                line = min(iomega_block$line, na.rm = TRUE),
-                                pos = 1:3)
-  
-  iomega_block$line <- rev(na.locf(rev(iomega_block$line)))
-  
-  iomega_block <- iomega_block %>% dplyr::group_by(.data$omega1) %>%
-    dplyr::mutate(pos = 1:length(.data$omega1)) %>% as.data.frame
-  
-  iomega_block$line <- iomega_block$line + 1
-  suppressWarnings({
-    iomega_block$mblock[!is.na(iomega_block$mblock)] <- 
-      max(c(0, max(iomega_pre$mblock, na.rm = TRUE))) + 1
-  })
-  
-  iomega_block <- suppressWarnings(dplyr::bind_rows(block_text_rows, iomega_block))
-  
-  ## post will also be one line shifted
-  iomega_post$line <- iomega_post$line + 1
-  
-  suppressWarnings({
-    should_be <- unique(stats::na.omit(iomega_block$mblock))+1
-    iomega_post$mblock[!is.na(iomega_post$mblock)] <- 
-      iomega_post$mblock[!is.na(iomega_post$mblock)] - 
-      (min(iomega_post$mblock[!is.na(iomega_post$mblock)], na.rm = TRUE) - 
-         should_be)
-  })
-  
-  if(any(!is.na(iomega_post$block))){
-    iomega_post$block <- iomega_post$block - 
-      (min(iomega_post$block, na.rm = TRUE) - (new_block + 1))
-  }
-  ################################
-  iomega <- suppressWarnings(dplyr::bind_rows(iomega_pre, iomega_block, iomega_post))
-  iomega <- iomega[!(iomega$remove %in% TRUE), ]
-  iomega$remove <- NULL
-  iomega
-  
-}
-
-block <- Vectorize(block, vectorize.args = "iomega", SIMPLIFY = FALSE)
-
-#' @rdname block-omega-sigma
-#' 
-#' @examples 
-#' 
-#' \dontrun{
-#' io <- m1 %>% init_omega()
-#' io <- io %>% unblock(c(2,3))
-#' m1 <- m1 %>% init_omega(io)
-#' m1 %>% dollar("OMEGA") ## to display $OMEGA
-#' }
-#' 
-#' @export
-unblock <- function(iomega, eta_numbers){
-  
-  eta_numbers <- sort(eta_numbers)
-  
-  if(!all(diff(eta_numbers) == 1)) stop("etas must be adjacent", call. = FALSE)
-  
-  start_eta <- min(eta_numbers)
-  end_eta <- max(eta_numbers)
-  
-  start_index <- match(start_eta, iomega$omega1)
-  end_index <- match(end_eta, iomega$omega1)
-  
-  if(is.na(start_index) | is.na(end_index)) stop("etas not found", call. = FALSE)
-  
-  block_to_dismantle <- iomega$block[iomega$omega1 %in% eta_numbers]
-  block_to_dismantle <- unique(block_to_dismantle)
-  
-  if(length(block_to_dismantle) > 1) stop("etas belong to multiple BLOCKs", call. = FALSE)
-  if(length(block_to_dismantle) == 0) stop("couldn't find BLOCK", call. = FALSE)
-  
-  iomega_block <- iomega[iomega$block %in% block_to_dismantle,]
-  
-  iomega_pre <- iomega[iomega$line < min(iomega_block$line, na.rm = TRUE), ]
-  iomega_post <- iomega[iomega$line > max(iomega_block$line, na.rm = TRUE), ]
-  
-  ## remove $OMEGA block lines
-  
-  iomega_block <- iomega_block[!is.na(iomega_block$omega1),]
-  iomega_block <- iomega_block[iomega_block$omega1 == iomega_block$omega2, ]
-  iomega_block$pos <- 1
-  suppressWarnings({
-    iomega_block$block <- seq_along(iomega_block$block) +
-      max(c(0, max(iomega_pre$block, na.rm = TRUE)))
-  })
-  
-  iomega_block$mblock <- max(c(1, iomega_pre$mblock), na.rm = TRUE)
-  
-  if(any(!is.na(iomega_pre$line))){
-    iomega_block$line <- iomega_block$line + 
-      max(iomega_pre$line) + 1 - min(iomega_block$line)
-  }
-  
-  if(any(!is.na(iomega_post$line))){
-    iomega_post$line <- iomega_post$line + max(iomega_block$line) + 1 - min(iomega_post$line)
-  }
-  
-  suppressWarnings({
-    should_be <- max(iomega_block$mblock, na.rm = TRUE)
-    iomega_post$mblock[!is.na(iomega_post$mblock)] <- 
-      iomega_post$mblock[!is.na(iomega_post$mblock)] - 
-      (min(iomega_post$mblock, na.rm = TRUE) - should_be)
-  })
-  
-  if(any(!is.na(iomega_post$block))){
-    iomega_post$block <- iomega_post$block - 
-      (min(iomega_post$block, na.rm = TRUE) - (max(iomega_block$block) + 1))
-  }
-  
-  ################################
-  suppressWarnings(dplyr::bind_rows(iomega_pre, iomega_block, iomega_post))  
-  
-}
-
-unblock <- Vectorize(unblock, vectorize.args = "iomega", SIMPLIFY = FALSE)

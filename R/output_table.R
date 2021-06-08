@@ -181,3 +181,18 @@ output_table_first.nm_list <- function(r, ...){
   outtab <- outtab[[1]]
   outtab
 }
+
+ctl_table_paths <- function(ctl) {
+  UseMethod("ctl_table_paths")
+}
+
+ctl_table_paths.nm_generic <- function(ctl) {
+  ## path should go from base directory
+  ## in psn directory
+  file.path(output_location(ctl), ctl_table_files(ctl_contents(ctl)))
+}
+
+ctl_table_paths.nm_list <- Vectorize_nm_list(ctl_table_paths.nm_generic, SIMPLIFY = FALSE)
+
+output_location <- function(m) file.path(run_in(m), dirname(lst_path(m)))
+

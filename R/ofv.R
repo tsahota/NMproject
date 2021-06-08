@@ -1,11 +1,12 @@
-#' Get objective function value (OFV)
+#' Get Objective Function Value (OFV)
 #' 
 #' @description 
 #' 
 #' `r lifecycle::badge("stable")`
 #'
+#' Extracts OFV from .ext file.
+#' 
 #' @param r An nm object.
-#' @include nm.R
 #' 
 #' @examples 
 #' \dontrun{

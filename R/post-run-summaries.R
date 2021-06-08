@@ -1,250 +1,3 @@
-ext2coef <- function(extout,file_name){
-  ## raw function to generate parameter table from ext.file.
-
-  if(!requireNamespace("reshape2", quietly = TRUE))
-    stop("reshape2 needed for this function to work. Please install it.",
-         call. = FALSE)
-
-  d <- extout
-  if(nrow(d) == 0) return(data.frame())
-
-  has_final_est <- "FINAL" %in% d$TYPE
-  if(has_final_est){
-    cond_num <- d$THETA1[d$TYPE %in% "CONDNUM" & d$EST.NO %in% max(d$EST.NO)]
-    d <- d[d$TYPE %in% c("FINAL","SE"),]
-    d <- d[d$EST.NO %in% max(d$EST.NO), ]
-  } else {
-    cond_num <- numeric()
-    d <- utils::tail(d,1)
-  }
-
-  d <- d[,c(names(d)[grepl("THETA|SIGMA|OMEGA",names(d))],
-            c("OBJ","EST.NAME","EST.NO","EVALUATION","TYPE"))]
-
-
-  par.names <- names(d)[match("THETA1",names(d)):match("OBJ",names(d))]
-
-  d <- reshape2::melt(data = d, variable.name = "parameter",
-                      measure.vars = par.names)
-  if(!"parameter" %in% names(d)) stop("melt has failed - could be due to reshape being loaded. reshape can interfere with reshape2")
-
-
-  d <- reshape2::dcast(data = d,
-                       stats::as.formula(paste(paste(names(d)[!names(d) %in% c("TYPE","value")],collapse=" + "),
-                                               "~ TYPE")),
-                       value.var = "value")
-
-  ## messy hard coding - consider refactoring if need more than just eigenvalues
-  if(has_final_est & length(cond_num) > 0){
-    dlast <- d[nrow(d),]
-    dlast$parameter <- "CONDNUM"
-    dlast$FINAL <- cond_num
-    dlast$SE <- 0
-
-    d <- rbind(d,dlast)
-  }
-
-  if(!has_final_est) names(d)[names(d) %in% "ITER"] <- "FINAL"
-
-  d <- d[order(d$EST.NO,decreasing = TRUE),]
-  d$file <- file_name
-
-  is.diag.omega <- grepl("OMEGA.([0-9]+\\.)\\1",d$parameter)
-  is.omega <- grepl("OMEGA.([0-9]+\\.)+",d$parameter)
-  is.off.diag.omega <- is.omega & !is.diag.omega
-  d <- d[!(is.off.diag.omega & d$FINAL == 0), ] ## get rid of off diag 0s
-  is.diag.sigma <- grepl("SIGMA.([0-9]+\\.)\\1",d$parameter)
-  is.sigma <- grepl("SIGMA.([0-9]+\\.)+",d$parameter)
-  is.off.diag.sigma <- is.sigma & !is.diag.sigma
-  d <- d[!(is.off.diag.sigma & d$FINAL == 0), ] ## get rid of off diag 0s
-
-
-  is.diag.omega <- grepl("OMEGA.([0-9]+\\.)\\1",d$parameter) ## redefine
-  is.omega <- grepl("OMEGA.([0-9]+\\.)+",d$parameter) ## redefine
-  is.off.diag.omega <- is.omega & !is.diag.omega  ## redefine
-  is.diag.sigma <- grepl("SIGMA.([0-9]+\\.)\\1",d$parameter) ## redefine
-  is.sigma <- grepl("SIGMA.([0-9]+\\.)+",d$parameter) ## redefine
-  is.off.diag.sigma <- is.sigma & !is.diag.sigma ## redefine
-
-  ## sort so that THETAs first, then diagonal OMEGAs, then off diag, then SIGMA, then OBJ
-
-  par.char <- as.character(d$parameter)
-  par.order <- c(sort(par.char[grepl("THETA",par.char)]),
-                 sort(par.char[is.diag.omega]),
-                 sort(par.char[is.off.diag.omega]),
-                 sort(par.char[grepl("SIGMA",par.char)]),
-                 "OBJ",
-                 sort(par.char[grepl("CONDNUM",par.char)]))
-  if(!identical(sort(par.order),sort(as.character(d$parameter)))) stop("Bug in code. Debug.")
-  d$parameter <- factor(d$parameter,levels=par.order)
-  d$type <- NA
-  d$type[grepl("THETA",par.char)] <- "THETA"
-  d$type[is.diag.omega] <- "OMEGAVAR"
-  d$type[is.off.diag.omega] <- "OMEGACOV"
-  d$type[grepl("SIGMA",par.char)] <- "SIGMA"
-  d$type[grepl("OBJ",par.char)] <- "OBJ"
-  if(has_final_est){
-    d$type[grepl("CONDNUM",par.char)] <- "CONDNUM"
-    d$type <- factor(d$type,levels=c("THETA","OMEGAVAR","OMEGACOV","SIGMA","OBJ","CONDNUM"))
-  } else {
-    d$type <- factor(d$type,levels=c("THETA","OMEGAVAR","OMEGACOV","SIGMA","OBJ"))
-  }
-  d <- d[order(d$type),]
-  d$unit <- NA
-  d$SEunit <- NA
-  if(!"SE" %in% names(d)) {
-    namesd <- names(d)
-    d$SE <- NA
-    final_pos <- grep("FINAL",namesd)
-    d <- d[,c(namesd[1:final_pos],"SE",namesd[(final_pos+1):length(namesd)])]
-  }
-  d$is_final <- has_final_est
-  d
-}
-
-coef_ext0 <- function(ext.file){
-  ## raw function to generate parameter table from ext.file.
-  extout <- read_ext0(ext.file = ext.file)
-  ext2coef(extout,file_name=ext.file)
-}
-
-#' @importFrom stats coef
-#' @export
-stats::coef
-
-#' @export
-coef.nm_generic <- function(object, trans=TRUE, ...){
-  
-  if(!is_finished(object)) return(invisible(data.frame()))
-  
-  ext_file_path <- object %>% nm_output_path("ext")
-  
-  d <- coef_ext0(ext_file_path)
-  if(nrow(d) == 0) return(data.frame())
-  
-  d$run_name <- gsub("execute\\.", "\\1", unique_id(object))
-  if(!unique(d$is_final)) d$run_name <- paste0(d$run_name,"*")
-  d$is_final <- NULL
-  if(!trans) return(d)
-  
-  p <- param_info2(object)
-  
-  d0 <- d[,names(d)[!names(d) %in% "unit"]]
-  d1 <- p[,c("name","parameter","unit","trans")]
-  
-  d <- merge(d0,d1,all.x = TRUE,by="parameter")
-  d$name[is.na(d$name)] <- as.character(d$parameter)[is.na(d$name)]
-  d$name <- factor(d$name,levels=d$name)
-  d$trans_unit <- d$unit
-  d$transSEunit <- d$SEunit
-  ## transformations
-  d$FINAL.TRANS <- d$FINAL
-  d$SE.TRANS <- d$SE
-  
-  th <- d$type %in% "THETA"
-  om <- d$type %in% "OMEGAVAR"
-  sg <- d$type %in% "SIGMA"
-  
-  ## RATIO data
-  d$SE.TRANS[d$trans %in% "RATIO" & th] <- 100*d$SE[d$trans %in% "RATIO" & th]/d$FINAL[d$trans %in% "RATIO" & th]
-  d$transSEunit[d$trans %in% "RATIO" & th] <- "%"
-  ## LOG
-  d$FINAL.TRANS[d$trans %in% c("LOG","LOGODDS") & th] <- exp(d$FINAL[d$trans %in% c("LOG","LOGODDS") & th])
-  d$SE.TRANS[d$trans %in% c("LOG","LOGODDS") & th] <- 100*sqrt((exp(d$SE[d$trans %in% c("LOG","LOGODDS") & th]^2)-1))
-  d$transSEunit[d$trans %in% c("LOG","LOGODDS") & th] <- "%"
-  ## LOGIT
-  if("LOGIT" %in% d$trans){
-    d$FINAL.TRANS[d$trans %in% "LOGIT" & th] <- 100*1/(1+exp(-d$FINAL[d$trans %in% "LOGIT" & th]))
-    d$trans_unit[d$trans %in% "LOGIT" & th] <- "%"
-    # delt <- lapply(which(d$trans %in% "LOGIT"),function(i){
-    #   par <- c(logit=d$FINAL[i])
-    #   separ <- c(logit=d$SE[i])
-    #   car::deltaMethod(par,"1/(1+exp(-logit))",vcov.=separ^2)
-    # })
-    # delt <- do.call(rbind,delt)
-    # d$SE.TRANS[d$trans %in% "LOGIT"] <- 100*delt$SE
-  }
-  ## OMEGA
-  
-  ## https://www.cognigen.com/nmusers/2008-February/0811.html
-  ## delta method:
-  ## FINAL = E[OM^2]
-  ## SE = SE(OM^2)
-  ## f = sqrt
-  ## SE(OM) ~= SE(OM^2)/(2*sqrt(E[OM^2]))
-  ## SE(OM) ~= SE/(2*sqrt(FINAL))
-  ## E(OM) ~= sqrt(E[OM^2]) = sqrt(FINAL)
-  ## RSE(OM) = SE(OM) / (2* E(OM))
-  
-  d$SE.TRANS[d$trans %in% "LOG" & om] <- 100*(d$SE[d$trans %in% "LOG" & om]/d$FINAL[d$trans %in% "LOG" & om])/2
-  d$FINAL.TRANS[d$trans %in% "LOG" & om] <- 100*sqrt(exp(d$FINAL[d$trans %in% "LOG" & om])-1)
-  d$trans_unit[d$trans %in% "LOG" & om] <- "CV%"
-  d$transSEunit[d$trans %in% "LOG" & om] <- "%"
-  ## COV
-  d$trans[d$type %in% "OMEGACOV"] <- "COV" ## temp code
-  # if("COV" %in% d$trans){
-  #   omx <- gsub("^OMEGA\\.([0-9]+)\\.([0-9]+)\\.","\\1",d$parameter[d$trans %in% "COV"])
-  #   omy <- gsub("^OMEGA\\.([0-9]+)\\.([0-9]+)\\.","\\2",d$parameter[d$trans %in% "COV"])
-  #   omx <- paste0("OMEGA.",omx,".",omx,".")
-  #   omy <- paste0("OMEGA.",omy,".",omy,".")
-  #   sdx <- sqrt(d$FINAL[match(omx,d$parameter)])
-  #   sdy <- sqrt(d$FINAL[match(omy,d$parameter)])
-  #   d$FINAL.TRANS[d$trans %in% "COV"] <- d$FINAL[d$trans %in% "COV"]/(sdx*sdy)
-  #   d$trans_unit[d$trans %in% "COV"] <- "CORR.COEF"
-  #   ## COV[X,Y]/(SD[X]*SD[Y])
-  #   ## know SE(COV[X,Y]) and SE[SDX^2] and SE[SDY^2]
-  #   ## Need covariance matrix between these though - from .cov file.
-  #   ## SQRT(VAR(COV[X,Y]/(SD[X]*SD[Y])))
-  #   cov.file <- object$output$psn.cov
-  #   dc <- utils::read.table(cov.file,skip=1,header = TRUE)
-  #   for(i in seq_along(which(d$trans %in% "COV"))){
-  #     ## loop through each COV variable and generate absolute SE
-  #     names.c <- c(omx[i],omy[i],as.character(d$parameter[d$trans %in% "COV"][i]))
-  #     names.c <- d$parameter[d$parameter %in% names.c] ## reorder
-  #     names.c2 <- gsub("\\.([0-9]+)\\.([0-9]+)\\.","(\\1,\\2)",names.c)
-  #
-  #     ## same order as names.c - important
-  #     vcov <- dc[match(names.c2,dc$NAME),as.character(names.c)]
-  #     rownames(vcov) <- names(vcov)
-  #     vcov <- as.matrix(vcov)
-  #
-  #     pmean <- d$FINAL[match(names.c,d$parameter)]  ## may as well recompute FINALs
-  #     names(pmean) <- d$name[match(names.c,d$parameter)]
-  #
-  #     formula.i <- paste0(names.c[3],"/(sqrt(",names.c[1],")*sqrt(",names.c[2],"))")
-  #     #tmp <- car::deltaMethod(pmean,formula.i,vcov.=vcov)
-  #     #d$SE.TRANS[d$trans %in% "COV"][i] <- tmp$SE
-  #   }
-  #
-  # }
-  
-  ## SIGMA
-  d$SE.TRANS[d$type %in% "SIGMA"] <- 100*(d$SE[d$type %in% "SIGMA"]/d$FINAL[d$type %in% "SIGMA"])/2
-  d$FINAL.TRANS[d$type %in% "SIGMA"] <- sqrt(d$FINAL[d$type %in% "SIGMA"])
-  d$trans_unit[d$type %in% "SIGMA"] <- "SD"
-  d$transSEunit[d$type %in% "SIGMA"] <- "%"
-  
-  ## get names back to what they should be
-  d$FINAL <- d$FINAL.TRANS
-  d$FINAL.TRANS <- NULL
-  d$SE <- d$SE.TRANS
-  d$SE.TRANS <- NULL
-  d$unit <- d$trans_unit
-  d$trans_unit <- NULL
-  d$SEunit <- d$transSEunit
-  d$transSEunit <- NULL
-  d$parameter <- d$name
-  d$name <- NULL
-  d
-}
-
-#' @export
-coef.nm_list <- function(object,trans=TRUE,...){
-  d <- lapply(object, coef, trans = trans)
-  #do.call(rbind, d)
-  d
-}
-
 #' Run record
 #'
 #' @description 
@@ -397,34 +150,141 @@ coef_long <- function(m, trans = TRUE){
   d
 }
 
-rr2 <- function(m, trans = TRUE){
-  d <- coef_long(m, trans = trans)
+#' @importFrom stats coef
+#' @export
+stats::coef
+
+#' @export
+coef.nm_generic <- function(object, trans=TRUE, ...){
   
+  if(!is_finished(object)) return(invisible(data.frame()))
+  
+  ext_file_path <- object %>% nm_output_path("ext")
+  
+  d <- coef_ext0(ext_file_path)
   if(nrow(d) == 0) return(data.frame())
   
-  index <- !d$unit %in% "" & !is.na(d$unit)
-  d$parameter[index] <- 
-    paste0(d$parameter[index], " (", d$unit[index], ")")
+  d$run_name <- gsub("execute\\.", "\\1", unique_id(object))
+  if(!unique(d$is_final)) d$run_name <- paste0(d$run_name,"*")
+  d$is_final <- NULL
+  if(!trans) return(d)
   
-  if("trans" %in% names(d)){
-    index <- !d$trans %in% "" & !is.na(d$trans)
-    d$parameter[index] <- 
-      paste0(d$parameter[index], " (", d$trans[index],")")
+  p <- param_info2(object)
+  
+  d0 <- d[,names(d)[!names(d) %in% "unit"]]
+  d1 <- p[,c("name","parameter","unit","trans")]
+  
+  d <- merge(d0,d1,all.x = TRUE,by="parameter")
+  d$name[is.na(d$name)] <- as.character(d$parameter)[is.na(d$name)]
+  d$name <- factor(d$name,levels=d$name)
+  d$trans_unit <- d$unit
+  d$transSEunit <- d$SEunit
+  ## transformations
+  d$FINAL.TRANS <- d$FINAL
+  d$SE.TRANS <- d$SE
+  
+  th <- d$type %in% "THETA"
+  om <- d$type %in% "OMEGAVAR"
+  sg <- d$type %in% "SIGMA"
+  
+  ## RATIO data
+  d$SE.TRANS[d$trans %in% "RATIO" & th] <- 100*d$SE[d$trans %in% "RATIO" & th]/d$FINAL[d$trans %in% "RATIO" & th]
+  d$transSEunit[d$trans %in% "RATIO" & th] <- "%"
+  ## LOG
+  d$FINAL.TRANS[d$trans %in% c("LOG","LOGODDS") & th] <- exp(d$FINAL[d$trans %in% c("LOG","LOGODDS") & th])
+  d$SE.TRANS[d$trans %in% c("LOG","LOGODDS") & th] <- 100*sqrt((exp(d$SE[d$trans %in% c("LOG","LOGODDS") & th]^2)-1))
+  d$transSEunit[d$trans %in% c("LOG","LOGODDS") & th] <- "%"
+  ## LOGIT
+  if("LOGIT" %in% d$trans){
+    d$FINAL.TRANS[d$trans %in% "LOGIT" & th] <- 100*1/(1+exp(-d$FINAL[d$trans %in% "LOGIT" & th]))
+    d$trans_unit[d$trans %in% "LOGIT" & th] <- "%"
+    # delt <- lapply(which(d$trans %in% "LOGIT"),function(i){
+    #   par <- c(logit=d$FINAL[i])
+    #   separ <- c(logit=d$SE[i])
+    #   car::deltaMethod(par,"1/(1+exp(-logit))",vcov.=separ^2)
+    # })
+    # delt <- do.call(rbind,delt)
+    # d$SE.TRANS[d$trans %in% "LOGIT"] <- 100*delt$SE
   }
+  ## OMEGA
   
-  d$parameter[d$key %in% "SE"] <- paste0("se_", d$parameter[d$key %in% "SE"])
-  d <- d %>% dplyr::group_by(.data$parameter) %>% 
-    dplyr::mutate(par_no = max(.data$par_no))
+  ## https://www.cognigen.com/nmusers/2008-February/0811.html
+  ## delta method:
+  ## FINAL = E[OM^2]
+  ## SE = SE(OM^2)
+  ## f = sqrt
+  ## SE(OM) ~= SE(OM^2)/(2*sqrt(E[OM^2]))
+  ## SE(OM) ~= SE/(2*sqrt(FINAL))
+  ## E(OM) ~= sqrt(E[OM^2]) = sqrt(FINAL)
+  ## RSE(OM) = SE(OM) / (2* E(OM))
   
-  m_names <- unique(d$run_name)  
-  d <- d %>% tidyr::spread(key = "run_name", value = "estimate")
-  names1 <- names(d)[!names(d) %in% m_names]
-  d <- d[, c(names1, m_names)]
-  #d <- d[order(d$key, d$par_no), ]
-  d <- d[order(d$par_no, d$key), ]
-  row.names(d) <- NULL
+  d$SE.TRANS[d$trans %in% "LOG" & om] <- 100*(d$SE[d$trans %in% "LOG" & om]/d$FINAL[d$trans %in% "LOG" & om])/2
+  d$FINAL.TRANS[d$trans %in% "LOG" & om] <- 100*sqrt(exp(d$FINAL[d$trans %in% "LOG" & om])-1)
+  d$trans_unit[d$trans %in% "LOG" & om] <- "CV%"
+  d$transSEunit[d$trans %in% "LOG" & om] <- "%"
+  ## COV
+  d$trans[d$type %in% "OMEGACOV"] <- "COV" ## temp code
+  # if("COV" %in% d$trans){
+  #   omx <- gsub("^OMEGA\\.([0-9]+)\\.([0-9]+)\\.","\\1",d$parameter[d$trans %in% "COV"])
+  #   omy <- gsub("^OMEGA\\.([0-9]+)\\.([0-9]+)\\.","\\2",d$parameter[d$trans %in% "COV"])
+  #   omx <- paste0("OMEGA.",omx,".",omx,".")
+  #   omy <- paste0("OMEGA.",omy,".",omy,".")
+  #   sdx <- sqrt(d$FINAL[match(omx,d$parameter)])
+  #   sdy <- sqrt(d$FINAL[match(omy,d$parameter)])
+  #   d$FINAL.TRANS[d$trans %in% "COV"] <- d$FINAL[d$trans %in% "COV"]/(sdx*sdy)
+  #   d$trans_unit[d$trans %in% "COV"] <- "CORR.COEF"
+  #   ## COV[X,Y]/(SD[X]*SD[Y])
+  #   ## know SE(COV[X,Y]) and SE[SDX^2] and SE[SDY^2]
+  #   ## Need covariance matrix between these though - from .cov file.
+  #   ## SQRT(VAR(COV[X,Y]/(SD[X]*SD[Y])))
+  #   cov.file <- object$output$psn.cov
+  #   dc <- utils::read.table(cov.file,skip=1,header = TRUE)
+  #   for(i in seq_along(which(d$trans %in% "COV"))){
+  #     ## loop through each COV variable and generate absolute SE
+  #     names.c <- c(omx[i],omy[i],as.character(d$parameter[d$trans %in% "COV"][i]))
+  #     names.c <- d$parameter[d$parameter %in% names.c] ## reorder
+  #     names.c2 <- gsub("\\.([0-9]+)\\.([0-9]+)\\.","(\\1,\\2)",names.c)
+  #
+  #     ## same order as names.c - important
+  #     vcov <- dc[match(names.c2,dc$NAME),as.character(names.c)]
+  #     rownames(vcov) <- names(vcov)
+  #     vcov <- as.matrix(vcov)
+  #
+  #     pmean <- d$FINAL[match(names.c,d$parameter)]  ## may as well recompute FINALs
+  #     names(pmean) <- d$name[match(names.c,d$parameter)]
+  #
+  #     formula.i <- paste0(names.c[3],"/(sqrt(",names.c[1],")*sqrt(",names.c[2],"))")
+  #     #tmp <- car::deltaMethod(pmean,formula.i,vcov.=vcov)
+  #     #d$SE.TRANS[d$trans %in% "COV"][i] <- tmp$SE
+  #   }
+  #
+  # }
   
-  d 
+  ## SIGMA
+  d$SE.TRANS[d$type %in% "SIGMA"] <- 100*(d$SE[d$type %in% "SIGMA"]/d$FINAL[d$type %in% "SIGMA"])/2
+  d$FINAL.TRANS[d$type %in% "SIGMA"] <- sqrt(d$FINAL[d$type %in% "SIGMA"])
+  d$trans_unit[d$type %in% "SIGMA"] <- "SD"
+  d$transSEunit[d$type %in% "SIGMA"] <- "%"
+  
+  ## get names back to what they should be
+  d$FINAL <- d$FINAL.TRANS
+  d$FINAL.TRANS <- NULL
+  d$SE <- d$SE.TRANS
+  d$SE.TRANS <- NULL
+  d$unit <- d$trans_unit
+  d$trans_unit <- NULL
+  d$SEunit <- d$transSEunit
+  d$transSEunit <- NULL
+  d$parameter <- d$name
+  d$name <- NULL
+  d
+}
+
+#' @export
+coef.nm_list <- function(object,trans=TRUE,...){
+  d <- lapply(object, coef, trans = trans)
+  #do.call(rbind, d)
+  d
 }
 
 #' Find an output file associated with a run
@@ -637,6 +497,12 @@ summary.nm_generic <- function(object, ref_model = NA, parameters = c("none", "n
   summary(object = as_nm_list(object), ref_model = ref_model, parameters = parameters, keep_m = keep_m, ...)
 }
 
+rr_row <- function(m){
+  d <- nm_row(m)
+  d$m <- m
+  d
+}
+
 #' @rdname nm_summary
 #' @name nm_summary
 #' @title Generate a summary of NONMEM results
@@ -814,3 +680,153 @@ omega_matrix <- function(r){
 }
 
 omega_matrix <- Vectorize(omega_matrix, vectorize.args = list("r"), SIMPLIFY = FALSE)
+
+
+ext2coef <- function(extout,file_name){
+  ## raw function to generate parameter table from ext.file.
+  
+  if(!requireNamespace("reshape2", quietly = TRUE))
+    stop("reshape2 needed for this function to work. Please install it.",
+         call. = FALSE)
+  
+  d <- extout
+  if(nrow(d) == 0) return(data.frame())
+  
+  has_final_est <- "FINAL" %in% d$TYPE
+  if(has_final_est){
+    cond_num <- d$THETA1[d$TYPE %in% "CONDNUM" & d$EST.NO %in% max(d$EST.NO)]
+    d <- d[d$TYPE %in% c("FINAL","SE"),]
+    d <- d[d$EST.NO %in% max(d$EST.NO), ]
+  } else {
+    cond_num <- numeric()
+    d <- utils::tail(d,1)
+  }
+  
+  d <- d[,c(names(d)[grepl("THETA|SIGMA|OMEGA",names(d))],
+            c("OBJ","EST.NAME","EST.NO","EVALUATION","TYPE"))]
+  
+  
+  par.names <- names(d)[match("THETA1",names(d)):match("OBJ",names(d))]
+  
+  d <- reshape2::melt(data = d, variable.name = "parameter",
+                      measure.vars = par.names)
+  if(!"parameter" %in% names(d)) stop("melt has failed - could be due to reshape being loaded. reshape can interfere with reshape2")
+  
+  
+  d <- reshape2::dcast(data = d,
+                       stats::as.formula(paste(paste(names(d)[!names(d) %in% c("TYPE","value")],collapse=" + "),
+                                               "~ TYPE")),
+                       value.var = "value")
+  
+  ## messy hard coding - consider refactoring if need more than just eigenvalues
+  if(has_final_est & length(cond_num) > 0){
+    dlast <- d[nrow(d),]
+    dlast$parameter <- "CONDNUM"
+    dlast$FINAL <- cond_num
+    dlast$SE <- 0
+    
+    d <- rbind(d,dlast)
+  }
+  
+  if(!has_final_est) names(d)[names(d) %in% "ITER"] <- "FINAL"
+  
+  d <- d[order(d$EST.NO,decreasing = TRUE),]
+  d$file <- file_name
+  
+  is.diag.omega <- grepl("OMEGA.([0-9]+\\.)\\1",d$parameter)
+  is.omega <- grepl("OMEGA.([0-9]+\\.)+",d$parameter)
+  is.off.diag.omega <- is.omega & !is.diag.omega
+  d <- d[!(is.off.diag.omega & d$FINAL == 0), ] ## get rid of off diag 0s
+  is.diag.sigma <- grepl("SIGMA.([0-9]+\\.)\\1",d$parameter)
+  is.sigma <- grepl("SIGMA.([0-9]+\\.)+",d$parameter)
+  is.off.diag.sigma <- is.sigma & !is.diag.sigma
+  d <- d[!(is.off.diag.sigma & d$FINAL == 0), ] ## get rid of off diag 0s
+  
+  
+  is.diag.omega <- grepl("OMEGA.([0-9]+\\.)\\1",d$parameter) ## redefine
+  is.omega <- grepl("OMEGA.([0-9]+\\.)+",d$parameter) ## redefine
+  is.off.diag.omega <- is.omega & !is.diag.omega  ## redefine
+  is.diag.sigma <- grepl("SIGMA.([0-9]+\\.)\\1",d$parameter) ## redefine
+  is.sigma <- grepl("SIGMA.([0-9]+\\.)+",d$parameter) ## redefine
+  is.off.diag.sigma <- is.sigma & !is.diag.sigma ## redefine
+  
+  ## sort so that THETAs first, then diagonal OMEGAs, then off diag, then SIGMA, then OBJ
+  
+  par.char <- as.character(d$parameter)
+  par.order <- c(sort(par.char[grepl("THETA",par.char)]),
+                 sort(par.char[is.diag.omega]),
+                 sort(par.char[is.off.diag.omega]),
+                 sort(par.char[grepl("SIGMA",par.char)]),
+                 "OBJ",
+                 sort(par.char[grepl("CONDNUM",par.char)]))
+  if(!identical(sort(par.order),sort(as.character(d$parameter)))) stop("Bug in code. Debug.")
+  d$parameter <- factor(d$parameter,levels=par.order)
+  d$type <- NA
+  d$type[grepl("THETA",par.char)] <- "THETA"
+  d$type[is.diag.omega] <- "OMEGAVAR"
+  d$type[is.off.diag.omega] <- "OMEGACOV"
+  d$type[grepl("SIGMA",par.char)] <- "SIGMA"
+  d$type[grepl("OBJ",par.char)] <- "OBJ"
+  if(has_final_est){
+    d$type[grepl("CONDNUM",par.char)] <- "CONDNUM"
+    d$type <- factor(d$type,levels=c("THETA","OMEGAVAR","OMEGACOV","SIGMA","OBJ","CONDNUM"))
+  } else {
+    d$type <- factor(d$type,levels=c("THETA","OMEGAVAR","OMEGACOV","SIGMA","OBJ"))
+  }
+  d <- d[order(d$type),]
+  d$unit <- NA
+  d$SEunit <- NA
+  if(!"SE" %in% names(d)) {
+    namesd <- names(d)
+    d$SE <- NA
+    final_pos <- grep("FINAL",namesd)
+    d <- d[,c(namesd[1:final_pos],"SE",namesd[(final_pos+1):length(namesd)])]
+  }
+  d$is_final <- has_final_est
+  d
+}
+
+coef_ext0 <- function(ext.file){
+  ## raw function to generate parameter table from ext.file.
+  extout <- read_ext0(ext.file = ext.file)
+  ext2coef(extout,file_name=ext.file)
+}
+
+param_info2 <- function(m){
+  p_info <- dplyr::bind_rows(
+    raw_init_theta(m),
+    raw_init_omega(m),
+    raw_init_sigma(m)
+  )
+  p_info[!is.na(p_info$parameter),]
+}
+
+rr2 <- function(m, trans = TRUE){
+  d <- coef_long(m, trans = trans)
+  
+  if(nrow(d) == 0) return(data.frame())
+  
+  index <- !d$unit %in% "" & !is.na(d$unit)
+  d$parameter[index] <- 
+    paste0(d$parameter[index], " (", d$unit[index], ")")
+  
+  if("trans" %in% names(d)){
+    index <- !d$trans %in% "" & !is.na(d$trans)
+    d$parameter[index] <- 
+      paste0(d$parameter[index], " (", d$trans[index],")")
+  }
+  
+  d$parameter[d$key %in% "SE"] <- paste0("se_", d$parameter[d$key %in% "SE"])
+  d <- d %>% dplyr::group_by(.data$parameter) %>% 
+    dplyr::mutate(par_no = max(.data$par_no))
+  
+  m_names <- unique(d$run_name)  
+  d <- d %>% tidyr::spread(key = "run_name", value = "estimate")
+  names1 <- names(d)[!names(d) %in% m_names]
+  d <- d[, c(names1, m_names)]
+  #d <- d[order(d$key, d$par_no), ]
+  d <- d[order(d$par_no, d$key), ]
+  row.names(d) <- NULL
+  
+  d 
+}

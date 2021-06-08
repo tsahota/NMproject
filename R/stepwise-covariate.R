@@ -406,138 +406,6 @@ remove_cov.nm_generic <- function(ctl, param, cov, state = 2, continuous = TRUE,
 #' @export
 remove_cov.nm_list <- Vectorize_nm_list(remove_cov.nm_generic, SIMPLIFY = FALSE)
 
-param_cov_text <- function(param,cov,state,data,theta_n_start,continuous = TRUE,
-                           state_text = list(
-                             "2" = "PARCOV= ( 1 + THETA(1)*(COV - median))",
-                             "linear" = "PARCOV= ( 1 + THETA(1)*(COV - median))",
-                             "3" = c("IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))",
-                                     "IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))"),
-                             "hockey-stick" = c("IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))",
-                                                "IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))"),
-                             "4" = "PARCOV= EXP(THETA(1)*(COV - median))",
-                             "exponential" = "PARCOV= EXP(THETA(1)*(COV - median))",
-                             "5" = "PARCOV= ((COV/median)**THETA(1))",
-                             "power" = "PARCOV= ((COV/median)**THETA(1))",
-                             "power1" = "PARCOV= ((COV/median))",
-                             "power0.75" = "PARCOV= ((COV/median)**0.75)",
-                             "6" = "PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))",
-                             "log-linear" = "PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))"),
-                           additional_state_text = list(), ...){
-  
-  if(length(additional_state_text)>0) {
-    if(is.null(names(additional_state_text))) stop("additional_state_text needs to be a named list")
-    if(any(names(additional_state_text) %in% names(state_text)))
-      stop("additional_state_text entries cannot overwrite base states:\n ",
-           "create new state name")
-    state_text <- append(state_text, additional_state_text)
-  }
-  
-  if(!continuous) {
-    
-    if(!missing(state_text)) 
-      stop("not currently allowed to modify state_text for categorical covariates.
-consider using the default with state \"linear\" or use additional_state_text")
-    
-    if(!(2 %in% state | "linear" %in% state))
-      stop("categorical covariates can only be used with state 2 (or \"linear\")")
-    
-    ##modify state_text for for categorical
-    unique_vals <- table(data[[cov]]) %>% sort(decreasing = TRUE)
-    unique_vals <- names(unique_vals)
-    
-    two_text <- sapply(seq_along(unique_vals), function(i){
-      val <- unique_vals[i]
-      def_text <- paste0("IF(COV.EQ.",val,") PARCOV = ")
-      if(i == 1) def_text <- paste0(def_text, 1) else
-        def_text <- paste0(def_text, "( 1 + THETA(",i-1,"))")
-    })
-    
-    state_text$"2" <- two_text
-    state_text$"linear" <- two_text      
-  }
-  
-  dstate_text <- data.frame(state = names(state_text))
-  dstate_text$text <- state_text
-  
-  par_cov_text <- dstate_text$text[dstate_text$state %in% state]
-  par_cov_text <- par_cov_text[[1]]
-  par_cov_text <- gsub("PAR", param, par_cov_text)
-  par_cov_text <- gsub("COV", cov, par_cov_text)
-  
-  if(any(grepl("log\\(median\\)", par_cov_text))){
-    ## get data
-    data_temp <- tapply(data[[cov]], data$ID, stats::median, na.rm = TRUE)
-    value <- signif(stats::median(log(data_temp), na.rm = TRUE), 3)
-    if(value>0){
-      par_cov_text <- gsub("log\\(median\\)", value , par_cov_text)
-    } else {
-      par_cov_text <- gsub("-\\s*log\\(median\\)", paste0("+ ", -value) , par_cov_text)
-    }
-  }
-  
-  if(any(grepl("median", par_cov_text))){
-    ## get data
-    data_temp <- tapply(data[[cov]], data$ID, stats::median, na.rm = TRUE)
-    value <- signif(stats::median(data_temp, na.rm = TRUE), 3)
-    if(value>0){
-      par_cov_text <- gsub("median", value , par_cov_text)
-    } else {
-      par_cov_text <- gsub("-\\s*median", paste0("+ ", -value) , par_cov_text)
-    }
-  }
-  
-  ## renumber thetas
-  n <- 1
-  n_replace <- theta_n_start
-  par_cov_text <- gsub("THETA\\(([0-9]+)\\)",
-                       "THETA\\(X\\1\\)", 
-                       par_cov_text)
-  
-  while(TRUE){
-    if(!any(grepl(paste0("THETA\\(X",n,"\\)"), par_cov_text))) break
-    par_cov_text <- gsub(paste0("(THETA\\()X",n,"(\\))"),
-                         paste0("\\1",n_replace,"\\2"),
-                         par_cov_text)
-    n <- n + 1
-    n_replace <- n_replace + 1
-  }
-  if(n-1 > 30) warning("You're adding ", n-1, " parameters. Are you insane?", call. = FALSE)
-  attributes(par_cov_text) <- list(n = n-1)
-  par_cov_text
-  
-}
-
-#' Generate paths for simulation runs
-#' 
-#' @description 
-#' 
-#' `r lifecycle::badge("experimental")`
-#' 
-#' Internal function to create nested directory structure paths.
-#'
-#' @param dsc A `tibble` with experimental factors to vary.
-#' @param start_dir Directory name within which all runs should take place.
-#' @param include_names Logical (default = TRUE). Should names be included.
-#' @examples 
-#' \dontrun{
-#' 
-#' dsc$location <- gen_sim_path(dsc, ...)
-#' 
-#' }
-#' @keywords internal
-
-gen_sim_path <- function(dsc, start_dir, include_names = TRUE){
-  
-  for(i in which(sapply(dsc,is.factor))){
-    dsc[,i] <- as.character(dsc[,i])
-  }
-  sapply(1:nrow(dsc),function(i){
-    if(include_names) location <- paste(names(dsc[i,]),as.character(dsc[i,]),sep="_",collapse = .Platform$file.sep)
-    if(!include_names) location <- paste(as.character(dsc[i,]),sep="_",collapse = .Platform$file.sep)
-    file.path(start_dir,location)
-  })
-}
-
 #' Prepare forward covariate step
 #'
 #' @description 
@@ -709,7 +577,7 @@ covariate_step_tibble <- function(base, run_id, run_in = nm_default_dir("models"
     dsc$state <- NULL
     dsc$continuous <- NULL
   }
-
+  
   dsc$m <- dsc$m %>% run_in(dsc$location)
   dsc$m <- dsc$m %>% results_dir(dsc$location)
   
@@ -872,6 +740,139 @@ test_relations <- function(dtest, param, cov, state, continuous){
   dtest_new$continuous <- continuous
   if(!missing(dtest)) dtest_new <- dplyr::bind_rows(dtest, dtest_new)
   return(dtest_new)
+  
+}
+
+#' Generate paths for simulation runs
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("experimental")`
+#' 
+#' Internal function to create nested directory structure paths.
+#'
+#' @param dsc A `tibble` with experimental factors to vary.
+#' @param start_dir Directory name within which all runs should take place.
+#' @param include_names Logical (default = TRUE). Should names be included.
+#' @examples 
+#' \dontrun{
+#' 
+#' dsc$location <- gen_sim_path(dsc, ...)
+#' 
+#' }
+#' @keywords internal
+
+gen_sim_path <- function(dsc, start_dir, include_names = TRUE){
+  
+  for(i in which(sapply(dsc,is.factor))){
+    dsc[,i] <- as.character(dsc[,i])
+  }
+  sapply(1:nrow(dsc),function(i){
+    if(include_names) location <- paste(names(dsc[i,]),as.character(dsc[i,]),sep="_",collapse = .Platform$file.sep)
+    if(!include_names) location <- paste(as.character(dsc[i,]),sep="_",collapse = .Platform$file.sep)
+    file.path(start_dir,location)
+  })
+}
+
+
+param_cov_text <- function(param,cov,state,data,theta_n_start,continuous = TRUE,
+                           state_text = list(
+                             "2" = "PARCOV= ( 1 + THETA(1)*(COV - median))",
+                             "linear" = "PARCOV= ( 1 + THETA(1)*(COV - median))",
+                             "3" = c("IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))",
+                                     "IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))"),
+                             "hockey-stick" = c("IF(COV.LE.median) PARCOV = ( 1 + THETA(1)*(COV - median))",
+                                                "IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))"),
+                             "4" = "PARCOV= EXP(THETA(1)*(COV - median))",
+                             "exponential" = "PARCOV= EXP(THETA(1)*(COV - median))",
+                             "5" = "PARCOV= ((COV/median)**THETA(1))",
+                             "power" = "PARCOV= ((COV/median)**THETA(1))",
+                             "power1" = "PARCOV= ((COV/median))",
+                             "power0.75" = "PARCOV= ((COV/median)**0.75)",
+                             "6" = "PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))",
+                             "log-linear" = "PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))"),
+                           additional_state_text = list(), ...){
+  
+  if(length(additional_state_text)>0) {
+    if(is.null(names(additional_state_text))) stop("additional_state_text needs to be a named list")
+    if(any(names(additional_state_text) %in% names(state_text)))
+      stop("additional_state_text entries cannot overwrite base states:\n ",
+           "create new state name")
+    state_text <- append(state_text, additional_state_text)
+  }
+  
+  if(!continuous) {
+    
+    if(!missing(state_text)) 
+      stop("not currently allowed to modify state_text for categorical covariates.
+consider using the default with state \"linear\" or use additional_state_text")
+    
+    if(!(2 %in% state | "linear" %in% state))
+      stop("categorical covariates can only be used with state 2 (or \"linear\")")
+    
+    ##modify state_text for for categorical
+    unique_vals <- table(data[[cov]]) %>% sort(decreasing = TRUE)
+    unique_vals <- names(unique_vals)
+    
+    two_text <- sapply(seq_along(unique_vals), function(i){
+      val <- unique_vals[i]
+      def_text <- paste0("IF(COV.EQ.",val,") PARCOV = ")
+      if(i == 1) def_text <- paste0(def_text, 1) else
+        def_text <- paste0(def_text, "( 1 + THETA(",i-1,"))")
+    })
+    
+    state_text$"2" <- two_text
+    state_text$"linear" <- two_text      
+  }
+  
+  dstate_text <- data.frame(state = names(state_text))
+  dstate_text$text <- state_text
+  
+  par_cov_text <- dstate_text$text[dstate_text$state %in% state]
+  par_cov_text <- par_cov_text[[1]]
+  par_cov_text <- gsub("PAR", param, par_cov_text)
+  par_cov_text <- gsub("COV", cov, par_cov_text)
+  
+  if(any(grepl("log\\(median\\)", par_cov_text))){
+    ## get data
+    data_temp <- tapply(data[[cov]], data$ID, stats::median, na.rm = TRUE)
+    value <- signif(stats::median(log(data_temp), na.rm = TRUE), 3)
+    if(value>0){
+      par_cov_text <- gsub("log\\(median\\)", value , par_cov_text)
+    } else {
+      par_cov_text <- gsub("-\\s*log\\(median\\)", paste0("+ ", -value) , par_cov_text)
+    }
+  }
+  
+  if(any(grepl("median", par_cov_text))){
+    ## get data
+    data_temp <- tapply(data[[cov]], data$ID, stats::median, na.rm = TRUE)
+    value <- signif(stats::median(data_temp, na.rm = TRUE), 3)
+    if(value>0){
+      par_cov_text <- gsub("median", value , par_cov_text)
+    } else {
+      par_cov_text <- gsub("-\\s*median", paste0("+ ", -value) , par_cov_text)
+    }
+  }
+  
+  ## renumber thetas
+  n <- 1
+  n_replace <- theta_n_start
+  par_cov_text <- gsub("THETA\\(([0-9]+)\\)",
+                       "THETA\\(X\\1\\)", 
+                       par_cov_text)
+  
+  while(TRUE){
+    if(!any(grepl(paste0("THETA\\(X",n,"\\)"), par_cov_text))) break
+    par_cov_text <- gsub(paste0("(THETA\\()X",n,"(\\))"),
+                         paste0("\\1",n_replace,"\\2"),
+                         par_cov_text)
+    n <- n + 1
+    n_replace <- n_replace + 1
+  }
+  if(n-1 > 30) warning("You're adding ", n-1, " parameters. Are you insane?", call. = FALSE)
+  attributes(par_cov_text) <- list(n = n-1)
+  par_cov_text
   
 }
 

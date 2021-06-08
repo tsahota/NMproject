@@ -1,4 +1,3 @@
-#' @include utilsExtra.R
 #' @include make_project.R
 
 NULL
@@ -11,14 +10,15 @@ NULL
 #' 
 #' Similar to [ctl_name()] & [run_in()], this allows you to retrieve and specify
 #' the relative path to the control file that will be written by the [run_nm()].
-#' 
+#'
 #' @param m An nm object.
 #' @param text Optional character. Name of path to control file (see details).
 #'   Typically, this file does not yet normally exist, but will house the code
 #'   code for this run.
-#' 
-#' @details "text" can contain "{run_id}" string.  E.g. "Models/run{run_id}.mod"
-#'   will use the name "Models/runm1.mod" if run_id(m1) is "m1".
+#'
+#' @details Note that `text` can contain an `"{run_id}"` string.  E.g.
+#'   `"Models/run{run_id}.mod"` will use the name `"Models/runm1.mod"` if
+#'   `run_id(m1)` is `"m1"`.
 #' 
 #' @examples
 #' \dontrun{
@@ -63,13 +63,11 @@ ctl_path <- function(m, text) {
 #'
 #' @details Easiest way to see all fields of an object is to type the object
 #'   into the console and hit enter. This will display the value of each field.
-#'   some fields like `cmd` are glue fields.  In these cases inserting
-#'   expressions inside braces in `text` will evaluate the expression
 #'   
 #'   The fundamental structure of all these functions is the same:
 #'   
 #'   To access the value of a field: 
-#'   `m %>% fieldname()` or equivalently `fieldname(m)`
+#'   `m %>% fieldname()` or equivalently `fieldname(m)`.
 #'   
 #'   To modify the value of a field:
 #'   `m <- m %>% fieldname("newvalue")`
@@ -88,16 +86,19 @@ run_dir.nm_generic <- function(m, text) {
 #' @export
 run_dir.nm_list <- run_dir.nm_generic
 
-
-
 #' @rdname nm_getsetters
+#' @details Some fields like `cmd` are glue fields.  In these cases inserting
+#' expressions inside braces in `text` will evaluate the expression (see
+#' examples).
 #' @examples 
 #' \dontrun{
 #' 
 #' ## set cmd field of m1
 #' m1 <- m1 %>% cmd("execute {ctl_name} -dir={run_dir}")
 #' 
-#' m1 %>% cmd() ## display command
+#' m1 %>% cmd()
+#' ## displays "execute runm1.mod -dir=m1"
+#' 
 #' ## can also view field when viewing object
 #' m1
 #' 
@@ -174,67 +175,6 @@ results_dir <- function(m, text) {
   if(missing(text)) custom_1d_field(m, "results_dir") else custom_1d_field(m, "results_dir", text, glue = TRUE)
 }
 
-#' @name nm_getsetters_execution
-#' @rdname nm_getsetters_execution
-#'
-#' @title Execution related functions to access and modify fields of nm objects
-#'
-#' @description
-#' 
-#' `r lifecycle::badge("stable")`
-#' 
-#' The fields of an object can be viewed by printing the object.  Each field has
-#' a corresponding function of the same name to access and modify it's value.
-#' 
-#' @param m An nm object.
-#' @param text Optional character for replacing field. If present function will
-#'   modify field (of same name as function) otherwise will return value of
-#'   field (of same name as function).
-#'
-#' @details Easiest way to see all fields of an object is to type the object
-#'   into the console and hit enter. This will display the value of each field.
-#'   some fields like `cmd` are glue fields.  In these cases inserting
-#'   expressions inside braces in `text` will evaluate the expression
-#'   
-#'   The fundamental structure of all these functions is the same:
-#'   
-#'   To access the value of a field: 
-#'   `m %>% fieldname()` or equivalently `fieldname(m)`
-#'   
-#'   To modify the value of a field:
-#'   `m <- m %>% fieldname("newvalue")`
-#'   
-#' @export
-cores <- function(m, text) {
-  if(missing(text)) custom_1d_field(m, "cores") else custom_1d_field(m, "cores", text)
-}
-
-#' @rdname nm_getsetters_execution
-#' @export
-parafile <- function(m, text) {
-  if(missing(text)) custom_1d_field(m, "parafile") else {
-    custom_1d_field(m, "parafile", normalizePath(text, winslash = "/", mustWork = FALSE))
-  }
-}
-
-#' @rdname nm_getsetters_execution
-#' @export
-walltime <- function(m, text) {
-  if(missing(text)) custom_1d_field(m, "walltime") else custom_1d_field(m, "walltime", text)
-}
-
-#' @rdname nm_getsetters_execution
-#' @export
-executed <- function(m, text) {
-  if(missing(text)) custom_1d_field(m, "executed") else custom_1d_field(m, "executed", text)
-}
-
-#' @rdname nm_getsetters
-#' @export
-lst_path <- function(m, text) {
-  if(missing(text)) custom_1d_field(m, "lst_path") else custom_1d_field(m, "lst_path", text, glue = TRUE)
-}
-
 #' @rdname nm_getsetters
 #' @export
 run_in <- function(m, text)
@@ -296,22 +236,104 @@ result_files.nm_generic <- function(m, text){
 #' @export
 result_files.nm_list <- Vectorize_nm_list(result_files.nm_generic, SIMPLIFY = FALSE)
 
-#' Get/set control file object
+
+#' @name nm_getsetters_execution
+#' @rdname nm_getsetters_execution
 #'
-#' @param m nm object
-#' @param ctl_ob optional path to control file
-#' @param update_numbering logical. Should table numbers and author fields be updated
-#' @param update_dollar_data logical. Should $DATA in control file be updated
-#' @param ... additional arguments
+#' @title Execution related functions to access and modify fields of nm objects
+#'
+#' @description
+#' 
+#' `r lifecycle::badge("stable")`
+#' 
+#' The fields of an object can be viewed by printing the object.  Each field has
+#' a corresponding function of the same name to access and modify it's value.
+#' 
+#' @param m An nm object.
+#' @param text Optional character for replacing field. If present function will
+#'   modify field (of same name as function) otherwise will return value of
+#'   field (of same name as function).
+#'
+#' @details Easiest way to see all fields of an object is to type the object
+#'   into the console and hit enter. This will display the value of each field.
+#'   some fields like `cmd` are glue fields.  In these cases inserting
+#'   expressions inside braces in `text` will evaluate the expression
+#'   
+#'   The fundamental structure of all these functions is the same:
+#'   
+#'   To access the value of a field: 
+#'   `m %>% fieldname()` or equivalently `fieldname(m)`
+#'   
+#'   To modify the value of a field:
+#'   `m <- m %>% fieldname("newvalue")`
+#'   
+#' @export
+cores <- function(m, text) {
+  if(missing(text)) custom_1d_field(m, "cores") else custom_1d_field(m, "cores", text)
+}
+
+#' @rdname nm_getsetters_execution
+#' @export
+parafile <- function(m, text) {
+  if(missing(text)) custom_1d_field(m, "parafile") else {
+    custom_1d_field(m, "parafile", normalizePath(text, winslash = "/", mustWork = FALSE))
+  }
+}
+
+#' @rdname nm_getsetters_execution
+#' @export
+walltime <- function(m, text) {
+  if(missing(text)) custom_1d_field(m, "walltime") else custom_1d_field(m, "walltime", text)
+}
+
+#' @rdname nm_getsetters_execution
+#' @export
+executed <- function(m, text) {
+  if(missing(text)) custom_1d_field(m, "executed") else custom_1d_field(m, "executed", text)
+}
+
+#' @rdname nm_getsetters
+#' @export
+lst_path <- function(m, text) {
+  if(missing(text)) custom_1d_field(m, "lst_path") else custom_1d_field(m, "lst_path", text, glue = TRUE)
+}
+
+#' Get path to run_dir
+#'
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#'
+#' The function [run_dir()] gives the directory name, whereas this function gets
+#' the (relative) path of [run_dir()].
+#'
+#' @param m An nm object.
+#' @seealso [nm_getsetters()].
+#' @export
+run_dir_path <- function(m) file.path(run_in(m), run_dir(m))
+
+#' Use file to set control file contents in nm object
+#'
+#' @description 
+#' 
+#' `r lifecycle::badge("stable")`
+#'
+#' @param m An nm object.
+#' @param ctl_ob Path to control file.
+#' @param update_numbering Logical. Should table numbers and author fields be updated.
+#' @param update_dollar_data Logical. Should $DATA in control file be updated.
+#' @param ... Additional arguments.
+#' 
+#' @keywords internal
 #' 
 #' @export
 
-ctl_contents <- function(m, ctl_ob, update_numbering = TRUE, update_dollar_data = TRUE, ...){
-  UseMethod("ctl_contents")
+based_on <- function(m, ctl_ob, update_numbering = TRUE, update_dollar_data = TRUE, ...){
+  UseMethod("based_on")
 }
 
 #' @export
-ctl_contents.nm_generic <- function(m, ctl_ob, update_numbering = TRUE, update_dollar_data = TRUE, ...){
+based_on.nm_generic <- function(m, ctl_ob, update_numbering = TRUE, update_dollar_data = TRUE, ...){
   
   if(missing(ctl_ob)){
     if(length(m[["ctl_contents"]]) > 0) return(m[["ctl_contents"]]) else return(NA_character_)
@@ -367,28 +389,100 @@ ctl_contents.nm_generic <- function(m, ctl_ob, update_numbering = TRUE, update_d
   m
 }
 #' @export
-ctl_contents.nm_list <- Vectorize_nm_list(ctl_contents.nm_generic, SIMPLIFY = FALSE, replace_arg = "ctl_ob", pre_glue = TRUE)
+based_on.nm_list <- Vectorize_nm_list(based_on.nm_generic, SIMPLIFY = FALSE, replace_arg = "ctl_ob", pre_glue = TRUE)
+
+#' Get/set control file contents
+#'
+#' This function is an alias for [based_on()].
+#'
+#' @param ... Arguments to be passed to [based_on()].
+#' 
+#' @export
+
+ctl_contents <- function(...) based_on(...)
 
 ## minimal version of ctl_contents (just sets ctl_contents without mods)
-## for internal package use
 ctl_contents_simple <- function(m, ctl_ob, ...){
   ctl_contents(m, ctl_ob, update_numbering = FALSE, update_dollar_data = FALSE, ...)
 }
 
-#' Use file to set control file contents in nm object
-#'
+#' Interface for getting and setting your own simple fields in nm objects
+#' 
 #' @description 
 #' 
 #' `r lifecycle::badge("stable")`
-#'
+#' 
 #' @param m An nm object.
-#' @param ctl_ob Path to control file.
-#' @param update_numbering Logical. Should table numbers and author fields be updated.
-#' @param update_dollar_data Logical. Should $DATA in control file be updated.
-#' @param ... Additional arguments.
+#' @param ... Arguments to get/set fields.
 #' 
-#' @keywords internal
+#' @examples 
+#' \dontrun{
 #' 
+#' mc <- mc %>% simple_field(stars = 3)
+#' mc %>% simple_field(stars)
+#' mc ## see that stars is a field of the nm object.
+#' 
+#' }
 #' @export
 
-based_on <- ctl_contents
+simple_field <- function(m, ...){
+  dots_exp <- rlang::enexprs(...)
+  if(identical(names(dots_exp), "")) {
+    get_simple_field(m, ...)
+  } else {
+    set_simple_field(m, ...) 
+  }
+}
+
+
+set_simple_field <- function(m, ...){
+  
+  dots <- list(...)
+  fields <- names(dots)
+  
+  for(i in seq_along(dots)){
+    m <- m %>% custom_1d_field(field = fields[i], replace = dots[[i]])
+  }
+  m
+}
+
+
+get_simple_field <- function(m, field){
+  
+  field <- rlang::enquo(field)
+  field <- rlang::quo_name(field)
+  
+  m %>% custom_1d_field(field = field)
+  
+}
+
+custom_1d_field <- function(m, field, replace, glue = FALSE){
+  UseMethod("custom_1d_field")
+}
+custom_1d_field.nm_generic <- function(m, field, replace, glue = FALSE){
+  if(missing(replace)){
+    if(length(m[[field]]) > 0) return(m[[field]]) else return(NA_character_)
+  }
+  
+  ## Only update if there is a change
+  if(field %in% names(m)){
+    if(glue) old_glue_field <- m$glue_fields[[field]] else old_glue_field <- m[[field]]
+    if(identical(replace, old_glue_field)) return(m)
+  }
+  
+  if(glue){
+    m$glue_fields[[field]] <- replace
+    m[[field]] <- replace
+    ## glue the field
+    if(!is.na(replace)) m <- replace_tags(m, field)
+  } else {
+    m[[field]] <- replace
+  }
+  ## reglue all other glueable fields
+  for(other_col in names(m$glue_fields)[!names(m$glue_fields) %in% field]) {
+    m <- replace_tags(m, other_col)
+  }
+  
+  m
+}
+custom_1d_field.nm_list <- Vectorize_nm_list(custom_1d_field.nm_generic, replace_arg = "replace")
