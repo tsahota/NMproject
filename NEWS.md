@@ -7,7 +7,7 @@ relative to 0.5.1:
 
 * Project libraries are now handled with `renv`.
 
-* Analysis project creation has been moved to NMproject with
+* Analysis project creation has been moved from tidyproject to NMproject with
   light wrappers around `usethis` project creation functionality and RStudio
   project templates.  Analysis projects have a package-like structure.
   
@@ -18,19 +18,20 @@ relative to 0.5.1:
   library available via RStudio 'Addins'.  The code library has been restructured
   to match NMproject analysis directory structure.
   
-* `new_nm()` function to create parent `nm_list` objects.
+* `new_nm()` function to create parent `nm_list` objects.  This is mostly for
+  creation of your first model.  Subsequent models are generated with the `child()`
+  function.
 
-* New manual edit interface via RStudio 'Addins'.  NMproject is the only NONMEM
-  interface (known to the author) that tracks manual edits to NONMEM code in 
-  the form of reusable patches.
+* New manual edit interface via RStudio 'Addins'.  NMproject is now the only 
+  NONMEM interface (known to the author) that tracks manual edits to NONMEM code
+  in the form of reusable patches.
 
 * Fully vectorised functions and compatibility of `nm_list` objects with 
-  `dplyr`. NMproject is the only pharmacometric package (known to the author) 
-  with a vectorised model object allowing groups of runs to be operated on using
-  the same syntax as single runs.
+  `dplyr`.
 
 * Custom NMproject implementations of PsN's bootstrap, cross-validation, 
-  stepwise covariate selection, simulation-re-estimation, and PPCs.
+  stepwise covariate selection, simulation-re-estimation, and PPCs have been
+  added.
 
 # NMproject 0.5.1 (beta interface pre-release)
 
