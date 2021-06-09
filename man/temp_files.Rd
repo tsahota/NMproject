@@ -23,7 +23,7 @@ path is specified, the function will look for all runs in the directory
 (including subdirectories).}
 
 \item{output_loc}{Optional character for locating files. Either \code{"run_dir"}
-(default) for PsN execution or \code{"base"} for nmfe execution.}
+(default) for PsN execution or \code{"base"} for "nmfe" execution.}
 
 \item{run_files}{Optional character vector.  Search amongst only these files
 instead.  Default value \code{NA} searches based on \code{object}.}

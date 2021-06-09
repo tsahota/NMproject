@@ -32,7 +32,7 @@
 #'  \item{kill_job}{
 #'    An optional function to kill jobs before they are started.
 #'    This is useful in infrastructures, where repeating a job conflicts with
-#'    other jobs writing into the same directories.  For example, in slurm grids
+#'    other jobs writing into the same directories.  For example, in Slurm grids
 #'    this could be a function wrapper around a `system("scancel ...")`
 #'    call.
 #'  }

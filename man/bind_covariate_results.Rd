@@ -7,11 +7,11 @@
 bind_covariate_results(dsc, nm_col = "m", parameters = "new")
 }
 \arguments{
-\item{dsc}{A covariate tibble (see \code{\link[=covariate_step_tibble]{covariate_step_tibble()}}).}
+\item{dsc}{An output \code{tibble} from \code{\link[=covariate_step_tibble]{covariate_step_tibble()}}.}
 
-\item{nm_col}{Character (default = "m"). Name of column to store nm objects.}
+\item{nm_col}{Character (default = \code{"m"}). Name of column to store nm objects.}
 
-\item{parameters}{Character (default = "new").  Passed to \code{\link[=summary_wide]{summary_wide()}}.}
+\item{parameters}{Character (default = \code{"new"}).  Passed to \code{\link[=summary_wide]{summary_wide()}}.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

@@ -324,7 +324,7 @@ ctl_table_files.default <- function(ctl) {
 #'   path is specified, the function will look for all runs in the directory
 #'   (including subdirectories).
 #' @param output_loc Optional character for locating files. Either `"run_dir"`
-#'   (default) for PsN execution or `"base"` for nmfe execution.
+#'   (default) for PsN execution or `"base"` for "nmfe" execution.
 #' @param run_files Optional character vector.  Search amongst only these files
 #'   instead.  Default value `NA` searches based on `object`.
 #' @param include_slurm_files Logical (default = `TRUE`). Include files

@@ -630,9 +630,9 @@ covariate_step_tibble <- function(base, run_id, run_in = nm_default_dir("models"
 #' See [PsN documentation](https://uupharmacometrics.github.io/PsN/docs.html)
 #' for more information.
 #'
-#' @param dsc A covariate tibble (see [covariate_step_tibble()]).
-#' @param nm_col Character (default = "m"). Name of column to store nm objects.
-#' @param parameters Character (default = "new").  Passed to [summary_wide()].
+#' @param dsc An output `tibble` from [covariate_step_tibble()].
+#' @param nm_col Character (default = `"m"`). Name of column to store nm objects.
+#' @param parameters Character (default = `"new"`).  Passed to [summary_wide()].
 #'
 #' @seealso [covariate_step_tibble()]
 #'
