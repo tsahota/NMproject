@@ -43,9 +43,8 @@ m2 <- m1 \%>\% child("m2")
 
 ## use parent object to ensure child object retain
 ## correct parent-child structure
-m2 <- m1 \%>\% c
-  update_parameters() \%>\%  ## modifying parent object
+m2 <- m1 \%>\% c()
+update_parameters() \%>\% ## modifying parent object
   child("m2", parent = m1)
-
 }
 }

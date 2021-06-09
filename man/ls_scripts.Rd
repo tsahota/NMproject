@@ -21,6 +21,6 @@ recursively.}
 \dontrun{
 
 ## find all scripts with the string "AUC("
-ls_scripts('~/path/to/analysis/Scripts') \%>\% search_raw("AUC\\\\(")
+ls_scripts("~/path/to/analysis/Scripts") \%>\% search_raw("AUC\\\\(")
 }
 }

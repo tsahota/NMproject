@@ -20,7 +20,7 @@ configuration can be modified with \code{\link[=nm_default_dirs]{nm_default_dirs
 scripts, where you need to refer to locations of model files or output files.
 }
 \examples{
-nm_default_dir("scripts")  ## will return the path to the "scripts" directory
+nm_default_dir("scripts") ## will return the path to the "scripts" directory
 nm_default_dir("models")
 nm_default_dir("results")
 }

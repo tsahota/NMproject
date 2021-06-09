@@ -24,16 +24,16 @@
 #'
 #' @details There are two ways to use `decision`:
 #'
-#' \describe{ 
-#' \item{Automatic:}{ 
+#' \describe{
+#' \item{Automatic:}{
 #' An `auto` decision (see examples below) works
 #' like `stopifnot()`. It requires a logical (TRUE/FALSE) condition. Doing this
 #' this way ensures that creates fewer points in your workflow where at the cost
 #' of removing.  If updating a workflow (e.g. with an updated dataset), so long
 #' as the TRUE/FALSE is TRUE, the workflow will proceed uninterrupted.  If the
 #' condition flips to FALSE the workflow will stop as it will be assumed that
-#' subsequent steps will no longer be valid. 
-#' } 
+#' subsequent steps will no longer be valid.
+#' }
 #' \item{Manual:}{ Manual: Requires
 #' specification of either `input` or `file_inputs` (or both) AND `outcome`.
 #' Inputs represent information you have considered in your decision and
@@ -48,78 +48,84 @@
 #' \dontrun{
 #'
 #' ## a decision based on summary statistics
-#' decision(inputs = summary_wide(c(m1, m2, m2WT)),
-#'          outcome = "m1 is better") # next line must be end of chunk
+#' decision(
+#'   inputs = summary_wide(c(m1, m2, m2WT)),
+#'   outcome = "m1 is better"
+#' ) # next line must be end of chunk
 #'
 #' ## a decision based also on goodness of fit plots
-#' decision(inputs = summary_wide(c(m1, m2, m2WT)),
-#'          file_inputs = c("Results/basic_gof.m1.nb.html",
-#'                          "Results/basic_gof.m2.nb.html"),
-#'          outcome = "m1 is better") # next line must be end of chunk
+#' decision(
+#'   inputs = summary_wide(c(m1, m2, m2WT)),
+#'   file_inputs = c(
+#'     "Results/basic_gof.m1.nb.html",
+#'     "Results/basic_gof.m2.nb.html"
+#'   ),
+#'   outcome = "m1 is better"
+#' ) # next line must be end of chunk
 #'
 #' ## a decision based on an automatic TRUE/FALSE criteria
 #' ## here we're ensuring m1 has the lowest AIC
 #' decision(auto = (AIC(m1) == min(AIC(m1, m2, m3))))
-#'
 #' }
 #'
 #' @export
-decision <- function(inputs = c(), 
-                     file_inputs = c(), 
+decision <- function(inputs = c(),
+                     file_inputs = c(),
                      auto = logical(),
                      outcome = character(),
-                     force = FALSE){
-  
-  if(!requireNamespace("digest"))
+                     force = FALSE) {
+  if (!requireNamespace("digest")) {
     stop("install digest")
-  
+  }
+
   error_msg <- "decision needs revisiting."
-  
-  if((!missing(inputs) | !missing(file_inputs)) & missing(outcome))
+
+  if ((!missing(inputs) | !missing(file_inputs)) & missing(outcome)) {
     stop("if specifying decision inputs need to specify outcome \n'outcome' = character description of decision")
-  
-  if(!missing(auto)){
-    if(!auto){
-      stop("auto decision FAILED - ", error_msg, call. =  FALSE)
+  }
+
+  if (!missing(auto)) {
+    if (!auto) {
+      stop("auto decision FAILED - ", error_msg, call. = FALSE)
     } else {
       message("auto decision PASSED")
       return(invisible())
     }
   }
-  
-  wait_input <- function(inputs){
-    if(!interactive()) stop("new manual decision needed. Run interactively")
-    inputs  ## create inputs dependency
+
+  wait_input <- function(inputs) {
+    if (!interactive()) stop("new manual decision needed. Run interactively")
+    inputs ## create inputs dependency
     cat(crayon::underline("\nmanual decision check\n"))
     cat("expected decision outcome:\n", outcome)
     ans <- readline("Does this accurately describe your decision? [y]es/[n]o/[c]heck:\n")
-    if(ans %in% ""){
+    if (ans %in% "") {
       stop("blank detected (if in R Notebooks, make sure decision() is at end of chunk with no blank line in between)")
     }
-    if(nchar(ans) > 1){
+    if (nchar(ans) > 1) {
       stop("give single character response", call. = FALSE)
     }
-    if(ans %in% "n"){
-      stop(error_msg, call. =  FALSE)
+    if (ans %in% "n") {
+      stop(error_msg, call. = FALSE)
     }
-    if(ans %in% "c"){
-      stop("have a look at inputs and if you agree with decision, rerun this answering [y] ", call. =  FALSE)
+    if (ans %in% "c") {
+      stop("have a look at inputs and if you agree with decision, rerun this answering [y] ", call. = FALSE)
     }
-    if(ans %in% "y"){
+    if (ans %in% "y") {
       return(TRUE)
     }
     stop("invalid response", call. = FALSE)
   }
-  
-  if(!length(inputs)) inputs <- c()
-  
-  if(length(file_inputs)){
-    if(!all(file.exists(file_inputs))){
+
+  if (!length(inputs)) inputs <- c()
+
+  if (length(file_inputs)) {
+    if (!all(file.exists(file_inputs))) {
       stop("file(s) do not exist", call. = FALSE)
     }
     inputs <- c(inputs, tools::md5sum(file_inputs))
   }
-  
+
   ## generate hashes for current call
   call_ob <- match.call()
   decision_cache_path <- file.path(nm_default_dir("models"), "decision_cache")
@@ -127,21 +133,23 @@ decision <- function(inputs = c(),
   cache_name <- paste0(digest::digest(call_ob), ".RDS")
   decision_info <- list(inputs = inputs)
   cache_path <- file.path(decision_cache_path, cache_name)
-  
+
   ############
   ## check cache
-  if(!force){
+  if (!force) {
     cache_match <- file.exists(cache_path) ## and contents match
-    if(cache_match){
+    if (cache_match) {
       stored_decision <- readRDS(cache_path)
       cache_match <- identical(stored_decision, decision_info)
-    }    
-  } else cache_match <- FALSE
+    }
+  } else {
+    cache_match <- FALSE
+  }
   ############
-  if(!cache_match){
-    decision_accurate <- wait_input(inputs)    
-    
-    if(decision_accurate){
+  if (!cache_match) {
+    decision_accurate <- wait_input(inputs)
+
+    if (decision_accurate) {
       ## save cache with a record of the decision
       saveRDS(decision_info, cache_path)
     } else {
@@ -151,5 +159,4 @@ decision <- function(inputs = c(),
   } else {
     message("\ndecision inputs & outcome match prior decision")
   }
-  
 }

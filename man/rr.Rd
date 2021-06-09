@@ -27,7 +27,6 @@ rr(m1)
 ## compare m1 and m2
 
 rr(c(m1, m2))
-
 }
 }
 \seealso{

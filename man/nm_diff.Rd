@@ -40,6 +40,5 @@ m2 <- m1 \%>\% child(run_id = "m2") \%>\%
   subroutine(advan = 2, trans = 2)
 
 nm_diff(m2, m1)
-
 }
 }

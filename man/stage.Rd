@@ -34,9 +34,7 @@ way to bring code is via the "code library" RStudio 'Addin' shiny app.
 
 ls_code_library("Models/ADVAN2.mod") \%>\%
   stage()
-  
 }
-
 
 }
 \seealso{

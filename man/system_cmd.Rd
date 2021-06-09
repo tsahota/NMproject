@@ -27,7 +27,6 @@ RStudio server.
 \dontrun{
 
 system_cmd("pwd")
-
 }
 
 }

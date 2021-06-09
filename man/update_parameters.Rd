@@ -19,8 +19,7 @@ update_parameters(ctl, from)
 \dontrun{
 
 m1 \%>\% dollar("THETA")
-m1 <- m1 \%>\% update_parameters() 
+m1 <- m1 \%>\% update_parameters()
 m1 \%>\% dollar("THETA")
-
 }
 }

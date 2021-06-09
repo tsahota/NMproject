@@ -58,19 +58,16 @@ for more information.
 dtest <- test_relations(param = c("KA", "K", "V"),
                         cov = c("LIN1", "LIN2", "LIN3", "RND1", "RND2", "RND3"),
                         state = c("linear", "power"),
-                        continuous = TRUE)
-dtest <- dtest \%>\%
-             test_relations(param = c("KA", "K", "V"),
-                            cov = "BN1",
-                            state = "linear",
-                            continuous = FALSE)
+                        continuous = TRUE) \%>\%
+         test_relations(param = c("KA", "K", "V"),
+                        cov = "BN1",
+                        state = "linear",
+                        continuous = FALSE)
 
 ## create tibble of covariate step with model objects as column m
-dsm1 <- m1 \%>\% covariate_step_tibble(
-  run_id = "m1_f1",
-  dtest = dtest,
-  direction = "forward"
-)
+dsm1 <- m1 \%>\% covariate_step_tibble(run_id = "m1_f1",
+                                     dtest = dtest,
+                                     direction = "forward")
 
 ## run all models greedily
 dsm1$m <- dsm1$m \%>\% run_nm()
@@ -87,22 +84,19 @@ dsm1
 
 ## when happy with selection, select run for subsequent step
 
-m1_f1 <- dsm1$m[1]   ## select most signifcant BIC
+m1_f1 <- dsm1$m[1] ## select most signifcant BIC
 # alternative select by relationship
 m1_f1 <- dsm1 \%>\%
-    filter(param = "CL", cov = "BWT", state = "power") \%$\%
-    m
+  filter(param = "CL", cov = "BWT", state = "power") \%$\%
+  m
 
 ## do next forward step
 
-dsm2 <- m1_f1 \%>\% covariate_step_tibble(
-  run_id = "m1_f2",
-  dtest = dtest,
-  direction = "forward"
-)
+dsm2 <- m1_f1 \%>\% covariate_step_tibble(run_id = "m1_f2",
+                                        dtest = dtest,
+                                        direction = "forward")
 
 ## continue ...
-
 }
 }
 \seealso{

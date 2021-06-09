@@ -18,10 +18,9 @@ ignore(ctl, ignore_char)
 
 \dontrun{
 
-ignore(m1)  ## display ignore statement
+ignore(m1) ## display ignore statement
 
 m1 \%>\% ignore("ID > 10") ## changes ignore to ignore IDs > 10.
-
 }
 
 }

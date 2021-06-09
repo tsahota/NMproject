@@ -30,8 +30,8 @@
 #'
 #'  Each field has a corresponding function (documented in [nm_getsetters]) of
 #'  the same name to access and modify it's value.
-#'  
-#'  \describe{ 
+#'
+#'  \describe{
 #'  \item{type}{
 #'    The PsN run type.  Default is `execute`.
 #'  }
@@ -43,11 +43,11 @@
 #'  }
 #'  \item{executed}{
 #'    For internal use.
-#'  } 
+#'  }
 #'  \item{ctl_contents}{
-#'    Stores the contents of the control file to be written to disk when the 
+#'    Stores the contents of the control file to be written to disk when the
 #'    [run_nm()] function is used on the object.
-#'  } 
+#'  }
 #'  \item{data_path}{
 #'    Path to the NONMEM ready dataset (from base project directory).
 #'  }
@@ -57,15 +57,15 @@
 #'  \item{cores}{
 #'    Numbers of cores to use.  Requires a `cmd` value that uses the `{cores}`
 #'    glue field.
-#'  } 
-#'  \item{run_dir}{ 
-#'    PsN directory to run the NONMEM run. Default is to the be the same as 
+#'  }
+#'  \item{run_dir}{
+#'    PsN directory to run the NONMEM run. Default is to the be the same as
 #'    the `run_id` for simplicity.
 #'  }
-#'  \item{results_dir}{ 
-#'    Location to store results files from diagnostic reports executed with 
+#'  \item{results_dir}{
+#'    Location to store results files from diagnostic reports executed with
 #'    [nm_render()].
-#'  } 
+#'  }
 #'  \item{unique_id}{
 #'    For internal use.
 #'  }
@@ -80,30 +80,27 @@
 #' \dontrun{
 #'
 #' m1 <- new_nm(run_id = "m1",
-#'             based_on = "staging/Models/run1.mod",
-#'             data_path = "DerivedData/data.csv",
-#'             cmd = "execute -run_on_sge -sge_prepend_flags='-V' {ctl_name} -dir={run_dir}") %>%
-#'      fill_input() %>%
-#'      run_nm()
+#'              based_on = "staging/Models/run1.mod",
+#'              data_path = "DerivedData/data.csv",
+#'              cmd = "execute -run_on_sge -sge_prepend_flags='-V' {ctl_name} -dir={run_dir}") %>%
+#'   fill_input() %>%
+#'   run_nm()
 #'
 #' m1 ## display object fields
 #' cmd(m1)
 #' ctl_name(m1)
 #' run_dir(m1)
-#'
 #' }
 #' @export
 new_nm <- function(based_on,
-                   run_id = NA_character_, 
-                   data_path, 
-                   cmd){
-  
+                   run_id = NA_character_,
+                   data_path,
+                   cmd) {
   m <- nm(run_id = run_id)
-  if(!missing(based_on)) m <- m %>% based_on(based_on)
-  if(!missing(data_path)) m <- m %>% data_path(data_path)
-  if(!missing(cmd)) m <- m %>% cmd(cmd)
+  if (!missing(based_on)) m <- m %>% based_on(based_on)
+  if (!missing(data_path)) m <- m %>% data_path(data_path)
+  if (!missing(cmd)) m <- m %>% cmd(cmd)
   m
-  
 }
 
 ## internal function
@@ -117,27 +114,29 @@ nm_generic <- function(run_id = NA_character_,
                        type = "execute",
                        run_dir = "{run_id}",
                        results_dir = nm_default_dir("results"),
-                       lst_path = "{run_dir}/NM_run1/psn.lst"){
-  
-  #m <- new.env()
+                       lst_path = "{run_dir}/NM_run1/psn.lst") {
+
+  # m <- new.env()
   m <- list()
-  #if(is.na(run_id)) stop("require run_id argument to be specified", call. = FALSE)
-  
+  # if(is.na(run_id)) stop("require run_id argument to be specified", call. = FALSE)
+
   ## test if run_id = "execute run... ..." stop with error
   ## about backward compatibility issue
   ##  1. it has spaces
-  if(grepl("\\s", run_id)) 
+  if (grepl("\\s", run_id)) {
     stop("run_id cannot contain spaces.
 NOTE: If you are trying to do something like:
          nm('execute run1.mod -dir=1')
 You are trying to use the old NMproject alpha interface.
 This is the newer beta interface which is not backwards compatible. 
 To use the alpha interface, install NMproject 0.3.2",
-         call. = FALSE)
-  
-  class_name <- paste0("nm_",type)
-  class(m) <- c(class_name, "nm_generic",class(m))
-  
+      call. = FALSE
+    )
+  }
+
+  class_name <- paste0("nm_", type)
+  class(m) <- c(class_name, "nm_generic", class(m))
+
   m[["type"]] <- type
   m[["run_id"]] <- as.character(run_id)
   m[["run_in"]] <- as.character(run_in)
@@ -156,15 +155,19 @@ To use the alpha interface, install NMproject 0.3.2",
   m$cores <- as.integer(1)
   m$parafile <- NA_character_
   m$walltime <- NA_integer_
-  
+
   unique_id <- "{type}.{run_in}{.Platform$file.sep}{run_dir}"
   ## the following is in order of glueing
-  m$glue_fields <- list(run_dir, ctl_name, results_dir, unique_id, 
-                        lst_path, NA_character_, getOption("nm.cmd_default"))
-  names(m$glue_fields) <- c("run_dir", "ctl_name", "results_dir", "unique_id", 
-                            "lst_path", "data_path", "cmd")
-  
-  for(field in names(m$glue_fields)){
+  m$glue_fields <- list(
+    run_dir, ctl_name, results_dir, unique_id,
+    lst_path, NA_character_, getOption("nm.cmd_default")
+  )
+  names(m$glue_fields) <- c(
+    "run_dir", "ctl_name", "results_dir", "unique_id",
+    "lst_path", "data_path", "cmd"
+  )
+
+  for (field in names(m$glue_fields)) {
     m <- replace_tag(m, field)
   }
 
@@ -172,7 +175,7 @@ To use the alpha interface, install NMproject 0.3.2",
 }
 
 #' Create core NM object
-#' 
+#'
 #' Create new nm object. The function [new_nm()] is more convenient.  This is
 #' mostly a back end function. This is the basic object this package centres
 #' around.  Most package functions act on this object.
@@ -199,19 +202,18 @@ To use the alpha interface, install NMproject 0.3.2",
 #'
 #' @return An object of class `nm_list`.  Object is concatenatable. Length of
 #'   object corresponds to length of `run_id`.
-#' @examples 
+#' @examples
 #' \dontrun{
-#' 
+#'
 #' m0 <- nm(run_id = "m0")
-#' m0  ## a human readable representation
-#'   
+#' m0 ## a human readable representation
+#'
 #' ## nm objects can be put into tibbles to group runs together
-#' d <- tibble(run_id = c("m1","m2"))
+#' d <- tibble(run_id = c("m1", "m2"))
 #' d$m <- nm(d$run_id)
-#' d  
-#' 
+#' d
 #' }
-#' 
+#'
 #' @keywords internal
 #' @export
 nm <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
@@ -245,24 +247,23 @@ nm <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
 #'
 #' ## use parent object to ensure child object retain
 #' ## correct parent-child structure
-#' m2 <- m1 %>% c
-#'   update_parameters() %>%  ## modifying parent object
+#' m2 <- m1 %>% c()
+#' update_parameters() %>% ## modifying parent object
 #'   child("m2", parent = m1)
-#'
 #' }
 #' @export
-child <- function(m, run_id = NA_character_, type = "execute", parent = nm(NA), silent = FALSE){
+child <- function(m, run_id = NA_character_, type = "execute", parent = nm(NA), silent = FALSE) {
   UseMethod("child")
 }
 #' @export
-child.nm_generic <- function(m, run_id = NA_character_, type = "execute", parent = nm(NA), silent = FALSE){
+child.nm_generic <- function(m, run_id = NA_character_, type = "execute", parent = nm(NA), silent = FALSE) {
   mparent <- m
   # if(is.environment(m)){
   #   old_classes <- class(m)
   #   m <- as.environment(as.list(m, all.names=TRUE))
-  #   class(m) <- old_classes 
+  #   class(m) <- old_classes
   # }
-  
+
   m <- m %>% executed(FALSE)
   m <- m %>% job_info(NA_character_)
   m[["result_files"]] <- c()
@@ -270,68 +271,77 @@ child.nm_generic <- function(m, run_id = NA_character_, type = "execute", parent
   m <- m %>% parent_run_in(run_in(m))
   m <- m %>% parent_ctl_name(ctl_name(m))
   m <- m %>% parent_results_dir(results_dir(m))
-  
+
   ## if missing increment run_id
-  if(is.na(run_id)) {
-    if(!is.na(run_id(m))){
+  if (is.na(run_id)) {
+    if (!is.na(run_id(m))) {
       run_id <- increment_run_id(run_id(m))
       message("child run_id automatically set to: ", run_id)
     }
   }
-  if(!is.na(run_id)) m <- m %>% run_id(run_id)
-  
-  m <- m %>% ctl_contents(ctl_contents(m), 
-                          update_numbering = TRUE,
-                          update_dollar_data = FALSE)
-  if(!type %in% "execute") m <- m %>% type(type)
-  m[["ctl_orig"]] <- m[["ctl_contents"]]  ## reset ctl_orig
-  
+  if (!is.na(run_id)) m <- m %>% run_id(run_id)
+
+  m <- m %>% ctl_contents(ctl_contents(m),
+    update_numbering = TRUE,
+    update_dollar_data = FALSE
+  )
+  if (!type %in% "execute") m <- m %>% type(type)
+  m[["ctl_orig"]] <- m[["ctl_contents"]] ## reset ctl_orig
+
   ## check for file conficts
-  if(!is_single_na(m[["ctl_contents"]])){
+  if (!is_single_na(m[["ctl_contents"]])) {
     file_conflicts <- intersect(psn_exported_files(mparent), psn_exported_files(m))
-    if(length(file_conflicts) > 0){
-      if(!silent) warning("Child file(s) currently in conflict with parent:\n",
-                          paste(paste0(" ",file_conflicts),collapse="\n"),
-                          "\nYou will overwrite parent object outputs if you run now", call. = FALSE)
+    if (length(file_conflicts) > 0) {
+      if (!silent) {
+        warning("Child file(s) currently in conflict with parent:\n",
+          paste(paste0(" ", file_conflicts), collapse = "\n"),
+          "\nYou will overwrite parent object outputs if you run now",
+          call. = FALSE
+        )
+      }
     }
   }
-  
+
   ## warn if ctl_name or run_dir aren't glueable
   relevant_glue_fields <- unlist(m$glue_fields[c("ctl_name", "run_dir")])
   non_glued_glue_fields <- relevant_glue_fields[!grepl("\\{", relevant_glue_fields)]
-  if(length(non_glued_glue_fields) > 0){
-    if(!silent) warning("Following parents attributes do not use {glue} fields:\n", 
-                        paste(paste0(" ",names(non_glued_glue_fields)), collapse="\n"), 
-                        "\nThese fields will be identical to parent and may result in conflicts",
-                        "\nIf this is unintended, make sure parent object uses {glue} notation for these attributes", call. = FALSE)
+  if (length(non_glued_glue_fields) > 0) {
+    if (!silent) {
+      warning("Following parents attributes do not use {glue} fields:\n",
+        paste(paste0(" ", names(non_glued_glue_fields)), collapse = "\n"),
+        "\nThese fields will be identical to parent and may result in conflicts",
+        "\nIf this is unintended, make sure parent object uses {glue} notation for these attributes",
+        call. = FALSE
+      )
+    }
   }
-  
-  if(!is.na(parent)) m <- m %>% change_parent(parent)
-  
+
+  if (!is.na(parent)) m <- m %>% change_parent(parent)
+
   m
 }
 #' @export
 child.nm_list <- Vectorize_nm_list(child.nm_generic, SIMPLIFY = FALSE)
 
-increment_run_id <- function(run_id){
-  if(length(run_id) != 1) stop("run_id must be of length 1")
+increment_run_id <- function(run_id) {
+  if (length(run_id) != 1) stop("run_id must be of length 1")
   stop_msg <- paste0("cannot automatically increment ", run_id, ", specify run_id argument explicitly")
-  
+
   # number at end
-  run_id_regex <- "^(\\w*?)([0-9]+)$" 
-  if(!grepl(run_id_regex, run_id)) stop(stop_msg)
-  
+  run_id_regex <- "^(\\w*?)([0-9]+)$"
+  if (!grepl(run_id_regex, run_id)) stop(stop_msg)
+
   prefix_part <- gsub("^(\\w*?)([0-9]+)$", "\\1", run_id)
   numeric_part <- gsub("^(\\w*?)([0-9]+)$", "\\2", run_id)
   numeric_part <- as.numeric(numeric_part)
-  
+
   paste0(prefix_part, numeric_part + 1)
 }
 
 #' Change parent object
 #'
-#' @description 
-#' 
+#' @description
+#'
 #' `r lifecycle::badge("stable")`
 #'
 #' When a `child()` has been created by a modified parent sometimes adoption is
@@ -344,130 +354,141 @@ increment_run_id <- function(run_id){
 #' @seealso [child()]
 #'
 #' @keywords internal
-change_parent <- function(m, mparent, silent = TRUE){
+change_parent <- function(m, mparent, silent = TRUE) {
   UseMethod("change_parent")
 }
 
-change_parent.nm_generic <- function(m, mparent, silent = TRUE){
-  
+change_parent.nm_generic <- function(m, mparent, silent = TRUE) {
   m <- m %>% parent_run_id(run_id(mparent))
   m <- m %>% parent_run_in(run_in(mparent))
   m <- m %>% parent_ctl_name(ctl_name(mparent))
   m <- m %>% parent_results_dir(results_dir(mparent))
-  
-  m[["ctl_orig"]] <- mparent[["ctl_contents"]]  ## reset ctl_orig
-  
+
+  m[["ctl_orig"]] <- mparent[["ctl_contents"]] ## reset ctl_orig
+
   ## check for file conficts
-  if(!is_single_na(m[["ctl_contents"]])){
+  if (!is_single_na(m[["ctl_contents"]])) {
     file_conflicts <- intersect(psn_exported_files(mparent), psn_exported_files(m))
-    if(length(file_conflicts) > 0){
-      if(!silent) warning("new parent file(s) currently in conflict with parent:\n",
-                          paste(paste0(" ",file_conflicts),collapse="\n"),
-                          "\nYou will overwrite parent object outputs if you run now", call. = FALSE)
+    if (length(file_conflicts) > 0) {
+      if (!silent) {
+        warning("new parent file(s) currently in conflict with parent:\n",
+          paste(paste0(" ", file_conflicts), collapse = "\n"),
+          "\nYou will overwrite parent object outputs if you run now",
+          call. = FALSE
+        )
+      }
     }
   }
-  
+
   m
 }
 
 change_parent.nm_list <- Vectorize_nm_list(change_parent.nm_generic, SIMPLIFY = FALSE)
 
 #' Get parent object of nm object
-#' 
-#' @description 
-#' 
+#'
+#' @description
+#'
 #' `r lifecycle::badge("stable")`
-#' 
+#'
 #' Will pull the parent run of an nm object from the run cache.  Run needs to
 #' have been executed for this to work.
-#' 
+#'
 #' @param m An nm object.
 #' @param n Numeric. Generation of parent (default = `1`).
-#'  
+#'
 #' @export
-parent_run <- function(m, n = 1L){
+parent_run <- function(m, n = 1L) {
   UseMethod("parent_run")
 }
 #' @export
-parent_run.nm_generic <- function(m, n = 1L){
-  
-  if(n == 0) return(as_nm_generic(nm(NA)))
-  
-  hack_m <- m %>% 
-    run_id(parent_run_id(m)) %>% 
+parent_run.nm_generic <- function(m, n = 1L) {
+  if (n == 0) {
+    return(as_nm_generic(nm(NA)))
+  }
+
+  hack_m <- m %>%
+    run_id(parent_run_id(m)) %>%
     run_in(parent_run_in(m))
-  
+
   pattern <- hack_m %>%
     unique_run_cache_path() %>%
     basename()
-  pattern <- paste0("^",pattern,"$")
-  
+  pattern <- paste0("^", pattern, "$")
+
   ## sort by most recent
-  
+
   dir_list <- dir(".cache", pattern = pattern, full.names = TRUE)
-  
+
   file_info <- file.info(dir_list)
-  
+
   md5_files <- dir_list[order(file_info$mtime, decreasing = TRUE)]
-  
+
   ## get proposed parent objects and update
-  if(length(md5_files) == 0) return(as_nm_generic(nm(NA)))
-  
+  if (length(md5_files) == 0) {
+    return(as_nm_generic(nm(NA)))
+  }
+
   md5_file <- md5_files[1]
   parent_ob <- readRDS(md5_file)$object
-  
-  if(n > 1) return(parent_run(parent_ob, n = n - 1))
+
+  if (n > 1) {
+    return(parent_run(parent_ob, n = n - 1))
+  }
   parent_ob
-  
 }
 #' @export
 parent_run.nm_list <- Vectorize_nm_list(parent_run.nm_generic, SIMPLIFY = FALSE)
 
 
-glue_text_nm <- function(m, text){
+glue_text_nm <- function(m, text) {
   UseMethod("glue_text_nm")
 }
-glue_text_nm.nm_generic <- function(m, text){
+glue_text_nm.nm_generic <- function(m, text) {
   stringr::str_glue(text, .envir = m, .na = NULL)
 }
 glue_text_nm.nm_list <- Vectorize_nm_list(glue_text_nm.nm_generic, SIMPLIFY = TRUE)
 
-replace_tag <- function(m, field){
+replace_tag <- function(m, field) {
   ## this function is rate limiting - use it as little as possible.
   ## only proceed if "raw" field exists
-  if(!is.na(m$glue_fields[[field]])){
+  if (!is.na(m$glue_fields[[field]])) {
     ## start by resetting to raw
     m[[field]] <- glue_text_nm(m, m$glue_fields[[field]])
-    #m[[field]] <- stringr::str_glue(m$glue_fields[[field]], .envir = m)
+    # m[[field]] <- stringr::str_glue(m$glue_fields[[field]], .envir = m)
     m[[field]] <- as.character(m[[field]])
   }
   m
 }
 
-replace_tags <- function(m, field){
+replace_tags <- function(m, field) {
   ## this function is rate limiting - use it as little as possible.
   ## only proceed if "raw" field exists
   ## this will update all tags
-  if(field %in% names(m$glue_fields)){
+  if (field %in% names(m$glue_fields)) {
     m <- replace_tag(m, field)
   }
   m
 }
 
 
-glue_fields <- function(m){
+glue_fields <- function(m) {
   UseMethod("glue_fields")
 }
 
 glue_fields.nm_generic <- function(m) m$glue_fields
 glue_fields.nm_list <- Vectorize_nm_list(glue_fields.nm_generic, SIMPLIFY = FALSE)
 
-custom_vector_field <- function(m, field, replace){
+custom_vector_field <- function(m, field, replace) {
   UseMethod("custom_vector_field")
 }
-custom_vector_field.nm_generic <- function(m, field, replace){
-  if(missing(replace)){
-    if(length(m[[field]]) > 0) return(m[[field]]) else return(NA_character_)
+custom_vector_field.nm_generic <- function(m, field, replace) {
+  if (missing(replace)) {
+    if (length(m[[field]]) > 0) {
+      return(m[[field]])
+    } else {
+      return(NA_character_)
+    }
   }
   m[[field]] <- replace
   m
@@ -476,66 +497,65 @@ custom_vector_field.nm_list <- Vectorize_nm_list(custom_vector_field.nm_generic,
 
 #' Convert nm objects to a row-wise tibble/data.frame
 #'
-#' @description 
+#' @description
 #'
 #' `r lifecycle::badge("stable")`
 #'
 #' Primarily an internal function. Converts an `nm_list` object to a `tibble`.
 #'
 #' @param m An nm object.
-#' 
+#'
 #' @keywords internal
 #' @export
-nm_row <- function(m){
+nm_row <- function(m) {
   UseMethod("nm_row")
 }
 #' @export
-nm_row.nm_generic <- function(m){
+nm_row.nm_generic <- function(m) {
   m_orig <- m
   m <- as.list(m)
-  eligible_rows <- sapply(m, function(field){
+  eligible_rows <- sapply(m, function(field) {
     length(field) == 1
   })
   d <- dplyr::as_tibble(m[eligible_rows])
   d
 }
 #' @export
-nm_row.nm_list <- function(m){
+nm_row.nm_list <- function(m) {
   d <- lapply(m, nm_row)
   d <- suppressWarnings(dplyr::bind_rows(d))
   d
 }
 
-nm_list2list <- function(m){
+nm_list2list <- function(m) {
   class(m) <- "list"
   m
 }
 
 #' Get all nm_list objects
-#' 
-#' @description 
-#' 
+#'
+#' @description
+#'
 #' `r lifecycle::badge("stable")`
-#' 
+#'
 #' Get all nm objects in an environment.  By default this is the global
 #' workspace.
-#' 
+#'
 #' @param x environment (default = `.GlobalEnv`) to search
 #'   or data.frame with (`nm_list` column) or `nm_list`
-#'   
+#'
 #' @return A single `nm_list` object with all model objects
 #' @export
-nm_list_gather <- function(x = .GlobalEnv){
+nm_list_gather <- function(x = .GlobalEnv) {
   UseMethod("nm_list_gather")
 }
 
 #' @export
-nm_list_gather.default <- function(x = .GlobalEnv){
-  
-  m <- lapply(x, function(object){
-    if(inherits(object, "nm_list")) object else NA
+nm_list_gather.default <- function(x = .GlobalEnv) {
+  m <- lapply(x, function(object) {
+    if (inherits(object, "nm_list")) object else NA
   })
-  
+
   m <- m[!is.na(m)]
   m <- do.call(c, m)
   m

@@ -40,10 +40,9 @@ beginning of your script, in your \code{.Rprofile} or for all users in
 \examples{
 \dontrun{
 
-  # the following two are equivalent
-  nm_tran_command("/opt/NONMEM/nm75/tr/NMTRAN.exe")
-  nm_tran_command("/opt/NONMEM/nm75/tr/NMTRAN.exe < {ctl_name}")
-
+# the following two are equivalent
+nm_tran_command("/opt/NONMEM/nm75/tr/NMTRAN.exe")
+nm_tran_command("/opt/NONMEM/nm75/tr/NMTRAN.exe < {ctl_name}")
 }
 }
 \seealso{

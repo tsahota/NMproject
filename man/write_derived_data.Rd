@@ -45,7 +45,6 @@ d <- read_derived_data("data")
 ## you can use input_data() to load it via the nm object
 
 d <- input_data(m1)
-
 }
 }
 \seealso{

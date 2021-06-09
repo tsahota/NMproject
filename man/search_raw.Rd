@@ -26,15 +26,15 @@ in finding files that you know contain certain text snippets.
 
 \dontrun{
 
-ls_scripts("Scripts") \%>\% search_raw("AUC")  ## finds all scripts containing string "AUC"
+ls_scripts("Scripts") \%>\% search_raw("AUC") ## finds all scripts containing string "AUC"
 
 ## regex match find instances of AUC() function being used
 ls_scripts("Scripts") \%>\% search_raw("AUC\\\\(")
 
 ## bring file(s) into project
-ls_scripts("/path/to/other/analysis/scripts/dir") \%>\% 
-  search_raw("AUC\\\\(") \%>\% import()
-
+ls_scripts("/path/to/other/analysis/scripts/dir") \%>\%
+  search_raw("AUC\\\\(") \%>\%
+  import()
 }
 
 }

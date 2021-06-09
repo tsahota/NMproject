@@ -64,19 +64,24 @@ made is that if inputs have not changed since the last decision was made. }
 \dontrun{
 
 ## a decision based on summary statistics
-decision(inputs = summary_wide(c(m1, m2, m2WT)),
-         outcome = "m1 is better") # next line must be end of chunk
+decision(
+  inputs = summary_wide(c(m1, m2, m2WT)),
+  outcome = "m1 is better"
+) # next line must be end of chunk
 
 ## a decision based also on goodness of fit plots
-decision(inputs = summary_wide(c(m1, m2, m2WT)),
-         file_inputs = c("Results/basic_gof.m1.nb.html",
-                         "Results/basic_gof.m2.nb.html"),
-         outcome = "m1 is better") # next line must be end of chunk
+decision(
+  inputs = summary_wide(c(m1, m2, m2WT)),
+  file_inputs = c(
+    "Results/basic_gof.m1.nb.html",
+    "Results/basic_gof.m2.nb.html"
+  ),
+  outcome = "m1 is better"
+) # next line must be end of chunk
 
 ## a decision based on an automatic TRUE/FALSE criteria
 ## here we're ensuring m1 has the lowest AIC
 decision(auto = (AIC(m1) == min(AIC(m1, m2, m3))))
-
 }
 
 }

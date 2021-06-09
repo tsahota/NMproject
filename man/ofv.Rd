@@ -18,6 +18,5 @@ Extracts OFV from .ext file.
 \dontrun{
 
 ofv(m1)
-
 }
 }

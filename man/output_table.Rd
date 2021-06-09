@@ -38,23 +38,23 @@ columns including text columns used for \code{ggplot} facetting will be present.
 
 \dontrun{
 
-## exploratory data plot 
+## exploratory data plot
 read_derived_data("DerivedData/data.csv") \%>\%
-  ggplot(aes(x=TIME, y=DV)) + theme_bw() +
+  ggplot(aes(x = TIME, y = DV)) +
+  theme_bw() +
   geom_point() +
   geom_line(aes(group = ID)) +
   facet_wrap(~STUDYTXT)
-  
+
 m1 \%>\%
   output_table_first() \%>\%
-  ggplot(aes(x=TIME, y=DV)) + theme_bw() +
+  ggplot(aes(x = TIME, y = DV)) +
+  theme_bw() +
   geom_point() +
   geom_line(aes(group = ID)) +
   facet_wrap(~STUDYTXT) +
-## additional layer for overlaying IPRED curves
+  ## additional layer for overlaying IPRED curves
   geom_line(aes(y = IPRED, group = ID))
-  
-
 }
 
 }

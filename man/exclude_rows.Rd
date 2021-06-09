@@ -34,8 +34,10 @@ descriptions for more details.
 \examples{
 \dontrun{
 ## use with dplyr
-dexcl <- d \%>\% filter(ID == 23, TIME > 18, TIME < 24) \%>\% select(ID, TIME, DV, EXCL)
-dexcl  ## view rows to be excluded
+dexcl <- d \%>\%
+  filter(ID == 23, TIME > 18, TIME < 24) \%>\%
+  select(ID, TIME, DV, EXCL)
+dexcl ## view rows to be excluded
 d <- d \%>\% exclude_rows(dexcl)
 }
 }

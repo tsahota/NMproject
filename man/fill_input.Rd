@@ -27,17 +27,15 @@ See examples for how to use \code{drop} and \code{rename} arguments to control h
 \examples{
 \dontrun{
 
- m1 <- m1 \%>\% fill_input() 
- m1 \%>\% dollar("INPUT") ## view $INPUT
+m1 <- m1 \%>\% fill_input()
+m1 \%>\% dollar("INPUT") ## view $INPUT
 
- ## following will will drop the "RATE" column
- m1 <- m1 \%>\% fill_input(drop = "RATE")
- m1 \%>\% dollar("INPUT")
+## following will will drop the "RATE" column
+m1 <- m1 \%>\% fill_input(drop = "RATE")
+m1 \%>\% dollar("INPUT")
 
- ## following will rename "DATE" to be "DAT0"
- m1 <- m1 \%>\% fill_input(rename = c("DAT0" = "DATE"))
- m1 \%>\% dollar("INPUT") ## view $INPUT
-
-
+## following will rename "DATE" to be "DAT0"
+m1 <- m1 \%>\% fill_input(rename = c("DAT0" = "DATE"))
+m1 \%>\% dollar("INPUT") ## view $INPUT
 }
 }

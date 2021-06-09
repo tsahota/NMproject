@@ -33,7 +33,6 @@ tol(m1) ## display current TOL value
 
 ## set tol to 12
 m1 <- m1 \%>\% tol(12)
-
 }
 }
 \seealso{

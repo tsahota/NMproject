@@ -32,13 +32,13 @@ These functions are useful to obtain and modify initial values of \verb{$THETA},
 m1 <- new_nm(run_id = "m1",
              based_on = "staging/Models/ADVAN2.mod",
              data_path = "DerivedData/data.csv") \%>\%
-      fill_input() \%>\%
-      init_theta(init = c(-2, 0.5, 1)) \%>\%
-      init_sigma(init = c(0.1, 0.1)) \%>\%
-      run_nm()
-      
-init_theta(m1)  ## display current $THETA in tibble-form
-init_omega(m1)  ## display current $OMEGA in tibble-form
+  fill_input() \%>\%
+  init_theta(init = c(-2, 0.5, 1)) \%>\%
+  init_sigma(init = c(0.1, 0.1)) \%>\%
+  run_nm()
+
+init_theta(m1) ## display current $THETA in tibble-form
+init_omega(m1) ## display current $OMEGA in tibble-form
 
 
 ## here we supply a named vector in a different order
@@ -49,18 +49,17 @@ m1 \%>\% dollar("THETA")
 m1 <- m1 \%>\% init_theta(init = c(KA = -2, V = 1),
                         FIX = c(KA = TRUE))
 m1 \%>\% dollar("THETA")
-  
+
 ## perturb all parameters by ~10\%
 m1 <- m1 \%>\% init_theta(init = rnorm(length(init), mean = init, sd = 0.1))
 
 ## perturb only log transformed parameters by ~10\%
 m1 <- m1 \%>\% init_theta(
-    init = ifelse(
+  init = ifelse(
     trans \%in\% "LOG",
     rnorm(length(init), mean = init, sd = 0.1),
     init
   )
 )
-
 }
 }

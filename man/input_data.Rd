@@ -31,7 +31,6 @@ d <- input_data(m1)
 
 ## only non-ignored rows
 d_nonignore <- input_data(m1, filter = TRUE)
-
 }
 
 }

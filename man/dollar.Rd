@@ -27,17 +27,18 @@ place of manual edits
 \examples{
 \dontrun{
 
-m1 \%>\% dollar("PK")  ## displays existing $PK
+m1 \%>\% dollar("PK") ## displays existing $PK
 
-m1 <- m1 \%>\% dollar("DES",
-"
+m1 <- m1 \%>\% dollar(
+  "DES",
+  "
 DADT(1) = -K*A(1)
-")
+"
+)
 
 ## This will rewrite an existing $DES
 ## if control file doesn't already have a $DES
 ## use insert_dollar() instead
-
 }
 
 }

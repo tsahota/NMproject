@@ -27,7 +27,6 @@ Will block R console until an expression evaluates to be \code{TRUE}.
 
 wait_finish(m1)
 wait_for(is_finished(m1))
-
 }
 
 }

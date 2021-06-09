@@ -24,10 +24,9 @@ scripting.
 \examples{
 \dontrun{
 
-shiny_nm()        ## use all objects in global workspace
-shiny_nm(m1)      ## only m1
-shiny_nm(d$m)     ## only d$m
-shiny_nm(d)       ## all nm_lists in d (data.frame/list/environment)
-
+shiny_nm() ## use all objects in global workspace
+shiny_nm(m1) ## only m1
+shiny_nm(d$m) ## only d$m
+shiny_nm(d) ## all nm_lists in d (data.frame/list/environment)
 }
 }

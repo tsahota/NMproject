@@ -35,16 +35,15 @@ covariate_scenarios <- bind_rows(
   tibble(cov = "HEALTHGP", value = c(0, 1)),
   tibble(cov = "HEPATIC", value = unique(dcov$HEPATIC[dcov$HEPATIC > -99])),
   tibble(cov = "BWTIMP", value = c(50, 80, 120)),
-  tibble(cov = "ECOG", value = c(0,1,2,3)),
+  tibble(cov = "ECOG", value = c(0, 1, 2, 3)),
   tibble(cov = "BEGFRIMP", value = quantile(dcov$BEGFR[dcov$BEGFR > -99])),
-  tibble(cov = "RACE", value = c(1,2),text=c("white","black")),
-  tibble(cov = "PPI", value = c(0,1)),
-  tibble(cov = "H2RA", value = c(0,1))
+  tibble(cov = "RACE", value = c(1, 2), text = c("white", "black")),
+  tibble(cov = "PPI", value = c(0, 1)),
+  tibble(cov = "H2RA", value = c(0, 1))
 )
 
 dplot <- cov_forest_data(m1, covariate_scenarios = covariate_scenarios)
 cov_forest_plot(dplot)
-
 }
 
 }

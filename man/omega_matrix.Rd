@@ -22,9 +22,10 @@ packages such as \code{mrgsolve}.
 ## matrix of initial estimates
 m1 \%>\% omega_matrix()
 
-## matrix of final estimates  
-m1 \%>\% update_parameters() \%>\% omega_matrix()
-
+## matrix of final estimates
+m1 \%>\%
+  update_parameters() \%>\%
+  omega_matrix()
 }
 
 }

@@ -31,7 +31,6 @@ m1 <- m1 \%>\%
 m2 <- m1 \%>\% child("m2") ## inherits same command as above
 
 sge_parallel_execute ## view the character to see how psn interfaces with SGE
-
 }
 }
 \seealso{

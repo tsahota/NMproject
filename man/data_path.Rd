@@ -26,10 +26,10 @@ Requires ctl_contents to already be specified.
 
 m1 <- new_nm(run_id = "m1",
              based_on = "staging/Models/ADVAN2.mod",
-             data_path = "DerivedData/data.csv") \%>\%
-      
-data_path(m1)  ## display data name
+             data_path = "DerivedData/data.csv") 
 
+data_path(m1) ## display data name
+  
 }
 
 }

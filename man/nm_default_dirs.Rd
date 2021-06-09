@@ -24,10 +24,12 @@ their directory structure
 \dontrun{
 
 nm_default_dirs()
-nm_default_dirs(list(models = "Models", 
-                     scripts = "Scripts",
-                     results = "Results",
-                     "SourceData",
-                     "Data"))
+nm_default_dirs(list(
+  models = "Models",
+  scripts = "Scripts",
+  results = "Results",
+  "SourceData",
+  "Data"
+))
 }
 }

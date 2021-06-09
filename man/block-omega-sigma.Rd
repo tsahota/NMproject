@@ -27,7 +27,7 @@ Manipulate $OMEGA (and $SIGMA) BLOCKs to introduce or remove correlations.
 
 \dontrun{
 io <- m1 \%>\% init_omega()
-io <- io \%>\% block(c(2,3))
+io <- io \%>\% block(c(2, 3))
 m1 <- m1 \%>\% init_omega(io)
 m1 \%>\% dollar("OMEGA") ## to display $OMEGA
 }
@@ -35,7 +35,7 @@ m1 \%>\% dollar("OMEGA") ## to display $OMEGA
 
 \dontrun{
 io <- m1 \%>\% init_omega()
-io <- io \%>\% unblock(c(2,3))
+io <- io \%>\% unblock(c(2, 3))
 m1 <- m1 \%>\% init_omega(io)
 m1 \%>\% dollar("OMEGA") ## to display $OMEGA
 }

@@ -29,7 +29,6 @@ m <- m \%>\% insert_dollar("MODEL", "
 $MODEL
 COMP = (CENTRAL)
 ", after_dollar = "SUB")
-                                 
 }
 
 }

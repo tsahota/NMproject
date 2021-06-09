@@ -79,16 +79,15 @@ PARCOV= ( 1 + THETA(1)*(LOG(COV) - log(median)))
 \examples{
 
 dtest <- test_relations(param = c("KA", "K", "V"),
-                        cov = c("LIN1", "LIN2", "LIN3", "RND1", "RND2", "RND3"), 
-                        state = c("linear", "power"), 
-                        continuous = TRUE) \%>\% 
+                        cov = c("LIN1", "LIN2", "LIN3", "RND1", "RND2", "RND3"),
+                        state = c("linear", "power"),
+                        continuous = TRUE) \%>\%
          test_relations(param = c("KA", "K", "V"),
                         cov = "BN1",
                         state = "linear",
                         continuous = FALSE)
 
 dtest
-
 }
 \seealso{
 \code{\link[=add_cov]{add_cov()}}, \code{\link[=covariate_step_tibble]{covariate_step_tibble()}}, \code{\link[=bind_covariate_results]{bind_covariate_results()}}

@@ -30,7 +30,6 @@ replace proceeded as intended.
 \dontrun{
 
 m1 \%>\% gsub_ctl("ISAMPLE=300", "ISAMPLE=600")
-
 }
 
 }

@@ -36,11 +36,13 @@ the necessary \code{rsample} splitting objects to be present. See examples.
 
 \dontrun{
 
-## in your dataset production script 
+## in your dataset production script
 
 d <- d \%>\%
-mutate(WT_C = cut(WT, breaks = 2, labels = FALSE),
-       STRATA = paste(SEX, WT_C, sep = "_"))
+  mutate(
+    WT_C = cut(WT, breaks = 2, labels = FALSE),
+    STRATA = paste(SEX, WT_C, sep = "_")
+  )
 
 d_id <- d \%>\% distinct(ID, STRATA)
 
@@ -53,7 +55,7 @@ bootsplits <- rsample::bootstraps(d_id, 100, strata = "STRATA")
 dir.create("DerivedData", showWarnings = FALSE)
 bootsplits \%>\% saveRDS("DerivedData/bootsplit_data.csv.RData")
 
-## In a model development script, the following, performs a 
+## In a model development script, the following, performs a
 ## 100 sample bootstrap of model m1
 
 m1_boot <- m1 \%>\% make_boot_datasets(samples = 100, overwrite = TRUE)
@@ -62,7 +64,6 @@ m1_boot$m \%>\% run_nm()
 
 ## the following bootstrap template will wait for results to complete
 m1_boot$m \%>\% nm_list_render("Scripts/basic_boot.Rmd")
-
 }
 
 }

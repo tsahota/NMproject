@@ -56,7 +56,9 @@ capability as these software use exported files.
 
 ls_tempfiles(m1) ## display all temp files associated with m1
 
-m1 \%>\% ls_tempfiles() \%>\% unlink()  ## delete all m1 temp files
+m1 \%>\%
+  ls_tempfiles() \%>\%
+  unlink() ## delete all m1 temp files
 
 ## above line is equivalent to:
 clean_run(m1)
@@ -64,7 +66,6 @@ clean_run(m1)
 ls_tempfiles() ## display all temp files in analysis project
 
 ls_tempfiles() \%>\% unlink() ## remove all temp files in analysis project
-
 }
 
 }

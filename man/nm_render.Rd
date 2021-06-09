@@ -73,11 +73,11 @@ parent run spawns multiple children in the form of an nm_list
 }
 \examples{
 \dontrun{
-  m1 \%>\% nm_render("Scripts/basic_gof.Rmd")
+m1 \%>\% nm_render("Scripts/basic_gof.Rmd")
 
-  ## to run "Scripts/basic_gof.Rmd" as an R Notebook
-  ## first define .m
+## to run "Scripts/basic_gof.Rmd" as an R Notebook
+## first define .m
 
-  .m <- m1 ## Now you can run "Scripts/basic_gof.Rmd" as a Notebook
+.m <- m1 ## Now you can run "Scripts/basic_gof.Rmd" as a Notebook
 }
 }

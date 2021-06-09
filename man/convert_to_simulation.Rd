@@ -27,14 +27,14 @@ need to perform a \verb{manual edit} for categorical data simulation.
 
 \dontrun{
 
-m2s <- m2 \%>\% child(run_id = "m2s") \%>\%
-         update_parameters(m2) \%>\%
-         convert_to_simulation(subpr = 50) \%>\%
-         run_nm()
+m2s <- m2 \%>\%
+  child(run_id = "m2s") \%>\%
+  update_parameters(m2) \%>\%
+  convert_to_simulation(subpr = 50) \%>\%
+  run_nm()
 
 m2s \%>\% nm_render("Scripts/basic_vpc.Rmd")
 m2s \%>\% nm_render("Scripts/basic_ppc.Rmd")
-
 }
 
 }

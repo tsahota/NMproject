@@ -18,9 +18,8 @@ Extracts condition number from .ext file.
 
 \dontrun{
 
-is_finished(m1)  ## should be TRUE
+is_finished(m1) ## should be TRUE
 cond_num(m1) ## displays condition number
-
 }
 
 }

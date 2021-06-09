@@ -26,12 +26,11 @@ To be used in a \code{dplyr::mutate()} statement \code{dplyr::group_by()}'d by "
 d <- input_data(m1)
 
 ## OCC increments on every dosing interval with more than 4 samples
-d \%>\% group_by(ID) \%>\%
+d \%>\%
+  group_by(ID) \%>\%
   mutate(OCC = make_OCC_every_dose(
-    EVID \%in\% 1, 
+    EVID \%in\% 1,
     length(which(EVID \%in\% 0)) > 4
-   )
-  )
-
+  ))
 }
 }

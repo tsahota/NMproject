@@ -94,17 +94,16 @@ Normally does not require setting.  Path to the expected .lst file.
 \dontrun{
 
 m1 <- new_nm(run_id = "m1",
-            based_on = "staging/Models/run1.mod",
-            data_path = "DerivedData/data.csv",
-            cmd = "execute -run_on_sge -sge_prepend_flags='-V' {ctl_name} -dir={run_dir}") \%>\%
-     fill_input() \%>\%
-     run_nm()
+             based_on = "staging/Models/run1.mod",
+             data_path = "DerivedData/data.csv",
+             cmd = "execute -run_on_sge -sge_prepend_flags='-V' {ctl_name} -dir={run_dir}") \%>\%
+  fill_input() \%>\%
+  run_nm()
 
 m1 ## display object fields
 cmd(m1)
 ctl_name(m1)
 run_dir(m1)
-
 }
 }
 \seealso{

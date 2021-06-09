@@ -19,6 +19,5 @@ rename_parameter(m, ...)
 
 m1 \%>\% rename_parameter(CL = "KE")
 ## renames KE to CL
-
 }
 }

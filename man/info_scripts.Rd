@@ -34,9 +34,9 @@ List information about scripts
 }
 \examples{
 \dontrun{
-ls_scripts('~/path/to/directory/') \%>\%
-  info_scripts('Description') \%>\%
-  filter(grepl('mod',DESCRIPTION))
+ls_scripts("~/path/to/directory/") \%>\%
+  info_scripts("Description") \%>\%
+  filter(grepl("mod", DESCRIPTION))
 }
 }
 \keyword{internal}

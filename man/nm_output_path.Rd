@@ -21,6 +21,6 @@ associated with nm objects.
 }
 \examples{
 \dontrun{
-m \%>\% nm_output_path("ext")  ## path to ext file
+m \%>\% nm_output_path("ext") ## path to ext file
 }
 }

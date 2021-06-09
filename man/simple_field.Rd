@@ -20,6 +20,5 @@ simple_field(m, ...)
 mc <- mc \%>\% simple_field(stars = 3)
 mc \%>\% simple_field(stars)
 mc ## see that stars is a field of the nm object.
-
 }
 }

@@ -21,7 +21,6 @@ cases to use the shiny "code library" RStudio 'Addin'.
 
 ls_code_library("Models/ADVAN2.mod") \%>\%
   stage()
-  
 }
 
 }

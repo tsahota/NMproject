@@ -123,21 +123,18 @@ m1WT <- m1 \%>\% child("m1WT") \%>\%
 
 rr(c(m1, m1WT))
 summary_wide(c(m1, m1WT))
-
 }
-
 
 \dontrun{
 
 m1noWT <- m1 \%>\% child("m1noWT") \%>\%
-  remove_cov(param = "CL", cov = "WT") \%>\% 
+  remove_cov(param = "CL", cov = "WT") \%>\%
   run_nm()
-  
+
 ## compare results
 
 rr(c(m1, m1noWT))
 summary_wide(c(m1, m1noWT))
-  
 }
 
 }

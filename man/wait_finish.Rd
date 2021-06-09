@@ -23,11 +23,12 @@ ensure they wait for runs to complete before executing.
 
 \dontrun{
 
-m1 \%>\% run_nm() \%>\% wait_finish()
+m1 \%>\%
+  run_nm() \%>\%
+  wait_finish()
 
 ## following requires run to be completed.
 covariance_plot(m1)
-
 }
 
 }

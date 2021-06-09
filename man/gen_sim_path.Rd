@@ -22,7 +22,6 @@ Internal function to create nested directory structure paths.
 \dontrun{
 
 dsc$location <- gen_sim_path(dsc, ...)
-
 }
 }
 \keyword{internal}

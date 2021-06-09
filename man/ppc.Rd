@@ -48,10 +48,12 @@ returned by FUN.}
 \examples{
 \dontrun{
 
-idEXPstat <- function(d, ...){ ## example individual statistic function
- ## arg = nonmem dataset data.frame
- ## return data.frame with statistic column
-  d \%>\% group_by(ID, ...) \%>\% filter(is.na(AMT)) \%>\%
+idEXPstat <- function(d, ...) { ## example individual statistic function
+  ## arg = nonmem dataset data.frame
+  ## return data.frame with statistic column
+  d \%>\%
+    group_by(ID, ...) \%>\%
+    filter(is.na(AMT)) \%>\%
     summarise(
       AUC = AUC(time = TIME, conc = DV),
       CMAX = max(DV, na.rm = TRUE),
@@ -61,24 +63,24 @@ idEXPstat <- function(d, ...){ ## example individual statistic function
     ungroup()
 }
 
-EXPstat <- function(d, ...){ ## example summary statistic function
- ## arg = nonmem dataset data.frame
- ## return data.frame with statistic column
- d \%>\% idEXPstat(...) \%>\%  ## reuse idEXPstat for individual stats
-   ## summarise over study and any other variables (...)
-   group_by(exposure, ...) \%>\%
-   summarise(
-     median = median(statistic, na.rm = TRUE),
-     cv = 100*sd(statistic, na.rm = TRUE)/mean(statistic, na.rm = TRUE)
-   ) \%>\%
-   tidyr::gather(key = "type", value = "statistic", median:cv)
+EXPstat <- function(d, ...) { ## example summary statistic function
+  ## arg = nonmem dataset data.frame
+  ## return data.frame with statistic column
+  d \%>\%
+    idEXPstat(...) \%>\% ## reuse idEXPstat for individual stats
+    ## summarise over study and any other variables (...)
+    group_by(exposure, ...) \%>\%
+    summarise(
+      median = median(statistic, na.rm = TRUE),
+      cv = 100 * sd(statistic, na.rm = TRUE) / mean(statistic, na.rm = TRUE)
+    ) \%>\%
+    tidyr::gather(key = "type", value = "statistic", median:cv)
 }
 
 dppc <- m1s \%>\% ppc_data(EXPstat)
 
 dppc \%>\% ppc_whisker_plot()
 dppc \%>\% ppc_forest_plot()
-
 }
 }
 \seealso{

@@ -24,12 +24,10 @@ Not intended to be used directly in most cases.  This is the function used by
 \examples{
 
 system_nm("hostname")
-
 \dontrun{
 
 system_nm("psn --versions")
 system_nm("sumo run1.mod")
-
 }
 
 }

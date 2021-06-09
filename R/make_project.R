@@ -1,11 +1,11 @@
 #' Create analysis project
 #'
-#' @description 
-#' 
+#' @description
+#'
 #' `r lifecycle::badge("stable")`
 #'
-#' This is the underlying function used by: `File` -> `New Project` -> 
-#' `New Directory` -> `New NMproject`.  It creates a new analysis working 
+#' This is the underlying function used by: `File` -> `New Project` ->
+#' `New Directory` -> `New NMproject`.  It creates a new analysis working
 #' directory with a directory structure similar to an R package.
 #'
 #' @param path Character path (relative or absolute) to project.  If just
@@ -29,10 +29,10 @@
 #'   letter and not end in a dot.  See [Description file
 #'   requirements](https://cran.r-project.org/doc/manuals/r-release/R-exts.html#The-DESCRIPTION-file)
 #'   for more information.
-#'   
+#'
 #'   This is to cater to users who like underscores and aren't interested in
 #'   creating a package.
-#'   
+#'
 #' @section Default modelling directories:
 #'
 #' Default modelling directories can be modified with `nm_default_dirs` option
@@ -42,7 +42,7 @@
 #' `"Models"`, `"Scripts"` and `"Results"`, respectively. Additional nameless
 #' characters (e.g. `"SourceData"`) correspond to additional modelling
 #' directories.
-#' 
+#'
 #' \describe{
 #'   \item{"SourceData":}{
 #'   intended for unmodified source datasets entering the analysis project.
@@ -60,92 +60,108 @@
 #'   intended as default location for run diagnostics, plots and tables
 #'   }
 #' }
-#' 
+#'
 #' @export
 
-nm_create_analysis_project <- function(path, dirs = nm_default_dirs(), 
-                                       style = c("analysis", "analysis-package"), 
-                                       use_renv = FALSE, ...){
-  
+nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
+                                       style = c("analysis", "analysis-package"),
+                                       use_renv = FALSE, ...) {
+
   ## need to normalize path because usethis has different
   ## home directory, so use use R normalizePath to remove abiguity
   path <- normalizePath(path, mustWork = FALSE)
-  
+
   validate_dir_list(dirs)
-  
+
   style <- match.arg(style)
   name <- basename(path)
   folder <- dirname(path)
-  
-  if(grepl("package", style) & !valid_package_name(name)) 
+
+  if (grepl("package", style) & !valid_package_name(name)) {
     stop("directory name is compliant for style = \"analysis-package\" see ?validate_dir_list")
-  
+  }
+
   usethis::create_project(path = path, rstudio = TRUE, open = FALSE)
-  
+
   current_proj <- try(usethis::proj_get(), silent = TRUE)
   if (inherits(current_proj, "try-error")) {
     current_proj <- NULL
   }
   usethis::proj_set(path)
   on.exit(usethis::proj_set(current_proj))
-  
-  
-  usethis::use_template("README.Rmd", data = list(Package = name),
-                        package = "NMproject")
-  
+
+
+  usethis::use_template("README.Rmd",
+    data = list(Package = name),
+    package = "NMproject"
+  )
+
   usethis::use_build_ignore("README.Rmd")
-  
+
   ## no badges - skip this part of starters for now
   repo <- git2r::init(usethis::proj_get())
   git2r::add(repo, path = "README.Rmd")
-  
-  tryCatch({
-    git2r::commit(repo, message = "added README.Rmd", all = TRUE)
-  }, error = function(e){
-    usethis::ui_oops("cannot commit {usethis::ui_path('README.Rmd')}. Aborting...")
-  })
-  
-  if(use_renv) {
-    if(!requireNamespace("renv", quietly = TRUE))
+
+  tryCatch(
+    {
+      git2r::commit(repo, message = "added README.Rmd", all = TRUE)
+    },
+    error = function(e) {
+      usethis::ui_oops("cannot commit {usethis::ui_path('README.Rmd')}. Aborting...")
+    }
+  )
+
+  if (use_renv) {
+    if (!requireNamespace("renv", quietly = TRUE)) {
       stop("install renv", call. = FALSE)
-    if(!requireNamespace("desc", quietly = TRUE))
+    }
+    if (!requireNamespace("desc", quietly = TRUE)) {
       stop("install desc", call. = FALSE)
+    }
   }
-  
-  if(use_renv) renv::scaffold(project = usethis::proj_get())
-  
-  for(dir_name in dirs) usethis::use_directory(dir_name, ignore = TRUE)
-  
-  tryCatch({
-    if(style %in% "analysis"){
-      usethis::use_description(fields = list(Package = "localanalysis"), check_name = FALSE)
+
+  if (use_renv) renv::scaffold(project = usethis::proj_get())
+
+  for (dir_name in dirs) usethis::use_directory(dir_name, ignore = TRUE)
+
+  tryCatch(
+    {
+      if (style %in% "analysis") {
+        usethis::use_description(fields = list(Package = "localanalysis"), check_name = FALSE)
+      }
+      if (style %in% "analysis-package") {
+        usethis::use_description()
+      }
+
+      if (use_renv) {
+        desc::desc_set_dep(
+          package = "renv", type = "Imports",
+          file = usethis::proj_get()
+        )
+      }
+    },
+    error = function(e) {
+      usethis::ui_info("skipping creation of {usethis::ui_path('DESCRIPTION')}")
     }
-    if(style %in% "analysis-package"){
-      usethis::use_description() 
+  )
+
+  tryCatch(
+    {
+      usethis::use_namespace()
+    },
+    error = function(e) {
+      usethis::ui_info("skipping creation of {usethis::ui_path('NAMESPACE')}")
     }
-    
-    if(use_renv) desc::desc_set_dep(package = "renv", type = "Imports", 
-                                    file = usethis::proj_get())
-  }, error = function(e){
-    usethis::ui_info("skipping creation of {usethis::ui_path('DESCRIPTION')}")
-  })
-  
-  tryCatch({
-    usethis::use_namespace()
-  }, error = function(e){
-    usethis::ui_info("skipping creation of {usethis::ui_path('NAMESPACE')}")
-  })
-  
+  )
+
   set_default_dirs_in_rprofile(file.path(folder, name, ".Rprofile"), dirs)
   return(invisible(path))
 }
 
 #' Package name validator from `usethis`
-#' 
+#'
 #' @param x Name of package.
 #' @keywords internal
 valid_package_name <- function(x) {
   grepl("^[a-zA-Z][a-zA-Z0-9.]+$", x) && !grepl("\\.$", x)
 }
-
-

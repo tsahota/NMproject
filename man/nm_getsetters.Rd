@@ -86,6 +86,5 @@ m1 \%>\% cmd()
 
 ## can also view field when viewing object
 m1
-
 }
 }

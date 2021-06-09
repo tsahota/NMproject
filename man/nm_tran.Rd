@@ -30,12 +30,11 @@ are performed. Stops before running NONMEM.
 m1 <- new_nm(run_id = "m1",
              based_on = "staging/Models/ADVAN2.mod",
              data_path = "DerivedData/data.csv") \%>\%
-      cmd("execute {ctl_name} -dir={run_dir}") \%>\%
-      fill_input() \%>\%
-      init_theta(init = c(-2, 0.5, 1)) \%>\%
-      init_sigma(init = c(0.1, 0.1)) \%>\%
-      run_nm()
-      
+  cmd("execute {ctl_name} -dir={run_dir}") \%>\%
+  fill_input() \%>\%
+  init_theta(init = c(-2, 0.5, 1)) \%>\%
+  init_sigma(init = c(0.1, 0.1)) \%>\%
+  run_nm()
 }
 }
 \seealso{

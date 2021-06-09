@@ -28,15 +28,14 @@ code into your project.
 
 \dontrun{
 
-## both of these following operations are easier in the shiny code library 
+## both of these following operations are easier in the shiny code library
 ## RStudio 'Addin'.
 
 ls_code_library("Models/ADVAN2.mod") \%>\%
   import() ## ends up in "staging/Models"
-  
+
 ls_code_library("Scripts/AUC.R") \%>\%
-  import()  ## ends up "scripts" directory
-  
+  import() ## ends up "scripts" directory
 }
 
 }
