@@ -2,7 +2,7 @@
 % Please edit documentation in R/nm_object.R
 \name{nm_row}
 \alias{nm_row}
-\title{Convert nm objects to a rowwise tibble/data.frame}
+\title{Convert nm objects to a row-wise tibble/data.frame}
 \usage{
 nm_row(m)
 }

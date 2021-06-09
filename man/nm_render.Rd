@@ -48,7 +48,7 @@ A wrapper around \code{rmarkdown::render} for nm objects.  Use markdown template
 to create a customised set of diagnostics to reuse on multiple models. In the
 demo an example is shown in \code{Scripts/basic_gof.Rmd}, but ideally you'll
 create your own customised version with everything you need to evaluate your
-model. To create a rmarkdown diagnostic template go to \code{FILE} -> \verb{New File}
+model. To create an R markdown diagnostic template go to \code{FILE} -> \verb{New File}
 -> \verb{R markdown} -> \verb{From Template} the select from one of the following:
 
 \itemize{ \item model diagnostic \item VPC diagnostic
@@ -73,11 +73,11 @@ parent run spawns multiple children in the form of an nm_list
 }
 \examples{
 \dontrun{
-  m1 \%>\% nm_render("Scripts/basic_gof.Rmd")
+m1 \%>\% nm_render("Scripts/basic_gof.Rmd")
 
-  ## to run "Scripts/basic_gof.Rmd" as an R Notebook
-  ## first define .m
+## to run "Scripts/basic_gof.Rmd" as an R Notebook
+## first define .m
 
-  .m <- m1 ## Now you can run "Scripts/basic_gof.Rmd" as a Notebook
+.m <- m1 ## Now you can run "Scripts/basic_gof.Rmd" as a Notebook
 }
 }

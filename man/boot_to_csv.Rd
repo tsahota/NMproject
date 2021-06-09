@@ -17,15 +17,15 @@ boot_to_csv(
 \arguments{
 \item{d}{Dataset to merge.}
 
-\item{rsplit}{Splits object from rsample.}
+\item{rsplit}{An object from \code{rsample::bootstraps()}.}
 
 \item{data_name}{Name of dataset.}
 
 \item{data_folder}{Path to bootstrap datasets.}
 
-\item{id_var}{Character (default = "ID"). Name of ID column.}
+\item{id_var}{Character (default = \code{"ID"}). Name of ID column.}
 
-\item{oob}{Logical.  Should out of bag dataset be written (default = FALSE).}
+\item{oob}{Logical.  Should out of bag dataset be written (default = \code{FALSE}).}
 
 \item{overwrite}{Should datasets be overwritten.}
 }

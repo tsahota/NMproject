@@ -7,13 +7,15 @@
 change_parent(m, mparent, silent = TRUE)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{mparent}{new parent object to child}
+\item{mparent}{New parent object to child.}
 
-\item{silent}{logical (default = TRUE). Should warn if conflicts detected}
+\item{silent}{Logical (default = \code{TRUE}). Should warn if conflicts detected.}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 When a \code{child()} has been created by a modified parent sometimes adoption is
 the answer.  This will force parenthood to the specified object.
 }

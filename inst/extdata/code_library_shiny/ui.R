@@ -19,11 +19,6 @@ fluidPage(
                               fluidRow(
                                 "R command: ",tags$code("code_library(viewer = FALSE, return_info = TRUE)"),
                                        p(em("Click rows to select run(s)"))
-                                # column(9,"R command: ",tags$code("code_library(viewer = FALSE, return_info = TRUE)"),
-                                #        p(em("Click rows to select run(s)"))),
-                                # column(3,
-                                #        actionButton("preview","preview file"),
-                                #        actionButton("import","import file"))
                               ),
                               fluidRow(
                                 actionButton("preview","preview file"),

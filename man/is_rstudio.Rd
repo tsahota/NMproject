@@ -2,11 +2,11 @@
 % Please edit documentation in R/utils.R
 \name{is_rstudio}
 \alias{is_rstudio}
-\title{Logical flag for detecting if R session is on rstudio not}
+\title{Logical flag for detecting if R session is on RStudio}
 \usage{
 is_rstudio()
 }
 \description{
-Logical flag for detecting if R session is on rstudio not
+Logical flag for detecting if R session is on RStudio
 }
 \keyword{internal}

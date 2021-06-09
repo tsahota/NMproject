@@ -12,7 +12,7 @@ untarget(m, dollar)
 \arguments{
 \item{m}{An nm object.}
 
-\item{dollar}{Sharacter. Name of subroutine to target.}
+\item{dollar}{Character. Name of subroutine to target.}
 
 \item{lines}{Optional character.  Assignment of lines.}
 }

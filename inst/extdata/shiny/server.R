@@ -65,11 +65,9 @@ function(input, output, session) {
   )
   
   objects <- eventReactive(input$run_table_rows_selected,{
-    #row <- input$run_table_rows_selected
     .m[input$run_table_rows_selected]
-    #lapply(new_table()$entry[row],function(...)extract_nm(...,.db_name))
   })
-  # 
+  
   output$runs_selected_info <- renderTable({
     if(length(input$run_table_rows_selected)==0) return(data.frame())
     new_table()[input$run_table_rows_selected,c("run_id","type","ctl_name")]

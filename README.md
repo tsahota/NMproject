@@ -93,7 +93,7 @@ m2WT <- m2 %>% child() %>%
   run_nm()
 ```
 
-Graphical RStudio “addins” exist for reviewing the changes that
+Graphical RStudio ‘Addins’ exist for reviewing the changes that
 functions like `add_cov()` make before execution and performing
 `nm_tran()` checks.
 

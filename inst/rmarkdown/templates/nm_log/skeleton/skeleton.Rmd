@@ -14,7 +14,7 @@ output:
 <!--  2. make sure you already have data in DerivedData directory -->
 <!--  3. Use the code_library() to import code -->
 <!--  4. Adapt code below to create a control file suitable for your problem -->
-<!--  5. Use the addins to help you -->
+<!--  5. Use the RStudio 'Addins' to help you -->
 <!--  6. There are R markdown templates to help you get started with diagnostics -->
 <!--  7. Write your thoughts and decision making in the document as you go -->
 <!--  8. Keep the script self contained - any R objects your need in other scripts, save them with saveRDS() and use readRDS() to load them in other scripts -->

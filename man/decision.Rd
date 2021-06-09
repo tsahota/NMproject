@@ -33,7 +33,7 @@ e.g. if you compare a 1 compartment and 2 compartment and decide based on the
 OFV and goodness of fit plots that the 1 compartment model is better and
 subsequent steps will build off of this, it is worth putting a decision point
 in your code so that if you are to rerun the workflow with a new/updated
-dataset, the decision can be revisted prior to moving onto the parts of the
+dataset, the decision can be revisited prior to moving onto the parts of the
 workflow that depend on the 1 compartment decision.  The function requests
 inputs (\code{values} and \code{files}) that you base a decision on and stop for users
 to remake decision if inputs change.
@@ -64,19 +64,24 @@ made is that if inputs have not changed since the last decision was made. }
 \dontrun{
 
 ## a decision based on summary statistics
-decision(inputs = summary_wide(c(m1, m2, m2WT)),
-         outcome = "m1 is better") # next line must be end of chunk
+decision(
+  inputs = summary_wide(c(m1, m2, m2WT)),
+  outcome = "m1 is better"
+) # next line must be end of chunk
 
 ## a decision based also on goodness of fit plots
-decision(inputs = summary_wide(c(m1, m2, m2WT)),
-         file_inputs = c("Results/basic_gof.m1.nb.html",
-                         "Results/basic_gof.m2.nb.html"),
-         outcome = "m1 is better") # next line must be end of chunk
+decision(
+  inputs = summary_wide(c(m1, m2, m2WT)),
+  file_inputs = c(
+    "Results/basic_gof.m1.nb.html",
+    "Results/basic_gof.m2.nb.html"
+  ),
+  outcome = "m1 is better"
+) # next line must be end of chunk
 
 ## a decision based on an automatic TRUE/FALSE criteria
 ## here we're ensuring m1 has the lowest AIC
 decision(auto = (AIC(m1) == min(AIC(m1, m2, m3))))
-
 }
 
 }

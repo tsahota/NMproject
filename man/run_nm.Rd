@@ -29,7 +29,7 @@ run_nm_batch(m, threads = 10, ...)
 \item{quiet}{Logical (default=FALSE). Should \code{system_nm()} output be piped to
 screen?}
 
-\item{intern}{Logical. \code{intern} arg to be passed to \code{system_nm()}.}
+\item{intern}{Logical. \code{intern} argument to be passed to \code{system_nm()}.}
 
 \item{force}{Logical (default = FALSE).  Force run even results unchanged.}
 
@@ -56,7 +56,7 @@ Run nm objects.  Uses \code{system_nm()} to submit the \code{cmd()} value of obj
 }
 \details{
 In grid environment it is recommended to run \code{\link[=nm_tran]{nm_tran()}} via the
-RStudio addin prior to executing this code.
+RStudio 'Addin' prior to executing this code.
 
 By default, when highlighting code and evaluating it via an RStudio app,
 run_nm() will not execute and will just return the \code{nm} object.
@@ -74,13 +74,14 @@ all runs have completed
 }
 \examples{
 \dontrun{
-m1 <- new_nm(run_id = "m1",
-             based_on = "staging/Models/ADVAN2.mod",
-             data_path = "DerivedData/data.csv") \%>\%
-      cmd("execute {ctl_name} -dir={run_dir}") \%>\%
-      fill_input() \%>\%
-      run_nm()
-
+m1 <- new_nm(
+  run_id = "m1",
+  based_on = "staging/Models/ADVAN2.mod",
+  data_path = "DerivedData/data.csv"
+) \%>\%
+  cmd("execute {ctl_name} -dir={run_dir}") \%>\%
+  fill_input() \%>\%
+  run_nm()
 }
 }
 \seealso{
