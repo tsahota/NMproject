@@ -87,7 +87,7 @@ orig_dir <- getwd()
 
 ```
 
-# Demo: Learn by doing
+# Demo
 
 The easiest way to familiarise your with NMproject is to run through the demo scripts line by line.  Here's a short YouTube video on running the demo
 
