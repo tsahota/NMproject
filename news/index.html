@@ -124,13 +124,13 @@
 <ul>
 <li><p>Removal and deprecation of tidyproject as an NMproject dependency.</p></li>
 <li><p>Project libraries are now handled with <code>renv</code>.</p></li>
-<li><p>Analysis project creation has been moved to NMproject with light wrappers around <code>usethis</code> project creation functionality and RStudio project templates. Analysis projects have a package-like structure.</p></li>
+<li><p>Analysis project creation has been moved from tidyproject to NMproject with light wrappers around <code>usethis</code> project creation functionality and RStudio project templates. Analysis projects have a package-like structure.</p></li>
 <li><p>Expanded demo based on a theophylline pharmacometric analysis and new vignette based around same demo.</p></li>
 <li><p>The code library has been moved to NMproject. New shiny interface to code library available via RStudio ‘Addins’. The code library has been restructured to match NMproject analysis directory structure.</p></li>
-<li><p><code><a href="../reference/new_nm.html">new_nm()</a></code> function to create parent <code>nm_list</code> objects.</p></li>
-<li><p>New manual edit interface via RStudio ‘Addins’. NMproject is the only NONMEM interface (known to the author) that tracks manual edits to NONMEM code in the form of reusable patches.</p></li>
-<li><p>Fully vectorised functions and compatibility of <code>nm_list</code> objects with <code>dplyr</code>. NMproject is the only pharmacometric package (known to the author) with a vectorised model object allowing groups of runs to be operated on using the same syntax as single runs.</p></li>
-<li><p>Custom NMproject implementations of PsN’s bootstrap, cross-validation, stepwise covariate selection, simulation-re-estimation, and PPCs.</p></li>
+<li><p><code><a href="../reference/new_nm.html">new_nm()</a></code> function to create parent <code>nm_list</code> objects. This is mostly for creation of your first model. Subsequent models are generated with the <code><a href="../reference/child.html">child()</a></code> function.</p></li>
+<li><p>New manual edit interface via RStudio ‘Addins’. NMproject is now the only NONMEM interface (known to the author) that tracks manual edits to NONMEM code in the form of reusable patches.</p></li>
+<li><p>Fully vectorised functions and compatibility of <code>nm_list</code> objects with <code>dplyr</code>.</p></li>
+<li><p>Custom NMproject implementations of PsN’s bootstrap, cross-validation, stepwise covariate selection, simulation-re-estimation, and PPCs have been added.</p></li>
 </ul>
 </div>
     <div id="nmproject-051-beta-interface-pre-release" class="section level1">
