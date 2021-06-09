@@ -115,7 +115,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>PPC functions: process data from simulation and plot</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/sim_diagnostics.R'><code>R/sim_diagnostics.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/sim-diagnostics.R'><code>R/sim-diagnostics.R</code></a></small>
     <div class="hidden name"><code>ppc.Rd</code></div>
     </div>
 
@@ -146,8 +146,8 @@
     </tr>
     <tr>
       <th>FUN</th>
-      <td><p>Statistic function with NONMEM dataset as arg and
-returns <code>data.frame</code> with a column <code>"statistic"</code>.</p></td>
+      <td><p>Statistic function accepting a NONMEM dataset <code>data.frame</code> as an
+argument and returns <code>data.frame</code> with a column <code>"statistic"</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -187,10 +187,12 @@ returned by FUN.</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
-<span class='va'>idEXPstat</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>...</span><span class='op'>)</span><span class='op'>{</span> <span class='co'>## example individual statistic function</span>
- <span class='co'>## arg = nonmem dataset data.frame</span>
- <span class='co'>## return data.frame with statistic column</span>
-  <span class='va'>d</span> <span class='op'>%&gt;%</span> <span class='fu'>group_by</span><span class='op'>(</span><span class='va'>ID</span>, <span class='va'>...</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>AMT</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+<span class='va'>idEXPstat</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>...</span><span class='op'>)</span> <span class='op'>{</span> <span class='co'>## example individual statistic function</span>
+  <span class='co'>## arg = nonmem dataset data.frame</span>
+  <span class='co'>## return data.frame with statistic column</span>
+  <span class='va'>d</span> <span class='op'>%&gt;%</span>
+    <span class='fu'>group_by</span><span class='op'>(</span><span class='va'>ID</span>, <span class='va'>...</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+    <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>AMT</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
     <span class='fu'>summarise</span><span class='op'>(</span>
       AUC <span class='op'>=</span> <span class='fu'>AUC</span><span class='op'>(</span>time <span class='op'>=</span> <span class='va'>TIME</span>, conc <span class='op'>=</span> <span class='va'>DV</span><span class='op'>)</span>,
       CMAX <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>DV</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,
@@ -200,24 +202,24 @@ returned by FUN.</p></td>
     <span class='fu'>ungroup</span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>}</span>
 
-<span class='va'>EXPstat</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>...</span><span class='op'>)</span><span class='op'>{</span> <span class='co'>## example summary statistic function</span>
- <span class='co'>## arg = nonmem dataset data.frame</span>
- <span class='co'>## return data.frame with statistic column</span>
- <span class='va'>d</span> <span class='op'>%&gt;%</span> <span class='fu'>idEXPstat</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span> <span class='op'>%&gt;%</span>  <span class='co'>## reuse idEXPstat for individual stats</span>
-   <span class='co'>## summarise over study and any other variables (...)</span>
-   <span class='fu'>group_by</span><span class='op'>(</span><span class='va'>exposure</span>, <span class='va'>...</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-   <span class='fu'>summarise</span><span class='op'>(</span>
-     median <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/median.html'>median</a></span><span class='op'>(</span><span class='va'>statistic</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,
-     cv <span class='op'>=</span> <span class='fl'>100</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>statistic</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>statistic</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-   <span class='op'>)</span> <span class='op'>%&gt;%</span>
-   <span class='fu'>tidyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyr.tidyverse.org/reference/gather.html'>gather</a></span><span class='op'>(</span>key <span class='op'>=</span> <span class='st'>"type"</span>, value <span class='op'>=</span> <span class='st'>"statistic"</span>, <span class='va'>median</span><span class='op'>:</span><span class='va'>cv</span><span class='op'>)</span>
+<span class='va'>EXPstat</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>d</span>, <span class='va'>...</span><span class='op'>)</span> <span class='op'>{</span> <span class='co'>## example summary statistic function</span>
+  <span class='co'>## arg = nonmem dataset data.frame</span>
+  <span class='co'>## return data.frame with statistic column</span>
+  <span class='va'>d</span> <span class='op'>%&gt;%</span>
+    <span class='fu'>idEXPstat</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='co'>## reuse idEXPstat for individual stats</span>
+    <span class='co'>## summarise over study and any other variables (...)</span>
+    <span class='fu'>group_by</span><span class='op'>(</span><span class='va'>exposure</span>, <span class='va'>...</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+    <span class='fu'>summarise</span><span class='op'>(</span>
+      median <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/median.html'>median</a></span><span class='op'>(</span><span class='va'>statistic</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>,
+      cv <span class='op'>=</span> <span class='fl'>100</span> <span class='op'>*</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>statistic</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>statistic</span>, na.rm <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+    <span class='op'>)</span> <span class='op'>%&gt;%</span>
+    <span class='fu'>tidyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyr.tidyverse.org/reference/gather.html'>gather</a></span><span class='op'>(</span>key <span class='op'>=</span> <span class='st'>"type"</span>, value <span class='op'>=</span> <span class='st'>"statistic"</span>, <span class='va'>median</span><span class='op'>:</span><span class='va'>cv</span><span class='op'>)</span>
 <span class='op'>}</span>
 
 <span class='va'>dppc</span> <span class='op'>&lt;-</span> <span class='va'>m1s</span> <span class='op'>%&gt;%</span> <span class='fu'>ppc_data</span><span class='op'>(</span><span class='va'>EXPstat</span><span class='op'>)</span>
 
 <span class='va'>dppc</span> <span class='op'>%&gt;%</span> <span class='fu'>ppc_whisker_plot</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>dppc</span> <span class='op'>%&gt;%</span> <span class='fu'>ppc_forest_plot</span><span class='op'>(</span><span class='op'>)</span>
-
 <span class='op'>}</span>
 </div></pre>
   </div>

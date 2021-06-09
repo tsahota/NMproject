@@ -118,7 +118,7 @@ sumo." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>System command for NONMEM execution</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/NMproject_options.R'><code>R/NMproject_options.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/NMproject-options.R'><code>R/NMproject-options.R</code></a></small>
     <div class="hidden name"><code>system_nm.Rd</code></div>
     </div>
 
@@ -145,7 +145,7 @@ default this will be the "models" directory (<code><a href='nm_default_dir.html'
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional args to be passed to <code><a href='https://rdrr.io/r/base/system.html'>system()</a></code> or <code><a href='https://rdrr.io/r/base/system.html'>shell()</a></code>.</p></td>
+      <td><p>Additional arguments to be passed to <code><a href='https://rdrr.io/r/base/system.html'>system()</a></code> or <code><a href='https://rdrr.io/r/base/system.html'>shell()</a></code>.</p></td>
     </tr>
     </table>
 
@@ -156,12 +156,10 @@ default this will be the "models" directory (<code><a href='nm_default_dir.html'
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='fu'>system_nm</span><span class='op'>(</span><span class='st'>"hostname"</span><span class='op'>)</span>
-
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
 <span class='fu'>system_nm</span><span class='op'>(</span><span class='st'>"psn --versions"</span><span class='op'>)</span>
 <span class='fu'>system_nm</span><span class='op'>(</span><span class='st'>"sumo run1.mod"</span><span class='op'>)</span>
-
 <span class='op'>}</span>
 
 </div></pre>

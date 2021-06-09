@@ -116,13 +116,13 @@ removes full.names argument, always return full names." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>List directories</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/make_project.R'><code>R/make_project.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
     <div class="hidden name"><code>list_dirs.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Wrapper around list.dirs() but includes maxdepth and pattern arguments and
-removes full.names argument, always return full names.</p>
+    <p>Wrapper around <code><a href='https://rdrr.io/r/base/list.files.html'>list.dirs()</a></code> but includes <code>maxdepth</code> and pattern arguments and
+removes <code>full.names</code> argument, always return full names.</p>
     </div>
 
     <pre class="usage"><span class='fu'>list_dirs</span><span class='op'>(</span>
@@ -150,7 +150,7 @@ removes full.names argument, always return full names.</p>
     </tr>
     <tr>
       <th>maxdepth</th>
-      <td><p>Integer (default = 1) maximum depth to search.</p></td>
+      <td><p>Integer (default = <code>1</code>) maximum depth to search.</p></td>
     </tr>
     <tr>
       <th>pattern</th>

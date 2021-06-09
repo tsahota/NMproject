@@ -42,9 +42,9 @@
 <meta property="og:title" content="Add/remove a covariate to a NONMEM model — add_remove_covs" />
 <meta property="og:description" content="
 Follows PsN coding conventions to add covariates into a model.  The advantage
-is no need to create a .scm file, just directly modify the ctl file contents.
-This function is used by covariate_step_tibble() for stepwise
-covariate model development." />
+is no need to create a .scm file, just directly modify the NONMEM control
+file contents. This function is used by covariate_step_tibble() for
+stepwise covariate model development." />
 
 
 
@@ -119,16 +119,16 @@ covariate model development." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Add/remove a covariate to a NONMEM model</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/stepwise_covariate.R'><code>R/stepwise_covariate.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/stepwise-covariate.R'><code>R/stepwise-covariate.R</code></a></small>
     <div class="hidden name"><code>add_remove_covs.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
 <p>Follows PsN coding conventions to add covariates into a model.  The advantage
-is no need to create a .scm file, just directly modify the ctl file contents.
-This function is used by <code><a href='covariate_step_tibble.html'>covariate_step_tibble()</a></code> for stepwise
-covariate model development.</p>
+is no need to create a .scm file, just directly modify the NONMEM control
+file contents. This function is used by <code><a href='covariate_step_tibble.html'>covariate_step_tibble()</a></code> for
+stepwise covariate model development.</p>
     </div>
 
     <pre class="usage"><span class='fu'>add_cov</span><span class='op'>(</span>
@@ -162,7 +162,7 @@ covariate model development.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>ctl</th>
-      <td><p>An nm object or an object coercible to ctl_list.</p></td>
+      <td><p>An nm object or an object coercible to <code>ctl_list</code>.</p></td>
     </tr>
     <tr>
       <th>param</th>
@@ -178,7 +178,7 @@ covariate model development.</p>
     </tr>
     <tr>
       <th>continuous</th>
-      <td><p>Logical (default = TRUE). is covariate continuous?</p></td>
+      <td><p>Logical (default = <code>TRUE</code>). Is covariate continuous?</p></td>
     </tr>
     <tr>
       <th>time_varying</th>
@@ -186,22 +186,23 @@ covariate model development.</p>
     </tr>
     <tr>
       <th>additional_state_text</th>
-      <td><p>Optional character (default = empty). custom
+      <td><p>Optional character (default = empty). Custom
 state variable to be passed to <code>param_cov_text</code>.</p></td>
     </tr>
     <tr>
       <th>id_var</th>
-      <td><p>Character (default = "ID"). Needed if time_varying is missing.</p></td>
+      <td><p>Character (default = <code>"ID"</code>). Needed if time_varying is
+missing.</p></td>
     </tr>
     <tr>
       <th>force</th>
-      <td><p>Logical (default = FALSE). Force covariate in even if missing
+      <td><p>Logical (default = `FALSE``). Force covariate in even if missing
 values found.</p></td>
     </tr>
     <tr>
       <th>force_TV_var</th>
-      <td><p>Logical (default = FALSE). Force covariates only on TV
-notation parameters.</p></td>
+      <td><p>Logical (default = <code>FALSE</code>). Force covariates only on
+<code>TV</code> notation parameters.</p></td>
     </tr>
     <tr>
       <th>init</th>
@@ -222,7 +223,7 @@ parameters.</p></td>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>available <code>state</code>s:</p>
+    <p>Available <code>state</code>s:</p>
 <dl>
 
 <dt>"2" or "linear"</dt><dd><p>PARCOV= ( 1 + THETA(1)*(COV -median))</p></dd>
@@ -259,21 +260,18 @@ IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))</p></dd>
 
 <span class='fu'><a href='rr.html'>rr</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1WT</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='nm_summary.html'>summary_wide</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1WT</span><span class='op'>)</span><span class='op'>)</span>
-
 <span class='op'>}</span>
-
 
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
 <span class='va'>m1noWT</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='child.html'>child</a></span><span class='op'>(</span><span class='st'>"m1noWT"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>remove_cov</span><span class='op'>(</span>param <span class='op'>=</span> <span class='st'>"CL"</span>, cov <span class='op'>=</span> <span class='st'>"WT"</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>remove_cov</span><span class='op'>(</span>param <span class='op'>=</span> <span class='st'>"CL"</span>, cov <span class='op'>=</span> <span class='st'>"WT"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='run_nm.html'>run_nm</a></span><span class='op'>(</span><span class='op'>)</span>
-  
+
 <span class='co'>## compare results</span>
 
 <span class='fu'><a href='rr.html'>rr</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1noWT</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'><a href='nm_summary.html'>summary_wide</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1noWT</span><span class='op'>)</span><span class='op'>)</span>
-  
 <span class='op'>}</span>
 
 </div></pre>

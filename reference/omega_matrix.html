@@ -117,7 +117,7 @@ packages such as mrgsolve." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Get OMEGA matrix from run</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/run_record.R'><code>R/run_record.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/post-run-summaries.R'><code>R/post-run-summaries.R</code></a></small>
     <div class="hidden name"><code>omega_matrix.Rd</code></div>
     </div>
 
@@ -146,9 +146,10 @@ packages such as <code>mrgsolve</code>.</p>
 <span class='co'>## matrix of initial estimates</span>
 <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>omega_matrix</span><span class='op'>(</span><span class='op'>)</span>
 
-<span class='co'>## matrix of final estimates  </span>
-<span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='update_parameters.html'>update_parameters</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>omega_matrix</span><span class='op'>(</span><span class='op'>)</span>
-
+<span class='co'>## matrix of final estimates</span>
+<span class='va'>m1</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='update_parameters.html'>update_parameters</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>omega_matrix</span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>}</span>
 
 </div></pre>

@@ -42,7 +42,7 @@
 <meta property="og:title" content="Wait for runs to finish — wait_finish" />
 <meta property="og:description" content="
 Blocks subsequent r execution until run(s) are finished.  This is useful for
-when subequent relies on outputs from completed NONMEM jobs.  It is normally
+when subsequent relies on outputs from completed NONMEM jobs.  It is normally
 a good idea to include this in post processing R markdown templates, to
 ensure they wait for runs to complete before executing." />
 
@@ -126,7 +126,7 @@ ensure they wait for runs to complete before executing." />
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
 <p>Blocks subsequent r execution until run(s) are finished.  This is useful for
-when subequent relies on outputs from completed NONMEM jobs.  It is normally
+when subsequent relies on outputs from completed NONMEM jobs.  It is normally
 a good idea to include this in post processing R markdown templates, to
 ensure they wait for runs to complete before executing.</p>
     </div>
@@ -151,11 +151,12 @@ ensure they wait for runs to complete before executing.</p>
     <pre class="examples"><div class='input'>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
-<span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='run_nm.html'>run_nm</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>wait_finish</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='run_nm.html'>run_nm</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>wait_finish</span><span class='op'>(</span><span class='op'>)</span>
 
 <span class='co'>## following requires run to be completed.</span>
 <span class='fu'><a href='covariance_plot.html'>covariance_plot</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span>
-
 <span class='op'>}</span>
 
 </div></pre>

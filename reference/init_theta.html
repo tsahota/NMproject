@@ -157,13 +157,13 @@ These functions are useful to obtain and modify initial values of $THETA, $OMEGA
 <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_nm.html'>new_nm</a></span><span class='op'>(</span>run_id <span class='op'>=</span> <span class='st'>"m1"</span>,
              based_on <span class='op'>=</span> <span class='st'>"staging/Models/ADVAN2.mod"</span>,
              data_path <span class='op'>=</span> <span class='st'>"DerivedData/data.csv"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-      <span class='fu'><a href='fill_input.html'>fill_input</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-      <span class='fu'>init_theta</span><span class='op'>(</span>init <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>2</span>, <span class='fl'>0.5</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-      <span class='fu'>init_sigma</span><span class='op'>(</span>init <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.1</span>, <span class='fl'>0.1</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-      <span class='fu'><a href='run_nm.html'>run_nm</a></span><span class='op'>(</span><span class='op'>)</span>
-      
-<span class='fu'>init_theta</span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span>  <span class='co'>## display current $THETA in tibble-form</span>
-<span class='fu'>init_omega</span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span>  <span class='co'>## display current $OMEGA in tibble-form</span>
+  <span class='fu'><a href='fill_input.html'>fill_input</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>init_theta</span><span class='op'>(</span>init <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>-</span><span class='fl'>2</span>, <span class='fl'>0.5</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>init_sigma</span><span class='op'>(</span>init <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.1</span>, <span class='fl'>0.1</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='run_nm.html'>run_nm</a></span><span class='op'>(</span><span class='op'>)</span>
+
+<span class='fu'>init_theta</span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span> <span class='co'>## display current $THETA in tibble-form</span>
+<span class='fu'>init_omega</span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span> <span class='co'>## display current $OMEGA in tibble-form</span>
 
 
 <span class='co'>## here we supply a named vector in a different order</span>
@@ -174,19 +174,18 @@ These functions are useful to obtain and modify initial values of $THETA, $OMEGA
 <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>init_theta</span><span class='op'>(</span>init <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>KA <span class='op'>=</span> <span class='op'>-</span><span class='fl'>2</span>, V <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>,
                         FIX <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>KA <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"THETA"</span><span class='op'>)</span>
-  
+
 <span class='co'>## perturb all parameters by ~10%</span>
 <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>init_theta</span><span class='op'>(</span>init <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>init</span><span class='op'>)</span>, mean <span class='op'>=</span> <span class='va'>init</span>, sd <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'>## perturb only log transformed parameters by ~10%</span>
 <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>init_theta</span><span class='op'>(</span>
-    init <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span>
+  init <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span>
     <span class='va'>trans</span> <span class='op'>%in%</span> <span class='st'>"LOG"</span>,
     <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>init</span><span class='op'>)</span>, mean <span class='op'>=</span> <span class='va'>init</span>, sd <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span>,
     <span class='va'>init</span>
   <span class='op'>)</span>
 <span class='op'>)</span>
-
 <span class='op'>}</span>
 </div></pre>
   </div>

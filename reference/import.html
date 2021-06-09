@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Import staged files into project — import" />
 <meta property="og:description" content="
-This function is used by the &quot;code libary&quot; RStudio addin to bring external
+This function is used by the &quot;code libary&quot; RStudio 'Addin' to bring external
 code into your project." />
 
 
@@ -117,13 +117,13 @@ code into your project." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Import staged files into project</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/make_project.R'><code>R/make_project.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/import-code.R'><code>R/import-code.R</code></a></small>
     <div class="hidden name"><code>import.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
-<p>This function is used by the "code libary" RStudio addin to bring external
+<p>This function is used by the "code libary" RStudio 'Addin' to bring external
 code into your project.</p>
     </div>
 
@@ -161,15 +161,14 @@ will instead reside only in the staging area.</p></td>
     <pre class="examples"><div class='input'>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
-<span class='co'>## both of these following operations are easier in the shiny code library </span>
-<span class='co'>## RStudio addin.</span>
+<span class='co'>## both of these following operations are easier in the shiny code library</span>
+<span class='co'>## RStudio 'Addin'.</span>
 
 <span class='fu'><a href='ls_code_library.html'>ls_code_library</a></span><span class='op'>(</span><span class='st'>"Models/ADVAN2.mod"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>import</span><span class='op'>(</span><span class='op'>)</span> <span class='co'>## ends up in "staging/Models"</span>
-  
+
 <span class='fu'><a href='ls_code_library.html'>ls_code_library</a></span><span class='op'>(</span><span class='st'>"Scripts/AUC.R"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>import</span><span class='op'>(</span><span class='op'>)</span>  <span class='co'>## ends up "scripts" directory</span>
-  
+  <span class='fu'>import</span><span class='op'>(</span><span class='op'>)</span> <span class='co'>## ends up "scripts" directory</span>
 <span class='op'>}</span>
 
 </div></pre>

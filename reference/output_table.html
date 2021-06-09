@@ -168,23 +168,23 @@ unmodified from the input dataset.</p>
     <pre class="examples"><div class='input'>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
-<span class='co'>## exploratory data plot </span>
+<span class='co'>## exploratory data plot</span>
 <span class='fu'><a href='read_derived_data.html'>read_derived_data</a></span><span class='op'>(</span><span class='st'>"DerivedData/data.csv"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>ggplot</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span>x<span class='op'>=</span><span class='va'>TIME</span>, y<span class='op'>=</span><span class='va'>DV</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'>theme_bw</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>ggplot</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>TIME</span>, y <span class='op'>=</span> <span class='va'>DV</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>theme_bw</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
   <span class='fu'>geom_point</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
   <span class='fu'>geom_line</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span>group <span class='op'>=</span> <span class='va'>ID</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
   <span class='fu'>facet_wrap</span><span class='op'>(</span><span class='op'>~</span><span class='va'>STUDYTXT</span><span class='op'>)</span>
-  
+
 <span class='va'>m1</span> <span class='op'>%&gt;%</span>
   <span class='fu'>output_table_first</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>ggplot</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span>x<span class='op'>=</span><span class='va'>TIME</span>, y<span class='op'>=</span><span class='va'>DV</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'>theme_bw</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>ggplot</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>TIME</span>, y <span class='op'>=</span> <span class='va'>DV</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+  <span class='fu'>theme_bw</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
   <span class='fu'>geom_point</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
   <span class='fu'>geom_line</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span>group <span class='op'>=</span> <span class='va'>ID</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
   <span class='fu'>facet_wrap</span><span class='op'>(</span><span class='op'>~</span><span class='va'>STUDYTXT</span><span class='op'>)</span> <span class='op'>+</span>
-<span class='co'>## additional layer for overlaying IPRED curves</span>
+  <span class='co'>## additional layer for overlaying IPRED curves</span>
   <span class='fu'>geom_line</span><span class='op'>(</span><span class='fu'>aes</span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>IPRED</span>, group <span class='op'>=</span> <span class='va'>ID</span><span class='op'>)</span><span class='op'>)</span>
-  
-
 <span class='op'>}</span>
 
 </div></pre>

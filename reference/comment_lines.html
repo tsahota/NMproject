@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>NMproject: Script Based 'NONMEM' Model Development — NMproject-package • NMproject</title>
+<title>Comment and uncomment lines of control file — comment_lines • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,9 @@
 
 
 
-<meta property="og:title" content="NMproject: Script Based 'NONMEM' Model Development — NMproject-package" />
-<meta property="og:description" content="Industrialisation of 'NONMEM'
-  &amp;lt;https://www.iconplc.com/innovation/nonmem/&amp;gt; model development 
-  via end-to-end model development 'workflows'." />
+<meta property="og:title" content="Comment and uncomment lines of control file — comment_lines" />
+<meta property="og:description" content="
+Comment out lines of code with that are matched by a patter string." />
 
 
 
@@ -116,78 +115,36 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>NMproject: Script Based 'NONMEM' Model Development</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/NMproject-package.R'><code>R/NMproject-package.R</code></a></small>
-    <div class="hidden name"><code>NMproject-package.Rd</code></div>
+    <h1>Comment and uncomment lines of control file</h1>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/low-level-ctl-handling-funs.R'><code>R/low-level-ctl-handling-funs.R</code></a></small>
+    <div class="hidden name"><code>comment_lines.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Industrialisation of 'NONMEM'
-  &lt;https://www.iconplc.com/innovation/nonmem/&gt; model development 
-  via end-to-end model development 'workflows'.</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Comment out lines of code with that are matched by a patter string.</p>
     </div>
 
+    <pre class="usage"><span class='fu'>comment_out</span><span class='op'>(</span><span class='va'>m</span>, pattern <span class='op'>=</span> <span class='st'>".*"</span><span class='op'>)</span>
 
+<span class='fu'>uncomment</span><span class='op'>(</span><span class='va'>m</span>, pattern <span class='op'>=</span> <span class='st'>".*"</span><span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="package-options"><a class="anchor" href="#package-options"></a>Package options</h2>
-
-    
-
-
-<p>See <code><a href='https://rdrr.io/r/base/options.html'>options()</a></code> for information on how to modify these:</p>
-<dl>
-<dt>system_cmd</dt><dd><p>See <code><a href='system_cmd.html'>?system_cmd</a></code>.</p></dd>
-<dt>system_nm</dt><dd><p>See <code><a href='system_nm.html'>?system_nm</a></code>.</p></dd>
-<dt>quiet_run</dt><dd><p>Sets the default value for the <code>quiet</code> argument in <code>run_nm</code>.</p></dd>
-<dt>intern</dt><dd><p>Sets the default value for the <code>intern</code> argument in <code>run_nm</code>.</p></dd>
-<dt>available_nm_types</dt><dd><p>A list of NONMEM subroutine names.
-This is modifiable in case future versions of NONMEM contain new
-subroutines.</p></dd>
-<dt>nm_default_dirs</dt><dd><p>An optional (partially) named list of directories
-to be used by <code>nm_create_analysis_project</code> to create the project
-directory structure when making a new analysis project.
-Required names are <code>"models"</code>, <code>"scripts"</code> and <code>"results"</code>.
-By default these will be set to <code>"Models"</code>, <code>"Scripts"</code> and <code>"Results"</code>,
-respectively.  Additional characters (e.g. <code>"SourceData"</code>) correspond to
-additional modelling directories to be created.</p></dd>
-<dt>kill_job</dt><dd><p>An optional function to kill jobs before they are started.
-This is useful in infrastructures, where repeating a job conflicts with
-other jobs writing into the same directories.  For example, in Slurm grids
-this could be a function wrapper around a <code><a href='https://rdrr.io/r/base/system.html'>system("scancel ...")</a></code>
-call.</p></dd>
-<dt>nm.overwrite_behaviour</dt><dd><p>See <code><a href='overwrite_behaviour.html'>?overwrite_behaviour</a></code>.</p></dd>
-<dt>nm.force_render</dt><dd><p>Sets default value for the <code>force</code> argument in See <code>nm_render</code>.</p></dd>
-<dt>nm.cmd_default</dt><dd><p>Sets default <code>cmd</code> field for all nm objects.
-See <code><a href='nm_getsetters.html'>?cmd</a></code> for more information.
-The default value is "execute ctl_name -dir=run_dir".
-However in environments where a different command is needed, this is the
-place to change it.</p></dd>
-<dt>nmtran_exe_path</dt><dd><p>Sets the value of the NMTRAN.exe program.  This may be deprecated in future
-it is recommended to use <code><a href='nm_tran_command.html'>nm_tran_command()</a></code>.
-See <code><a href='nm_tran_command.html'>?nm_tran_command</a></code> for more information.</p></dd>
-<dt>code_library_path</dt><dd><p>Path to code library.  By default this will point to the code library
-within the NMproject installation directory.
-See <code><a href='code_library.html'>?code_library</a></code> for more information.</p></dd>
-
-</dl>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>m</th>
+      <td><p>An nm object.</p></td>
+    </tr>
+    <tr>
+      <th>pattern</th>
+      <td><p>Character regex. Passed to <code><a href='https://rdrr.io/r/base/grep.html'>gsub()</a></code>.</p></td>
+    </tr>
+    </table>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Useful links:</p><ul>
-<li><p><a href='https://tsahota.github.io/NMproject/'>https://tsahota.github.io/NMproject/</a></p></li>
-<li><p><a href='https://github.com/tsahota/NMproject'>https://github.com/tsahota/NMproject</a></p></li>
-<li><p>Report bugs at <a href='https://github.com/tsahota/NMproject/issues'>https://github.com/tsahota/NMproject/issues</a></p></li>
-</ul>
-
-</div>
-    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
-
-    <p><strong>Maintainer</strong>: Tarj Sahota <a href='mailto:t.sahota0@gmail.com'>t.sahota0@gmail.com</a> [copyright holder]</p>
-<p>Other contributors:</p><ul>
-<li><p>AstraZeneca [copyright holder]</p></li>
-</ul>
-
-
+    <div class='dont-index'><p><code><a href='gsub_ctl.html'>gsub_ctl()</a></code>, <code><a href='target.html'>target()</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

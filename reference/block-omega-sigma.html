@@ -155,7 +155,7 @@ unblock for <code>block()</code> and <code>unblock()</code>, respectively. Must 
     <pre class="examples"><div class='input'>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='va'>io</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='init_theta.html'>init_omega</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>io</span> <span class='op'>&lt;-</span> <span class='va'>io</span> <span class='op'>%&gt;%</span> <span class='fu'>block</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>io</span> <span class='op'>&lt;-</span> <span class='va'>io</span> <span class='op'>%&gt;%</span> <span class='fu'>block</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='init_theta.html'>init_omega</a></span><span class='op'>(</span><span class='va'>io</span><span class='op'>)</span>
 <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"OMEGA"</span><span class='op'>)</span> <span class='co'>## to display $OMEGA</span>
 <span class='op'>}</span>
@@ -163,7 +163,7 @@ unblock for <code>block()</code> and <code>unblock()</code>, respectively. Must 
 
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='va'>io</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='init_theta.html'>init_omega</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>io</span> <span class='op'>&lt;-</span> <span class='va'>io</span> <span class='op'>%&gt;%</span> <span class='fu'>unblock</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>io</span> <span class='op'>&lt;-</span> <span class='va'>io</span> <span class='op'>%&gt;%</span> <span class='fu'>unblock</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='init_theta.html'>init_omega</a></span><span class='op'>(</span><span class='va'>io</span><span class='op'>)</span>
 <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"OMEGA"</span><span class='op'>)</span> <span class='co'>## to display $OMEGA</span>
 <span class='op'>}</span>

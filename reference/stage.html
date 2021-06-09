@@ -46,7 +46,7 @@ into the project.  The intent is it remains a snapshot of code as it was at
 the time of importing.  This aids in reproducibility because if that
 external code is changed, the staged code will remain fixed.
 In practice, this function will rarely need to be used directly.  The easiest
-way to bring code is via the code library RStudio addin shiny app." />
+way to bring code is via the &quot;code library&quot; RStudio 'Addin' shiny app." />
 
 
 
@@ -121,7 +121,7 @@ way to bring code is via the code library RStudio addin shiny app." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Stage files in project staging area ready for import</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/make_project.R'><code>R/make_project.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/import-code.R'><code>R/import-code.R</code></a></small>
     <div class="hidden name"><code>stage.Rd</code></div>
     </div>
 
@@ -132,7 +132,7 @@ into the project.  The intent is it remains a snapshot of code as it was at
 the time of <code>import</code>ing.  This aids in reproducibility because if that
 external code is changed, the staged code will remain fixed.</p>
 <p>In practice, this function will rarely need to be used directly.  The easiest
-way to bring code is via the <code>code library</code> RStudio addin shiny app.</p>
+way to bring code is via the "code library" RStudio 'Addin' shiny app.</p>
     </div>
 
     <pre class="usage"><span class='fu'>stage</span><span class='op'>(</span><span class='va'>files</span>, <span class='va'>root_dir</span>, overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
@@ -148,7 +148,7 @@ way to bring code is via the <code>code library</code> RStudio addin shiny app.<
       <th>root_dir</th>
       <td><p>Character path to root directory of <code>files</code>. Staged files
 relative to <code>staging</code> directory will be same as <code>files</code> to <code>root_dir</code>. If
-this is not specified, will guess based on presense of <code>nm_default_dirs</code></p></td>
+this is not specified, will guess based on presence of <code>nm_default_dirs</code></p></td>
     </tr>
     <tr>
       <th>overwrite</th>
@@ -170,9 +170,7 @@ this is not specified, will guess based on presense of <code>nm_default_dirs</co
 
 <span class='fu'><a href='ls_code_library.html'>ls_code_library</a></span><span class='op'>(</span><span class='st'>"Models/ADVAN2.mod"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>stage</span><span class='op'>(</span><span class='op'>)</span>
-  
 <span class='op'>}</span>
-
 
 </div></pre>
   </div>

@@ -120,7 +120,7 @@ descriptions for more details." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Exclude rows of NONMEM dataset</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/nm.R'><code>R/nm.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/derived-data-prep.R'><code>R/derived-data-prep.R</code></a></small>
     <div class="hidden name"><code>exclude_rows.Rd</code></div>
     </div>
 
@@ -168,8 +168,10 @@ coinciding with <code>dexcl</code>.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'>## use with dplyr</span>
-<span class='va'>dexcl</span> <span class='op'>&lt;-</span> <span class='va'>d</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>ID</span> <span class='op'>==</span> <span class='fl'>23</span>, <span class='va'>TIME</span> <span class='op'>&gt;</span> <span class='fl'>18</span>, <span class='va'>TIME</span> <span class='op'>&lt;</span> <span class='fl'>24</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'>select</span><span class='op'>(</span><span class='va'>ID</span>, <span class='va'>TIME</span>, <span class='va'>DV</span>, <span class='va'>EXCL</span><span class='op'>)</span>
-<span class='va'>dexcl</span>  <span class='co'>## view rows to be excluded</span>
+<span class='va'>dexcl</span> <span class='op'>&lt;-</span> <span class='va'>d</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>ID</span> <span class='op'>==</span> <span class='fl'>23</span>, <span class='va'>TIME</span> <span class='op'>&gt;</span> <span class='fl'>18</span>, <span class='va'>TIME</span> <span class='op'>&lt;</span> <span class='fl'>24</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>select</span><span class='op'>(</span><span class='va'>ID</span>, <span class='va'>TIME</span>, <span class='va'>DV</span>, <span class='va'>EXCL</span><span class='op'>)</span>
+<span class='va'>dexcl</span> <span class='co'>## view rows to be excluded</span>
 <span class='va'>d</span> <span class='op'>&lt;-</span> <span class='va'>d</span> <span class='op'>%&gt;%</span> <span class='fu'>exclude_rows</span><span class='op'>(</span><span class='va'>dexcl</span><span class='op'>)</span>
 <span class='op'>}</span>
 </div></pre>

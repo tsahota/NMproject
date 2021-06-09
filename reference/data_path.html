@@ -117,7 +117,7 @@ Requires ctl_contents to already be specified." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Get/set path to dataset</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/nm_object.R'><code>R/nm_object.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/basic-ctl-manipulation.R'><code>R/basic-ctl-manipulation.R</code></a></small>
     <div class="hidden name"><code>data_path.Rd</code></div>
     </div>
 
@@ -152,10 +152,10 @@ otherwise will set data_path to the text provided</p>
 
 <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_nm.html'>new_nm</a></span><span class='op'>(</span>run_id <span class='op'>=</span> <span class='st'>"m1"</span>,
              based_on <span class='op'>=</span> <span class='st'>"staging/Models/ADVAN2.mod"</span>,
-             data_path <span class='op'>=</span> <span class='st'>"DerivedData/data.csv"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-      
-<span class='fu'>data_path</span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span>  <span class='co'>## display data name</span>
+             data_path <span class='op'>=</span> <span class='st'>"DerivedData/data.csv"</span><span class='op'>)</span> 
 
+<span class='fu'>data_path</span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span> <span class='co'>## display data name</span>
+  
 <span class='op'>}</span>
 
 </div></pre>

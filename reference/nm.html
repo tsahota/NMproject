@@ -40,8 +40,9 @@
 
 
 <meta property="og:title" content="Create core NM object — nm" />
-<meta property="og:description" content="Experimental new nm object interface.  Not compatible with previous system.
-The basic object this package centres around.  Most package functions act on this object." />
+<meta property="og:description" content="Create new nm object. The function new_nm() is more convenient.  This is
+mostly a back end function. This is the basic object this package centres
+around.  Most package functions act on this object." />
 
 
 
@@ -121,8 +122,9 @@ The basic object this package centres around.  Most package functions act on thi
     </div>
 
     <div class="ref-description">
-    <p>Experimental new nm object interface.  Not compatible with previous system.
-The basic object this package centres around.  Most package functions act on this object.</p>
+    <p>Create new nm object. The function <code><a href='new_nm.html'>new_nm()</a></code> is more convenient.  This is
+mostly a back end function. This is the basic object this package centres
+around.  Most package functions act on this object.</p>
     </div>
 
     <pre class="usage"><span class='fu'>nm</span><span class='op'>(</span>
@@ -144,67 +146,73 @@ The basic object this package centres around.  Most package functions act on thi
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>run_id</th>
-      <td><p>character vector. Run identifier</p></td>
+      <td><p>Character vector. Run identifier.</p></td>
     </tr>
     <tr>
       <th>run_in</th>
-      <td><p>character vector. ctl file and run location</p></td>
+      <td><p>Character vector. The location to copy the NONMEM control file
+and run location.</p></td>
     </tr>
     <tr>
       <th>parent_run_id</th>
-      <td><p>character vector (optional). Run identifier of previous run</p></td>
+      <td><p>Character vector (optional). The run identifier of the
+parent run.</p></td>
     </tr>
     <tr>
       <th>parent_run_in</th>
-      <td><p>character vector (optional). Run location of previous run</p></td>
+      <td><p>Character vector (optional). The location of the parent
+run.</p></td>
     </tr>
     <tr>
       <th>parent_ctl_name</th>
-      <td><p>character vector (optional). Ctl name of previous run</p></td>
+      <td><p>Character vector (optional). The <code>ctl_name</code> of the
+parent run.</p></td>
     </tr>
     <tr>
       <th>parent_results_dir</th>
-      <td><p>character vector (optional). results_dir of previous run</p></td>
+      <td><p>Character vector (optional). The <code>results_dir</code> of
+the parent run.</p></td>
     </tr>
     <tr>
       <th>ctl_name</th>
-      <td><p>character. Name of control file</p></td>
+      <td><p>Character. Name of control file.</p></td>
     </tr>
     <tr>
       <th>type</th>
-      <td><p>character (default = "execute").  Type of run to run</p></td>
+      <td><p>Character (default = <code>"execute"</code>).  Type of run to run.</p></td>
     </tr>
     <tr>
       <th>run_dir</th>
-      <td><p>character (default = "run_id").  Subdirectory where PsN wll run NONMEM</p></td>
+      <td><p>Character (default = <code>"{run_id}"</code>).  Subdirectory where PsN
+will run NONMEM.</p></td>
     </tr>
     <tr>
       <th>results_dir</th>
-      <td><p>character (default = "Results").
-Directory to store results of this run</p></td>
+      <td><p>Character (default = <code>"Results"</code>). Directory to store
+results of this run.</p></td>
     </tr>
     <tr>
       <th>lst_path</th>
-      <td><p>character (default = "run_dir/NM_run1/psn.lst") expected location of lst file</p></td>
+      <td><p>Character (default = <code>"{run_dir}/NM_run1/psn.lst"</code>) expected
+location of .lst file.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of class nm_list.  Object is concatenatable.
-Length of object corresponds to length of run_id</p>
+    <p>An object of class <code>nm_list</code>.  Object is concatenatable. Length of
+object corresponds to length of <code>run_id</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
 <span class='va'>m0</span> <span class='op'>&lt;-</span> <span class='fu'>nm</span><span class='op'>(</span>run_id <span class='op'>=</span> <span class='st'>"m0"</span><span class='op'>)</span>
-<span class='va'>m0</span>  <span class='co'>## a human readable representation</span>
-  
-<span class='co'>## nm objects can be put into tibbles to group runs together</span>
-<span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'>tibble</span><span class='op'>(</span>run_id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"m1"</span>,<span class='st'>"m2"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>d</span><span class='op'>$</span><span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>nm</span><span class='op'>(</span><span class='va'>d</span><span class='op'>$</span><span class='va'>run_id</span><span class='op'>)</span>
-<span class='va'>d</span>  
+<span class='va'>m0</span> <span class='co'>## a human readable representation</span>
 
+<span class='co'>## nm objects can be put into tibbles to group runs together</span>
+<span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'>tibble</span><span class='op'>(</span>run_id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"m1"</span>, <span class='st'>"m2"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>d</span><span class='op'>$</span><span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'>nm</span><span class='op'>(</span><span class='va'>d</span><span class='op'>$</span><span class='va'>run_id</span><span class='op'>)</span>
+<span class='va'>d</span>
 <span class='op'>}</span>
 
 </div></pre>

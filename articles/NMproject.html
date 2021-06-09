@@ -76,7 +76,7 @@
       <h1 data-toc-skip>NMproject</h1>
                         <h4 class="author">Tarj Sahota</h4>
             
-            <h4 class="date">2021-06-06</h4>
+            <h4 class="date">2021-06-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/tsahota/NMproject/blob/master/vignettes/NMproject.Rmd"><code>vignettes/NMproject.Rmd</code></a></small>
       <div class="hidden name"><code>NMproject.Rmd</code></div>
@@ -108,12 +108,12 @@
 <li><p>(<em>New</em>)End-to-end model development workflows/notebooks for people who want 100% control over their model files. The new interface is the only NONMEM interface (known to the author) that can record and replay manual edits to files (seemlessly) for 100% flexibility without breaking the end-to-end reproducibility.</p></li>
 <li><p>(<em>New</em>)R Functions to automatically fill $INPUT, $DATA, $THETA,… elements as well as various other routine model file manipulations</p></li>
 <li><p>(<em>New</em>)Import code library templates (via a shiny interface) and get to a working NONMEM model quickly and entirely within R. See demo.</p></li>
-<li><p>(<em>New</em>)NMproject is the only R package (known to the author) with a vectorized model object allowing groups of models to be operated on using the same syntax as a single model.</p></li>
-<li><p>(<em>New</em>)Custom NMproject implementations of bootstrap, cross-validation, PPCs, stepwise covariate selection, and simulation-re-estimation. All controllable on granular level using vectorized model objects.</p></li>
-<li><p>Diagnostics and VPCs using your favourite packages (e.g., xpose, vpc, …)</p></li>
-<li><p>(<em>New</em>)RStudio addins to streamline user experience.</p></li>
+<li><p>(<em>New</em>)NMproject is the only R package (known to the author) with a vectorised model object allowing groups of models to be operated on using the same syntax as a single model.</p></li>
+<li><p>(<em>New</em>)Custom NMproject implementations of bootstrap, cross-validation, PPCs, stepwise covariate selection, and simulation-re-estimation. All controllable on granular level using vectorised model objects.</p></li>
+<li><p>Diagnostics and VPCs using your favourite packages (e.g., ‘xpose’, ‘vpc’, …)</p></li>
+<li><p>(<em>New</em>)RStudio ‘Addins’ to streamline user experience.</p></li>
 <li><p>Monitor runs via shiny app including interactive OFV vs iteration plots for convergence assessment.</p></li>
-<li><p>Optional customizable analysis directory structure for consistent code organisation</p></li>
+<li><p>Optional customisable analysis directory structure for consistent code organisation</p></li>
 <li><p>(<em>New</em>)R markdown friendly. Pipe friendly</p></li>
 </ul>
 <p>NMproject has been used to conduct exploratory analyses and submission work. Model based power calculations were performed with NMproject in collaboration with biostatistics to demonstrate feasibility, design (sample size and dose), and to plan interim decision points of a recently published oncology dose finding study using pharmacometric endpoints: <a href="https://youtu.be/QVw28Im3Zz0">video presentation</a></p>
@@ -121,7 +121,7 @@
 <div id="prerequisites" class="section level2">
 <h2 class="hasAnchor">
 <a href="#prerequisites" class="anchor"></a>Prerequisites</h2>
-<p>NMproject targetted towards mid to upper level R users. If you know what a pipe is, what knitr is, you should be good. NMproject does not hide NONMEM from the user so users should be familiar with NONMEM coding. For advanced functionality, knowledge of dplyr will help to create complex workflows.</p>
+<p>NMproject targetted towards mid to upper level R users. If you know what a pipe is, what Knitr is, you should be good. NMproject does not hide NONMEM from the user so users should be familiar with NONMEM coding. For advanced functionality, knowledge of <code>dplyr</code> will help to create complex workflows.</p>
 </div>
 </div>
 <div id="demo-learn-by-doing" class="section level1">
@@ -160,8 +160,8 @@
 <div id="creating-new-r-markdowns" class="section level2">
 <h2 class="hasAnchor">
 <a href="#creating-new-r-markdowns" class="anchor"></a>Creating new R markdowns</h2>
-<p>There is nothing mandating the use of R markdown in NMproject. You can use scripts. However R markdown documents produce nice sharable model development logs which provide a readable description of what steps were performed and in what order.</p>
-<p>It is advisable to always start from a template. Templates can be accessed in <code>File</code> -&gt; <code>New File</code> -&gt; <code>Rmarkdown...</code> -&gt; <code>From Template</code>. Two to get started with are <code>NMproject generic</code> which we’ll use as a generic template for data processing and cleaning and <code>model development</code> for our model development notebook.</p>
+<p>There is nothing mandating the use of R markdown in NMproject. You can use scripts. However R markdown documents produce nice shareable model development logs which provide a readable description of what steps were performed and in what order.</p>
+<p>It is advisable to always start from a template. Templates can be accessed in <code>File</code> -&gt; <code>New File</code> -&gt; <code>R markdown...</code> -&gt; <code>From Template</code>. Two to get started with are <code>NMproject generic</code> which we’ll use as a generic template for data processing and cleaning and <code>model development</code> for our model development notebook.</p>
 </div>
 <div id="data-cleaning" class="section level2">
 <h2 class="hasAnchor">
@@ -177,7 +177,7 @@
 <div id="code-library" class="section level2">
 <h2 class="hasAnchor">
 <a href="#code-library" class="anchor"></a>Code Library</h2>
-<p>It’s always best to start with NONMEM template too. Search the code library and bring into staging area of analysis project using the <code>code_library</code> addin:</p>
+<p>It’s always best to start with NONMEM template too. Search the code library and bring into staging area of analysis project using the “code_library” RStudio ‘Addin’:</p>
 <p>One of the templates is <code>Models/ADVAN2.mod</code>. Select it, <code>preview</code> it and then <code>stage</code> by clicking the buttons and then closing the app.</p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/nTixZB9tfgk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
@@ -187,11 +187,11 @@
 <div id="model-development" class="section level1">
 <h1 class="hasAnchor">
 <a href="#model-development" class="anchor"></a>Model development</h1>
-<p><code>File</code> -&gt; <code>New File</code> -&gt; <code>New Rmarkdown...</code> -&gt; <code>From Template</code> -&gt; <code>Model development</code> will get you started with a model development log file.</p>
+<p><code>File</code> -&gt; <code>New File</code> -&gt; <code>New R markdown...</code> -&gt; <code>From Template</code> -&gt; <code>Model development</code> will get you started with a model development log file.</p>
 <div id="the-core-nm-object" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-core-nm-object" class="anchor"></a>The core nm object</h2>
-<p>The core nm object is created via the <code><a href="../reference/new_nm.html">new_nm()</a></code>. Subsequent child objects are created via the <code><a href="../reference/child.html">child()</a></code> function. All interactions with NONMEM occur through the this object. It contains metadata about the NONMEM run and contain the contents of what will writtent as the control file (also called model file).</p>
+<p>The core nm object is created via the <code><a href="../reference/new_nm.html">new_nm()</a></code>. Subsequent child objects are created via the <code><a href="../reference/child.html">child()</a></code> function. All interactions with NONMEM occur through the this object. It contains metadata about the NONMEM run and contain the contents of what will written as the control file (also called model file).</p>
 <p>NONMEM control files are only written to the <code>Models</code> sub-directory just before running NONMEM via the <code><a href="../reference/run_nm.html">run_nm()</a></code> command</p>
 <p>Let’s create our first NONMEM object with <code><a href="../reference/new_nm.html">new_nm()</a></code>. This will be a parent run to all other runs and thus requires more set up than other runs. Subsequent child objects created with <code><a href="../reference/child.html">child()</a></code> will inherits characteristics of the parent.</p>
 <p>Three arguments are required to create the parent, a run identifier, <code>run_id</code>, a control file it’s based on, <code>based_on</code>, and a (relative) dataset path <code>data_path</code>:</p>
@@ -232,8 +232,8 @@
 <code class="sourceCode R"><span class="fu"><a href="../reference/nm_getsetters.html">run_in</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "NONMEM/base_model"</code></pre>
 <p>For now though, we’ll remove the last piped command and stay with the default <code>run_in</code> location.</p>
-<p><em>NOTE:</em> the field <code>ctl_name</code> refers to the name of the control that will be created. This will only be created when it the model is run with the <code><a href="../reference/run_nm.html">run_nm()</a></code> function (described later). For now, the control file contents reside inside the object. To view these you can use <code>show model/ctl file</code> addin , or <code><a href="https://rdrr.io/r/graphics/text.html">text(m1)</a></code>.</p>
-<p>A few automatic edits from the staged control file and a compact representation of these changes can be shown by highlighting the above code and selecting the <code>nm_diff</code> addin which show what has been changed.</p>
+<p><em>NOTE:</em> the field <code>ctl_name</code> refers to the name of the control that will be created. This will only be created when it the model is run with the <code><a href="../reference/run_nm.html">run_nm()</a></code> function (described later). For now, the control file contents reside inside the object. To view these you can use “show model/ctl file” RStudio ‘Addin’ , or <code><a href="https://rdrr.io/r/graphics/text.html">text(m1)</a></code>.</p>
+<p>A few automatic edits from the staged control file and a compact representation of these changes can be shown by highlighting the above code and selecting the “nm_diff” RStudio ‘Addin’ which show what has been changed.</p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/mYUaKrj0-YE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 <p>Learning how to read to diffs will be an important skill in NMproject you will pick up over time. Notice how the <code>$DATA</code> has been updated to refer to the new location.</p>
@@ -270,13 +270,13 @@
 <div id="fast-nmtran-checks" class="section level2">
 <h2 class="hasAnchor">
 <a href="#fast-nmtran-checks" class="anchor"></a>Fast NMTRAN checks</h2>
-<p>PLACEHOLDER: YouTube video showing nm tran addin in action.</p>
-<p>In a cluster environment it is especially important to be able to diagnose data and control file issues before sending jobs off to the grid. Otherwise, you often need to wait minutes for errors that can be spotted immediately. It’s therefore highly recommended to make use of the <code>nm_tran</code> addin. This will only run NMTRAN checks to find control file syntax errors and dataset errors. It will not run nonmem itself. To use this addin, highlight the above code and select the <code>nm_tran</code> addin near the top of the RStudio GUI.</p>
+<p>PLACEHOLDER: YouTube video showing “nm_tran” RStudio ‘Addin’ in action.</p>
+<p>In a cluster environment it is especially important to be able to diagnose data and control file issues before sending jobs off to the grid. Otherwise, you often need to wait minutes for errors that can be spotted immediately. It’s therefore highly recommended to make use of the “nm_tran” RStudio ‘Addin’. This will only run NMTRAN checks to find control file syntax errors and dataset errors. It will not run NONMEM itself. To use this ‘Addin’, highlight the above code and select the “nm_tran” RStudio ‘Addin’ near the top of the RStudio GUI.</p>
 </div>
 <div id="manual-edits" class="section level2">
 <h2 class="hasAnchor">
 <a href="#manual-edits" class="anchor"></a>Manual edits</h2>
-<p>Often there will not be the functions to do the control file manipulation you want. Although it is preferable to stick to automatic control file manipulation functions, you can do fully tracked <code>manual edit</code>s via the addin menu. Again, just highlight the code, click the addin and follow the instructions:</p>
+<p>Often there will not be the functions to do the control file manipulation you want. Although it is preferable to stick to automatic control file manipulation functions, you can do fully tracked manual edits via the “manual edit” RStudio ‘Addins’ menu. Again, just highlight the code, click the ‘Addin’ and follow the instructions:</p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/HyCHeAAiwy4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 </div>
@@ -288,7 +288,7 @@
 <code class="sourceCode R"><span class="va">m2</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/subroutine.html">subroutine</a></span><span class="op">(</span>trans <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>View exactly what’s been changed by highlighting the above code in RStudio and clicking the <code>nm_diff</code> addin to see what’s been changed before running. Here, changes will be in the <code>$SUB</code>, <code>$PK</code> and <code>$THETA</code>.</p>
+<p>View exactly what’s been changed by highlighting the above code in RStudio and clicking the "nm_diff RStudio ‘Addin’ to see what’s been changed before running. Here, changes will be in the <code>$SUB</code>, <code>$PK</code> and <code>$THETA</code>.</p>
 <p>To add a covariate using PsN coding conventions use <code><a href="../reference/add_remove_covs.html">add_cov()</a></code>:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2WT</span> <span class="op">&lt;-</span> <span class="va">m2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m2WT"</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -298,7 +298,7 @@
 <div id="initial-estimates" class="section level2">
 <h2 class="hasAnchor">
 <a href="#initial-estimates" class="anchor"></a>Initial estimates</h2>
-<p>We saw a little at how the functions <code>init_theta</code>, <code>init_omega</code> and <code>init_sigma</code> can be used to set inital estimates earlier. The functions actually allow manipulation of initial estimates, parameter bounds, names, units, etc.</p>
+<p>We saw a little at how the functions <code>init_theta</code>, <code>init_omega</code> and <code>init_sigma</code> can be used to set initial estimates earlier. The functions actually allow manipulation of initial estimates, parameter bounds, names, units, etc.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## display R representaton of $THETA</span>
 <span class="va">it</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/init_theta.html">init_theta</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/nth.html">first</a></span><span class="op">(</span><span class="op">)</span>
@@ -318,7 +318,7 @@
 ##   2| 0   ; KA ; h-1 ; LOG
 ##   3| 1   ; K ; h-1 ; LOG
 ##   4| 2   ; V ; L ; LOG</code></pre>
-<p>This is quite inconvenient though as it requires 3 lines of R code. Knowing the columns of the tibble though, we can manipulate values directly like so:</p>
+<p>This is quite inconvenient though as it requires 3 lines of R code. Knowing the columns of the ‘tibble’ though, we can manipulate values directly like so:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Reset in one line to what we set it to earlier</span>
 <span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/init_theta.html">init_theta</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> 
@@ -361,14 +361,14 @@
 <div id="diagnostics" class="section level2">
 <h2 class="hasAnchor">
 <a href="#diagnostics" class="anchor"></a>Diagnostics</h2>
-<p>Use markdown templates to create a customised set of diagnostics to reuse on multiple models. In the demo an example is shown in <code>Scripts/basic_gof.Rmd</code>, but ideally you’ll create your own customised version with everything you need to evaluate your model. To create a rmarkdown diagnostic template go to <code>FILE</code> -&gt; <code>New File</code> -&gt; <code>R markdown</code> -&gt; <code>From Template</code> then select from one of the following:</p>
+<p>Use markdown templates to create a customised set of diagnostics to reuse on multiple models. In the demo an example is shown in <code>Scripts/basic_gof.Rmd</code>, but ideally you’ll create your own customised version with everything you need to evaluate your model. To create an R markdown diagnostic template go to <code>FILE</code> -&gt; <code>New File</code> -&gt; <code>R markdown</code> -&gt; <code>From Template</code> then select from one of the following:</p>
 <ul>
 <li><p><code>model diagnostic</code></p></li>
 <li><p><code>VPC diagnostic</code></p></li>
 <li><p><code>PPC diagnostic</code></p></li>
 <li><p><code>bootstrap results</code></p></li>
 </ul>
-<p><em>PLACEHOLDER: short youtube video of opening, customizing, saving and running a template.</em></p>
+<p><em>PLACEHOLDER: short YouTube video of opening, customising, saving and running a template.</em></p>
 <p>A template will appear in the script window for you to customise. Instructions are the at the top. Save the file (e.g. as <code>Scripts/basic_gof.Rmd</code>) and run in your log script with:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_gof.Rmd"</span><span class="op">)</span></code></pre></div>
@@ -403,7 +403,7 @@
 <div id="simulation-based-diagnostics" class="section level2">
 <h2 class="hasAnchor">
 <a href="#simulation-based-diagnostics" class="anchor"></a>Simulation based diagnostics</h2>
-<p>Create simulation based diagnostics first by running a simulation using <code><a href="../reference/update_parameters.html">update_parameters()</a></code> and <code><a href="../reference/convert_to_simulation.html">convert_to_simulation()</a></code>. Then use the <code>ppc diagnostics</code> and <code>vpc diagnostics</code> R markdown templates to generate customisable vpc and ppc diagnostics reports.</p>
+<p>Create simulation based diagnostics first by running a simulation using <code><a href="../reference/update_parameters.html">update_parameters()</a></code> and <code><a href="../reference/convert_to_simulation.html">convert_to_simulation()</a></code>. Then use the <code>ppc diagnostics</code> and <code>vpc diagnostics</code> R markdown templates to generate customisable VPC and PPC diagnostics reports.</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2s</span> <span class="op">&lt;-</span> <span class="va">m2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m2s"</span><span class="op">)</span> <span class="op">%&gt;%</span>
               <span class="fu"><a href="../reference/update_parameters.html">update_parameters</a></span><span class="op">(</span><span class="va">m2</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -560,17 +560,17 @@
 <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"THETA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/m1`
 ##   1| $THETA
-##   2| 0.79489   ; KA ; h-1 ; LOG
-##   3| -2.642   ; K ; h-1 ; LOG
-##   4| 0.031847   ; V ; L ; LOG</code></pre>
+##   2| 0.57282   ; KA ; h-1 ; LOG
+##   3| -2.2492   ; K ; h-1 ; LOG
+##   4| 0.17494   ; V ; L ; LOG</code></pre>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/init_theta.html">init_omega</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="va">init</span>, min <span class="op">=</span> <span class="va">init</span><span class="op">/</span><span class="fl">2</span>, max <span class="op">=</span> <span class="va">init</span><span class="op">*</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>
 <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"OMEGA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/m1`
 ##   1| $OMEGA
-##   2| 0.14494   ;  IIV_KA ; LOG
-##   3| 0.19522   ;  IIV_K ; LOG
-##   4| 0.096525   ;  IIV_V ; LOG</code></pre>
+##   2| 0.09802   ;  IIV_KA ; LOG
+##   3| 0.19711   ;  IIV_K ; LOG
+##   4| 0.1434   ;  IIV_V ; LOG</code></pre>
 </div>
 <div id="working-with-omegasigma-blocks" class="section level2">
 <h2 class="hasAnchor">
@@ -580,11 +580,11 @@
 <code class="sourceCode R"><span class="va">io</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/init_theta.html">init_omega</a></span><span class="op">(</span><span class="op">)</span>  <span class="co">## note we dont need dplyr::first as block()/unblock() also work on lists of tibbles.</span>
 <span class="va">io</span> </code></pre></div>
 <pre><code>## $`execute.Models/m1`
-##     name omega1 omega2 lower     init upper block mblock   FIX unit trans line
-## 1   &lt;NA&gt;     NA     NA    NA       NA    NA     1     NA FALSE &lt;NA&gt;  &lt;NA&gt;    1
-## 2 IIV_KA      1      1    NA 0.144940    NA     1      1 FALSE &lt;NA&gt;   LOG    2
-## 3  IIV_K      2      2    NA 0.195220    NA     2      1 FALSE &lt;NA&gt;   LOG    3
-## 4  IIV_V      3      3    NA 0.096525    NA     3      1 FALSE &lt;NA&gt;   LOG    4
+##     name omega1 omega2 lower    init upper block mblock   FIX unit trans line
+## 1   &lt;NA&gt;     NA     NA    NA      NA    NA     1     NA FALSE &lt;NA&gt;  &lt;NA&gt;    1
+## 2 IIV_KA      1      1    NA 0.09802    NA     1      1 FALSE &lt;NA&gt;   LOG    2
+## 3  IIV_K      2      2    NA 0.19711    NA     2      1 FALSE &lt;NA&gt;   LOG    3
+## 4  IIV_V      3      3    NA 0.14340    NA     3      1 FALSE &lt;NA&gt;   LOG    4
 ##   pos orig_line orig_pos
 ## 1   1         1        1
 ## 2   1         2        1
@@ -598,10 +598,10 @@
 <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"OMEGA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/m1`
 ##   1| $OMEGA
-##   2| 0.14494   ;   IIV_KA ; LOG
+##   2| 0.09802   ;   IIV_KA ; LOG
 ##   3| $OMEGA BLOCK (2)
-##   4| 0.19522   ;   IIV_K ; LOG
-##   5| 0.01 0.096525   ;   IIV_V ; LOG</code></pre>
+##   4| 0.19711   ;   IIV_K ; LOG
+##   5| 0.01 0.1434   ;   IIV_V ; LOG</code></pre>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## for demo purposes we'll reverse the process with unblock()</span>
 <span class="va">io</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/init_theta.html">init_omega</a></span><span class="op">(</span><span class="op">)</span>
@@ -610,18 +610,18 @@
 <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"OMEGA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/m1`
 ##   1| $OMEGA
-##   2| 0.14494   ;    IIV_KA ; LOG
-##   3| 0.19522   ;    IIV_K ; LOG
-##   4| 0.096525   ;    IIV_V ; LOG</code></pre>
+##   2| 0.09802   ;    IIV_KA ; LOG
+##   3| 0.19711   ;    IIV_K ; LOG
+##   4| 0.1434   ;    IIV_V ; LOG</code></pre>
 </div>
 </div>
 <div id="advanced-topics" class="section level1">
 <h1 class="hasAnchor">
 <a href="#advanced-topics" class="anchor"></a>Advanced topics</h1>
-<div id="vectorization" class="section level2">
+<div id="vectorisation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#vectorization" class="anchor"></a>Vectorization</h2>
-<p>The basic nm object is fully vectorized. To see this compare the following two outputs</p>
+<a href="#vectorisation" class="anchor"></a>Vectorisation</h2>
+<p>The basic nm object is fully vectorised. To see this compare the following two outputs</p>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span></code></pre></div>
 <pre><code>## List of 1
@@ -683,16 +683,16 @@
 ##   ..- attr(*, "class")= chr [1:3] "nm_execute" "nm_generic" "list"
 ##  - attr(*, "class")= chr [1:2] "nm_list" "list"</code></pre>
 <p>Both are nm objects with length 1 and 2, respectively. We used the <code><a href="https://rdrr.io/r/base/c.html">c(m1, m2)</a></code> above when we wanted to use <code><a href="../reference/nm_render.html">nm_render()</a></code> on both runs. We didn’t need to write any loops or special code to handle this because nm objects and the functions that operate on them have been designed with parallelisation in mind. This is because in pharmacometrics we are often dealing with multiple models, perhaps moreso than other statistical modelling disciplines.</p>
-<p>The vectorized nature of the nm object is particularly powerful when used in conjuction with <code>dplyr</code>. To demonstrate, lets repeat the the previous initial perturbation exercise, but create 5 runs each with their own perturbed initial estimates.</p>
-<p>The basic idea is to contruct a <code>tibble</code> (if you are unfamiliar with <code>tibble</code>s, they are a tidyverse expansion of the concept of a <code>data.frame</code>), and then use a <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate</a></code> statement to construct a column vector of nm objects. Below the column vector is produced by starting with the parent object <code>m1</code> and then supplying a vector rather than a scalar to the <code><a href="../reference/child.html">child()</a></code> function. Since the <code>rep</code> column is length 5, this will make the nm_object length 5.</p>
+<p>The vectorised nature of the nm object is particularly powerful when used in conjuction with <code>dplyr</code>. To demonstrate, lets repeat the the previous initial perturbation exercise, but create 5 runs each with their own perturbed initial estimates.</p>
+<p>The basic idea is to construct a <code>tibble</code> (a <code>tibble</code> is a ‘tidyverse’ expansion of the concept of a <code>data.frame</code>), and then use a <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate</a></code> statement to construct a column vector of nm objects. Below the column vector is produced by starting with the parent object <code>m1</code> and then supplying a vector rather than a scalar to the <code><a href="../reference/child.html">child()</a></code> function. Since the <code>rep</code> column is length 5, this will make the nm_object length 5.</p>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>rep <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span>
 <span class="va">dp</span><span class="op">$</span><span class="va">m</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="co">## start with parent - m1 is length 1</span>
   <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="va">dp</span><span class="op">$</span><span class="va">rep</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## now object is length = length(dp$rep) = 5</span>
-  <span class="fu"><a href="../reference/init_theta.html">init_theta</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">init</span>, mean <span class="op">=</span> <span class="va">init</span>, sd <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## vectorized operation</span>
+  <span class="fu"><a href="../reference/init_theta.html">init_theta</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">init</span>, mean <span class="op">=</span> <span class="va">init</span>, sd <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co">## vectorised operation</span>
   <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span> <span class="co">## run all 5 runs</span></code></pre></div>
-<p>View <code>dp</code> to see a tibble with two columsn <code>rep</code> and <code>m</code>. View the new <code>$THETA</code> statements with <code>dp$m %&gt;% dollar("THETA")</code>.</p>
-<p>An alternative but equivalent way of writing the above is to use dplyrs <code>mutate</code> statement to create the <code>m</code> column</p>
+<p>View <code>dp</code> to see a <code>tibble</code> with two columns <code>rep</code> and <code>m</code>. View the new <code>$THETA</code> statements with <code>dp$m %&gt;% dollar("THETA")</code>.</p>
+<p>An alternative but equivalent way of writing the above is to use <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate()</a></code> statement to create the <code>m</code> column.</p>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dp</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>rep <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">mutate</span><span class="op">(</span>
@@ -705,44 +705,44 @@
 <span class="va">dp</span><span class="op">$</span><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"THETA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/1`
 ##   1| $THETA
-##   2| 0.92062   ; KA ; h-1 ; LOG
-##   3| -3.0503   ; K ; h-1 ; LOG
-##   4| -0.00947   ; V ; L ; LOG
+##   2| 0.57123   ; KA ; h-1 ; LOG
+##   3| -2.0137   ; K ; h-1 ; LOG
+##   4| 0.055915   ; V ; L ; LOG
 ## 
 ## $`execute.Models/2`
 ##   1| $THETA
-##   2| 1.1737   ; KA ; h-1 ; LOG
-##   3| -2.2379   ; K ; h-1 ; LOG
-##   4| -0.18115   ; V ; L ; LOG
+##   2| 0.81811   ; KA ; h-1 ; LOG
+##   3| -2.2443   ; K ; h-1 ; LOG
+##   4| -0.19993   ; V ; L ; LOG
 ## 
 ## $`execute.Models/3`
 ##   1| $THETA
-##   2| 0.62354   ; KA ; h-1 ; LOG
-##   3| -2.7352   ; K ; h-1 ; LOG
-##   4| -0.15704   ; V ; L ; LOG
+##   2| 0.46697   ; KA ; h-1 ; LOG
+##   3| -1.9809   ; K ; h-1 ; LOG
+##   4| 0.017208   ; V ; L ; LOG
 ## 
 ## $`execute.Models/4`
 ##   1| $THETA
-##   2| 0.29259   ; KA ; h-1 ; LOG
-##   3| -2.4912   ; K ; h-1 ; LOG
-##   4| -0.29968   ; V ; L ; LOG
+##   2| 0.5428   ; KA ; h-1 ; LOG
+##   3| -2.5001   ; K ; h-1 ; LOG
+##   4| -0.32254   ; V ; L ; LOG
 ## 
 ## $`execute.Models/5`
 ##   1| $THETA
-##   2| 1.0497   ; KA ; h-1 ; LOG
-##   3| -2.3177   ; K ; h-1 ; LOG
-##   4| -0.012033   ; V ; L ; LOG</code></pre>
+##   2| 0.35361   ; KA ; h-1 ; LOG
+##   3| -1.9853   ; K ; h-1 ; LOG
+##   4| 0.0084784   ; V ; L ; LOG</code></pre>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## run all runs in dp$m with the normal syntax </span>
 <span class="va">dp</span><span class="op">$</span><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>The reset of the code in this vignette will use the dplyr layout.</p>
-<p>Note that here the functions <code>init_theta</code>, <code>dollar</code> and <code>run_nm</code> were all operating in a vectorized fashion</p>
+<p>The reset of the code in this vignette will use the <code>dplyr</code> layout.</p>
+<p>Note that here the functions <code>init_theta</code>, <code>dollar</code> and <code>run_nm</code> were all operating in a vectorised fashion</p>
 </div>
 <div id="automating-model-checking" class="section level2">
 <h2 class="hasAnchor">
 <a href="#automating-model-checking" class="anchor"></a>Automating model checking</h2>
 <p>Lets expand the earlier subroutine example to build a vector of runs that test multiple different <code>ADVAN</code>s and <code>TRANS</code> at the same time.</p>
-<p>We’ll use a similar structure to the previous section using <code>.available_advans</code> to list all available advans, <code>filter</code> to isolate specific advans, and <code>mutate</code> and <code><a href="../reference/subroutine.html">subroutine()</a></code> to perform the control file manipulation function.</p>
+<p>We’ll use a similar structure to the previous section using <code>.available_advans</code> to list all available ADVAN/TRANS options, <code>filter</code> to isolate specific ADVAN/TRANS options, and <code>mutate</code> and <code><a href="../reference/subroutine.html">subroutine()</a></code> to perform the control file manipulation function.</p>
 <p>Then we’ll display all the <code>$PK</code> subroutines to view the changes.</p>
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">.available_advans</span> <span class="co">## display available advans</span></code></pre></div>
@@ -1011,7 +1011,7 @@
 <div id="simulation-re-estimation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#simulation-re-estimation" class="anchor"></a>Simulation re-estimation</h2>
-<p>There will soon a be a simple wrapper for the code below, as with the bootstrap and step wise covariate functionaliy above, but for now the code below is a good example of how the flexibility of the vectorized object can be used to create complex workflows whilst still providing granular control of runs.</p>
+<p>There will soon a be a simple wrapper for the code below, as with the bootstrap and step wise covariate functionality above, but for now the code below is a good example of how the flexibility of the vectorised object can be used to create complex workflows whilst still providing granular control of runs.</p>
 <p>It’s good advice to start with 1 or 2 replicates and scale up only when you’ve confirmed your code is working (here we’re just using 3 for demo purposes). You will not waste time because <code><a href="../reference/run_nm.html">run_nm()</a></code> will skip over runs that have already completed.</p>
 <div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">n_sims</span> <span class="op">&lt;-</span> <span class="fl">3</span>  <span class="co">## start small, scale up later</span>
@@ -1080,7 +1080,7 @@
 <div id="how-do-i-set-a-nmproject-configuration-option-permanently-so-i-dont-have-to-set-it-for-all-my-future-r-sessions" class="section level3">
 <h3 class="hasAnchor">
 <a href="#how-do-i-set-a-nmproject-configuration-option-permanently-so-i-dont-have-to-set-it-for-all-my-future-r-sessions" class="anchor"></a>+ How do I set a NMproject configuration option permanently so I don’t have to set it for all my future R sessions?</h3>
-<p>See ?.Rprofile. In a multiple user environment it’s best practice to avoid user specific configurations as your code may run different from user to user. There are two options, set the option for the project or site wide for all users.</p>
+<p>See <code><a href="https://rdrr.io/r/base/Startup.html">?.Rprofile</a></code>. In a multiple user environment it’s best practice to avoid user specific configurations as your code may run different from user to user. There are two options, set the option for the project or site wide for all users.</p>
 <p>To set the option for anyone using the project, include the <code>options</code> command (e.g. <code><a href="https://rdrr.io/r/base/options.html">options(nm.cmd_default = ....)</a></code>) in <code>.Rprofile</code>.</p>
 <p>To set the option site wide include the <code>options</code> command in <code>$R_HOME/etc/Rprofile.site</code> (requires administration privileges).</p>
 <p>Also consider creating your own organisation specific option/path setting package. The <code>options</code> statement then just needs to be in a R script in the packages <code>R</code> directory. Loading this package will then set the option. So be sure to load it (before or after) each time you’re using <code>NMproject</code>. The advantage of a package is you can also bundle other functions in there for them to use.</p>
@@ -1113,7 +1113,7 @@
 </div>
 <div id="how-do-i-run-this-on-other-clusters-like-slurm-lsf-torque" class="section level3">
 <h3 class="hasAnchor">
-<a href="#how-do-i-run-this-on-other-clusters-like-slurm-lsf-torque" class="anchor"></a>+ How do I run this on other clusters like Slurm, LSF, Torque</h3>
+<a href="#how-do-i-run-this-on-other-clusters-like-slurm-lsf-torque" class="anchor"></a>+ How do I run this on other clusters like Slurm, LSF, Torque?</h3>
 <p>The workflow is similar to above where PsN handles the grid submission. You will need to create your own analog character to <code>sge_parallel_execute</code> for your respective cluster. It is recommended to consult PsN documentation to “gridify” your PsN command. Once you have this, it’s just a simple matter of replacing your control file name, run directory, parafile and desired number of cores with the relevant glue field (e.g. <code>{parafile}</code>) and then putting it into your parent <code><a href="../reference/nm_getsetters.html">cmd()</a></code> command to get it running through NMproject.</p>
 <p>Feel free to contact me if you need help</p>
 </div>
@@ -1127,13 +1127,13 @@
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}"</span><span class="op">)</span></code></pre></div>
 <p><code><a href="../reference/run_nm.html">run_nm()</a></code> will then execute NONMEM via the docker container. All subsequent child objects will inherit the same command structure. Note the use the glueing object fields <code>ctl_name</code> and <code>run_dir</code> so child objects can inherit the same command structure to save the command being rewritten for each run)</p>
-<p>Set up dockerized NMTRAN checking with:</p>
+<p>Set up dockerised NMTRAN checking with:</p>
 <div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/nm_tran_command.html">nm_tran_command</a></span><span class="op">(</span><span class="st">"docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn /bin/bash -c '/opt/NONMEM/nm_current/tr/NMTRAN.exe &lt; {ctl_name}'"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="my-rstudio-server-is-on-a-different-linux-server-to-my-nonmem-cluster--how-can-i-set-up-nmproject-to-work-with-this" class="section level3">
 <h3 class="hasAnchor">
-<a href="#my-rstudio-server-is-on-a-different-linux-server-to-my-nonmem-cluster--how-can-i-set-up-nmproject-to-work-with-this" class="anchor"></a>+ My Rstudio Server is on a different linux server to my NONMEM cluster. How can I set up NMproject to work with this?</h3>
+<a href="#my-rstudio-server-is-on-a-different-linux-server-to-my-nonmem-cluster--how-can-i-set-up-nmproject-to-work-with-this" class="anchor"></a>+ My RStudio Server is on a different Linux server to my NONMEM cluster. How can I set up NMproject to work with this?</h3>
 <p>You need to ensure your account has passwordless ssh set up. Then create a <code>system_nm</code> option in your <code>~/.Rprofile</code> configuration file which appends an ssh statement to the system call e.g. the following will set you up to connect to the host <code>clustername</code>:</p>
 <div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>system_nm<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">cmd</span>,<span class="va">...</span><span class="op">)</span> <span class="op">{</span>
@@ -1147,7 +1147,7 @@
 </div>
 <div id="my-organisation-has-a-different-control-file-convention-to-the-runxx-mod-convention--can-i-change-this" class="section level3">
 <h3 class="hasAnchor">
-<a href="#my-organisation-has-a-different-control-file-convention-to-the-runxx-mod-convention--can-i-change-this" class="anchor"></a>+ My organisation has a different control file convention to the runXX.mod convention. Can I change this?</h3>
+<a href="#my-organisation-has-a-different-control-file-convention-to-the-runxx-mod-convention--can-i-change-this" class="anchor"></a>+ My organisation has a different control file convention to the ‘runXX.mod’ convention. Can I change this?</h3>
 <p>Set it up with <code>ctl_path</code> the field of your object, e.g. to change the convention to <code>nm.XX.con</code></p>
 <div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/ctl_path.html">ctl_path</a></span><span class="op">(</span><span class="st">"Models/nm.{run_id}.com"</span><span class="op">)</span></code></pre></div>
@@ -1159,15 +1159,15 @@
 <code class="sourceCode R"><span class="fu"><a href="../reference/system_nm.html">system_nm</a></span><span class="op">(</span><span class="st">"command_to_run"</span>, dir<span class="op">=</span><span class="st">"path/to/dir"</span><span class="op">)</span></code></pre></div>
 <p>if dir is not specified, this will default to the <code>Models</code> directory</p>
 </div>
-<div id="there-is-functionality-in-psns-runrecord-sumo-or-pirana-that-i-would-like-but-is-not-available-in-nmproject-" class="section level3">
+<div id="there-is-functionality-in-psns-run-record-sumo-or-pirana-that-i-would-like-but-is-not-available-in-nmproject-" class="section level3">
 <h3 class="hasAnchor">
-<a href="#there-is-functionality-in-psns-runrecord-sumo-or-pirana-that-i-would-like-but-is-not-available-in-nmproject-" class="anchor"></a>+ There is functionality in PsN’s runrecord, sumo or Pirana that I would like but is not available in NMproject.</h3>
-<p>NMproject doesn’t change PsN’s default directory structure, everything in the “Models” directory is as if you lauched the jobs from the command line. Therefore you can continue to use PsN functions on the command line. You can also continue using Pirana by pointing it towards your models directory.</p>
-<p>If it’s something you think really should be part of NMproject, open a github “issue” and ask for the feature.</p>
+<a href="#there-is-functionality-in-psns-run-record-sumo-or-pirana-that-i-would-like-but-is-not-available-in-nmproject-" class="anchor"></a>+ There is functionality in PsN’s run record, sumo or Pirana that I would like but is not available in NMproject.</h3>
+<p>NMproject doesn’t change PsN’s default directory structure, everything in the “Models” directory is as if you launched the jobs from the command line. Therefore you can continue to use PsN functions on the command line. You can also continue using Pirana by pointing it towards your models directory.</p>
+<p>If it’s something you think really should be part of NMproject, open a GitHub “issue” and ask for the feature.</p>
 </div>
-<div id="thats-all-well-and-good-that-nmproject-has-its-own-boostrapvpc-methods-but-i-just-want-to-runrerun-a-bootstrapvpc-in-psn--can-i-do-this-through-nmproject" class="section level3">
+<div id="thats-all-well-and-good-that-nmproject-has-its-own-bootstrapvpc-methods-but-i-just-want-to-runrerun-a-bootstrapvpc-in-psn--can-i-do-this-through-nmproject" class="section level3">
 <h3 class="hasAnchor">
-<a href="#thats-all-well-and-good-that-nmproject-has-its-own-boostrapvpc-methods-but-i-just-want-to-runrerun-a-bootstrapvpc-in-psn--can-i-do-this-through-nmproject" class="anchor"></a>+ That’s all well and good that NMproject has it’s own boostrap/vpc/… methods, but I just want to run/rerun a bootstrap/vpc/… in PsN. Can I do this through NMproject?</h3>
+<a href="#thats-all-well-and-good-that-nmproject-has-its-own-bootstrapvpc-methods-but-i-just-want-to-runrerun-a-bootstrapvpc-in-psn--can-i-do-this-through-nmproject" class="anchor"></a>+ That’s all well and good that NMproject has it’s own bootstrap/vpc/… methods, but I just want to run/rerun a bootstrap/vpc/… in PsN. Can I do this through NMproject?</h3>
 <p>Yes, just change <code>cmd</code> to reflect the proper PsN command.</p>
 <div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1psnboot</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span><span class="st">"m1psnboot"</span><span class="op">)</span> <span class="op">%&gt;%</span>
