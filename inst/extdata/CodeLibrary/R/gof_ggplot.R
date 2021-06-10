@@ -1,13 +1,13 @@
-## Description: Function template: ggplot GOF
-## Instructions: source() this file, then launch on completed model object
-## Author:
-## Depends on:
-## Key words: function, template
+#' Create pdf diagnostic report with ggplot
+#' 
+#' @param m An nm object
+#' 
+#' @export
 
 gof_ggplot <- function(m){
 
-  wait_finish(m)  ## ensures m is finished
-  d <- output_table_first(m)  ## reads in all table files
+  NMproject::wait_finish(m)  ## ensures m is finished
+  d <- NMproject::output_table_first(m)  ## reads in all table files
 
   library(ggplot2)
 
@@ -48,7 +48,10 @@ gof_ggplot <- function(m){
 
 
 
-  pdf(file.path(results_dir(m1), paste0("gof_ggplot_run_",run_id(m),".pdf")))
+  pdf(file.path(NMproject::results_dir(m), 
+                paste0("gof_ggplot_run_",
+                       NMproject::run_id(m),
+                       ".pdf")))
   print(pl)
   dev.off()
 

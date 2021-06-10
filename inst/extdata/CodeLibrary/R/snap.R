@@ -1,14 +1,11 @@
-## Author: klgk669, metrumrg
-## First created: 2016-09-16
-## Description: metrumrg snap function 
-## Run interactively: FALSE
-## Keywords: function
-
-########################################
-## load packages and source functions here
-
-########################################
-## main script here
+#' metrumrg snap function 
+#' 
+#' @param x numeric vector to snap
+#' @param rule vector of points to snap to
+#' @param left direction to snap to 
+#' @param ... not used
+#' 
+#' @export
 
 snap <- function (x, rule = 1, left = TRUE, ...) 
 {

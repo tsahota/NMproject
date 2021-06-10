@@ -1,8 +1,8 @@
-## Description: Function template: Xpose GOF
-## Instructions: source() this file, then launch on completed model object
-## Run interactively: FALSE
-## Key words: function, template
-## E.g. for sdtab37, run with gof1(37)
+#' Create pdf diagnostic report with xpose
+#' 
+#' @param m An nm object
+#' 
+#' @export
 
 gof_xpose <- function(m){
 
