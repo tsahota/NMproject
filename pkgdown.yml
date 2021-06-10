@@ -2,8 +2,8 @@ pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  NMproject: NMproject.html
-last_built: 2021-06-09T18:44Z
+  articles/NMproject: NMproject.html
+last_built: 2021-06-10T10:19Z
 urls:
   reference: https://tsahota.github.io/NMproject/reference
   article: https://tsahota.github.io/NMproject/articles
