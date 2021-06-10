@@ -72,10 +72,9 @@ library(NMproject)
 Two options:
 
 1. Running the
-[demo](https://tsahota.github.io/NMproject/articles/NMproject.html#demo-learn-by-doing-1)
+[demo](https://tsahota.github.io/NMproject/articles/articles/NMproject.html#demo-1)
 is easiest way to familiarise your with NMproject.
-2. Reading the 
-[vignette](https://tsahota.github.io/NMproject/articles/NMproject.html).
+2. Reading the website [vignette](https://tsahota.github.io/NMproject/articles/articles/NMproject.html).
 
 ## Code snippets
 
@@ -151,6 +150,5 @@ m1rep <- m1 %>% child(1:5) %>%
 
 ```
 
-See the
-[vignette](https://tsahota.github.io/NMproject/articles/NMproject.html) for more
+See the website [vignette](https://tsahota.github.io/NMproject/articles/articles/NMproject.html) for more
 examples

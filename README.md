@@ -27,7 +27,7 @@ Script based ‘NONMEM’ model development in RStudio.
 -   100% flexibility through tracked manual edits to model files
 -   Customisable to multiple infrastructure types
 
-[Two-minute Youtube
+[Two-minute YouTube
 summary](https://www.youtube.com/watch?v=b7oBb6QZub8) *WARNING: this is
 the prototype “alpha” interface. The new interface has a different
 syntax and is not backwards compatible. Video is to be replaced*
@@ -71,10 +71,10 @@ library(NMproject)
 Two options:
 
 1.  Running the
-    [demo](https://tsahota.github.io/NMproject/articles/NMproject.html#demo-learn-by-doing-1)
+    [demo](https://tsahota.github.io/NMproject/articles/articles/NMproject.html#demo-1)
     is easiest way to familiarise your with NMproject.
-2.  Reading the
-    [vignette](https://tsahota.github.io/NMproject/articles/NMproject.html).
+2.  Reading the website
+    [vignette](https://tsahota.github.io/NMproject/articles/articles/NMproject.html).
 
 ## Code snippets
 
@@ -145,6 +145,6 @@ m1rep <- m1 %>% child(1:5) %>%
   run_nm()
 ```
 
-See the
-[vignette](https://tsahota.github.io/NMproject/articles/NMproject.html)
+See the website
+[vignette](https://tsahota.github.io/NMproject/articles/articles/NMproject.html)
 for more examples

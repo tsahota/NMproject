@@ -9,8 +9,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-The best way to view this vignette link is on the [website](https://tsahota.github.io/NMproject/articles/NMproject.html).  If you're viewing this as a PDF, you will not able to see all the formatting including YouTube video demonstrations of certain parts of the interface.
-
 # Why NMproject?
 
 ## History
