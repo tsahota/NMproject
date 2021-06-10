@@ -27,17 +27,7 @@ The goal of {{{ Package }}} is to ...
 - **R**: Location of R functions to be loaded with `source()` (or loaded with `devtools::load_all()`).
 - **`r NMproject::nm_default_dir("scripts")`**: Location of Script files for data cleaning, analysis and post-processing.
 - **`r NMproject::nm_default_dir("results")`**: Location of Results files
-- ...
-
-<!--
-
-Fill in the ... to include the other directories.
-
-In general there should be a source data directory for 
-unmodified source datasets and a derived data directory
-for cleaned modelling-ready datasets
-
--->
+- Additional directories are for source datasets (unmodified source data files) and derived datasets (cleaned and analysis-ready datasets)
 
 ## Data sources
 
