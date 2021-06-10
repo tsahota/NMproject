@@ -238,6 +238,31 @@ info_scripts <- function(files, fields = c("Description"), viewer = TRUE, silent
       ## per file
       suppressWarnings({
         s <- readLines(file.name, n = 30)
+        
+        ######
+        ## look for roxygen comments
+        if(requireNamespace("roxygen2")) {
+          res <- try(
+            {
+              has_roxygen <- any(grepl("^#'\\s*.+$", s))
+              if(has_roxygen) {
+                block <- roxygen2::parse_file(file.name)[[1]]
+                title <- roxygen2::block_get_tags(block, tags = "title")
+                if(length(title) > 0) {
+                  title <- title[[1]][['val']]
+                  return(data.frame(Description = title))
+                }
+              } 
+            }, silent = TRUE
+          )
+          if(inherits(res, "data.frame")) {
+            if(nrow(res) == 1){
+              return(res)
+            }
+          }
+        }
+        #####
+        
         field.vals <- as.data.frame(lapply(fields, function(field) {
           field <- gsub(paste0("^.*", field, "s*:\\s*(.*)$"), "\\1",
             s[grepl(paste0("^.*", field, "s*:\\s*"), s, ignore.case = TRUE)],

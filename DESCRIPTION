@@ -52,7 +52,8 @@ Suggests:
     purrr,
     digest,
     covr,
-    devtools
+    devtools,
+    roxygen2
 Collate: 
     'NMproject-options.R'
     'NMproject-package.R'
