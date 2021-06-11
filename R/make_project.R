@@ -78,7 +78,7 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
   folder <- dirname(path)
 
   if (grepl("package", style) & !valid_package_name(name)) {
-    stop("directory name is compliant for style = \"analysis-package\" see ?validate_dir_list")
+    stop("directory name is not compliant for style = \"analysis-package\" see ?nm_create_analysis_project")
   }
 
   usethis::create_project(path = path, rstudio = TRUE, open = FALSE)
