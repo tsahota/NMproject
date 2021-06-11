@@ -1,3 +1,9 @@
+## Resubmission
+This is a resubmission. In this version I have:
+
+* Removed VignetteBuilder field from DESCRIPTION.
+* Reduced build size by removing redundant file from tests.
+
 ## Test environments
 * local windows R installation, R 4.0.3
 * local ubuntu 20.04 R installation, R 4.0.5

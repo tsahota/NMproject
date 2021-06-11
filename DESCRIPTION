@@ -3,7 +3,7 @@ Type: Package
 Title: Script Based 'NONMEM' Model Development
 URL: https://tsahota.github.io/NMproject/, https://github.com/tsahota/NMproject
 BugReports: https://github.com/tsahota/NMproject/issues
-Version: 0.6.0
+Version: 0.6.1
 Authors@R: c(
  person("Tarj", "Sahota", email = "t.sahota0@gmail.com", 
     role = c("aut", "cre", "cph")),
@@ -111,5 +111,4 @@ Collate:
     'text.R'
     'update_parameters.R'
     'zzz.R'
-VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
