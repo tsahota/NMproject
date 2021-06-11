@@ -19,7 +19,7 @@
 #' @param ... Deprecated.
 #'
 #' @details The function works like as is inspired by
-#'   `starters::create_analysis_project`. There is no restriction on directory
+#'   `starters::create_analysis_project()`. There is no restriction on directory
 #'   name.  It is therefore possible to violate R package naming conventions.
 #'
 #'   When `style = "analysis"` is selected, the analysis directory will be
@@ -61,6 +61,7 @@
 #'   }
 #' }
 #'
+#' @seealso [nm_default_dirs()] for modifying default directory structure.
 #' @export
 
 nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),

@@ -36,7 +36,7 @@ directory with a directory structure similar to an R package.
 }
 \details{
 The function works like as is inspired by
-\code{starters::create_analysis_project}. There is no restriction on directory
+\code{starters::create_analysis_project()}. There is no restriction on directory
 name.  It is therefore possible to violate R package naming conventions.
 
 When \code{style = "analysis"} is selected, the analysis directory will be
@@ -79,3 +79,6 @@ intended as default location for run diagnostics, plots and tables
 }
 }
 
+\seealso{
+\code{\link[=nm_default_dirs]{nm_default_dirs()}} for modifying default directory structure.
+}
