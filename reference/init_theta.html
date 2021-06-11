@@ -41,7 +41,8 @@
 
 <meta property="og:title" content="Get/set initial parameters — init_theta" />
 <meta property="og:description" content="
-These functions are useful to obtain and modify initial values of $THETA, $OMEGA and $SIGMA." />
+These functions are useful to obtain and modify initial values of $THETA,
+$OMEGA and $SIGMA." />
 
 
 
@@ -73,7 +74,7 @@ These functions are useful to obtain and modify initial values of $THETA, $OMEGA
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.9.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -122,7 +123,8 @@ These functions are useful to obtain and modify initial values of $THETA, $OMEGA
 
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
-<p>These functions are useful to obtain and modify initial values of <code>$THETA</code>, <code>$OMEGA</code> and <code>$SIGMA</code>.</p>
+<p>These functions are useful to obtain and modify initial values of <code>$THETA</code>,
+<code>$OMEGA</code> and <code>$SIGMA</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>init_theta</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>replace</span>, <span class='va'>...</span><span class='op'>)</span>
@@ -136,15 +138,16 @@ These functions are useful to obtain and modify initial values of $THETA, $OMEGA
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>m</th>
-      <td><p>nm object</p></td>
+      <td><p>An nm object.</p></td>
     </tr>
     <tr>
       <th>replace</th>
-      <td><p>optional tibble for replacement</p></td>
+      <td><p>Optional <code>tibble</code> for replacement.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>mutate init_theta</p></td>
+      <td><p>Additional arguments for mutating initial estimate NONMEM
+subroutines.  See examples.</p></td>
     </tr>
     </table>
 
