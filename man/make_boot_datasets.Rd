@@ -24,7 +24,7 @@ make_boot_datasets(
 
 \item{id_var}{Character (default = \code{"ID"}). Name of ID column in dataset.}
 
-\item{...}{Arguments passed to \code{\link[=fill_input]{fill_input()}}}
+\item{...}{Arguments passed to \code{\link[=fill_input]{fill_input()}}.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

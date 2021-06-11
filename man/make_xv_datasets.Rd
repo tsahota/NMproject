@@ -18,10 +18,10 @@ make_xv_datasets(
 
 \item{overwrite}{Logical. Overwrite previous files or not.}
 
-\item{id_var}{character (default = \code{"ID"}). Name of ID column.}
+\item{id_var}{Character (default = \code{"ID"}). Name of ID column.}
 }
 \value{
-A \code{tibble} of nm objects similar to \code{\link[=make_boot_datasets]{make_boot_datasets()}} output
+A \code{tibble} of nm objects similar to \code{\link[=make_boot_datasets]{make_boot_datasets()}} output.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

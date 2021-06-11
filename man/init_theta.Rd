@@ -13,16 +13,18 @@ init_omega(m, replace, ...)
 init_sigma(m, replace, ...)
 }
 \arguments{
-\item{m}{nm object}
+\item{m}{An nm object.}
 
-\item{replace}{optional tibble for replacement}
+\item{replace}{Optional \code{tibble} for replacement.}
 
-\item{...}{mutate init_theta}
+\item{...}{Additional arguments for mutating initial estimate NONMEM
+subroutines.  See examples.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-These functions are useful to obtain and modify initial values of \verb{$THETA}, \verb{$OMEGA} and \verb{$SIGMA}.
+These functions are useful to obtain and modify initial values of \verb{$THETA},
+\verb{$OMEGA} and \verb{$SIGMA}.
 }
 \examples{
 \dontrun{

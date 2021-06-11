@@ -7,11 +7,11 @@
 nm_list_gather(x = .GlobalEnv)
 }
 \arguments{
-\item{x}{environment (default = \code{.GlobalEnv}) to search
-or data.frame with (\code{nm_list} column) or \code{nm_list}}
+\item{x}{An environment (default = \code{.GlobalEnv}) to search
+or \code{data.frame} with (\code{nm_list} column) or \code{nm_list}.}
 }
 \value{
-A single \code{nm_list} object with all model objects
+A single \code{nm_list} object with all model objects.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

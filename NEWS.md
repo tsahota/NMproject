@@ -32,6 +32,10 @@ relative to 0.5.1:
 * Custom NMproject implementations of PsN's bootstrap, cross-validation, 
   stepwise covariate selection, simulation-re-estimation, and PPCs have been
   added.
+  
+* "overwrite behaviour" RStudio 'Addin' has been created to allow different
+  behaviours when modifying and rerunning a previously executed run. The
+  default is to ask for confirmation.
 
 # NMproject 0.5.1 (beta interface pre-release)
 

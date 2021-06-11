@@ -65,7 +65,7 @@ boot_to_csv <- function(d,
 #' @param data_folder Folder (relative path) to store datasets.
 #' @param overwrite Logical (default = `FALSE`). Overwrites previous files.
 #' @param id_var Character (default = `"ID"`). Name of ID column in dataset.
-#' @param ... Arguments passed to [fill_input()]
+#' @param ... Arguments passed to [fill_input()].
 #'
 #' @examples
 #'
@@ -156,9 +156,9 @@ make_boot_datasets <- function(m,
 #' @param dboot Output from [make_boot_datasets()].
 #' @param data_folder Folder to store datasets.
 #' @param overwrite Logical. Overwrite previous files or not.
-#' @param id_var character (default = `"ID"`). Name of ID column.
+#' @param id_var Character (default = `"ID"`). Name of ID column.
 #'
-#' @return A `tibble` of nm objects similar to [make_boot_datasets()] output
+#' @return A `tibble` of nm objects similar to [make_boot_datasets()] output.
 #'
 #' @export
 make_xv_datasets <- function(dboot,

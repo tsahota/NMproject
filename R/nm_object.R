@@ -26,7 +26,7 @@
 #'  fields and if these change value like when the `child()` function is used to
 #'  create a separate child object, the `cmd` field will update automatically.
 #'
-#' @section object fields:
+#' @section Object fields:
 #'
 #'  Each field has a corresponding function (documented in [nm_getsetters]) of
 #'  the same name to access and modify it's value.
@@ -74,7 +74,8 @@
 #'  }
 #'  }
 #'
-#' @return An object of class `nm_list`.  Attributes
+#' @return An object of class `nm_list`.  Attributes can be viewed by printing
+#'   the object in the console.
 #' @seealso [nm_getsetters()], [child()]
 #' @examples
 #' \dontrun{
@@ -541,10 +542,10 @@ nm_list2list <- function(m) {
 #' Get all nm objects in an environment.  By default this is the global
 #' workspace.
 #'
-#' @param x environment (default = `.GlobalEnv`) to search
-#'   or data.frame with (`nm_list` column) or `nm_list`
+#' @param x An environment (default = `.GlobalEnv`) to search
+#'   or `data.frame` with (`nm_list` column) or `nm_list`.
 #'
-#' @return A single `nm_list` object with all model objects
+#' @return A single `nm_list` object with all model objects.
 #' @export
 nm_list_gather <- function(x = .GlobalEnv) {
   UseMethod("nm_list_gather")

@@ -4,11 +4,13 @@
 #'
 #' `r lifecycle::badge("stable")`
 #'
-#' These functions are useful to obtain and modify initial values of `$THETA`, `$OMEGA` and `$SIGMA`.
+#' These functions are useful to obtain and modify initial values of `$THETA`,
+#' `$OMEGA` and `$SIGMA`.
 #'
-#' @param m nm object
-#' @param replace optional tibble for replacement
-#' @param ... mutate init_theta
+#' @param m An nm object.
+#' @param replace Optional `tibble` for replacement.
+#' @param ... Additional arguments for mutating initial estimate NONMEM
+#'   subroutines.  See examples.
 #'
 #' @examples
 #' \dontrun{
@@ -125,20 +127,6 @@ init_theta.nm_list <- Vectorize_nm_list(init_theta.nm_generic,
   non_lazy_eval = c("m", "replace")
 )
 
-
-# init_theta.nm_list <- function(m, replace, ...){
-#   current_call <- match.call()
-#   calling_env <- parent.frame()
-#   result <- lapply(m, function(m){
-#     current_call[[1]] <- as.symbol("init_theta")
-#     current_call[[2]] <- m
-#     eval(current_call, envir = calling_env)
-#   })
-#   if(is_nm_list(result)){
-#     result <- as_nm_list(result)
-#   }
-#   result
-# }
 
 #' @rdname init_theta
 #' @export

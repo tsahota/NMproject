@@ -25,7 +25,8 @@ explicitly as a relative path.}
 details.}
 }
 \value{
-An object of class \code{nm_list}.  Attributes
+An object of class \code{nm_list}.  Attributes can be viewed by printing
+the object in the console.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
@@ -40,7 +41,7 @@ The \code{cmd} field uses \code{glue} notation.  So instead of specifying
 fields and if these change value like when the \code{child()} function is used to
 create a separate child object, the \code{cmd} field will update automatically.
 }
-\section{object fields}{
+\section{Object fields}{
 
 
 Each field has a corresponding function (documented in \link{nm_getsetters}) of

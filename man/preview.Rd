@@ -7,14 +7,14 @@
 preview(name)
 }
 \arguments{
-\item{name}{character indicating script in code_library to preview}
+\item{name}{Character indicating script in code_library to preview.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
 
 This is now primarily a back end function.  Easiest way to preview parts of
 the code library is use the "code library" RStudio 'Addin' and use the
-\code{preview} button in the shiny interface
+"preview" button in the shiny interface.
 }
 \seealso{
 \code{\link[=code_library]{code_library()}}

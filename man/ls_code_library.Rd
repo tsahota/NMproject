@@ -7,7 +7,7 @@
 ls_code_library(pattern = ".")
 }
 \arguments{
-\item{pattern}{optional character. filter the code library use regex}
+\item{pattern}{Optional character. Filter the code library use regex.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

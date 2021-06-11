@@ -6,9 +6,9 @@
 #'
 #' This is now primarily a back end function.  Easiest way to preview parts of
 #' the code library is use the "code library" RStudio 'Addin' and use the
-#' `preview` button in the shiny interface
+#' "preview" button in the shiny interface.
 #'
-#' @param name character indicating script in code_library to preview
+#' @param name Character indicating script in code_library to preview.
 #'
 #' @seealso [code_library()]
 #' @keywords internal

@@ -395,7 +395,7 @@ search_raw <- function(files, text, search_title = TRUE, search_contents = TRUE)
 #' A low level function to interact with the code library.  It is easier in most
 #' cases to use the shiny "code library" RStudio 'Addin'.
 #'
-#' @param pattern optional character. filter the code library use regex
+#' @param pattern Optional character. Filter the code library use regex.
 #'
 #' @seealso [code_library()], [preview()], [stage()], [import()]
 #'
