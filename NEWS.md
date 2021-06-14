@@ -1,4 +1,4 @@
-# NMproject 0.6.1
+# NMproject 0.6.2
 
 This is the first CRAN release of NMproject.  Here are the major changes here 
 relative to 0.5.1:
