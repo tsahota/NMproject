@@ -1,4 +1,19 @@
 ## Resubmission
+This is a second resubmission. In this version I have:
+
+* Added Nuria and Stein as contributors in DESCRIPTION
+* I have contacted Peter Lawrence via LinkedIn for
+  his personal email and inclusion as contributor and
+  (co)author to the file: 
+  inst/extdata/CodeLibrary/R/AUC.R. However he has
+  requested he be removal stating "I am now retired 
+  and have no contribution to make in this area and
+  very little recollection of the AUC code you refer
+  to". I have therefore removed his name from the
+  roxygen @author field of the file and not included
+  his name in the DESCRIPTION.
+
+## Resubmission
 This is a resubmission. In this version I have:
 
 * Removed VignetteBuilder field from DESCRIPTION.

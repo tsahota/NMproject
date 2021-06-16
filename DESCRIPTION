@@ -7,7 +7,11 @@ Version: 0.6.1.9000
 Authors@R: c(
  person("Tarj", "Sahota", email = "t.sahota0@gmail.com", 
     role = c("aut", "cre", "cph")),
- person("AstraZeneca", role = "cph"))
+ person("AstraZeneca", role = "cph"),
+ person("Nuria", "Buil Bruna", email = "nuria.buil.bruna@gmail.com", 
+    role = c("ctb")),
+ person("Stein", "Schalkwijk", email = "steinschalkwijk@gmail.com", 
+    role = c("ctb")))
 Maintainer: Tarj Sahota <t.sahota0@gmail.com>
 Description: Industrialisation of 'NONMEM'
   <https://www.iconplc.com/innovation/nonmem/> model development 

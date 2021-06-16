@@ -2,7 +2,7 @@
 #'
 #' @description Computes AUC by trapezoidal rule.
 #'
-#' @author Tarj Sahota, Peter Lawrence
+#' @author Tarj Sahota
 #'
 #' @param time Numeric vector of times to integrate over.
 #' @param conc Numeric vector of concentrations to integrate.
