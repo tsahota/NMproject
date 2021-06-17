@@ -772,11 +772,6 @@ test_relations <- function(dtest, param, cov, state, continuous) {
 #' @param dsc A `tibble` with experimental factors to vary.
 #' @param start_dir Directory name within which all runs should take place.
 #' @param include_names Logical (default = TRUE). Should names be included.
-#' @examples
-#' \dontrun{
-#'
-#' dsc$location <- gen_sim_path(dsc, ...)
-#' }
 #' @keywords internal
 
 gen_sim_path <- function(dsc, start_dir, include_names = TRUE) {

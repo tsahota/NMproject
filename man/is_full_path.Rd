@@ -15,10 +15,4 @@ is_full_path(x)
 \description{
 Test if full path
 }
-\examples{
-\dontrun{
-is_full_path("file.text.ext")
-is_full_path("/path/to/file.text.ext")
-}
-}
 \keyword{internal}

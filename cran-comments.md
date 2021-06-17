@@ -12,8 +12,9 @@ This is a resubmission. In this version I have:
   to". I have therefore removed his name from the
   roxygen @author field of the file and not included
   his name in the DESCRIPTION.
-* Expanded Description field
-* Removed options(warn=-1) statements
+* Expanded Description field.
+* Removed options(warn=-1) statements.
+* Removed examples from non-exported functions.
 
 ## Test environments
 * local windows R installation, R 4.0.3

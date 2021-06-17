@@ -223,12 +223,6 @@ ls_scripts <- function(folder = ".", extn = "r|R|Rmd|rmd", recursive = TRUE) {
 #'   directory paths.
 #' @param shorten_paths Logical (default = `TRUE`). Long paths will be shortened
 #'   if true in displayed output (not returned object).
-#' @examples
-#' \dontrun{
-#' ls_scripts("~/path/to/directory/") %>%
-#'   info_scripts("Description") %>%
-#'   filter(grepl("mod", DESCRIPTION))
-#' }
 #' @keywords internal
 
 info_scripts <- function(files, fields = c("Description"), viewer = TRUE, silent = FALSE,

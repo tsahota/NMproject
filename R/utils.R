@@ -4,11 +4,6 @@ is_single_na <- function(x) if (length(x) == 1) is.na(x) else FALSE
 #'
 #' @param x String giving file/path name.
 #' @return `TRUE` only when path starts with ~, /, \\ or X: (i.e. when x is a full path), FALSE otherwise.
-#' @examples
-#' \dontrun{
-#' is_full_path("file.text.ext")
-#' is_full_path("/path/to/file.text.ext")
-#' }
 #' @keywords internal
 is_full_path <- function(x) grepl("^(~|/|\\\\|([a-zA-Z]:))", x, perl = TRUE)
 

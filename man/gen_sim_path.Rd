@@ -18,10 +18,4 @@ gen_sim_path(dsc, start_dir, include_names = TRUE)
 
 Internal function to create nested directory structure paths.
 }
-\examples{
-\dontrun{
-
-dsc$location <- gen_sim_path(dsc, ...)
-}
-}
 \keyword{internal}
