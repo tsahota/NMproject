@@ -19,7 +19,7 @@
 #'   All of this is optional though, you can just leave functions undocumented
 #'   if you want.
 #'
-#' @author Tarj Sahota, Peter Lawrence
+#' @author Tarj Sahota
 #'
 #' @param time Numeric vector of times to integrate over.
 #' @param conc Numeric vector of concentrations to integrate.

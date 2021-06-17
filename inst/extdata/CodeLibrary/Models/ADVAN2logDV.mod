@@ -1,6 +1,6 @@
-;; 1. Based on: run1
-;; 2. Description: 1CMT+oral
-;; x1. Author: John Smith
+;; 1. Based on: ...
+;; 2. Description: 1CMT+oral (log-scale DV)
+;; x1. Author: ...
 
 $PROBLEM ...
 
