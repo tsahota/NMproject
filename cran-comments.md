@@ -12,6 +12,8 @@ This is a second resubmission. In this version I have:
   to". I have therefore removed his name from the
   roxygen @author field of the file and not included
   his name in the DESCRIPTION.
+* Expanded Description field
+  
 
 ## Resubmission
 This is a resubmission. In this version I have:

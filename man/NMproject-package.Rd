@@ -8,7 +8,15 @@
 \description{
 Industrialisation of 'NONMEM'
   <https://www.iconplc.com/innovation/nonmem/> model development 
-  via end-to-end model development 'workflows'.
+  via end-to-end model development 'workflows' entirely within 'RStudio'.
+  Quickly get started with new models by importing templated `NONMEM` code
+  from the built-in code library. Manipulate 'NONMEM' code from within R
+  either via the tracked 'manual edit' interface or programmatically 
+  via supplied functions. Use pipes to create a step-by-step sequence of 
+  model building steps from control file creation, to execution, to 
+  post-processing and evaluation.  Runs are cached making scripts R markdown
+  friendly to allow for easy documentation of thoughts and modelling decisions 
+  alongside the reproducible and re-executable modelling steps.
 }
 \section{Package options}{
 
@@ -90,6 +98,8 @@ Useful links:
 Other contributors:
 \itemize{
   \item AstraZeneca [copyright holder]
+  \item Nuria Buil Bruna \email{nuria.buil.bruna@gmail.com} [contributor]
+  \item Stein Schalkwijk \email{steinschalkwijk@gmail.com} [contributor]
 }
 
 }
