@@ -6,8 +6,6 @@ library(dygraphs)
 
 setwd(.currentwd)
 
-options(warn =-1)
-
 gen_run_table <- function(){
   d <- nm_row(.m)
   d$target <- NULL

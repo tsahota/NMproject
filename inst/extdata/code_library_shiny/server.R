@@ -4,8 +4,6 @@ library(shiny)
 
 setwd(.currentwd)
 
-options(warn =-1)
-
 gen_code_library <- function(){
   NMproject::code_library(viewer = FALSE, return_info = TRUE)
 }

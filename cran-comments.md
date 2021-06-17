@@ -1,25 +1,19 @@
 ## Resubmission
-This is a second resubmission. In this version I have:
+This is a resubmission. In this version I have:
 
-* Added Nuria and Stein as contributors in DESCRIPTION
+* Added Nuria and Stein as contributors
 * I have contacted Peter Lawrence via LinkedIn for
-  his personal email and inclusion as contributor and
-  (co)author to the file: 
+  his personal details/email and inclusion as contributor 
+  and (co)author to the file: 
   inst/extdata/CodeLibrary/R/AUC.R. However he has
-  requested he be removal stating "I am now retired 
+  requested he be removed stating "I am now retired 
   and have no contribution to make in this area and
   very little recollection of the AUC code you refer
   to". I have therefore removed his name from the
   roxygen @author field of the file and not included
   his name in the DESCRIPTION.
 * Expanded Description field
-  
-
-## Resubmission
-This is a resubmission. In this version I have:
-
-* Removed VignetteBuilder field from DESCRIPTION.
-* Reduced build size by removing redundant file from tests.
+* Removed options(warn=-1) statements
 
 ## Test environments
 * local windows R installation, R 4.0.3
