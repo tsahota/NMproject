@@ -41,6 +41,7 @@ remove_parameter <- function(m, name) {
 #' @param position Integer. Not used.
 #' @param after Character. Pattern to match and include the mixed effect after.
 #'
+#' @return An nm object with modified `ctl_contents` field.
 #' @export
 add_mixed_param <- function(m, name,
                             init = 1, unit = "", trans = c("LOG"),
