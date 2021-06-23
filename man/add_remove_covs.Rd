@@ -66,6 +66,9 @@ parameters.}
 \item{upper}{Optional numeric/character vector.  Upper bound of additional
 parameters.}
 }
+\value{
+An nm object with modified \code{ctl_contents} field.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

@@ -241,6 +241,9 @@ nm <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
 #'   is useful in piping when a parent object is modified prior to being used in
 #'   the child object.
 #'
+#' @return An new nm object with modified `parent_*` fields updated to be the
+#'   `*` fields of the parent object, `m`.
+#'
 #' @examples
 #' \dontrun{
 #'
@@ -352,6 +355,8 @@ increment_run_id <- function(run_id) {
 #' @param mparent New parent object to child.
 #' @param silent Logical (default = `TRUE`). Should warn if conflicts detected.
 #'
+#' @return An nm object with modified `parent_*` fields.
+#' 
 #' @seealso [child()]
 #'
 #' @keywords internal

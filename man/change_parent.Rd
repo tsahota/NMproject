@@ -13,6 +13,9 @@ change_parent(m, mparent, silent = TRUE)
 
 \item{silent}{Logical (default = \code{TRUE}). Should warn if conflicts detected.}
 }
+\value{
+An nm object with modified \verb{parent_*} fields.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

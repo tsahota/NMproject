@@ -308,6 +308,8 @@ init_sigma.nm_list <- Vectorize_nm_list(init_sigma.nm_generic,
 #'   unblock for `block()` and `unblock()`, respectively. Must be contiguous.
 #' @param diag_init Numeric. Default value for off diagonal elements.
 #'
+#' @return An nm object with modified `ctl_contents` field.
+#'
 #' @seealso [init_theta()], [init_omega()], [init_sigma()]
 #'
 #' @examples

@@ -25,6 +25,10 @@ object.}
 
 \item{silent}{Logical (default = \code{FALSE}). Should warn if conflicts detected.}
 }
+\value{
+An new nm object with modified \verb{parent_*} fields updated to be the
+\code{*} fields of the parent object, \code{m}.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

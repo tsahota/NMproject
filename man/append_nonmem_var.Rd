@@ -14,6 +14,9 @@ append_nonmem_var(output_table, r, var)
 \item{var}{Character. Name of variable to extract (needs to be defined in
 $PK/$PRED).}
 }
+\value{
+A modified version of \code{output_table} with addition \code{var} column.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 

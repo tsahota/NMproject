@@ -13,6 +13,10 @@ bind_covariate_results(dsc, nm_col = "m", parameters = "new")
 
 \item{parameters}{Character (default = \code{"new"}).  Passed to \code{\link[=summary_wide]{summary_wide()}}.}
 }
+\value{
+An modified version of \code{dsc} with additional columns from
+\code{\link[=summary_wide]{summary_wide()}} for model selection purposes.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
@@ -51,8 +55,13 @@ wait_finish(dsm1$m)
 
 ## extract results and put into tibble
 dsm1 <- dsm1 \%>\% bind_covariate_results()
+
+## plot goodness of fit diagnostics top 3 models (in terms of p-value)
+dsm1$m[1:3] \%>\% nm_render("Scripts/basic_gof.Rmd")
+
 }
 }
 \seealso{
-\code{\link[=covariate_step_tibble]{covariate_step_tibble()}}
+\code{\link[=covariate_step_tibble]{covariate_step_tibble()}} and \code{\link[=nm_render]{nm_render()}} for rendering diagnostic
+reports for (subsets of) models in \code{nm_col}.
 }

@@ -18,6 +18,9 @@ unblock for \code{block()} and \code{unblock()}, respectively. Must be contiguou
 
 \item{diag_init}{Numeric. Default value for off diagonal elements.}
 }
+\value{
+An nm object with modified \code{ctl_contents} field.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

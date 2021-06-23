@@ -17,7 +17,14 @@ based_on(m, ctl_ob, update_numbering = TRUE, update_dollar_data = TRUE, ...)
 
 \item{...}{Additional arguments.}
 }
+\value{
+An nm object with modified \code{ctl_contents} field.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+This function is mostly called by the \code{new_nm()} and will not generally be
+used directly by users. The function populates/modifies the \code{ctl_contents}
+field of an nm object, with the contents of an already existing control file.
 }
 \keyword{internal}

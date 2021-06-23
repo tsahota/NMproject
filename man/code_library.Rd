@@ -27,6 +27,11 @@ all).}
 \item{return_info}{Logical (default = \code{FALSE}). Return data.frame of results
 (FALSE= returns file paths).}
 }
+\value{
+If \code{return_info = TRUE}, invisibly returns output a \code{tibble} with
+code library information.  Otherwise (this may be deprecated soon), will return paths to code library
+files.
+}
 \description{
 Function not designed for direct use.  Instead use the RStudio \verb{code library}
 entry on the RStudio 'Addins' menu. This will open the shiny app. Select the file, and

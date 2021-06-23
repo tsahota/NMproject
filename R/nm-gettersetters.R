@@ -335,12 +335,18 @@ run_dir_path <- function(m) file.path(run_in(m), run_dir(m))
 #' @description
 #'
 #' `r lifecycle::badge("stable")`
+#' 
+#' This function is mostly called by the `new_nm()` and will not generally be
+#' used directly by users. The function populates/modifies the `ctl_contents`
+#' field of an nm object, with the contents of an already existing control file.
 #'
 #' @param m An nm object.
 #' @param ctl_ob Path to control file.
 #' @param update_numbering Logical. Should table numbers and author fields be updated.
 #' @param update_dollar_data Logical. Should $DATA in control file be updated.
 #' @param ... Additional arguments.
+#'
+#' @return An nm object with modified `ctl_contents` field.
 #'
 #' @keywords internal
 #'

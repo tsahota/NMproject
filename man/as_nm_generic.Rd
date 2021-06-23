@@ -7,9 +7,12 @@
 as_nm_generic(m)
 }
 \arguments{
-\item{m}{An nm object.}
+\item{m}{An \code{nm_list} object to coerce.}
+}
+\value{
+An \code{nm_generic} object.
 }
 \description{
-Used where methods for nm_list don't exist or aren't appropriate.
+Used where methods for \code{nm_list} don't exist or aren't appropriate.
 }
 \keyword{internal}

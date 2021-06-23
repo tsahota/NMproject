@@ -282,6 +282,7 @@ cov_forest_plot <- function(d) {
 #' @param var Character. Name of variable to extract (needs to be defined in
 #'   $PK/$PRED).
 #'
+#' @return A modified version of `output_table` with addition `var` column.
 #' @export
 append_nonmem_var <- function(output_table, r, var) {
   r <- as_nm_generic(r)

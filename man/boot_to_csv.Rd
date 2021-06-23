@@ -17,7 +17,7 @@ boot_to_csv(
 \arguments{
 \item{d}{Dataset to merge.}
 
-\item{rsplit}{An object from \code{rsample::bootstraps()}.}
+\item{rsplit}{An object from \code{sample::bootstraps()}.}
 
 \item{data_name}{Name of dataset.}
 
@@ -29,7 +29,14 @@ boot_to_csv(
 
 \item{overwrite}{Should datasets be overwritten.}
 }
+\value{
+path to csv file storing resampled ID for use by
+\code{\link[=make_boot_datasets]{make_boot_datasets()}}.  Normally the return object is not needed by users.
+}
 \description{
-Used by \code{make_boot_datasets()}, run once per bootstrap sample
+Used by \code{\link[=make_boot_datasets]{make_boot_datasets()}}, run once per bootstrap sample
+}
+\seealso{
+\code{\link[=make_boot_datasets]{make_boot_datasets()}}
 }
 \keyword{internal}

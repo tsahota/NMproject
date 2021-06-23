@@ -20,6 +20,8 @@
 #'   the "view patch" RStudio 'Addin') and manually re-implement the changes again
 #'   in a new manual edit.
 #'
+#' @return An nm object with modified `ctl_contents` field.
+#'
 #' @export
 apply_manual_edit <- function(m, patch_name) {
   UseMethod("apply_manual_edit")

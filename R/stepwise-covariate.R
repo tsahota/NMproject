@@ -67,6 +67,7 @@
 #'
 #' }
 #'
+#' @return An nm object with modified `ctl_contents` field.
 #' @seealso [covariate_step_tibble()], [test_relations()]
 #' @examples
 #' \dontrun{
@@ -634,7 +635,11 @@ covariate_step_tibble <- function(base, run_id, run_in = nm_default_dir("models"
 #' @param nm_col Character (default = `"m"`). Name of column to store nm objects.
 #' @param parameters Character (default = `"new"`).  Passed to [summary_wide()].
 #'
-#' @seealso [covariate_step_tibble()]
+#' @return An modified version of `dsc` with additional columns from
+#'   [summary_wide()] for model selection purposes.
+#'
+#' @seealso [covariate_step_tibble()] and [nm_render()] for rendering diagnostic
+#'   reports for (subsets of) models in `nm_col`.
 #'
 #' @examples
 #' \dontrun{
@@ -652,6 +657,10 @@ covariate_step_tibble <- function(base, run_id, run_in = nm_default_dir("models"
 #'
 #' ## extract results and put into tibble
 #' dsm1 <- dsm1 %>% bind_covariate_results()
+#' 
+#' ## plot goodness of fit diagnostics top 3 models (in terms of p-value)
+#' dsm1$m[1:3] %>% nm_render("Scripts/basic_gof.Rmd")
+#' 
 #' }
 #' @export
 bind_covariate_results <- function(dsc, nm_col = "m", parameters = "new") {

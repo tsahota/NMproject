@@ -12,6 +12,9 @@ apply_manual_edit(m, patch_name)
 \item{patch_name}{Character name of patch.  Corresponds to the file name in
 the "patches" subdirectory of \code{nm_default_dir("models")}.}
 }
+\value{
+An nm object with modified \code{ctl_contents} field.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

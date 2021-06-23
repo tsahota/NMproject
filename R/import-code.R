@@ -431,6 +431,10 @@ ls_code_library <- function(pattern = ".") {
 #'
 #' @details Requires `getOption("code_library_path")` to be set.
 #'
+#' @return If `return_info = TRUE`, invisibly returns output a `tibble` with
+#'   code library information.  Otherwise (this may be deprecated soon), will return paths to code library
+#'   files.
+#'
 #' @seealso [ls_code_library()], [preview()], [stage()], [import()]
 #'
 #' @export
