@@ -155,6 +155,8 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
     }
   )
 
+  suppressMessages(devtools::build_readme(path = path))
+
   set_default_dirs_in_rprofile(file.path(folder, name, ".Rprofile"), dirs)
   return(invisible(path))
 }
