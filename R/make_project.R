@@ -99,19 +99,6 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
 
   usethis::use_build_ignore("README.Rmd")
 
-  ## no badges - skip this part of starters for now
-  repo <- git2r::init(usethis::proj_get())
-  git2r::add(repo, path = "README.Rmd")
-
-  tryCatch(
-    {
-      git2r::commit(repo, message = "added README.Rmd", all = TRUE)
-    },
-    error = function(e) {
-      usethis::ui_oops("cannot commit {usethis::ui_path('README.Rmd')}. Aborting...")
-    }
-  )
-
   if (use_renv) {
     if (!requireNamespace("renv", quietly = TRUE)) {
       stop("install renv", call. = FALSE)
@@ -154,8 +141,21 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
       usethis::ui_info("skipping creation of {usethis::ui_path('NAMESPACE')}")
     }
   )
-
+  
   suppressMessages(devtools::build_readme(path = path))
+  
+  ## no badges - skip this part of starters for now
+  repo <- git2r::init(usethis::proj_get())
+  git2r::add(repo, path = "*")
+  
+  tryCatch(
+    {
+      git2r::commit(repo, message = "Initial commit", all = TRUE)
+    },
+    error = function(e) {
+      usethis::ui_oops("cannot commit. Aborting commit...")
+    }
+  )
 
   set_default_dirs_in_rprofile(file.path(folder, name, ".Rprofile"), dirs)
   return(invisible(path))
