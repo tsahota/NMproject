@@ -123,10 +123,8 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
     readme_path <- file.path(dir_name, "Readme.txt")
     if (generic_dir_name %in% names(.nm_dir_descriptions)) {
       write(.nm_dir_descriptions[[generic_dir_name]], file.path(path, readme_path))
-      usethis::use_build_ignore(readme_path)
     } else {
       write("Custom directory", file.path(path, readme_path))
-      usethis::use_build_ignore(readme_path)
     }
   }
 
