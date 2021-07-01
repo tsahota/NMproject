@@ -93,6 +93,14 @@ nm_default_dirs <- function(dir_list) {
   }
 }
 
+.nm_dir_descriptions <- list(
+  models = "Directory for NONMEM runs and other 3rd party software",
+  scripts = "Directory for R and Rmd scripts",
+  results = "Default directory for results including tables, pdfs, Rmd reports, ...",
+  source_data = "Directory for unmodified source data",
+  derived_data = "Directory for derived analysis-ready datasets"
+)
+
 validate_dir_list <- function(dir_list) {
   if (any(!c("scripts", "models", "results") %in% names(dir_list))) {
     stop("names \"scripts\", \"models\", and \"results\" must at least be present")

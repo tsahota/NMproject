@@ -86,7 +86,7 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
   }
 
   usethis::create_project(path = path, rstudio = TRUE, open = FALSE)
-
+  
   current_proj <- try(usethis::proj_get(), silent = TRUE)
   if (inherits(current_proj, "try-error")) {
     current_proj <- NULL
@@ -94,6 +94,8 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
   usethis::proj_set(path)
   on.exit(usethis::proj_set(current_proj))
 
+  write("This directory is for .R files containing R functions", file.path(path, "R", "Readme.txt"))
+  usethis::use_build_ignore(file.path("R", "Readme.txt"))
 
   usethis::use_template("README.Rmd",
     data = list(Package = name),
@@ -113,9 +115,19 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
 
   if (use_renv) renv::scaffold(project = usethis::proj_get())
 
-  for (dir_name in dirs) {
+  for (i in seq_along(dirs)) {
+    dir_name <- dirs[[i]]
     usethis::use_directory(dir_name, ignore = TRUE)
-    
+
+    generic_dir_name <- names(dirs)[i]
+    readme_path <- file.path(dir_name, "Readme.txt")
+    if (generic_dir_name %in% names(.nm_dir_descriptions)) {
+      write(.nm_dir_descriptions[[generic_dir_name]], file.path(path, readme_path))
+      usethis::use_build_ignore(readme_path)
+    } else {
+      write("Custom directory", file.path(path, readme_path))
+      usethis::use_build_ignore(readme_path)
+    }
   }
 
   tryCatch(
@@ -149,7 +161,9 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
   )
   
   suppressMessages(devtools::build_readme(path = path))
-  
+
+  set_default_dirs_in_rprofile(file.path(folder, name, ".Rprofile"), dirs)
+    
   ## no badges - skip this part of starters for now
   repo <- git2r::init(usethis::proj_get())
   git2r::add(repo, path = "*")
@@ -163,7 +177,6 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
     }
   )
 
-  set_default_dirs_in_rprofile(file.path(folder, name, ".Rprofile"), dirs)
   return(invisible(path))
 }
 
