@@ -113,7 +113,10 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
 
   if (use_renv) renv::scaffold(project = usethis::proj_get())
 
-  for (dir_name in dirs) usethis::use_directory(dir_name, ignore = TRUE)
+  for (dir_name in dirs) {
+    usethis::use_directory(dir_name, ignore = TRUE)
+    
+  }
 
   tryCatch(
     {

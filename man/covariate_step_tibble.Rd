@@ -7,7 +7,7 @@
 covariate_step_tibble(
   base,
   run_id,
-  run_in = nm_default_dir("models"),
+  run_in = nm_dir("models"),
   dtest,
   direction = c("forward", "backward"),
   ...

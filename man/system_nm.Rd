@@ -4,13 +4,13 @@
 \alias{system_nm}
 \title{System command for NONMEM execution}
 \usage{
-system_nm(cmd, dir = nm_default_dir("models"), ...)
+system_nm(cmd, dir = nm_dir("models"), ...)
 }
 \arguments{
 \item{cmd}{Character. System call to be sent to the terminal.}
 
 \item{dir}{Character. Directory (relative path) to run command in.  By
-default this will be the "models" directory (\code{nm_default_dir("models")}).}
+default this will be the "models" directory (\code{nm_dir("models")}).}
 
 \item{...}{Additional arguments to be passed to \code{system()} or \code{shell()}.}
 }

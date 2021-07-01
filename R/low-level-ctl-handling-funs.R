@@ -70,7 +70,7 @@ gsub_ctl.nm_generic <- function(m, pattern, replacement, ..., dollar = NA_charac
 #' @export
 gsub_ctl.nm_list <- Vectorize_nm_list(gsub_ctl.nm_generic, SIMPLIFY = FALSE)
 
-search_ctl_name <- function(r, models_dir = nm_default_dir("models")) {
+search_ctl_name <- function(r, models_dir = nm_dir("models")) {
   if (inherits(r, "nm")) ctl_name <- r$ctl
   if (inherits(r, "numeric") | inherits(r, "character")) {
     r <- as.character(r)

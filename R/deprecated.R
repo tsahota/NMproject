@@ -244,7 +244,7 @@ if (0) {
     # if (name != basename(name))
     #   stop("name must not be a path")
     if (name == basename(name)) {
-      to_path <- file.path(nm_default_dir("scripts"), name) ## destination path
+      to_path <- file.path(nm_dir("scripts"), name) ## destination path
     } else {
       to_path <- name
     }
@@ -302,7 +302,7 @@ if (0) {
     data_extra$m
   }
 
-  new_ctl_extra <- function(m, ctl, dir = nm_default_dir("models")) {
+  new_ctl_extra <- function(m, ctl, dir = nm_dir("models")) {
     ctl$TABLE <- gsub(paste0("(FILE\\s*=\\s*\\S*tab)\\S*\\b"), paste0("\\1", run_id(m)), ctl$TABLE)
     ctl[[1]] <- gsub("^(\\s*;;\\s*[0-9]*\\.\\s*Based on:).*", paste("\\1", parent_run_id(m)), ctl[[1]])
     ctl[[1]] <- gsub("^(\\s*;;\\s*\\w*\\.\\s*Author:).*", paste("\\1", Sys.info()["user"]), ctl[[1]])

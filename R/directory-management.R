@@ -77,7 +77,7 @@ setup_nm_demo <- function(demo_name = "theopp",
 #'
 #' @export
 run_all_scripts <- function(index, quiet = FALSE) {
-  script_files <- dir(nm_default_dir("scripts"), "s[0-9]+_.*?\\.R(md)?$", full.names = TRUE)
+  script_files <- dir(nm_dir("scripts"), "s[0-9]+_.*?\\.R(md)?$", full.names = TRUE)
 
   dplan <- dplyr::tibble(script_files) %>%
     dplyr::mutate(rmd = grepl("\\.Rmd", .data$script_files))

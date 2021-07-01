@@ -19,7 +19,7 @@
 #' @export
 rmd_to_vignettes <- function(script_files, overwrite = FALSE) {
   if (missing(script_files)) {
-    script_files <- dir(nm_default_dir("scripts"), "s[0-9]+_.*?\\.Rmd$", full.names = TRUE)
+    script_files <- dir(nm_dir("scripts"), "s[0-9]+_.*?\\.Rmd$", full.names = TRUE)
   }
 
   for (script in script_files) {

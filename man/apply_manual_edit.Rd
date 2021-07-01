@@ -10,7 +10,7 @@ apply_manual_edit(m, patch_name)
 \item{m}{An nm object.}
 
 \item{patch_name}{Character name of patch.  Corresponds to the file name in
-the "patches" subdirectory of \code{nm_default_dir("models")}.}
+the "patches" subdirectory of \code{nm_dir("models")}.}
 }
 \value{
 An nm object with modified \code{ctl_contents} field.
@@ -21,7 +21,7 @@ An nm object with modified \code{ctl_contents} field.
 It is best to allow the "manual edit" RStudio 'Addin' to write this function
 in your script for you.  After a tracked manual edit is performed, a patch
 file is created and saved in the "patches" subdirectory of
-\code{nm_default_dir("models")}.  This function applies the patch to the object.
+\code{nm_dir("models")}.  This function applies the patch to the object.
 }
 \details{
 Generally best to to apply patches before automatic edits and

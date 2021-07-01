@@ -12,6 +12,7 @@ reference:
   - run_all_scripts
   - temp_files
   - rmd_to_vignettes
+  - nm_dir
 - title: "Importing code"
 - contents:
   - code_library
@@ -129,8 +130,8 @@ reference:
 - title: "Configuration"
 - contents:
   - nm_tran_command
+  - nm_default_fields
   - nm_default_dirs
-  - nm_default_dir
   - overwrite_behaviour
   - find_nonmem
   - NONMEM_version

@@ -106,7 +106,7 @@ new_nm <- function(based_on,
 
 ## internal function
 nm_generic <- function(run_id = NA_character_,
-                       run_in = nm_default_dir("models"),
+                       run_in = nm_dir("models"),
                        parent_run_id = NA_character_,
                        parent_run_in = NA_character_,
                        parent_ctl_name = NA_character_,
@@ -114,7 +114,7 @@ nm_generic <- function(run_id = NA_character_,
                        ctl_name = "run{run_id}.mod",
                        type = "execute",
                        run_dir = "{run_id}",
-                       results_dir = nm_default_dir("results"),
+                       results_dir = nm_dir("results"),
                        lst_path = "{run_dir}/NM_run1/psn.lst") {
 
   # m <- new.env()

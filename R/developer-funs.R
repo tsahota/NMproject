@@ -6,7 +6,7 @@
 #'   Use within a demo directory (e.g. after `run_all_scripts())`)
 
 copy_demo_to_templates <- function() {
-  script_files <- dir(nm_default_dir("scripts"), "basic_", full.names = TRUE)
+  script_files <- dir(nm_dir("scripts"), "basic_", full.names = TRUE)
 
   template_folder <- tools::file_path_sans_ext(basename(script_files))
 
@@ -42,12 +42,12 @@ copy_demo_to_demo <- function(demo = "theopp") {
 
   models_dir <- "staging/Models"
 
-  script_files <- dir(nm_default_dir("scripts"))
+  script_files <- dir(nm_dir("scripts"))
 
   script_files <- script_files[grepl("\\.R|r(md)?$", script_files) |
     grepl("(R|r)eadme", script_files)]
 
-  script_files <- file.path(nm_default_dir("scripts"), script_files)
+  script_files <- file.path(nm_dir("scripts"), script_files)
   script_files <- relative_path(
     script_files,
     rprojroot::find_root(rprojroot::has_file(".Rprofile"))
@@ -92,12 +92,12 @@ copy_demo_to_test <- function(demo = "theopp") {
     "staging"
   )
 
-  script_files <- dir(nm_default_dir("scripts"))
+  script_files <- dir(nm_dir("scripts"))
 
   script_files <- script_files[grepl("\\.R|r(md)?$", script_files) |
     grepl("(R|r)eadme", script_files)]
 
-  script_files <- file.path(nm_default_dir("scripts"), script_files)
+  script_files <- file.path(nm_dir("scripts"), script_files)
   script_files <- relative_path(
     script_files,
     rstudioapi::getActiveProject()

@@ -103,6 +103,31 @@ validate_dir_list <- function(dir_list) {
 #'
 #' @description
 #'
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Get subdirectory (relative) paths in a configuration independent way.  The
+#' configuration can be modified with [nm_default_dirs()].  Can be useful in
+#' scripts, where you need to refer to locations of model files or output files.
+#'
+#' @param name Character. Directory type.  Should be either `"scripts"`,
+#'   `"models"` or `"results"`.
+#' @param ... Deprecated.
+#'
+#' @seealso [nm_default_dirs()]
+#'
+#' @export
+
+nm_default_dir <- function(name = c("scripts", "models", "results"), ...) {
+  .Deprecated("nm_dir")
+  if (missing(name)) stop("need argument")
+  name < match.arg(name)
+  nm_default_dirs()[[name]]
+}
+
+#' Get a directory name
+#'
+#' @description
+#'
 #' `r lifecycle::badge("stable")`
 #'
 #' Get subdirectory (relative) paths in a configuration independent way.  The
@@ -116,12 +141,12 @@ validate_dir_list <- function(dir_list) {
 #' @seealso [nm_default_dirs()]
 #'
 #' @examples
-#' nm_default_dir("scripts") ## will return the path to the "scripts" directory
-#' nm_default_dir("models")
-#' nm_default_dir("results")
+#' nm_dir("scripts") ## will return the path to the "scripts" directory
+#' nm_dir("models")
+#' nm_dir("results")
 #' @export
 
-nm_default_dir <- function(name = c("scripts", "models", "results"), ...) {
+nm_dir <- function(name = c("scripts", "models", "results"), ...) {
   if (missing(name)) stop("need argument")
   name < match.arg(name)
   nm_default_dirs()[[name]]
@@ -335,7 +360,7 @@ system_nm_default <- function(cmd, ...) {
 #'
 #' @param cmd Character. System call to be sent to the terminal.
 #' @param dir Character. Directory (relative path) to run command in.  By
-#'   default this will be the "models" directory (`nm_default_dir("models")`).
+#'   default this will be the "models" directory (`nm_dir("models")`).
 #' @param ... Additional arguments to be passed to `system()` or `shell()`.
 #' @seealso [run_nm()]
 #'
@@ -350,7 +375,7 @@ system_nm_default <- function(cmd, ...) {
 #'
 #' @export
 #'
-system_nm <- function(cmd, dir = nm_default_dir("models"), ...) {
+system_nm <- function(cmd, dir = nm_dir("models"), ...) {
   if (is.null(dir) | !file.exists(dir)) dir <- "."
   if (file.exists(dir)) {
     currentwd <- getwd()

@@ -23,7 +23,7 @@ start_manual_edit <- function(m, combine_patch = NA_character_) {
   time_stamp <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S")
 
   patch_name <- paste0("patch-", Sys.info()["user"], "-", time_stamp)
-  patch_path <- file.path(nm_default_dir("models"), "patches", patch_name)
+  patch_path <- file.path(nm_dir("models"), "patches", patch_name)
   dir.create(dirname(patch_path), showWarnings = FALSE, recursive = TRUE)
 
   temp_ctl_path <- file.path(run_in(m), paste0("manual_", ctl_name(m)))
@@ -107,7 +107,7 @@ diff_manual_edit <- function(m, res) {
 #' @keywords internal
 #' @export
 view_patch <- function(patch_name) {
-  patch_path <- file.path(nm_default_dir("models"), "patches", patch_name)
+  patch_path <- file.path(nm_dir("models"), "patches", patch_name)
   file.show(patch_path)
 }
 

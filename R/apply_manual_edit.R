@@ -7,11 +7,11 @@
 #' It is best to allow the "manual edit" RStudio 'Addin' to write this function
 #' in your script for you.  After a tracked manual edit is performed, a patch
 #' file is created and saved in the "patches" subdirectory of
-#' `nm_default_dir("models")`.  This function applies the patch to the object.
+#' `nm_dir("models")`.  This function applies the patch to the object.
 #'
 #' @param m An nm object.
 #' @param patch_name Character name of patch.  Corresponds to the file name in
-#'   the "patches" subdirectory of `nm_default_dir("models")`.
+#'   the "patches" subdirectory of `nm_dir("models")`.
 #'
 #' @details Generally best to to apply patches before automatic edits and
 #'   changes in directories e.g. via `run_in()`.  If patches are applied to
@@ -30,7 +30,7 @@ apply_manual_edit <- function(m, patch_name) {
 #' @export
 apply_manual_edit.nm_generic <- function(m, patch_name) {
   patch_path <- file.path(
-    nm_default_dir("models"),
+    nm_dir("models"),
     "patches",
     patch_name
   )

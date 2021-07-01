@@ -128,7 +128,7 @@ decision <- function(inputs = c(),
 
   ## generate hashes for current call
   call_ob <- match.call()
-  decision_cache_path <- file.path(nm_default_dir("models"), "decision_cache")
+  decision_cache_path <- file.path(nm_dir("models"), "decision_cache")
   dir.create(decision_cache_path, recursive = TRUE, showWarnings = FALSE)
   cache_name <- paste0(digest::digest(call_ob), ".RDS")
   decision_info <- list(inputs = inputs)

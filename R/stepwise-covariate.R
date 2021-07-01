@@ -517,7 +517,7 @@ remove_cov.nm_list <- Vectorize_nm_list(remove_cov.nm_generic, SIMPLIFY = FALSE)
 #' }
 #' @export
 
-covariate_step_tibble <- function(base, run_id, run_in = nm_default_dir("models"), dtest, direction = c("forward", "backward"), ...) {
+covariate_step_tibble <- function(base, run_id, run_in = nm_dir("models"), dtest, direction = c("forward", "backward"), ...) {
   direction <- match.arg(direction)
 
   ## check dtest
@@ -563,7 +563,7 @@ covariate_step_tibble <- function(base, run_id, run_in = nm_default_dir("models"
 
   dsc <- dtest
 
-  # start_dir <- file.path(nm_default_dir("models"), paste0(run_id(base),"_",label))
+  # start_dir <- file.path(nm_dir("models"), paste0(run_id(base),"_",label))
   # start_dir <- run_in(base)
   # if(length(start_dir) > 1) stop("non unique parents", call. = FALSE)
   # if(length(start_dir) < 1) stop("can't find parent run in location", call. = FALSE)

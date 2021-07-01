@@ -40,8 +40,8 @@ stage <- function(files, root_dir,
   ##########################
   if (missing(root_dir)) {
     roots <- sapply(files, function(file) {
-      rprojroot::find_root(rprojroot::has_dir(nm_default_dir("scripts")) |
-        rprojroot::has_dir(nm_default_dir("models")) |
+      rprojroot::find_root(rprojroot::has_dir(nm_dir("scripts")) |
+        rprojroot::has_dir(nm_dir("models")) |
         rprojroot::has_dir("Scripts") |
         rprojroot::has_dir("Models"),
       path = file
@@ -57,9 +57,9 @@ stage <- function(files, root_dir,
   }
 
   destination <- relative_path(files, root_dir)
-  destination <- gsub("^Scripts/", paste0(nm_default_dir("scripts"), "/"), destination)
-  destination <- gsub("^Models/", paste0(nm_default_dir("models"), "/"), destination)
-  destination <- gsub("^Results/", paste0(nm_default_dir("results"), "/"), destination)
+  destination <- gsub("^Scripts/", paste0(nm_dir("scripts"), "/"), destination)
+  destination <- gsub("^Models/", paste0(nm_dir("models"), "/"), destination)
+  destination <- gsub("^Results/", paste0(nm_dir("results"), "/"), destination)
 
   d <- dplyr::tibble(from = files, destination)
   d$staging <- file.path("staging", d$destination)
