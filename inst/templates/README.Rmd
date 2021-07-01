@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-Version: `r desc::desc_get_version(usethis::proj_get())`
+Version: See DESCRIPTION file
 
 ## Objective
 
