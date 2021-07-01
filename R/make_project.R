@@ -16,6 +16,8 @@
 #'   details for `path` requirements and function behaviour.
 #' @param use_renv Logical (default = `FALSE`). Should `renv` be used or not in
 #'   project.
+#' @param readme_template_package Package name from which to load the README
+#'   template (default = `"NMproject"`)
 #' @param ... Deprecated.
 #'
 #' @details The function works like as is inspired by
@@ -66,7 +68,8 @@
 
 nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
                                        style = c("analysis", "analysis-package"),
-                                       use_renv = FALSE, ...) {
+                                       use_renv = FALSE, readme_template_package = "NMproject", 
+                                       ...) {
 
   ## need to normalize path because usethis has different
   ## home directory, so use use R normalizePath to remove abiguity
@@ -94,7 +97,7 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
 
   usethis::use_template("README.Rmd",
     data = list(Package = name),
-    package = "NMproject"
+    package = readme_template_package
   )
 
   usethis::use_build_ignore("README.Rmd")

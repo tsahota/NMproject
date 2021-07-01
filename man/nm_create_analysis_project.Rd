@@ -9,6 +9,7 @@ nm_create_analysis_project(
   dirs = nm_default_dirs(),
   style = c("analysis", "analysis-package"),
   use_renv = FALSE,
+  readme_template_package = "NMproject",
   ...
 )
 }
@@ -24,6 +25,9 @@ details for \code{path} requirements and function behaviour.}
 
 \item{use_renv}{Logical (default = \code{FALSE}). Should \code{renv} be used or not in
 project.}
+
+\item{readme_template_package}{Package name from which to load the README
+template (default = \code{"NMproject"})}
 
 \item{...}{Deprecated.}
 }
