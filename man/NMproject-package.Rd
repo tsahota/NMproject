@@ -49,6 +49,7 @@ Required names are \code{"models"}, \code{"scripts"} and \code{"results"}.
 By default these will be set to \code{"Models"}, \code{"Scripts"} and \code{"Results"},
 respectively.  Additional characters (e.g. \code{"SourceData"}) correspond to
 additional modelling directories to be created.
+See \code{?nm_default_fields} for more information.
 }
 \item{kill_job}{
 An optional function to kill jobs before they are started.
@@ -63,12 +64,9 @@ See \code{?overwrite_behaviour}.
 \item{nm.force_render}{
 Sets default value for the \code{force} argument in See \code{nm_render}.
 }
-\item{nm.cmd_default}{
-Sets default \code{cmd} field for all nm objects.
-See \code{?cmd} for more information.
-The default value is "execute {ctl_name} -dir={run_dir}".
-However in environments where a different command is needed, this is the
-place to change it.
+\item{nm_default_fields}{
+Sets default fields for all nm objects.
+See \code{?nm_default_fields} for more information.
 }
 \item{nmtran_exe_path}{
 Sets the value of the NMTRAN.exe program.  This may be deprecated in future

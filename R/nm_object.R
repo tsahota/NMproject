@@ -9,7 +9,7 @@
 #' @param based_on Character. Relative path to an existing control file from
 #'   which to base this run.  NMproject will not modify or run this control
 #'   file.  Instead it will create a new control file specified by the
-#' `ctl_name` field (see Details below).
+#'   `ctl_name` field (see Details below).
 #' @param run_id Character. Run identifier. This is used to name the run and
 #'   output files such as $TABLE outputs.
 #' @param data_path Character. Path to dataset. If this is not specified,
@@ -17,11 +17,11 @@
 #'   file specified in `based_on`.  However it is recommended to specify this
 #'   explicitly as a relative path.
 #' @param cmd Optional character. PsN command to use. If unspecified will use
-#'   `getOption("nm.cmd_default")`. Use glue notation for inheritance.  See
-#'   details.
+#'   `getOption("nm_default_fields")` value of `cmd`. Use glue notation for
+#'   inheritance.  See details.
 #'
 #' @details The `cmd` field uses `glue` notation.  So instead of specifying
-#'  `execute runm1.mod -dir=m1`, it is best to specify `execute {ctl_name}
+#'   `execute runm1.mod -dir=m1`, it is best to specify `execute {ctl_name}
 #'  -dir={run_dir}`.  The values of `ctl_name` and `run_dir` refer to object
 #'  fields and if these change value like when the `child()` function is used to
 #'  create a separate child object, the `cmd` field will update automatically.
@@ -154,19 +154,34 @@ To use the alpha interface, install NMproject 0.3.2",
   m$data_path <- NA_character_
   m$cmd <- NA_character_
   m$cores <- as.integer(1)
-  m$parafile <- NA_character_
+  m$parafile <- "path/to/parafile.pnm"
   m$walltime <- NA_integer_
 
   unique_id <- "{type}.{run_in}{.Platform$file.sep}{run_dir}"
   ## the following is in order of glueing
   m$glue_fields <- list(
     run_dir, ctl_name, results_dir, unique_id,
-    lst_path, NA_character_, getOption("nm.cmd_default")
+    lst_path, NA_character_, NA_character_
   )
   names(m$glue_fields) <- c(
     "run_dir", "ctl_name", "results_dir", "unique_id",
     "lst_path", "data_path", "cmd"
   )
+  
+  ## look through nm_default_fields and set glue_fields before replacing glue tags
+  default_fields <- nm_default_fields()
+  default_glue <- names(default_fields) %in% names(m$glue_fields)
+  
+  for (i in seq_along(default_fields)) {
+    glue <- default_glue[i]
+    value <- default_fields[[i]]
+    name <- names(default_fields)[i]
+    if (glue) {
+      m$glue_fields[[name]] <- value
+    } else {
+      m[[name]] <- value
+    }
+  }
 
   for (field in names(m$glue_fields)) {
     m <- replace_tag(m, field)

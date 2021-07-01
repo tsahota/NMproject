@@ -21,8 +21,8 @@ file specified in \code{based_on}.  However it is recommended to specify this
 explicitly as a relative path.}
 
 \item{cmd}{Optional character. PsN command to use. If unspecified will use
-\code{getOption("nm.cmd_default")}. Use glue notation for inheritance.  See
-details.}
+\code{getOption("nm_default_fields")} value of \code{cmd}. Use glue notation for
+inheritance.  See details.}
 }
 \value{
 An object of class \code{nm_list}.  Attributes can be viewed by printing

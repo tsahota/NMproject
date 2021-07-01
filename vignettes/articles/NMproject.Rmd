@@ -852,9 +852,9 @@ Two options:
 
 1) set `cmd` once for your parent object and then make all other objects child objects from the parent.
 
-2) set the `nm.cmd_default` option for the analysis project for your organisation.  E.g. organisations using docker (as described in below FAQ question) require the execute command to be much longer: `"docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}"`.
+2) set the default `cmd` field with `nm_default_fields()` for the analysis project for your organisation.  E.g. organisations using docker (as described in below FAQ question) require the execute command to be much longer: `"docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}"`.
 
-`options(nm.cmd_default = "docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}")`
+`nm_default_fields(list(cmd = "docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}"))`
 
 Setting this will ensure all runs produced in the R session will run using the above command.  To see how to set an option for all your R sessions see subsequent question
 

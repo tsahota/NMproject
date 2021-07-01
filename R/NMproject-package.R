@@ -28,6 +28,7 @@
 #'    By default these will be set to `"Models"`, `"Scripts"` and `"Results"`,
 #'    respectively.  Additional characters (e.g. `"SourceData"`) correspond to
 #'    additional modelling directories to be created.
+#'    See `?nm_default_fields` for more information.
 #'  }
 #'  \item{kill_job}{
 #'    An optional function to kill jobs before they are started.
@@ -42,12 +43,9 @@
 #'  \item{nm.force_render}{
 #'    Sets default value for the `force` argument in See `nm_render`.
 #'  }
-#'  \item{nm.cmd_default}{
-#'    Sets default `cmd` field for all nm objects.
-#'    See `?cmd` for more information.
-#'    The default value is "execute {ctl_name} -dir={run_dir}".
-#'    However in environments where a different command is needed, this is the
-#'    place to change it.
+#'  \item{nm_default_fields}{
+#'    Sets default fields for all nm objects.
+#'    See `?nm_default_fields` for more information.
 #'  }
 #'  \item{nmtran_exe_path}{
 #'    Sets the value of the NMTRAN.exe program.  This may be deprecated in future

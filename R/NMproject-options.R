@@ -33,8 +33,13 @@ set_nm_opts <- function() {
 
   if (is.null(getOption("nm.overwrite_behaviour"))) options(nm.overwrite_behaviour = "ask")
   if (is.null(getOption("nm.force_render"))) options(nm.force_render = FALSE)
-  if (is.null(getOption("nm.cmd_default"))) options(nm.cmd_default = "execute {ctl_name} -dir={run_dir}")
 
+  if (is.null(getOption("nm_default_fields"))) {
+    options(nm_default_fields = list(
+      cmd = "execute {ctl_name} -dir={run_dir}"
+    ))
+  }
+  
   if (is.null(getOption("nmtran_exe_path"))) options(nmtran_exe_path = find_nm_tran_path(warn = FALSE))
 
   if (is.null(getOption("code_library_path"))) {
@@ -44,7 +49,7 @@ set_nm_opts <- function() {
   options("nm.options" = c(
     "system_cmd", "system_nm", "quiet_run", "intern", "available_nm_types",
     "nm_default_dirs", "kill_job", "nm.overwrite_behaviour",
-    "nm.force_render", "nm.cmd_default", "nmtran_exe_path",
+    "nm.force_render", "nm_default_fields", "nmtran_exe_path",
     "code_library_path"
   ))
 }
@@ -156,6 +161,40 @@ set_default_dirs_in_rprofile <- function(path = ".Rprofile", dir_list = nm_defau
   txt <- c(start_flag, txt, end_flag, "", current_lines)
   writeLines(txt, path)
   usethis::ui_done("setting {usethis::ui_path('nm_default_dirs')} in {usethis::ui_path('.Rprofile')}")
+}
+
+
+#' Setup default nm object fields
+#'
+#' @description
+#'
+#' `r lifecycle::badge("stable")`
+#'
+#' This allows organisations/individuals with their own nm object field
+#' preferences to set these.
+#'
+#' @param field_list Optional named list or vector. Names correspond to function
+#'   names and object fields, values correspond to what will be set.
+#'
+#' @return if `field_list` is missing, will return value of
+#' `getOption("nm_default_fields")` otherwise will set option `nm_default_fields`.
+#' @examples
+#'
+#' nm_default_fields()
+#' nm_default_fields(list(
+#'   cmd = "execute {ctl_name} -dir={run_dir}"
+#' ))
+#' nm_default_fields()
+#' 
+#' @export
+
+nm_default_fields <- function(field_list) {
+  if (missing(field_list)) {
+    return(getOption("nm_default_fields"))
+  }
+  if (!missing(field_list)) {
+    options(nm_default_fields = field_list)
+  }
 }
 
 #' Generic execute command for SGE grids
