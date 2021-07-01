@@ -88,7 +88,6 @@ nm_default_dirs <- function(dir_list) {
   }
   if (!missing(dir_list)) {
     ## now assume we're setting
-    validate_dir_list(dir_list)
     options(nm_default_dirs = dir_list)
   }
 }
@@ -100,12 +99,6 @@ nm_default_dirs <- function(dir_list) {
   source_data = "Directory for unmodified source data",
   derived_data = "Directory for derived analysis-ready datasets"
 )
-
-validate_dir_list <- function(dir_list) {
-  if (any(!c("scripts", "models", "results") %in% names(dir_list))) {
-    stop("names \"scripts\", \"models\", and \"results\" must at least be present")
-  }
-}
 
 #' Get a default directory
 #'
@@ -161,7 +154,7 @@ nm_dir <- function(name = c("scripts", "models", "results"), ...) {
 }
 
 set_default_dirs_in_rprofile <- function(path = ".Rprofile", dir_list = nm_default_dirs()) {
-  validate_dir_list(dir_list)
+
   if (!file.exists(path)) file.create(path)
 
   start_flag <- "# nm_default_dir modify - start"

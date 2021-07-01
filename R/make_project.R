@@ -75,8 +75,6 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
   ## home directory, so use use R normalizePath to remove abiguity
   path <- normalizePath(path, mustWork = FALSE)
 
-  validate_dir_list(dirs)
-
   style <- match.arg(style)
   name <- basename(path)
   folder <- dirname(path)
