@@ -24,8 +24,8 @@ set_nm_opts <- function() {
       models = "Models",
       scripts = "Scripts",
       results = "Results",
-      "SourceData",
-      "DerivedData"
+      source_data = "SourceData",
+      derived_data = "DerivedData"
     ))
   }
 
