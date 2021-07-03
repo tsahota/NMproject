@@ -42,6 +42,23 @@ remove_parameter <- function(m, name) {
 #' @param after Character. Pattern to match and include the mixed effect after.
 #'
 #' @return An nm object with modified `ctl_contents` field.
+#' 
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#' 
+#' m1 %>% dollar("PK")
+#' m1 %>% dollar("THETA")
+#' 
+#' m1 <- m1 %>% add_mixed_param("ALAG1", init = 1, unit = "h", trans = "LOG")
+#' 
+#' m1 %>% dollar("PK")
+#' m1 %>% dollar("THETA")
+#' 
 #' @export
 add_mixed_param <- function(m, name,
                             init = 1, unit = "", trans = c("LOG"),

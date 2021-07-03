@@ -38,3 +38,20 @@ An nm object with modified \code{ctl_contents} field.
 Primarily an internal function. This will (by default) add a parameter (mixed
 effect) to your code $PK/$PRED and $THETA/$OMEGA.
 }
+\examples{
+
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+
+m1 \%>\% dollar("PK")
+m1 \%>\% dollar("THETA")
+
+m1 <- m1 \%>\% add_mixed_param("ALAG1", init = 1, unit = "h", trans = "LOG")
+
+m1 \%>\% dollar("PK")
+m1 \%>\% dollar("THETA")
+
+}
