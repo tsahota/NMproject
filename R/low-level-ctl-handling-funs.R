@@ -11,6 +11,8 @@
 #' @param m An nm object.
 #' @param pattern Character regex. Passed to [gsub()].
 #'
+#' @return An nm object with modified `ctl_contents` field.
+#'
 #' @seealso [gsub_ctl()], [target()]
 #' @export
 comment_out <- function(m, pattern = ".*") {
@@ -40,6 +42,8 @@ uncomment <- function(m, pattern = ".*") {
 #' @param replacement Argument passed to [gsub()].
 #' @param ... Additional arguments passed to [gsub()].
 #' @param dollar Character name of subroutine.
+#'
+#' @return An nm object with modified `ctl_contents` field.
 #'
 #' @seealso [apply_manual_edit()]
 #' @examples

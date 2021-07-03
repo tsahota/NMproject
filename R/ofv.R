@@ -136,6 +136,8 @@ BIC.nm_list <- Vectorize_nm_list(BIC.nm_generic)
 #'
 #' @param r An nm object.
 #'
+#' @return Numeric vector of condition numbers.
+#'
 #' @seealso [ofv()], [rr()]
 #'
 #' @examples

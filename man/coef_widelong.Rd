@@ -16,6 +16,13 @@ coef_long(m, trans = TRUE)
 \item{trans}{Logical (default = \code{TRUE}). Transform parameters using comments
 in $THETA/$OMEGA/$SIGMA.}
 }
+\value{
+\code{data.frame} of extracted model parameter values. \code{coef_wide()}
+returns a \code{data.frame} in wide format. Vector valued objects \code{m}, will be
+stacked vertically with one row per run.  \code{coef_long()} returns a
+\code{data.frame} in long format. Vector valued objects \code{m}, will be stacked
+horizontally.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

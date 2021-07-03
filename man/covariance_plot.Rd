@@ -13,7 +13,7 @@ covariance_plot(r, trans = TRUE)
 in $THETA/$OMEGA/$SIGMA comments before plotting.}
 }
 \value{
-A \code{ggplot2} object
+A \code{ggplot2} object with parameter correlations.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

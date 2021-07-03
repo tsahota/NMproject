@@ -20,6 +20,9 @@ NULL
 #'   `"Models/run{run_id}.mod"` will use the name `"Models/runm1.mod"` if
 #'   `run_id(m1)` is `"m1"`.
 #'
+#' @return `character` with path to NONMEM control file to be copied immediately
+#'   prior to running (with [run_nm()]).
+#'
 #' @examples
 #' \dontrun{
 #'
@@ -426,6 +429,7 @@ based_on.nm_list <- Vectorize_nm_list(based_on.nm_generic, SIMPLIFY = FALSE, rep
 #' This function is an alias for [based_on()].
 #'
 #' @param ... Arguments to be passed to [based_on()].
+#' @return An nm object with modified `ctl_contents` field.
 #'
 #' @export
 

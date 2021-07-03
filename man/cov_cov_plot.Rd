@@ -27,6 +27,9 @@ not.}
 
 \item{by}{Character (default = \code{"ID"}) variable to split over.}
 }
+\value{
+\code{ggplot2} object displaying covariate-covariate correlations.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

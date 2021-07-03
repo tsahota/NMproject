@@ -14,6 +14,8 @@
 #'   change a categorical estimation control file to simulation. You will likely
 #'   need to perform a `manual edit` for categorical data simulation.
 #'
+#' @return An nm object with modified `ctl_contents` field.
+#'
 #' @examples
 #'
 #' \dontrun{

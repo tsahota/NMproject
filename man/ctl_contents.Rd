@@ -9,6 +9,9 @@ ctl_contents(...)
 \arguments{
 \item{...}{Arguments to be passed to \code{\link[=based_on]{based_on()}}.}
 }
+\value{
+An nm object with modified \code{ctl_contents} field.
+}
 \description{
 This function is an alias for \code{\link[=based_on]{based_on()}}.
 }

@@ -19,6 +19,9 @@
 #'   a labelling column for [cov_forest_plot()] to adjust how the covariate
 #'   scenarios are printed on the axis
 #'
+#' @return `dplyr::tibble` with quantile information suitable for
+#'   [cov_forest_plot()].
+#'   
 #' @examples
 #' \dontrun{
 #'
@@ -428,6 +431,8 @@ param_cov_diag <- function(r, param, cov, ..., categorical = FALSE, plot_tv = TR
 #' @param dcov_info Optional `data.frame` with covariate information.
 #' @param by Character (default = `"ID"`) variable to split over.
 #'
+#' @return `ggplot2` object displaying covariate-covariate correlations.
+#' 
 #' @export
 cov_cov_plot <- function(d,
                          cov,

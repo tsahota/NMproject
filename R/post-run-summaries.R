@@ -87,6 +87,12 @@ rr.nm_generic <- function(m, trans = TRUE) {
 #' @param trans Logical (default = `TRUE`). Transform parameters using comments
 #'   in $THETA/$OMEGA/$SIGMA.
 #'
+#' @return `data.frame` of extracted model parameter values. `coef_wide()`
+#'   returns a `data.frame` in wide format. Vector valued objects `m`, will be
+#'   stacked vertically with one row per run.  `coef_long()` returns a
+#'   `data.frame` in long format. Vector valued objects `m`, will be stacked
+#'   horizontally.
+#'
 #' @seealso [rr()]
 #' @export
 coef_wide <- function(m, trans = TRUE) {
@@ -597,7 +603,7 @@ summary_long <- function(..., parameters = c("none", "new", "all")) {
 #' @param trans Logical (default = TRUE).  Applies the transformations specified
 #'   in $THETA/$OMEGA/$SIGMA comments before plotting.
 #'
-#' @return A `ggplot2` object
+#' @return A `ggplot2` object with parameter correlations.
 #'
 #' @export
 

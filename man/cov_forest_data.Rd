@@ -12,6 +12,10 @@ cov_forest_data(m, covariate_scenarios)
 \item{covariate_scenarios}{A \code{data.frame}. Need columns \code{cov}, \code{value}
 and (optional) \code{text}.  See details for more information.}
 }
+\value{
+\code{dplyr::tibble} with quantile information suitable for
+\code{\link[=cov_forest_plot]{cov_forest_plot()}}.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

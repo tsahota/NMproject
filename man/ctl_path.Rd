@@ -13,6 +13,10 @@ ctl_path(m, text)
 Typically, this file does not yet normally exist, but will house the code
 code for this run.}
 }
+\value{
+\code{character} with path to NONMEM control file to be copied immediately
+prior to running (with \code{\link[=run_nm]{run_nm()}}).
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
