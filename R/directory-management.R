@@ -98,3 +98,26 @@ run_all_scripts <- function(index, quiet = FALSE) {
   res <- lapply(exprs, rlang::eval_tidy)
   return(invisible(TRUE))
 }
+
+#' Is the directory an NMproject directory
+#' 
+#' @description
+#'
+#' `r lifecycle::badge("stable")`
+#'
+#' Find out whether current (or specified) directory is an NMproject directory
+#' or not.
+#' 
+#' @param path Optional path to test if it's an NMproject or not.
+#' 
+#' @return Logical `TRUE` or `FALSE`
+#' 
+#' @export
+
+is_nmproject_dir <- function(path = getwd()){
+  
+  rprofile_path <- file.path(path, ".Rprofile")
+  if (!file.exists(rprofile_path)) return(FALSE)
+  any(grepl("nm_default_dirs", readLines(rprofile_path)))
+  
+}
