@@ -24,8 +24,8 @@ opts_chunk$set(message = TRUE)
 ```{r echo=FALSE,message=FALSE}
 ## LOAD PACKAGES HERE
 library(NMproject)
-# library(future)
-# future::plan("future::multiprocess", workers = 2)
+library(dplyr)
+
 
 ```
 
