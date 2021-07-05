@@ -178,8 +178,10 @@ import <- function(copy_table, overwrite = FALSE, silent = FALSE,
     )
   }
 
-  copy_table_orig$imported <- copy_table_orig$destination %in%
-    copy_table$destination
+  if(inherits(copy_table_orig, "data.frame")){
+    copy_table_orig$imported <- copy_table_orig$destination %in%
+      copy_table$destination 
+  }
 
   invisible(copy_table_orig)
 }
