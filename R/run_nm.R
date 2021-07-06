@@ -113,6 +113,9 @@ run_nm.nm_generic <- function(m,
 
       matched <- identical(run_cache_disk$checksums, current_checksums)
       if (matched) {
+        if (!is_finished(m)) {
+          warning("run was previously executed but has is_finished() status = FALSE")
+        }
         message("rebuilding run from cache... use run_nm(force = TRUE) to override")
         ## update object and return
         m <- m %>% executed(TRUE)
