@@ -137,8 +137,9 @@ nm_render.nm_generic <- function(m,
   }
 
   m <- m %>% result_files(output_file)
-
   m <- m %>% save_render_cache(input)
+  
+  message("run report saved in: ", output_file)
 
   invisible(m)
 }
