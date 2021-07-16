@@ -6,7 +6,7 @@
 \usage{
 make_xv_datasets(
   dboot,
-  data_folder = "DerivedData/bootstrap_datasets",
+  data_folder = file.path(nm_dir("derived_data"), "bootstrap_datasets"),
   overwrite = FALSE,
   id_var = "ID"
 )

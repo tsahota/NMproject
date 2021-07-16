@@ -7,7 +7,7 @@
 make_boot_datasets(
   m,
   samples = 10,
-  data_folder = "DerivedData/bootstrap_datasets",
+  data_folder = file.path(nm_dir("derived_data"), "bootstrap_datasets"),
   overwrite = FALSE,
   id_var = "ID",
   ...

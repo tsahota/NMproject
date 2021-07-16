@@ -109,11 +109,12 @@ boot_to_csv <- function(d,
 #' @export
 make_boot_datasets <- function(m,
                                samples = 10,
-                               data_folder = "DerivedData/bootstrap_datasets",
+                               data_folder = file.path(nm_dir("derived_data"), "bootstrap_datasets"),
                                overwrite = FALSE,
                                id_var = "ID",
                                ...) {
-  bootsplits <- readRDS(paste0("DerivedData/bootsplit_", basename(data_path(m)), ".RData"))
+  bootsplits <- readRDS(file.path(nm_dir("derived_data"), 
+                                  paste0("bootsplit_", basename(data_path(m)), ".RData")))
 
   dboots <- bootsplits[seq_len(samples), ] # datasets created
   dboots$run_id <- 1:nrow(dboots)
@@ -167,7 +168,7 @@ make_boot_datasets <- function(m,
 #'
 #' @export
 make_xv_datasets <- function(dboot,
-                             data_folder = "DerivedData/bootstrap_datasets",
+                             data_folder = file.path(nm_dir("derived_data"), "bootstrap_datasets"),
                              overwrite = FALSE,
                              id_var = "ID") {
   d <- input_data(parent_run(dboot$m[1])) ## originally input_data(m)
