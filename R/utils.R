@@ -277,3 +277,9 @@ wait_for <- function(x, timeout = NULL, interval = 1) {
   }
   invisible(TRUE)
 }
+
+file_find_replace <- function(filepath, pattern, replacement) {
+  file_contents <- readLines(filepath)
+  updated_contents <- gsub(x = file_contents, pattern = pattern, replacement = replacement)
+  cat(updated_contents, file = filepath, sep = "\n")
+}

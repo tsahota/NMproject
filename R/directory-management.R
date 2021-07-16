@@ -25,6 +25,7 @@
 setup_nm_demo <- function(demo_name = "theopp",
                           overwrite = FALSE,
                           additional_demo_locations = NULL) {
+  
   examples_dir <- character()
   examples_dirs <- character()
 
@@ -54,9 +55,11 @@ setup_nm_demo <- function(demo_name = "theopp",
 
   files_to_copy <- dir(examples_dir, all.files = TRUE, full.names = TRUE, recursive = TRUE)
 
-  stage_info <- stage(files_to_copy, overwrite = overwrite, silent = TRUE)
+  stage_info <- stage(files_to_copy, overwrite = overwrite, silent = TRUE, 
+                      find_replace_dir_names = TRUE)
 
-  import(stage_info, overwrite = overwrite)
+  imported_info <- import(stage_info, overwrite = overwrite)
+  
 }
 
 

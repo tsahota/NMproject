@@ -147,9 +147,8 @@ nm_default_dir <- function(name = c("scripts", "models", "results"), ...) {
 #' nm_dir("results")
 #' @export
 
-nm_dir <- function(name = c("scripts", "models", "results"), ...) {
+nm_dir <- function(name, ...) {
   if (missing(name)) stop("need argument")
-  name < match.arg(name)
   nm_default_dirs()[[name]]
 }
 

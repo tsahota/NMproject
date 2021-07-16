@@ -18,7 +18,8 @@
 #'   this is not specified, will guess based on presence of `nm_default_dirs`
 #' @param overwrite Logical (default = FALSE).
 #' @param silent Logical (default = FALSE).
-#'
+#' @param find_replace_dir_names Logical (default = FALSE). Will attempt to find
+#'   replace strings in scripts to reflect [nm_default_dirs()].
 #' @seealso [code_library()], [import()]
 #'
 #' @examples
@@ -31,7 +32,8 @@
 #'
 #' @export
 stage <- function(files, root_dir,
-                  overwrite = FALSE, silent = FALSE) {
+                  overwrite = FALSE, silent = FALSE, 
+                  find_replace_dir_names = FALSE) {
 
   ## send unmodified files into staging area for importation
 
@@ -60,7 +62,9 @@ stage <- function(files, root_dir,
   destination <- gsub("^Scripts/", paste0(nm_dir("scripts"), "/"), destination)
   destination <- gsub("^Models/", paste0(nm_dir("models"), "/"), destination)
   destination <- gsub("^Results/", paste0(nm_dir("results"), "/"), destination)
-
+  destination <- gsub("^SourceData/", paste0(nm_dir("source_data"), "/"), destination)
+  destination <- gsub("^DerivedData/", paste0(nm_dir("derived_data"), "/"), destination)
+  
   d <- dplyr::tibble(from = files, destination)
   d$staging <- file.path("staging", d$destination)
 
@@ -91,6 +95,16 @@ stage <- function(files, root_dir,
 
   if (!silent) message("File(s) staged in project:\n", paste(paste0(" ", d$staging[do_copy]), collapse = "\n"), "\nTo import use import()")
 
+  if (find_replace_dir_names) {
+    for (path in d$staging) {
+      file_find_replace(path, "Scripts", nm_dir("scripts"))
+      file_find_replace(path, "Models", nm_dir("models"))
+      file_find_replace(path, "Results", nm_dir("results"))
+      file_find_replace(path, "SourceData", nm_dir("source_data"))
+      file_find_replace(path, "DerivedData", nm_dir("derived_data"))
+    }
+  }
+  
   invisible(d)
 }
 

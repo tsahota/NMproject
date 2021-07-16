@@ -4,7 +4,7 @@
 \alias{nm_dir}
 \title{Get a directory name}
 \usage{
-nm_dir(name = c("scripts", "models", "results"), ...)
+nm_dir(name, ...)
 }
 \arguments{
 \item{name}{Character. Directory type.  Should be either \code{"scripts"},

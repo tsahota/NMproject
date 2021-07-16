@@ -4,7 +4,13 @@
 \alias{stage}
 \title{Stage files in project staging area ready for import}
 \usage{
-stage(files, root_dir, overwrite = FALSE, silent = FALSE)
+stage(
+  files,
+  root_dir,
+  overwrite = FALSE,
+  silent = FALSE,
+  find_replace_dir_names = FALSE
+)
 }
 \arguments{
 \item{files}{Character vector. path of files to stage.}
@@ -16,6 +22,9 @@ this is not specified, will guess based on presence of \code{nm_default_dirs}}
 \item{overwrite}{Logical (default = FALSE).}
 
 \item{silent}{Logical (default = FALSE).}
+
+\item{find_replace_dir_names}{Logical (default = FALSE). Will attempt to find
+replace strings in scripts to reflect \code{\link[=nm_default_dirs]{nm_default_dirs()}}.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
