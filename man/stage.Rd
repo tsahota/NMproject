@@ -9,7 +9,7 @@ stage(
   root_dir,
   overwrite = FALSE,
   silent = FALSE,
-  find_replace_dir_names = FALSE
+  find_replace_dir_names = TRUE
 )
 }
 \arguments{
@@ -23,7 +23,7 @@ this is not specified, will guess based on presence of \code{nm_default_dirs}}
 
 \item{silent}{Logical (default = FALSE).}
 
-\item{find_replace_dir_names}{Logical (default = FALSE). Will attempt to find
+\item{find_replace_dir_names}{Logical (default = TRUE). Will attempt to find
 replace strings in scripts to reflect \code{\link[=nm_default_dirs]{nm_default_dirs()}}.}
 }
 \description{

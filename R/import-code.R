@@ -18,7 +18,7 @@
 #'   this is not specified, will guess based on presence of `nm_default_dirs`
 #' @param overwrite Logical (default = FALSE).
 #' @param silent Logical (default = FALSE).
-#' @param find_replace_dir_names Logical (default = FALSE). Will attempt to find
+#' @param find_replace_dir_names Logical (default = TRUE). Will attempt to find
 #'   replace strings in scripts to reflect [nm_default_dirs()].
 #' @seealso [code_library()], [import()]
 #'
@@ -33,7 +33,7 @@
 #' @export
 stage <- function(files, root_dir,
                   overwrite = FALSE, silent = FALSE, 
-                  find_replace_dir_names = FALSE) {
+                  find_replace_dir_names = TRUE) {
 
   ## send unmodified files into staging area for importation
 
@@ -124,6 +124,8 @@ stage <- function(files, root_dir,
 #' @param skip Character (default = `"\\.mod$"`). Pattern to skip.  Model files
 #'   will be imported directly into the project in order to avoid conflicts and
 #'   will instead reside only in the staging area.
+#' @param find_replace_dir_names Logical (default = TRUE). Will attempt to find
+#'   replace strings in scripts to reflect [nm_default_dirs()].
 #'
 #' @seealso [code_library()], [stage()]
 #'
@@ -145,7 +147,7 @@ stage <- function(files, root_dir,
 #'
 #' @export
 import <- function(copy_table, overwrite = FALSE, silent = FALSE,
-                   skip = "\\.mod$") {
+                   skip = "\\.mod$", find_replace_dir_names = TRUE) {
 
   ## import the files_to_copy
 
@@ -156,7 +158,10 @@ import <- function(copy_table, overwrite = FALSE, silent = FALSE,
   copy_table_orig <- copy_table
 
   if (is.character(copy_table)) {
-    copy_table <- stage(copy_table, overwrite = overwrite, silent = silent)
+    copy_table <- stage(copy_table, 
+                        overwrite = overwrite, 
+                        silent = silent,
+                        find_replace_dir_names = find_replace_dir_names)
   }
 
   copy_table <- copy_table[!is.na(copy_table$destination), ]

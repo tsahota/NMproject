@@ -4,7 +4,13 @@
 \alias{import}
 \title{Import staged files into project}
 \usage{
-import(copy_table, overwrite = FALSE, silent = FALSE, skip = "\\\\.mod$")
+import(
+  copy_table,
+  overwrite = FALSE,
+  silent = FALSE,
+  skip = "\\\\.mod$",
+  find_replace_dir_names = TRUE
+)
 }
 \arguments{
 \item{copy_table}{A \verb{data frame} or character. if \code{data.frame} should be
@@ -17,6 +23,9 @@ output from \code{stage()}, if character path, result will be \code{stage()}d fi
 \item{skip}{Character (default = \code{"\\\\.mod$"}). Pattern to skip.  Model files
 will be imported directly into the project in order to avoid conflicts and
 will instead reside only in the staging area.}
+
+\item{find_replace_dir_names}{Logical (default = TRUE). Will attempt to find
+replace strings in scripts to reflect \code{\link[=nm_default_dirs]{nm_default_dirs()}}.}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
