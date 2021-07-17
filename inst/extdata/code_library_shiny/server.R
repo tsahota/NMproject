@@ -55,10 +55,35 @@ function(input, output, session) {
     new_nm_text <- character()
     if(any(!import_ob$imported)) 
       new_nm_text <- paste0(
-        "Create nm objects based on this file with:\n ",
-        "<code>new_nm(.... , based_on = \"", 
+        "Following code can be copy-pasted to create a new parent nm object (with run id <code>\"m1\"</code>).
+        <code>new_nm()</code> will fill in the $DATA (substitute <code>filename.csv</code> below for your data file).
+        Using pipes and <code>fill_input()</code> can automatically fill in the $INPUT.\n
+        These are just to get you started, additional modifications may been needed, 
+        consult the documentation for more information:\n\n ",
+        "<code>m1 <- new_nm(run_id = \"m1\", \n",
+        HTML('&nbsp;'), HTML('&nbsp;'), HTML('&nbsp;'),
+        HTML('&nbsp;'), HTML('&nbsp;'), HTML('&nbsp;'),
+        HTML('&nbsp;'), HTML('&nbsp;'), HTML('&nbsp;'),
+        HTML('&nbsp;'), HTML('&nbsp;'), HTML('&nbsp;'),
+        HTML('&nbsp;'), HTML('&nbsp;'), 
+        "based_on = \"", 
         import_ob$staging[!import_ob$imported],
-        "\", ....)</code>\n\n"
+        "\",\n",
+        HTML('&nbsp;'), HTML('&nbsp;'), HTML('&nbsp;'),
+        HTML('&nbsp;'), HTML('&nbsp;'), HTML('&nbsp;'),
+        HTML('&nbsp;'), HTML('&nbsp;'), HTML('&nbsp;'),
+        HTML('&nbsp;'), HTML('&nbsp;'), HTML('&nbsp;'),
+        HTML('&nbsp;'), HTML('&nbsp;'),
+        "data_path = \"",
+        NMproject::nm_dir("derived_data"), .Platform$file.sep,
+        "filename.csv\") %>% \n",
+        HTML('&nbsp;'), HTML('&nbsp;'), HTML('&nbsp;'),
+        HTML('&nbsp;'), HTML('&nbsp;'), HTML('&nbsp;'), HTML('&nbsp;'),
+        "fill_input() %>%\n",
+        HTML('&nbsp;'), HTML('&nbsp;'), HTML('&nbsp;'),
+        HTML('&nbsp;'), HTML('&nbsp;'), HTML('&nbsp;'), HTML('&nbsp;'),
+        "run_nm()",
+        "</code>\n\n"
       )
     
     popup_text <- paste0(
