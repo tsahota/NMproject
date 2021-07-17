@@ -11,6 +11,7 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+source(".Rprofile")
 ```
 # {{{ Package }}}
 
@@ -25,11 +26,12 @@ The goal of {{{ Package }}} is to ...
 
 ## Directory structure
 
-- **`r NMproject::nm_dir("models")`**: Location of model files (e.g. NONMEM, Stan, ...).
-- **R**: Location of R functions to be loaded with `source()` (or loaded with `devtools::load_all()`).
 - **`r NMproject::nm_dir("scripts")`**: Location of Script files for data cleaning, analysis and post-processing.
+- **`r NMproject::nm_dir("models")`**: Location of model files (e.g. NONMEM, Stan, ...).
+- **R**: Location of any custom R functions used in scripts.  These can be loaded with `devtools::load_all()` or by sourcing indivdiually via `source("R/functionname.R")`.
 - **`r NMproject::nm_dir("results")`**: Location of Results files
-- Additional directories are for source datasets (unmodified source data files) and derived datasets (cleaned and analysis-ready datasets)
+- **`r NMproject::nm_dir("source_data")`**: Location of unmodified source datasets
+- **`r NMproject::nm_dir("derived_data")`**: Location of analysis-ready datasets.  The production of these should be scripted.
 
 ## Data sources
 

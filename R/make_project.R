@@ -167,9 +167,9 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
     }
   )
   
-  suppressMessages(devtools::build_readme(path = path))
-
   set_default_dirs_in_rprofile(file.path(folder, name, ".Rprofile"), dirs)
+  
+  suppressMessages(devtools::build_readme(path = path))
     
   ## no badges - skip this part of starters for now
   repo <- git2r::init(usethis::proj_get())
