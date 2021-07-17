@@ -27,5 +27,7 @@ library(NMproject)
 
 devtools::load_all() ## for loading functions in R/
 
+set.seed(1234)
+
 ```
 

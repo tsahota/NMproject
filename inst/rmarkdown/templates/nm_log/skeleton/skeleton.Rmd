@@ -39,12 +39,16 @@ opts_chunk$set(message = TRUE)
 library(NMproject)
 
 # devtools::load_all()  ## to load R functions in R/
+
+set.seed(1234)
+
 ```
 
 ## model development
 
 ```{r}
 
+## REPLACE ME BELOW
 m1 <- new_nm(run_id = "m1",
              based_on = "staging/Models/runm1.mod",
              data_path = "DerivedData/THEOPP.csv",
