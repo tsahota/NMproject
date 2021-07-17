@@ -99,6 +99,8 @@ library(xpose)
 xpdb <- xpose_data(runno = run_id(.m), dir = run_in(.m))
 
 dv_vs_pred(xpdb)
+dv_vs_ipred(xpdb)
+ind_plots(xpdb, page = 1)
 
 ```
 
