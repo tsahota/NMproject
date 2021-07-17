@@ -78,6 +78,10 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
   
   if(is.character(dirs) & length(dirs) == 1) dirs <- parse_dirs(dirs)
   
+  current_default_dirs <- nm_default_dirs()
+  nm_default_dirs(dirs)
+  on.exit(nm_default_dirs(current_default_dirs))
+  
   path <- normalizePath(path, mustWork = FALSE)
 
   style <- match.arg(style)
@@ -95,7 +99,7 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
     current_proj <- NULL
   }
   usethis::proj_set(path)
-  on.exit(usethis::proj_set(current_proj))
+  on.exit(usethis::proj_set(current_proj), add = TRUE)
 
   write("This directory is for .R files containing R functions", file.path(path, "R", "Readme.txt"))
   usethis::use_build_ignore(file.path("R", "Readme.txt"))
