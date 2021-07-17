@@ -21,8 +21,8 @@ set_nm_opts <- function() {
 
   if (is.null(getOption("nm_default_dirs"))) {
     options(nm_default_dirs = list(
-      models = "Models",
       scripts = "Scripts",
+      models = "Models",
       results = "Results",
       source_data = "SourceData",
       derived_data = "DerivedData"
@@ -93,8 +93,8 @@ nm_default_dirs <- function(dir_list) {
 }
 
 .nm_dir_descriptions <- list(
-  models = "Directory for NONMEM runs and other 3rd party software",
   scripts = "Directory for R and Rmd scripts",
+  models = "Directory for NONMEM runs and other 3rd party software",
   results = "Default directory for results including tables, pdfs, Rmd reports, ...",
   source_data = "Directory for unmodified source data",
   derived_data = "Directory for derived analysis-ready datasets"

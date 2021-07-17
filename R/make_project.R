@@ -115,14 +115,16 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
 
   for (i in seq_along(dirs)) {
     dir_name <- dirs[[i]]
-    usethis::use_directory(dir_name, ignore = TRUE)
-
-    generic_dir_name <- names(dirs)[i]
-    readme_path <- file.path(dir_name, "Readme.txt")
-    if (generic_dir_name %in% names(.nm_dir_descriptions)) {
-      write(.nm_dir_descriptions[[generic_dir_name]], file.path(path, readme_path))
-    } else {
-      write("Custom directory", file.path(path, readme_path))
+    if (!dir_name %in% ".") {
+      usethis::use_directory(dir_name, ignore = TRUE)
+      
+      generic_dir_name <- names(dirs)[i]
+      readme_path <- file.path(dir_name, "Readme.txt")
+      if (generic_dir_name %in% names(.nm_dir_descriptions)) {
+        write(.nm_dir_descriptions[[generic_dir_name]], file.path(path, readme_path))
+      } else {
+        write("Custom directory", file.path(path, readme_path))
+      }
     }
   }
 
@@ -174,6 +176,33 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
   )
 
   return(invisible(path))
+}
+
+nm_create_analysis_project_app <- function(path, dirs,
+                                       style = c("analysis", "analysis-package"),
+                                       use_renv = FALSE, readme_template_package = "NMproject", 
+                                       ...){
+  
+  nm_create_analysis_project(path = path, 
+                             dirs = parse_dirs(dirs),
+                             style = style,
+                             use_renv = use_renv, 
+                             readme_template_package = readme_template_package, 
+                             ...)
+}
+
+parse_dirs <- function(dirs){
+  dirs <- as.character(dirs)
+  if(length(dirs) != 1) stop("dirs must be length 1", call. = FALSE)
+  dirs <- strsplit(dirs, ",")[[1]]
+  dirs <- trimws(dirs)
+
+  named_indexes <- seq_len(min(length(dirs), length(.nm_dir_descriptions)))
+  names(dirs)[named_indexes] <- names(.nm_dir_descriptions)[named_indexes]
+  names(dirs)[is.na(names(dirs))] <- ""
+  dirs <- dirs[!dirs %in% ""]
+  dirs <- as.list(dirs)
+  dirs
 }
 
 #' Package name validator from `usethis`

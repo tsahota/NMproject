@@ -1,4 +1,4 @@
-Binding: nm_create_analysis_project
+Binding: nm_create_analysis_project_app
 Title: New NMproject
 
 Parameter: style
@@ -13,3 +13,8 @@ Widget: CheckboxInput
 Label: Use renv with this project
 Default: FALSE
 Position: left
+
+Parameter: dirs
+Widget: TextInput
+Default: Scripts, Models, Results, SourceData, DerivedData
+Label: Subdirectory structure. Comma separated order: scripts, models, outputs, source data, derived data
