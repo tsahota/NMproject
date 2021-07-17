@@ -1,4 +1,4 @@
-Binding: nm_create_analysis_project_app
+Binding: nm_create_analysis_project
 Title: New NMproject
 
 Parameter: style

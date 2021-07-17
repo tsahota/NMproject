@@ -10,8 +10,10 @@
 #'
 #' @param path Character path (relative or absolute) to project.  If just
 #'   specifying a name, this will create the analysis project in the current
-#'   working directory.  See details for naming requirements.
-#' @param dirs Character list or vector.  Default = `nm_default_dirs()`
+#' working directory.  See details for naming requirements.
+#' @param dirs Character list or vector.  Default = `nm_default_dirs()`.  Can
+#'   also handle an ordered string which is supplied by the RStudio project
+#'   template interface.
 #' @param style Character. Either `"analysis"` or `"analysis-package"` See
 #'   details for `path` requirements and function behaviour.
 #' @param use_renv Logical (default = `FALSE`). Should `renv` be used or not in
@@ -73,6 +75,9 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
 
   ## need to normalize path because usethis has different
   ## home directory, so use use R normalizePath to remove abiguity
+  
+  if(is.character(dirs) & length(dirs) == 1) dirs <- parse_dirs(dirs)
+  
   path <- normalizePath(path, mustWork = FALSE)
 
   style <- match.arg(style)
@@ -176,19 +181,6 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
   )
 
   return(invisible(path))
-}
-
-nm_create_analysis_project_app <- function(path, dirs,
-                                       style = c("analysis", "analysis-package"),
-                                       use_renv = FALSE, readme_template_package = "NMproject", 
-                                       ...){
-  
-  nm_create_analysis_project(path = path, 
-                             dirs = parse_dirs(dirs),
-                             style = style,
-                             use_renv = use_renv, 
-                             readme_template_package = readme_template_package, 
-                             ...)
 }
 
 parse_dirs <- function(dirs){
