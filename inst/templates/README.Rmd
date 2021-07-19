@@ -33,6 +33,18 @@ The goal of {{{ Package }}} is to ...
 - **{{{source_data}}}**: Location of unmodified source datasets
 - **{{{derived_data}}}**: Location of analysis-ready datasets.  The production of these should be scripted.
 
+## Automated tests
+
+Any automated tests will be included here.
+
+```{r echo = FALSE}
+
+if (file.exists(file.path("tests", "testthat.R"))){
+  devtools::test()
+} 
+
+```
+
 ## Data sources
 
 The data was obtained from ...
