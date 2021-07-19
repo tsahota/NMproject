@@ -82,7 +82,12 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
   nm_default_dirs(dirs)
   on.exit(nm_default_dirs(current_default_dirs))
   
-  path <- normalizePath(path, mustWork = FALSE)
+  ## if it's a full path, leave it alone
+  ## otherwise if it's a relative path, we need the working directory to make it full
+  if (!is_full_path(path)) {
+    path <- file.path(normalizePath(getwd()), path)
+    path <- normalizePath(path, mustWork = FALSE)    
+  }
 
   style <- match.arg(style)
   name <- basename(path)
