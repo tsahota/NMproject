@@ -18,8 +18,6 @@ if (file.exists(".Rprofile")) source(".Rprofile")
 <!-- badges: start -->
 <!-- badges: end -->
 
-Version: See DESCRIPTION file
-
 ## Objective
 
 The goal of {{{ Package }}} is to ...
