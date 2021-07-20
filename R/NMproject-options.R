@@ -28,7 +28,10 @@ set_nm_opts <- function() {
       derived_data = "DerivedData"
     ))
   }
-
+  
+  if (is.null(getOption("nm_pre_commit_hook"))) options(nm_pre_commit_hook = NULL)
+  if (is.null(getOption("nm_pre_push_hook"))) options(nm_pre_commit_hook = NULL)
+  
   if (is.null(getOption("kill_job"))) options(kill_job = identity)
 
   if (is.null(getOption("nm.overwrite_behaviour"))) options(nm.overwrite_behaviour = "ask")
@@ -50,6 +53,7 @@ set_nm_opts <- function() {
     "system_cmd", "system_nm", "quiet_run", "intern", "available_nm_types",
     "nm_default_dirs", "kill_job", "nm.overwrite_behaviour",
     "nm.force_render", "nm_default_fields", "nmtran_exe_path",
+    "nm_pre_commit_hook", "nm_pre_push_hook",
     "code_library_path"
   ))
 }

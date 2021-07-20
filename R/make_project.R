@@ -178,6 +178,15 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
     
   ## no badges - skip this part of starters for now
   repo <- git2r::init(usethis::proj_get())
+  
+  if(!is.null(nm_pre_commit_hook())) {
+    usethis::use_git_hook("pre-commit", nm_pre_commit_hook())
+  }
+  
+  if(!is.null(nm_pre_push_hook())) {
+    usethis::use_git_hook("pre-push", nm_pre_push_hook())
+  }
+  
   git2r::add(repo, path = "*")
   
   tryCatch(
@@ -205,6 +214,45 @@ parse_dirs <- function(dirs){
   dirs <- as.list(dirs)
   dirs
 }
+
+#' @rdname git_hooks
+#' @name git_hooks
+#' @title Git hooks
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("experimental")`
+#' 
+#' This function is primarily for organisational level configuration. Supply
+#' git hooks in the form of R functions and they will be executed via the
+#' `Rscript` interface.
+#' 
+#' @param cmd Optional command for setting the git hook.
+#' 
+#' @return If no `cmd` is specified this returns the return value of
+#'   `getOption("nm_pre_commit_hook")`.  Otherwise there is no return value.
+#' 
+#' @seealso [nm_create_analysis_project()]
+#' @keywords internal
+#' @export 
+nm_pre_commit_hook <- function(cmd){
+  if (missing(cmd)) {
+    return(getOption("nm_pre_commit_hook"))
+  }
+  ## now assume we're setting
+  options(nm_pre_commit_hook = cmd)
+}
+
+#' @rdname git_hooks
+#' @export
+nm_pre_push_hook <- function(cmd){
+  if (missing(cmd)) {
+    return(getOption("nm_pre_push_hook"))
+  }
+  ## now assume we're setting
+  options(nm_pre_push_hook = cmd)
+}
+
 
 #' Package name validator from `usethis`
 #'
