@@ -59,10 +59,12 @@ nm_diff <- function(m, ref_m, format = "raw") {
   new_ctl <- as.character(ctl_character(ctl_contents(as_nm_generic(m))))
   # "ansi256"
   dff <- diffobj::diffChr(old_ctl, new_ctl, format = format)
+  dff <- as.character(dff)
 
-  if (grepl("No visible differences between objects", as.character(dff)[1])) {
+  if (grepl("No visible differences between objects", dff[1])) {
     dff <- character()
   }
+  cat(dff, sep = "\n")
 
-  dff
+  invisible(dff)
 }
