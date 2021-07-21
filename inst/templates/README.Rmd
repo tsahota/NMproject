@@ -26,7 +26,7 @@ The goal of {{{ Package }}} is to ...
 
 - **{{{scripts}}}**: Location of Script files for data cleaning, analysis and post-processing.
 - **{{{models}}}**: Location of model files (e.g. NONMEM, Stan, ...).
-- **R**: Location of any custom R functions used in scripts.  These can be loaded with `devtools::load_all()` or by sourcing indivdiually via `source("R/functionname.R")`.
+- **R**: Location of any custom R functions used in scripts.  These can be loaded with `devtools::load_all()` or by sourcing individually via `source("R/functionname.R")`.
 - **{{{results}}}**: Location of Results files
 - **{{{source_data}}}**: Location of unmodified source datasets
 - **{{{derived_data}}}**: Location of analysis-ready datasets.  The production of these should be scripted.
