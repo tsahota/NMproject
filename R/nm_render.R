@@ -107,6 +107,7 @@ nm_render.nm_generic <- function(m,
       if (any(matches)) {
         message("nm_render cache found, skipping... use nm_render(force = TRUE) to override")
         m <- m %>% result_files(output_file)
+        usethis::ui_info("run report saved in: {usethis::ui_path(output_path)}")
         return(invisible(m)) ## if up to date, skip
       }
     }
@@ -133,14 +134,14 @@ nm_render.nm_generic <- function(m,
       params = args,
       envir = new.env(),
       ...
-    )
+    ) 
   }
 
   m <- m %>% result_files(output_file)
   m <- m %>% save_render_cache(input)
   
-  message("run report saved in: ", output_file)
-
+  usethis::ui_info("run report saved in: {usethis::ui_path(output_path)}")
+  
   invisible(m)
 }
 
