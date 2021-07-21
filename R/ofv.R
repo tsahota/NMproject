@@ -48,7 +48,9 @@ ofv.nm_generic <- function(r) {
   if (inherits(dc, "try-error")) {
     return(NA_real_)
   }
-  dc$FINAL[dc$parameter %in% "OBJ"]
+  ofv <- dc$FINAL[dc$parameter %in% "OBJ"]
+  if (length(ofv) == 0) ofv <- NA_real_
+  ofv
 }
 #' @export
 ofv.nm_list <- Vectorize_nm_list(ofv.nm_generic)
