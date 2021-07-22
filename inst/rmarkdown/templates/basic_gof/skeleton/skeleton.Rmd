@@ -81,12 +81,27 @@ covariance_plot(.m)
 
 library(ggplot2)
 
+## output_table_first() returns a merged version of all $TABLE outputs and your
+## input data.  See ?output_table_first for more info.
+
 .m %>%
   output_table_first() %>%
   ggplot(aes(x = PRED, y = DV)) +
   theme_bw() +
   geom_point() +
   geom_abline()
+
+
+## The following is an example of an exploratory data analysis (EDA) type plot
+## but with an additional layer with model predictions (in this case IPREDs).
+## Since EDA plots often highlight the more interesting aspects of the data, we
+## can recycle to see if the model predicting these aspects of the data.
+
+.m %>%
+  output_table_first() %>%
+  ggplot(aes(x = TIME, y = DV)) + theme_bw() +
+  geom_point() +
+  geom_line(aes(y = IPRED, group = ID), colour = "red") ## additional prediction layer
 
 ```
 
