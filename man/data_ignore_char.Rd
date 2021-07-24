@@ -9,7 +9,10 @@ data_ignore_char(r, data)
 \arguments{
 \item{r}{An object coercible into ctl_list.}
 
-\item{data}{A data.frame (default = missing) optional input dataset from R.}
+\item{data}{A \code{data.frame} (default = missing) optional input dataset from R.}
+}
+\value{
+Character representation of $DATA IGNORE statement.
 }
 \description{
 Get ignore statement

@@ -1,7 +1,10 @@
 #' Get ignore statement
 #'
 #' @param r An object coercible into ctl_list.
-#' @param data A data.frame (default = missing) optional input dataset from R.
+#' @param data A `data.frame` (default = missing) optional input dataset from R.
+#' 
+#' @return Character representation of $DATA IGNORE statement.
+#' 
 #' @keywords internal
 
 data_ignore_char <- function(r, data) {
@@ -111,10 +114,13 @@ data_ignore_char.nm_list <- Vectorize_nm_list(data_ignore_char.nm_generic, SIMPL
 
 #' Get filter statement
 #'
-#' Opposite of data_ignore_char.
+#' Opposite of [data_ignore_char()].
 #'
 #' @param r Object coercible into ctl_list.
 #' @param ... Arguments passed to data_ignore_char.
+#' 
+#' @return Negation of character value of [data_ignore_char()].
+#' 
 #' @keywords internal
 data_filter_char <- function(r, ...) {
   ignore_char <- data_ignore_char(r, ...)
