@@ -16,6 +16,9 @@ insert_dollar(m, dollar, text, after_dollar)
 \item{after_dollar}{Character name of preceding subroutine. The new
 subroutine will be inserted immediately after it.}
 }
+\value{
+An nm object with modified \code{ctl_contents} field.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

@@ -20,11 +20,21 @@ init_sigma(m, replace, ...)
 \item{...}{Additional arguments for mutating initial estimate NONMEM
 subroutines.  See examples.}
 }
+\value{
+If \code{replace} is specified returns an nm object with modified
+\code{ctl_contents} field.  Otherwise returns a \code{tibble} or list of \code{tibble}s
+with initial estimation information.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 These functions are useful to obtain and modify initial values of \verb{$THETA},
 \verb{$OMEGA} and \verb{$SIGMA}.
+}
+\details{
+It's easiest to learn this function by view examples, the vignette
+and the demo \code{\link[=setup_nm_demo]{setup_nm_demo()}}. It is a good idea to view the resulting
+\code{data.frame} to see the columns that are able to be manipulated.
 }
 \examples{
 \dontrun{

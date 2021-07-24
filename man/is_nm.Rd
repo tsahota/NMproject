@@ -13,6 +13,9 @@ is_nm_generic(x)
 \arguments{
 \item{x}{Object.}
 }
+\value{
+A logical vector with \code{TRUE} or \code{FALSE} values.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

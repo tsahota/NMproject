@@ -29,6 +29,9 @@ directory paths.}
 \item{shorten_paths}{Logical (default = \code{TRUE}). Long paths will be shortened
 if true in displayed output (not returned object).}
 }
+\value{
+A \code{tibble} with extracted information from \code{files}.
+}
 \description{
 List information about scripts
 }

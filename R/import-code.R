@@ -111,6 +111,8 @@ stage <- function(files, root_dir,
 #'   will be imported directly into the project in order to avoid conflicts and
 #'   will instead reside only in the staging area.
 #'
+#' @return Invisibly returns `copy_table` argument.
+#'
 #' @seealso [code_library()], [stage()]
 #'
 #' @examples
@@ -128,8 +130,7 @@ stage <- function(files, root_dir,
 #' }
 #'
 #' @export
-#'
-#' @export
+
 import <- function(copy_table, overwrite = FALSE, silent = FALSE,
                    skip = "\\.mod$") {
 
@@ -223,6 +224,8 @@ ls_scripts <- function(folder = ".", extn = "r|R|Rmd|rmd", recursive = TRUE) {
 #'   directory paths.
 #' @param shorten_paths Logical (default = `TRUE`). Long paths will be shortened
 #'   if true in displayed output (not returned object).
+#'   
+#' @return A `tibble` with extracted information from `files`.
 #' @keywords internal
 
 info_scripts <- function(files, fields = c("Description"), viewer = TRUE, silent = FALSE,

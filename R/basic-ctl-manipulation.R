@@ -155,7 +155,7 @@ delete_dollar.nm_list <- Vectorize_nm_list(delete_dollar.nm_generic, SIMPLIFY = 
 #' @param after_dollar Character name of preceding subroutine. The new
 #'   subroutine will be inserted immediately after it.
 #'
-#'
+#' @return An nm object with modified `ctl_contents` field.
 #' @examples
 #'
 #' \dontrun{

@@ -18,6 +18,9 @@ output from \code{stage()}, if character path, result will be \code{stage()}d fi
 will be imported directly into the project in order to avoid conflicts and
 will instead reside only in the staging area.}
 }
+\value{
+Invisibly returns \code{copy_table} argument.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

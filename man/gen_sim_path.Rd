@@ -13,6 +13,9 @@ gen_sim_path(dsc, start_dir, include_names = TRUE)
 
 \item{include_names}{Logical (default = TRUE). Should names be included.}
 }
+\value{
+A vector of paths concatenating the columns of \code{dsc}.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 

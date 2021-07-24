@@ -12,7 +12,7 @@ is_finished(r, initial_timeout = NA)
 \item{initial_timeout}{Deprecated.  See \code{\link[=wait_finish]{wait_finish()}}.}
 }
 \value{
-A logical vector.
+A logical vector with \code{TRUE} or \code{FALSE} values.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
