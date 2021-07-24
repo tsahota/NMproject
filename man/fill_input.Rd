@@ -11,6 +11,9 @@ fill_input(m, ...)
 
 \item{...}{Either \code{keep}, \code{drop}, or \code{rename} arguments.  See examples.}
 }
+\value{
+An nm object with modified \code{ctl_contents} field.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

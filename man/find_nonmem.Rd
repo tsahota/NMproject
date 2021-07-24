@@ -17,7 +17,7 @@ find_nm_tran_path(name = "default", warn = TRUE)
 }
 \value{
 If functions cannot find installation they will return \code{NULL} without
-errors or warnings
+errors or warning, otherwise they will return the located paths.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

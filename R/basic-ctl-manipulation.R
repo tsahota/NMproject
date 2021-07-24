@@ -10,8 +10,8 @@
 #' @param m An nm object.
 #' @param text Optional character. Path to input dataset.
 #'
-#' @return if text is not specified, will return the data_path name
-#'  otherwise will set data_path to the text provided
+#' @return if text is not specified, will return the `data_path` name
+#'  otherwise will return an nm object with modified `data_path` field.
 #'
 #' @examples
 #' \dontrun{
@@ -80,6 +80,8 @@ fill_dollar_data <- function(m, data_name) {
 #'   See examples for how to use `drop` and `rename` arguments to control how
 #'   `$INPUT` is written.
 #'
+#' @return An nm object with modified `ctl_contents` field.
+#'
 #' @examples
 #' \dontrun{
 #'
@@ -121,6 +123,9 @@ fill_input.nm_list <- Vectorize_nm_list(fill_input.nm_generic, SIMPLIFY = FALSE)
 #'
 #' @param m An nm object.
 #' @param dollar Character. Name of subroutine.
+#' 
+#' @return An nm object with modified `ctl_contents` field.
+#' 
 #' @export
 delete_dollar <- function(m, dollar) {
   UseMethod("delete_dollar")
@@ -208,6 +213,10 @@ insert_dollar.nm_list <- Vectorize_nm_list(insert_dollar.nm_generic, SIMPLIFY = 
 #'   will set the contents of the subroutine.  See examples below.
 #' @param add_dollar_text Logical (default = `TRUE`). Should the $XXXX string be
 #'   added to text.
+#'
+#' @return If `dollar` is specified returns the relevant subroutine of the
+#'   control file as a character.  Otherwise returns an nm object with modified
+#'   `ctl_contents` field.
 #'
 #' @seealso [insert_dollar()], [delete_dollar()]
 #'

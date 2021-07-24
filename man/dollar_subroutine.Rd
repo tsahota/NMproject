@@ -18,6 +18,11 @@ tol(m, text)
 
 \item{text}{Optional number/character number to set to.}
 }
+\value{
+If \code{text} is specified returns an nm object with modified
+\code{ctl_contents} field.  Otherwise returns the value of the advan, trans, or
+tol.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

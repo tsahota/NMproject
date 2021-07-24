@@ -557,6 +557,11 @@ subroutine.nm_list <- Vectorize_nm_list(subroutine.nm_generic, SIMPLIFY = FALSE)
 #'
 #' @param m An nm object.
 #' @param text Optional number/character number to set to.
+#' 
+#' @return If `text` is specified returns an nm object with modified
+#'   `ctl_contents` field.  Otherwise returns the value of the advan, trans, or
+#'   tol.
+#' 
 #' @seealso [subroutine()]
 #' @name dollar_subroutine
 #' @export
