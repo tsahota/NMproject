@@ -427,8 +427,11 @@ search_raw <- function(files, text, search_title = TRUE, search_contents = TRUE)
 ls_code_library <- function(pattern = ".") {
   paths <- ls_scripts(extn = ".*", folder = getOption("code_library_path"), recursive = TRUE)
 
-  excluded_types <- c("Rproj")
-  paths <- paths[!tools::file_ext(paths) %in% excluded_types]
+  excluded_types <- c("\\.Rproj", "README")
+  
+  for (excluded_type in excluded_types) {
+    paths <- paths[!grepl(excluded_type, paths)] 
+  }
   
   paths[grepl(pattern, paths)]
 }
