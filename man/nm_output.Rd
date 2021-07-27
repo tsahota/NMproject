@@ -14,8 +14,11 @@ nm_output(r, dorig, ...)
 \item{...}{Additional arguments to pass on to \code{\link[=read.csv]{read.csv()}}.}
 }
 \value{
-A merged \code{data.frame} of all $TABLE output files and the input
-dataset.
+A list of \code{tibble}s with merged version of all output $TABLEs and the
+input data.  Additional columns will be \code{INNONMEM} which will be TRUE for
+rows that were not ignored by NONMEM.  For simulation control files there
+is also \code{DV_OUT} which will contain simulated \code{DV} values. \code{DV} will always
+be unmodified from the input dataset.
 }
 \description{
 This function may become deprecated soon. The function \code{\link[=output_table]{output_table()}} is a

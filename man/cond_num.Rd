@@ -10,7 +10,7 @@ cond_num(r)
 \item{r}{An nm object.}
 }
 \value{
-Numeric vector of condition numbers.
+The \code{numeric} value of the condition number.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

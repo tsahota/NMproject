@@ -9,6 +9,9 @@ ofv(r)
 \arguments{
 \item{r}{An nm object.}
 }
+\value{
+The \code{numeric} value of the OFV.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

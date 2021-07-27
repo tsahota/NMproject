@@ -371,6 +371,10 @@ system_cmd <- function(cmd, dir = ".", ...) {
 #'
 #' @param txt Character either `"run"`, `"stop"`, or `"skip"`.
 #'
+#' @return if `txt` is missing returns `getOption(\"nm.overwrite_behaviour\")`
+#'   otherwise returns no value and is called for side effects (setting the
+#'   `nm.overwrite_behaviour` option).
+#'
 #' @export
 overwrite_behaviour <- function(txt = c(
                                   "ask",

@@ -675,6 +675,8 @@ covariance_plot <- function(r, trans = TRUE) {
 #' packages such as `mrgsolve`.
 #'
 #' @param r An nm object.
+#' 
+#' @return A `matrix` object.
 #'
 #' @examples
 #'
