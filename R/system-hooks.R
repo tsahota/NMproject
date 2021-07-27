@@ -6,6 +6,8 @@
 #'
 #' @details The option `"kill_job"` needs to be defined as a function that kills
 #'   a cluster job.
+#'   
+#' @return No return value, called for side effects.
 #'
 #' @seealso [system_nm()], [job_info()]
 #'
@@ -22,6 +24,9 @@ kill_job <- function(m) {
 #'
 #' @param m An nm object.
 #' @param text Optional character to set job_info.
+#' 
+#' @return The value of the `job_info` field of `m` if `text` is missing.
+#'   Otherwise an nm object with modified `job_info` field.
 #'
 #' @seealso [system_nm()]
 #'

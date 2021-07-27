@@ -98,6 +98,8 @@ file.exists2 <- function(x) { ## only true is file exists and is not a directory
 #' @param pattern Optional character (default is missing) regex pattern match on directory
 #'   name.
 #'
+#' @return Character vector of paths to matched directories.
+#' 
 #' @keywords internal
 list_dirs <- function(path = ".", full.names = TRUE, recursive = FALSE, maxdepth = 1, pattern) {
   dirs <- list()

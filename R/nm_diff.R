@@ -19,7 +19,7 @@
 #' @param format Character (default = `"raw"`) argument passed to
 #'   [diffobj::diffChr()]
 #'
-#' @return diff object
+#' @return A `diff` object.
 #' @examples
 #' \dontrun{
 #'

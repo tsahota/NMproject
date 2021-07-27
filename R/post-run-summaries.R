@@ -322,6 +322,8 @@ coef.nm_list <- function(object, trans = TRUE, ...) {
 #' @param extn Character. Name of extension.
 #' @param file_name Optional character. Name of file name.
 #'
+#' @return The path to the relevant output file of `m`.
+#'
 #' @examples
 #' \dontrun{
 #' m %>% nm_output_path("ext") ## path to ext file
@@ -562,6 +564,8 @@ rr_row <- function(m) {
 #' @param trans Logical (default = `TRUE`). Should parameters be transformed in
 #'   accordance with $THETA/$OMEGA/$SIGMA comments.  This is only valid if
 #'   `parameters` is `"new"` or `"all`.
+#' @return A wide format `tibble` with run results.
+#'   
 #' @export
 summary_wide <- function(..., include_fields = character(), parameters = c("none", "new", "all"), m = TRUE, trans = TRUE) {
   parameters <- match.arg(parameters)
@@ -575,6 +579,7 @@ summary_wide <- function(..., include_fields = character(), parameters = c("none
 }
 
 #' @rdname nm_summary
+#' @return A long format `tibble` with run results coerced to `character` form.
 #' @export
 summary_long <- function(..., parameters = c("none", "new", "all")) {
   parameters <- match.arg(parameters)

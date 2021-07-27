@@ -53,6 +53,10 @@ lst_path(m, text)
 modify field (of same name as function) otherwise will return value of
 field (of same name as function).}
 }
+\value{
+The value of the specified field of \code{m} if \code{text} is missing.
+Otherwise an nm object with modified field.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

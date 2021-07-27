@@ -9,6 +9,9 @@ ls_code_library(pattern = ".")
 \arguments{
 \item{pattern}{Optional character. Filter the code library use regex.}
 }
+\value{
+Character vector of matched file paths.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

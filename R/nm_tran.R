@@ -24,6 +24,8 @@ update_dollar_data <- function(ctl_name, new_data_name) {
 #'
 #' @param x An nm object.
 #'
+#' @return The same `x` object is returned, called for side effects.
+#'
 #' @seealso [run_nm()], [nm_tran_command()] for configuration.
 #'
 #' @examples

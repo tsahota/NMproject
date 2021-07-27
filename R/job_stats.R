@@ -8,6 +8,8 @@
 #'
 #' @param m An nm object.
 #'
+#' @return A wide format `tibble` with information about the job execution
+#'   times.
 #' @examples
 #'
 #' \dontrun{

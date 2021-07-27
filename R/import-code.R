@@ -195,6 +195,9 @@ import <- function(copy_table, overwrite = FALSE, silent = FALSE,
 #' @param extn Character (can be regex) giving extension to limit search to.
 #' @param recursive Logical (default = `TRUE`).  Should directories be searched
 #'   recursively.
+#'   
+#' @return Character vector of matched file paths.
+#' 
 #' @examples
 #' \dontrun{
 #'
@@ -395,6 +398,8 @@ search_raw <- function(files, text, search_title = TRUE, search_contents = TRUE)
 #' @param pattern Optional character. Filter the code library use regex.
 #'
 #' @seealso [code_library()], [preview()], [stage()], [import()]
+#' 
+#' @return Character vector of matched file paths.
 #'
 #' @examples
 #'

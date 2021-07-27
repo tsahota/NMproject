@@ -13,6 +13,10 @@ nm_output(r, dorig, ...)
 
 \item{...}{Additional arguments to pass on to \code{\link[=read.csv]{read.csv()}}.}
 }
+\value{
+A merged \code{data.frame} of all $TABLE output files and the input
+dataset.
+}
 \description{
 This function may become deprecated soon. The function \code{\link[=output_table]{output_table()}} is a
 more user friendly wrapper for this function.

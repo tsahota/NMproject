@@ -37,6 +37,11 @@ covariate analysis).}
 accordance with $THETA/$OMEGA/$SIGMA comments.  This is only valid if
 \code{parameters} is \code{"new"} or \verb{"all}.}
 }
+\value{
+A wide format \code{tibble} with run results.
+
+A long format \code{tibble} with run results coerced to \code{character} form.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

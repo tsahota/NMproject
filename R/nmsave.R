@@ -18,6 +18,9 @@
 #' @param height Passed to [ggplot2::ggsave()].
 #' @param dpi Passed to [ggplot2::ggsave()].
 #' @param ... Passed to [ggplot2::ggsave()].
+#' 
+#' @return An nm object with modified `result_files` field.
+#' 
 #' @export
 nmsave_plot <- function(r, object, file_name, directory = results_dir(r),
                         width = 7, height = 5, dpi = 300, ...) {

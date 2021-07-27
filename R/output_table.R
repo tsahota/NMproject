@@ -6,7 +6,10 @@
 #' @param r An nm object.
 #' @param dorig Optional `data.frame`. NONMEM input dataset.
 #' @param ... Additional arguments to pass on to [read.csv()].
-#'
+#' 
+#' @return A merged `data.frame` of all $TABLE output files and the input
+#'   dataset.
+#' 
 #' @keywords internal
 #' @export
 

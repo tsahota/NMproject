@@ -11,6 +11,10 @@ job_info(m, text)
 
 \item{text}{Optional character to set job_info.}
 }
+\value{
+The value of the \code{job_info} field of \code{m} if \code{text} is missing.
+Otherwise an nm object with modified \code{job_info} field.
+}
 \description{
 Can be useful for storing job numbers with a modified \code{\link[=system_nm]{system_nm()}}.
 }
