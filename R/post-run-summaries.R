@@ -12,6 +12,48 @@
 #' @param trans Logical. If `TRUE` (default) will transform using control file
 #'   $THETA/OMEGA conventions.
 #'
+#' @section THETA transformations using `trans = TRUE`:
+#' 
+#' Where FINAL is the reported estimate in the returned `tibble`, and RSE% is
+#' the reported standard error (where applicable) and \eqn{\theta} and \eqn{se(\theta)}
+#' are the NONMEM reported values of parameters and standard errors, respectively
+#' 
+#' \describe{
+#'     \item{LOG or LOGODDS:}{
+#'       \eqn{FINAL = exp(\theta), RSE% = 100*\sqrt(exp^(se(\theta)) - 1)}
+#'     }
+#'     \item{RATIO:}{
+#'       \eqn{FINAL = \theta, RSE% = 100*se(\theta) / \theta}
+#'     }
+#'     \item{LOGIT:}{
+#'       \eqn{FINAL = 100 * 1 / (1 + exp(-\theta))}
+#'     }
+#' }
+#' 
+#' @section OMEGA transformations using `trans = TRUE`:
+#' 
+#' Where FINAL is the reported estimate in the returned `tibble`, and RSE% is
+#' the reported standard error (where applicable) and \eqn{\omega^2} and \eqn{se(\omega^2)}
+#' are the NONMEM reported values of parameters and standard errors, respectively
+#'   
+#' \describe{
+#'     \item{LOG:}{
+#'       \eqn{FINAL = 100*\sqrt(exp^(\omega^2) - 1), RSE% = 100*(se(\omega^2)/\omega^2)/2}
+#'     }
+#'  }
+#' 
+#' @section SIGMA transformations using `trans = TRUE`:
+#' 
+#' Where FINAL is the reported estimate in the returned `tibble`, and RSE% is
+#' the reported standard error (where applicable) and \eqn{\sigma^2} and \eqn{se(\sigma^2)}
+#' are the NONMEM reported values of parameters and standard errors, respectively
+#' 
+#' \describe{
+#'     \item{}{
+#'       \eqn{FINAL = \sqrt \omega^2, RSE% = 100*se(\omega^2) / \omega^2}
+#'     }
+#' }
+#'
 #' @seealso [nm_render()]
 #' @examples
 #' \dontrun{
@@ -86,6 +128,48 @@ rr.nm_generic <- function(m, trans = TRUE) {
 #' @param m An nm object.
 #' @param trans Logical (default = `TRUE`). Transform parameters using comments
 #'   in $THETA/$OMEGA/$SIGMA.
+#'   
+#' @section THETA transformations using `trans = TRUE`:
+#' 
+#' Where FINAL is the reported estimate in the returned `tibble`, and RSE% is
+#' the reported standard error (where applicable) and \eqn{\theta} and \eqn{se(\theta)}
+#' are the NONMEM reported values of parameters and standard errors, respectively
+#' 
+#' \describe{
+#'     \item{LOG or LOGODDS:}{
+#'       \eqn{FINAL = exp(\theta), RSE% = 100*\sqrt(exp^(se(\theta)) - 1)}
+#'     }
+#'     \item{RATIO:}{
+#'       \eqn{FINAL = \theta, RSE% = 100*se(\theta) / \theta}
+#'     }
+#'     \item{LOGIT:}{
+#'       \eqn{FINAL = 100 * 1 / (1 + exp(-\theta))}
+#'     }
+#' }
+#' 
+#' @section OMEGA transformations using `trans = TRUE`:
+#' 
+#' Where FINAL is the reported estimate in the returned `tibble`, and RSE% is
+#' the reported standard error (where applicable) and \eqn{\omega^2} and \eqn{se(\omega^2)}
+#' are the NONMEM reported values of parameters and standard errors, respectively
+#'   
+#' \describe{
+#'     \item{LOG:}{
+#'       \eqn{FINAL = 100*\sqrt(exp^(\omega^2) - 1), RSE% = 100*(se(\omega^2)/\omega^2)/2}
+#'     }
+#'  }
+#' 
+#' @section SIGMA transformations using `trans = TRUE`:
+#' 
+#' Where FINAL is the reported estimate in the returned `tibble`, and RSE% is
+#' the reported standard error (where applicable) and \eqn{\sigma^2} and \eqn{se(\sigma^2)}
+#' are the NONMEM reported values of parameters and standard errors, respectively
+#' 
+#' \describe{
+#'     \item{}{
+#'       \eqn{FINAL = \sqrt \omega^2, RSE% = 100*se(\omega^2) / \omega^2}
+#'     }
+#' }
 #'
 #' @return `data.frame` of extracted model parameter values. `coef_wide()`
 #'   returns a `data.frame` in wide format. Vector valued objects `m`, will be

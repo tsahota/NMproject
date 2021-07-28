@@ -31,6 +31,54 @@ files, applies transformations.  This function is useful when numeric values
 are needed. \code{rr} is easier to read, however it returns characters.  A wide
 and long format is available via two different functions.
 }
+\section{THETA transformations using \code{trans = TRUE}}{
+
+
+Where FINAL is the reported estimate in the returned \code{tibble}, and RSE\% is
+the reported standard error (where applicable) and \eqn{\theta} and \eqn{se(\theta)}
+are the NONMEM reported values of parameters and standard errors, respectively
+
+\describe{
+\item{LOG or LOGODDS:}{
+\eqn{FINAL = exp(\theta), RSE% = 100*\sqrt(exp^(se(\theta)) - 1)}
+    }
+\item{RATIO:}{
+\eqn{FINAL = \theta, RSE% = 100*se(\theta) / \theta}
+    }
+\item{LOGIT:}{
+\eqn{FINAL = 100 * 1 / (1 + exp(-\theta))}
+}
+}
+}
+
+\section{OMEGA transformations using \code{trans = TRUE}}{
+
+
+Where FINAL is the reported estimate in the returned \code{tibble}, and RSE\% is
+the reported standard error (where applicable) and \eqn{\omega^2} and \eqn{se(\omega^2)}
+are the NONMEM reported values of parameters and standard errors, respectively
+
+\describe{
+\item{LOG:}{
+\eqn{FINAL = 100*\sqrt(exp^(\omega^2) - 1), RSE% = 100*(se(\omega^2)/\omega^2)/2}
+    }
+}
+}
+
+\section{SIGMA transformations using \code{trans = TRUE}}{
+
+
+Where FINAL is the reported estimate in the returned \code{tibble}, and RSE\% is
+the reported standard error (where applicable) and \eqn{\sigma^2} and \eqn{se(\sigma^2)}
+are the NONMEM reported values of parameters and standard errors, respectively
+
+\describe{
+\item{}{
+\eqn{FINAL = \sqrt \omega^2, RSE% = 100*se(\omega^2) / \omega^2}
+    }
+}
+}
+
 \seealso{
 \code{\link[=rr]{rr()}}
 }

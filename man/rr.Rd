@@ -19,6 +19,54 @@ Displays the transformed parameters of a completed or running model.
 Normally used inside of a diagnostic template, but can be useful for quickly
 seeing parameter estimates of several models.
 }
+\section{THETA transformations using \code{trans = TRUE}}{
+
+
+Where FINAL is the reported estimate in the returned \code{tibble}, and RSE\% is
+the reported standard error (where applicable) and \eqn{\theta} and \eqn{se(\theta)}
+are the NONMEM reported values of parameters and standard errors, respectively
+
+\describe{
+\item{LOG or LOGODDS:}{
+\eqn{FINAL = exp(\theta), RSE% = 100*\sqrt(exp^(se(\theta)) - 1)}
+    }
+\item{RATIO:}{
+\eqn{FINAL = \theta, RSE% = 100*se(\theta) / \theta}
+    }
+\item{LOGIT:}{
+\eqn{FINAL = 100 * 1 / (1 + exp(-\theta))}
+}
+}
+}
+
+\section{OMEGA transformations using \code{trans = TRUE}}{
+
+
+Where FINAL is the reported estimate in the returned \code{tibble}, and RSE\% is
+the reported standard error (where applicable) and \eqn{\omega^2} and \eqn{se(\omega^2)}
+are the NONMEM reported values of parameters and standard errors, respectively
+
+\describe{
+\item{LOG:}{
+\eqn{FINAL = 100*\sqrt(exp^(\omega^2) - 1), RSE% = 100*(se(\omega^2)/\omega^2)/2}
+    }
+}
+}
+
+\section{SIGMA transformations using \code{trans = TRUE}}{
+
+
+Where FINAL is the reported estimate in the returned \code{tibble}, and RSE\% is
+the reported standard error (where applicable) and \eqn{\sigma^2} and \eqn{se(\sigma^2)}
+are the NONMEM reported values of parameters and standard errors, respectively
+
+\describe{
+\item{}{
+\eqn{FINAL = \sqrt \omega^2, RSE% = 100*se(\omega^2) / \omega^2}
+    }
+}
+}
+
 \examples{
 \dontrun{
 
