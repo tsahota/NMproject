@@ -175,6 +175,10 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
   set_default_dirs_in_rprofile(file.path(folder, name, ".Rprofile"), dirs)
   
   suppressMessages(devtools::build_readme(path = path))
+
+  ## No R directory for simple package - advanced users needs to create this manually
+  ##  This is because RStudio by default tries to save files in the R directory.
+  if (style %in% "analysis") unlink(file.path(folder, name, "R"), recursive = TRUE)
     
   ## no badges - skip this part of starters for now
   repo <- git2r::init(usethis::proj_get())
