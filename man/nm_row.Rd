@@ -9,6 +9,10 @@ nm_row(m)
 \arguments{
 \item{m}{An nm object.}
 }
+\value{
+A wide format \code{tibble} with \code{length(m)} rows where one dimensional
+fields are represented as columns.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

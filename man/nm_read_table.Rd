@@ -11,6 +11,9 @@ nm_read_table(file, ...)
 
 \item{...}{Other arguments to be passed to \code{utils::read.table()}.}
 }
+\value{
+A \code{data.frame} from a relevant $TABLE output file.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

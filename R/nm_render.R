@@ -41,6 +41,7 @@
 #' `nm_list_render()` is mostly used for bootstraps, and other routines where a
 #' parent run spawns multiple children in the form of an nm_list
 #'
+#' @return The same nm object, `m`, with modified `results_files` field.
 #' @examples
 #' \dontrun{
 #' m1 %>% nm_render("Scripts/basic_gof.Rmd")

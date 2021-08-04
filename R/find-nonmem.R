@@ -17,7 +17,7 @@ psn_available <- function() Sys.which("psn") != ""
 #'   installation to get this information.  If the PsN installation is on a
 #'   remote server, this function will not work (it will return a `NULL`)
 #' @return If functions cannot find installation they will return `NULL` without
-#'   errors or warnings
+#'   errors or warning, otherwise they will return the located paths.
 #'
 #' @export
 find_nm_install_path <- function(name = "default") {

@@ -17,6 +17,11 @@ will set the contents of the subroutine.  See examples below.}
 \item{add_dollar_text}{Logical (default = \code{TRUE}). Should the $XXXX string be
 added to text.}
 }
+\value{
+If \code{dollar} is specified returns the relevant subroutine of the
+control file as a character.  Otherwise returns an nm object with modified
+\code{ctl_contents} field.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

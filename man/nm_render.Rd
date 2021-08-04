@@ -41,6 +41,9 @@ execution.}
 
 \item{...}{Additional argument passed to \code{rmarkdown::render()}.}
 }
+\value{
+The same nm object, \code{m}, with modified \code{results_files} field.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

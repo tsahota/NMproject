@@ -12,8 +12,8 @@ data_path(m, text)
 \item{text}{Optional character. Path to input dataset.}
 }
 \value{
-if text is not specified, will return the data_path name
-otherwise will set data_path to the text provided
+if text is not specified, will return the \code{data_path} name
+otherwise will return an nm object with modified \code{data_path} field.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

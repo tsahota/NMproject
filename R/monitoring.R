@@ -113,7 +113,7 @@ status_table <- function(m) {
 #' @param r An nm object.
 #' @param initial_timeout Deprecated.  See [wait_finish()].
 #'
-#' @return A logical vector.
+#' @return A logical vector with `TRUE` or `FALSE` values.
 #' @export
 is_finished <- function(r, initial_timeout = NA) {
   UseMethod("is_finished")

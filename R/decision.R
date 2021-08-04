@@ -42,6 +42,7 @@
 #'
 #' }
 #'
+#' @return No return value, called for side effects.
 #'
 #' @examples
 #'

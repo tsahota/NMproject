@@ -8,6 +8,8 @@
 #'
 #' @param ... Arguments passed to [nm_list_gather()].
 #' @param summary Logical (default = `FALSE`). Should [summary_wide()] variables be appended.
+#' 
+#' @return A `data.tree` object.
 #' @export
 nm_tree <- function(..., summary = FALSE) {
   if (!requireNamespace("data.tree")) stop("install data.tree")

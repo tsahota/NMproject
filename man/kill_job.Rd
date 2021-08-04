@@ -9,6 +9,9 @@ kill_job(m)
 \arguments{
 \item{m}{An nm object.}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 Can be useful in conjuction with a modified \code{\link[=system_nm]{system_nm()}}.  Requires setting \code{"kill_job"} option.
 }

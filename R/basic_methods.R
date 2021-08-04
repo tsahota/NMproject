@@ -15,6 +15,8 @@ NULL
 #' Mostly internal functions to test object types.
 #'
 #' @param x Object.
+#' 
+#' @return A logical vector with `TRUE` or `FALSE` values.
 #'
 #' @export
 is_nm_list <- function(x) {

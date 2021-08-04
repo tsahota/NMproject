@@ -56,7 +56,7 @@ boot_to_csv <- function(d,
   return(csv_name)
 }
 
-#' Write bootstrap datasets
+#' Prepare a bootstrap tibble
 #'
 #' @description
 #'
@@ -71,6 +71,9 @@ boot_to_csv <- function(d,
 #' @param overwrite Logical (default = `FALSE`). Overwrites previous files.
 #' @param id_var Character (default = `"ID"`). Name of ID column in dataset.
 #' @param ... Arguments passed to [fill_input()].
+#'
+#' @return A `tibble` with `samples` rows and an nm object object column `m` for
+#'   execution of the bootstrap.
 #'
 #' @examples
 #'

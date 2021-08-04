@@ -24,6 +24,9 @@ list_dirs(
 \item{pattern}{Optional character (default is missing) regex pattern match on directory
 name.}
 }
+\value{
+Character vector of paths to matched directories.
+}
 \description{
 Wrapper around \code{list.dirs()} but includes \code{maxdepth} and pattern arguments and
 removes \code{full.names} argument, always return full names.

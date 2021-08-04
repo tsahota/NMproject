@@ -2,7 +2,7 @@
 % Please edit documentation in R/boot.R
 \name{make_boot_datasets}
 \alias{make_boot_datasets}
-\title{Write bootstrap datasets}
+\title{Prepare a bootstrap tibble}
 \usage{
 make_boot_datasets(
   m,
@@ -25,6 +25,10 @@ make_boot_datasets(
 \item{id_var}{Character (default = \code{"ID"}). Name of ID column in dataset.}
 
 \item{...}{Arguments passed to \code{\link[=fill_input]{fill_input()}}.}
+}
+\value{
+A \code{tibble} with \code{samples} rows and an nm object object column \code{m} for
+execution of the bootstrap.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

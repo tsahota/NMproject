@@ -12,6 +12,13 @@
 #' @param ... Additional arguments for mutating initial estimate NONMEM
 #'   subroutines.  See examples.
 #'
+#' @details It's easiest to learn this function by view examples, the vignette
+#'   and the demo [setup_nm_demo()]. It is a good idea to view the resulting
+#'   `data.frame` to see the columns that are able to be manipulated.
+#'
+#' @return If `replace` is specified returns an nm object with modified
+#'   `ctl_contents` field.  Otherwise returns a `tibble` or list of `tibble`s
+#'   with initial estimation information.
 #' @examples
 #' \dontrun{
 #'

@@ -526,6 +526,8 @@ custom_vector_field.nm_list <- Vectorize_nm_list(custom_vector_field.nm_generic,
 #'
 #' @param m An nm object.
 #'
+#' @return A wide format `tibble` with `length(m)` rows where one dimensional
+#'   fields are represented as columns.
 #' @keywords internal
 #' @export
 nm_row <- function(m) {
@@ -565,7 +567,7 @@ nm_list2list <- function(m) {
 #' @param x An environment (default = `.GlobalEnv`) to search
 #'   or `data.frame` with (`nm_list` column) or `nm_list`.
 #'
-#' @return A single `nm_list` object with all model objects.
+#' @return A single `nm_list` object with all model objects in environment `x`.
 #' @export
 nm_list_gather <- function(x = .GlobalEnv) {
   UseMethod("nm_list_gather")

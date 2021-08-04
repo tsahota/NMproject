@@ -13,6 +13,9 @@ nm_output_path(m, extn, file_name)
 
 \item{file_name}{Optional character. Name of file name.}
 }
+\value{
+The path to the relevant output file of \code{m}.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

@@ -323,14 +323,10 @@ rem_trailing_spaces <- function(x) {
   x
 }
 
-#' Get parameter information
-#'
-#' @param ctl Character. Path to control file.
-#' @keywords internal
-
 param_info <- function(ctl) {
   UseMethod("param_info")
 }
+
 param_info.default <- function(ctl) {
   ctl <- ctl_list(ctl)
   if ("THETA" %in% names(ctl)) {
@@ -340,7 +336,6 @@ param_info.default <- function(ctl) {
   }
 }
 
-#' @export
 param_info.nm_generic <- function(ctl) {
   ctl <- ctl_list2(ctl)
   if ("THETA" %in% names(ctl)) {
@@ -349,7 +344,7 @@ param_info.nm_generic <- function(ctl) {
     return(data.frame())
   }
 }
-#' @export
+
 param_info.nm_list <- function(ctl) param_info(as_nm_generic(ctl))
 
 

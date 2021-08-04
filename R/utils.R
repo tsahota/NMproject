@@ -3,7 +3,7 @@ is_single_na <- function(x) if (length(x) == 1) is.na(x) else FALSE
 #' Test if full path
 #'
 #' @param x String giving file/path name.
-#' @return `TRUE` only when path starts with ~, /, \\ or X: (i.e. when x is a full path), FALSE otherwise.
+#' @return `TRUE` only when path starts with ~, /, \\ or X: (i.e. when x is a full path), `FALSE` otherwise.
 #' @keywords internal
 is_full_path <- function(x) grepl("^(~|/|\\\\|([a-zA-Z]:))", x, perl = TRUE)
 
@@ -146,6 +146,8 @@ file.exists2 <- function(x) { ## only true is file exists and is not a directory
 #' @param pattern Optional character (default is missing) regex pattern match on directory
 #'   name.
 #'
+#' @return Character vector of paths to matched directories.
+#' 
 #' @keywords internal
 list_dirs <- function(path = ".", full.names = TRUE, recursive = FALSE, maxdepth = 1, pattern) {
   dirs <- list()
@@ -190,6 +192,8 @@ list_dirs <- function(path = ".", full.names = TRUE, recursive = FALSE, maxdepth
 #' Logical flag for detecting if R session is on RStudio
 #'
 #' @keywords internal
+#' 
+#' @return A logical `TRUE` or `FALSE` value.
 #' @export
 is_rstudio <- function() Sys.getenv("RSTUDIO") == "1"
 

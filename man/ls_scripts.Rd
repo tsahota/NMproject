@@ -14,6 +14,9 @@ ls_scripts(folder = ".", extn = "r|R|Rmd|rmd", recursive = TRUE)
 \item{recursive}{Logical (default = \code{TRUE}).  Should directories be searched
 recursively.}
 }
+\value{
+Character vector of matched file paths.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }

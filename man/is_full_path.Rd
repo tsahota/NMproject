@@ -10,7 +10,7 @@ is_full_path(x)
 \item{x}{String giving file/path name.}
 }
 \value{
-\code{TRUE} only when path starts with ~, /, \\ or X: (i.e. when x is a full path), FALSE otherwise.
+\code{TRUE} only when path starts with ~, /, \\ or X: (i.e. when x is a full path), \code{FALSE} otherwise.
 }
 \description{
 Test if full path

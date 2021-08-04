@@ -7,7 +7,9 @@
 #' Extracts OFV from .ext file.
 #'
 #' @param r An nm object.
-#'
+#' 
+#' @return The `numeric` value of the OFV.
+#' 
 #' @examples
 #' \dontrun{
 #'
@@ -138,7 +140,7 @@ BIC.nm_list <- Vectorize_nm_list(BIC.nm_generic)
 #'
 #' @param r An nm object.
 #'
-#' @return Numeric vector of condition numbers.
+#' @return The `numeric` value of the condition number.
 #'
 #' @seealso [ofv()], [rr()]
 #'

@@ -75,6 +75,9 @@ ctl_path <- function(m, text) {
 #'   To modify the value of a field:
 #'   `m <- m %>% fieldname("newvalue")`
 #'
+#' @return The value of the specified field of `m` if `text` is missing.
+#'   Otherwise an nm object with modified field.
+#'
 #' @export
 run_dir <- function(m, text) {
   UseMethod("run_dir")

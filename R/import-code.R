@@ -127,6 +127,8 @@ stage <- function(files, root_dir,
 #' @param find_replace_dir_names Logical (default = TRUE). Will attempt to find
 #'   replace strings in scripts to reflect [nm_default_dirs()].
 #'
+#' @return Invisibly returns `copy_table` argument.
+#'
 #' @seealso [code_library()], [stage()]
 #'
 #' @examples
@@ -144,8 +146,7 @@ stage <- function(files, root_dir,
 #' }
 #'
 #' @export
-#'
-#' @export
+
 import <- function(copy_table, overwrite = FALSE, silent = FALSE,
                    skip = "\\.mod$", find_replace_dir_names = TRUE) {
 
@@ -215,6 +216,9 @@ import <- function(copy_table, overwrite = FALSE, silent = FALSE,
 #' @param extn Character (can be regex) giving extension to limit search to.
 #' @param recursive Logical (default = `TRUE`).  Should directories be searched
 #'   recursively.
+#'   
+#' @return Character vector of matched file paths.
+#' 
 #' @examples
 #' \dontrun{
 #'
@@ -244,6 +248,8 @@ ls_scripts <- function(folder = ".", extn = "r|R|Rmd|rmd", recursive = TRUE) {
 #'   directory paths.
 #' @param shorten_paths Logical (default = `TRUE`). Long paths will be shortened
 #'   if true in displayed output (not returned object).
+#'   
+#' @return A `tibble` with extracted information from `files`.
 #' @keywords internal
 
 info_scripts <- function(files, fields = c("Description"), viewer = TRUE, silent = FALSE,
@@ -413,6 +419,8 @@ search_raw <- function(files, text, search_title = TRUE, search_contents = TRUE)
 #' @param pattern Optional character. Filter the code library use regex.
 #'
 #' @seealso [code_library()], [preview()], [stage()], [import()]
+#' 
+#' @return Character vector of matched file paths.
 #'
 #' @examples
 #'

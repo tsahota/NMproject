@@ -36,6 +36,9 @@ nmsave_table(r, object, file_name, directory = results_dir(r), ...)
 
 \item{...}{Passed to \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}.}
 }
+\value{
+An nm object with modified \code{result_files} field.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 

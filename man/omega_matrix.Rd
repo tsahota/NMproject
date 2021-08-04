@@ -9,6 +9,9 @@ omega_matrix(r)
 \arguments{
 \item{r}{An nm object.}
 }
+\value{
+A \code{matrix} object.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 

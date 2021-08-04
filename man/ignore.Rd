@@ -11,6 +11,11 @@ ignore(ctl, ignore_char)
 
 \item{ignore_char}{Optional character. Ignore statement to set in $DATA.}
 }
+\value{
+If \code{ignore_char} is specified returns an nm object with modified
+\code{ctl_contents} field.  Otherwise returns the value of the IGNORE statement
+in $DATA.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }

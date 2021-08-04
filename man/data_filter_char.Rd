@@ -11,7 +11,10 @@ data_filter_char(r, ...)
 
 \item{...}{Arguments passed to data_ignore_char.}
 }
+\value{
+Negation of character value of \code{\link[=data_ignore_char]{data_ignore_char()}}.
+}
 \description{
-Opposite of data_ignore_char.
+Opposite of \code{\link[=data_ignore_char]{data_ignore_char()}}.
 }
 \keyword{internal}

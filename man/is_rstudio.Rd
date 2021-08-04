@@ -6,6 +6,9 @@
 \usage{
 is_rstudio()
 }
+\value{
+A logical \code{TRUE} or \code{FALSE} value.
+}
 \description{
 Logical flag for detecting if R session is on RStudio
 }

@@ -9,6 +9,10 @@ job_stats(m)
 \arguments{
 \item{m}{An nm object.}
 }
+\value{
+A wide format \code{tibble} with information about the job execution
+times.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 

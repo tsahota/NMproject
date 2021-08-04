@@ -27,6 +27,9 @@ will instead reside only in the staging area.}
 \item{find_replace_dir_names}{Logical (default = TRUE). Will attempt to find
 replace strings in scripts to reflect \code{\link[=nm_default_dirs]{nm_default_dirs()}}.}
 }
+\value{
+Invisibly returns \code{copy_table} argument.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

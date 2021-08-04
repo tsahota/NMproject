@@ -24,6 +24,9 @@ decision(
 \item{force}{Logical (default = \code{FALSE}). Force a stop in the workflow so
 decision has been remade.}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 

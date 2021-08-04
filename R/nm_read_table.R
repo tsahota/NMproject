@@ -18,6 +18,7 @@ suppressWarnings(
 #' @param file File argument from `utils::read.table()`.
 #' @param ... Other arguments to be passed to `utils::read.table()`.
 #'
+#' @return A `data.frame` from a relevant $TABLE output file.
 #' @seealso [output_table()]
 #' @export
 

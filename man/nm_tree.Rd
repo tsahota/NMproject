@@ -11,6 +11,9 @@ nm_tree(..., summary = FALSE)
 
 \item{summary}{Logical (default = \code{FALSE}). Should \code{\link[=summary_wide]{summary_wide()}} variables be appended.}
 }
+\value{
+A \code{data.tree} object.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 

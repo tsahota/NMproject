@@ -65,6 +65,10 @@ input_data.nm_list <- function(m, filter = FALSE, na = ".", ...) {
 #' @param ctl An nm object.
 #' @param ignore_char Optional character. Ignore statement to set in $DATA.
 #'
+#' @return If `ignore_char` is specified returns an nm object with modified
+#'   `ctl_contents` field.  Otherwise returns the value of the IGNORE statement
+#'   in $DATA.
+#'
 #' @examples
 #'
 #' \dontrun{

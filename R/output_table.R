@@ -6,7 +6,13 @@
 #' @param r An nm object.
 #' @param dorig Optional `data.frame`. NONMEM input dataset.
 #' @param ... Additional arguments to pass on to [read.csv()].
-#'
+#' 
+#' @return A list of `tibble`s with merged version of all output $TABLEs and the
+#'   input data.  Additional columns will be `INNONMEM` which will be TRUE for
+#'   rows that were not ignored by NONMEM.  For simulation control files there
+#'   is also `DV_OUT` which will contain simulated `DV` values. `DV` will always
+#'   be unmodified from the input dataset.
+#' 
 #' @keywords internal
 #' @export
 
@@ -110,12 +116,11 @@ nm_output.nm_list <- nm_output.nm_generic
 #'   otherwise will append only those variables requested.
 #' @param ... Optional additional arguments to pass on to read.csv of orig data.
 #'
-#' @return `output_table()` will return a list of tibbles with merged version
-#'   of all output $TABLEs and the input data.  Additional columns will be
-#'   `INNONMEM` which will be TRUE for rows that were not ignored by
-#'   NONMEM.  For simulation control files there is also `DV_OUT` which
-#'   will contain simulated `DV` values. `DV` will always be
-#'   unmodified from the input dataset.
+#' @return A list of `tibble`s with merged version of all output $TABLEs and the
+#'   input data.  Additional columns will be `INNONMEM` which will be TRUE for
+#'   rows that were not ignored by NONMEM.  For simulation control files there
+#'   is also `DV_OUT` which will contain simulated `DV` values. `DV` will always
+#'   be unmodified from the input dataset.
 #'
 #' @seealso [nm_render()], [input_data()]
 #'
