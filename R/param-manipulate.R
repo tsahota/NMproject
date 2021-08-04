@@ -12,6 +12,8 @@
 #' @param m An nm object.
 #' @param name Character. Parameter name to remove.
 #'
+#' @return An nm object with modified `ctl_contents` field.
+#'
 #' @export
 remove_parameter <- function(m, name) {
   old_target <- target(m)

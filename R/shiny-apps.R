@@ -13,6 +13,8 @@
 #' @param m Either an nm object, or data.frame or list or environment contain
 #'   nm_lists.
 #' @param envir If missing, the environment to search.
+#' 
+#' @return No return value, called for side effects.
 #' @examples
 #' \dontrun{
 #'

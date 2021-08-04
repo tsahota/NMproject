@@ -18,6 +18,9 @@ setup_nm_demo(
 \item{additional_demo_locations}{Character vector. default = NULL. Locations
 for demo directories.}
 }
+\value{
+Invisibly returns a \code{tibble} with imported file information.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

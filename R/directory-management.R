@@ -18,7 +18,9 @@
 #'
 #' @details Available `demo_name` correspond to directory locations in
 #' `system.file("extdata","examples",package = "NMproject")`
-#'
+#' 
+#' @return Invisibly returns a `tibble` with imported file information.
+#' 
 #' @seealso [code_library()]
 #' @export
 
@@ -77,6 +79,8 @@ setup_nm_demo <- function(demo_name = "theopp",
 #'
 #' @details Works with .R and .Rmd extensions.  Behaviour is to [source()] .R
 #'   files and use [rmarkdown::render()] on .Rmd files
+#'   
+#' @return Invisibly returns `TRUE` if file creation is successful.
 #'
 #' @export
 run_all_scripts <- function(index, quiet = FALSE) {

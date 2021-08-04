@@ -93,6 +93,8 @@ status.nm_list <- Vectorize_nm_list(status.nm_generic)
 #' dealing with groups of NONMEM runs.
 #'
 #' @param m An nm object.
+#' 
+#' @return A `tibble` object.
 #'
 #' @export
 status_table <- function(m) {

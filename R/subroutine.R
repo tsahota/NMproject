@@ -198,6 +198,8 @@ default_trans <- function(advan) {
 #'
 #' @details Can only switch between subroutines listed in `available_advans`.
 #'
+#' @return An nm object with modified `ctl_contents` field.
+#'
 #' @seealso [advan()]
 #'
 #' @examples

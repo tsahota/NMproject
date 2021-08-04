@@ -9,6 +9,9 @@ status_table(m)
 \arguments{
 \item{m}{An nm object.}
 }
+\value{
+A \code{tibble} object.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

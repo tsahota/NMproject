@@ -236,6 +236,9 @@ nm_default_fields <- function(field_list) {
 #' on SGE.
 #'
 #' @details Requires `cores` and `parafile` fields to be set.
+#' 
+#' @return A `character` object.
+#' 
 #' @seealso [nm_getsetters()].
 #'
 #' @examples
@@ -322,6 +325,8 @@ nm_tran_command <- function(text) {
 #' @param cmd Character. System call to be sent to the terminal.
 #' @param ... Additional arguments to be passed to `system()` or `shell()`.
 #'
+#' @return The return value of [system()] or [shell()] depending on the OS type.
+#'
 #' @seealso [system_nm()], [run_nm()]
 #'
 #' @keywords internal
@@ -366,6 +371,9 @@ system_nm_default <- function(cmd, ...) {
 #' @param dir Character. Directory (relative path) to run command in.  By
 #'   default this will be the "models" directory (`nm_dir("models")`).
 #' @param ... Additional arguments to be passed to `system()` or `shell()`.
+#' 
+#' @return The return value of `getOption("system_nm")`.
+#' 
 #' @seealso [run_nm()]
 #'
 #' @examples
@@ -406,6 +414,8 @@ system_nm <- function(cmd, dir = nm_dir("models"), ...) {
 #' @param dir Optional character. Directory to run command in (default = current
 #'   working directory)
 #' @param ... Other arguments passed to system command.
+#'
+#' @return The return value of `getOption("system_cmd")`.
 #'
 #' @examples
 #'

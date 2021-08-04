@@ -15,6 +15,9 @@ read_derived_data(name, na = ".", silent = FALSE, ...)
 
 \item{...}{Additional arguments to be passed to \code{\link[utils:read.table]{utils::read.csv()}}.}
 }
+\value{
+A \code{data.frame} object of the NONMEM dataset.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

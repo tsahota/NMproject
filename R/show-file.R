@@ -18,6 +18,8 @@ show_file <- function(file_name) {
 #' Opens a read-only version of the NONMEM control file for browsing.
 #'
 #' @param r An nm object.
+#' 
+#' @return No return value, called for side effects.
 #' @seealso [show_ctl()].
 #' @export
 show_out <- function(r) {
@@ -44,6 +46,8 @@ show_out.nm_list <- show_out.nm_generic
 #' Opens a read-only version of the NONMEM control file for browsing.
 #'
 #' @param r An nm object.
+#' 
+#' @return No return value, called for side effects.
 #' @seealso [show_out()].
 #' @export
 show_ctl <- function(r) {

@@ -11,6 +11,9 @@ relative_path(path, relative_path)
 
 \item{relative_path}{Path of directory to travel from.}
 }
+\value{
+A relative path \code{character} object.
+}
 \description{
 Compute path relative to reference
 }

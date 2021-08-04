@@ -15,6 +15,9 @@ subroutine(m, advan = NA, trans = 1, recursive = TRUE)
 
 \item{recursive}{Logical (default = TRUE). Internal argument, do not modify.}
 }
+\value{
+An nm object with modified \code{ctl_contents} field.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 

@@ -9,6 +9,9 @@ run_dir_path(m)
 \arguments{
 \item{m}{An nm object.}
 }
+\value{
+A path to the \code{run_dir} field of \code{m}.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

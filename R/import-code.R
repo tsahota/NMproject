@@ -20,6 +20,9 @@
 #' @param silent Logical (default = FALSE).
 #' @param find_replace_dir_names Logical (default = TRUE). Will attempt to find
 #'   replace strings in scripts to reflect [nm_default_dirs()].
+#'
+#' @return A `tibble` with staged file information.
+#'
 #' @seealso [code_library()], [import()]
 #'
 #' @examples
@@ -370,6 +373,8 @@ info_scripts <- function(files, fields = c("Description"), viewer = TRUE, silent
 #'   file contents.
 #'
 #' @seealso [ls_scripts()], [ls_code_library()], [stage()]
+#'
+#' @return A subset of `files` with contents matching `text`.
 #'
 #' @examples
 #'

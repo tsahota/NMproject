@@ -332,6 +332,9 @@ lst_path <- function(m, text) {
 #' the (relative) path of [run_dir()].
 #'
 #' @param m An nm object.
+#' 
+#' @return A path to the `run_dir` field of `m`.
+#' 
 #' @seealso [nm_getsetters()].
 #' @export
 run_dir_path <- function(m) file.path(run_in(m), run_dir(m))
@@ -451,6 +454,9 @@ ctl_contents_simple <- function(m, ctl_ob, ...) {
 #'
 #' @param m An nm object.
 #' @param ... Arguments to get/set fields.
+#'
+#' @return If `...` contains an assignment, an nm object with modified field,
+#'   otherwise returns the field value.
 #'
 #' @examples
 #' \dontrun{

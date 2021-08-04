@@ -13,6 +13,9 @@ scripting making the \code{s##_XXX.Rmd} convention.  Must be .Rmd files}
 \item{overwrite}{Logical (default = \code{FALSE}). Overwrites existing vignettes
 of the same name.}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
