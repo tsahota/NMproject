@@ -80,6 +80,10 @@ convert_to_simulation.nm_list <- Vectorize_nm_list(
 #'   returned by FUN.
 #' @param group,var1,var2 Grouping variables for plotting.
 #'
+#' @return The function `ppc_data()` return a `data.frame` with observed and
+#'   predicted statistics. The `ppc_*_plot()` plotting functions return `ggplot`
+#'   objects.
+#'
 #' @seealso [nm_render()]
 #' @examples
 #' \dontrun{
@@ -185,6 +189,7 @@ ppc_data <- function(r, FUN, ..., pre_proc = identity, max_mod_no = NA, DV = "DV
 
 #' @name ppc
 #' @param d Output from [ppc_data()].
+#' 
 #' @export
 ppc_whisker_plot <- function(d, group, var1, var2, statistic = "statistic") {
   requireNamespace("ggplot2")

@@ -104,6 +104,8 @@ overwrite_behaviour_app <- function() {
 #' @param trans Logical (default = `TRUE`). Should parameter transformations be
 #'   performed in accordance with $THETA/$OMEGA comments.
 #'
+#' @return A `dygraph` plot.
+#'
 #' @keywords internal
 #' @export
 plot_iter_dygraph <- function(m, trans = TRUE) {

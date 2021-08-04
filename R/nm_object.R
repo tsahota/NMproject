@@ -418,6 +418,8 @@ change_parent.nm_list <- Vectorize_nm_list(change_parent.nm_generic, SIMPLIFY = 
 #' @param m An nm object.
 #' @param n Numeric. Generation of parent (default = `1`).
 #'
+#' @return An nm object.
+#' 
 #' @export
 parent_run <- function(m, n = 1L) {
   UseMethod("parent_run")

@@ -19,6 +19,9 @@ beginning iterations where the OFV and parameters may move a lot.}
 \item{yvar}{Character (default = \code{"OBJ"}). Name of variable/parameter to
 display.}
 }
+\value{
+A \code{ggplot2} object.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

@@ -19,6 +19,9 @@ inclusion.}
 \item{alpha_backward}{Numeric (default = \code{0.01}). Alpha level for backward
 deletion.}
 }
+\value{
+The nm object of the selected model.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 

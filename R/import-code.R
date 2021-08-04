@@ -418,7 +418,7 @@ search_raw <- function(files, text, search_title = TRUE, search_contents = TRUE)
 #'
 #' @param pattern Optional character. Filter the code library use regex.
 #'
-#' @seealso [code_library()], [preview()], [stage()], [import()]
+#' @seealso [code_library()], [stage()], [import()]
 #' 
 #' @return Character vector of matched file paths.
 #'
@@ -471,7 +471,7 @@ ls_code_library <- function(pattern = ".") {
 #'   code library information.  Otherwise (this may be deprecated soon), will return paths to code library
 #'   files.
 #'
-#' @seealso [ls_code_library()], [preview()], [stage()], [import()]
+#' @seealso [ls_code_library()], [stage()], [import()]
 #'
 #' @export
 code_library <- function(extn = NULL, fields = "Description", viewer = TRUE, silent = FALSE,

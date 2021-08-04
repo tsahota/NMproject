@@ -12,6 +12,9 @@ plot_iter_dygraph(m, trans = TRUE)
 \item{trans}{Logical (default = \code{TRUE}). Should parameter transformations be
 performed in accordance with $THETA/$OMEGA comments.}
 }
+\value{
+A \code{dygraph} plot.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
