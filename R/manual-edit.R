@@ -9,6 +9,9 @@
 #' @param m An nm object
 #' @param combine_patch Logical. Should patch be added first before edit.
 #'
+#' @return A `list` with the temporary control file name and patch details (name
+#'   and path).
+#'
 #' @keywords internal
 #' @export
 start_manual_edit <- function(m, combine_patch = NA_character_) {

@@ -11,6 +11,10 @@ simple_field(m, ...)
 
 \item{...}{Arguments to get/set fields.}
 }
+\value{
+If \code{...} contains an assignment, an nm object with modified field,
+otherwise returns the field value.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }

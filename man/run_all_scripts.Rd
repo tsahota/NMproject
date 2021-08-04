@@ -11,6 +11,9 @@ run_all_scripts(index, quiet = FALSE)
 
 \item{quiet}{Argument passed to \code{\link[rmarkdown:render]{rmarkdown::render()}}.}
 }
+\value{
+Invisibly returns \code{TRUE} if file creation is successful.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

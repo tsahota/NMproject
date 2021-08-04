@@ -54,6 +54,8 @@
 #'     }
 #' }
 #'
+#' @return A `tibble` with NONMEM run results.
+#'
 #' @seealso [nm_render()]
 #' @examples
 #' \dontrun{

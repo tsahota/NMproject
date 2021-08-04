@@ -16,6 +16,9 @@ search_raw(files, text, search_title = TRUE, search_contents = TRUE)
 \item{search_contents}{Logical (default=\code{TRUE}). Should matching occur in
 file contents.}
 }
+\value{
+A subset of \code{files} with contents matching \code{text}.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

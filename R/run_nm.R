@@ -34,7 +34,7 @@
 #'   environment.  In this case see [run_nm_batch()] for batched execution of a
 #'   vector valued `nm` object.
 #'
-#' @return m with `job_info` fields populated.
+#' @return `m` with `job_info` fields populated.
 #'
 #' @seealso [nm_tran()]
 #'

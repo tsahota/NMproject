@@ -19,6 +19,8 @@
 #' @param overwrite Logical (default = FALSE).
 #' @param silent Logical (default = FALSE).
 #'
+#' @return A `tibble` with staged file information.
+#'
 #' @seealso [code_library()], [import()]
 #'
 #' @examples
@@ -349,6 +351,8 @@ info_scripts <- function(files, fields = c("Description"), viewer = TRUE, silent
 #'   file contents.
 #'
 #' @seealso [ls_scripts()], [ls_code_library()], [stage()]
+#'
+#' @return A subset of `files` with contents matching `text`.
 #'
 #' @examples
 #'

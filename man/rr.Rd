@@ -12,6 +12,9 @@ rr(m, trans = TRUE)
 \item{trans}{Logical. If \code{TRUE} (default) will transform using control file
 $THETA/OMEGA conventions.}
 }
+\value{
+A \code{tibble} with NONMEM run results.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

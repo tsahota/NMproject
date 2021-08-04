@@ -16,6 +16,8 @@
 #' @details Uses of [decision()] must pass without stopping so these must have
 #'   been run interactively prior to use of [devtools::build_vignettes()].
 #'
+#' @return No return value, called for side effects.
+#'
 #' @export
 rmd_to_vignettes <- function(script_files, overwrite = FALSE) {
   if (missing(script_files)) {
@@ -77,4 +79,5 @@ rmd_to_vignettes <- function(script_files, overwrite = FALSE) {
       }
     }
   }
+  invisible()
 }

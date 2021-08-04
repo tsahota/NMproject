@@ -11,6 +11,10 @@ start_manual_edit(m, combine_patch = NA_character_)
 
 \item{combine_patch}{Logical. Should patch be added first before edit.}
 }
+\value{
+A \code{list} with the temporary control file name and patch details (name
+and path).
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

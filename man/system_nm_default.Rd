@@ -11,6 +11,9 @@ system_nm_default(cmd, ...)
 
 \item{...}{Additional arguments to be passed to \code{system()} or \code{shell()}.}
 }
+\value{
+The return value of \code{\link[=system]{system()}} or \code{\link[=shell]{shell()}} depending on the OS type.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

@@ -17,6 +17,9 @@ this is not specified, will guess based on presence of \code{nm_default_dirs}}
 
 \item{silent}{Logical (default = FALSE).}
 }
+\value{
+A \code{tibble} with staged file information.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

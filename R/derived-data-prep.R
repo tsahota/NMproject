@@ -108,6 +108,8 @@ write_derived_data.list <- function(d, name, ...) {
 #' @param ...  Additional arguments to be passed to [utils::read.csv()].
 #' @seealso [write_derived_data()], [input_data()], [exclude_rows()].
 #'
+#' @return A `data.frame` object of the NONMEM dataset.
+#' 
 #' @examples
 #' \dontrun{
 #'

@@ -10,6 +10,9 @@ An object of class \code{character} of length 1.
 \usage{
 sge_parallel_execute
 }
+\value{
+A \code{character} object.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

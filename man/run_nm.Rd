@@ -47,7 +47,7 @@ cache?}
 \item{...}{Additional arguments passed to \code{run_nm()}.}
 }
 \value{
-m with \code{job_info} fields populated.
+\code{m} with \code{job_info} fields populated.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

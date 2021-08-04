@@ -14,6 +14,9 @@ working directory)}
 
 \item{...}{Other arguments passed to system command.}
 }
+\value{
+The return value of \code{getOption("system_cmd")}.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

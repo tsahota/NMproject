@@ -14,6 +14,9 @@ default this will be the "models" directory (\code{nm_default_dir("models")}).}
 
 \item{...}{Additional arguments to be passed to \code{system()} or \code{shell()}.}
 }
+\value{
+The return value of \code{getOption("system_nm")}.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

@@ -48,6 +48,8 @@ rlang::.data
 #' @param path Path of desired directory or file.
 #' @param relative_path Path of directory to travel from.
 #'
+#' @return A relative path `character` object.
+#'
 #' @keywords internal
 #' @export
 
