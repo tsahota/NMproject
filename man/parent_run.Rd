@@ -11,6 +11,9 @@ parent_run(m, n = 1L)
 
 \item{n}{Numeric. Generation of parent (default = \code{1}).}
 }
+\value{
+An nm object.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

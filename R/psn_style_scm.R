@@ -15,6 +15,8 @@
 #' @param alpha_backward Numeric (default = `0.01`). Alpha level for backward
 #'   deletion.
 #'
+#' @return The nm object of the selected model.
+#'
 #' @seealso [test_relations()], [covariate_step_tibble()],
 #'   [bind_covariate_results()].
 #'

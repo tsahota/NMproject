@@ -93,7 +93,7 @@ function(input, output, session) {
   })
   
   output$preview_command <- renderText({
-    paste0("preview(\"", objects()$NAME, "\")")
+    paste0("deprecated")
   })
 
 }

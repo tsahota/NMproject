@@ -9,6 +9,9 @@ plot_iter_ggplot(d)
 \arguments{
 \item{d}{A \code{data.frame}. Output from \code{\link[=plot_iter_data]{plot_iter_data()}}.}
 }
+\value{
+A \code{ggplot2} object.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

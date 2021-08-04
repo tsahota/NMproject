@@ -42,6 +42,11 @@ returned by FUN.}
 
 \item{group, var1, var2}{Grouping variables for plotting.}
 }
+\value{
+The function \code{ppc_data()} return a \code{data.frame} with observed and
+predicted statistics. The \verb{ppc_*_plot()} plotting functions return \code{ggplot}
+objects.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }

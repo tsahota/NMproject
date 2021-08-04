@@ -97,6 +97,8 @@ plot_iter_data.nm_list <- function(r, trans = TRUE, skip = 0, yvar = "OBJ") {
 #' Used in shiny app and as a backend function.
 #'
 #' @param d A `data.frame`. Output from [plot_iter_data()].
+#' 
+#' @return A `ggplot2` object.
 #'
 #' @seealso [plot_iter_data()]
 #' @keywords internal
@@ -139,6 +141,8 @@ plot_iter_ggplot <- function(d) {
 #'   beginning iterations where the OFV and parameters may move a lot.
 #' @param yvar Character (default = `"OBJ"`). Name of variable/parameter to
 #'   display.
+#'
+#' @return A `ggplot2` object.
 #'
 #' @seealso [shiny_nm()], [nm_render()]
 #'
