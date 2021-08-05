@@ -13,6 +13,7 @@ reference:
   - temp_files
   - rmd_to_vignettes
   - nm_dir
+  - is_nmproject_dir
 - title: "Importing code"
 - contents:
   - code_library
@@ -40,6 +41,7 @@ reference:
   - ctl_path
   - simple_field
   - is_nm
+  - '%f>%'
 - title: "NONMEM code manipulation"
 - contents:
   - apply_manual_edit
