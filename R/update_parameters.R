@@ -89,7 +89,10 @@ update_parameters0 <- function(ctl, coef_from, type = c("THETA", "OMEGA", "SIGMA
 #' `r lifecycle::badge("stable")`
 #'
 #' @param ctl An nm object.
-#' @param from Optional nm object. The completed object from which to extract results.  If not specified, `from` will be taken to be `ctl`.
+#' @param from Optional nm object. The completed object from which to extract
+#'   results.  If not specified, `from` will be taken to be `ctl`.
+#'
+#' @return An nm object with modified `ctl_contents` field.
 #'
 #' @examples
 #'

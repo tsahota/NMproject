@@ -14,6 +14,10 @@ wait_for(x, timeout = NULL, interval = 1)
 \item{interval}{Numeric. Number of seconds (default=\code{1}) to wait before
 rechecking.}
 }
+\value{
+Invisibly returns \code{TRUE} indicating value of \code{x} after waiting for
+\code{x} to be \code{TRUE}.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

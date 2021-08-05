@@ -9,6 +9,9 @@ view_patch(patch_name)
 \arguments{
 \item{patch_name}{Character. Name of patch}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 Use the "view patch" RStudio 'Addin' for viewing patches instead.
 }

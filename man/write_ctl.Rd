@@ -11,6 +11,9 @@ write_ctl(m, force = FALSE)
 
 \item{force}{Logical (default = \code{FALSE}), force write, don't ask.}
 }
+\value{
+Invisibly returns \code{m} unmodified.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

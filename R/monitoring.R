@@ -178,7 +178,9 @@ is_successful <- function(r) {
 #'
 #' @param r An nm object.
 #' @param timeout Numeric seconds to wait before timeout.
-#'
+#'  
+#' @return Invisibly returns `r` unmodified.  Called for side effects.
+#'  
 #' @examples
 #'
 #' \dontrun{

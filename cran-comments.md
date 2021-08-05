@@ -12,9 +12,11 @@ This is a resubmission. In this version I have:
   to". I have therefore removed his name from the
   roxygen @author field of the file and not included
   his name in the DESCRIPTION.
-* Expanded Description field.
+* Expanded Description field of the package.
 * Removed options(warn=-1) statements.
 * Removed examples from non-exported functions.
+* Added \value entries to all .Rd files
+* Restrained multi-core to use a single core in the vignettes and tests
 
 ## Test environments
 * local windows R installation, R 4.0.3

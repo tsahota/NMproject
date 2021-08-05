@@ -9,6 +9,10 @@ valid_package_name(x)
 \arguments{
 \item{x}{Name of package.}
 }
+\value{
+A logical \code{TRUE} if or \code{FALSE} indicating if \code{x} is a valid package
+name.
+}
 \description{
 Package name validator from \code{usethis}
 }

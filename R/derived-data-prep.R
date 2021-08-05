@@ -18,6 +18,8 @@
 #'   different structure the argument `name` must be a (relative) path to
 #'   an existing directory where you want your NONMEM ready dataset to be stored.
 #'
+#' @return No return value, called for side effects.
+#'
 #' @seealso [read_derived_data()], [input_data()], [exclude_rows()]
 #'
 #' @examples

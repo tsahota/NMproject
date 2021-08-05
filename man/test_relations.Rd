@@ -19,6 +19,9 @@ test_relations(dtest, param, cov, state, continuous)
 \item{continuous}{Logical (default = \code{TRUE}). If \code{FALSE}, will treat the
 covariate as categorical.}
 }
+\value{
+A \code{tibble} describing relationships to test.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

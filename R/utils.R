@@ -43,6 +43,54 @@ magrittr::"%$%"
 #' @export
 rlang::.data
 
+
+#' Function pipe for nm objects
+#' 
+#' @description
+#'
+#' `r lifecycle::badge("experimental")`
+#' 
+#' Pipe an nm object object to a list of functions.  Although this enables
+#' multiple NONMEM runs to be handled simulataneously, it does make your code
+#' less readable.
+#' 
+#' @param lhs An nm object.
+#' @param rhs A list of functions.  Must be same length as `lhs`.
+#' 
+#' @return A modified nm object.
+#' 
+#' @seealso [child()] for creating multiple child NONMEM objects
+#' 
+#' @examples 
+#' 
+#' \dontrun{
+#' mWT <- m2 %>% child(c("m3", "m4", "m5", "m6", "m7", "m8")) %f>% 
+#' list(
+#'  . %>% add_cov(param = "CL", cov = "WT", state = "power"),
+#'  . %>% add_cov(param = "CL", cov = "WT", state = "power0.75"),
+#'  . %>% add_cov(param = "V", cov = "WT", state = "power"),
+#'  . %>% add_cov(param = "V", cov = "WT", state = "power1"),
+#'  . %>% add_cov(param = "CL", cov = "WT", state = "power") %>%
+#'    add_cov(param = "V", cov = "WT", state = "power"),
+#'  . %>% add_cov(param = "CL", cov = "WT", state = "power0.75") %>%
+#'   add_cov(param = "V", cov = "WT", state = "power1")
+#' )
+#' 
+#' mWT %>% run_nm() %>% wait_finish()
+#' 
+#' mWT %>% summary_wide()
+#' 
+#' }
+#' 
+#' @export
+
+`%f>%` <- function(lhs, rhs) {
+  if(length(lhs) != length(rhs)) {
+    stop("for 'lhs %f>% rhs' the length of lhs and rhs must be the same")
+  }
+  as_nm_list(lapply(seq_along(lhs), function(i) rhs[[i]](lhs[[i]])))
+}
+
 #' Compute path relative to reference
 #'
 #' @param path Path of desired directory or file.
@@ -206,6 +254,9 @@ na.locf <- function(x) {
 #' @param interval Numeric. Number of seconds (default=`1`) to wait before
 #'   rechecking.
 #'
+#' @return Invisibly returns `TRUE` indicating value of `x` after waiting for
+#'   `x` to be `TRUE`.
+#'
 #' @seealso [wait_finish()].
 #'
 #' @examples
@@ -234,4 +285,10 @@ wait_for <- function(x, timeout = NULL, interval = 1) {
     Sys.sleep(1)
   }
   invisible(TRUE)
+}
+
+file_find_replace <- function(filepath, pattern, replacement) {
+  file_contents <- readLines(filepath)
+  updated_contents <- gsub(x = file_contents, pattern = pattern, replacement = replacement)
+  cat(updated_contents, file = filepath, sep = "\n")
 }

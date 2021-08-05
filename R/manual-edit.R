@@ -107,6 +107,8 @@ diff_manual_edit <- function(m, res) {
 #'
 #' @param patch_name Character. Name of patch
 #'
+#' @return No return value, called for side effects.
+#'
 #' @keywords internal
 #' @export
 view_patch <- function(patch_name) {
