@@ -16,7 +16,12 @@ This is a resubmission. In this version I have:
 * Removed options(warn=-1) statements.
 * Removed examples from non-exported functions.
 * Added \value entries to all .Rd files
-* Restrained multi-core to use a single core in the vignettes and tests
+* Restrained multi-core to use a single core in the vignettes 
+  and tests.
+* Apologies, I cannot see where I am modifying .GlobalEnv. I 
+  have checked the global environment with 
+  ls(envir = .GlobalEnv, all.names = TRUE)
+  
 
 ## Test environments
 * local windows R installation, R 4.0.3

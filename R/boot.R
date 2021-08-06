@@ -3,7 +3,7 @@
 #' Used by [make_boot_datasets()], run once per bootstrap sample
 #'
 #' @param d Dataset to merge.
-#' @param rsplit An object from `sample::bootstraps()`.
+#' @param rsplit An object from `rsample::bootstraps()`.
 #' @param data_name Name of dataset.
 #' @param data_folder Path to bootstrap datasets.
 #' @param id_var Character (default = `"ID"`). Name of ID column.
