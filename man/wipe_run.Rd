@@ -9,6 +9,9 @@ wipe_run(r)
 \arguments{
 \item{r}{An nm object.}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

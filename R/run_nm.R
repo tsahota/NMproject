@@ -200,6 +200,9 @@ run_nm_batch <- function(m, threads = 10, ...) {
 #' files from old runs do not get mistaken for up-to-date runs.
 #'
 #' @param r An nm object.
+#' 
+#' @return No return value, called for side effects.
+#' 
 #' @export
 wipe_run <- function(r) {
   UseMethod("wipe_run")
@@ -338,6 +341,8 @@ ctl_table_files.default <- function(ctl) {
 #'
 #' @details Setting `include_psn_exports = TRUE` will break 'Pirana' and 'xpose'
 #'   capability as these software use exported files.
+#'
+#' @return A `character` vector of temporary file paths
 #'
 #' @examples
 #'
@@ -532,6 +537,8 @@ clean_run.nm_list <- function(m, output_loc = c("run_dir", "base"), include_slur
 #'
 #' @param m An nm object.
 #' @param force Logical (default = `FALSE`), force write, don't ask.
+#'
+#' @return Invisibly returns `m` unmodified.
 #'
 #' @keywords internal
 #' @export

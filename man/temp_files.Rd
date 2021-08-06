@@ -38,6 +38,9 @@ PsN exports to the \code{run_in} directory as temporary}
 
 \item{m}{An nm object}
 }
+\value{
+A \code{character} vector of temporary file paths
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

@@ -14,6 +14,9 @@ path, will save to DerivedData directory.}
 
 \item{...}{Additional arguments to be passed to \code{\link[utils:write.table]{utils::write.csv()}}.}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 

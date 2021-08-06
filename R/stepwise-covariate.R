@@ -752,7 +752,8 @@ bind_covariate_results <- function(dsc, nm_col = "m", parameters = "new") {
 #'  }
 #'
 #' }
-#'
+#' 
+#' @return A `tibble` describing relationships to test.
 #'
 #' @seealso [add_cov()], [covariate_step_tibble()], [bind_covariate_results()]
 #'

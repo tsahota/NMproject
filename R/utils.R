@@ -254,6 +254,9 @@ na.locf <- function(x) {
 #' @param interval Numeric. Number of seconds (default=`1`) to wait before
 #'   rechecking.
 #'
+#' @return Invisibly returns `TRUE` indicating value of `x` after waiting for
+#'   `x` to be `TRUE`.
+#'
 #' @seealso [wait_finish()].
 #'
 #' @examples

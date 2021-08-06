@@ -32,6 +32,9 @@ ctl_list2.nm_list <- Vectorize_nm_list(ctl_list2.nm_generic, SIMPLIFY = FALSE)
 #' @param m An nm object.
 #' @param dollar Character. Name of subroutine to target.
 #' @param lines Optional character.  Assignment of lines.
+#' 
+#' @return An nm object with modified `target` field.
+#' @keywords internal
 #' @export
 target <- function(m, dollar, lines) {
   UseMethod("target")

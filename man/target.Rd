@@ -16,9 +16,13 @@ untarget(m, dollar)
 
 \item{lines}{Optional character.  Assignment of lines.}
 }
+\value{
+An nm object with modified \code{target} field.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
 Intended mostly for internal use.  Used with \code{\link[=text]{text()}} to target control file
 modifications to specific NONMEM subroutines
 }
+\keyword{internal}

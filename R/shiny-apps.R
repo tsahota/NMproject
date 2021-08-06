@@ -175,6 +175,8 @@ get_plot_bootstrapjs_div <- function(plot_object_list) {
 #' Used by the shiny run monitor to show the tail end of the .lst file.
 #'
 #' @param r An nm object.
+#' 
+#' @return A `character` vector of the tail end of the lst file.
 #'
 #' @keywords internal
 #' @export

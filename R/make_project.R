@@ -261,6 +261,10 @@ nm_pre_push_hook <- function(cmd){
 #' Package name validator from `usethis`
 #'
 #' @param x Name of package.
+#' 
+#' @return A logical `TRUE` if or `FALSE` indicating if `x` is a valid package
+#'   name.
+#' 
 #' @keywords internal
 valid_package_name <- function(x) {
   grepl("^[a-zA-Z][a-zA-Z0-9.]+$", x) && !grepl("\\.$", x)

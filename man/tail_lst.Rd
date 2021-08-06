@@ -9,6 +9,9 @@ tail_lst(r)
 \arguments{
 \item{r}{An nm object.}
 }
+\value{
+A \code{character} vector of the tail end of the lst file.
+}
 \description{
 Used by the shiny run monitor to show the tail end of the .lst file.
 }
