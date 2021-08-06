@@ -64,7 +64,10 @@ made is that if inputs have not changed since the last decision was made. }
 }
 \examples{
 
+## requires completed runs m1, m2 and m2WT available
 \dontrun{
+
+if(interactive()){
 
 ## a decision based on summary statistics
 decision(
@@ -84,7 +87,9 @@ decision(
 
 ## a decision based on an automatic TRUE/FALSE criteria
 ## here we're ensuring m1 has the lowest AIC
-decision(auto = (AIC(m1) == min(AIC(m1, m2, m3))))
+decision(auto = (AIC(m1) == min(AIC(m1, m2, m3)))) 
+
+}
 }
 
 }

@@ -23,6 +23,8 @@
 #' @seealso [read_derived_data()], [input_data()], [exclude_rows()]
 #'
 #' @examples
+#' 
+#' ## requires NMproject directory structure to operate in
 #' \dontrun{
 #'
 #' ## read a dataset that's been copie into SourceData
@@ -113,6 +115,8 @@ write_derived_data.list <- function(d, name, ...) {
 #' @return A `data.frame` object of the NONMEM dataset.
 #' 
 #' @examples
+#' 
+#' ## requires NMproject directory structure to operate in
 #' \dontrun{
 #'
 #' ## read a dataset that's been copie into SourceData
@@ -203,14 +207,24 @@ read_derived_data <- function(name, na = ".", silent = FALSE, ...) {
 #' @seealso [read_derived_data()], [write_derived_data()]
 #'
 #' @examples
-#' \dontrun{
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#'              
+#' d <- input_data(m1)
+#' d$EXCL <- 0  ## start with no rows excluded
+#' 
 #' ## use with dplyr
 #' dexcl <- d %>%
-#'   filter(ID == 23, TIME > 18, TIME < 24) %>%
-#'   select(ID, TIME, DV, EXCL)
+#'   dplyr::filter(ID == 6, TIME > 3) %>%
+#'   dplyr::select(ID, TIME, DV, EXCL)
 #' dexcl ## view rows to be excluded
 #' d <- d %>% exclude_rows(dexcl)
-#' }
+#' 
+#' d %>% dplyr::filter(ID %in% 6)
 #' @export
 
 exclude_rows <- function(d, dexcl, exclude_col = "EXCL") {

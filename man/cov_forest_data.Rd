@@ -31,19 +31,22 @@ a labelling column for \code{\link[=cov_forest_plot]{cov_forest_plot()}} to adju
 scenarios are printed on the axis
 }
 \examples{
+
+## The following requires a covariate control stream available
 \dontrun{
 
 dcov <- input_data(m1, filter = TRUE)
 dcov <- dcov[!duplicated(dcov$ID), ]
-covariate_scenarios <- bind_rows(
-  tibble(cov = "HEALTHGP", value = c(0, 1)),
-  tibble(cov = "HEPATIC", value = unique(dcov$HEPATIC[dcov$HEPATIC > -99])),
-  tibble(cov = "BWTIMP", value = c(50, 80, 120)),
-  tibble(cov = "ECOG", value = c(0, 1, 2, 3)),
-  tibble(cov = "BEGFRIMP", value = quantile(dcov$BEGFR[dcov$BEGFR > -99])),
-  tibble(cov = "RACE", value = c(1, 2), text = c("white", "black")),
-  tibble(cov = "PPI", value = c(0, 1)),
-  tibble(cov = "H2RA", value = c(0, 1))
+
+covariate_scenarios <- dplyr::bind_rows(
+  dplyr::tibble(cov = "HEALTHGP", value = c(0, 1)),
+  dplyr::tibble(cov = "HEPATIC", value = unique(dcov$HEPATIC[dcov$HEPATIC > -99])),
+  dplyr::tibble(cov = "BWTIMP", value = c(50, 80, 120)),
+  dplyr::tibble(cov = "ECOG", value = c(0, 1, 2, 3)),
+  dplyr::tibble(cov = "BEGFRIMP", value = quantile(dcov$BEGFR[dcov$BEGFR > -99])),
+  dplyr::tibble(cov = "RACE", value = c(1, 2), text = c("white", "black")),
+  dplyr::tibble(cov = "PPI", value = c(0, 1)),
+  dplyr::tibble(cov = "H2RA", value = c(0, 1))
 )
 
 dplot <- cov_forest_data(m1, covariate_scenarios = covariate_scenarios)
