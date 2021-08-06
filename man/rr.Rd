@@ -30,8 +30,8 @@ the reported standard error (where applicable) and \eqn{\theta} and \eqn{se(\the
 are the NONMEM reported values of parameters and standard errors, respectively
 
 \describe{
-\item{LOG or LOGODDS:}{
-\eqn{FINAL = exp(\theta), RSE% = 100*\sqrt(exp^(se(\theta)) - 1)}
+\item{LOG:}{
+\eqn{FINAL = exp(\theta), RSE% = 100*\sqrt(exp^(se(\theta)^2) - 1)}
     }
 \item{RATIO:}{
 \eqn{FINAL = \theta, RSE% = 100*se(\theta) / \theta}
