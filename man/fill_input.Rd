@@ -28,17 +28,26 @@ See examples for how to use \code{drop} and \code{rename} arguments to control h
 \verb{$INPUT} is written.
 }
 \examples{
-\dontrun{
+
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+
+m1 \%>\% dollar("INPUT") ## shows placeholder for column names
 
 m1 <- m1 \%>\% fill_input()
 m1 \%>\% dollar("INPUT") ## view $INPUT
 
 ## following will will drop the "RATE" column
 m1 <- m1 \%>\% fill_input(drop = "RATE")
-m1 \%>\% dollar("INPUT")
+## no RATE column so will not drop anything
+m1 \%>\% dollar("INPUT") 
 
 ## following will rename "DATE" to be "DAT0"
 m1 <- m1 \%>\% fill_input(rename = c("DAT0" = "DATE"))
+## no DATE column so will not rename anything
 m1 \%>\% dollar("INPUT") ## view $INPUT
-}
+
 }

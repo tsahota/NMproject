@@ -38,10 +38,18 @@ the necessary \code{rsample} splitting objects to be present. See examples.
 }
 \examples{
 
+## The following only works inside an NMproject directory structure.
 \dontrun{
 
-## in your dataset production script
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 
+d <- input_data(m1)
+
+## in your dataset production script
 d <- d \%>\%
   mutate(
     WT_C = cut(WT, breaks = 2, labels = FALSE),

@@ -26,12 +26,17 @@ Mostly a back end function used by other functions.
 }
 \examples{
 
-\dontrun{
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 
-m <- m \%>\% insert_dollar("MODEL", "
+m1 <- m1 \%>\% insert_dollar("MODEL", "
 $MODEL
 COMP = (CENTRAL)
 ", after_dollar = "SUB")
-}
+
+m1 \%>\% dollar("MODEL")
 
 }
