@@ -299,9 +299,9 @@ coef.nm_generic <- function(object, trans = TRUE, ...) {
   d$SE.TRANS[d$trans %in% "RATIO" & th] <- 100 * d$SE[d$trans %in% "RATIO" & th] / d$FINAL[d$trans %in% "RATIO" & th]
   d$transSEunit[d$trans %in% "RATIO" & th] <- "%"
   ## LOG
-  d$FINAL.TRANS[d$trans %in% c("LOG", "LOGODDS") & th] <- exp(d$FINAL[d$trans %in% c("LOG", "LOGODDS") & th])
-  d$SE.TRANS[d$trans %in% c("LOG", "LOGODDS") & th] <- 100 * sqrt((exp(d$SE[d$trans %in% c("LOG", "LOGODDS") & th]^2) - 1))
-  d$transSEunit[d$trans %in% c("LOG", "LOGODDS") & th] <- "%"
+  d$FINAL.TRANS[d$trans %in% "LOG" & th] <- exp(d$FINAL[d$trans %in% "LOG" & th])
+  d$SE.TRANS[d$trans %in% "LOG" & th] <- 100 * sqrt((exp(d$SE[d$trans %in% "LOG" & th]^2) - 1))
+  d$transSEunit[d$trans %in% "LOG" & th] <- "%"
   ## LOGIT
   if ("LOGIT" %in% d$trans) {
     d$FINAL.TRANS[d$trans %in% "LOGIT" & th] <- 100 * 1 / (1 + exp(-d$FINAL[d$trans %in% "LOGIT" & th]))

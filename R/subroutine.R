@@ -349,8 +349,8 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
 
   thetas <- raw_init_theta(m)
   thetas$init_trans <- thetas$init
-  thetas$init_trans[thetas$trans %in% c("LOG", "LOGODDS")] <-
-    exp(thetas$init_trans[thetas$trans %in% c("LOG", "LOGODDS")])
+  thetas$init_trans[thetas$trans %in% "LOG"] <-
+    exp(thetas$init_trans[thetas$trans %in% "LOG"])
   thetas$init_trans[thetas$trans %in% "LOGIT"] <-
     100 * 1 / (1 + exp(-thetas$init_trans[thetas$trans %in% "LOGIT"]))
 
@@ -410,7 +410,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
       if (!inherits(new_theta, "try-error")) {
         ithetai <- init_theta(m)
         ithetai$init[ithetai$name == di$nm_name.y] <- new_theta
-        if (ithetai$trans[ithetai$name == di$nm_name.y] %in% c("LOG", "LOGODDS")) {
+        if (ithetai$trans[ithetai$name == di$nm_name.y] %in% "LOG") {
           ithetai$init[ithetai$name == di$nm_name.y] <- log(new_theta)
         }
         if (ithetai$trans[ithetai$name == di$nm_name.y] %in% c("LOGIT")) {

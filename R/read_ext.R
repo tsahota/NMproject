@@ -62,7 +62,7 @@ read_ext.default <- function(r, trans = FALSE) {
   for (i in seq_len(nrow(p_info))) {
     pi <- p_info[i, ]
     names(d)[names(d) %in% pi$parameter & !is.na(pi$name)] <- pi$name
-    if (pi$trans %in% c("LOG", "LOGODDS")) {
+    if (pi$trans %in% "LOG") {
       d[, pi$name][d$ITERATION > -1000000000] <- exp(d[, pi$name][d$ITERATION > -1000000000])
     } else if (pi$trans %in% "LOGIT") {
       d[, pi$name][d$ITERATION > -1000000000] <- stats::plogis(d[, pi$name][d$ITERATION > -1000000000])
