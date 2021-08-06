@@ -17,7 +17,7 @@ boot_to_csv(
 \arguments{
 \item{d}{Dataset to merge.}
 
-\item{rsplit}{An object from \code{sample::bootstraps()}.}
+\item{rsplit}{An object from \code{rsample::bootstraps()}.}
 
 \item{data_name}{Name of dataset.}
 

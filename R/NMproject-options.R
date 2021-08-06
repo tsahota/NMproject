@@ -65,9 +65,10 @@ set_nm_opts <- function() {
 #' @return if `dir_list` is missing, will return value of
 #' `getOption("nm_default_dirs")` otherwise will set option `nm_default_dirs`.
 #' @examples
-#' \dontrun{
 #'
-#' nm_default_dirs()
+#' orig_list <- nm_default_dirs()
+#' orig_list
+#' 
 #' nm_default_dirs(list(
 #'   models = "Models",
 #'   scripts = "Scripts",
@@ -75,7 +76,12 @@ set_nm_opts <- function() {
 #'   "SourceData",
 #'   "Data"
 #' ))
-#' }
+#' 
+#' nm_default_dirs()
+#' nm_default_dirs(orig_list)
+#' 
+#' 
+#' 
 #' @export
 nm_default_dirs <- function(dir_list) {
   if (missing(dir_list)) {
@@ -174,18 +180,21 @@ set_default_dirs_in_rprofile <- function(path = ".Rprofile", dir_list = nm_defau
 #' @seealso [nm_getsetters()].
 #'
 #' @examples
-#' \dontrun{
 #'
-#' m1 <- m1 %>%
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv")) %>%
 #'   cmd(sge_parallel_execute) %>%
 #'   parafile("/opt/NONMEM/nm75/run/mpilinux8.pnm") %>%
-#'   cores(8) %>%
-#'   run_nm()
+#'   cores(8)
+#'   
+#' cmd(m1)
 #'
 #' m2 <- m1 %>% child("m2") ## inherits same command as above
 #'
 #' sge_parallel_execute ## view the character to see how psn interfaces with SGE
-#' }
 #' @export
 sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_flags='-pe orte {cores} -V' {ctl_name} -dir={run_dir} -nodes={cores}"
 
@@ -223,12 +232,19 @@ sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_f
 #' @return If `text` is missing will get and return the current NMTRAN command.
 #' @seealso [find_nm_tran_path()], [nm_tran()]
 #' @examples
-#' \dontrun{
+#'
+#' orig_cmd <- nm_tran_command()
+#' orig_cmd
 #'
 #' # the following two are equivalent
 #' nm_tran_command("/opt/NONMEM/nm75/tr/NMTRAN.exe")
+#' nm_tran_command()
+#' 
 #' nm_tran_command("/opt/NONMEM/nm75/tr/NMTRAN.exe < {ctl_name}")
-#' }
+#' nm_tran_command()
+#' 
+#' nm_tran_command(orig_cmd)
+#' 
 #' @export
 nm_tran_command <- function(text) {
   if (missing(text)) {
@@ -351,10 +367,7 @@ system_nm <- function(cmd, dir = nm_default_dir("models"), ...) {
 #'
 #' @examples
 #'
-#' \dontrun{
-#'
 #' system_cmd("pwd")
-#' }
 #'
 #' @export
 system_cmd <- function(cmd, dir = ".", ...) {

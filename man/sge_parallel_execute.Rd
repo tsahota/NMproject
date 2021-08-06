@@ -23,18 +23,21 @@ on SGE.
 Requires \code{cores} and \code{parafile} fields to be set.
 }
 \examples{
-\dontrun{
 
-m1 <- m1 \%>\%
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv")) \%>\%
   cmd(sge_parallel_execute) \%>\%
   parafile("/opt/NONMEM/nm75/run/mpilinux8.pnm") \%>\%
-  cores(8) \%>\%
-  run_nm()
+  cores(8)
+  
+cmd(m1)
 
 m2 <- m1 \%>\% child("m2") ## inherits same command as above
 
 sge_parallel_execute ## view the character to see how psn interfaces with SGE
-}
 }
 \seealso{
 \code{\link[=nm_getsetters]{nm_getsetters()}}.
