@@ -25,6 +25,7 @@
 #'
 #' @examples
 #'
+#' ## requires NMproject directory structure
 #' \dontrun{
 #'
 #' ls_code_library("Models/ADVAN2.mod") %>%
@@ -119,6 +120,7 @@ stage <- function(files, root_dir,
 #'
 #' @examples
 #'
+#' ## requires NMproject directory structure
 #' \dontrun{
 #'
 #' ## both of these following operations are easier in the shiny code library
@@ -201,11 +203,10 @@ import <- function(copy_table, overwrite = FALSE, silent = FALSE,
 #' @return Character vector of matched file paths.
 #' 
 #' @examples
-#' \dontrun{
 #'
 #' ## find all scripts with the string "AUC("
 #' ls_scripts("~/path/to/analysis/Scripts") %>% search_raw("AUC\\(")
-#' }
+#' 
 #' @export
 
 ls_scripts <- function(folder = ".", extn = "r|R|Rmd|rmd", recursive = TRUE) {
@@ -356,13 +357,14 @@ info_scripts <- function(files, fields = c("Description"), viewer = TRUE, silent
 #'
 #' @examples
 #'
-#' \dontrun{
 #'
 #' ls_scripts("Scripts") %>% search_raw("AUC") ## finds all scripts containing string "AUC"
 #'
 #' ## regex match find instances of AUC() function being used
 #' ls_scripts("Scripts") %>% search_raw("AUC\\(")
 #'
+#' ## requires NMproject directory structure to operate in
+#' \dontrun{
 #' ## bring file(s) into project
 #' ls_scripts("/path/to/other/analysis/scripts/dir") %>%
 #'   search_raw("AUC\\(") %>%
@@ -407,8 +409,10 @@ search_raw <- function(files, text, search_title = TRUE, search_contents = TRUE)
 #'
 #' @examples
 #'
+#' ls_code_library("Models/ADVAN2.mod")
+#' 
+#' ## requires NMproject directory structure to operate in
 #' \dontrun{
-#'
 #' ls_code_library("Models/ADVAN2.mod") %>%
 #'   stage()
 #' }
@@ -449,8 +453,13 @@ ls_code_library <- function(pattern = ".") {
 #'
 #' @seealso [ls_code_library()], [stage()], [import()]
 #'
+#' @examples 
+#' 
+#' code_library(viewer = FALSE, return_info = TRUE)
+#'
 #' @export
-code_library <- function(extn = NULL, fields = "Description", viewer = TRUE, silent = FALSE,
+code_library <- function(extn = NULL, fields = "Description", 
+                         viewer = TRUE, silent = FALSE,
                          return_info = FALSE) {
   if (is.null(getOption("code_library_path"))) {
     stop("no code library found check getOption(\"code_library_path\")")

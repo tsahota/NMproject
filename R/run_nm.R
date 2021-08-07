@@ -10,24 +10,24 @@
 #' Run nm objects.  Uses `system_nm()` to submit the `cmd()` value of object.
 #'
 #' @param m An nm object.
-#' @param ignore.stdout Logical (default=TRUE). Parameter passed to `system_nm()`.
-#' @param ignore.stderr Logical (default=TRUE). Parameter passed to `system_nm()`.
-#' @param quiet Logical (default=FALSE). Should `system_nm()` output be piped to
+#' @param ignore.stdout Logical (default=`TRUE`). Parameter passed to `system_nm()`.
+#' @param ignore.stderr Logical (default=`TRUE`). Parameter passed to `system_nm()`.
+#' @param quiet Logical (default=`FALSE`). Should `system_nm()` output be piped to
 #'   screen?
 #' @param intern Logical. `intern` argument to be passed to `system_nm()`.
-#' @param force Logical (default = FALSE).  Force run even results unchanged.
-#' @param cache_ignore_cmd Logical (default = FALSE). Should check `cmd` field
+#' @param force Logical (default = `FALSE`).  Force run even results unchanged.
+#' @param cache_ignore_cmd Logical (default = `FALSE`). Should check `cmd` field
 #'   with cache?
-#' @param cache_ignore_ctl Logical (default = FALSE). Should check control file
+#' @param cache_ignore_ctl Logical (default = `FALSE`). Should check control file
 #'   contents with cache?
-#' @param cache_ignore_data Logical (default = FALSE). Should check dataset with
+#' @param cache_ignore_data Logical (default = `FALSE`). Should check dataset with
 #'   cache?
 #'
 #' @details In grid environment it is recommended to run [nm_tran()] via the
 #'   RStudio 'Addin' prior to executing this code.
 #'
 #'   By default, when highlighting code and evaluating it via an RStudio app,
-#'   run_nm() will not execute and will just return the `nm` object.
+#'   `run_nm()` will not execute and will just return the `nm` object.
 #'
 #'   For vector `nm` objects of length more than 1, all runs will be launched at
 #'   the same time.  This could overwhelm resources if not in a grid

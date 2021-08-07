@@ -27,13 +27,14 @@ in finding files that you know contain certain text snippets.
 }
 \examples{
 
-\dontrun{
 
 ls_scripts("Scripts") \%>\% search_raw("AUC") ## finds all scripts containing string "AUC"
 
 ## regex match find instances of AUC() function being used
 ls_scripts("Scripts") \%>\% search_raw("AUC\\\\(")
 
+## requires NMproject directory structure to operate in
+\dontrun{
 ## bring file(s) into project
 ls_scripts("/path/to/other/analysis/scripts/dir") \%>\%
   search_raw("AUC\\\\(") \%>\%

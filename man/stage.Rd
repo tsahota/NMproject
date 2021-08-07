@@ -33,6 +33,7 @@ way to bring code is via the "code library" RStudio 'Addin' shiny app.
 }
 \examples{
 
+## requires NMproject directory structure
 \dontrun{
 
 ls_code_library("Models/ADVAN2.mod") \%>\%

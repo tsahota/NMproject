@@ -25,12 +25,17 @@ Uses \code{data_path} field of object to locate data and read in.
 }
 \examples{
 
-\dontrun{
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+
 
 d <- input_data(m1)
+head(d)
 
 ## only non-ignored rows
 d_nonignore <- input_data(m1, filter = TRUE)
-}
 
 }

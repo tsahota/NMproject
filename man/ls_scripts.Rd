@@ -21,9 +21,8 @@ Character vector of matched file paths.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \examples{
-\dontrun{
 
 ## find all scripts with the string "AUC("
 ls_scripts("~/path/to/analysis/Scripts") \%>\% search_raw("AUC\\\\(")
-}
+
 }

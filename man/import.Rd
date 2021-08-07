@@ -29,6 +29,7 @@ code into your project.
 }
 \examples{
 
+## requires NMproject directory structure
 \dontrun{
 
 ## both of these following operations are easier in the shiny code library

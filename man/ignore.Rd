@@ -13,19 +13,30 @@ ignore(ctl, ignore_char)
 }
 \value{
 If \code{ignore_char} is specified returns an nm object with modified
-\code{ctl_contents} field.  Otherwise returns the value of the IGNORE statement
-in $DATA.
+\code{ctl_contents} field.  If no IGNORE present, returns \code{FALSE}. Otherwise
+returns the value of the IGNORE statement in $DATA.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \examples{
 
-\dontrun{
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv")) \%>\%
+  fill_input()
 
-ignore(m1) ## display ignore statement
 
-m1 \%>\% ignore("ID > 10") ## changes ignore to ignore IDs > 10.
+ignore(m1) ## display ignore statement, currently none
+m1 \%>\% dollar("DATA")
+
+m1 <- m1 \%>\% ignore("ID > 10") ## changes ignore to ignore IDs > 10.
+
+m1 \%>\% dollar("DATA")
+
 }
-
+\seealso{
+\code{\link[=data_ignore_char]{data_ignore_char()}}, \code{\link[=data_filter_char]{data_filter_char()}}
 }

@@ -22,24 +22,24 @@ run_nm_batch(m, threads = 10, ...)
 \arguments{
 \item{m}{An nm object.}
 
-\item{ignore.stdout}{Logical (default=TRUE). Parameter passed to \code{system_nm()}.}
+\item{ignore.stdout}{Logical (default=\code{TRUE}). Parameter passed to \code{system_nm()}.}
 
-\item{ignore.stderr}{Logical (default=TRUE). Parameter passed to \code{system_nm()}.}
+\item{ignore.stderr}{Logical (default=\code{TRUE}). Parameter passed to \code{system_nm()}.}
 
-\item{quiet}{Logical (default=FALSE). Should \code{system_nm()} output be piped to
+\item{quiet}{Logical (default=\code{FALSE}). Should \code{system_nm()} output be piped to
 screen?}
 
 \item{intern}{Logical. \code{intern} argument to be passed to \code{system_nm()}.}
 
-\item{force}{Logical (default = FALSE).  Force run even results unchanged.}
+\item{force}{Logical (default = \code{FALSE}).  Force run even results unchanged.}
 
-\item{cache_ignore_cmd}{Logical (default = FALSE). Should check \code{cmd} field
+\item{cache_ignore_cmd}{Logical (default = \code{FALSE}). Should check \code{cmd} field
 with cache?}
 
-\item{cache_ignore_ctl}{Logical (default = FALSE). Should check control file
+\item{cache_ignore_ctl}{Logical (default = \code{FALSE}). Should check control file
 contents with cache?}
 
-\item{cache_ignore_data}{Logical (default = FALSE). Should check dataset with
+\item{cache_ignore_data}{Logical (default = \code{FALSE}). Should check dataset with
 cache?}
 
 \item{threads}{Numeric.  Number of threads to run concurrently.}
@@ -59,7 +59,7 @@ In grid environment it is recommended to run \code{\link[=nm_tran]{nm_tran()}} v
 RStudio 'Addin' prior to executing this code.
 
 By default, when highlighting code and evaluating it via an RStudio app,
-run_nm() will not execute and will just return the \code{nm} object.
+\code{run_nm()} will not execute and will just return the \code{nm} object.
 
 For vector \code{nm} objects of length more than 1, all runs will be launched at
 the same time.  This could overwhelm resources if not in a grid
