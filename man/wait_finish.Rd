@@ -24,6 +24,8 @@ ensure they wait for runs to complete before executing.
 }
 \examples{
 
+## requires NONMEM to be installed
+
 \dontrun{
 
 m1 \%>\%

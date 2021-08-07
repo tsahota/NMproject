@@ -12,6 +12,7 @@
 #'   times.
 #' @examples
 #'
+#' ## Below code requires NONMEM to be installed
 #' \dontrun{
 #'
 #' dc <- tibble(cores = c(1, 3, 10, 30)) %>%

@@ -30,10 +30,19 @@ replace proceeded as intended.
 }
 \examples{
 
-\dontrun{
 
-m1 \%>\% gsub_ctl("ISAMPLE=300", "ISAMPLE=600")
-}
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+
+
+m1 \%>\% dollar("EST")
+
+m1 <- m1 \%>\% gsub_ctl("ISAMPLE=300", "ISAMPLE=600")
+
+m1 \%>\% dollar("EST")
 
 }
 \seealso{

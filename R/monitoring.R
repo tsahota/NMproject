@@ -10,6 +10,16 @@
 #'
 #' @seealso [status_table()].
 #'
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#'
+#' status(m1)  ## not run
+#'
 #' @export
 
 status <- function(x) {
@@ -95,12 +105,20 @@ status.nm_list <- Vectorize_nm_list(status.nm_generic)
 #' @param m An nm object.
 #' 
 #' @return A `tibble` object.
-#'
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#'              
+#' c(m1, m1) %>% status_table()  ## both not started
 #' @export
 status_table <- function(m) {
   tab <- m %>%
     status() %>%
-    factor(levels = c("finished", "error", "running", "not started")) %>%
+    factor(levels = c("finished", "error", "running", "not_started")) %>%
     table()
   dplyr::as_tibble(tab)
 }
@@ -116,6 +134,17 @@ status_table <- function(m) {
 #' @param initial_timeout Deprecated.  See [wait_finish()].
 #'
 #' @return A logical vector with `TRUE` or `FALSE` values.
+#' 
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#'
+#' is_finished(m1) # FALSE
+#'
 #' @export
 is_finished <- function(r, initial_timeout = NA) {
   UseMethod("is_finished")
@@ -157,6 +186,16 @@ is_finished.nm_list <- Vectorize_nm_list(is_finished.nm_generic)
 #'
 #' @return `TRUE` if run was successful, `FALSE` otherwise.
 #'
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#'              
+#' is_successful(m1) ## FALSE
+#'
 #' @export
 is_successful <- function(r) {
   res <- all(status(r) %in% "finished")
@@ -182,6 +221,8 @@ is_successful <- function(r) {
 #' @return Invisibly returns `r` unmodified.  Called for side effects.
 #'  
 #' @examples
+#'
+#' ## requires NONMEM to be installed
 #'
 #' \dontrun{
 #'
