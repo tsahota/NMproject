@@ -75,7 +75,7 @@
 #' parameters and standard errors, respectively
 #'   
 #' \describe{
-#'     \item{LOG:}{
+#'     \item{`LOG`}{
 #'       \eqn{FINAL = 100*\sqrt(exp^(\omega^2) - 1), RSE% = 100*(se(\omega^2)/\omega^2)/2}
 #'     }
 #'     \item{missing}{
@@ -92,7 +92,7 @@
 #' standard deviations.
 #' 
 #' \describe{
-#'     \item{all sigmas:}{
+#'     \item{all sigmas}{
 #'       \eqn{FINAL = \sqrt \sigma^2, RSE% = 100*se(\sigma^2) / \sigma^2}
 #'     }
 #' }
@@ -237,7 +237,7 @@ rr.nm_generic <- function(m, trans = TRUE) {
 #' parameters and standard errors, respectively
 #'   
 #' \describe{
-#'     \item{LOG:}{
+#'     \item{`LOG`}{
 #'       \eqn{FINAL = 100*\sqrt(exp^(\omega^2) - 1), RSE% = 100*(se(\omega^2)/\omega^2)/2}
 #'     }
 #'     \item{missing}{
@@ -254,7 +254,7 @@ rr.nm_generic <- function(m, trans = TRUE) {
 #' standard deviations.
 #' 
 #' \describe{
-#'     \item{all sigmas:}{
+#'     \item{all sigmas}{
 #'       \eqn{FINAL = \sqrt \sigma^2, RSE% = 100*se(\sigma^2) / \sigma^2}
 #'     }
 #' }
