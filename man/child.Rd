@@ -41,14 +41,14 @@ is useful in piping when a parent object is modified prior to being used in
 the child object.
 }
 \examples{
-\dontrun{
+
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 
 m2 <- m1 \%>\% child("m2")
 
-## use parent object to ensure child object retain
-## correct parent-child structure
-m2 <- m1 \%>\% c()
-update_parameters() \%>\% ## modifying parent object
-  child("m2", parent = m1)
-}
+nm_diff(m2, m1)
+
 }

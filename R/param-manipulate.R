@@ -13,6 +13,17 @@
 #' @param name Character. Parameter name to remove.
 #'
 #' @return An nm object with modified `ctl_contents` field.
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#'              
+#' m1 <- m1 %>% remove_parameter("KA")
+#' 
+#' nm_diff(m1)
 #'
 #' @export
 remove_parameter <- function(m, name) {
@@ -56,7 +67,7 @@ remove_parameter <- function(m, name) {
 #' m1 %>% dollar("PK")
 #' m1 %>% dollar("THETA")
 #' 
-#' m1 <- m1 %>% add_mixed_param("ALAG1", init = 1, unit = "h", trans = "LOG")
+#' m1 <- m1 %>% add_mixed_param("ALAG1", init = 1.1, unit = "h", trans = "LOG")
 #' 
 #' m1 %>% dollar("PK")
 #' m1 %>% dollar("THETA")
@@ -154,12 +165,19 @@ rename_parameter_.nm_list <- Vectorize_nm_list(rename_parameter_.nm_generic, SIM
 #' @param m An nm object.
 #' @param ... Named arguments with character values indicated old names.
 #'
-#' @examples
-#' \dontrun{
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
-#' m1 %>% rename_parameter(CL = "KE")
-#' ## renames KE to CL
-#' }
+#' m1 <- m1 %>% rename_parameter(V2 = "V")
+#' 
+#' m1 %>% dollar("PK")
+#' m1 %>% dollar("THETA")
+#' 
 #' @export
 rename_parameter <- function(m, ...) {
   rename_list <- list(...)

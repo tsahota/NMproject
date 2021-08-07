@@ -15,9 +15,16 @@ rename_parameter(m, ...)
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \examples{
-\dontrun{
 
-m1 \%>\% rename_parameter(CL = "KE")
-## renames KE to CL
-}
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+
+m1 <- m1 \%>\% rename_parameter(V2 = "V")
+
+m1 \%>\% dollar("PK")
+m1 \%>\% dollar("THETA")
+
 }

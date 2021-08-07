@@ -30,6 +30,8 @@ update_dollar_data <- function(ctl_name, new_data_name) {
 #'
 #' @examples
 #'
+#' ## requires NONMEM to be installed
+#'
 #' \dontrun{
 #'
 #' ## highlight the code below and use the "nm_tran" RStudio 'Addin'

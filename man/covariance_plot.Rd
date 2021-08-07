@@ -21,3 +21,16 @@ A \code{ggplot2} object with parameter correlations.
 \details{
 Plots the correlation plot from the $COV NONMEM output.
 }
+\examples{
+
+## requires NONMEM to be installed
+\dontrun{
+
+covariance_plot(m1)
+
+}
+
+}
+\seealso{
+\code{\link[=nm_render]{nm_render()}}
+}

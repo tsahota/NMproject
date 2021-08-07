@@ -10,11 +10,17 @@
 #' 
 #' @return The `numeric` value of the OFV.
 #' 
-#' @examples
-#' \dontrun{
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
-#' ofv(m1)
-#' }
+#' is_finished(m1) ## FALSE until run is completed
+#' ofv(m1) ## NA until m1 is finished
+#' 
 #' @export
 ofv <- function(r) {
   UseMethod("ofv")
@@ -144,13 +150,16 @@ BIC.nm_list <- Vectorize_nm_list(BIC.nm_generic)
 #'
 #' @seealso [ofv()], [rr()]
 #'
-#' @examples
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
-#' \dontrun{
-#'
-#' is_finished(m1) ## should be TRUE
-#' cond_num(m1) ## displays condition number
-#' }
+#' is_finished(m1) ## FALSE until run is completed
+#' cond_num(m1) ## NA until m1 is finished
 #'
 #' @export
 cond_num <- function(r) {

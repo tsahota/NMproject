@@ -59,16 +59,14 @@ mostly a back end function. This is the basic object this package centres
 around.  Most package functions act on this object.
 }
 \examples{
-\dontrun{
 
 m0 <- nm(run_id = "m0")
 m0 ## a human readable representation
 
 ## nm objects can be put into tibbles to group runs together
-d <- tibble(run_id = c("m1", "m2"))
+d <- dplyr::tibble(run_id = c("m1", "m2"))
 d$m <- nm(d$run_id)
 d
-}
 
 }
 \keyword{internal}

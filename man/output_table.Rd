@@ -35,6 +35,8 @@ columns including text columns used for \code{ggplot} facetting will be present.
 }
 \examples{
 
+## requires NONMEM to be installed
+
 \dontrun{
 
 ## exploratory data plot

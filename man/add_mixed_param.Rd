@@ -49,7 +49,7 @@ m1 <- new_nm(run_id = "m1",
 m1 \%>\% dollar("PK")
 m1 \%>\% dollar("THETA")
 
-m1 <- m1 \%>\% add_mixed_param("ALAG1", init = 1, unit = "h", trans = "LOG")
+m1 <- m1 \%>\% add_mixed_param("ALAG1", init = 1.1, unit = "h", trans = "LOG")
 
 m1 \%>\% dollar("PK")
 m1 \%>\% dollar("THETA")

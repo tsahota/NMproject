@@ -92,20 +92,18 @@ Normally does not require setting.  Path to the expected .lst file.
 }
 
 \examples{
-\dontrun{
 
-m1 <- new_nm(run_id = "m1",
-             based_on = "staging/Models/run1.mod",
-             data_path = "DerivedData/data.csv",
-             cmd = "execute -run_on_sge -sge_prepend_flags='-V' {ctl_name} -dir={run_dir}") \%>\%
-  fill_input() \%>\%
-  run_nm()
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 
 m1 ## display object fields
 cmd(m1)
 ctl_name(m1)
 run_dir(m1)
-}
+
 }
 \seealso{
 \code{\link[=nm_getsetters]{nm_getsetters()}}, \code{\link[=child]{child()}}

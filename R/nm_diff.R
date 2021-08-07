@@ -20,17 +20,20 @@
 #'   [diffobj::diffChr()]
 #'
 #' @return A `diff` object.
-#' @examples
-#' \dontrun{
 #'
-#' m1 <- new_nm(run_id = "m1",
-#'              based_on = "staging/Models/run1.mod")
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
 #' m2 <- m1 %>% child(run_id = "m2") %>%
 #'   subroutine(advan = 2, trans = 2)
 #'
 #' nm_diff(m2, m1)
-#' }
+#' 
 #' @export
 nm_diff <- function(m, ref_m, format = "raw") {
   requireNamespace("diffobj", quietly = TRUE)

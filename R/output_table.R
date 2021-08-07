@@ -126,6 +126,8 @@ nm_output.nm_list <- nm_output.nm_generic
 #'
 #' @examples
 #'
+#' ## requires NONMEM to be installed
+#'
 #' \dontrun{
 #'
 #' ## exploratory data plot

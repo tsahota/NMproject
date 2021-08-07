@@ -29,16 +29,19 @@ Note that \code{text} can contain an \code{"{run_id}"} string.  E.g.
 \code{run_id(m1)} is \code{"m1"}.
 }
 \examples{
-\dontrun{
 
-m0 <- nm(run_id = "m0")
-ctl_name(m0)
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 
-m0 <- m0 \%>\% ctl_name("run{run_id}.mod")
-ctl_name(m0)
 
-## warning: this makes the run identifier in old xpose4 "_m0" not "m0"!
-m0 <- m0 \%>\% ctl_path("Models/run_{run_id}.mod")
-ctl_path(m0)
-}
+ctl_name(m1)
+ctl_path(m1)
+
+m1 <- m1 \%>\% ctl_path("Models/nm_{run_id}.ctl")
+ctl_path(m1)
+
+
 }

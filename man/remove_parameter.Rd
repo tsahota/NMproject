@@ -22,3 +22,16 @@ written according to NMproject conventions (i.e. TVPARAM notation and
 TVPARAM + IIV_PARAM comments in $THETA/$OMEGA).  The presence of any code
 that depends on the removed parameter will cause the control file to break.
 }
+\examples{
+
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+             
+m1 <- m1 \%>\% remove_parameter("KA")
+
+nm_diff(m1)
+
+}

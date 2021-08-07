@@ -75,6 +75,8 @@ space first.
 parent run spawns multiple children in the form of an nm_list
 }
 \examples{
+
+## requires NONMEM to be installed
 \dontrun{
 m1 \%>\% nm_render("Scripts/basic_gof.Rmd")
 

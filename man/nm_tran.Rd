@@ -26,6 +26,8 @@ are performed. Stops before running NONMEM.
 }
 \examples{
 
+## requires NONMEM to be installed
+
 \dontrun{
 
 ## highlight the code below and use the "nm_tran" RStudio 'Addin'

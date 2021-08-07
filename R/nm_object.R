@@ -77,21 +77,19 @@
 #' @return An object of class `nm_list`.  Attributes can be viewed by printing
 #'   the object in the console.
 #' @seealso [nm_getsetters()], [child()]
-#' @examples
-#' \dontrun{
-#'
-#' m1 <- new_nm(run_id = "m1",
-#'              based_on = "staging/Models/run1.mod",
-#'              data_path = "DerivedData/data.csv",
-#'              cmd = "execute -run_on_sge -sge_prepend_flags='-V' {ctl_name} -dir={run_dir}") %>%
-#'   fill_input() %>%
-#'   run_nm()
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
 #' m1 ## display object fields
 #' cmd(m1)
 #' ctl_name(m1)
 #' run_dir(m1)
-#' }
+#' 
 #' @export
 new_nm <- function(based_on,
                    run_id = NA_character_,
@@ -219,16 +217,14 @@ To use the alpha interface, install NMproject 0.3.2",
 #' @return An object of class `nm_list`.  Object is concatenatable. Length of
 #'   object corresponds to length of `run_id`.
 #' @examples
-#' \dontrun{
 #'
 #' m0 <- nm(run_id = "m0")
 #' m0 ## a human readable representation
 #'
 #' ## nm objects can be put into tibbles to group runs together
-#' d <- tibble(run_id = c("m1", "m2"))
+#' d <- dplyr::tibble(run_id = c("m1", "m2"))
 #' d$m <- nm(d$run_id)
 #' d
-#' }
 #'
 #' @keywords internal
 #' @export
@@ -260,16 +256,16 @@ nm <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
 #'   `*` fields of the parent object, `m`.
 #'
 #' @examples
-#' \dontrun{
+#' 
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
 #' m2 <- m1 %>% child("m2")
+#' 
+#' nm_diff(m2, m1)
 #'
-#' ## use parent object to ensure child object retain
-#' ## correct parent-child structure
-#' m2 <- m1 %>% c()
-#' update_parameters() %>% ## modifying parent object
-#'   child("m2", parent = m1)
-#' }
 #' @export
 child <- function(m, run_id = NA_character_, type = "execute", parent = nm(NA), silent = FALSE) {
   UseMethod("child")
@@ -418,7 +414,8 @@ change_parent.nm_list <- Vectorize_nm_list(change_parent.nm_generic, SIMPLIFY = 
 #' @param m An nm object.
 #' @param n Numeric. Generation of parent (default = `1`).
 #'
-#' @return An nm object.
+#' @return An nm object.  Will not return parent object, if the parent object
+#'   has not been run.
 #' 
 #' @export
 parent_run <- function(m, n = 1L) {
@@ -570,6 +567,24 @@ nm_list2list <- function(m) {
 #'   or `data.frame` with (`nm_list` column) or `nm_list`.
 #'
 #' @return A single `nm_list` object with all model objects in environment `x`.
+#'
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#'
+#' m2 <- m1 %>% child("m2")
+#' 
+#' m_all <- nm_list_gather()
+#' 
+#' identical(
+#'   m_all %>% subset(run_id(.) %in% "m1"),
+#'   m1
+#' )
+#' 
 #' @export
 nm_list_gather <- function(x = .GlobalEnv) {
   UseMethod("nm_list_gather")

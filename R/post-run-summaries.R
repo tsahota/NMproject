@@ -101,6 +101,8 @@
 #'
 #' @seealso [nm_render()]
 #' @examples
+#' 
+#' ## requires NONMEM to be installed
 #' \dontrun{
 #'
 #' rr(m1)
@@ -496,10 +498,16 @@ coef.nm_list <- function(object, trans = TRUE, ...) {
 #'
 #' @return The path to the relevant output file of `m`.
 #'
-#' @examples
-#' \dontrun{
-#' m %>% nm_output_path("ext") ## path to ext file
-#' }
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#'
+#' m1 %>% nm_output_path("ext") ## path to ext file
+#' 
 #' @export
 nm_output_path <- function(m, extn, file_name) {
   UseMethod("nm_output_path")
@@ -738,6 +746,17 @@ rr_row <- function(m) {
 #'   `parameters` is `"new"` or `"all`.
 #' @return A wide format `tibble` with run results.
 #'   
+#' @examples 
+#' 
+#' ## requires NONMEM to be installed
+#' 
+#' \dontrun{
+#' 
+#' summary_wide(c(m1, m2))
+#' summary_long(c(m1, m2))
+#' 
+#' }
+#'   
 #' @export
 summary_wide <- function(..., include_fields = character(), parameters = c("none", "new", "all"), m = TRUE, trans = TRUE) {
   parameters <- match.arg(parameters)
@@ -781,7 +800,18 @@ summary_long <- function(..., parameters = c("none", "new", "all")) {
 #'   in $THETA/$OMEGA/$SIGMA comments before plotting.
 #'
 #' @return A `ggplot2` object with parameter correlations.
-#'
+#' 
+#' @examples 
+#' 
+#' ## requires NONMEM to be installed
+#' \dontrun{
+#' 
+#' covariance_plot(m1)
+#' 
+#' }
+#' 
+#' @seealso [nm_render()]
+#' 
 #' @export
 
 covariance_plot <- function(r, trans = TRUE) {
@@ -851,7 +881,8 @@ covariance_plot <- function(r, trans = TRUE) {
 #' @return A `matrix` object.
 #'
 #' @examples
-#'
+#' 
+#' ## requires NONMEM to be installed
 #' \dontrun{
 #'
 #' ## matrix of initial estimates

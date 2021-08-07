@@ -20,6 +20,7 @@ packages such as \code{mrgsolve}.
 }
 \examples{
 
+## requires NONMEM to be installed
 \dontrun{
 
 ## matrix of initial estimates
