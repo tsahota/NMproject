@@ -43,6 +43,8 @@
 #'
 #' @return The same nm object, `m`, with modified `results_files` field.
 #' @examples
+#' 
+#' ## requires NONMEM to be installed
 #' \dontrun{
 #' m1 %>% nm_render("Scripts/basic_gof.Rmd")
 #'

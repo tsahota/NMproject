@@ -19,3 +19,21 @@ A single \code{nm_list} object with all model objects in environment \code{x}.
 Get all nm objects in an environment.  By default this is the global
 workspace.
 }
+\examples{
+
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+
+m2 <- m1 \%>\% child("m2")
+
+m_all <- nm_list_gather()
+
+identical(
+  m_all \%>\% subset(run_id(.) \%in\% "m1"),
+  m1
+)
+
+}

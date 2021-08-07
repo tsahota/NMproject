@@ -116,6 +116,8 @@ standard deviations.
 }
 
 \examples{
+
+## requires NONMEM to be installed
 \dontrun{
 
 rr(m1)

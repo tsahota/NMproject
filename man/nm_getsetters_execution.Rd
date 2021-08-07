@@ -43,3 +43,20 @@ To access the value of a field:
 To modify the value of a field:
 \code{m <- m \%>\% fieldname("newvalue")}
 }
+\examples{
+
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+
+m1 <- m1 \%>\% cmd("execute -parafile={parafile} {ctl_name} -dir={run_dir} -nodes={cores}")
+
+m1 <- m1 \%>\% cores(8) \%>\% parafile("mpilinux8.pnm")
+
+cmd(m1)
+cores(m1)
+
+
+}

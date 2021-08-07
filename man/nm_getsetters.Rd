@@ -80,7 +80,19 @@ expressions inside braces in \code{text} will evaluate the expression (see
 examples).
 }
 \examples{
-\dontrun{
+
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+
+
+run_dir(m1)
+
+m1 <- m1 \%>\% run_dir("{run_id}_dir")
+run_dir(m1)
+
 
 ## set cmd field of m1
 m1 <- m1 \%>\% cmd("execute {ctl_name} -dir={run_dir}")
@@ -90,5 +102,4 @@ m1 \%>\% cmd()
 
 ## can also view field when viewing object
 m1
-}
 }

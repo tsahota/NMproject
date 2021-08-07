@@ -23,7 +23,13 @@ This is primarily a backend function used to identify output file paths
 associated with nm objects.
 }
 \examples{
-\dontrun{
-m \%>\% nm_output_path("ext") ## path to ext file
-}
+
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+
+m1 \%>\% nm_output_path("ext") ## path to ext file
+
 }

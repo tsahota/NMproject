@@ -24,18 +24,21 @@ NULL
 #'   prior to running (with [run_nm()]).
 #'
 #' @examples
-#' \dontrun{
 #'
-#' m0 <- nm(run_id = "m0")
-#' ctl_name(m0)
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
-#' m0 <- m0 %>% ctl_name("run{run_id}.mod")
-#' ctl_name(m0)
 #'
-#' ## warning: this makes the run identifier in old xpose4 "_m0" not "m0"!
-#' m0 <- m0 %>% ctl_path("Models/run_{run_id}.mod")
-#' ctl_path(m0)
-#' }
+#' ctl_name(m1)
+#' ctl_path(m1)
+#'
+#' m1 <- m1 %>% ctl_path("Models/nm_{run_id}.ctl")
+#' ctl_path(m1)
+#'
+#' 
 #' @export
 ctl_path <- function(m, text) {
   if (missing(text)) {
@@ -78,6 +81,20 @@ ctl_path <- function(m, text) {
 #' @return The value of the specified field of `m` if `text` is missing.
 #'   Otherwise an nm object with modified field.
 #'
+#' @examples
+#'
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#'
+#'
+#' run_dir(m1)
+#'
+#' m1 <- m1 %>% run_dir("{run_id}_dir")
+#' run_dir(m1)
+#' 
 #' @export
 run_dir <- function(m, text) {
   UseMethod("run_dir")
@@ -99,7 +116,6 @@ run_dir.nm_list <- run_dir.nm_generic
 #' expressions inside braces in `text` will evaluate the expression (see
 #' examples).
 #' @examples
-#' \dontrun{
 #'
 #' ## set cmd field of m1
 #' m1 <- m1 %>% cmd("execute {ctl_name} -dir={run_dir}")
@@ -109,7 +125,6 @@ run_dir.nm_list <- run_dir.nm_generic
 #'
 #' ## can also view field when viewing object
 #' m1
-#' }
 #' @export
 cmd <- function(m, text) {
   if (missing(text)) {
@@ -288,6 +303,22 @@ result_files.nm_list <- Vectorize_nm_list(result_files.nm_generic, SIMPLIFY = FA
 #'
 #'   To modify the value of a field:
 #'   `m <- m %>% fieldname("newvalue")`
+#' 
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#' 
+#' m1 <- m1 %>% cmd("execute -parafile={parafile} {ctl_name} -dir={run_dir} -nodes={cores}")
+#' 
+#' m1 <- m1 %>% cores(8) %>% parafile("mpilinux8.pnm")
+#' 
+#' cmd(m1)
+#' cores(m1)
+#' 
 #'
 #' @export
 cores <- function(m, text) {
@@ -336,6 +367,17 @@ lst_path <- function(m, text) {
 #' @return A path to the `run_dir` field of `m`.
 #' 
 #' @seealso [nm_getsetters()].
+#' 
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#' 
+#' run_dir_path(m1)
+#'              
 #' @export
 run_dir_path <- function(m) file.path(run_in(m), run_dir(m))
 
@@ -437,6 +479,16 @@ based_on.nm_list <- Vectorize_nm_list(based_on.nm_generic, SIMPLIFY = FALSE, rep
 #' @param ... Arguments to be passed to [based_on()].
 #' @return An nm object with modified `ctl_contents` field.
 #'
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#'              
+#' m1 %>% ctl_contents()
+#'
 #' @export
 
 ctl_contents <- function(...) based_on(...)
@@ -459,12 +511,17 @@ ctl_contents_simple <- function(m, ctl_ob, ...) {
 #'   otherwise returns the field value.
 #'
 #' @examples
-#' \dontrun{
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
-#' mc <- mc %>% simple_field(stars = 3)
-#' mc %>% simple_field(stars)
-#' mc ## see that stars is a field of the nm object.
-#' }
+#' m1 <- m1 %>% simple_field(stars = 3)
+#' m1 %>% simple_field(stars)
+#' m1 ## see that stars is a field of the nm object.
+#' 
 #' @export
 
 simple_field <- function(m, ...) {

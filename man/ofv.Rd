@@ -18,8 +18,14 @@ The \code{numeric} value of the OFV.
 Extracts OFV from .ext file.
 }
 \examples{
-\dontrun{
 
-ofv(m1)
-}
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+
+is_finished(m1) ## FALSE until run is completed
+ofv(m1) ## NA until m1 is finished
+
 }

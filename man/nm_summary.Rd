@@ -47,3 +47,15 @@ A long format \code{tibble} with run results coerced to \code{character} form.
 
 Get wide (or a long) \code{tibble} showing summary results.
 }
+\examples{
+
+## requires NONMEM to be installed
+
+\dontrun{
+
+summary_wide(c(m1, m2))
+summary_long(c(m1, m2))
+
+}
+  
+}

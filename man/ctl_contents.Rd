@@ -15,3 +15,14 @@ An nm object with modified \code{ctl_contents} field.
 \description{
 This function is an alias for \code{\link[=based_on]{based_on()}}.
 }
+\examples{
+
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+             
+m1 \%>\% ctl_contents()
+
+}

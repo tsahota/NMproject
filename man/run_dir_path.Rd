@@ -18,6 +18,17 @@ A path to the \code{run_dir} field of \code{m}.
 The function \code{\link[=run_dir]{run_dir()}} gives the directory name, whereas this function gets
 the (relative) path of \code{\link[=run_dir]{run_dir()}}.
 }
+\examples{
+
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+
+run_dir_path(m1)
+             
+}
 \seealso{
 \code{\link[=nm_getsetters]{nm_getsetters()}}.
 }
