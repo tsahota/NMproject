@@ -13,18 +13,18 @@
 #'   increment.
 #'
 #' @examples
-#' \dontrun{
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
 #' d <- input_data(m1)
 #'
 #' ## OCC increments on every dosing interval with more than 4 samples
-#' d %>%
-#'   group_by(ID) %>%
-#'   mutate(OCC = make_OCC_every_dose(
-#'     EVID %in% 1,
-#'     length(which(EVID %in% 0)) > 4
-#'   ))
-#' }
+#' d %>% make_OCC_every_dose(!is.na(AMT), any(!is.na(DV)))
+#' 
 #' @export
 make_OCC_every_dose <- function(d, dose_trigger, new_OCC_trigger) {
   # Rule for when new occasion is happening
@@ -33,23 +33,24 @@ make_OCC_every_dose <- function(d, dose_trigger, new_OCC_trigger) {
   ## TODO: walk the ast of new_OCC_trigger
   ## pull out variables, evaluate them to create a mini d
 
+  dorig <- d
+  
   new_OCC_trigger <- rlang::enquo(new_OCC_trigger)
-  id_group <- rlang::enquo(id_group)
   dose_trigger <- rlang::enquo(dose_trigger)
 
   d <- d %>%
-    dplyr::group_by(!!id_group) %>%
+    dplyr::group_by(.data$ID) %>%
     dplyr::mutate(DPERIOD = cumsum(!!dose_trigger)) %>%
-    dplyr::group_by(!!id_group, .data$DPERIOD) %>%
+    dplyr::group_by(.data$ID, .data$DPERIOD) %>%
     dplyr::mutate(new_OCC = !!new_OCC_trigger)
 
   ## select temporarly unique DPERIOD and HAS PK SAMPLE for each ID
   tmp <- d %>%
     dplyr::ungroup() %>%
-    dplyr::distinct(!!id_group, .data$DPERIOD, .data$new_OCC)
+    dplyr::distinct(.data$ID, .data$DPERIOD, .data$new_OCC)
 
   tmp <- tmp %>%
-    dplyr::group_by(!!id_group) %>%
+    dplyr::group_by(.data$ID) %>%
     dplyr::mutate(OCC = cumsum(.data$new_OCC))
 
   d$ROW <- seq_len(nrow(d))
@@ -59,5 +60,5 @@ make_OCC_every_dose <- function(d, dose_trigger, new_OCC_trigger) {
   ## normalise to start at 1
   d$OCC <- d$OCC - min(d$OCC) + 1
 
-  d$OCC
+  d[, c(names(dorig), "OCC")]
 }

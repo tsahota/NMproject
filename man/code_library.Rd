@@ -45,6 +45,11 @@ imported straight in the "Models" directory and instead go into
 \details{
 Requires \code{getOption("code_library_path")} to be set.
 }
+\examples{
+
+code_library(viewer = FALSE, return_info = TRUE)
+
+}
 \seealso{
 \code{\link[=ls_code_library]{ls_code_library()}}, \code{\link[=stage]{stage()}}, \code{\link[=import]{import()}}
 }

@@ -19,3 +19,13 @@ A more friendly version of \code{\link[=status]{status()}} for vector valued nm 
 after bootstraps, or stepwise covariate method steps, or any situation
 dealing with groups of NONMEM runs.
 }
+\examples{
+
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+             
+c(m1, m1) \%>\% status_table()  ## both not started
+}

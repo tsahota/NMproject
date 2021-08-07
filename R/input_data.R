@@ -16,13 +16,18 @@
 #'
 #' @examples
 #'
-#' \dontrun{
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#'
 #'
 #' d <- input_data(m1)
-#'
+#' head(d)
+#' 
 #' ## only non-ignored rows
 #' d_nonignore <- input_data(m1, filter = TRUE)
-#' }
 #'
 #' @export
 input_data <- function(m, filter = FALSE, na = ".", ...) {
@@ -66,18 +71,28 @@ input_data.nm_list <- function(m, filter = FALSE, na = ".", ...) {
 #' @param ignore_char Optional character. Ignore statement to set in $DATA.
 #'
 #' @return If `ignore_char` is specified returns an nm object with modified
-#'   `ctl_contents` field.  Otherwise returns the value of the IGNORE statement
-#'   in $DATA.
-#'
+#'   `ctl_contents` field.  If no IGNORE present, returns `FALSE`. Otherwise
+#'   returns the value of the IGNORE statement in $DATA.
+#' 
+#' @seealso [data_ignore_char()], [data_filter_char()]
+#'   
 #' @examples
 #'
-#' \dontrun{
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv")) %>%
+#'   fill_input()
 #'
-#' ignore(m1) ## display ignore statement
 #'
-#' m1 %>% ignore("ID > 10") ## changes ignore to ignore IDs > 10.
-#' }
+#' ignore(m1) ## display ignore statement, currently none
+#' m1 %>% dollar("DATA")
+#' 
+#' m1 <- m1 %>% ignore("ID > 10") ## changes ignore to ignore IDs > 10.
 #'
+#' m1 %>% dollar("DATA")
+#' 
 #' @export
 ignore <- function(ctl, ignore_char) {
   UseMethod("ignore")

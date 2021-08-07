@@ -28,20 +28,35 @@ Manipulate $OMEGA (and $SIGMA) BLOCKs to introduce or remove correlations.
 }
 \examples{
 
-\dontrun{
+
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+
 io <- m1 \%>\% init_omega()
 io <- io \%>\% block(c(2, 3))
 m1 <- m1 \%>\% init_omega(io)
 m1 \%>\% dollar("OMEGA") ## to display $OMEGA
-}
 
 
-\dontrun{
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+
+## first create a block
 io <- m1 \%>\% init_omega()
+io <- io \%>\% block(c(2, 3))
+m1 <- m1 \%>\% init_omega(io)
+m1 \%>\% dollar("OMEGA") ## to display $OMEGA
+
+## now unblock
 io <- io \%>\% unblock(c(2, 3))
 m1 <- m1 \%>\% init_omega(io)
 m1 \%>\% dollar("OMEGA") ## to display $OMEGA
-}
 
 }
 \seealso{

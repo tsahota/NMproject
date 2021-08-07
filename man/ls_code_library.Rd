@@ -20,8 +20,10 @@ cases to use the shiny "code library" RStudio 'Addin'.
 }
 \examples{
 
-\dontrun{
+ls_code_library("Models/ADVAN2.mod")
 
+## requires NMproject directory structure to operate in
+\dontrun{
 ls_code_library("Models/ADVAN2.mod") \%>\%
   stage()
 }

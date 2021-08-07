@@ -37,17 +37,19 @@ and the demo \code{\link[=setup_nm_demo]{setup_nm_demo()}}. It is a good idea to
 \code{data.frame} to see the columns that are able to be manipulated.
 }
 \examples{
-\dontrun{
 
-## set initial values
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 
-m1 <- new_nm(run_id = "m1",
-             based_on = "staging/Models/ADVAN2.mod",
-             data_path = "DerivedData/data.csv") \%>\%
+
+m1 <- m1 \%>\%
   fill_input() \%>\%
   init_theta(init = c(-2, 0.5, 1)) \%>\%
-  init_sigma(init = c(0.1, 0.1)) \%>\%
-  run_nm()
+  init_sigma(init = c(0.1, 0.1)) # \%>\%
+  # run_nm()
 
 init_theta(m1) ## display current $THETA in tibble-form
 init_omega(m1) ## display current $OMEGA in tibble-form
@@ -65,13 +67,6 @@ m1 \%>\% dollar("THETA")
 ## perturb all parameters by ~10\%
 m1 <- m1 \%>\% init_theta(init = rnorm(length(init), mean = init, sd = 0.1))
 
-## perturb only log transformed parameters by ~10\%
-m1 <- m1 \%>\% init_theta(
-  init = ifelse(
-    trans \%in\% "LOG",
-    rnorm(length(init), mean = init, sd = 0.1),
-    init
-  )
-)
-}
+m1 \%>\% dollar("THETA")
+
 }

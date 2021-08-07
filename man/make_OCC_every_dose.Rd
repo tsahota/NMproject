@@ -21,16 +21,16 @@ Creates and OCC column that increments in accordance to specified condition.
 To be used in a \code{dplyr::mutate()} statement \code{dplyr::group_by()}'d by "ID".
 }
 \examples{
-\dontrun{
+
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 
 d <- input_data(m1)
 
 ## OCC increments on every dosing interval with more than 4 samples
-d \%>\%
-  group_by(ID) \%>\%
-  mutate(OCC = make_OCC_every_dose(
-    EVID \%in\% 1,
-    length(which(EVID \%in\% 0)) > 4
-  ))
-}
+d \%>\% make_OCC_every_dose(!is.na(AMT), any(!is.na(DV)))
+
 }
