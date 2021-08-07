@@ -19,6 +19,8 @@ Uses \code{ggplot2} to take outputs from \code{\link[=cov_forest_data]{cov_fores
 and display a forest plot.
 }
 \examples{
+
+## The following requires a covariate control stream available
 \dontrun{
 
 dcov <- input_data(m1, filter = TRUE)

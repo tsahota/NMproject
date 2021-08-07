@@ -27,9 +27,6 @@ RStudio server.
 }
 \examples{
 
-\dontrun{
-
 system_cmd("pwd")
-}
 
 }

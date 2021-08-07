@@ -21,9 +21,10 @@ This allows organisations/individuals with their own directory to customize
 their directory structure
 }
 \examples{
-\dontrun{
 
-nm_default_dirs()
+orig_list <- nm_default_dirs()
+orig_list
+
 nm_default_dirs(list(
   models = "Models",
   scripts = "Scripts",
@@ -31,5 +32,10 @@ nm_default_dirs(list(
   source_data = "SourceData",
   derived_data = "Data"
 ))
-}
+
+nm_default_dirs()
+nm_default_dirs(orig_list)
+
+
+
 }

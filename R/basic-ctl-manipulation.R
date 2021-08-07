@@ -14,15 +14,15 @@
 #'  otherwise will return an nm object with modified `data_path` field.
 #'
 #' @examples
-#' \dontrun{
 #'
-#' m1 <- new_nm(run_id = "m1",
-#'              based_on = "staging/Models/ADVAN2.mod",
-#'              data_path = "DerivedData/data.csv") 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #' 
 #' data_path(m1) ## display data name
 #'   
-#' }
 #'
 #' @export
 data_path <- function(m, text) {
@@ -83,19 +83,28 @@ fill_dollar_data <- function(m, data_name) {
 #' @return An nm object with modified `ctl_contents` field.
 #'
 #' @examples
-#' \dontrun{
 #'
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#'
+#' m1 %>% dollar("INPUT") ## shows placeholder for column names
+#' 
 #' m1 <- m1 %>% fill_input()
 #' m1 %>% dollar("INPUT") ## view $INPUT
 #'
 #' ## following will will drop the "RATE" column
 #' m1 <- m1 %>% fill_input(drop = "RATE")
-#' m1 %>% dollar("INPUT")
+#' ## no RATE column so will not drop anything
+#' m1 %>% dollar("INPUT") 
 #'
 #' ## following will rename "DATE" to be "DAT0"
 #' m1 <- m1 %>% fill_input(rename = c("DAT0" = "DATE"))
+#' ## no DATE column so will not rename anything
 #' m1 %>% dollar("INPUT") ## view $INPUT
-#' }
+#' 
 #' @export
 fill_input <- function(m, ...) {
   UseMethod("fill_input")
@@ -125,6 +134,18 @@ fill_input.nm_list <- Vectorize_nm_list(fill_input.nm_generic, SIMPLIFY = FALSE)
 #' @param dollar Character. Name of subroutine.
 #' 
 #' @return An nm object with modified `ctl_contents` field.
+#' 
+#' @examples
+#'
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#' 
+#' m1 %>% dollar("TABLE")
+#' m1 <- m1 %>% delete_dollar("TABLE")
+#' m1 %>% dollar("TABLE")  ## missing
 #' 
 #' @export
 delete_dollar <- function(m, dollar) {
@@ -158,13 +179,18 @@ delete_dollar.nm_list <- Vectorize_nm_list(delete_dollar.nm_generic, SIMPLIFY = 
 #' @return An nm object with modified `ctl_contents` field.
 #' @examples
 #'
-#' \dontrun{
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
-#' m <- m %>% insert_dollar("MODEL", "
+#' m1 <- m1 %>% insert_dollar("MODEL", "
 #' $MODEL
 #' COMP = (CENTRAL)
 #' ", after_dollar = "SUB")
-#' }
+#' 
+#' m1 %>% dollar("MODEL")
 #'
 #' @export
 insert_dollar <- function(m, dollar, text, after_dollar) {
@@ -221,21 +247,18 @@ insert_dollar.nm_list <- Vectorize_nm_list(insert_dollar.nm_generic, SIMPLIFY = 
 #' @seealso [insert_dollar()], [delete_dollar()]
 #'
 #' @examples
-#' \dontrun{
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
 #' m1 %>% dollar("PK") ## displays existing $PK
+#' 
+#' m1 %>% dollar("THETA")
 #'
-#' m1 <- m1 %>% dollar(
-#'   "DES",
-#'   "
-#' DADT(1) = -K*A(1)
-#' "
-#' )
-#'
-#' ## This will rewrite an existing $DES
-#' ## if control file doesn't already have a $DES
-#' ## use insert_dollar() instead
-#' }
+#' c(m1, m1) %>% dollar("THETA") # display $THETAs for multiple NONMEM runs
 #'
 #' @export
 dollar <- function(m, dollar, ..., add_dollar_text = TRUE) {

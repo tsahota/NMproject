@@ -38,12 +38,19 @@ beginning of your script, in your \code{.Rprofile} or for all users in
 \code{Rprofile.site}.  See FAQ for setting up configuration options permanently.
 }
 \examples{
-\dontrun{
+
+orig_cmd <- nm_tran_command()
+orig_cmd
 
 # the following two are equivalent
 nm_tran_command("/opt/NONMEM/nm75/tr/NMTRAN.exe")
+nm_tran_command()
+
 nm_tran_command("/opt/NONMEM/nm75/tr/NMTRAN.exe < {ctl_name}")
-}
+nm_tran_command()
+
+nm_tran_command(orig_cmd)
+
 }
 \seealso{
 \code{\link[=find_nm_tran_path]{find_nm_tran_path()}}, \code{\link[=nm_tran]{nm_tran()}}

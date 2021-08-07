@@ -30,21 +30,18 @@ console. It can also be used to set the contents of a NONMEM subroutine in
 place of manual edits
 }
 \examples{
-\dontrun{
+
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 
 m1 \%>\% dollar("PK") ## displays existing $PK
 
-m1 <- m1 \%>\% dollar(
-  "DES",
-  "
-DADT(1) = -K*A(1)
-"
-)
+m1 \%>\% dollar("THETA")
 
-## This will rewrite an existing $DES
-## if control file doesn't already have a $DES
-## use insert_dollar() instead
-}
+c(m1, m1) \%>\% dollar("THETA") # display $THETAs for multiple NONMEM runs
 
 }
 \seealso{

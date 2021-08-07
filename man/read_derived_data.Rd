@@ -25,6 +25,8 @@ Read the derived data directly instead of via the nm object which is what
 \code{\link[=input_data]{input_data()}} does.
 }
 \examples{
+
+## requires NMproject directory structure to operate in
 \dontrun{
 
 ## read a dataset that's been copie into SourceData
