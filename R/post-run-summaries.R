@@ -12,45 +12,88 @@
 #' @param trans Logical. If `TRUE` (default) will transform using control file
 #'   $THETA/OMEGA conventions.
 #'
+#' @section NONMEM coding conventions used by NMproject:
+#' 
+#' The convention for $THETA comments used by NMproject is 
+#' `value ; name ; unit ; transformation`
+#' 
+#' e.g. 
+#' `$THETA`
+#' `0.1    ; KA ; h-1 ; LOG`
+#'
+#' The options for THETA transformations are: `LOG`, `LOGIT`, `RATIO` and
+#' missing. `LOG` and `LOGIT` refer to log and logit transformed THETAs,
+#' respectively where the parameters should be back-transformed for reporting.
+#' `RATIO` refers to ratio data types, i.e. parameters that are positive and
+#' have a meaningful zero. Most parameters like KA, CL, EMAX fall into this
+#' category, but covariates effects which can go negative do not.  RSEs are
+#' calculated for ratio data. Missing transformations are suitable for all other
+#' parameters, here no RSEs will be calculated, only raw SE values will be
+#' reported.
+#'
+#' The convention for $OMEGA is similar but without a unit item: 
+#' `value ; name ; transformation`
+#' 
+#' e.g. 
+#' `$OMEGA`
+#' `0.1    ; IIV_KA ; LOG`
+#' 
+#' The options for OMEGA are either `LOG` or missing.  `LOG` indicating that the
+#' individual parameter distribution is log normally distributions and should be
+#' reported as a CV% (and associated RSE%) rather than as the raw NONMEM
+#' estimate.
+#' 
+#' The convention for $OMEGA is just : `value ; name`.
+#'
 #' @section THETA transformations using `trans = TRUE`:
 #' 
-#' Where FINAL is the reported estimate in the returned `tibble`, and RSE% is
-#' the reported standard error (where applicable) and \eqn{\theta} and \eqn{se(\theta)}
-#' are the NONMEM reported values of parameters and standard errors, respectively
+#' The value of FINAL and RSE% (always accompanied with a `%` symbol in outputs)
+#' in the returned `tibble` is the reported standard error (where applicable)
+#' where \eqn{\theta} and \eqn{se(\theta)} are the NONMEM reported values of
+#' parameters and standard errors, respectively:
 #' 
 #' \describe{
-#'     \item{LOG:}{
+#'     \item{`LOG`}{
 #'       \eqn{FINAL = exp(\theta), RSE% = 100*\sqrt(exp^(se(\theta)^2) - 1)}
 #'     }
-#'     \item{RATIO:}{
+#'     \item{`RATIO`}{
 #'       \eqn{FINAL = \theta, RSE% = 100*se(\theta) / \theta}
 #'     }
-#'     \item{LOGIT:}{
-#'       \eqn{FINAL = 100 * 1 / (1 + exp(-\theta))}
+#'     \item{`LOGIT`}{
+#'       \eqn{FINAL = 100 * 1 / (1 + exp(-\theta)), SE = se(\theta)}
+#'     }
+#'     \item{missing}{
+#'       \eqn{FINAL = \theta, SE = se(\theta)}
 #'     }
 #' }
 #' 
 #' @section OMEGA transformations using `trans = TRUE`:
 #' 
-#' Where FINAL is the reported estimate in the returned `tibble`, and RSE% is
-#' the reported standard error (where applicable) and \eqn{\omega^2} and \eqn{se(\omega^2)}
-#' are the NONMEM reported values of parameters and standard errors, respectively
+#' The value of FINAL and RSE% (always accompanied with a `%` symbol in outputs)
+#' in the returned `tibble` is the reported standard error (where applicable)
+#' where \eqn{\omega^2} and \eqn{se(\omega^2)} are the NONMEM reported values of
+#' parameters and standard errors, respectively
 #'   
 #' \describe{
 #'     \item{LOG:}{
 #'       \eqn{FINAL = 100*\sqrt(exp^(\omega^2) - 1), RSE% = 100*(se(\omega^2)/\omega^2)/2}
 #'     }
+#'     \item{missing}{
+#'       \eqn{FINAL = \omega^2, SE = se(\omega^2)}
+#'     }
 #'  }
 #' 
 #' @section SIGMA transformations using `trans = TRUE`:
 #' 
-#' Where FINAL is the reported estimate in the returned `tibble`, and RSE% is
-#' the reported standard error (where applicable) and \eqn{\sigma^2} and \eqn{se(\sigma^2)}
-#' are the NONMEM reported values of parameters and standard errors, respectively
+#' The value of FINAL and RSE% (always accompanied with a `%` symbol in outputs)
+#' in the returned `tibble` is the reported standard error (where applicable)
+#' where \eqn{\sigma^2} and \eqn{se(\sigma^2)} are the NONMEM reported values of
+#' parameters and standard errors, respectively.  All sigmas are reported as
+#' standard deviations.
 #' 
 #' \describe{
-#'     \item{}{
-#'       \eqn{FINAL = \sqrt \omega^2, RSE% = 100*se(\omega^2) / \omega^2}
+#'     \item{all sigmas:}{
+#'       \eqn{FINAL = \sqrt \sigma^2, RSE% = 100*se(\sigma^2) / \sigma^2}
 #'     }
 #' }
 #'
@@ -131,45 +174,88 @@ rr.nm_generic <- function(m, trans = TRUE) {
 #' @param trans Logical (default = `TRUE`). Transform parameters using comments
 #'   in $THETA/$OMEGA/$SIGMA.
 #'   
+#' @section NONMEM coding conventions used by NMproject:
+#' 
+#' The convention for $THETA comments used by NMproject is 
+#' `value ; name ; unit ; transformation`
+#' 
+#' e.g. 
+#' `$THETA`
+#' `0.1    ; KA ; h-1 ; LOG`
+#'
+#' The options for THETA transformations are: `LOG`, `LOGIT`, `RATIO` and
+#' missing. `LOG` and `LOGIT` refer to log and logit transformed THETAs,
+#' respectively where the parameters should be back-transformed for reporting.
+#' `RATIO` refers to ratio data types, i.e. parameters that are positive and
+#' have a meaningful zero. Most parameters like KA, CL, EMAX fall into this
+#' category, but covariates effects which can go negative do not.  RSEs are
+#' calculated for ratio data. Missing transformations are suitable for all other
+#' parameters, here no RSEs will be calculated, only raw SE values will be
+#' reported.
+#'
+#' The convention for $OMEGA is similar but without a unit item: 
+#' `value ; name ; transformation`
+#' 
+#' e.g. 
+#' `$OMEGA`
+#' `0.1    ; IIV_KA ; LOG`
+#' 
+#' The options for OMEGA are either `LOG` or missing.  `LOG` indicating that the
+#' individual parameter distribution is log normally distributions and should be
+#' reported as a CV% (and associated RSE%) rather than as the raw NONMEM
+#' estimate.
+#' 
+#' The convention for $OMEGA is just : `value ; name`.
+#'
 #' @section THETA transformations using `trans = TRUE`:
 #' 
-#' Where FINAL is the reported estimate in the returned `tibble`, and RSE% is
-#' the reported standard error (where applicable) and \eqn{\theta} and \eqn{se(\theta)}
-#' are the NONMEM reported values of parameters and standard errors, respectively
+#' The value of FINAL and RSE% (always accompanied with a `%` symbol in outputs)
+#' in the returned `tibble` is the reported standard error (where applicable)
+#' where \eqn{\theta} and \eqn{se(\theta)} are the NONMEM reported values of
+#' parameters and standard errors, respectively:
 #' 
 #' \describe{
-#'     \item{LOG:}{
-#'       \eqn{FINAL = exp(\theta), RSE% = 100*\sqrt(exp^(se(\theta)) - 1)}
+#'     \item{`LOG`}{
+#'       \eqn{FINAL = exp(\theta), RSE% = 100*\sqrt(exp^(se(\theta)^2) - 1)}
 #'     }
-#'     \item{RATIO:}{
+#'     \item{`RATIO`}{
 #'       \eqn{FINAL = \theta, RSE% = 100*se(\theta) / \theta}
 #'     }
-#'     \item{LOGIT:}{
-#'       \eqn{FINAL = 100 * 1 / (1 + exp(-\theta))}
+#'     \item{`LOGIT`}{
+#'       \eqn{FINAL = 100 * 1 / (1 + exp(-\theta)), SE = se(\theta)}
+#'     }
+#'     \item{missing}{
+#'       \eqn{FINAL = \theta, SE = se(\theta)}
 #'     }
 #' }
 #' 
 #' @section OMEGA transformations using `trans = TRUE`:
 #' 
-#' Where FINAL is the reported estimate in the returned `tibble`, and RSE% is
-#' the reported standard error (where applicable) and \eqn{\omega^2} and \eqn{se(\omega^2)}
-#' are the NONMEM reported values of parameters and standard errors, respectively
+#' The value of FINAL and RSE% (always accompanied with a `%` symbol in outputs)
+#' in the returned `tibble` is the reported standard error (where applicable)
+#' where \eqn{\omega^2} and \eqn{se(\omega^2)} are the NONMEM reported values of
+#' parameters and standard errors, respectively
 #'   
 #' \describe{
 #'     \item{LOG:}{
 #'       \eqn{FINAL = 100*\sqrt(exp^(\omega^2) - 1), RSE% = 100*(se(\omega^2)/\omega^2)/2}
 #'     }
+#'     \item{missing}{
+#'       \eqn{FINAL = \omega^2, SE = se(\omega^2)}
+#'     }
 #'  }
 #' 
 #' @section SIGMA transformations using `trans = TRUE`:
 #' 
-#' Where FINAL is the reported estimate in the returned `tibble`, and RSE% is
-#' the reported standard error (where applicable) and \eqn{\sigma^2} and \eqn{se(\sigma^2)}
-#' are the NONMEM reported values of parameters and standard errors, respectively
+#' The value of FINAL and RSE% (always accompanied with a `%` symbol in outputs)
+#' in the returned `tibble` is the reported standard error (where applicable)
+#' where \eqn{\sigma^2} and \eqn{se(\sigma^2)} are the NONMEM reported values of
+#' parameters and standard errors, respectively.  All sigmas are reported as
+#' standard deviations.
 #' 
 #' \describe{
-#'     \item{}{
-#'       \eqn{FINAL = \sqrt \omega^2, RSE% = 100*se(\omega^2) / \omega^2}
+#'     \item{all sigmas:}{
+#'       \eqn{FINAL = \sqrt \sigma^2, RSE% = 100*se(\sigma^2) / \sigma^2}
 #'     }
 #' }
 #'
