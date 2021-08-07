@@ -31,6 +31,8 @@ different structure the argument \code{name} must be a (relative) path to
 an existing directory where you want your NONMEM ready dataset to be stored.
 }
 \examples{
+
+## requires NMproject directory structure to operate in
 \dontrun{
 
 ## read a dataset that's been copie into SourceData
