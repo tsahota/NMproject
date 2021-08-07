@@ -90,7 +90,7 @@ where \eqn{\omega^2} and \eqn{se(\omega^2)} are the NONMEM reported values of
 parameters and standard errors, respectively
 
 \describe{
-\item{LOG:}{
+\item{\code{LOG}}{
 \eqn{FINAL = 100*\sqrt(exp^(\omega^2) - 1), RSE% = 100*(se(\omega^2)/\omega^2)/2}
     }
 \item{missing}{
@@ -109,7 +109,7 @@ parameters and standard errors, respectively.  All sigmas are reported as
 standard deviations.
 
 \describe{
-\item{all sigmas:}{
+\item{all sigmas}{
 \eqn{FINAL = \sqrt \sigma^2, RSE% = 100*se(\sigma^2) / \sigma^2}
     }
 }
