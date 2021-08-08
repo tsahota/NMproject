@@ -1,6 +1,7 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
+* As requested below is a list of changes requested by Julia Haider:
 * Added \value entries to all .Rd files in package
 * Removed examples from non-exported functions.
 * Removed most instances of \dontrun in .Rd files so that most can be run.  
