@@ -20,9 +20,18 @@ An nm object with modified \code{ctl_contents} field.
 }
 \examples{
 
-\dontrun{
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+             
 
 m1 \%>\% dollar("THETA")
+
+## requires NONMEM to be installed
+\dontrun{
+m1 \%>\% run_nm() \%>\% wait_finish()
 m1 <- m1 \%>\% update_parameters()
 m1 \%>\% dollar("THETA")
 }

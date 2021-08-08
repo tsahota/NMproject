@@ -24,7 +24,7 @@
 #'   
 #' @examples
 #' 
-#' ## The following requires a covariate control stream available
+#' ## requires NONMEM to be installed
 #' \dontrun{
 #'
 #' dcov <- input_data(m1, filter = TRUE)
@@ -235,7 +235,7 @@ cov_forest_data <- function(m, covariate_scenarios) {
 #' @seealso [cov_forest_data()]
 #' @examples
 #' 
-#' ## The following requires a covariate control stream available
+#' ## requires NONMEM to be installed
 #' \dontrun{
 #'
 #' dcov <- input_data(m1, filter = TRUE)

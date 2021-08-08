@@ -7,16 +7,16 @@
 \title{NMproject: Script Based 'NONMEM' Model Development}
 \description{
 Industrialisation of 'NONMEM'
-  <https://www.iconplc.com/innovation/nonmem/> model development 
-  via end-to-end model development 'workflows' entirely within 'RStudio'.
-  Quickly get started with new models by importing templated `NONMEM` code
-  from the built-in code library. Manipulate 'NONMEM' code from within R
-  either via the tracked 'manual edit' interface or programmatically 
-  via supplied functions. Use pipes to create a step-by-step sequence of 
-  model building steps from control file creation, to execution, to 
-  post-processing and evaluation.  Runs are cached making scripts R markdown
-  friendly to allow for easy documentation of thoughts and modelling decisions 
-  alongside the reproducible and re-executable modelling steps.
+  <https://www.iconplc.com/innovation/nonmem/> via fully and rapidly reusable 
+  model development 'workflows' entirely within 'RStudio'. Quickly get started
+  with new models by importing 'NONMEM' templates from the built-in code
+  library. Manipulate 'NONMEM' code from within R either via the tracked 
+  'manual edit' interface or 'programmatically' via convenience functions. 
+  Script 'workflows' by piping sequences of model building steps from control 
+  file creation, to execution, to post-processing and evaluation. Run caching 
+  makes 'workflows' R markdown friendly for easy documentation of thoughts and
+  modelling decisions alongside executable code. Share, reuse and recycle
+  'workflows' for new problems.
 }
 \section{Package options}{
 

@@ -40,6 +40,8 @@ See \href{https://uupharmacometrics.github.io/PsN/docs.html}{PsN documentation}
 for more information.
 }
 \examples{
+
+## requires NONMEM to be installed
 \dontrun{
 ## create tibble of covariate step with model objects as column m
 dsm1 <- m1 \%>\% covariate_step_tibble(

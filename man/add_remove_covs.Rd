@@ -123,7 +123,15 @@ m1 <- new_nm(run_id = "m1",
              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 
-\dontrun{
+temp_data_file <- paste0(tempfile(), ".csv")
+
+## dataset has missing WTs so create a new one and assign this to the run
+input_data(m1) \%>\% 
+  dplyr::group_by(ID) \%>\%
+  dplyr::mutate(WT = na.omit(WT)) \%>\%
+  write_derived_data(temp_data_file)
+  
+m1 <- m1 \%>\% data_path(temp_data_file)
  
 m1WT <- m1 \%>\% child("m1WT") \%>\%
   add_cov(param = "V", cov = "WT", state = "power")
@@ -133,22 +141,46 @@ m1WT \%>\% dollar("PK")  ## notice SCM style code added
 
 nm_diff(m1WT)
 
+\dontrun{
 run_nm(c(m1, m1WT))
 rr(c(m1, m1WT))
 summary_wide(c(m1, m1WT)) 
 }
 
-\dontrun{
+unlink(temp_data_file)
 
-m1noWT <- m1 \%>\% child("m1noWT") \%>\%
-  remove_cov(param = "CL", cov = "WT") \%>\%
-  run_nm()
 
-## compare results
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 
-rr(c(m1, m1noWT))
-summary_wide(c(m1, m1noWT))
-}
+temp_data_file <- paste0(tempfile(), ".csv")
+
+## dataset has missing WTs so create a new one and assign this to the run
+input_data(m1) \%>\% 
+  dplyr::group_by(ID) \%>\%
+  dplyr::mutate(WT = na.omit(WT)) \%>\%
+  write_derived_data(temp_data_file)
+  
+m1 <- m1 \%>\% data_path(temp_data_file)
+ 
+m1WT <- m1 \%>\% child("m1WT") \%>\%
+  add_cov(param = "V", cov = "WT", state = "power")
+
+m1 \%>\% dollar("PK")
+m1WT \%>\% dollar("PK")  ## notice SCM style code added
+
+## reverse this by removing WT
+
+m1noWT <- m1WT \%>\% child("m1noWT") \%>\%
+  remove_cov(param = "V", cov = "WT") 
+  
+m1noWT \%>\% dollar("PK")
+m1noWT \%>\% dollar("THETA")
+
+unlink(temp_data_file)
 
 }
 \seealso{

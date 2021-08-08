@@ -27,9 +27,6 @@ opts_chunk$set(message = TRUE)
 library(NMproject)
 library(dplyr)
 
-# library(future)
-# future::plan("future::multiprocess", workers = 2)
-
 # devtools::load_all()
 
 ```

@@ -15,14 +15,28 @@
 #' @param envir If missing, the environment to search.
 #' 
 #' @return No return value, called for side effects.
-#' @examples
-#' \dontrun{
+#' @examples 
+#' 
+#' if(interactive()){
+#' 
+#' #' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
 #' shiny_nm() ## use all objects in global workspace
 #' shiny_nm(m1) ## only m1
+#' 
+#' ## if model objects are inside a tibble
+#' d <- dplyr::tibble(m = m1)
+#' 
 #' shiny_nm(d$m) ## only d$m
 #' shiny_nm(d) ## all nm_lists in d (data.frame/list/environment)
+#' 
 #' }
+#'   
+#' 
 #' @export
 shiny_nm <- function(m, envir = .GlobalEnv) {
   if (missing(m)) {

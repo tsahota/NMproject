@@ -31,15 +31,6 @@ simple ADVAN/TRANS/TOL adjustments to the NONMEM control file.  No other file
 changes outside $SUBROUTINE will be made which makes \code{advan} and \code{trans} less
 useful than the higher level \code{\link[=subroutine]{subroutine()}} function.
 }
-\examples{
-\dontrun{
-
-tol(m1) ## display current TOL value
-
-## set tol to 12
-m1 <- m1 \%>\% tol(12)
-}
-}
 \seealso{
 \code{\link[=subroutine]{subroutine()}}
 }

@@ -38,7 +38,8 @@ the necessary \code{rsample} splitting objects to be present. See examples.
 }
 \examples{
 
-## The following only works inside an NMproject directory structure.
+## The following only works inside an NMproject directory structure and
+## and requires NONMEM installed
 \dontrun{
 
 # create example object m1 from package demo files

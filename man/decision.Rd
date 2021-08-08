@@ -64,7 +64,15 @@ made is that if inputs have not changed since the last decision was made. }
 }
 \examples{
 
-## requires completed runs m1, m2 and m2WT available
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+             
+m2 <- m1 \%>\% child("m2")
+m2WT <- m1 \%>\% child("m2WT")
+
 \dontrun{
 
 if(interactive()){

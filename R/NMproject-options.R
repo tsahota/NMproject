@@ -395,6 +395,8 @@ system_nm_default <- function(cmd, ...) {
 #' @examples
 #'
 #' system_nm("hostname")
+#' 
+#' ## requires NONMEM to be installed
 #' \dontrun{
 #'
 #' system_nm("psn --versions")
@@ -402,7 +404,6 @@ system_nm_default <- function(cmd, ...) {
 #' }
 #'
 #' @export
-#'
 system_nm <- function(cmd, dir = nm_dir("models"), ...) {
   if (is.null(dir) | !file.exists(dir)) dir <- "."
   if (file.exists(dir)) {

@@ -39,6 +39,7 @@
 #' @seealso [nm_tran()]
 #'
 #' @examples
+#' ## requires NONMEM to be installed
 #' \dontrun{
 #' m1 <- new_nm(
 #'   run_id = "m1",
@@ -344,11 +345,15 @@ ctl_table_files.default <- function(ctl) {
 #'
 #' @return A `character` vector of temporary file paths
 #'
-#' @examples
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
-#' \dontrun{
-#'
-#' ls_tempfiles(m1) ## display all temp files associated with m1
+#' ls_tempfiles(m1) ## if no files, will be empty
 #'
 #' m1 %>%
 #'   ls_tempfiles() %>%
@@ -356,11 +361,10 @@ ctl_table_files.default <- function(ctl) {
 #'
 #' ## above line is equivalent to:
 #' clean_run(m1)
-#'
+#' 
 #' ls_tempfiles() ## display all temp files in analysis project
 #'
 #' ls_tempfiles() %>% unlink() ## remove all temp files in analysis project
-#' }
 #'
 #' @export
 ls_tempfiles <- function(object = ".", output_loc = c("run_dir", "base"),
@@ -378,6 +382,7 @@ ls_tempfiles.default <- function(object = ".", output_loc = c("run_dir", "base")
   output_loc <- match.arg(output_loc)
 
   ## get all_run_files (in NM_run1 dir)
+  if (length(run_files) == 0) return(character())
   if (identical(run_files, NA_character_)) {
     all_run_dirs <- list_dirs(
       object,
@@ -385,7 +390,11 @@ ls_tempfiles.default <- function(object = ".", output_loc = c("run_dir", "base")
       recursive = TRUE, full.names = TRUE, maxdepth = Inf
     )
 
-    all_run_files <- dir(all_run_dirs, full.names = TRUE)
+    if (length(all_run_dirs) == 0) {
+      return(character())
+    } else {
+      all_run_files <- dir(all_run_dirs, full.names = TRUE) 
+    }
 
     all_outside_run_dirs <- file.path(all_run_dirs, "..")
     all_outside_run_files <- dir(all_outside_run_dirs, full.names = TRUE)

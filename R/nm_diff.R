@@ -19,7 +19,7 @@
 #' @param format Character (default = `"raw"`) argument passed to
 #'   [diffobj::diffChr()]
 #'
-#' @return A `diff` object.
+#' @return Invisibly returns a `character` vector of the diff.
 #'
 #' @examples 
 #' 

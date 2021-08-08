@@ -16,18 +16,21 @@
 #'
 #' @return An nm object with modified `ctl_contents` field.
 #'
-#' @examples
-#'
+#' @examples 
+#' 
 #' \dontrun{
 #'
-#' m2s <- m2 %>%
-#'   child(run_id = "m2s") %>%
-#'   update_parameters(m2) %>%
+#' ## requires NONMEM to be installed
+#'
+#' m1s <- m1 %>%
+#'   child(run_id = "m1s") %>%
+#'   update_parameters(m1) %>%
 #'   convert_to_simulation(subpr = 50) %>%
 #'   run_nm()
 #'
-#' m2s %>% nm_render("Scripts/basic_vpc.Rmd")
-#' m2s %>% nm_render("Scripts/basic_ppc.Rmd")
+#' m1s %>% nm_render("Scripts/basic_vpc.Rmd")
+#' m1s %>% nm_render("Scripts/basic_ppc.Rmd")
+#'   
 #' }
 #'
 #' @export
@@ -86,6 +89,8 @@ convert_to_simulation.nm_list <- Vectorize_nm_list(
 #'
 #' @seealso [nm_render()]
 #' @examples
+#' 
+#' ## requires NONMEM to be installed
 #' \dontrun{
 #'
 #' idEXPstat <- function(d, ...) { ## example individual statistic function

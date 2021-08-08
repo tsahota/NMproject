@@ -51,6 +51,8 @@ objects.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 }
 \examples{
+
+## requires NONMEM to be installed
 \dontrun{
 
 idEXPstat <- function(d, ...) { ## example individual statistic function

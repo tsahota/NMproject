@@ -55,9 +55,13 @@ capability as these software use exported files.
 }
 \examples{
 
-\dontrun{
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 
-ls_tempfiles(m1) ## display all temp files associated with m1
+ls_tempfiles(m1) ## if no files, will be empty
 
 m1 \%>\%
   ls_tempfiles() \%>\%
@@ -69,6 +73,5 @@ clean_run(m1)
 ls_tempfiles() ## display all temp files in analysis project
 
 ls_tempfiles() \%>\% unlink() ## remove all temp files in analysis project
-}
 
 }
