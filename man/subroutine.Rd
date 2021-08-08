@@ -27,22 +27,6 @@ another.
 \details{
 Can only switch between subroutines listed in \code{available_advans}.
 }
-\examples{
-\dontrun{
-
-advan(m) ## 2
-trans(m) ## 1
-
-m <- m \%>\% subroutine(ADVAN = 2, TRANS = 2)
-
-ds <- .available_advans \%>\%
-  filter(oral) \%>\%
-  mutate(
-    m = m1 \%>\% child(run_id = label) \%>\%
-      subroutine(advan = advan, trans = trans)
-  )
-}
-}
 \seealso{
 \code{\link[=advan]{advan()}}
 }

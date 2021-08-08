@@ -25,12 +25,19 @@ Will block R console until an expression evaluates to be \code{TRUE}.
 }
 \examples{
 
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+
+## requires NONMEM to be installed
 \dontrun{
 
 ## the following are identical
+m1 \%>\% run_nm() \%>\% wait_finish()
 
-wait_finish(m1)
-wait_for(is_finished(m1))
+wait_for(is_finished(m1)) ## wait_finish is a more convenient form of this
 }
 
 }

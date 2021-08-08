@@ -32,7 +32,7 @@ scenarios are printed on the axis
 }
 \examples{
 
-## The following requires a covariate control stream available
+## requires NONMEM to be installed
 \dontrun{
 
 dcov <- input_data(m1, filter = TRUE)

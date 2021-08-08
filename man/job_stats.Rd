@@ -23,6 +23,12 @@ Gets attributes of the run like run time, queue time.
 ## Below code requires NONMEM to be installed
 \dontrun{
 
+#' # create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+
 dc <- tibble(cores = c(1, 3, 10, 30)) \%>\%
   mutate(m = m1 \%>\%
     child(run_id = cores) \%>\%

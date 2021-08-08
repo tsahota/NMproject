@@ -69,16 +69,24 @@
 #'
 #' @return An nm object with modified `ctl_contents` field.
 #' @seealso [covariate_step_tibble()], [test_relations()]
-#'
-#' @examples 
 #' 
+#' @examples
+#'
 #' # create example object m1 from package demo files
 #' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
 #' m1 <- new_nm(run_id = "m1", 
 #'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
 #'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
-#' \dontrun{
+#' temp_data_file <- paste0(tempfile(), ".csv")
+#'
+#' ## dataset has missing WTs so create a new one and assign this to the run
+#' input_data(m1) %>% 
+#'   dplyr::group_by(ID) %>%
+#'   dplyr::mutate(WT = na.omit(WT)) %>%
+#'   write_derived_data(temp_data_file)
+#'   
+#' m1 <- m1 %>% data_path(temp_data_file)
 #'  
 #' m1WT <- m1 %>% child("m1WT") %>%
 #'   add_cov(param = "V", cov = "WT", state = "power")
@@ -88,10 +96,13 @@
 #' 
 #' nm_diff(m1WT)
 #'
+#' \dontrun{
 #' run_nm(c(m1, m1WT))
 #' rr(c(m1, m1WT))
 #' summary_wide(c(m1, m1WT)) 
 #' }
+#' 
+#' unlink(temp_data_file)
 #'
 #' @export
 
@@ -273,17 +284,38 @@ add_cov.nm_list <- Vectorize_nm_list(add_cov.nm_generic, SIMPLIFY = FALSE)
 #' `remove_cov` only works with covariates added with `add_cov`.
 #'
 #' @examples
-#' \dontrun{
 #'
-#' m1noWT <- m1 %>% child("m1noWT") %>%
-#'   remove_cov(param = "CL", cov = "WT") %>%
-#'   run_nm()
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
-#' ## compare results
+#' temp_data_file <- paste0(tempfile(), ".csv")
 #'
-#' rr(c(m1, m1noWT))
-#' summary_wide(c(m1, m1noWT))
-#' }
+#' ## dataset has missing WTs so create a new one and assign this to the run
+#' input_data(m1) %>% 
+#'   dplyr::group_by(ID) %>%
+#'   dplyr::mutate(WT = na.omit(WT)) %>%
+#'   write_derived_data(temp_data_file)
+#'   
+#' m1 <- m1 %>% data_path(temp_data_file)
+#'  
+#' m1WT <- m1 %>% child("m1WT") %>%
+#'   add_cov(param = "V", cov = "WT", state = "power")
+#'
+#' m1 %>% dollar("PK")
+#' m1WT %>% dollar("PK")  ## notice SCM style code added
+#'
+#' ## reverse this by removing WT
+#'
+#' m1noWT <- m1WT %>% child("m1noWT") %>%
+#'   remove_cov(param = "V", cov = "WT") 
+#'   
+#' m1noWT %>% dollar("PK")
+#' m1noWT %>% dollar("THETA")
+#'
+#' unlink(temp_data_file)
 #'
 #' @export
 
@@ -470,7 +502,6 @@ remove_cov.nm_list <- Vectorize_nm_list(remove_cov.nm_generic, SIMPLIFY = FALSE)
 #' @seealso [test_relations()], [bind_covariate_results()], [add_cov()]
 #'
 #' @examples
-#' \dontrun{
 #'
 #' dtest <- test_relations(param = c("KA", "K", "V"),
 #'                         cov = c("LIN1", "LIN2", "LIN3", "RND1", "RND2", "RND3"),
@@ -480,7 +511,30 @@ remove_cov.nm_list <- Vectorize_nm_list(remove_cov.nm_generic, SIMPLIFY = FALSE)
 #'                         cov = "BN1",
 #'                         state = "linear",
 #'                         continuous = FALSE)
+#'                         
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
+#' temp_data_file <- paste0(tempfile(), ".csv")
+#'
+#' ## dataset has missing WTs so create a new one and assign this to the run
+#' input_data(m1) %>% 
+#'   dplyr::group_by(ID) %>%
+#'   dplyr::mutate(WT = na.omit(WT)) %>%
+#'   write_derived_data(temp_data_file)
+#'   
+#' m1 <- m1 %>% data_path(temp_data_file)
+#'  
+#' dtest <- test_relations(param = c("K", "V"),
+#'                         cov = c("WT"),
+#'                         state = c("linear", "power"),
+#'                         continuous = TRUE)
+#'
+#' ## requires NONMEM to be installed
+#' \dontrun{
 #' ## create tibble of covariate step with model objects as column m
 #' dsm1 <- m1 %>% covariate_step_tibble(run_id = "m1_f1",
 #'                                      dtest = dtest,
@@ -653,6 +707,8 @@ covariate_step_tibble <- function(base, run_id, run_in = nm_default_dir("models"
 #'   reports for (subsets of) models in `nm_col`.
 #'
 #' @examples
+#' 
+#' ## requires NONMEM to be installed
 #' \dontrun{
 #' ## create tibble of covariate step with model objects as column m
 #' dsm1 <- m1 %>% covariate_step_tibble(

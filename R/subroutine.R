@@ -202,21 +202,32 @@ default_trans <- function(advan) {
 #'
 #' @seealso [advan()]
 #'
-#' @examples
-#' \dontrun{
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
-#' advan(m) ## 2
-#' trans(m) ## 1
 #'
-#' m <- m %>% subroutine(ADVAN = 2, TRANS = 2)
+#' advan(m1) ## 2
+#' trans(m1) ## 1
+#'
+#' m1 <- m1 %>% subroutine(advan = 2, trans = 2)
 #'
 #' ds <- .available_advans %>%
-#'   filter(oral) %>%
-#'   mutate(
+#'   dplyr::filter(oral) %>%
+#'   dplyr::mutate(
 #'     m = m1 %>% child(run_id = label) %>%
 #'       subroutine(advan = advan, trans = trans)
 #'   )
 #' }
+#' 
+#' ds
+#' 
+#' ds$m %>% dollar("PK")
+#' 
 #' @export
 
 subroutine <- function(m, advan = NA, trans = 1, recursive = TRUE) {
@@ -656,14 +667,6 @@ trans.nm_generic <- function(m, text) {
 trans.nm_list <- Vectorize_nm_list(trans.nm_generic)
 
 #' @rdname dollar_subroutine
-#' @examples
-#' \dontrun{
-#'
-#' tol(m1) ## display current TOL value
-#'
-#' ## set tol to 12
-#' m1 <- m1 %>% tol(12)
-#' }
 #' @export
 tol <- function(m, text) {
   UseMethod("tol")

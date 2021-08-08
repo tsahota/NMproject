@@ -77,7 +77,8 @@ boot_to_csv <- function(d,
 #'
 #' @examples
 #'
-#' ## The following only works inside an NMproject directory structure.
+#' ## The following only works inside an NMproject directory structure and
+#' ## and requires NONMEM installed
 #' \dontrun{
 #'
 #' # create example object m1 from package demo files

@@ -27,6 +27,8 @@ Not intended to be used directly in most cases.  This is the function used by
 \examples{
 
 system_nm("hostname")
+
+## requires NONMEM to be installed
 \dontrun{
 
 system_nm("psn --versions")

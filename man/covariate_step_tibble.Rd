@@ -53,7 +53,6 @@ See \href{https://uupharmacometrics.github.io/PsN/docs.html}{PsN documentation}
 for more information.
 }
 \examples{
-\dontrun{
 
 dtest <- test_relations(param = c("KA", "K", "V"),
                         cov = c("LIN1", "LIN2", "LIN3", "RND1", "RND2", "RND3"),
@@ -63,7 +62,30 @@ dtest <- test_relations(param = c("KA", "K", "V"),
                         cov = "BN1",
                         state = "linear",
                         continuous = FALSE)
+                        
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 
+temp_data_file <- paste0(tempfile(), ".csv")
+
+## dataset has missing WTs so create a new one and assign this to the run
+input_data(m1) \%>\% 
+  dplyr::group_by(ID) \%>\%
+  dplyr::mutate(WT = na.omit(WT)) \%>\%
+  write_derived_data(temp_data_file)
+  
+m1 <- m1 \%>\% data_path(temp_data_file)
+ 
+dtest <- test_relations(param = c("K", "V"),
+                        cov = c("WT"),
+                        state = c("linear", "power"),
+                        continuous = TRUE)
+
+## requires NONMEM to be installed
+\dontrun{
 ## create tibble of covariate step with model objects as column m
 dsm1 <- m1 \%>\% covariate_step_tibble(run_id = "m1_f1",
                                      dtest = dtest,

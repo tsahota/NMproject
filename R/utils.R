@@ -63,24 +63,32 @@ rlang::.data
 #' 
 #' @examples 
 #' 
-#' \dontrun{
-#' mWT <- m2 %>% child(c("m3", "m4", "m5", "m6", "m7", "m8")) %f>% 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#'              
+#' temp_data_file <- paste0(tempfile(), ".csv")
+#'
+#' ## dataset has missing WTs so create a new one and assign this to the run
+#' input_data(m1) %>% 
+#'   dplyr::group_by(ID) %>%
+#'   dplyr::mutate(WT = na.omit(WT)) %>%
+#'   write_derived_data(temp_data_file)
+#'   
+#' m1 <- m1 %>% data_path(temp_data_file)
+#' 
+#' mWT <- m1 %>% child(c("m2", "m3", "m4")) %f>% 
 #' list(
-#'  . %>% add_cov(param = "CL", cov = "WT", state = "power"),
-#'  . %>% add_cov(param = "CL", cov = "WT", state = "power0.75"),
+#'  . %>% add_cov(param = "V", cov = "WT", state = "linear"),
 #'  . %>% add_cov(param = "V", cov = "WT", state = "power"),
-#'  . %>% add_cov(param = "V", cov = "WT", state = "power1"),
-#'  . %>% add_cov(param = "CL", cov = "WT", state = "power") %>%
-#'    add_cov(param = "V", cov = "WT", state = "power"),
-#'  . %>% add_cov(param = "CL", cov = "WT", state = "power0.75") %>%
-#'   add_cov(param = "V", cov = "WT", state = "power1")
+#'  . %>% add_cov(param = "V", cov = "WT", state = "power1")
 #' )
 #' 
-#' mWT %>% run_nm() %>% wait_finish()
-#' 
-#' mWT %>% summary_wide()
-#' 
-#' }
+#' mWT %>% dollar("PK")
+#'
+#' unlink(temp_data_file)
 #' 
 #' @export
 
@@ -259,14 +267,21 @@ na.locf <- function(x) {
 #'
 #' @seealso [wait_finish()].
 #'
-#' @examples
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
+#' ## requires NONMEM to be installed
 #' \dontrun{
 #'
 #' ## the following are identical
-#'
-#' wait_finish(m1)
-#' wait_for(is_finished(m1))
+#' m1 %>% run_nm() %>% wait_finish()
+#' 
+#' wait_for(is_finished(m1)) ## wait_finish is a more convenient form of this
 #' }
 #'
 #' @export
