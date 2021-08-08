@@ -9,12 +9,12 @@
 Industrialisation of 'NONMEM'
   <https://www.iconplc.com/innovation/nonmem/> via fully and rapidly reusable 
   model development 'workflows' entirely within 'RStudio'. Quickly get started
-  with new models by importing templated 'NONMEM' code from the built-in code
+  with new models by importing 'NONMEM' templates from the built-in code
   library. Manipulate 'NONMEM' code from within R either via the tracked 
-  'manual edit' interface or programmatically via convenience functions. Script
-  'workflows' by piping sequences of model building steps from control file
-  creation, to execution, to post-processing and evaluation. Run caching makes
-  'workflows' R markdown friendly for easy documentation of thoughts and
+  'manual edit' interface or 'programmatically' via convenience functions. 
+  Script 'workflows' by piping sequences of model building steps from control 
+  file creation, to execution, to post-processing and evaluation. Run caching 
+  makes 'workflows' R markdown friendly for easy documentation of thoughts and
   modelling decisions alongside executable code. Share, reuse and recycle
   'workflows' for new problems.
 }
