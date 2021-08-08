@@ -43,62 +43,6 @@ magrittr::"%$%"
 #' @export
 rlang::.data
 
-
-#' Function pipe for nm objects
-#' 
-#' @description
-#'
-#' `r lifecycle::badge("experimental")`
-#' 
-#' Pipe an nm object object to a list of functions.  Although this enables
-#' multiple NONMEM runs to be handled simulataneously, it does make your code
-#' less readable.
-#' 
-#' @param lhs An nm object.
-#' @param rhs A list of functions.  Must be same length as `lhs`.
-#' 
-#' @return A modified nm object.
-#' 
-#' @seealso [child()] for creating multiple child NONMEM objects
-#' 
-#' @examples 
-#' 
-#' # create example object m1 from package demo files
-#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
-#' m1 <- new_nm(run_id = "m1", 
-#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
-#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
-#'              
-#' temp_data_file <- paste0(tempfile(), ".csv")
-#'
-#' ## dataset has missing WTs so create a new one and assign this to the run
-#' input_data(m1) %>% 
-#'   dplyr::group_by(ID) %>%
-#'   dplyr::mutate(WT = na.omit(WT)) %>%
-#'   write_derived_data(temp_data_file)
-#'   
-#' m1 <- m1 %>% data_path(temp_data_file)
-#' 
-#' mWT <- m1 %>% child(c("m2", "m3", "m4")) %f>% 
-#' list(
-#'  . %>% add_cov(param = "V", cov = "WT", state = "linear"),
-#'  . %>% add_cov(param = "V", cov = "WT", state = "power"),
-#'  . %>% add_cov(param = "V", cov = "WT", state = "power1")
-#' )
-#' 
-#' mWT %>% dollar("PK")
-#'
-#' unlink(temp_data_file)
-#' 
-#' @export
-
-`%f>%` <- function(lhs, rhs) {
-  if(length(lhs) != length(rhs)) {
-    stop("for 'lhs %f>% rhs' the length of lhs and rhs must be the same")
-  }
-  as_nm_list(lapply(seq_along(lhs), function(i) rhs[[i]](lhs[[i]])))
-}
-
 #' Compute path relative to reference
 #'
 #' @param path Path of desired directory or file.
