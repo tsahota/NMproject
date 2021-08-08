@@ -54,13 +54,13 @@
 #' 
 #' \describe{
 #'     \item{`LOG`}{
-#'       \eqn{FINAL = exp(\theta), RSE% = 100*\sqrt(exp^(se(\theta)^2) - 1)}
+#'       \eqn{FINAL = exp(\theta), RSE = 100\sqrt(exp^(se(\theta)^2) - 1)}
 #'     }
 #'     \item{`RATIO`}{
-#'       \eqn{FINAL = \theta, RSE% = 100*se(\theta) / \theta}
+#'       \eqn{FINAL = \theta, RSE = 100se(\theta)/\theta}
 #'     }
 #'     \item{`LOGIT`}{
-#'       \eqn{FINAL = 100 * 1 / (1 + exp(-\theta)), SE = se(\theta)}
+#'       \eqn{FINAL = 100/(1 + exp(-\theta)), SE = se(\theta)}
 #'     }
 #'     \item{missing}{
 #'       \eqn{FINAL = \theta, SE = se(\theta)}
@@ -76,7 +76,7 @@
 #'   
 #' \describe{
 #'     \item{`LOG`}{
-#'       \eqn{FINAL = 100*\sqrt(exp^(\omega^2) - 1), RSE% = 100*(se(\omega^2)/\omega^2)/2}
+#'       \eqn{FINAL = 100\sqrt(exp^(\omega^2) - 1), RSE = 100(se(\omega^2)/\omega^2)/2}
 #'     }
 #'     \item{missing}{
 #'       \eqn{FINAL = \omega^2, SE = se(\omega^2)}
@@ -93,7 +93,7 @@
 #' 
 #' \describe{
 #'     \item{all sigmas}{
-#'       \eqn{FINAL = \sqrt \sigma^2, RSE% = 100*se(\sigma^2) / \sigma^2}
+#'       \eqn{FINAL = \sqrt\sigma^2, RSE = 100se(\sigma^2) / \sigma^2}
 #'     }
 #' }
 #'
@@ -218,13 +218,13 @@ rr.nm_generic <- function(m, trans = TRUE) {
 #' 
 #' \describe{
 #'     \item{`LOG`}{
-#'       \eqn{FINAL = exp(\theta), RSE% = 100*\sqrt(exp^(se(\theta)^2) - 1)}
+#'       \eqn{FINAL = exp(\theta), RSE = 100\sqrt(exp^(se(\theta)^2) - 1)}
 #'     }
 #'     \item{`RATIO`}{
-#'       \eqn{FINAL = \theta, RSE% = 100*se(\theta) / \theta}
+#'       \eqn{FINAL = \theta, RSE = 100se(\theta)/\theta}
 #'     }
 #'     \item{`LOGIT`}{
-#'       \eqn{FINAL = 100 * 1 / (1 + exp(-\theta)), SE = se(\theta)}
+#'       \eqn{FINAL = 100/(1 + exp(-\theta)), SE = se(\theta)}
 #'     }
 #'     \item{missing}{
 #'       \eqn{FINAL = \theta, SE = se(\theta)}
@@ -240,7 +240,7 @@ rr.nm_generic <- function(m, trans = TRUE) {
 #'   
 #' \describe{
 #'     \item{`LOG`}{
-#'       \eqn{FINAL = 100*\sqrt(exp^(\omega^2) - 1), RSE% = 100*(se(\omega^2)/\omega^2)/2}
+#'       \eqn{FINAL = 100\sqrt(exp^(\omega^2) - 1), RSE = 100(se(\omega^2)/\omega^2)/2}
 #'     }
 #'     \item{missing}{
 #'       \eqn{FINAL = \omega^2, SE = se(\omega^2)}
@@ -257,9 +257,10 @@ rr.nm_generic <- function(m, trans = TRUE) {
 #' 
 #' \describe{
 #'     \item{all sigmas}{
-#'       \eqn{FINAL = \sqrt \sigma^2, RSE% = 100*se(\sigma^2) / \sigma^2}
+#'       \eqn{FINAL = \sqrt\sigma^2, RSE = 100se(\sigma^2) / \sigma^2}
 #'     }
 #' }
+#'
 #'
 #' @return `data.frame` of extracted model parameter values. `coef_wide()`
 #'   returns a `data.frame` in wide format. Vector valued objects `m`, will be
