@@ -222,7 +222,6 @@ default_trans <- function(advan) {
 #'     m = m1 %>% child(run_id = label) %>%
 #'       subroutine(advan = advan, trans = trans)
 #'   )
-#' }
 #' 
 #' ds
 #' 

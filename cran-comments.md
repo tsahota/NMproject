@@ -27,7 +27,6 @@ This is a resubmission. In this version I have:
 ## Test environments
 * local windows R installation, R 4.0.3
 * local ubuntu 20.04 R installation, R 4.0.5
-* ubuntu 16.04.6 (on travis-ci), R 4.0.2
 * windows (on appveyor), R 4.1.0
 * win-builder (release, oldrelease and devel)
 

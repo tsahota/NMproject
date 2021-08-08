@@ -27,6 +27,32 @@ another.
 \details{
 Can only switch between subroutines listed in \code{available_advans}.
 }
+\examples{
+
+# create example object m1 from package demo files
+exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+m1 <- new_nm(run_id = "m1", 
+             based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+             data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+
+
+advan(m1) ## 2
+trans(m1) ## 1
+
+m1 <- m1 \%>\% subroutine(advan = 2, trans = 2)
+
+ds <- .available_advans \%>\%
+  dplyr::filter(oral) \%>\%
+  dplyr::mutate(
+    m = m1 \%>\% child(run_id = label) \%>\%
+      subroutine(advan = advan, trans = trans)
+  )
+
+ds
+
+ds$m \%>\% dollar("PK")
+
+}
 \seealso{
 \code{\link[=advan]{advan()}}
 }

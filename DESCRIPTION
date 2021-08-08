@@ -16,7 +16,7 @@ Maintainer: Tarj Sahota <t.sahota0@gmail.com>
 Description: Industrialisation of 'NONMEM'
   <https://www.iconplc.com/innovation/nonmem/> via fully and rapidly reusable 
   model development 'workflows' entirely within 'RStudio'. Quickly get started
-  with new models by importing templated `NONMEM` code from the built-in code
+  with new models by importing templated 'NONMEM' code from the built-in code
   library. Manipulate 'NONMEM' code from within R either via the tracked 
   'manual edit' interface or programmatically via convenience functions. Script
   'workflows' by piping sequences of model building steps from control file
