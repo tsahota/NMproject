@@ -26,8 +26,6 @@ opts_chunk$set(message = TRUE)
 ## LOAD PACKAGES HERE
 
 library(NMproject)
-# library(future)
-# future::plan("future::multiprocess", workers = 2)
 library(dplyr)
 
 devtools::load_all()
