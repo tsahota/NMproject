@@ -18,7 +18,7 @@ is stored in the \code{ctl_orig} field.}
 \code{\link[diffobj:diffChr]{diffobj::diffChr()}}}
 }
 \value{
-A \code{diff} object.
+Invisibly returns a \code{character} vector of the diff.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}

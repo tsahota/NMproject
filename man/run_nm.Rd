@@ -73,6 +73,7 @@ blocked for until the last batch has been submitted which will be before
 all runs have completed
 }
 \examples{
+## requires NONMEM to be installed
 \dontrun{
 m1 <- new_nm(
   run_id = "m1",

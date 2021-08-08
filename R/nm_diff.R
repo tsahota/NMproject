@@ -19,7 +19,7 @@
 #' @param format Character (default = `"raw"`) argument passed to
 #'   [diffobj::diffChr()]
 #'
-#' @return A `diff` object.
+#' @return Invisibly returns a `character` vector of the diff.
 #'
 #' @examples 
 #' 
@@ -67,5 +67,9 @@ nm_diff <- function(m, ref_m, format = "raw") {
     dff <- character()
   }
 
-  dff
+  ## to simplify and prevent printing, convert to character
+  dff <- as.character(dff)
+  cat(dff, sep = "\n")
+  
+  invisible(dff)
 }
