@@ -67,7 +67,7 @@ parameters and standard errors, respectively:
 
 \describe{
 \item{\code{LOG}}{
-\eqn{FINAL = exp(\theta), RSE = 100\sqrt(exp^(se(\theta)^2) - 1)}
+\eqn{FINAL = exp(\theta), RSE = 100\sqrt(exp(se(\theta)^2) - 1)}
 }
 \item{\code{RATIO}}{
 \eqn{FINAL = \theta, RSE = 100se(\theta)/\theta}
@@ -91,7 +91,7 @@ parameters and standard errors, respectively
 
 \describe{
 \item{\code{LOG}}{
-\eqn{FINAL = 100\sqrt(exp^(\omega^2) - 1), RSE = 100(se(\omega^2)/\omega^2)/2}
+\eqn{FINAL = 100\sqrt(exp(\omega^2) - 1), RSE = 100(se(\omega^2)/\omega^2)/2}
 }
 \item{missing}{
 \eqn{FINAL = \omega^2, SE = se(\omega^2)}
@@ -110,7 +110,7 @@ standard deviations.
 
 \describe{
 \item{all sigmas}{
-\eqn{FINAL = \sqrt\sigma^2, RSE = 100se(\sigma^2) / \sigma^2}
+\eqn{FINAL = \sqrt(\sigma^2), RSE = 100se(\sigma^2) / \sigma^2}
 }
 }
 }
