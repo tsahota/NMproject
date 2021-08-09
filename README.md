@@ -5,15 +5,15 @@
 
 <!-- badges: start -->
 
-[![AppVeyor Build
-Status](https://ci.appveyor.com/api/projects/status/github/tsahota/NMproject?branch=master&svg=true)](https://ci.appveyor.com/project/tsahota/NMproject)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/NMproject)](https://CRAN.R-project.org/package=NMproject)
+[![R-CMD-check](https://github.com/tsahota/NMproject/workflows/R-CMD-check/badge.svg)](https://github.com/tsahota/NMproject/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/tsahota/NMproject/branch/master/graph/badge.svg)](https://codecov.io/gh/tsahota/NMproject?branch=master)
 [![Lifecycle:
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/NMproject)](https://CRAN.R-project.org/package=NMproject)
-[![R-CMD-check](https://github.com/tsahota/NMproject/workflows/R-CMD-check/badge.svg)](https://github.com/tsahota/NMproject/actions)
+[![AppVeyor Build
+Status](https://ci.appveyor.com/api/projects/status/github/tsahota/NMproject?branch=master&svg=true)](https://ci.appveyor.com/project/tsahota/NMproject)
 <!-- badges: end -->
 
 Script based ‘NONMEM’ model development in RStudio.
