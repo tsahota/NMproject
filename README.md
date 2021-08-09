@@ -12,8 +12,6 @@ status](https://www.r-pkg.org/badges/version/NMproject)](https://CRAN.R-project.
 coverage](https://codecov.io/gh/tsahota/NMproject/branch/master/graph/badge.svg)](https://codecov.io/gh/tsahota/NMproject?branch=master)
 [![Lifecycle:
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-[![AppVeyor Build
-Status](https://ci.appveyor.com/api/projects/status/github/tsahota/NMproject?branch=master&svg=true)](https://ci.appveyor.com/project/tsahota/NMproject)
 <!-- badges: end -->
 
 Script based ‘NONMEM’ model development in RStudio.
@@ -85,7 +83,7 @@ Following snippet adds covariates to model object, `m2`:
 -   run
 
 ``` r
-m2WT <- m2 %>% child() %>%
+m2WT <- m2 %>% child("m2WT") %>%
   add_cov(param = "CL", cov = "WT", state = "power") %>%
   run_nm()
 ```
