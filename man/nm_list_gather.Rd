@@ -32,7 +32,7 @@ m2 <- m1 \%>\% child("m2")
 m_all <- nm_list_gather()
 
 identical(
-  m_all \%>\% subset(run_id(.) \%in\% "m1"),
+  m_all \%>\% subset(run_id(m_all) \%in\% "m1"),
   m1
 )
 
