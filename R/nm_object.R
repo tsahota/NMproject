@@ -581,7 +581,7 @@ nm_list2list <- function(m) {
 #' m_all <- nm_list_gather()
 #' 
 #' identical(
-#'   m_all %>% subset(run_id(.) %in% "m1"),
+#'   m_all %>% subset(run_id(m_all) %in% "m1"),
 #'   m1
 #' )
 #' 
