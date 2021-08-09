@@ -108,6 +108,7 @@ Collate:
     'param-manipulate.R'
     'plot_iter.R'
     'post-run-summaries.R'
+    'preview.R'
     'prompt_overwrite.R'
     'psn_style_scm.R'
     'read_ext.R'
