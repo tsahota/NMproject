@@ -23,6 +23,8 @@ This is a resubmission. In this version I have:
   very little recollection of the AUC code you refer to". I have therefore
   removed his name at his request from the author field of the file in 
   inst/extdata and not included his name in the DESCRIPTION.
+* [not a requested change] Deprecated preview() in preparation for future 
+  removal.
   
 
 ## Test environments
