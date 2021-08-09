@@ -74,7 +74,7 @@ To be used in a dplyr::mutate() statement dplyr::group_by()'d by &quot;ID&quot;.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
       </span>
     </div>
 
@@ -149,18 +149,162 @@ increment.</p></td>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples"><div class='input'>
+<span class='co'># create example object m1 from package demo files</span>
+<span class='va'>exdir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"examples"</span>, <span class='st'>"theopp"</span>, package <span class='op'>=</span> <span class='st'>"NMproject"</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_nm.html'>new_nm</a></span><span class='op'>(</span>run_id <span class='op'>=</span> <span class='st'>"m1"</span>, 
+             based_on <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>exdir</span>, <span class='st'>"Models"</span>, <span class='st'>"ADVAN2.mod"</span><span class='op'>)</span>,
+             data_path <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>exdir</span>, <span class='st'>"SourceData"</span>, <span class='st'>"THEOPP.csv"</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='input_data.html'>input_data</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span>
 
 <span class='co'>## OCC increments on every dosing interval with more than 4 samples</span>
-<span class='va'>d</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>group_by</span><span class='op'>(</span><span class='va'>ID</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>mutate</span><span class='op'>(</span>OCC <span class='op'>=</span> <span class='fu'>make_OCC_every_dose</span><span class='op'>(</span>
-    <span class='va'>EVID</span> <span class='op'>%in%</span> <span class='fl'>1</span>,
-    <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>EVID</span> <span class='op'>%in%</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='fl'>4</span>
-  <span class='op'>)</span><span class='op'>)</span>
-<span class='op'>}</span>
+<span class='va'>d</span> <span class='op'>%&gt;%</span> <span class='fu'>make_OCC_every_dose</span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>AMT</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/any.html'>any</a></span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>DV</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;     ID  AMT  TIME    DV   WT OCC
+#&gt; 1    1 4.02  0.00    NA 79.6   1
+#&gt; 2    1   NA  0.00  0.74   NA   1
+#&gt; 3    1   NA  0.25  2.84   NA   1
+#&gt; 4    1   NA  0.57  6.57   NA   1
+#&gt; 5    1   NA  1.12 10.50   NA   1
+#&gt; 6    1   NA  2.02  9.66   NA   1
+#&gt; 7    1   NA  3.82  8.58   NA   1
+#&gt; 8    1   NA  5.10  8.36   NA   1
+#&gt; 9    1   NA  7.03  7.47   NA   1
+#&gt; 10   1   NA  9.05  6.89   NA   1
+#&gt; 11   1   NA 12.12  5.94   NA   1
+#&gt; 12   1   NA 24.37  3.28   NA   1
+#&gt; 49   2 4.40  0.00    NA 72.4   1
+#&gt; 50   2   NA  0.00  0.00   NA   1
+#&gt; 51   2   NA  0.27  1.72   NA   1
+#&gt; 52   2   NA  0.52  7.91   NA   1
+#&gt; 53   2   NA  1.00  8.31   NA   1
+#&gt; 54   2   NA  1.92  8.33   NA   1
+#&gt; 55   2   NA  3.50  6.85   NA   1
+#&gt; 56   2   NA  5.02  6.08   NA   1
+#&gt; 57   2   NA  7.03  5.40   NA   1
+#&gt; 58   2   NA  9.00  4.55   NA   1
+#&gt; 59   2   NA 12.00  3.01   NA   1
+#&gt; 60   2   NA 24.30  0.90   NA   1
+#&gt; 61   3 4.53  0.00    NA 70.5   1
+#&gt; 62   3   NA  0.00  0.00   NA   1
+#&gt; 63   3   NA  0.27  4.40   NA   1
+#&gt; 64   3   NA  0.58  6.90   NA   1
+#&gt; 65   3   NA  1.02  8.20   NA   1
+#&gt; 66   3   NA  2.02  7.80   NA   1
+#&gt; 67   3   NA  3.62  7.50   NA   1
+#&gt; 68   3   NA  5.08  6.20   NA   1
+#&gt; 69   3   NA  7.07  5.30   NA   1
+#&gt; 70   3   NA  9.00  4.90   NA   1
+#&gt; 71   3   NA 12.15  3.70   NA   1
+#&gt; 72   3   NA 24.17  1.05   NA   1
+#&gt; 73   4 4.40  0.00    NA 72.7   1
+#&gt; 74   4   NA  0.00  0.00   NA   1
+#&gt; 75   4   NA  0.35  1.89   NA   1
+#&gt; 76   4   NA  0.60  4.60   NA   1
+#&gt; 77   4   NA  1.07  8.60   NA   1
+#&gt; 78   4   NA  2.13  8.38   NA   1
+#&gt; 79   4   NA  3.50  7.54   NA   1
+#&gt; 80   4   NA  5.02  6.88   NA   1
+#&gt; 81   4   NA  7.02  5.78   NA   1
+#&gt; 82   4   NA  9.02  5.33   NA   1
+#&gt; 83   4   NA 11.98  4.19   NA   1
+#&gt; 84   4   NA 24.65  1.15   NA   1
+#&gt; 85   5 5.86  0.00    NA 54.6   1
+#&gt; 86   5   NA  0.00  0.00   NA   1
+#&gt; 87   5   NA  0.30  2.02   NA   1
+#&gt; 88   5   NA  0.52  5.63   NA   1
+#&gt; 89   5   NA  1.00 11.40   NA   1
+#&gt; 90   5   NA  2.02  9.33   NA   1
+#&gt; 91   5   NA  3.50  8.74   NA   1
+#&gt; 92   5   NA  5.02  7.56   NA   1
+#&gt; 93   5   NA  7.02  7.09   NA   1
+#&gt; 94   5   NA  9.10  5.90   NA   1
+#&gt; 95   5   NA 12.00  4.37   NA   1
+#&gt; 96   5   NA 24.35  1.57   NA   1
+#&gt; 97   6 4.00  0.00    NA 80.0   1
+#&gt; 98   6   NA  0.00  0.00   NA   1
+#&gt; 99   6   NA  0.27  1.29   NA   1
+#&gt; 100  6   NA  0.58  3.08   NA   1
+#&gt; 101  6   NA  1.15  6.44   NA   1
+#&gt; 102  6   NA  2.03  6.32   NA   1
+#&gt; 103  6   NA  3.57  5.53   NA   1
+#&gt; 104  6   NA  5.00  4.94   NA   1
+#&gt; 105  6   NA  7.00  4.02   NA   1
+#&gt; 106  6   NA  9.22  3.46   NA   1
+#&gt; 107  6   NA 12.10  2.78   NA   1
+#&gt; 108  6   NA 23.85  0.92   NA   1
+#&gt; 109  7 4.95  0.00    NA 64.6   1
+#&gt; 110  7   NA  0.00  0.15   NA   1
+#&gt; 111  7   NA  0.25  0.85   NA   1
+#&gt; 112  7   NA  0.50  2.35   NA   1
+#&gt; 113  7   NA  1.02  5.02   NA   1
+#&gt; 114  7   NA  2.02  6.58   NA   1
+#&gt; 115  7   NA  3.48  7.09   NA   1
+#&gt; 116  7   NA  5.00  6.66   NA   1
+#&gt; 117  7   NA  6.98  5.25   NA   1
+#&gt; 118  7   NA  9.00  4.39   NA   1
+#&gt; 119  7   NA 12.05  3.53   NA   1
+#&gt; 120  7   NA 24.22  1.15   NA   1
+#&gt; 121  8 4.53  0.00    NA 70.5   1
+#&gt; 122  8   NA  0.00  0.00   NA   1
+#&gt; 123  8   NA  0.25  3.05   NA   1
+#&gt; 124  8   NA  0.52  3.05   NA   1
+#&gt; 125  8   NA  0.98  7.31   NA   1
+#&gt; 126  8   NA  2.02  7.56   NA   1
+#&gt; 127  8   NA  3.53  6.59   NA   1
+#&gt; 128  8   NA  5.05  5.88   NA   1
+#&gt; 129  8   NA  7.15  4.73   NA   1
+#&gt; 130  8   NA  9.07  4.57   NA   1
+#&gt; 131  8   NA 12.10  3.00   NA   1
+#&gt; 132  8   NA 24.12  1.25   NA   1
+#&gt; 133  9 3.10  0.00    NA 86.4   1
+#&gt; 134  9   NA  0.00  0.00   NA   1
+#&gt; 135  9   NA  0.30  7.37   NA   1
+#&gt; 136  9   NA  0.63  9.03   NA   1
+#&gt; 137  9   NA  1.05  7.14   NA   1
+#&gt; 138  9   NA  2.02  6.33   NA   1
+#&gt; 139  9   NA  3.53  5.66   NA   1
+#&gt; 140  9   NA  5.02  5.67   NA   1
+#&gt; 141  9   NA  7.17  4.24   NA   1
+#&gt; 142  9   NA  8.80  4.11   NA   1
+#&gt; 143  9   NA 11.60  3.16   NA   1
+#&gt; 144  9   NA 24.43  1.12   NA   1
+#&gt; 13  10 5.50  0.00    NA 58.2   1
+#&gt; 14  10   NA  0.00  0.24   NA   1
+#&gt; 15  10   NA  0.37  2.89   NA   1
+#&gt; 16  10   NA  0.77  5.22   NA   1
+#&gt; 17  10   NA  1.02  6.41   NA   1
+#&gt; 18  10   NA  2.05  7.83   NA   1
+#&gt; 19  10   NA  3.55 10.21   NA   1
+#&gt; 20  10   NA  5.05  9.18   NA   1
+#&gt; 21  10   NA  7.08  8.02   NA   1
+#&gt; 22  10   NA  9.38  7.14   NA   1
+#&gt; 23  10   NA 12.10  5.68   NA   1
+#&gt; 24  10   NA 23.70  2.42   NA   1
+#&gt; 25  11 4.92  0.00    NA 65.0   1
+#&gt; 26  11   NA  0.00  0.00   NA   1
+#&gt; 27  11   NA  0.25  4.86   NA   1
+#&gt; 28  11   NA  0.50  7.24   NA   1
+#&gt; 29  11   NA  0.98  8.00   NA   1
+#&gt; 30  11   NA  1.98  6.81   NA   1
+#&gt; 31  11   NA  3.60  5.87   NA   1
+#&gt; 32  11   NA  5.02  5.22   NA   1
+#&gt; 33  11   NA  7.03  4.45   NA   1
+#&gt; 34  11   NA  9.03  3.62   NA   1
+#&gt; 35  11   NA 12.12  2.69   NA   1
+#&gt; 36  11   NA 24.08  0.86   NA   1
+#&gt; 37  12 5.30  0.00    NA 60.5   1
+#&gt; 38  12   NA  0.00  0.00   NA   1
+#&gt; 39  12   NA  0.25  1.25   NA   1
+#&gt; 40  12   NA  0.50  3.96   NA   1
+#&gt; 41  12   NA  1.00  7.82   NA   1
+#&gt; 42  12   NA  2.00  9.72   NA   1
+#&gt; 43  12   NA  3.52  9.75   NA   1
+#&gt; 44  12   NA  5.07  8.57   NA   1
+#&gt; 45  12   NA  7.07  6.59   NA   1
+#&gt; 46  12   NA  9.03  6.11   NA   1
+#&gt; 47  12   NA 12.05  4.57   NA   1
+#&gt; 48  12   NA 24.15  1.17   NA   1</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -40,7 +40,10 @@
 
 
 <meta property="og:title" content="Use file to set control file contents in nm object — based_on" />
-<meta property="og:description" content="" />
+<meta property="og:description" content="
+This function is mostly called by the new_nm() and will not generally be
+used directly by users. The function populates/modifies the ctl_contents
+field of an nm object, with the contents of an already existing control file." />
 
 
 
@@ -72,7 +75,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
       </span>
     </div>
 
@@ -121,6 +124,9 @@
 
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>This function is mostly called by the <code><a href='new_nm.html'>new_nm()</a></code> and will not generally be
+used directly by users. The function populates/modifies the <code>ctl_contents</code>
+field of an nm object, with the contents of an already existing control file.</p>
     </div>
 
     <pre class="usage"><span class='fu'>based_on</span><span class='op'>(</span><span class='va'>m</span>, <span class='va'>ctl_ob</span>, update_numbering <span class='op'>=</span> <span class='cn'>TRUE</span>, update_dollar_data <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
@@ -150,6 +156,9 @@
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>An nm object with modified <code>ctl_contents</code> field.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

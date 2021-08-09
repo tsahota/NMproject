@@ -73,7 +73,7 @@ more user friendly wrapper for this function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
       </span>
     </div>
 
@@ -144,6 +144,13 @@ more user friendly wrapper for this function.</p>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A list of <code>tibble</code>s with merged version of all output $TABLEs and the
+input data.  Additional columns will be <code>INNONMEM</code> which will be TRUE for
+rows that were not ignored by NONMEM.  For simulation control files there
+is also <code>DV_OUT</code> which will contain simulated <code>DV</code> values. <code>DV</code> will always
+be unmodified from the input dataset.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

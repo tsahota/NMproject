@@ -79,7 +79,7 @@ nm objects with new_nm(..., based_on = &quot;staging/Models/[filename]&quot;)." 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
       </span>
     </div>
 
@@ -174,13 +174,74 @@ all).</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>If <code>return_info = TRUE</code>, invisibly returns output a <code>tibble</code> with
+code library information.  Otherwise (this may be deprecated soon), will return paths to code library
+files.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Requires <code><a href='https://rdrr.io/r/base/options.html'>getOption("code_library_path")</a></code> to be set.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='ls_code_library.html'>ls_code_library()</a></code>, <code><a href='preview.html'>preview()</a></code>, <code><a href='stage.html'>stage()</a></code>, <code><a href='import.html'>import()</a></code></p></div>
+    <div class='dont-index'><p><code><a href='ls_code_library.html'>ls_code_library()</a></code>, <code><a href='stage.html'>stage()</a></code>, <code><a href='import.html'>import()</a></code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='fu'>code_library</span><span class='op'>(</span>viewer <span class='op'>=</span> <span class='cn'>FALSE</span>, return_info <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Loading required namespace: roxygen2</span></div><div class='output co'>#&gt;                                                            FOLDER
+#&gt; 1  /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 2  /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 3  /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 4  /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 5  /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 6  /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 7  /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 8  /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 9  /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 10 /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 11 /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 12 /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 13 /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 14 /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 15 /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 16 /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 17 /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 18 /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 19 /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 20 /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 21 /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 22 /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 23 /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 24 /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt; 25 /Users/runner/work/_temp/Library/NMproject/extdata/CodeLibrary
+#&gt;                        NAME                                     Description
+#&gt; 1         Models/ADVAN2.mod                                       1CMT+oral
+#&gt; 2    Models/ADVAN2logDV.mod                        1CMT+oral (log-scale DV)
+#&gt; 3  Models/ADVAN2logDVM3.mod                  1CMT+oral (log DV with M3 BQL)
+#&gt; 4         Models/ADVAN3.mod                                         2CMT IV
+#&gt; 5         Models/ADVAN4.mod                                     2CMT + Oral
+#&gt; 6         Models/binary.mod                       Logistic regression model
+#&gt; 7            Models/DES.mod                       Differential equation use
+#&gt; 8      Models/Emax_PRED.mod                                      Emax model
+#&gt; 9        Models/example.scm                                            &lt;NA&gt;
+#&gt; 10        Models/M3_bql.mod                        ADVAN2 + M3 BQL handling
+#&gt; 11   Models/NegBinomial.mod                 Count data (Neg-binomial) model
+#&gt; 12       Models/Poisson.mod                      Count data (Poisson) model
+#&gt; 13           Models/TTE.mod                       Differential equation use
+#&gt; 14                  R/AUC.R                                   Calculate AUC
+#&gt; 15        R/convert.to.na.R                  replace -99 with NA in dataset
+#&gt; 16  R/covariate_summaries.R            Functions for summarising covariates
+#&gt; 17           R/gof_ggplot.R        Create pdf diagnostic report with ggplot
+#&gt; 18            R/gof_xpose.R         Create pdf diagnostic report with xpose
+#&gt; 19         R/group.factor.R Group a set of values into equally sized groups
+#&gt; 20                 R/locf.R                Last observation carried forward
+#&gt; 21            R/rep_times.R                             create dosing times
+#&gt; 22                 R/snap.R                          metrumrg snap function
+#&gt; 23   Scripts/BinomRegMeta.R          Binomial regression meta-analysis in R
+#&gt; 24   Scripts/deSolvePKsim.R                           PK simulation deSolve
+#&gt; 25     Scripts/theoppStan.R                    Stan PK (Rbloggers 19/04/15)</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -76,7 +76,7 @@ and long format is available via two different functions." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
       </span>
     </div>
 
@@ -148,6 +148,89 @@ and long format is available via two different functions.</p>
 in $THETA/$OMEGA/$SIGMA.</p></td>
     </tr>
     </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p><code>data.frame</code> of extracted model parameter values. <code>coef_wide()</code>
+returns a <code>data.frame</code> in wide format. Vector valued objects <code>m</code>, will be
+stacked vertically with one row per run.  <code>coef_long()</code> returns a
+<code>data.frame</code> in long format. Vector valued objects <code>m</code>, will be stacked
+horizontally.</p>
+    <h2 class="hasAnchor" id="nonmem-coding-conventions-used-by-nmproject"><a class="anchor" href="#nonmem-coding-conventions-used-by-nmproject"></a>NONMEM coding conventions used by NMproject</h2>
+
+    
+
+
+<p>The convention for $THETA comments used by NMproject is
+<code>value ; name ; unit ; transformation</code></p>
+<p>e.g.
+<code>$THETA</code>
+<code>0.1    ; KA ; h-1 ; LOG</code></p>
+<p>The options for THETA transformations are: <code>LOG</code>, <code>LOGIT</code>, <code>RATIO</code> and
+missing. <code>LOG</code> and <code>LOGIT</code> refer to log and logit transformed THETAs,
+respectively where the parameters should be back-transformed for reporting.
+<code>RATIO</code> refers to ratio data types, i.e. parameters that are positive and
+have a meaningful zero. Most parameters like KA, CL, EMAX fall into this
+category, but covariates effects which can go negative do not.  RSEs are
+calculated for ratio data. Missing transformations are suitable for all other
+parameters, here no RSEs will be calculated, only raw SE values will be
+reported.</p>
+<p>The convention for $OMEGA is similar but without a unit item:
+<code>value ; name ; transformation</code></p>
+<p>e.g.
+<code>$OMEGA</code>
+<code>0.1    ; IIV_KA ; LOG</code></p>
+<p>The options for OMEGA are either <code>LOG</code> or missing.  <code>LOG</code> indicating that the
+individual parameter distribution is log normally distributions and should be
+reported as a CV% (and associated RSE%) rather than as the raw NONMEM
+estimate.</p>
+<p>The convention for $OMEGA is just : <code>value ; name</code>.</p>
+    <h2 class="hasAnchor" id="theta-transformations-using-trans-true"><a class="anchor" href="#theta-transformations-using-trans-true"></a>THETA transformations using <code>trans = TRUE</code></h2>
+
+    
+
+
+<p>The value of FINAL and RSE% (always accompanied with a <code>%</code> symbol in outputs)
+in the returned <code>tibble</code> is the reported standard error (where applicable)
+where \(\theta\) and \(se(\theta)\) are the NONMEM reported values of
+parameters and standard errors, respectively:</p>
+<dl>
+<dt><code>LOG</code></dt><dd><p>\(FINAL = exp(\theta), RSE = 100\sqrt(exp(se(\theta)^2) - 1)\)</p></dd>
+<dt><code>RATIO</code></dt><dd><p>\(FINAL = \theta, RSE = 100se(\theta)/\theta\)</p></dd>
+<dt><code>LOGIT</code></dt><dd><p>\(FINAL = 100/(1 + exp(-\theta)), SE = se(\theta)\)</p></dd>
+<dt>missing</dt><dd><p>\(FINAL = \theta, SE = se(\theta)\)</p></dd>
+
+</dl>
+
+    <h2 class="hasAnchor" id="omega-transformations-using-trans-true"><a class="anchor" href="#omega-transformations-using-trans-true"></a>OMEGA transformations using <code>trans = TRUE</code></h2>
+
+    
+
+
+<p>The value of FINAL and RSE% (always accompanied with a <code>%</code> symbol in outputs)
+in the returned <code>tibble</code> is the reported standard error (where applicable)
+where \(\omega^2\) and \(se(\omega^2)\) are the NONMEM reported values of
+parameters and standard errors, respectively</p>
+<dl>
+<dt><code>LOG</code></dt><dd><p>\(FINAL = 100\sqrt(exp(\omega^2) - 1), RSE = 100(se(\omega^2)/\omega^2)/2\)</p></dd>
+<dt>missing</dt><dd><p>\(FINAL = \omega^2, SE = se(\omega^2)\)</p></dd>
+
+</dl>
+
+    <h2 class="hasAnchor" id="sigma-transformations-using-trans-true"><a class="anchor" href="#sigma-transformations-using-trans-true"></a>SIGMA transformations using <code>trans = TRUE</code></h2>
+
+    
+
+
+<p>The value of FINAL and RSE% (always accompanied with a <code>%</code> symbol in outputs)
+in the returned <code>tibble</code> is the reported standard error (where applicable)
+where \(\sigma^2\) and \(se(\sigma^2)\) are the NONMEM reported values of
+parameters and standard errors, respectively.  All sigmas are reported as
+standard deviations.</p>
+<dl>
+<dt>all sigmas</dt><dd><p>\(FINAL = \sqrt(\sigma^2), RSE = 100se(\sigma^2) / \sigma^2\)</p></dd>
+
+</dl>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 

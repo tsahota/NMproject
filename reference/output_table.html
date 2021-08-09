@@ -75,7 +75,7 @@ columns including text columns used for ggplot facetting will be present." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
       </span>
     </div>
 
@@ -153,12 +153,11 @@ otherwise will append only those variables requested.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>output_table()</code> will return a list of tibbles with merged version
-of all output $TABLEs and the input data.  Additional columns will be
-<code>INNONMEM</code> which will be TRUE for rows that were not ignored by
-NONMEM.  For simulation control files there is also <code>DV_OUT</code> which
-will contain simulated <code>DV</code> values. <code>DV</code> will always be
-unmodified from the input dataset.</p>
+    <p>A list of <code>tibble</code>s with merged version of all output $TABLEs and the
+input data.  Additional columns will be <code>INNONMEM</code> which will be TRUE for
+rows that were not ignored by NONMEM.  For simulation control files there
+is also <code>DV_OUT</code> which will contain simulated <code>DV</code> values. <code>DV</code> will always
+be unmodified from the input dataset.</p>
 <p><code>output_table_first</code> will return a <code>tibble</code> with a single run.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -166,6 +165,8 @@ unmodified from the input dataset.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
+<span class='co'>## requires NONMEM to be installed</span>
+
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
 <span class='co'>## exploratory data plot</span>

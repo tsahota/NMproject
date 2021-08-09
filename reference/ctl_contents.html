@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
       </span>
     </div>
 
@@ -134,7 +134,147 @@
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>An nm object with modified <code>ctl_contents</code> field.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='co'># create example object m1 from package demo files</span>
+<span class='va'>exdir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"examples"</span>, <span class='st'>"theopp"</span>, package <span class='op'>=</span> <span class='st'>"NMproject"</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_nm.html'>new_nm</a></span><span class='op'>(</span>run_id <span class='op'>=</span> <span class='st'>"m1"</span>, 
+             based_on <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>exdir</span>, <span class='st'>"Models"</span>, <span class='st'>"ADVAN2.mod"</span><span class='op'>)</span>,
+             data_path <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>exdir</span>, <span class='st'>"SourceData"</span>, <span class='st'>"THEOPP.csv"</span><span class='op'>)</span><span class='op'>)</span>
+             
+<span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>ctl_contents</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $`execute.Models/m1`
+#&gt; $PROB
+#&gt;   1| ;; 1. Based on: NA
+#&gt;   2| ;; 2. Description: 1CMT+oral
+#&gt;   3| ;; x1. Author: runner
+#&gt;   4| 
+#&gt;   5| $PROBLEM ...
+#&gt;   6| 
+#&gt;   7| ;; 4. Date: 01.01.2011
+#&gt;   8| ;; 5. Version: 1
+#&gt;   9| ;; 6. Label:
+#&gt;  10| ;; Basic model
+#&gt;  11| ;; 7. Structural model:
+#&gt;  12| ;; One compartment model
+#&gt;  13| ;; 8. Covariate model:
+#&gt;  14| ;; No covariates
+#&gt;  15| ;; 9. Inter-individual variability:
+#&gt;  16| ;; CL and V1.
+#&gt;  17| ;; 10. Inter-occasion variability:
+#&gt;  18| ;; No IOV
+#&gt;  19| ;; 11. Residual variability:
+#&gt;  20| ;; Additive + Proportional
+#&gt;  21| ;; 12. Estimation:
+#&gt;  22| ;; IMP
+#&gt;  23| 
+#&gt; 
+#&gt; $INPUT
+#&gt;   1| $INPUT ...
+#&gt; 
+#&gt; $DATA
+#&gt;   1| $DATA ../../../../../../../../../../Users/runner/work/_temp/Library/NMproject/extdata/examples/theopp/SourceData/THEOPP.csv IGNORE=@
+#&gt; 
+#&gt; $SUB
+#&gt;   1| $SUB ADVAN2
+#&gt;   2| 
+#&gt; 
+#&gt; $PK
+#&gt;   1| $PK
+#&gt;   2| 
+#&gt;   3| TVKA=EXP(THETA(1))
+#&gt;   4| MU_1=LOG(TVKA)
+#&gt;   5| KA = EXP(MU_1+ETA(1))
+#&gt;   6| 
+#&gt;   7| TVK=EXP(THETA(2))
+#&gt;   8| MU_2=LOG(TVK)
+#&gt;   9| K = EXP(MU_2+ETA(2))
+#&gt;  10| 
+#&gt;  11| TVV=EXP(THETA(3))
+#&gt;  12| MU_3=LOG(TVV)
+#&gt;  13| V = EXP(MU_3+ETA(3))
+#&gt;  14| 
+#&gt;  15| CL = K*V
+#&gt;  16| 
+#&gt;  17| S2 = V
+#&gt;  18| 
+#&gt; 
+#&gt; $ERROR
+#&gt;   1| $ERROR
+#&gt;   2| 
+#&gt;   3| IPRED=F
+#&gt;   4| W=SQRT(SIGMA(1,1)*IPRED**2 + SIGMA(2,2))  ; proportional + additive error
+#&gt;   5| IRES=DV-IPRED
+#&gt;   6| IWRES=IRES/W
+#&gt;   7| Y=IPRED + IPRED*EPS(1) + EPS(2)
+#&gt;   8| 
+#&gt;   9| 
+#&gt; 
+#&gt; $THETA
+#&gt;   1| $THETA
+#&gt;   2| .....          	; KA ; h-1 ; LOG
+#&gt;   3| .....          	; K  ; h-1 ; LOG
+#&gt;   4| .....          	; V  ; L ; LOG
+#&gt;   5| 
+#&gt; 
+#&gt; $OMEGA
+#&gt;   1| $OMEGA
+#&gt;   2| 0.1			          ; IIV_KA ; LOG
+#&gt;   3| 0.1			          ; IIV_K ; LOG
+#&gt;   4| 0.1			          ; IIV_V ; LOG
+#&gt;   5| 
+#&gt; 
+#&gt; $SIGMA
+#&gt;   1| $SIGMA
+#&gt;   2| 0.1           	; prop error
+#&gt;   3| .....          	; add error
+#&gt;   4| 
+#&gt;   5| 
+#&gt; 
+#&gt; $EST
+#&gt;   1| ; Parameter estimation - FOCE
+#&gt;   2| ;$EST METHOD=1 INTER NOABORT MAXEVAL=9999 PRINT=1 NSIG=3 SIGL=9
+#&gt;   3| 
+#&gt;   4| ; Parameter estimation - IMP
+#&gt;   5| $EST METHOD=IMP ISAMPLE=300 NITER=300 RANMETHOD=3S2
+#&gt;   6| CTYPE=3 CITER=10 CALPHA=0.05 CINTERVAL=3
+#&gt;   7| PRINT=1 NOABORT INTERACTION
+#&gt;   8| 
+#&gt;   9| ; Parameer estimation - SAEM
+#&gt;  10| ;$EST METHOD=SAEM ISAMPLE=2 NBURN=1000 NITER=500 RANMETHOD=3S2
+#&gt;  11| ;CTYPE=3 CITER=10 CALPHA=0.05 CINTERVAL=10
+#&gt;  12| ;PRINT=1 NOABORT INTERACTION
+#&gt;  13| 
+#&gt;  14| ; Objective function and covariance evaluation
+#&gt;  15| $EST METHOD=IMP INTER EONLY= 1 MAPITER=0 ISAMPLE = 2000 NITER = 10 RANMETHOD=3S2 NOABORT PRINT=1 NSIG=3 SIGL=9
+#&gt;  16| 
+#&gt; 
+#&gt; $COV
+#&gt;   1| $COV MATRIX=R PRINT=E UNCONDITIONAL SIGL=10
+#&gt;   2| 
+#&gt; 
+#&gt; $SIM
+#&gt;   1| ;$SIM (1234) ONLYSIM SUBPR=1
+#&gt;   2| 
+#&gt; 
+#&gt; $TABLE
+#&gt;   1| $TABLE ID TIME IPRED IWRES IRES CWRES NPDE
+#&gt;   2| FILE=sdtabm1 NOPRINT ONEHEADER
+#&gt;   3| $TABLE ID ETAS(1:LAST); individual parameters
+#&gt;   4| FILE=patabm1 NOPRINT ONEHEADER
+#&gt;   5| $TABLE ID ; continuous covariates
+#&gt;   6| FILE=cotabm1 NOPRINT ONEHEADER
+#&gt;   7| $TABLE ID ; categorical covariates
+#&gt;   8| FILE=catabm1 NOPRINT ONEHEADER
+#&gt; 
+#&gt; attr(,"class")
+#&gt; [1] "ctl_list"
+#&gt; </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

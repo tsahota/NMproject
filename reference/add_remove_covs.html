@@ -76,7 +76,7 @@ stepwise covariate model development." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
       </span>
     </div>
 
@@ -221,6 +221,9 @@ parameters.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>An nm object with modified <code>ctl_contents</code> field.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Available <code>state</code>s:</p>
@@ -250,29 +253,222 @@ IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))</p></dd>
     <div class='dont-index'><p><code><a href='covariate_step_tibble.html'>covariate_step_tibble()</a></code>, <code><a href='test_relations.html'>test_relations()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples"><div class='input'>
+<span class='co'># create example object m1 from package demo files</span>
+<span class='va'>exdir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"examples"</span>, <span class='st'>"theopp"</span>, package <span class='op'>=</span> <span class='st'>"NMproject"</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_nm.html'>new_nm</a></span><span class='op'>(</span>run_id <span class='op'>=</span> <span class='st'>"m1"</span>, 
+             based_on <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>exdir</span>, <span class='st'>"Models"</span>, <span class='st'>"ADVAN2.mod"</span><span class='op'>)</span>,
+             data_path <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>exdir</span>, <span class='st'>"SourceData"</span>, <span class='st'>"THEOPP.csv"</span><span class='op'>)</span><span class='op'>)</span>
 
+<span class='va'>temp_data_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>".csv"</span><span class='op'>)</span>
+
+<span class='co'>## dataset has missing WTs so create a new one and assign this to the run</span>
+<span class='fu'><a href='input_data.html'>input_data</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>ID</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>WT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>WT</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='write_derived_data.html'>write_derived_data</a></span><span class='op'>(</span><span class='va'>temp_data_file</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>written: </span></div><div class='output co'>#&gt; <span class='message'>/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpDSCtX7/filef041b557d90.RDS</span></div><div class='output co'>#&gt; <span class='message'>/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpDSCtX7/filef041b557d90.csv</span></div><div class='input'>  
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='data_path.html'>data_path</a></span><span class='op'>(</span><span class='va'>temp_data_file</span><span class='op'>)</span>
+ 
 <span class='va'>m1WT</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='child.html'>child</a></span><span class='op'>(</span><span class='st'>"m1WT"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>add_cov</span><span class='op'>(</span>param <span class='op'>=</span> <span class='st'>"CL"</span>, cov <span class='op'>=</span> <span class='st'>"WT"</span>, state <span class='op'>=</span> <span class='st'>"power"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='run_nm.html'>run_nm</a></span><span class='op'>(</span><span class='op'>)</span>
+  <span class='fu'>add_cov</span><span class='op'>(</span>param <span class='op'>=</span> <span class='st'>"V"</span>, cov <span class='op'>=</span> <span class='st'>"WT"</span>, state <span class='op'>=</span> <span class='st'>"power"</span><span class='op'>)</span>
 
-<span class='co'>## compare results</span>
-
-<span class='fu'><a href='rr.html'>rr</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1WT</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='nm_summary.html'>summary_wide</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1WT</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>}</span>
-
+<span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"PK"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $`execute.Models/m1`
+#&gt;   1| $PK
+#&gt;   2| 
+#&gt;   3| TVKA=EXP(THETA(1))
+#&gt;   4| MU_1=LOG(TVKA)
+#&gt;   5| KA = EXP(MU_1+ETA(1))
+#&gt;   6| 
+#&gt;   7| TVK=EXP(THETA(2))
+#&gt;   8| MU_2=LOG(TVK)
+#&gt;   9| K = EXP(MU_2+ETA(2))
+#&gt;  10| 
+#&gt;  11| TVV=EXP(THETA(3))
+#&gt;  12| MU_3=LOG(TVV)
+#&gt;  13| V = EXP(MU_3+ETA(3))
+#&gt;  14| 
+#&gt;  15| CL = K*V
+#&gt;  16| 
+#&gt;  17| S2 = V
+#&gt;  18| 
+#&gt; </div><div class='input'><span class='va'>m1WT</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"PK"</span><span class='op'>)</span>  <span class='co'>## notice SCM style code added</span>
+</div><div class='output co'>#&gt; $`execute.Models/m1WT`
+#&gt;   1| $PK
+#&gt;   2| 
+#&gt;   3| ;;; TVVWT-DEFINITION START
+#&gt;   4| TVVWT= ((WT/70.5)**THETA(4))
+#&gt;   5| ;;; TVVWT-DEFINITION END
+#&gt;   6| 
+#&gt;   7| ;;; TVV-RELATION START
+#&gt;   8| TVVCOV=TVVWT
+#&gt;   9| ;;; TVV-RELATION END
+#&gt;  10| 
+#&gt;  11| TVKA=EXP(THETA(1))
+#&gt;  12| MU_1=LOG(TVKA)
+#&gt;  13| KA = EXP(MU_1+ETA(1))
+#&gt;  14| 
+#&gt;  15| TVK=EXP(THETA(2))
+#&gt;  16| MU_2=LOG(TVK)
+#&gt;  17| K = EXP(MU_2+ETA(2))
+#&gt;  18| 
+#&gt;  19| TVV=EXP(THETA(3))
+#&gt;  20| 
+#&gt;  21| TVV = TVVCOV*TVV
+#&gt;  22| MU_3=LOG(TVV)
+#&gt;  23| V = EXP(MU_3+ETA(3))
+#&gt;  24| 
+#&gt;  25| CL = K*V
+#&gt;  26| 
+#&gt;  27| S2 = V
+#&gt;  28| 
+#&gt; </div><div class='input'>
+<span class='fu'><a href='nm_diff.html'>nm_diff</a></span><span class='op'>(</span><span class='va'>m1WT</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt; old_ctl                                         
+#&gt; &gt; new_ctl                                         
+#&gt; @@ 28,4 / 28,12 @@                                
+#&gt;   $PK                                             
+#&gt;                                                   
+#&gt; &gt; ;;; TVVWT-DEFINITION START                      
+#&gt; &gt; TVVWT= ((WT/70.5)**THETA(4))                    
+#&gt; &gt; ;;; TVVWT-DEFINITION END                        
+#&gt; &gt;                                                 
+#&gt; &gt; ;;; TVV-RELATION START                          
+#&gt; &gt; TVVCOV=TVVWT                                    
+#&gt; &gt; ;;; TVV-RELATION END                            
+#&gt; &gt;                                                 
+#&gt;   TVKA=EXP(THETA(1))                              
+#&gt;   MU_1=LOG(TVKA)                                  
+#&gt; @@ 37,4 / 45,6 @@                                 
+#&gt;                                                   
+#&gt;   TVV=EXP(THETA(3))                               
+#&gt; &gt;                                                 
+#&gt; &gt; TVV = TVVCOV*TVV                                
+#&gt;   MU_3=LOG(TVV)                                   
+#&gt;   V = EXP(MU_3+ETA(3))                            
+#&gt; @@ 58,4 / 68,5 @@                                 
+#&gt;   .....           ; V  ; L ; LOG                  
+#&gt;                                                   
+#&gt; &gt; $THETA  (-1,0.8,5) ; TVVWTpower                 
+#&gt;   $OMEGA                                          
+#&gt;   0.1                               ; IIV_KA ; LOG</div><div class='input'>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-
-<span class='va'>m1noWT</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='child.html'>child</a></span><span class='op'>(</span><span class='st'>"m1noWT"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>remove_cov</span><span class='op'>(</span>param <span class='op'>=</span> <span class='st'>"CL"</span>, cov <span class='op'>=</span> <span class='st'>"WT"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='run_nm.html'>run_nm</a></span><span class='op'>(</span><span class='op'>)</span>
-
-<span class='co'>## compare results</span>
-
-<span class='fu'><a href='rr.html'>rr</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1noWT</span><span class='op'>)</span><span class='op'>)</span>
-<span class='fu'><a href='nm_summary.html'>summary_wide</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1noWT</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='run_nm.html'>run_nm</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1WT</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='rr.html'>rr</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1WT</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='nm_summary.html'>summary_wide</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>m1</span>, <span class='va'>m1WT</span><span class='op'>)</span><span class='op'>)</span> 
 <span class='op'>}</span>
+
+<span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span><span class='op'>(</span><span class='va'>temp_data_file</span><span class='op'>)</span>
+
+
+<span class='co'># create example object m1 from package demo files</span>
+<span class='va'>exdir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"examples"</span>, <span class='st'>"theopp"</span>, package <span class='op'>=</span> <span class='st'>"NMproject"</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_nm.html'>new_nm</a></span><span class='op'>(</span>run_id <span class='op'>=</span> <span class='st'>"m1"</span>, 
+             based_on <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>exdir</span>, <span class='st'>"Models"</span>, <span class='st'>"ADVAN2.mod"</span><span class='op'>)</span>,
+             data_path <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>exdir</span>, <span class='st'>"SourceData"</span>, <span class='st'>"THEOPP.csv"</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='va'>temp_data_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>".csv"</span><span class='op'>)</span>
+
+<span class='co'>## dataset has missing WTs so create a new one and assign this to the run</span>
+<span class='fu'><a href='input_data.html'>input_data</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span> <span class='op'>%&gt;%</span> 
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>ID</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>WT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>WT</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='write_derived_data.html'>write_derived_data</a></span><span class='op'>(</span><span class='va'>temp_data_file</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>written: </span></div><div class='output co'>#&gt; <span class='message'>/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpDSCtX7/filef049a686f5.RDS</span></div><div class='output co'>#&gt; <span class='message'>/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpDSCtX7/filef049a686f5.csv</span></div><div class='input'>  
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='data_path.html'>data_path</a></span><span class='op'>(</span><span class='va'>temp_data_file</span><span class='op'>)</span>
+ 
+<span class='va'>m1WT</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='child.html'>child</a></span><span class='op'>(</span><span class='st'>"m1WT"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>add_cov</span><span class='op'>(</span>param <span class='op'>=</span> <span class='st'>"V"</span>, cov <span class='op'>=</span> <span class='st'>"WT"</span>, state <span class='op'>=</span> <span class='st'>"power"</span><span class='op'>)</span>
+
+<span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"PK"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $`execute.Models/m1`
+#&gt;   1| $PK
+#&gt;   2| 
+#&gt;   3| TVKA=EXP(THETA(1))
+#&gt;   4| MU_1=LOG(TVKA)
+#&gt;   5| KA = EXP(MU_1+ETA(1))
+#&gt;   6| 
+#&gt;   7| TVK=EXP(THETA(2))
+#&gt;   8| MU_2=LOG(TVK)
+#&gt;   9| K = EXP(MU_2+ETA(2))
+#&gt;  10| 
+#&gt;  11| TVV=EXP(THETA(3))
+#&gt;  12| MU_3=LOG(TVV)
+#&gt;  13| V = EXP(MU_3+ETA(3))
+#&gt;  14| 
+#&gt;  15| CL = K*V
+#&gt;  16| 
+#&gt;  17| S2 = V
+#&gt;  18| 
+#&gt; </div><div class='input'><span class='va'>m1WT</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"PK"</span><span class='op'>)</span>  <span class='co'>## notice SCM style code added</span>
+</div><div class='output co'>#&gt; $`execute.Models/m1WT`
+#&gt;   1| $PK
+#&gt;   2| 
+#&gt;   3| ;;; TVVWT-DEFINITION START
+#&gt;   4| TVVWT= ((WT/70.5)**THETA(4))
+#&gt;   5| ;;; TVVWT-DEFINITION END
+#&gt;   6| 
+#&gt;   7| ;;; TVV-RELATION START
+#&gt;   8| TVVCOV=TVVWT
+#&gt;   9| ;;; TVV-RELATION END
+#&gt;  10| 
+#&gt;  11| TVKA=EXP(THETA(1))
+#&gt;  12| MU_1=LOG(TVKA)
+#&gt;  13| KA = EXP(MU_1+ETA(1))
+#&gt;  14| 
+#&gt;  15| TVK=EXP(THETA(2))
+#&gt;  16| MU_2=LOG(TVK)
+#&gt;  17| K = EXP(MU_2+ETA(2))
+#&gt;  18| 
+#&gt;  19| TVV=EXP(THETA(3))
+#&gt;  20| 
+#&gt;  21| TVV = TVVCOV*TVV
+#&gt;  22| MU_3=LOG(TVV)
+#&gt;  23| V = EXP(MU_3+ETA(3))
+#&gt;  24| 
+#&gt;  25| CL = K*V
+#&gt;  26| 
+#&gt;  27| S2 = V
+#&gt;  28| 
+#&gt; </div><div class='input'>
+<span class='co'>## reverse this by removing WT</span>
+
+<span class='va'>m1noWT</span> <span class='op'>&lt;-</span> <span class='va'>m1WT</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='child.html'>child</a></span><span class='op'>(</span><span class='st'>"m1noWT"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>remove_cov</span><span class='op'>(</span>param <span class='op'>=</span> <span class='st'>"V"</span>, cov <span class='op'>=</span> <span class='st'>"WT"</span><span class='op'>)</span> 
+  
+<span class='va'>m1noWT</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"PK"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $`execute.Models/m1noWT`
+#&gt;   1| $PK
+#&gt;   2| 
+#&gt;   3| 
+#&gt;   4| 
+#&gt;   5| TVKA=EXP(THETA(1))
+#&gt;   6| MU_1=LOG(TVKA)
+#&gt;   7| KA = EXP(MU_1+ETA(1))
+#&gt;   8| 
+#&gt;   9| TVK=EXP(THETA(2))
+#&gt;  10| MU_2=LOG(TVK)
+#&gt;  11| K = EXP(MU_2+ETA(2))
+#&gt;  12| 
+#&gt;  13| TVV=EXP(THETA(3))
+#&gt;  14| 
+#&gt;  15| MU_3=LOG(TVV)
+#&gt;  16| V = EXP(MU_3+ETA(3))
+#&gt;  17| 
+#&gt;  18| CL = K*V
+#&gt;  19| 
+#&gt;  20| S2 = V
+#&gt;  21| 
+#&gt; </div><div class='input'><span class='va'>m1noWT</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"THETA"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $`execute.Models/m1noWT`
+#&gt;   1| $THETA
+#&gt;   2| .....          	; KA ; h-1 ; LOG
+#&gt;   3| .....          	; K  ; h-1 ; LOG
+#&gt;   4| .....          	; V  ; L ; LOG
+#&gt;   5| 
+#&gt; </div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span><span class='op'>(</span><span class='va'>temp_data_file</span><span class='op'>)</span>
 
 </div></pre>
   </div>

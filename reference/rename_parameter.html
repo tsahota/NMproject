@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
       </span>
     </div>
 
@@ -140,11 +140,43 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples"><div class='input'>
+<span class='co'># create example object m1 from package demo files</span>
+<span class='va'>exdir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"examples"</span>, <span class='st'>"theopp"</span>, package <span class='op'>=</span> <span class='st'>"NMproject"</span><span class='op'>)</span>
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_nm.html'>new_nm</a></span><span class='op'>(</span>run_id <span class='op'>=</span> <span class='st'>"m1"</span>, 
+             based_on <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>exdir</span>, <span class='st'>"Models"</span>, <span class='st'>"ADVAN2.mod"</span><span class='op'>)</span>,
+             data_path <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>exdir</span>, <span class='st'>"SourceData"</span>, <span class='st'>"THEOPP.csv"</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>rename_parameter</span><span class='op'>(</span>CL <span class='op'>=</span> <span class='st'>"KE"</span><span class='op'>)</span>
-<span class='co'>## renames KE to CL</span>
-<span class='op'>}</span>
+<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'>rename_parameter</span><span class='op'>(</span>V2 <span class='op'>=</span> <span class='st'>"V"</span><span class='op'>)</span>
+
+<span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"PK"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $`execute.Models/m1`
+#&gt;   1| $PK
+#&gt;   2| 
+#&gt;   3| TVKA=EXP(THETA(1))
+#&gt;   4| MU_1=LOG(TVKA)
+#&gt;   5| KA = EXP(MU_1+ETA(1))
+#&gt;   6| 
+#&gt;   7| TVK=EXP(THETA(2))
+#&gt;   8| MU_2=LOG(TVK)
+#&gt;   9| K = EXP(MU_2+ETA(2))
+#&gt;  10| 
+#&gt;  11| TVV2=EXP(THETA(3))
+#&gt;  12| MU_3=LOG(TVV2)
+#&gt;  13| V2 = EXP(MU_3+ETA(3))
+#&gt;  14| 
+#&gt;  15| CL = K*V2
+#&gt;  16| 
+#&gt;  17| S2 = V2
+#&gt;  18| 
+#&gt; </div><div class='input'><span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='dollar.html'>dollar</a></span><span class='op'>(</span><span class='st'>"THETA"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $`execute.Models/m1`
+#&gt;   1| $THETA
+#&gt;   2| .....          	; KA ; h-1 ; LOG
+#&gt;   3| .....          	; K  ; h-1 ; LOG
+#&gt;   4| .....          	; V2  ; L ; LOG
+#&gt;   5| 
+#&gt; </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
