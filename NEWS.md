@@ -1,5 +1,7 @@
 # NMproject (development version)
 
+* made `run_id` argument mandatory in `child()`.
+
 # NMproject 0.6.2
 
 This is the first CRAN release of NMproject.  Here are the major changes here 
