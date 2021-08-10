@@ -243,7 +243,7 @@ nm <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
 #' @param m Parent nm object.
 #' @param run_id Character.  New `run_id` to assign to child object.
 #' @param type Character (default = `"execute"`). Type of child object.
-#' @param parent Optional nm object (default = `nm(NA)`) . Parent object will by
+#' @param parent Optional nm object (default = `m`) . Parent object will by
 #'   default be `m`, but this argument will force parent to be a different
 #'   object.
 #' @param silent Logical (default = `FALSE`). Should warn if conflicts detected.
@@ -267,18 +267,21 @@ nm <- Vectorize_nm_list(nm_generic, SIMPLIFY = FALSE)
 #' nm_diff(m2, m1)
 #'
 #' @export
-child <- function(m, run_id = NA_character_, type = "execute", parent = nm(NA), silent = FALSE) {
+child <- function(m, run_id = NA_character_, type = "execute",
+                  parent = m, silent = FALSE) {
   UseMethod("child")
 }
 #' @export
-child.nm_generic <- function(m, run_id = NA_character_, type = "execute", parent = nm(NA), silent = FALSE) {
+child.nm_generic <- function(m, run_id = NA_character_, type = "execute",
+                             parent = m, silent = FALSE) {
+  
+  if (is.na(run_id)) {
+    stop("child() needs a run_id argument e.g. m2 <- m1 %>% child(run_id = \"m2\")")
+  }
+  
   mparent <- m
-  # if(is.environment(m)){
-  #   old_classes <- class(m)
-  #   m <- as.environment(as.list(m, all.names=TRUE))
-  #   class(m) <- old_classes
-  # }
-
+  parent <- parent # evaluate now rather than lazily
+  
   m <- m %>% executed(FALSE)
   m <- m %>% job_info(NA_character_)
   m[["result_files"]] <- c()
@@ -287,13 +290,6 @@ child.nm_generic <- function(m, run_id = NA_character_, type = "execute", parent
   m <- m %>% parent_ctl_name(ctl_name(m))
   m <- m %>% parent_results_dir(results_dir(m))
 
-  ## if missing increment run_id
-  if (is.na(run_id)) {
-    if (!is.na(run_id(m))) {
-      run_id <- increment_run_id(run_id(m))
-      message("child run_id automatically set to: ", run_id)
-    }
-  }
   if (!is.na(run_id)) m <- m %>% run_id(run_id)
 
   m <- m %>% ctl_contents(ctl_contents(m),
@@ -305,13 +301,15 @@ child.nm_generic <- function(m, run_id = NA_character_, type = "execute", parent
 
   ## check for file conficts
   if (!is_single_na(m[["ctl_contents"]])) {
-    file_conflicts <- intersect(psn_exported_files(mparent), psn_exported_files(m))
+    file_conflicts <- intersect(
+      psn_exported_files(parent),
+      psn_exported_files(m)
+    )
     if (length(file_conflicts) > 0) {
       if (!silent) {
         warning("Child file(s) currently in conflict with parent:\n",
           paste(paste0(" ", file_conflicts), collapse = "\n"),
-          "\nYou will overwrite parent object outputs if you run now",
-          call. = FALSE
+          "\nYou will overwrite parent object outputs if you run now"
         )
       }
     }
@@ -331,7 +329,7 @@ child.nm_generic <- function(m, run_id = NA_character_, type = "execute", parent
     }
   }
 
-  if (!is.na(parent)) m <- m %>% change_parent(parent)
+  if (!identical(parent, mparent)) m <- m %>% change_parent(parent)
 
   m
 }

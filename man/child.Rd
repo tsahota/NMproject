@@ -4,13 +4,7 @@
 \alias{child}
 \title{Make child nm object from parent}
 \usage{
-child(
-  m,
-  run_id = NA_character_,
-  type = "execute",
-  parent = nm(NA),
-  silent = FALSE
-)
+child(m, run_id = NA_character_, type = "execute", parent = m, silent = FALSE)
 }
 \arguments{
 \item{m}{Parent nm object.}
@@ -19,7 +13,7 @@ child(
 
 \item{type}{Character (default = \code{"execute"}). Type of child object.}
 
-\item{parent}{Optional nm object (default = \code{nm(NA)}) . Parent object will by
+\item{parent}{Optional nm object (default = \code{m}) . Parent object will by
 default be \code{m}, but this argument will force parent to be a different
 object.}
 
