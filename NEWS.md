@@ -1,11 +1,51 @@
 # NMproject (development version)
 
+* Moved to GitHub Actions, dropped Appveyor and Travis
+
+* Included an experimental `%f>%` pipe for applying functions elementwise
+  to vector valued nm objects.
+  
+* Included `is_nmproject_dir()`, intended for package owners of dependent packages
+
+* Renamed `nm_default_dir()` to `nm_dir()`
+
+* Added `nm_pre_commit_hook()` and `nm_pre_commit_hook()` for custom NMproject
+  analysis projects
+  
+* Removed `nm.cmd_default` option in favour of the more flexible `nm_default_fields`.
+  See `?nm_default_fields()` for help.
+
+* `decision()` uses `usethis::ui_yeah()` for prompting rather than `readline()`.
+
+* `stage()` has `find_replace_dir_names` argument to handle custom NMproject
+  directory structures.
+  
+* Revamped the NMproject project creation template and `nm_create_analysis_project()`
+  for greater customisability ability and removed dependence on `options()` which 
+  was causing strange behaviour.
+  
+## Minor changes
+
 * Made `run_id` argument mandatory in `child()`.
+
 * Added example code for first object creation in code library dialog boxes 
   when a model file is imported
+  
 * `new_nm()` will now fail if user tries to use a run based on one in the
   Models.  This is for safety as the Models directry should only contain 
   NMproject generated code.
+  
+* The code library will not display `.Rroj` or `README` files.
+  
+## Deprecated functions
+
+* `preview()` is now deprecated and removed in favour of the code library 'Addin'
+
+* `nm_default_dir` is now deprecated
+
+* Expanded model diagnostic rmarkdown template to include more xpose plots.
+
+* Expanded README template for new NMprojects to run analysis level tests on build.
 
 # NMproject 0.6.2
 
