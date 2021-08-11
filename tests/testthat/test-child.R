@@ -13,4 +13,6 @@ test_that("child", {
   m3 <- m2 %>% child("m3", parent = m1)
   expect_equal(parent_run_id(m3), "m1")
   
+  expect_error(m3 <- m2 %>% child("m2", parent = m1))
+  
 })

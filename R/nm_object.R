@@ -279,6 +279,10 @@ child.nm_generic <- function(m, run_id = NA_character_, type = "execute",
     stop("child() needs a run_id argument e.g. m2 <- m1 %>% child(run_id = \"m2\")")
   }
   
+  if (identical(as.character(run_id), as.character(run_id(m)))){
+    stop("run_id of the child should be different from parent e.g. m2 <- m1 %>% child(run_id = \"m2\")")
+  }
+    
   mparent <- m
   parent <- parent # evaluate now rather than lazily
   
