@@ -1,4 +1,4 @@
-# NMproject (development version)
+# NMproject 0.6.3
 
 * Moved to GitHub Actions, dropped Appveyor and Travis
 
