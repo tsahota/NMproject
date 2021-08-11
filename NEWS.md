@@ -1,6 +1,11 @@
 # NMproject (development version)
 
-* made `run_id` argument mandatory in `child()`.
+* Made `run_id` argument mandatory in `child()`.
+* Added example code for first object creation in code library dialog boxes 
+  when a model file is imported
+* `new_nm()` will now fail if user tries to use a run based on one in the
+  Models.  This is for safety as the Models directry should only contain 
+  NMproject generated code.
 
 # NMproject 0.6.2
 

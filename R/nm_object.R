@@ -19,6 +19,8 @@
 #' @param cmd Optional character. PsN command to use. If unspecified will use
 #'   `getOption("nm_default_fields")` value of `cmd`. Use glue notation for
 #'   inheritance.  See details.
+#' @param force (Default = `FALSE`). Forces object creation even if `based_on`
+#'   model is in the `nm_dir("models")` directory.
 #'
 #' @details The `cmd` field uses `glue` notation.  So instead of specifying
 #'   `execute runm1.mod -dir=m1`, it is best to specify `execute {ctl_name}
@@ -94,8 +96,20 @@
 new_nm <- function(based_on,
                    run_id = NA_character_,
                    data_path,
-                   cmd) {
+                   cmd,
+                   force = FALSE) {
   m <- nm(run_id = run_id)
+  if (!force) {
+    in_models_dir <- identical(
+      normalizePath(dirname(based_on), mustWork = FALSE), 
+      normalizePath(nm_dir("models"), mustWork = FALSE)
+    )
+    if (in_models_dir) {
+      stop("The '", nm_dir("models"), "' directory is meant for automatically generated models, 
+ this is risky. Move the 'based_on' to another directory in the analysis project, 
+ or rerun with force=TRUE")
+    }
+  }
   if (!missing(based_on)) m <- m %>% based_on(based_on)
   if (!missing(data_path)) m <- m %>% data_path(data_path)
   if (!missing(cmd)) m <- m %>% cmd(cmd)

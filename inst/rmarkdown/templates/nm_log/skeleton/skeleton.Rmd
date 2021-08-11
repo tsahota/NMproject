@@ -49,10 +49,13 @@ set.seed(1234)
 ```{r}
 
 ## REPLACE ME BELOW
+## instructions:
+##   either use the Addins -> code library to import NONMEM code and then copy-paste the code in the pop up.
+##   OR copy a NONMEM model file (and data set) into your analysis project and fill out relative paths below
+
 m1 <- new_nm(run_id = "m1",
-             based_on = "staging/Models/runm1.mod",
-             data_path = "DerivedData/THEOPP.csv",
-             cmd = "execute {ctl_name} -dir={run_dir}") %>%
+             based_on = "relative/path/to/your/NONMEM/file",
+             data_path = "relative/path/to/your/NONMEM/ready/file.csv") %>%
   fill_input() %>%
   run_nm()
   
