@@ -35,15 +35,11 @@ Script based 'NONMEM' model development in RStudio.
 
 ## Installation
 
-<!-- CRAN install instructions
-
 You can install the released version of NMproject from [CRAN](https://CRAN.R-project.org) with:
 
 ```{r eval = FALSE}
 install.packages("NMproject")
 ```
-
--->
 
 To install the latest version of NMproject from [GitHub](https://github.com/):
 

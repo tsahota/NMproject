@@ -29,16 +29,12 @@ syntax and is not backwards compatible. Video is to be replaced*
 
 ## Installation
 
-<!-- CRAN install instructions
+You can install the released version of NMproject from
+[CRAN](https://CRAN.R-project.org) with:
 
-You can install the released version of NMproject from [CRAN](https://CRAN.R-project.org) with:
-
-
-```r
+``` r
 install.packages("NMproject")
 ```
-
--->
 
 To install the latest version of NMproject from
 [GitHub](https://github.com/):
