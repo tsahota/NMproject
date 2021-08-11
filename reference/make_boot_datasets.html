@@ -74,7 +74,7 @@ the necessary rsample splitting objects to be present. See examples." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -130,7 +130,7 @@ the necessary <code>rsample</code> splitting objects to be present. See examples
     <pre class="usage"><span class='fu'>make_boot_datasets</span><span class='op'>(</span>
   <span class='va'>m</span>,
   samples <span class='op'>=</span> <span class='fl'>10</span>,
-  data_folder <span class='op'>=</span> <span class='st'>"DerivedData/bootstrap_datasets"</span>,
+  data_folder <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='fu'><a href='nm_dir.html'>nm_dir</a></span><span class='op'>(</span><span class='st'>"derived_data"</span><span class='op'>)</span>, <span class='st'>"bootstrap_datasets"</span><span class='op'>)</span>,
   overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>,
   id_var <span class='op'>=</span> <span class='st'>"ID"</span>,
   <span class='va'>...</span>

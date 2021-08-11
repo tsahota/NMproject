@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -117,9 +117,46 @@
       <small>Source: <a href='https://github.com/tsahota/NMproject/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="nmproject-063" class="section level1">
+<h1 class="page-header" data-toc-text="0.6.3">
+<a href="#nmproject-063" class="anchor"></a>NMproject 0.6.3<small> Unreleased </small>
+</h1>
+<ul>
+<li><p>Moved to GitHub Actions, dropped Appveyor and Travis</p></li>
+<li><p>Included an experimental <code><a href="../reference/%f&gt;%.html">%f&gt;%</a></code> pipe for applying functions elementwise to vector valued nm objects.</p></li>
+<li><p>Included <code><a href="../reference/is_nmproject_dir.html">is_nmproject_dir()</a></code>, intended for package owners of dependent packages</p></li>
+<li><p>Renamed <code><a href="../reference/nm_default_dir.html">nm_default_dir()</a></code> to <code><a href="../reference/nm_dir.html">nm_dir()</a></code></p></li>
+<li><p>Added <code><a href="../reference/git_hooks.html">nm_pre_commit_hook()</a></code> and <code><a href="../reference/git_hooks.html">nm_pre_commit_hook()</a></code> for custom NMproject analysis projects</p></li>
+<li><p>Removed <code>nm.cmd_default</code> option in favour of the more flexible <code>nm_default_fields</code>. See <code>?nm_default_fields()</code> for help.</p></li>
+<li><p><code><a href="../reference/decision.html">decision()</a></code> uses <code><a href="https://usethis.r-lib.org/reference/ui-questions.html">usethis::ui_yeah()</a></code> for prompting rather than <code><a href="https://rdrr.io/r/base/readline.html">readline()</a></code>.</p></li>
+<li><p><code><a href="../reference/stage.html">stage()</a></code> has <code>find_replace_dir_names</code> argument to handle custom NMproject directory structures.</p></li>
+<li><p>Revamped the NMproject project creation template and <code><a href="../reference/nm_create_analysis_project.html">nm_create_analysis_project()</a></code> for greater customisability ability and removed dependence on <code><a href="https://rdrr.io/r/base/options.html">options()</a></code> which was causing strange behaviour.</p></li>
+</ul>
+<div id="minor-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes" class="anchor"></a>Minor changes</h2>
+<ul>
+<li><p>Made <code>run_id</code> argument mandatory in <code><a href="../reference/child.html">child()</a></code>.</p></li>
+<li><p>Added example code for first object creation in code library dialog boxes when a model file is imported</p></li>
+<li><p><code><a href="../reference/new_nm.html">new_nm()</a></code> will now fail if user tries to use a run based on one in the Models. This is for safety as the Models directry should only contain NMproject generated code.</p></li>
+<li><p>The code library will not display <code>.Rroj</code> or <code>README</code> files.</p></li>
+</ul>
+</div>
+<div id="deprecated-functions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#deprecated-functions" class="anchor"></a>Deprecated functions</h2>
+<ul>
+<li><p><code>preview()</code> is now deprecated and removed in favour of the code library ‘Addin’</p></li>
+<li><p><code>nm_default_dir</code> is now deprecated</p></li>
+<li><p>Expanded model diagnostic rmarkdown template to include more xpose plots.</p></li>
+<li><p>Expanded README template for new NMprojects to run analysis level tests on build.</p></li>
+</ul>
+</div>
+</div>
     <div id="nmproject-062" class="section level1">
 <h1 class="page-header" data-toc-text="0.6.2">
-<a href="#nmproject-062" class="anchor"></a>NMproject 0.6.2</h1>
+<a href="#nmproject-062" class="anchor"></a>NMproject 0.6.2<small> 2021-08-09 </small>
+</h1>
 <p>This is the first CRAN release of NMproject. Here are the major changes here relative to 0.5.1:</p>
 <ul>
 <li><p>Removal and deprecation of tidyproject as an NMproject dependency.</p></li>
@@ -136,12 +173,14 @@
 </div>
     <div id="nmproject-051-beta-interface-pre-release" class="section level1">
 <h1 class="page-header" data-toc-text="0.5.1">
-<a href="#nmproject-051-beta-interface-pre-release" class="anchor"></a>NMproject 0.5.1 (beta interface pre-release)</h1>
+<a href="#nmproject-051-beta-interface-pre-release" class="anchor"></a>NMproject 0.5.1 (beta interface pre-release)<small> Unreleased </small>
+</h1>
 <p>This is the last version of NMproject to be developed at AZ. It has is a developmental version of the newer “beta”" interface.</p>
 </div>
     <div id="nmproject-032-alpha" class="section level1">
 <h1 class="page-header" data-toc-text="0.3.2">
-<a href="#nmproject-032-alpha" class="anchor"></a>NMproject 0.3.2 (alpha)</h1>
+<a href="#nmproject-032-alpha" class="anchor"></a>NMproject 0.3.2 (alpha)<small> Unreleased </small>
+</h1>
 <p>This is the last release of the alpha interface developed at AZ.</p>
 </div>
   </div>

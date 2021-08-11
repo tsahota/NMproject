@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Wait for runs to finish — wait_finish • NMproject</title>
+<title>Setup default nm object fields — nm_default_fields • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,12 +39,10 @@
 
 
 
-<meta property="og:title" content="Wait for runs to finish — wait_finish" />
+<meta property="og:title" content="Setup default nm object fields — nm_default_fields" />
 <meta property="og:description" content="
-Blocks subsequent r execution until run(s) are finished.  This is useful for
-when subsequent relies on outputs from completed NONMEM jobs.  It is normally
-a good idea to include this in post processing R markdown templates, to
-ensure they wait for runs to complete before executing." />
+This allows organisations/individuals with their own nm object field
+preferences to set these." />
 
 
 
@@ -118,57 +116,46 @@ ensure they wait for runs to complete before executing." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Wait for runs to finish</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/monitoring.R'><code>R/monitoring.R</code></a></small>
-    <div class="hidden name"><code>wait_finish.Rd</code></div>
+    <h1>Setup default nm object fields</h1>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/NMproject-options.R'><code>R/NMproject-options.R</code></a></small>
+    <div class="hidden name"><code>nm_default_fields.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
-<p>Blocks subsequent r execution until run(s) are finished.  This is useful for
-when subsequent relies on outputs from completed NONMEM jobs.  It is normally
-a good idea to include this in post processing R markdown templates, to
-ensure they wait for runs to complete before executing.</p>
+<p>This allows organisations/individuals with their own nm object field
+preferences to set these.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>wait_finish</span><span class='op'>(</span><span class='va'>r</span>, timeout <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>nm_default_fields</span><span class='op'>(</span><span class='va'>field_list</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>r</th>
-      <td><p>An nm object.</p></td>
-    </tr>
-    <tr>
-      <th>timeout</th>
-      <td><p>Numeric seconds to wait before timeout.</p></td>
+      <th>field_list</th>
+      <td><p>Optional named list or vector. Names correspond to function
+names and object fields, values correspond to what will be set.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Invisibly returns <code>r</code> unmodified.  Called for side effects.</p>
+    <p>if <code>field_list</code> is missing, will return value of
+<code><a href='https://rdrr.io/r/base/options.html'>getOption("nm_default_fields")</a></code> otherwise will set option <code>nm_default_fields</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='co'>## requires NONMEM to be installed</span>
-
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='co'># create example object m1 from package demo files</span>
-<span class='va'>exdir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"examples"</span>, <span class='st'>"theopp"</span>, package <span class='op'>=</span> <span class='st'>"NMproject"</span><span class='op'>)</span>
-<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_nm.html'>new_nm</a></span><span class='op'>(</span>run_id <span class='op'>=</span> <span class='st'>"m1"</span>, 
-             based_on <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>exdir</span>, <span class='st'>"Models"</span>, <span class='st'>"ADVAN2.mod"</span><span class='op'>)</span>,
-             data_path <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>exdir</span>, <span class='st'>"SourceData"</span>, <span class='st'>"THEOPP.csv"</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='va'>m1</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='run_nm.html'>run_nm</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>wait_finish</span><span class='op'>(</span><span class='op'>)</span>
-
-<span class='co'>## following requires run to be completed.</span>
-<span class='fu'><a href='covariance_plot.html'>covariance_plot</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span>
-<span class='op'>}</span>
-
+<span class='fu'>nm_default_fields</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $cmd
+#&gt; [1] "execute {ctl_name} -dir={run_dir}"
+#&gt; </div><div class='input'><span class='fu'>nm_default_fields</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
+  cmd <span class='op'>=</span> <span class='st'>"execute {ctl_name} -dir={run_dir}"</span>
+<span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>nm_default_fields</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $cmd
+#&gt; [1] "execute {ctl_name} -dir={run_dir}"
+#&gt; </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

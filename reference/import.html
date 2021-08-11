@@ -74,7 +74,7 @@ code into your project." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -127,7 +127,13 @@ code into your project." />
 code into your project.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>import</span><span class='op'>(</span><span class='va'>copy_table</span>, overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span>, skip <span class='op'>=</span> <span class='st'>"\\.mod$"</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>import</span><span class='op'>(</span>
+  <span class='va'>copy_table</span>,
+  overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  silent <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  skip <span class='op'>=</span> <span class='st'>"\\.mod$"</span>,
+  find_replace_dir_names <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -150,6 +156,11 @@ output from <code><a href='stage.html'>stage()</a></code>, if character path, re
       <td><p>Character (default = <code>"\\.mod$"</code>). Pattern to skip.  Model files
 will be imported directly into the project in order to avoid conflicts and
 will instead reside only in the staging area.</p></td>
+    </tr>
+    <tr>
+      <th>find_replace_dir_names</th>
+      <td><p>Logical (default = TRUE). Will attempt to find
+replace strings in scripts to reflect <code><a href='nm_default_dirs.html'>nm_default_dirs()</a></code>.</p></td>
     </tr>
     </table>
 

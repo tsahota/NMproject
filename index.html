@@ -41,7 +41,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -140,7 +140,7 @@ install.packages("NMproject")
 <li>run</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">m2WT</span> <span class="op">&lt;-</span> <span class="va">m2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/child.html">child</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="va">m2WT</span> <span class="op">&lt;-</span> <span class="va">m2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/child.html">child</a></span><span class="op">(</span><span class="st">"m2WT"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="reference/add_remove_covs.html">add_cov</a></span><span class="op">(</span>param <span class="op">=</span> <span class="st">"CL"</span>, cov <span class="op">=</span> <span class="st">"WT"</span>, state <span class="op">=</span> <span class="st">"power"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>Graphical RStudio ‘Addins’ exist for reviewing the changes that functions like <code><a href="reference/add_remove_covs.html">add_cov()</a></code> make before execution and performing <code><a href="reference/nm_tran.html">nm_tran()</a></code> checks.</p>
@@ -188,6 +188,8 @@ install.packages("NMproject")
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
+<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=NMproject">https://​cloud.r-project.org/​package=NMproject</a>
+</li>
 <li>Browse source code at <br><a href="https://github.com/tsahota/NMproject/">https://​github.com/​tsahota/​NMproject/​</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/tsahota/NMproject/issues">https://​github.com/​tsahota/​NMproject/​issues</a>
@@ -212,12 +214,10 @@ install.packages("NMproject")
   <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://travis-ci.org/tsahota/NMproject"><img src="https://travis-ci.org/tsahota/NMproject.svg?branch=master" alt="Travis-CI Build Status"></a></li>
-<li><a href="https://ci.appveyor.com/project/tsahota/NMproject"><img src="https://ci.appveyor.com/api/projects/status/github/tsahota/NMproject?branch=master&amp;svg=true" alt="AppVeyor Build Status"></a></li>
-<li><a href="https://coveralls.io/github/tsahota/NMproject?branch=master"><img src="https://coveralls.io/repos/github/tsahota/NMproject/badge.svg?branch=master" alt="Coverage Status"></a></li>
+<li><a href="https://CRAN.R-project.org/package=NMproject"><img src="https://www.r-pkg.org/badges/version/NMproject" alt="CRAN status"></a></li>
+<li><a href="https://github.com/tsahota/NMproject/actions"><img src="https://github.com/tsahota/NMproject/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://codecov.io/gh/tsahota/NMproject?branch=master"><img src="https://codecov.io/gh/tsahota/NMproject/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="Lifecycle: maturing"></a></li>
-<li><a href="https://CRAN.R-project.org/package=NMproject"><img src="https://www.r-pkg.org/badges/version/NMproject" alt="CRAN status"></a></li>
 </ul>
 </div>
 </div>

@@ -78,7 +78,7 @@ way to bring code is via the &quot;code library&quot; RStudio 'Addin' shiny app.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -135,7 +135,13 @@ external code is changed, the staged code will remain fixed.</p>
 way to bring code is via the "code library" RStudio 'Addin' shiny app.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>stage</span><span class='op'>(</span><span class='va'>files</span>, <span class='va'>root_dir</span>, overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>stage</span><span class='op'>(</span>
+  <span class='va'>files</span>,
+  <span class='va'>root_dir</span>,
+  overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  silent <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  find_replace_dir_names <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -157,6 +163,11 @@ this is not specified, will guess based on presence of <code>nm_default_dirs</co
     <tr>
       <th>silent</th>
       <td><p>Logical (default = FALSE).</p></td>
+    </tr>
+    <tr>
+      <th>find_replace_dir_names</th>
+      <td><p>Logical (default = TRUE). Will attempt to find
+replace strings in scripts to reflect <code><a href='nm_default_dirs.html'>nm_default_dirs()</a></code>.</p></td>
     </tr>
     </table>
 

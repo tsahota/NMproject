@@ -75,7 +75,7 @@ function will inherit the properties of the parent run." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -129,7 +129,7 @@ will be using this function.  Subsequent objects created with the <code><a href=
 function will inherit the properties of the parent run.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>new_nm</span><span class='op'>(</span><span class='va'>based_on</span>, run_id <span class='op'>=</span> <span class='cn'>NA_character_</span>, <span class='va'>data_path</span>, <span class='va'>cmd</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>new_nm</span><span class='op'>(</span><span class='va'>based_on</span>, run_id <span class='op'>=</span> <span class='cn'>NA_character_</span>, <span class='va'>data_path</span>, <span class='va'>cmd</span>, force <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -156,8 +156,13 @@ explicitly as a relative path.</p></td>
     <tr>
       <th>cmd</th>
       <td><p>Optional character. PsN command to use. If unspecified will use
-<code><a href='https://rdrr.io/r/base/options.html'>getOption("nm.cmd_default")</a></code>. Use glue notation for inheritance.  See
-details.</p></td>
+<code><a href='https://rdrr.io/r/base/options.html'>getOption("nm_default_fields")</a></code> value of <code>cmd</code>. Use glue notation for
+inheritance.  See details.</p></td>
+    </tr>
+    <tr>
+      <th>force</th>
+      <td><p>(Default = <code>FALSE</code>). Forces object creation even if <code>based_on</code>
+model is in the <code><a href='nm_dir.html'>nm_dir("models")</a></code> directory.</p></td>
     </tr>
     </table>
 
@@ -222,6 +227,7 @@ the <code>run_id</code> for simplicity.</p></dd>
 #&gt;   ..$ data_path   : chr "/Users/runner/work/_temp/Library/NMproject/extdata/examples/theopp/SourceData/THEOPP.csv"
 #&gt;   ..$ cmd         : chr "execute runm1.mod -dir=m1"
 #&gt;   ..$ cores       : int 1
+#&gt;   ..$ parafile    : chr "path/to/parafile.pnm"
 #&gt;   ..$ run_dir     : chr "m1"
 #&gt;   ..$ ctl_name    : chr "runm1.mod"
 #&gt;   ..$ results_dir : chr "Results"

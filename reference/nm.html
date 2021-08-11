@@ -74,7 +74,7 @@ around.  Most package functions act on this object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -129,7 +129,7 @@ around.  Most package functions act on this object.</p>
 
     <pre class="usage"><span class='fu'>nm</span><span class='op'>(</span>
   run_id <span class='op'>=</span> <span class='cn'>NA_character_</span>,
-  run_in <span class='op'>=</span> <span class='fu'><a href='nm_default_dir.html'>nm_default_dir</a></span><span class='op'>(</span><span class='st'>"models"</span><span class='op'>)</span>,
+  run_in <span class='op'>=</span> <span class='fu'><a href='nm_dir.html'>nm_dir</a></span><span class='op'>(</span><span class='st'>"models"</span><span class='op'>)</span>,
   parent_run_id <span class='op'>=</span> <span class='cn'>NA_character_</span>,
   parent_run_in <span class='op'>=</span> <span class='cn'>NA_character_</span>,
   parent_ctl_name <span class='op'>=</span> <span class='cn'>NA_character_</span>,
@@ -137,7 +137,7 @@ around.  Most package functions act on this object.</p>
   ctl_name <span class='op'>=</span> <span class='st'>"run{run_id}.mod"</span>,
   type <span class='op'>=</span> <span class='st'>"execute"</span>,
   run_dir <span class='op'>=</span> <span class='st'>"{run_id}"</span>,
-  results_dir <span class='op'>=</span> <span class='fu'><a href='nm_default_dir.html'>nm_default_dir</a></span><span class='op'>(</span><span class='st'>"results"</span><span class='op'>)</span>,
+  results_dir <span class='op'>=</span> <span class='fu'><a href='nm_dir.html'>nm_dir</a></span><span class='op'>(</span><span class='st'>"results"</span><span class='op'>)</span>,
   lst_path <span class='op'>=</span> <span class='st'>"{run_dir}/NM_run1/psn.lst"</span>
 <span class='op'>)</span></pre>
 
@@ -217,6 +217,7 @@ object corresponds to length of <code>run_id</code>.</p>
 #&gt;   ..$ data_path   : chr <span style='text-decoration: underline;'>NA - fill with data_path()</span>
 #&gt;   ..$ cmd         : chr "execute runm0.mod -dir=m0"
 #&gt;   ..$ cores       : int 1
+#&gt;   ..$ parafile    : chr "path/to/parafile.pnm"
 #&gt;   ..$ run_dir     : chr "m0"
 #&gt;   ..$ results_dir : chr "Results"
 #&gt;   ..$ unique_id   : chr "execute.Models/m0"

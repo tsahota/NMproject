@@ -124,6 +124,12 @@
     <loc>https://tsahota.github.io/NMproject/reference/git_cmd_available.html</loc>
   </url>
   <url>
+    <loc>https://tsahota.github.io/NMproject/reference/git_hooks.html</loc>
+  </url>
+  <url>
+    <loc>https://tsahota.github.io/NMproject/reference/grapes-f-greater-than-grapes.html</loc>
+  </url>
+  <url>
     <loc>https://tsahota.github.io/NMproject/reference/gsub_ctl.html</loc>
   </url>
   <url>
@@ -152,6 +158,9 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/is_nm.html</loc>
+  </url>
+  <url>
+    <loc>https://tsahota.github.io/NMproject/reference/is_nmproject_dir.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/is_rstudio.html</loc>
@@ -202,7 +211,13 @@
     <loc>https://tsahota.github.io/NMproject/reference/nm_default_dirs.html</loc>
   </url>
   <url>
+    <loc>https://tsahota.github.io/NMproject/reference/nm_default_fields.html</loc>
+  </url>
+  <url>
     <loc>https://tsahota.github.io/NMproject/reference/nm_diff.html</loc>
+  </url>
+  <url>
+    <loc>https://tsahota.github.io/NMproject/reference/nm_dir.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/nm_getsetters.html</loc>
@@ -281,9 +296,6 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/ppc.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/reference/preview.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/psn_style_scm.html</loc>

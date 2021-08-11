@@ -74,7 +74,7 @@ their directory structure" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -148,27 +148,27 @@ their directory structure</p>
     <pre class="examples"><div class='input'>
 <span class='va'>orig_list</span> <span class='op'>&lt;-</span> <span class='fu'>nm_default_dirs</span><span class='op'>(</span><span class='op'>)</span>
 <span class='va'>orig_list</span>
-</div><div class='output co'>#&gt; $models
-#&gt; [1] "Models"
-#&gt; 
-#&gt; $scripts
+</div><div class='output co'>#&gt; $scripts
 #&gt; [1] "Scripts"
+#&gt; 
+#&gt; $models
+#&gt; [1] "Models"
 #&gt; 
 #&gt; $results
 #&gt; [1] "Results"
 #&gt; 
-#&gt; [[4]]
+#&gt; $source_data
 #&gt; [1] "SourceData"
 #&gt; 
-#&gt; [[5]]
+#&gt; $derived_data
 #&gt; [1] "DerivedData"
 #&gt; </div><div class='input'>
 <span class='fu'>nm_default_dirs</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
   models <span class='op'>=</span> <span class='st'>"Models"</span>,
   scripts <span class='op'>=</span> <span class='st'>"Scripts"</span>,
   results <span class='op'>=</span> <span class='st'>"Results"</span>,
-  <span class='st'>"SourceData"</span>,
-  <span class='st'>"Data"</span>
+  source_data <span class='op'>=</span> <span class='st'>"SourceData"</span>,
+  derived_data <span class='op'>=</span> <span class='st'>"Data"</span>
 <span class='op'>)</span><span class='op'>)</span>
 
 <span class='fu'>nm_default_dirs</span><span class='op'>(</span><span class='op'>)</span>
@@ -181,10 +181,10 @@ their directory structure</p>
 #&gt; $results
 #&gt; [1] "Results"
 #&gt; 
-#&gt; [[4]]
+#&gt; $source_data
 #&gt; [1] "SourceData"
 #&gt; 
-#&gt; [[5]]
+#&gt; $derived_data
 #&gt; [1] "Data"
 #&gt; </div><div class='input'><span class='fu'>nm_default_dirs</span><span class='op'>(</span><span class='va'>orig_list</span><span class='op'>)</span>
 

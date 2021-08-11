@@ -74,7 +74,7 @@ file will be inherited too with $TABLEs updated." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
       </span>
     </div>
 
@@ -127,13 +127,7 @@ file will be inherited too with $TABLEs updated." />
 file will be inherited too with $TABLEs updated.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>child</span><span class='op'>(</span>
-  <span class='va'>m</span>,
-  run_id <span class='op'>=</span> <span class='cn'>NA_character_</span>,
-  type <span class='op'>=</span> <span class='st'>"execute"</span>,
-  parent <span class='op'>=</span> <span class='fu'><a href='nm.html'>nm</a></span><span class='op'>(</span><span class='cn'>NA</span><span class='op'>)</span>,
-  silent <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>child</span><span class='op'>(</span><span class='va'>m</span>, run_id <span class='op'>=</span> <span class='cn'>NA_character_</span>, type <span class='op'>=</span> <span class='st'>"execute"</span>, parent <span class='op'>=</span> <span class='va'>m</span>, silent <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -152,7 +146,7 @@ file will be inherited too with $TABLEs updated.</p>
     </tr>
     <tr>
       <th>parent</th>
-      <td><p>Optional nm object (default = <code><a href='nm.html'>nm(NA)</a></code>) . Parent object will by
+      <td><p>Optional nm object (default = <code>m</code>) . Parent object will by
 default be <code>m</code>, but this argument will force parent to be a different
 object.</p></td>
     </tr>

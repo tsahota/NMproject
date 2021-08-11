@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Wait for runs to finish — wait_finish • NMproject</title>
+<title>Get a directory name — nm_dir • NMproject</title>
 
 
 <!-- jquery -->
@@ -39,12 +39,11 @@
 
 
 
-<meta property="og:title" content="Wait for runs to finish — wait_finish" />
+<meta property="og:title" content="Get a directory name — nm_dir" />
 <meta property="og:description" content="
-Blocks subsequent r execution until run(s) are finished.  This is useful for
-when subsequent relies on outputs from completed NONMEM jobs.  It is normally
-a good idea to include this in post processing R markdown templates, to
-ensure they wait for runs to complete before executing." />
+Get subdirectory (relative) paths in a configuration independent way.  The
+configuration can be modified with nm_default_dirs().  Can be useful in
+scripts, where you need to refer to locations of model files or output files." />
 
 
 
@@ -118,58 +117,43 @@ ensure they wait for runs to complete before executing." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Wait for runs to finish</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/monitoring.R'><code>R/monitoring.R</code></a></small>
-    <div class="hidden name"><code>wait_finish.Rd</code></div>
+    <h1>Get a directory name</h1>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/NMproject-options.R'><code>R/NMproject-options.R</code></a></small>
+    <div class="hidden name"><code>nm_dir.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
-<p>Blocks subsequent r execution until run(s) are finished.  This is useful for
-when subsequent relies on outputs from completed NONMEM jobs.  It is normally
-a good idea to include this in post processing R markdown templates, to
-ensure they wait for runs to complete before executing.</p>
+<p>Get subdirectory (relative) paths in a configuration independent way.  The
+configuration can be modified with <code><a href='nm_default_dirs.html'>nm_default_dirs()</a></code>.  Can be useful in
+scripts, where you need to refer to locations of model files or output files.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>wait_finish</span><span class='op'>(</span><span class='va'>r</span>, timeout <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>nm_dir</span><span class='op'>(</span><span class='va'>name</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>r</th>
-      <td><p>An nm object.</p></td>
+      <th>name</th>
+      <td><p>Character. Directory type.  Should be either <code>"scripts"</code>,
+<code>"models"</code> or <code>"results"</code>.</p></td>
     </tr>
     <tr>
-      <th>timeout</th>
-      <td><p>Numeric seconds to wait before timeout.</p></td>
+      <th>...</th>
+      <td><p>Deprecated.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>Invisibly returns <code>r</code> unmodified.  Called for side effects.</p>
+    <div class='dont-index'><p><code><a href='nm_default_dirs.html'>nm_default_dirs()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='co'>## requires NONMEM to be installed</span>
-
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='co'># create example object m1 from package demo files</span>
-<span class='va'>exdir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"examples"</span>, <span class='st'>"theopp"</span>, package <span class='op'>=</span> <span class='st'>"NMproject"</span><span class='op'>)</span>
-<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_nm.html'>new_nm</a></span><span class='op'>(</span>run_id <span class='op'>=</span> <span class='st'>"m1"</span>, 
-             based_on <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>exdir</span>, <span class='st'>"Models"</span>, <span class='st'>"ADVAN2.mod"</span><span class='op'>)</span>,
-             data_path <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>exdir</span>, <span class='st'>"SourceData"</span>, <span class='st'>"THEOPP.csv"</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='va'>m1</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='run_nm.html'>run_nm</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>wait_finish</span><span class='op'>(</span><span class='op'>)</span>
-
-<span class='co'>## following requires run to be completed.</span>
-<span class='fu'><a href='covariance_plot.html'>covariance_plot</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span>
-<span class='op'>}</span>
-
-</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>nm_dir</span><span class='op'>(</span><span class='st'>"scripts"</span><span class='op'>)</span> <span class='co'>## will return the path to the "scripts" directory</span>
+</div><div class='output co'>#&gt; [1] "Scripts"</div><div class='input'><span class='fu'>nm_dir</span><span class='op'>(</span><span class='st'>"models"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "Models"</div><div class='input'><span class='fu'>nm_dir</span><span class='op'>(</span><span class='st'>"results"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "Results"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
