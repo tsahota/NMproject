@@ -92,7 +92,7 @@ sim$DV <- sim$DV_OUT  ## needed because output_table puts DV in DV_OUT
 
 ```{r vpc_basic}
 
-vpc::vpc(
+vpc(
   sim = sim,
   obs = obs,
   obs_cols = list(idv = "TPERIOD"),
@@ -104,7 +104,7 @@ vpc::vpc(
 
 ```{r pred_corr}
 
-vpc::vpc(
+vpc(
   sim = sim,
   obs = obs,
   obs_cols = list(idv = "TPERIOD"),
@@ -121,7 +121,7 @@ vpc::vpc(
 sim$WT_c = Hmisc::cut2(sim$WT, g = 2)
 obs$WT_c = Hmisc::cut2(obs$WT, g = 2)
 
-vpc::vpc(
+vpc(
   sim = sim,
   obs = obs,
   obs_cols = list(idv = "TPERIOD"),

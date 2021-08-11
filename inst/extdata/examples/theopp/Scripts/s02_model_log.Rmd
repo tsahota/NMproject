@@ -147,7 +147,7 @@ m1s_temp <- m1 %>% child("m1s_temp") %>%
 m1 %>% saveRDS("Results/m1.RDS")
 
 # create a child run where we investigate a different TRANS subroutine
-m2 <- m1 %>% child() %>%
+m2 <- m1 %>% child("m2") %>%
   subroutine(trans = 2) %>% 
   # see nm_diff app to see if you're happy with the changes being made
   run_nm()
@@ -200,7 +200,7 @@ decision(inputs = summary_wide(c(m1, m2, m2WT), m = FALSE),
 # calculated - see the s01 script for how to make them
 # only running 4 samples for demo purposes
 
-m1_boot <- m1 %>% make_boot_datasets(samples = 4, overwrite = TRUE)
+m1_boot <- m1 %>% make_boot_datasets(samples = 4)
 
 m1_boot ## display data.frame
 
