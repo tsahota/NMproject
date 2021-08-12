@@ -1,6 +1,18 @@
 # NMproject 0.6.3
 
-* Moved to GitHub Actions, dropped Appveyor and Travis
+The first post CRAN release
+
+* Revamped the NMproject project creation template and `nm_create_analysis_project()`
+  for greater customisability ability and removed dependence on `options()` which 
+  was causing strange behaviour.
+  
+* Expanded analysis README template for new NMprojects to run analysis level tests on
+  build.  Useful for compliance checking.
+  
+* Added `nm_pre_commit_hook()` and `nm_pre_commit_hook()` for custom NMproject
+  analysis projects
+  
+* Expanded model diagnostic rmarkdown template to include more 'xpose' plots.
 
 * Included an experimental `%f>%` pipe for applying functions elementwise
   to vector valued nm objects.
@@ -9,9 +21,6 @@
 
 * Renamed `nm_default_dir()` to `nm_dir()`
 
-* Added `nm_pre_commit_hook()` and `nm_pre_commit_hook()` for custom NMproject
-  analysis projects
-  
 * Removed `nm.cmd_default` option in favour of the more flexible `nm_default_fields`.
   See `?nm_default_fields()` for help.
 
@@ -19,10 +28,6 @@
 
 * `stage()` has `find_replace_dir_names` argument to handle custom NMproject
   directory structures.
-  
-* Revamped the NMproject project creation template and `nm_create_analysis_project()`
-  for greater customisability ability and removed dependence on `options()` which 
-  was causing strange behaviour.
   
 ## Minor changes
 
@@ -42,10 +47,6 @@
 * `preview()` is now deprecated and removed in favour of the code library 'Addin'
 
 * `nm_default_dir` is now deprecated
-
-* Expanded model diagnostic rmarkdown template to include more xpose plots.
-
-* Expanded README template for new NMprojects to run analysis level tests on build.
 
 # NMproject 0.6.2
 
