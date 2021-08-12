@@ -4,6 +4,8 @@
 
 The first post CRAN release
 
+## Main changes
+
 * Revamped the NMproject project creation template and `nm_create_analysis_project()`
   for greater customisability ability and removed dependence on `options()` which 
   was causing strange behaviour.
