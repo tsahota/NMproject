@@ -121,16 +121,18 @@
 <h1 class="page-header" data-toc-text="0.6.3">
 <a href="#nmproject-063" class="anchor"></a>NMproject 0.6.3<small> Unreleased </small>
 </h1>
+<p>The first post CRAN release</p>
 <ul>
-<li><p>Moved to GitHub Actions, dropped Appveyor and Travis</p></li>
+<li><p>Revamped the NMproject project creation template and <code><a href="../reference/nm_create_analysis_project.html">nm_create_analysis_project()</a></code> for greater customisability ability and removed dependence on <code><a href="https://rdrr.io/r/base/options.html">options()</a></code> which was causing strange behaviour.</p></li>
+<li><p>Expanded analysis README template for new NMprojects to run analysis level tests on build. Useful for compliance checking.</p></li>
+<li><p>Added <code><a href="../reference/git_hooks.html">nm_pre_commit_hook()</a></code> and <code><a href="../reference/git_hooks.html">nm_pre_commit_hook()</a></code> for custom NMproject analysis projects</p></li>
+<li><p>Expanded model diagnostic rmarkdown template to include more ‘xpose’ plots.</p></li>
 <li><p>Included an experimental <code><a href="../reference/%f&gt;%.html">%f&gt;%</a></code> pipe for applying functions elementwise to vector valued nm objects.</p></li>
 <li><p>Included <code><a href="../reference/is_nmproject_dir.html">is_nmproject_dir()</a></code>, intended for package owners of dependent packages</p></li>
 <li><p>Renamed <code><a href="../reference/nm_default_dir.html">nm_default_dir()</a></code> to <code><a href="../reference/nm_dir.html">nm_dir()</a></code></p></li>
-<li><p>Added <code><a href="../reference/git_hooks.html">nm_pre_commit_hook()</a></code> and <code><a href="../reference/git_hooks.html">nm_pre_commit_hook()</a></code> for custom NMproject analysis projects</p></li>
 <li><p>Removed <code>nm.cmd_default</code> option in favour of the more flexible <code>nm_default_fields</code>. See <code>?nm_default_fields()</code> for help.</p></li>
 <li><p><code><a href="../reference/decision.html">decision()</a></code> uses <code><a href="https://usethis.r-lib.org/reference/ui-questions.html">usethis::ui_yeah()</a></code> for prompting rather than <code><a href="https://rdrr.io/r/base/readline.html">readline()</a></code>.</p></li>
 <li><p><code><a href="../reference/stage.html">stage()</a></code> has <code>find_replace_dir_names</code> argument to handle custom NMproject directory structures.</p></li>
-<li><p>Revamped the NMproject project creation template and <code><a href="../reference/nm_create_analysis_project.html">nm_create_analysis_project()</a></code> for greater customisability ability and removed dependence on <code><a href="https://rdrr.io/r/base/options.html">options()</a></code> which was causing strange behaviour.</p></li>
 </ul>
 <div id="minor-changes" class="section level2">
 <h2 class="hasAnchor">
@@ -148,8 +150,6 @@
 <ul>
 <li><p><code>preview()</code> is now deprecated and removed in favour of the code library ‘Addin’</p></li>
 <li><p><code>nm_default_dir</code> is now deprecated</p></li>
-<li><p>Expanded model diagnostic rmarkdown template to include more xpose plots.</p></li>
-<li><p>Expanded README template for new NMprojects to run analysis level tests on build.</p></li>
 </ul>
 </div>
 </div>
