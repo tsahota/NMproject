@@ -131,13 +131,18 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
     dir_name <- dirs[[i]]
     if (!dir_name %in% ".") {
       usethis::use_directory(dir_name, ignore = TRUE)
+      ## create staging equivalent
+      usethis::use_directory(file.path("staging", dir_name), ignore = TRUE)
       
       generic_dir_name <- names(dirs)[i]
       readme_path <- file.path(dir_name, "Readme.txt")
+      staging_readme_path <- file.path("staging", dir_name, "Readme.txt")
       if (generic_dir_name %in% names(.nm_dir_descriptions)) {
         write(.nm_dir_descriptions[[generic_dir_name]], file.path(path, readme_path))
+        write(.nm_dir_descriptions[[generic_dir_name]], file.path(path, staging_readme_path))
       } else {
         write("Custom directory", file.path(path, readme_path))
+        write("Custom directory", file.path(path, staging_readme_path))
       }
     }
   }
