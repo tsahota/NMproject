@@ -47,7 +47,11 @@ A \code{character} vector of temporary file paths
 NONMEM produces a lot of temporary files which can add up to a lot of disk
 space.  One strategy to remove this is to use the \code{clean} option in the PsN
 command.  However, this can automatically remove files as soon as the run
-finishes that may be useful for debugging.  \verb{ls_tempfiles()`` allows you to list the paths of all temporary files, for a single run or for all runs for inspection and deletion. }clean_run()\verb{is a wrapper function that runs}ls_tempfiles()\verb{and deletes everything returned.  For safety is limited to only deleting files associated with}nm` objects though.
+finishes that may be useful for debugging.  \code{ls_tempfiles()} allows you to
+list the paths of all temporary files, for a single run or for all runs for
+inspection and deletion. \code{clean_run()} is a wrapper function that runs
+\code{ls_tempfiles()} and deletes everything returned.  For safety is limited to
+only deleting files associated with \code{nm} objects though.
 }
 \details{
 Setting \code{include_psn_exports = TRUE} will break 'Pirana' and 'xpose'

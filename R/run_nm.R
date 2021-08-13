@@ -321,7 +321,7 @@ ctl_table_files.default <- function(ctl) {
 #' NONMEM produces a lot of temporary files which can add up to a lot of disk
 #' space.  One strategy to remove this is to use the `clean` option in the PsN
 #' command.  However, this can automatically remove files as soon as the run
-#' finishes that may be useful for debugging.  `ls_tempfiles()`` allows you to
+#' finishes that may be useful for debugging.  `ls_tempfiles()` allows you to
 #' list the paths of all temporary files, for a single run or for all runs for
 #' inspection and deletion. `clean_run()` is a wrapper function that runs
 #' `ls_tempfiles()` and deletes everything returned.  For safety is limited to
