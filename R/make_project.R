@@ -88,6 +88,10 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
     path <- file.path(normalizePath(getwd()), path)
     path <- normalizePath(path, mustWork = FALSE)    
   }
+  
+  if (file.exists(path)) {
+    stop("Directory already exists. Aborting.")
+  }
 
   style <- match.arg(style)
   name <- basename(path)
