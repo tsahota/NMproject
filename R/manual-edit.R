@@ -4,7 +4,10 @@
 #'
 #' `r lifecycle::badge("stable")`
 #'
-#' Needed for "manual edit" RStudio 'Addin' functionality.
+#' Needed for "manual edit" RStudio 'Addin' functionality.  Performs a git
+#' reset, git adds and commits a temporary version of control file to index (for
+#' subsequent diff), opens editor for edits.  The intent is that after the diff
+#' is created the commit will be removed.
 #'
 #' @param m An nm object
 #' @param combine_patch Character. Optional patch to be applied first.
@@ -25,29 +28,35 @@ start_manual_edit <- function(m, combine_patch = NA_character_) {
 
   time_stamp <- format(Sys.time(), "%Y-%m-%d-%H-%M-%S")
 
-  patch_name <- paste0("patch-", Sys.info()["user"], "-", time_stamp)
+  patch_id <- paste0(Sys.info()["user"], "-", time_stamp)
+  patch_name <- paste0("patch-", patch_id)
   patch_path <- file.path(nm_dir("models"), "patches", patch_name)
   dir.create(dirname(patch_path), showWarnings = FALSE, recursive = TRUE)
 
-  temp_ctl_path <- file.path(run_in(m), paste0("manual_", ctl_name(m)))
+  #temp_ctl_path <- file.path(run_in(m), paste0("manual_", ctl_name(m)))
+  temp_ctl_path <- file.path(nm_dir("models"), paste0("base-", patch_id))
   mnew <- m %>%
     ctl_path(temp_ctl_path) %>%
     write_ctl(force = TRUE)
 
   ## soft unstage all first, then add only the file
   if (!git_cmd_available) stop("need git available from system() for this to work")
-
   if (!user_values_exist()) stop("git user.name and/or user.email not set")
 
   system("git reset", intern = TRUE) ## for some reason git2r::reset() doesn't reset
   git2r::add(path = ctl_path(mnew))
-  git2r::commit(message = paste("before manual change: ", ctl_path(mnew)))
+  git2r::commit(message = paste("pre-manual edit: ", patch_id))
 
-  if (!is.na(combine_patch)) m <- m %>% apply_manual_edit(combine_patch)
-
+  if (!is.na(combine_patch)) {
+    mnew <- mnew %>% 
+      apply_manual_edit(combine_patch) %>%
+      write_ctl(force = TRUE)
+  }
+  
   usethis::edit_file(ctl_path(mnew)) ## edit new one
 
   res <- list()
+  res$patch_id <- patch_id
   res$new_ctl_path <- temp_ctl_path
   res$patch_name <- patch_name
   res$patch_path <- patch_path
@@ -94,9 +103,10 @@ a user.name and user.email, set this up with:
 
 diff_manual_edit <- function(m, res) {
   git2r::add(path = res$new_ctl_path)
-  git2r::diff(git2r::repository(), index = TRUE, as_char = TRUE, filename = res$patch_path)
+  git2r::commit(message = paste("manual edit: ", res$patch_id))
+  #git2r::diff(git2r::repository(), index = TRUE, as_char = TRUE, filename = res$patch_path)
   ## remove last commit and file
-  system("git reset HEAD^1", intern = TRUE) ## for some reason git2r::reset() doesn't reset
+  system("git reset HEAD", intern = TRUE) ## for some reason git2r::reset() doesn't reset
   unlink(res$new_ctl_path)
 }
 
@@ -105,17 +115,25 @@ diff_manual_edit <- function(m, res) {
 #'
 #' Use the "view patch" RStudio 'Addin' for viewing patches instead.
 #'
-#' @param patch_name Character. Name of patch
+#' @param patch_id Character. Name of patch
 #'
 #' @return No return value, called for side effects.
 #'
 #' @keywords internal
 #' @export
-view_patch <- function(patch_name) {
-  patch_path <- file.path(nm_dir("models"), "patches", patch_name)
-  patch_contents <- readLines(patch_path)
-  cat(patch_contents, sep = "\n")
-  #file.show(patch_path)
+view_patch <- function(patch_id) {
+
+  git_log <- git2r::commits()
+  find_commit <- paste("manual edit: ", patch_id)
+  found_commits <- git_log[sapply(git_log, function(commit) commit$message) %in% find_commit]
+  if (length(found_commits) != 1) stop("could not find commit corresponding to: ", patch_id, call. = FALSE)
+  found_commit <- found_commits[[1]]
+  
+  tree_1 <- git2r::tree(git2r::parents(found_commit)[[1]])
+  tree_2 <- git2r::tree(found_commit)
+
+  cat(git2r::diff(tree_1, tree_2, as_char=TRUE))
+  
 }
 
 new_patch_app <- function() {
@@ -143,14 +161,14 @@ new_patch_app <- function() {
 
   if (final_pipe_present) {
     if (final_newline_present) {
-      code_to_add <- paste0("  apply_manual_edit(\"", res$patch_name, "\")")
+      code_to_add <- paste0("  apply_manual_edit(\"", res$patch_id, "\") %>%")
     } else {
       code_to_add <- paste0("
-  apply_manual_edit(\"", res$patch_name, "\")")
+  apply_manual_edit(\"", res$patch_id, "\") %>%")
     }
   } else {
     code_to_add <- paste0(" %>%
-  apply_manual_edit(\"", res$patch_name, "\")")
+  apply_manual_edit(\"", res$patch_id, "\")")
   }
 
 
@@ -170,11 +188,11 @@ modify_patch_app <- function() {
 
   before_edit <- gsub("(.*)%>%.*apply_manual_edit.*", "\\1", selected_text)
 
-  patch_name <- gsub(".*%>%.*apply_manual_edit\\(\"(.*)\"\\).*", "\\1", selected_text)
+  patch_id <- gsub(".*%>%.*apply_manual_edit\\(\"(.*)\"\\).*", "\\1", selected_text)
 
   m <- eval(parse(text = before_edit))
 
-  res <- start_manual_edit(m, combine_patch = patch_name)
+  res <- start_manual_edit(m, combine_patch = patch_id)
 
   message(
     "---Manual edit---
@@ -191,14 +209,14 @@ modify_patch_app <- function() {
 
   if (final_pipe_present) {
     if (final_newline_present) {
-      code_to_add <- paste0(trimws(before_edit), "  apply_manual_edit(\"", res$patch_name, "\") %>%")
+      code_to_add <- paste0(trimws(before_edit), "  apply_manual_edit(\"", res$patch_id, "\") %>%")
     } else {
       code_to_add <- paste0(trimws(before_edit), " %>%
-  apply_manual_edit(\"", res$patch_name, "\") %>%")
+  apply_manual_edit(\"", res$patch_id, "\") %>%")
     }
   } else {
     code_to_add <- paste0(trimws(before_edit), " %>%
-  apply_manual_edit(\"", res$patch_name, "\")")
+  apply_manual_edit(\"", res$patch_id, "\")")
   }
 
   rstudioapi::insertText(
@@ -248,7 +266,7 @@ view_patch_app <- function() {
     selected_text <- ctx$contents[line]
   }
 
-  selected_text <- gsub(".*(patch-[^\"]+)\".*", "\\1", selected_text)
+  selected_text <- gsub(".*\"([^\"]+)\".*", "\\1", selected_text)
 
   # selected_text <- gsub("\"","", selected_text)
 
