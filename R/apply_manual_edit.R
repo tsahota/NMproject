@@ -61,7 +61,11 @@ apply_manual_edit.nm_generic <- function(m, patch_name) {
     res <- system_cmd(patch_cmd, intern = TRUE)
 
     if (1 %in% attributes(res)$status) {
-      stop("patch failed", call. = TRUE)
+      usethis::ui_oops("apply_manual_edit() failed to apply patch, 
+           this is normally due to the control file having changed since the 
+           patch was created. Right clicking the patch text and selecting 
+           Addins -> View patch will show the edits the patch is attempting to 
+           apply.  This can be used to create a new patch.")
     }
   }
 
