@@ -4,6 +4,7 @@ proj_path <- file.path(tempdir(), proj_name)
 
 test_that("run and post", {
   currentwd <- getwd()
+  if (file.exists(proj_path)) unlink(proj_path, recursive = TRUE, force = TRUE)
   nm_create_analysis_project(proj_path)
   on.exit({
     setwd(currentwd)
