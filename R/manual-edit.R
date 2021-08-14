@@ -133,7 +133,7 @@ new_patch_app <- function() {
     Instructions:
     1) edit control file
     2) save & close
-    Press ENTER when done..."
+    Click here and press ENTER when done..."
   )
   readline()
 
