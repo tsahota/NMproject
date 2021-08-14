@@ -53,7 +53,7 @@ start_manual_edit <- function(m, combine_patch = NA_character_) {
       write_ctl(force = TRUE)
   }
   
-  usethis::edit_file(ctl_path(mnew)) ## edit new one
+  usethis::ui_silence(usethis::edit_file(ctl_path(mnew))) ## edit new one
 
   res <- list()
   res$patch_id <- patch_id
@@ -146,14 +146,23 @@ new_patch_app <- function() {
 
   res <- start_manual_edit(m)
 
-  message(
-    "---Manual edit---
-    Instructions:
-    1) edit control file
-    2) save & close
-    Click here and press ENTER when done..."
-  )
-  readline()
+  if (!git_cmd_available) stop("need git available from system() for this to work")
+  if (!user_values_exist()) stop("git user.name and/or user.email not set")
+  git_log <- git2r::commits()
+  orig_commit <- git_log[[1]]
+  on.exit({
+    unlink(res$new_ctl_path)
+    system(paste("git reset", orig_commit$sha), intern = TRUE)
+  })
+  
+  ans <- usethis::ui_yeah("---INSTRUCTIONS--- 
+
+ 1) {usethis::ui_field('EDIT')} control file
+ 2) {usethis::ui_field('SAVE')} the file
+ 
+Finished & happy to proceed?", yes = "Yes", no = "Abort", shuffle = FALSE)
+  
+  if(!ans) return(invisible())
 
   ## now diff ctl_path(m) and old_file_path
 
@@ -193,15 +202,24 @@ modify_patch_app <- function() {
   m <- eval(parse(text = before_edit))
 
   res <- start_manual_edit(m, combine_patch = patch_id)
+  
+  if (!git_cmd_available) stop("need git available from system() for this to work")
+  if (!user_values_exist()) stop("git user.name and/or user.email not set")
+  git_log <- git2r::commits()
+  orig_commit <- git_log[[1]]
+  on.exit({
+    unlink(res$new_ctl_path)
+    system(paste("git reset", orig_commit$sha), intern = TRUE)
+  })
 
-  message(
-    "---Manual edit---
-    Instructions:
-    1) edit control file
-    2) save & close
-    Press ENTER when done..."
-  )
-  readline()
+  ans <- usethis::ui_yeah("---INSTRUCTIONS--- 
+
+ 1) {usethis::ui_field('EDIT')} control file
+ 2) {usethis::ui_field('SAVE')} the file
+ 
+Finished & happy to proceed?", yes = "Yes", no = "Abort", shuffle = FALSE)
+  
+  if(!ans) return(invisible())
 
   ## now diff ctl_path(m) and old_file_path
 
