@@ -1,5 +1,9 @@
 # NMproject (development version)
 
+## Minor changes
+
+* `view_patch()` prints to console instead of opening window
+
 # NMproject 0.6.3
 
 The first post CRAN release

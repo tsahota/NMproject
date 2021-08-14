@@ -113,7 +113,9 @@ diff_manual_edit <- function(m, res) {
 #' @export
 view_patch <- function(patch_name) {
   patch_path <- file.path(nm_dir("models"), "patches", patch_name)
-  file.show(patch_path)
+  patch_contents <- readLines(patch_path)
+  cat(patch_contents, sep = "\n")
+  #file.show(patch_path)
 }
 
 new_patch_app <- function() {
