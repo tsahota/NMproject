@@ -1,8 +1,16 @@
 # NMproject (development version)
 
+## Major changes
+
+* revamped the manual edit interface.  This is backwards incompatible.
+  merge conflicts will now be flagged. Resolve manual edit 'addin' add for 
+  handling merge conflicts in manual edits (#17)
+
 ## Minor changes
 
 * `view_patch()` prints to console instead of opening window
+
+* Better instructions on RStudio Addin usage.
 
 # NMproject 0.6.3
 

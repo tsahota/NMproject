@@ -35,19 +35,23 @@ test_that("manual_edit", {
     init_theta(init = c(0.5, -2.5, -0.5)) %>%
     init_sigma(init = c(0.1, 0.1))
   
-  #browser()
+  m1s_temp <- m1 %>% child("m1s_temp") %>%  
+    update_parameters(m1) %>%
+    apply_manual_edit("tarjinde-2021-08-15-16-55-38")
   
-  ## make a patch 
+  ## test that the manual edit made a $SIM
   
-  # p3 <- m1 %>% child("p3")  %>%
-  #   apply_manual_edit("tarjinde-2021-08-14-17-06-44")
-  # 
-  # p4 <- m1 %>% child("p4") %>%
-  #   ## break the patch
-  #   gsub_ctl("Label", "sdlfkjsldfjk") %>%
-  #   apply_manual_edit("tarjinde-2021-08-14-17-06-44")
+  expect_false(m1 %>% dollar("SIM") %>% {.[[1]][1]} %>% {grepl("^\\$SIM", .)})
+  expect_true(m1s_temp %>% dollar("SIM") %>% {.[[1]][1]} %>% {grepl("^\\$SIM", .)})
   
-  
-  
+  ## induce a merge conflict and check we get an error
+  expect_error(
+    suppressWarnings(
+      m1 %>% child("m1s_temp") %>%  
+        update_parameters(m1) %>%
+        gsub_ctl("ISAMPLE=300", "ISAMPLE=600") %>% 
+        apply_manual_edit("tarjinde-2021-08-15-16-55-38")
+    )
+  )
   
 })

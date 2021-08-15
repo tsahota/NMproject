@@ -124,17 +124,15 @@ the model evaluation is so others (including your future self) may follow your
 thinking
 
 ```{r manual_edit}
-# example manual_edit - no run_nm() because will not run this, it's just to
-# illustrate how code looks after using the manual_edit addin
+# example manual_edit - like above this converts it to a simulation control file.
+# To see what changes it does put the cursor on the patch name and then use
+# Addins -> view patch
 
 m1s_temp <- m1 %>% child("m1s_temp") %>%  
   update_parameters(m1) %>%
-  apply_manual_edit("patch-tarjinde-2021-06-04-17-07-24")
+  apply_manual_edit("tarjinde-2021-08-15-16-55-38")
 
-
-# try using nm_diff(m1s_temp, m1s) to see the difference between the two
-# approaches.  Note that since we didn't run_nm(), runm1s_temp.mod was never
-# written to disk. The control file exists only inside the object
+# Alternatively highlight the whole lot and select Addins -> View diff
 
 ```
 
