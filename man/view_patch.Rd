@@ -4,10 +4,10 @@
 \alias{view_patch}
 \title{View a patch}
 \usage{
-view_patch(patch_name)
+view_patch(patch_id)
 }
 \arguments{
-\item{patch_name}{Character. Name of patch}
+\item{patch_id}{Character. Name of patch}
 }
 \value{
 No return value, called for side effects.

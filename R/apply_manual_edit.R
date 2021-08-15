@@ -12,6 +12,8 @@
 #' @param m An nm object.
 #' @param patch_id Character name of patch.  Corresponds to the file name in
 #'   the "patches" subdirectory of `nm_dir("models")`.
+#' @param return_merge_conf_ctl Logical (default = `FALSE`). If there a merge
+#'   conflict produced, should the ctl file be returned?
 #'
 #' @details Generally best to to apply patches before automatic edits and
 #'   changes in directories e.g. via `run_in()`.  If patches are applied to
@@ -23,12 +25,12 @@
 #' @return An nm object with modified `ctl_contents` field.
 #'
 #' @export
-apply_manual_edit <- function(m, patch_id) {
+apply_manual_edit <- function(m, patch_id, return_merge_conf_ctl = FALSE) {
   UseMethod("apply_manual_edit")
 }
 
 #' @export
-apply_manual_edit.nm_generic <- function(m, patch_id) {
+apply_manual_edit.nm_generic <- function(m, patch_id, return_merge_conf_ctl = FALSE) {
   
   temp_ctl_path <- file.path(nm_dir("models"), paste0("base-", patch_id))
   mnew <- m %>%
@@ -88,6 +90,8 @@ apply_manual_edit.nm_generic <- function(m, patch_id) {
                            added_stuff,
                            "-------------------------------------------\n")
         
+        if (return_merge_conf_ctl) return(readLines(temp_ctl_path))
+        
         usethis::ui_info(warn_msg)
         usethis::ui_stop("You can resolve this conflict by selecting the code
             and ensuring the apply_manual_edit() is the last pipe highlighted
@@ -118,6 +122,8 @@ apply_manual_edit.nm_generic <- function(m, patch_id) {
                              "-------------------------------------------\n",
                              added_stuff,
                              "-------------------------------------------\n")
+          
+          if (return_merge_conf_ctl) return(readLines(temp_ctl_path))
           
           usethis::ui_info(warn_msg)
           usethis::ui_stop("You can resolve this conflict by highlighting the code

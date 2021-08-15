@@ -8,6 +8,11 @@ Description: Do manual edit. In your script highlight code segment (including pi
 Binding: make_patch_app
 Interactive: true
 
+Name: resolve manual edit conflict
+Description: Resolve manual edit conflict. In your script highlight code segment (including pipes) before selecting this.
+Binding: resolve_manual_edit_app
+Interactive: true
+
 Name: overwrite behaviour
 Description: modify overwrite behaviour
 Binding: overwrite_behaviour_app

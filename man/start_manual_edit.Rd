@@ -4,12 +4,19 @@
 \alias{start_manual_edit}
 \title{Start manual edit}
 \usage{
-start_manual_edit(m, combine_patch = NA_character_)
+start_manual_edit(
+  m,
+  combine_patch = NA_character_,
+  replace_ctl = NA_character_
+)
 }
 \arguments{
 \item{m}{An nm object}
 
 \item{combine_patch}{Character. Optional patch to be applied first.}
+
+\item{replace_ctl}{If not \code{NA_character_}, before displaying, the file will
+be replaced with this}
 }
 \value{
 A \code{list} with the temporary control file name and patch details (name
@@ -18,6 +25,9 @@ and path).
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
 
-Needed for "manual edit" RStudio 'Addin' functionality.
+Needed for "manual edit" RStudio 'Addin' functionality.  Performs a git
+reset, git adds and commits a temporary version of control file to index (for
+subsequent diff), opens editor for edits.  The intent is that after the diff
+is created the commit will be removed.
 }
 \keyword{internal}

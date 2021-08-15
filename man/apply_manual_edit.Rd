@@ -4,13 +4,16 @@
 \alias{apply_manual_edit}
 \title{Apply a manual edit patch}
 \usage{
-apply_manual_edit(m, patch_name)
+apply_manual_edit(m, patch_id, return_merge_conf_ctl = FALSE)
 }
 \arguments{
 \item{m}{An nm object.}
 
-\item{patch_name}{Character name of patch.  Corresponds to the file name in
+\item{patch_id}{Character name of patch.  Corresponds to the file name in
 the "patches" subdirectory of \code{nm_dir("models")}.}
+
+\item{return_merge_conf_ctl}{Logical (default = \code{FALSE}). If there a merge
+conflict produced, should the ctl file be returned?}
 }
 \value{
 An nm object with modified \code{ctl_contents} field.

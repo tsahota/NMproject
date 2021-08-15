@@ -11,13 +11,15 @@
 #'
 #' @param m An nm object
 #' @param combine_patch Character. Optional patch to be applied first.
+#' @param replace_ctl If not `NA_character_`, before displaying, the file will
+#'   be replaced with this
 #'
 #' @return A `list` with the temporary control file name and patch details (name
 #'   and path).
 #'
 #' @keywords internal
 #' @export
-start_manual_edit <- function(m, combine_patch = NA_character_) {
+start_manual_edit <- function(m, combine_patch = NA_character_, replace_ctl = NA_character_) {
   # if(.Platform$OS.type != "unix")
   #   stop("patching functionality only implemented for linux/unix systems\n consider manual_edit() instead",
   #        call. = FALSE)
@@ -51,6 +53,10 @@ start_manual_edit <- function(m, combine_patch = NA_character_) {
     mnew <- mnew %>% 
       apply_manual_edit(combine_patch) %>%
       write_ctl(force = TRUE)
+  }
+  
+  if (!identical(replace_ctl, NA_character_)) {
+    writeLines(replace_ctl, ctl_path(mnew))
   }
   
   usethis::ui_silence(usethis::edit_file(ctl_path(mnew))) ## edit new one
@@ -243,6 +249,71 @@ Finished & happy to proceed?", yes = "Yes", no = "Abort", shuffle = FALSE)
   message("apply_manual_edit() statement modified in script")
 }
 
+resolve_manual_edit <- function() {
+  ctx <- rstudioapi::getSourceEditorContext()
+  selected_text <- ctx$selection[[1]]$text
+  final_pipe_present <- grepl("\\s*%>%\\s*$", selected_text)
+  final_newline_present <- grepl("\\n\\s*$", selected_text)
+  
+  before_edit <- gsub("(.*)%>%.*apply_manual_edit.*", "\\1", selected_text)
+  
+  patch_id <- gsub(".*%>%.*apply_manual_edit\\(\"(.*)\"\\).*", "\\1", selected_text)
+  
+  m <- eval(parse(text = before_edit))
+  
+  ctl_with_merge <- eval(parse(text = before_edit)) %>%
+    apply_manual_edit(patch_id, return_merge_conf_ctl = TRUE)
+  
+  ctl_with_merge <- ctl_with_merge[[1]]
+  
+  ## before doing start_manual_edit - log the current commit for later resetting
+  if (!git_cmd_available) stop("need git available from system() for this to work")
+  if (!user_values_exist()) stop("git user.name and/or user.email not set")
+  git_log <- git2r::commits()
+  orig_commit <- git_log[[1]]
+  
+  res <- start_manual_edit(m, replace_ctl = ctl_with_merge)
+  on.exit(unlink(res$new_ctl_path))
+  
+  ans <- usethis::ui_yeah("---INSTRUCTIONS--- 
+
+ 1) {usethis::ui_field('REPAIR')} control file
+    a) Merge conflicts are indicated by the markers <<<<<<<, =======, and >>>>>>>
+    b) {usethis::ui_field('EDIT')} these sections
+ 2) {usethis::ui_field('SAVE')} the file
+ 
+Finished & happy to proceed?", yes = "Yes", no = "Abort", shuffle = FALSE)
+  
+  if(!ans) {
+    system(paste("git reset", orig_commit$sha), intern = TRUE)
+    return(invisible())
+  }
+  
+  ## now diff ctl_path(m) and old_file_path
+  
+  diff_manual_edit(m, res)
+  
+  if (final_pipe_present) {
+    if (final_newline_present) {
+      code_to_add <- paste0(trimws(before_edit), "  apply_manual_edit(\"", res$patch_id, "\") %>%")
+    } else {
+      code_to_add <- paste0(trimws(before_edit), " %>%
+  apply_manual_edit(\"", res$patch_id, "\") %>%")
+    }
+  } else {
+    code_to_add <- paste0(trimws(before_edit), " %>%
+  apply_manual_edit(\"", res$patch_id, "\")")
+  }
+  
+  rstudioapi::insertText(
+    text = code_to_add,
+    id = ctx$id
+  )
+  
+  message("apply_manual_edit() statement modified in script")
+  
+}
+
 make_patch_app <- function() {
   check_git_username()
 
@@ -272,6 +343,38 @@ make_patch_app <- function() {
     new_patch_app()
   }
 }
+
+resolve_manual_edit_app <- function() {
+  check_git_username()
+  
+  ctx <- rstudioapi::getSourceEditorContext()
+  selected_text <- ctx$selection[[1]]$text
+  selected_text <- gsub("\\s*%>%\\s*$", "", selected_text)
+  ## see if last function is apply_manual_edit
+  
+  ## get last function used in piping
+  full_expr <- parse(text = selected_text)[[1]]
+  
+  if (as.character(full_expr[[1]]) == "<-") {
+    full_expr <- full_expr[[3]] ## rhs of assignment
+  }
+  
+  if (as.character(full_expr[[1]]) == "%>%") {
+    last_fun_name <- as.character(full_expr[[3]][[1]])
+  }
+  
+  if (as.character(full_expr[[1]]) != "%>%") { ## normal function
+    last_fun_name <- as.character(full_expr[[1]])
+  }
+  
+  if (last_fun_name == "apply_manual_edit") {
+    resolve_manual_edit()
+  } else {
+    stop("the last function applied to selection needs to be apply_manual_edit()")
+  }
+}
+
+
 
 
 view_patch_app <- function() {
