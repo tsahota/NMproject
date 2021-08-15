@@ -9,7 +9,7 @@ start_manual_edit(m, combine_patch = NA_character_)
 \arguments{
 \item{m}{An nm object}
 
-\item{combine_patch}{Logical. Should patch be added first before edit.}
+\item{combine_patch}{Character. Optional patch to be applied first.}
 }
 \value{
 A \code{list} with the temporary control file name and patch details (name

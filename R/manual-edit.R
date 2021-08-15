@@ -7,7 +7,7 @@
 #' Needed for "manual edit" RStudio 'Addin' functionality.
 #'
 #' @param m An nm object
-#' @param combine_patch Logical. Should patch be added first before edit.
+#' @param combine_patch Character. Optional patch to be applied first.
 #'
 #' @return A `list` with the temporary control file name and patch details (name
 #'   and path).
