@@ -71,8 +71,8 @@ start_manual_edit <- function(m, combine_patch = NA_character_, replace_ctl = NA
 }
 
 user_values_exist <- function() {
-  all(c("user.email", "user.name") %in% names(git2r::config()$global)) |
-    all(c("user.email", "user.name") %in% names(git2r::config()$local))
+  config_names <- c(names(git2r::config()$global), names(git2r::config()$local))
+  all(c("user.email", "user.name") %in% config_names)
 }
 
 check_git_username <- function() {

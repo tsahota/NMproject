@@ -15,7 +15,6 @@ test_that("run and post", {
     unlink(proj_path, recursive = TRUE, force = TRUE)
   })
 
-
   testfilesloc <- file.path(currentwd, "theopp")
   zip_file <- file.path(currentwd, "theopp.zip")
   unzip(zip_file)
@@ -35,6 +34,8 @@ test_that("run and post", {
   ## run all scripts
   overwrite_behaviour("skip")
 
+  saveRDS(git2r::config(), "debug.RDS")
+  
   res <- tryCatch(run_all_scripts(), error = function(e) {
     on.exit({
       dump.frames(to.file = TRUE)
