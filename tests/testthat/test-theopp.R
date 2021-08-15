@@ -2,6 +2,10 @@ debug <- TRUE
 proj_name <- "test_nmproject"
 proj_path <- file.path(tempdir(), proj_name)
 
+config_names <- c(names(git2r::config()$global), names(git2r::config()$local))
+if (!"user.name" %in% config_names) usethis::use_git_config(user.name = "name")
+if (!"user.email" %in% config_names) usethis::use_git_config(user.email = "email@example.org")
+
 test_that("run and post", {
   currentwd <- getwd()
   if (file.exists(proj_path)) unlink(proj_path, recursive = TRUE, force = TRUE)
@@ -22,10 +26,6 @@ test_that("run and post", {
   file.rename("cache", ".cache")
 
   unlink(testfilesloc, recursive = TRUE)
-  
-  config_names <- c(names(git2r::config()$global), names(git2r::config()$local))
-  if (!"user.name" %in% config_names) usethis::use_git_config(scope = "project", user.name = "name")
-  if (!"user.email" %in% config_names) usethis::use_git_config(scope = "project", user.email = "email@example.org")
   
   ## end boiler plate
   ############################
