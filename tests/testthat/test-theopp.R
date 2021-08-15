@@ -22,7 +22,11 @@ test_that("run and post", {
   file.rename("cache", ".cache")
 
   unlink(testfilesloc, recursive = TRUE)
-
+  
+  config_names <- c(names(git2r::config()$global), names(git2r::config()$local))
+  if (!"user.name" %in% config_names) usethis::use_git_config(scope = "project", user.name = "name")
+  if (!"user.email" %in% config_names) usethis::use_git_config(scope = "project", user.email = "email@example.org")
+  
   ## end boiler plate
   ############################
 
