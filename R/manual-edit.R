@@ -102,9 +102,10 @@ a user.name and user.email, set this up with:
 }
 
 diff_manual_edit <- function(m, res) {
+  
   git2r::add(path = res$new_ctl_path)
-  git2r::commit(message = paste("manual edit: ", res$patch_id))
-  #git2r::diff(git2r::repository(), index = TRUE, as_char = TRUE, filename = res$patch_path)
+  git2r::diff(git2r::repository(), index = TRUE, as_char = TRUE, filename = res$patch_path)
+  #git2r::commit(message = paste("manual edit: ", res$patch_id))
   ## remove last commit and file
   system("git reset HEAD", intern = TRUE) ## for some reason git2r::reset() doesn't reset
   unlink(res$new_ctl_path)
@@ -123,16 +124,11 @@ diff_manual_edit <- function(m, res) {
 #' @export
 view_patch <- function(patch_id) {
 
-  git_log <- git2r::commits()
-  find_commit <- paste("manual edit: ", patch_id)
-  found_commits <- git_log[sapply(git_log, function(commit) commit$message) %in% find_commit]
-  if (length(found_commits) != 1) stop("could not find commit corresponding to: ", patch_id, call. = FALSE)
-  found_commit <- found_commits[[1]]
-  
-  tree_1 <- git2r::tree(git2r::parents(found_commit)[[1]])
-  tree_2 <- git2r::tree(found_commit)
-
-  cat(git2r::diff(tree_1, tree_2, as_char=TRUE))
+  patch_name <- paste0("patch-", patch_id)
+  patch_path <- file.path(nm_dir("models"), "patches", patch_name)
+  if (!file.exists(patch_path)) stop("patch file doesn't exist")
+  patch_contents <- readLines(patch_path)
+  cat(patch_contents, sep = "\n")
   
 }
 
@@ -144,16 +140,14 @@ new_patch_app <- function() {
 
   m <- get_single_object_for_app()
 
-  res <- start_manual_edit(m)
-
+  ## before doing start_manual_edit - log the current commit for later resetting
   if (!git_cmd_available) stop("need git available from system() for this to work")
   if (!user_values_exist()) stop("git user.name and/or user.email not set")
   git_log <- git2r::commits()
   orig_commit <- git_log[[1]]
-  on.exit({
-    unlink(res$new_ctl_path)
-    system(paste("git reset", orig_commit$sha), intern = TRUE)
-  })
+  
+  res <- start_manual_edit(m)
+  on.exit(unlink(res$new_ctl_path))
   
   ans <- usethis::ui_yeah("---INSTRUCTIONS--- 
 
@@ -162,7 +156,10 @@ new_patch_app <- function() {
  
 Finished & happy to proceed?", yes = "Yes", no = "Abort", shuffle = FALSE)
   
-  if(!ans) return(invisible())
+  if(!ans) {
+    system(paste("git reset", orig_commit$sha), intern = TRUE)
+    return(invisible())
+  }
 
   ## now diff ctl_path(m) and old_file_path
 
@@ -200,18 +197,16 @@ modify_patch_app <- function() {
   patch_id <- gsub(".*%>%.*apply_manual_edit\\(\"(.*)\"\\).*", "\\1", selected_text)
 
   m <- eval(parse(text = before_edit))
-
-  res <- start_manual_edit(m, combine_patch = patch_id)
   
+  ## before doing start_manual_edit - log the current commit for later resetting
   if (!git_cmd_available) stop("need git available from system() for this to work")
   if (!user_values_exist()) stop("git user.name and/or user.email not set")
   git_log <- git2r::commits()
   orig_commit <- git_log[[1]]
-  on.exit({
-    unlink(res$new_ctl_path)
-    system(paste("git reset", orig_commit$sha), intern = TRUE)
-  })
-
+  
+  res <- start_manual_edit(m, combine_patch = patch_id)
+  on.exit(unlink(res$new_ctl_path))
+  
   ans <- usethis::ui_yeah("---INSTRUCTIONS--- 
 
  1) {usethis::ui_field('EDIT')} control file
@@ -219,7 +214,10 @@ modify_patch_app <- function() {
  
 Finished & happy to proceed?", yes = "Yes", no = "Abort", shuffle = FALSE)
   
-  if(!ans) return(invisible())
+  if(!ans) {
+    system(paste("git reset", orig_commit$sha), intern = TRUE)
+    return(invisible())
+  }
 
   ## now diff ctl_path(m) and old_file_path
 
