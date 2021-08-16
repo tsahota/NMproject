@@ -70,9 +70,44 @@ start_manual_edit <- function(m, combine_patch = NA_character_, replace_ctl = NA
   res
 }
 
+git_user_name_exists <- function() {
+  config_names <- c(names(git2r::config()$global), names(git2r::config()$local))
+  "user.name" %in% config_names
+}
+
+git_user_email_exists <- function() {
+  config_names <- c(names(git2r::config()$global), names(git2r::config()$local))
+  "user.email" %in% config_names
+}
+
 user_values_exist <- function() {
   config_names <- c(names(git2r::config()$global), names(git2r::config()$local))
   all(c("user.email", "user.name") %in% config_names)
+}
+
+check_git_uservalues <- function() {
+  
+  cmd <- NA_character_
+  
+  if (!git_user_name_exists()) {
+    txt <- "user.name"
+    cmd <- "usethis::use_git_config(user.name = 'Jane')"
+  }
+  if (!git_user_email_exists()) {
+    txt <- "user.email"
+    cmd <- "usethis::use_git_config(user.email = 'jane@example.com')"
+  }
+  if (!git_user_name_exists() & !git_user_email_exists()) {
+    txt <- "user.name & user.email"
+    cmd <- "usethis::use_git_config(user.name = 'Jane', user.email = 'jane@example.com')"
+  }
+  
+  if(is.na(cmd)) return(invisible())
+  
+  usethis::ui_stop(paste0("git ", txt, "not set up. Set up like so:\n   ", 
+                          "{usethis::ui_code(\"", cmd, "\")}",
+                          "\nto set up"))
+  
 }
 
 check_git_username <- function() {
@@ -110,10 +145,16 @@ a user.name and user.email, set this up with:
 diff_manual_edit <- function(m, res) {
   
   git2r::add(path = res$new_ctl_path)
-  git2r::diff(git2r::repository(), index = TRUE, as_char = TRUE, filename = res$patch_path)
-  #git2r::commit(message = paste("manual edit: ", res$patch_id))
+  ## git2r::reset() doesn't work for some reason
+  on.exit(system("git reset HEAD", intern = TRUE))
+  
+  diff_text <- git2r::diff(git2r::repository(), index = TRUE, as_char = TRUE)
+  diff_text <- strsplit(diff_text, "\n")[[1]]
+  writeLines(diff_text, res$patch_path)
+  
+  ## following doesn't work for some reason
+  #git2r::diff(git2r::repository(), index = TRUE, as_char = TRUE, filename = res$patch_path)
   ## remove last commit and file
-  system("git reset HEAD", intern = TRUE) ## for some reason git2r::reset() doesn't reset
   unlink(res$new_ctl_path)
 }
 
@@ -315,7 +356,7 @@ Finished & happy to proceed?", yes = "Yes", no = "Abort", shuffle = FALSE)
 }
 
 make_patch_app <- function() {
-  check_git_username()
+  check_git_uservalues()
 
   ctx <- rstudioapi::getSourceEditorContext()
   selected_text <- ctx$selection[[1]]$text
@@ -345,7 +386,7 @@ make_patch_app <- function() {
 }
 
 resolve_manual_edit_app <- function() {
-  check_git_username()
+  check_git_uservalues()
   
   ctx <- rstudioapi::getSourceEditorContext()
   selected_text <- ctx$selection[[1]]$text

@@ -45,17 +45,21 @@ apply_manual_edit.nm_generic <- function(m, patch_id, return_merge_conf_ctl = FA
   
   patch_cmd <- paste("git apply -C1", patch_path)
   
-  res <- system_cmd(patch_cmd, intern = TRUE) ## win = no need to use system_nm, no file sync issues
+  suppressWarnings(
+    res <- system_cmd(patch_cmd, intern = TRUE) ## win = no need to use system_nm, no file sync issues    
+  )
+
   
-  if (1 %in% attributes(res)$status) {
+  if (isTRUE(attributes(res)$status > 0)) {
     ## try again with whitespace fix, needed for some versions of git
     patch_cmd <- paste("git apply --whitespace=fix -C1", patch_path)
-    res <- system_cmd(patch_cmd, intern = TRUE)
+    suppressWarnings(
+      res <- system_cmd(patch_cmd, intern = TRUE)
+    )
     
-    if (1 %in% attributes(res)$status) {
+    if (isTRUE(attributes(res)$status > 0)) {
       
       if (!git_cmd_available) stop("need git available from system() for this to work")
-      #if (!user_values_exist()) stop("git user.name and/or user.email not set")
       
       ## get current commit for later resetting
       git_log <- git2r::commits()
@@ -74,20 +78,41 @@ apply_manual_edit.nm_generic <- function(m, patch_id, return_merge_conf_ctl = FA
       commit_found <- length(found_commits) == 1
       
       if (commit_found) {
+        check_git_uservalues()
         ## create a commit so the 3way can be done
         system("git reset", intern = TRUE) ## for some reason git2r::reset() doesn't reset
         git2r::add(path = temp_ctl_path)
         on.exit(system(paste("git reset", orig_commit$sha), intern = TRUE), add = TRUE)
-        commit_msg <- paste("temp commit: ", ctl_path(m))
-        system(paste0("git commit --allow-empty -m '", commit_msg, "'"), intern = TRUE)
         
-        patch_cmd <- paste("git apply -C1 --3way", patch_path)
+        ## If no changes are present, we can exit
+        commit_diff <- git2r::diff(git2r::repository(), index = TRUE, as_char = TRUE)
+        commit_diff <- strsplit(commit_diff, "\n")[[1]]
+        empty_commit_coming <- length(commit_diff) == 0
+        
+        if (empty_commit_coming) {
+          usethis::ui_stop("apply_manual_edit() hit an unresolvable merge conflict, 
+            this is normally due to the control file having changed significantly
+            since the manual edit was performed. Right clicking the patch text and 
+            selecting  Addins -> View patch will show the edits the patch is attempting 
+            to apply.  This can be used to create a new patch.")
+        }
+        
+        commit_msg <- paste("temp commit: ", ctl_path(m))
+        git2r::commit(message = commit_msg)
+        
+        patch_cmd <- paste("git am -C1 --3way <", patch_path)
         
         res <- suppressWarnings(
-          system_cmd(patch_cmd, intern = TRUE, ignore.stdout = TRUE, ignore.stderr = TRUE)
+          system_cmd(patch_cmd, intern = TRUE)
         )
         
-        if (1 %in% attributes(res)$status) { ## error detected
+        if (any(grepl("git config", res))) {
+          usethis::ui_stop("Need to set project level user.name and user.email:
+            {usethis::ui_code(\"usethis::use_git_config(scope = 'project', user.name = 'Jane', user.email = 'jane@example.com')\")}
+          retry when finished")
+        }
+        
+        if (isTRUE(attributes(res)$status > 0)) { ## error detected
           ## two options:
           ##   merge conflict 
           ##   other fail (e.g. whitespace)
@@ -95,11 +120,13 @@ apply_manual_edit.nm_generic <- function(m, patch_id, return_merge_conf_ctl = FA
           added_stuff <- git2r::diff(git2r::repository(), index = TRUE, as_char = TRUE)
           conflict_present <- FALSE
           if (length(added_stuff) == 1) {
-            conflict_present <- any(grepl("\\+<<<<<<< ours", added_stuff))
+            conflict_present <- any(grepl("\\+<<<<<<<", added_stuff))
           }
           ## can now use conflict_present
           
           if (conflict_present) {
+            #on.exit(system("git am --abort", intern = TRUE))
+            
             warn_msg <- paste0("manual edit merge conflict detected:\n\n", 
                                "-------------------------------------------\n",
                                added_stuff,
@@ -118,10 +145,10 @@ apply_manual_edit.nm_generic <- function(m, patch_id, return_merge_conf_ctl = FA
             ## behaviour.  The patch wouldnt' match up to what is done.
           }
           
-          patch_cmd <- paste("git apply --whitespace=fix -C1 --3way", patch_path)
+          patch_cmd <- paste("git am --whitespace=fix -C1 --3way <", patch_path)
           res <- system_cmd(patch_cmd, intern = TRUE)
           
-          if (1 %in% attributes(res)$status) { ## error detected
+          if (isTRUE(attributes(res)$status > 0)) { ## error detected
             ## two options:
             ##   merge conflict 
             ##   other fail (non whitespace but other)
