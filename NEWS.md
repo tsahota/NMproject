@@ -12,6 +12,12 @@
 
 * Better instructions on RStudio Addin usage.
 
+## Bug fixes
+
+* Fixed bug were `nm_create_analysis_project` would fail in windows if using
+  the home directory due to a mismatch between how '~' is interpreted by R
+  and `usethis`.
+
 # NMproject 0.6.3
 
 The first post CRAN release
