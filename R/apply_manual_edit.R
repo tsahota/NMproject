@@ -39,7 +39,7 @@ apply_manual_edit.nm_generic <- function(m, patch_id, return_merge_conf_ctl = FA
   on.exit(unlink(temp_ctl_path))
   
   if (!git_cmd_available) stop("need git available from system() for this to work")
-  if (!user_values_exist()) stop("git user.name and/or user.email not set")
+  #if (!user_values_exist()) stop("git user.name and/or user.email not set")
   
   ## get current commit for later resetting
   git_log <- git2r::commits()
