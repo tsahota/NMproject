@@ -13,6 +13,8 @@
 * Fixed bug were `nm_create_analysis_project` would fail in windows if using
   the home directory due to a mismatch between how '~' is interpreted by R
   and `usethis`.
+  
+* Fixed bug in failing CRAN checks in macOS systems.
 
 # NMproject 0.6.3
 
