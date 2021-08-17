@@ -2,8 +2,10 @@
 
 ## Major changes
 
-* revamped the manual edit interface.  This is backwards incompatible.
-  merge conflicts will now be flagged. Resolve manual edit 'addin' add for 
+* Revamped the manual edit interface.  This is backwards incompatible.
+  merge conflicts will now be flagged.
+  
+* Resolve manual edit 'addin' for 
   handling merge conflicts in manual edits (#17)
 
 ## Minor changes

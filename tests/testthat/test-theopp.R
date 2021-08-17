@@ -3,6 +3,9 @@ proj_name <- "test_nmproject"
 proj_path <- file.path(tempdir(), proj_name)
 
 test_that("run and post", {
+  
+  skip_if_not(rmarkdown::pandoc_available("1.12.3"))
+  
   currentwd <- getwd()
   if (file.exists(proj_path)) unlink(proj_path, recursive = TRUE, force = TRUE)
   nm_create_analysis_project(proj_path)
