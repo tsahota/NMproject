@@ -1,6 +1,4 @@
-# NMproject (development version)
-
-## Major changes
+# NMproject 0.6.4
 
 * Revamped the manual edit interface.  This is backwards incompatible.
   merge conflicts will now be flagged.
@@ -8,13 +6,9 @@
 * Resolve manual edit 'addin' for 
   handling merge conflicts in manual edits (#17)
 
-## Minor changes
-
 * `view_patch()` prints to console instead of opening window
 
 * Better instructions on RStudio Addin usage.
-
-## Bug fixes
 
 * Fixed bug were `nm_create_analysis_project` would fail in windows if using
   the home directory due to a mismatch between how '~' is interpreted by R
