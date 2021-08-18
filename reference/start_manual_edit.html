@@ -41,7 +41,10 @@
 
 <meta property="og:title" content="Start manual edit — start_manual_edit" />
 <meta property="og:description" content="
-Needed for &quot;manual edit&quot; RStudio 'Addin' functionality." />
+Needed for &quot;manual edit&quot; RStudio 'Addin' functionality.  Performs a git
+reset, git adds and commits a temporary version of control file to index (for
+subsequent diff), opens editor for edits.  The intent is that after the diff
+is created the commit will be removed." />
 
 
 
@@ -73,7 +76,7 @@ Needed for &quot;manual edit&quot; RStudio 'Addin' functionality." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.4</span>
       </span>
     </div>
 
@@ -122,10 +125,17 @@ Needed for &quot;manual edit&quot; RStudio 'Addin' functionality." />
 
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
-<p>Needed for "manual edit" RStudio 'Addin' functionality.</p>
+<p>Needed for "manual edit" RStudio 'Addin' functionality.  Performs a git
+reset, git adds and commits a temporary version of control file to index (for
+subsequent diff), opens editor for edits.  The intent is that after the diff
+is created the commit will be removed.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>start_manual_edit</span><span class='op'>(</span><span class='va'>m</span>, combine_patch <span class='op'>=</span> <span class='cn'>NA_character_</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>start_manual_edit</span><span class='op'>(</span>
+  <span class='va'>m</span>,
+  combine_patch <span class='op'>=</span> <span class='cn'>NA_character_</span>,
+  replace_ctl <span class='op'>=</span> <span class='cn'>NA_character_</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -136,7 +146,12 @@ Needed for &quot;manual edit&quot; RStudio 'Addin' functionality." />
     </tr>
     <tr>
       <th>combine_patch</th>
-      <td><p>Logical. Should patch be added first before edit.</p></td>
+      <td><p>Character. Optional patch to be applied first.</p></td>
+    </tr>
+    <tr>
+      <th>replace_ctl</th>
+      <td><p>If not <code>NA_character_</code>, before displaying, the file will
+be replaced with this</p></td>
     </tr>
     </table>
 

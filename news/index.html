@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.4</span>
       </span>
     </div>
 
@@ -117,11 +117,27 @@
       <small>Source: <a href='https://github.com/tsahota/NMproject/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="nmproject-064" class="section level1">
+<h1 class="page-header" data-toc-text="0.6.4">
+<a href="#nmproject-064" class="anchor"></a>NMproject 0.6.4<small> 2021-08-18 </small>
+</h1>
+<ul>
+<li><p>Revamped the manual edit interface. This is backwards incompatible. merge conflicts will now be flagged.</p></li>
+<li><p>Resolve manual edit ‘addin’ for handling merge conflicts in manual edits (<a href='https://github.com/tsahota/NMproject/issues/17'>#17</a>)</p></li>
+<li><p><code><a href="../reference/view_patch.html">view_patch()</a></code> prints to console instead of opening window</p></li>
+<li><p>Better instructions on RStudio Addin usage.</p></li>
+<li><p>Fixed bug were <code>nm_create_analysis_project</code> would fail in windows if using the home directory due to a mismatch between how ‘~’ is interpreted by R and <code>usethis</code>.</p></li>
+<li><p>Fixed bug in failing CRAN checks in macOS systems.</p></li>
+</ul>
+</div>
     <div id="nmproject-063" class="section level1">
 <h1 class="page-header" data-toc-text="0.6.3">
 <a href="#nmproject-063" class="anchor"></a>NMproject 0.6.3<small> Unreleased </small>
 </h1>
 <p>The first post CRAN release</p>
+<div id="main-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#main-changes" class="anchor"></a>Main changes</h2>
 <ul>
 <li><p>Revamped the NMproject project creation template and <code><a href="../reference/nm_create_analysis_project.html">nm_create_analysis_project()</a></code> for greater customisability ability and removed dependence on <code><a href="https://rdrr.io/r/base/options.html">options()</a></code> which was causing strange behaviour.</p></li>
 <li><p>Expanded analysis README template for new NMprojects to run analysis level tests on build. Useful for compliance checking.</p></li>
@@ -134,13 +150,14 @@
 <li><p><code><a href="../reference/decision.html">decision()</a></code> uses <code><a href="https://usethis.r-lib.org/reference/ui-questions.html">usethis::ui_yeah()</a></code> for prompting rather than <code><a href="https://rdrr.io/r/base/readline.html">readline()</a></code>.</p></li>
 <li><p><code><a href="../reference/stage.html">stage()</a></code> has <code>find_replace_dir_names</code> argument to handle custom NMproject directory structures.</p></li>
 </ul>
+</div>
 <div id="minor-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#minor-changes" class="anchor"></a>Minor changes</h2>
 <ul>
 <li><p>Made <code>run_id</code> argument mandatory in <code><a href="../reference/child.html">child()</a></code>.</p></li>
 <li><p>Added example code for first object creation in code library dialog boxes when a model file is imported</p></li>
-<li><p><code><a href="../reference/new_nm.html">new_nm()</a></code> will now fail if user tries to use a run based on one in the Models. This is for safety as the Models directry should only contain NMproject generated code.</p></li>
+<li><p><code><a href="../reference/new_nm.html">new_nm()</a></code> will now fail if user tries to use a run based on one in the Models. This is for safety as the Models directory should only contain NMproject generated code.</p></li>
 <li><p>The code library will not display <code>.Rroj</code> or <code>README</code> files.</p></li>
 </ul>
 </div>
