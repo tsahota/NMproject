@@ -32,6 +32,9 @@ apply_manual_edit <- function(m, patch_id, return_merge_conf_ctl = FALSE) {
 #' @export
 apply_manual_edit.nm_generic <- function(m, patch_id, return_merge_conf_ctl = FALSE) {
   
+  ## retrain backwards compatibility with "patch-sdlkfjs.." format patch ids.
+  patch_id <- gsub("patch-", "", patch_id)
+  
   temp_ctl_path <- file.path(nm_dir("models"), paste0("base-", patch_id))
   mnew <- m %>%
     ctl_path(temp_ctl_path) %>%
