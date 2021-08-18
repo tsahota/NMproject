@@ -57,7 +57,7 @@ The first post CRAN release
   when a model file is imported
   
 * `new_nm()` will now fail if user tries to use a run based on one in the
-  Models.  This is for safety as the Models directry should only contain 
+  Models.  This is for safety as the Models directory should only contain 
   NMproject generated code.
   
 * The code library will not display `.Rroj` or `README` files.

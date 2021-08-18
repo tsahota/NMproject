@@ -51,7 +51,7 @@ rlang::.data
 #' `r lifecycle::badge("experimental")`
 #' 
 #' Pipe an nm object object to a list of functions.  Although this enables
-#' multiple NONMEM runs to be handled simulataneously, it does make your code
+#' multiple NONMEM runs to be handled simultaneously, it does make your code
 #' less readable.
 #' 
 #' @param lhs An nm object.

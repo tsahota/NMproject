@@ -916,7 +916,7 @@ m1 %>%
   cmd("docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}")
 ```
 
-`run_nm()` will then execute NONMEM via the docker container.  All subsequent child objects will inherit the same command structure.  Note the use the glueing object fields `ctl_name` and `run_dir` so child objects can inherit the same command structure to save the command being rewritten for each run)
+`run_nm()` will then execute NONMEM via the docker container.  All subsequent child objects will inherit the same command structure.  Note the use the gluing object fields `ctl_name` and `run_dir` so child objects can inherit the same command structure to save the command being rewritten for each run)
 
 Set up dockerised NMTRAN checking with:
 

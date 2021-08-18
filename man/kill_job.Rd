@@ -13,7 +13,7 @@ kill_job(m)
 No return value, called for side effects.
 }
 \description{
-Can be useful in conjuction with a modified \code{\link[=system_nm]{system_nm()}}.  Requires setting \code{"kill_job"} option.
+Can be useful in conjunction with a modified \code{\link[=system_nm]{system_nm()}}.  Requires setting \code{"kill_job"} option.
 }
 \details{
 The option \code{"kill_job"} needs to be defined as a function that kills

@@ -18,7 +18,7 @@ A modified nm object.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
 Pipe an nm object object to a list of functions.  Although this enables
-multiple NONMEM runs to be handled simulataneously, it does make your code
+multiple NONMEM runs to be handled simultaneously, it does make your code
 less readable.
 }
 \examples{

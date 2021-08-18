@@ -1,6 +1,6 @@
 #' Kill cluster job
 #'
-#' Can be useful in conjuction with a modified [system_nm()].  Requires setting `"kill_job"` option.
+#' Can be useful in conjunction with a modified [system_nm()].  Requires setting `"kill_job"` option.
 #'
 #' @param m An nm object.
 #'
