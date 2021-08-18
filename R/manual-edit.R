@@ -201,7 +201,7 @@ new_patch_app <- function() {
  1) {usethis::ui_field('EDIT')} control file
  2) {usethis::ui_field('SAVE')} the file
  
-Finished & happy to proceed?", yes = "Yes", no = "Abort", shuffle = FALSE)
+Follow the above instructions and indicate if you happy to proceed?", yes = "Yes", no = "Abort", shuffle = FALSE)
   
   if(!ans) {
     system(paste("git reset", orig_commit$sha), intern = TRUE)
@@ -259,7 +259,7 @@ modify_patch_app <- function() {
  1) {usethis::ui_field('EDIT')} control file
  2) {usethis::ui_field('SAVE')} the file
  
-Finished & happy to proceed?", yes = "Yes", no = "Abort", shuffle = FALSE)
+Follow the above instructions and indicate if you happy to proceed?", yes = "Yes", no = "Abort", shuffle = FALSE)
   
   if(!ans) {
     system(paste("git reset", orig_commit$sha), intern = TRUE)
@@ -315,7 +315,6 @@ resolve_manual_edit <- function() {
   
   res <- start_manual_edit(m, replace_ctl = ctl_with_merge)
   on.exit(unlink(res$new_ctl_path))
-  
   ans <- usethis::ui_yeah("---INSTRUCTIONS--- 
 
  1) {usethis::ui_field('REPAIR')} control file
@@ -323,7 +322,7 @@ resolve_manual_edit <- function() {
     b) {usethis::ui_field('EDIT')} these sections
  2) {usethis::ui_field('SAVE')} the file
  
-Finished & happy to proceed?", yes = "Yes", no = "Abort", shuffle = FALSE)
+Follow the above instructions and indicate if you happy to proceed?", yes = "Yes", no = "Abort", shuffle = FALSE)
   
   if(!ans) {
     system(paste("git reset", orig_commit$sha), intern = TRUE)
@@ -333,7 +332,7 @@ Finished & happy to proceed?", yes = "Yes", no = "Abort", shuffle = FALSE)
   ## now diff ctl_path(m) and old_file_path
   
   diff_manual_edit(m, res)
-  
+
   if (final_pipe_present) {
     if (final_newline_present) {
       code_to_add <- paste0(trimws(before_edit), "  apply_manual_edit(\"", res$patch_id, "\") %>%")
@@ -345,7 +344,7 @@ Finished & happy to proceed?", yes = "Yes", no = "Abort", shuffle = FALSE)
     code_to_add <- paste0(trimws(before_edit), " %>%
   apply_manual_edit(\"", res$patch_id, "\")")
   }
-  
+
   rstudioapi::insertText(
     text = code_to_add,
     id = ctx$id
