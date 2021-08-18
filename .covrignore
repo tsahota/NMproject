@@ -14,3 +14,4 @@ R/prompt_overwrite.R
 R/nmsave.R
 R/system-hooks.R
 R/zzz.R
+R/NMproject-package.R

@@ -1,3 +1,5 @@
+# NMproject (development version)
+
 # NMproject 0.6.4
 
 * Revamped the manual edit interface.  This is backwards incompatible.
