@@ -295,14 +295,14 @@ resolve_manual_edit <- function() {
   selected_text <- ctx$selection[[1]]$text
   final_pipe_present <- grepl("\\s*%>%\\s*$", selected_text)
   final_newline_present <- grepl("\\n\\s*$", selected_text)
-  
+
   before_edit <- gsub("(.*)%>%.*apply_manual_edit.*", "\\1", selected_text)
   
   patch_id <- gsub(".*%>%.*apply_manual_edit\\(\"(.*)\"\\).*", "\\1", selected_text)
   
   m <- eval(parse(text = before_edit))
-  
-  ctl_with_merge <- eval(parse(text = before_edit)) %>%
+
+  ctl_with_merge <- m %>%
     apply_manual_edit(patch_id, return_merge_conf_ctl = TRUE)
   
   ctl_with_merge <- ctl_with_merge[[1]]
