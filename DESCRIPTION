@@ -79,6 +79,7 @@ Collate:
     'nm_object.R'
     'cache.R'
     'covariate-explore.R'
+    'cran_note_handle.R'
     'data_filter.R'
     'decision.R'
     'deprecated.R'

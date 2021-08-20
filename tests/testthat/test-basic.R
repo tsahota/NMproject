@@ -2,6 +2,9 @@ proj_name <- "test_nmproject"
 proj_path <- file.path(tempdir(), proj_name)
 
 test_that("Project has basic functionality", {
+  
+  skip_if_not(rmarkdown::pandoc_available("1.12.3"))
+  
   currentwd <- getwd()
   nm_create_analysis_project(proj_path)
   on.exit({
