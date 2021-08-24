@@ -966,11 +966,11 @@ Yes, just change `cmd` to reflect the proper PsN command.
 
 ```{r eval=FALSE}
 
-m1psnboot <- m1 %>% child("m1psnboot") %>%
+m1psnboot <- m1 %>% child(run_id = "m1psnboot") %>%
   cmd("bootstrap {ctl_name} -samples=50 -dir={run_dir}") %>%
   run_nm()
 
-m1psnvpc <- m1 %>% child("m1psnvpc") %>%
+m1psnvpc <- m1 %>% child(run_id = "m1psnvpc") %>%
   cmd("vpc {ctl_name} -samples=50 -dir={run_dir}") %>%
   run_nm()
 
