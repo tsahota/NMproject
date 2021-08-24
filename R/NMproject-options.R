@@ -266,7 +266,38 @@ nm_default_fields <- function(field_list) {
 #' @export
 sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_flags='-pe orte {cores} -V' {ctl_name} -dir={run_dir} -nodes={cores}"
 
-
+#' Generic execute command for parallelised runs
+#'
+#' @description
+#'
+#' `r lifecycle::badge("stable")`
+#'
+#' Character to be used with the [cmd()] function to launch a parallelised run.
+#'
+#' @details Requires `cores` and `parafile` fields to be set.
+#' 
+#' @return A `character` object.
+#' 
+#' @seealso [nm_getsetters()].
+#'
+#' @examples
+#'
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv")) %>%
+#'   cmd(parallel_execute) %>%
+#'   parafile("/opt/NONMEM/nm75/run/mpilinux8.pnm") %>%
+#'   cores(8)
+#'   
+#' cmd(m1)
+#'
+#' m2 <- m1 %>% child("m2") ## inherits same command as above
+#'
+#' parallel_execute ## view the character to see how psn interfaces with SGE
+#' @export
+parallel_execute <- "execute -parafile={parafile} {ctl_name} -dir={run_dir} -nodes={cores}"
 
 #' Get/set nm_tran_command
 #'

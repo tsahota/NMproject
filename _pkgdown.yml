@@ -79,6 +79,7 @@ reference:
   - wait_for
   - is_finished
   - is_successful
+  - parallel_execute
   - sge_parallel_execute
   - system_nm
   - system_cmd
