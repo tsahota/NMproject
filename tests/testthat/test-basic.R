@@ -40,6 +40,9 @@ test_that("Project has basic functionality", {
 
 
 test_that("set up", {
+  
+  skip_if_not(rmarkdown::pandoc_available("1.12.3"))
+  
   currentwd <- getwd()
   nm_create_analysis_project(proj_path)
   on.exit({
