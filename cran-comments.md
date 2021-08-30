@@ -1,6 +1,5 @@
-* Apologies for the quick submission. This fixes CRAN errors
-  on macOS and solaris where tests are failing due to pandoc
-  incompatibility
+* This fixes CRAN errors on macOS and solaris where tests were 
+  failing due to pandoc incompatibility
 
 ## Test environments
 
