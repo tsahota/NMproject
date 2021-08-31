@@ -2,6 +2,8 @@
 
 * Fixed failing CRAN checks in macOS systems.
 
+* Added run monitor RStudio Addin.
+
 # NMproject 0.6.4
 
 * Revamped the manual edit interface.  This is backwards incompatible.
