@@ -1,5 +1,6 @@
 library(shiny)
 library(dygraphs)
+library(NMproject)
 
 .currentwd <- get(".currentwd", envir = NMproject:::.sso_env)
 .m <- get(".m", envir = NMproject:::.sso_env)

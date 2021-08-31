@@ -13,9 +13,19 @@ Description: Resolve manual edit conflict. In your script highlight code segment
 Binding: resolve_manual_edit_app
 Interactive: true
 
+Name: view manual edit patch
+Description: View manual edit patch. In your script put cursor on patch name before selecting this.
+Binding: view_patch_app
+Interactive: true
+
 Name: overwrite behaviour
 Description: modify overwrite behaviour
 Binding: overwrite_behaviour_app
+Interactive: true
+
+Name: run monitor
+Description: Monitor convergence and results of runs during execution
+Binding: shiny_nm
 Interactive: true
 
 Name: nm_tran
@@ -26,11 +36,6 @@ Interactive: true
 Name: view diff
 Description: View diff. In your script highlight code segment (including pipes) before selecting this.
 Binding: nm_diff_app
-Interactive: true
-
-Name: view patch
-Description: View patch. In your script put cursor on patch name before selecting this.
-Binding: view_patch_app
 Interactive: true
 
 Name: show model file
