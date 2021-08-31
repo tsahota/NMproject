@@ -76,7 +76,7 @@
       <h1 data-toc-skip>NMproject</h1>
                         <h4 class="author">Tarj Sahota</h4>
             
-            <h4 class="date">2021-08-30</h4>
+            <h4 class="date">2021-08-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/tsahota/NMproject/blob/master/vignettes/articles/NMproject.Rmd"><code>vignettes/articles/NMproject.Rmd</code></a></small>
       <div class="hidden name"><code>NMproject.Rmd</code></div>
@@ -560,17 +560,17 @@
 <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"THETA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/m1`
 ##   1| $THETA
-##   2| 0.48427   ; KA ; h-1 ; LOG
-##   3| -1.8192   ; K ; h-1 ; LOG
-##   4| -0.62337   ; V ; L ; LOG</code></pre>
+##   2| 0.72355   ; KA ; h-1 ; LOG
+##   3| -2.1615   ; K ; h-1 ; LOG
+##   4| -0.64714   ; V ; L ; LOG</code></pre>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../../reference/init_theta.html">init_omega</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="va">init</span>, min <span class="op">=</span> <span class="va">init</span><span class="op">/</span><span class="fl">2</span>, max <span class="op">=</span> <span class="va">init</span><span class="op">*</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>
 <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"OMEGA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/m1`
 ##   1| $OMEGA
-##   2| 0.094518   ;  IIV_KA ; LOG
-##   3| 0.072399   ;  IIV_K ; LOG
-##   4| 0.10888   ;  IIV_V ; LOG</code></pre>
+##   2| 0.15506   ;  IIV_KA ; LOG
+##   3| 0.055683   ;  IIV_K ; LOG
+##   4| 0.1793   ;  IIV_V ; LOG</code></pre>
 </div>
 <div id="working-with-omegasigma-blocks" class="section level2">
 <h2 class="hasAnchor">
@@ -582,9 +582,9 @@
 <pre><code>## $`execute.Models/m1`
 ##     name omega1 omega2 lower     init upper block mblock   FIX unit trans line
 ## 1   &lt;NA&gt;     NA     NA    NA       NA    NA     1     NA FALSE &lt;NA&gt;  &lt;NA&gt;    1
-## 2 IIV_KA      1      1    NA 0.094518    NA     1      1 FALSE &lt;NA&gt;   LOG    2
-## 3  IIV_K      2      2    NA 0.072399    NA     2      1 FALSE &lt;NA&gt;   LOG    3
-## 4  IIV_V      3      3    NA 0.108880    NA     3      1 FALSE &lt;NA&gt;   LOG    4
+## 2 IIV_KA      1      1    NA 0.155060    NA     1      1 FALSE &lt;NA&gt;   LOG    2
+## 3  IIV_K      2      2    NA 0.055683    NA     2      1 FALSE &lt;NA&gt;   LOG    3
+## 4  IIV_V      3      3    NA 0.179300    NA     3      1 FALSE &lt;NA&gt;   LOG    4
 ##   pos orig_line orig_pos
 ## 1   1         1        1
 ## 2   1         2        1
@@ -598,10 +598,10 @@
 <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"OMEGA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/m1`
 ##   1| $OMEGA
-##   2| 0.094518   ;   IIV_KA ; LOG
+##   2| 0.15506   ;   IIV_KA ; LOG
 ##   3| $OMEGA BLOCK (2)
-##   4| 0.072399   ;   IIV_K ; LOG
-##   5| 0.01 0.10888   ;   IIV_V ; LOG</code></pre>
+##   4| 0.055683   ;   IIV_K ; LOG
+##   5| 0.01 0.1793   ;   IIV_V ; LOG</code></pre>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## for demo purposes we'll reverse the process with unblock()</span>
 <span class="va">io</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../../reference/init_theta.html">init_omega</a></span><span class="op">(</span><span class="op">)</span>
@@ -610,9 +610,9 @@
 <span class="va">m1</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"OMEGA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/m1`
 ##   1| $OMEGA
-##   2| 0.094518   ;    IIV_KA ; LOG
-##   3| 0.072399   ;    IIV_K ; LOG
-##   4| 0.10888   ;    IIV_V ; LOG</code></pre>
+##   2| 0.15506   ;    IIV_KA ; LOG
+##   3| 0.055683   ;    IIV_K ; LOG
+##   4| 0.1793   ;    IIV_V ; LOG</code></pre>
 </div>
 </div>
 <div id="advanced-topics" class="section level1">
@@ -708,33 +708,33 @@
 <span class="va">dp</span><span class="op">$</span><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"THETA"</span><span class="op">)</span></code></pre></div>
 <pre><code>## $`execute.Models/1`
 ##   1| $THETA
-##   2| 0.76455   ; KA ; h-1 ; LOG
-##   3| -2.0342   ; K ; h-1 ; LOG
-##   4| -0.59844   ; V ; L ; LOG
+##   2| 0.75249   ; KA ; h-1 ; LOG
+##   3| -2.4253   ; K ; h-1 ; LOG
+##   4| -1.2354   ; V ; L ; LOG
 ## 
 ## $`execute.Models/2`
 ##   1| $THETA
-##   2| 0.6655   ; KA ; h-1 ; LOG
-##   3| -2.248   ; K ; h-1 ; LOG
-##   4| -0.18407   ; V ; L ; LOG
+##   2| 0.96506   ; KA ; h-1 ; LOG
+##   3| -2.4301   ; K ; h-1 ; LOG
+##   4| -0.45789   ; V ; L ; LOG
 ## 
 ## $`execute.Models/3`
 ##   1| $THETA
-##   2| 0.70954   ; KA ; h-1 ; LOG
-##   3| -1.7685   ; K ; h-1 ; LOG
-##   4| -0.097661   ; V ; L ; LOG
+##   2| 0.88088   ; KA ; h-1 ; LOG
+##   3| -2.228   ; K ; h-1 ; LOG
+##   4| -0.43213   ; V ; L ; LOG
 ## 
 ## $`execute.Models/4`
 ##   1| $THETA
-##   2| 0.63443   ; KA ; h-1 ; LOG
-##   3| -1.553   ; K ; h-1 ; LOG
-##   4| -1.0371   ; V ; L ; LOG
+##   2| 1.0508   ; KA ; h-1 ; LOG
+##   3| -1.7978   ; K ; h-1 ; LOG
+##   4| -0.55972   ; V ; L ; LOG
 ## 
 ## $`execute.Models/5`
 ##   1| $THETA
-##   2| 0.6873   ; KA ; h-1 ; LOG
-##   3| -1.29   ; K ; h-1 ; LOG
-##   4| -0.55103   ; V ; L ; LOG</code></pre>
+##   2| 1.2822   ; KA ; h-1 ; LOG
+##   3| -2.0405   ; K ; h-1 ; LOG
+##   4| -0.97792   ; V ; L ; LOG</code></pre>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## run all runs in dp$m with the normal syntax </span>
 <span class="va">dp</span><span class="op">$</span><span class="va">m</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
