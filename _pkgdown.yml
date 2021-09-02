@@ -3,6 +3,7 @@ url: https://tsahota.github.io/NMproject
 template:
   params:
     bootswatch: flatly
+    google_site_verification: Asq9eKyn87Krpkza8Y-Y_XiS5V6eNXGAreGhOYcBKd0
 
 reference:
 - title: "Directory management"

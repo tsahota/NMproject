@@ -1,5 +1,7 @@
 # NMproject (development version)
 
+* Added google verification
+
 # NMproject 0.6.5
 
 * Fixed failing CRAN checks in macOS systems.
