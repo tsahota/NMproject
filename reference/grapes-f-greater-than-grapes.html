@@ -37,6 +37,12 @@
 <script src="../pkgdown.js"></script>
 
 
+<!-- docsearch -->
+<script src="../docsearch.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
+<link href="../docsearch.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+
 
 
 <meta property="og:title" content="Function pipe for nm objects — %f&gt;%" />
@@ -75,7 +81,7 @@ less readable." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.6</span>
       </span>
     </div>
 
@@ -105,6 +111,12 @@ less readable." />
   </a>
 </li>
       </ul>
+      
+      <form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
+        <div class="form-group">
+          <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
+        </div>
+      </form>
       
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -166,7 +178,7 @@ less readable.</p>
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>ID</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>WT <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>WT</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='write_derived_data.html'>write_derived_data</a></span><span class='op'>(</span><span class='va'>temp_data_file</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>written: </span></div><div class='output co'>#&gt; <span class='message'>/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmpg21Yep/filee555333ed02.RDS</span></div><div class='output co'>#&gt; <span class='message'>/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmpg21Yep/filee555333ed02.csv</span></div><div class='input'>  
+</div><div class='output co'>#&gt; <span class='message'>written: </span></div><div class='output co'>#&gt; <span class='message'>/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpWqPi65/file10a07c18d53e.RDS</span></div><div class='output co'>#&gt; <span class='message'>/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpWqPi65/file10a07c18d53e.csv</span></div><div class='input'>  
 <span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='data_path.html'>data_path</a></span><span class='op'>(</span><span class='va'>temp_data_file</span><span class='op'>)</span>
 
 <span class='va'>mWT</span> <span class='op'>&lt;-</span> <span class='va'>m1</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='child.html'>child</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"m2"</span>, <span class='st'>"m3"</span>, <span class='st'>"m4"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%f&gt;%</span> 
@@ -292,6 +304,23 @@ less readable.</p>
    </div>
 
   
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.js" integrity="sha256-GKvGqXDznoRYHCwKXGnuchvKSwmx9SRMrZOTh2g4Sb0=" crossorigin="anonymous"></script>
+<script>
+  docsearch({
+    
+    
+    apiKey: 'be93a35b426aba9fa8e576efbb2011e7',
+    indexName: 'NMproject',
+    inputSelector: 'input#search-input.form-control',
+    transformData: function(hits) {
+      return hits.map(function (hit) {
+        hit.url = updateHitURL(hit);
+        return hit;
+      });
+    }
+  });
+</script>
+
 
 
   </body>
