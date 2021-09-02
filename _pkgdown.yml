@@ -4,6 +4,9 @@ template:
   params:
     bootswatch: flatly
     google_site_verification: Asq9eKyn87Krpkza8Y-Y_XiS5V6eNXGAreGhOYcBKd0
+    docsearch:
+      api_key: be93a35b426aba9fa8e576efbb2011e7
+      index_name: NMproject
 
 reference:
 - title: "Directory management"

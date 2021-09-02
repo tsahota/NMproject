@@ -1,6 +1,6 @@
 # NMproject (development version)
 
-* Added google verification
+* Added google verification and DocSearch
 
 # NMproject 0.6.5
 
