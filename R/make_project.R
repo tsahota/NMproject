@@ -70,28 +70,28 @@
 
 nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
                                        style = c("analysis", "analysis-package"),
-                                       use_renv = FALSE, readme_template_package = "NMproject", 
+                                       use_renv = FALSE, readme_template_package = "NMproject",
                                        ...) {
 
   ## need to normalize path because usethis has different
   ## home directory, so use use R normalizePath to remove abiguity
-  
+
   if(is.character(dirs) & length(dirs) == 1) dirs <- parse_dirs(dirs)
-  
+
   current_default_dirs <- nm_default_dirs()
   nm_default_dirs(dirs)
   on.exit(nm_default_dirs(current_default_dirs))
-  
+
   ## if it's a full path, leave it alone
   ## otherwise if it's a relative path, we need the working directory to make it full
   if (!is_full_path(path)) {
     path <- file.path(normalizePath(getwd()), path)
-    path <- normalizePath(path, mustWork = FALSE)    
+    path <- normalizePath(path, mustWork = FALSE)
   }
   ## needed because usethis::create_project and R can disagree on ~ location
   ## R should take precendence
-  path <- path.expand(path)   
-  
+  path <- path.expand(path)
+
   if (file.exists(path)) {
     stop("Directory already exists. Aborting.")
   }
@@ -105,7 +105,7 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
   }
 
   usethis::create_project(path = path, rstudio = TRUE, open = FALSE)
-  
+
   current_proj <- try(usethis::proj_get(), silent = TRUE)
   if (inherits(current_proj, "try-error")) {
     current_proj <- NULL
@@ -140,7 +140,7 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
       usethis::use_directory(dir_name, ignore = TRUE)
       ## create staging equivalent
       usethis::use_directory(file.path("staging", dir_name), ignore = TRUE)
-      
+
       generic_dir_name <- names(dirs)[i]
       readme_path <- file.path(dir_name, "Readme.txt")
       staging_readme_path <- file.path("staging", dir_name, "Readme.txt")
@@ -183,34 +183,35 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
       usethis::ui_info("skipping creation of {usethis::ui_path('NAMESPACE')}")
     }
   )
-  
+
   set_default_dirs_in_rprofile(file.path(folder, name, ".Rprofile"), dirs)
-  
+
   suppressMessages(devtools::build_readme(path = path))
 
   ## No R directory for simple package - advanced users needs to create this manually
   ##  This is because RStudio by default tries to save files in the R directory.
   if (style %in% "analysis") unlink(file.path(folder, name, "R"), recursive = TRUE)
-    
+
   ## no badges - skip this part of starters for now
   repo <- git2r::init(usethis::proj_get())
-  
+
   if(!is.null(nm_pre_commit_hook())) {
     usethis::use_git_hook("pre-commit", nm_pre_commit_hook())
   }
-  
+
   if(!is.null(nm_pre_push_hook())) {
     usethis::use_git_hook("pre-push", nm_pre_push_hook())
   }
-  
+
   git2r::add(repo, path = "*")
-  
+
   tryCatch(
     {
       git2r::commit(repo, message = "Initial commit", all = TRUE)
     },
     error = function(e) {
-      usethis::ui_oops("cannot commit. Aborting commit...")
+      check_git_uservalues()
+      usethis::ui_oops("cannot commit. Aborting commit, git functionality will be reduced...")
     }
   )
 
@@ -234,23 +235,23 @@ parse_dirs <- function(dirs){
 #' @rdname git_hooks
 #' @name git_hooks
 #' @title Git hooks
-#' 
-#' @description 
-#' 
+#'
+#' @description
+#'
 #' `r lifecycle::badge("experimental")`
-#' 
+#'
 #' This function is primarily for organisational level configuration. Supply
 #' git hooks in the form of R functions and they will be executed via the
 #' `Rscript` interface.
-#' 
+#'
 #' @param cmd Optional command for setting the git hook.
-#' 
+#'
 #' @return If no `cmd` is specified this returns the return value of
 #'   `getOption("nm_pre_commit_hook")`.  Otherwise there is no return value.
-#' 
+#'
 #' @seealso [nm_create_analysis_project()]
 #' @keywords internal
-#' @export 
+#' @export
 nm_pre_commit_hook <- function(cmd){
   if (missing(cmd)) {
     return(getOption("nm_pre_commit_hook"))
@@ -273,10 +274,10 @@ nm_pre_push_hook <- function(cmd){
 #' Package name validator from `usethis`
 #'
 #' @param x Name of package.
-#' 
+#'
 #' @return A logical `TRUE` if or `FALSE` indicating if `x` is a valid package
 #'   name.
-#' 
+#'
 #' @keywords internal
 valid_package_name <- function(x) {
   grepl("^[a-zA-Z][a-zA-Z0-9.]+$", x) && !grepl("\\.$", x)
