@@ -20,3 +20,4 @@
 ^staging$
 ^tests/testthat/test_nmproject\.zip$
 ^CRAN-RELEASE$
+^NMproject\.Rproj$
