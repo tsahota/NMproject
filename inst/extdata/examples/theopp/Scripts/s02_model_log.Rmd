@@ -96,7 +96,7 @@ Start with `m1` and pipe into `child()` function specifying a new run identifier
 
 ```{r sim}
 
-m1s <- m1 %>% child("m1s") %>%  
+m1s <- m1 %>% child(run_id = "m1s") %>%  
   # update the $THETA/$OMEGA/$SIGMA values using m1
   update_parameters(m1) %>%
   # use the convert_to_simulation() function to remove $EST and replace with
@@ -128,7 +128,7 @@ thinking
 # To see what changes it does put the cursor on the patch name and then use
 # Addins -> view patch
 
-m1s_temp <- m1 %>% child("m1s_temp") %>%  
+m1s_temp <- m1 %>% child(run_id = "m1s_temp") %>%  
   update_parameters(m1) %>%
   apply_manual_edit("tarjinde-2021-08-15-16-55-38")
 
@@ -145,14 +145,14 @@ m1s_temp <- m1 %>% child("m1s_temp") %>%
 m1 %>% saveRDS("Results/m1.RDS")
 
 # create a child run where we investigate a different TRANS subroutine
-m2 <- m1 %>% child("m2") %>%
+m2 <- m1 %>% child(run_id = "m2") %>%
   subroutine(trans = 2) %>% 
   # see nm_diff app to see if you're happy with the changes being made
   run_nm()
 
 
 # similarly, we can add coviarates and do many more types of manipulation
-m2WT <- m2 %>% child("m2WT") %>%
+m2WT <- m2 %>% child(run_id = "m2WT") %>%
   add_cov(param = "CL", cov = "WT", state = "linear") %>%
   run_nm()
 
@@ -217,7 +217,7 @@ cmd(m1_boot$m)
 ## eating up all your resources
 
 m1_boot$m %>% 
-  run_nm() %>% ## run all runs
+  run_nm_batch(threads = 1) %>% ## run all runs
   wait_finish() %>% ## wait until all are finished
   nm_list_render("Scripts/basic_boot.Rmd") ## generate run report in "Results" directory
 
@@ -236,7 +236,7 @@ m1_xv <- m1_boot %>%
 ```
 
 ```{r run_xv, eval = FALSE}
-m1_xv$m_xv %>% run_nm() %>% wait_finish()
+m1_xv$m_xv %>% run_nm_batch(threads = 1) %>% wait_finish()
 
 summary_wide(m1_xv$m_xv)
 

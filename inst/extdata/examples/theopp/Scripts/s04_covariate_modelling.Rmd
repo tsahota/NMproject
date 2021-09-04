@@ -40,7 +40,7 @@ devtools::load_all()
 
 m1 <- readRDS("Results/m1.RDS")
 
-c1 <- m1 %>% child("c1") %>%
+c1 <- m1 %>% child(run_id = "c1") %>%
   data_path("DerivedData/THEOPcov1.csv") %>%
   ## refill $INPUT because THEOPcov1.csv has different columns
   fill_input() %>%
@@ -223,7 +223,7 @@ final_model %>% param_cov_diag(param = "V", cov = "LIN2", categorical = FALSE)
 
 # simulation so we can do a ppc
 
-final_model_sim <- final_model %>% child("m1s") %>%
+final_model_sim <- final_model %>% child(run_id = "m1s") %>%
   update_parameters(final_model) %>%
   convert_to_simulation(subpr = 10) %>%
   run_nm()

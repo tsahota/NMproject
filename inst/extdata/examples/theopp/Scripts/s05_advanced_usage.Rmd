@@ -166,9 +166,9 @@ dc <- tibble::tibble(cores = c(1, 2, 3)) %>%  ## only 3 different values to test
            ## run them all in m1_coretest
            run_in("Models/m1_coretest") %>%
            ## run them all with the following execute command
-           cmd("execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}") %>%
+           cmd(parallel_execute) %>%
            ## and the following parafile
-           parafile("/opt/NONMEM/nm75/run/mpilinux8.pnm") %>%
+           parafile("/opt/NONMEM/nm750/run/mpilinux8.pnm") %>%
            ## and finally set the cores to the "cores" vector
            cores(cores))
 
