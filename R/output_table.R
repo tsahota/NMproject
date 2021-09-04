@@ -6,13 +6,13 @@
 #' @param r An nm object.
 #' @param dorig Optional `data.frame`. NONMEM input dataset.
 #' @param ... Additional arguments to pass on to [read.csv()].
-#' 
+#'
 #' @return A list of `tibble`s with merged version of all output $TABLEs and the
 #'   input data.  Additional columns will be `INNONMEM` which will be TRUE for
 #'   rows that were not ignored by NONMEM.  For simulation control files there
 #'   is also `DV_OUT` which will contain simulated `DV` values. `DV` will always
 #'   be unmodified from the input dataset.
-#' 
+#'
 #' @keywords internal
 #' @export
 
@@ -46,7 +46,11 @@ nm_output.nm_generic <- function(r, dorig, ...) {
     dORD <- seq_len(nrow(dorig))
   } else {
     expre <- parse(text = filter_statements)
-    dORD <- which(with(dorig, eval(expre)))
+    ## temporarily put NAs to zero for applying filtering
+    ## this is what NONMEM does where "." = 0
+    dorig_zeros <- dorig
+    dorig_zeros[is.na(dorig_zeros)] <- 0
+    dORD <- which(with(dorig_zeros, eval(expre)))
   }
 
   if (nrow(d) %% length(dORD) != 0) {
