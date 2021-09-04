@@ -122,5 +122,6 @@ Collate:
     'system-hooks.R'
     'text.R'
     'update_parameters.R'
+    'with_temp_git_config.R'
     'zzz.R'
 Roxygen: list(markdown = TRUE)

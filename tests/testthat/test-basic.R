@@ -2,11 +2,11 @@ proj_name <- "test_nmproject"
 proj_path <- file.path(tempdir(), proj_name)
 
 test_that("Project has basic functionality", {
-  
+
   skip_if_not(rmarkdown::pandoc_available("1.12.3"))
-  
+
   currentwd <- getwd()
-  nm_create_analysis_project(proj_path)
+  with_temp_git_config(nm_create_analysis_project(proj_path))
   on.exit({
     setwd(currentwd)
     unlink(proj_path, recursive = TRUE, force = TRUE)
@@ -40,11 +40,11 @@ test_that("Project has basic functionality", {
 
 
 test_that("set up", {
-  
+
   skip_if_not(rmarkdown::pandoc_available("1.12.3"))
-  
+
   currentwd <- getwd()
-  nm_create_analysis_project(proj_path)
+  with_temp_git_config(nm_create_analysis_project(proj_path))
   on.exit({
     setwd(currentwd)
     unlink(proj_path, recursive = TRUE, force = TRUE)
