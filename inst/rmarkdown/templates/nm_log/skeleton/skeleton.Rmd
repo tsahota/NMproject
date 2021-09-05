@@ -1,5 +1,5 @@
 ---
-title: "model development"
+title: "Model development notebook"
 author: "`r Sys.info()['user']`"
 date: "`r Sys.time()`"
 output:
@@ -38,26 +38,20 @@ opts_chunk$set(message = TRUE)
 ## LOAD PACKAGES HERE
 library(NMproject)
 
-# devtools::load_all()  ## to load R functions in R/
+# devtools::load_all()  ## to load any R functions in R/
 
 set.seed(1234)
 
 ```
 
-## model development
+## Introduction
+
+This is a reproducible notebook showing model development code blocks with notes documenting modeller decision making.  It functions as a lab notebook developed interactively interactively in RStudio.  The final step should be `Knit` to produce an html version of this model development notebook.
+
+## Model development
 
 ```{r}
 
-## REPLACE ME BELOW
-## instructions:
-##   either use the Addins -> code library to import NONMEM code and then copy-paste the code in the pop up.
-##   OR copy a NONMEM model file (and data set) into your analysis project and fill out relative paths below
-
-m1 <- new_nm(run_id = "m1",
-             based_on = "relative/path/to/your/NONMEM/file",
-             data_path = "relative/path/to/your/NONMEM/ready/file.csv") %>%
-  fill_input() %>%
-  run_nm()
   
 ```
 
