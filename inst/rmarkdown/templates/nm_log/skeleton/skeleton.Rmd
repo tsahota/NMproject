@@ -52,7 +52,14 @@ This is a reproducible notebook showing model development code blocks with notes
 
 ```{r}
 
-  
+setup_nmproject_code_completion()
+
+## TIP: First object
+##  Type "m1 <- new_nm" and hit TAB for code completion
+##  Note: requires model file and dataset
+
+
+
 ```
 
 

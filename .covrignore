@@ -15,3 +15,4 @@ R/nmsave.R
 R/system-hooks.R
 R/zzz.R
 R/cran_note_handle.R
+R/snippet_setup.R
