@@ -1,5 +1,11 @@
 # NMproject (development version)
 
+* Added code completion snippets
+
+* fixed bug in Windows where R markdown templates weren't being produced
+
+* fixed minor windows bug where addins were executing models
+
 # NMproject 0.6.6
 
 * Added google verification and DocSearch
