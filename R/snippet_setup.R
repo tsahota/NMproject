@@ -39,10 +39,7 @@ setup_nmproject_code_completion <- function(force = FALSE) {
       identical(snippet_contents[to_index], template_contents[from_index])
     })
 
-    if (all(matching_snippets)) {
-      message("matching snippets, no update needed")
-      return(invisible())
-    }
+    if (all(matching_snippets)) return(invisible())
 
   }
 
@@ -87,7 +84,7 @@ setup_nmproject_code_completion <- function(force = FALSE) {
     })
 
     write(snippet_contents, file = snippet_path)
-    usethis::ui_done("Intelligent code completion ready, hit TAB to activate")
+    usethis::ui_done("Code completion ready, hit TAB while coding to use")
 
   }
 }
