@@ -40,6 +40,8 @@ library(NMproject)
 
 # devtools::load_all()  ## to load any R functions in R/
 
+setup_nmproject_code_completion()  ## remove if not interested in code completion
+
 set.seed(1234)
 
 ```
@@ -51,8 +53,6 @@ This is a reproducible notebook showing model development code blocks with notes
 ## Model development
 
 ```{r}
-
-setup_nmproject_code_completion()
 
 ## TIP: First object
 ##  Type "m1 <- new_nm" and hit TAB for code completion
