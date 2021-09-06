@@ -88,6 +88,13 @@ library(ggplot2)
   geom_point() +
   geom_abline()
 
+.m %>%
+  output_table_first() %>%
+  ggplot(aes(x = TIME, y = DV)) +
+  theme_bw() +
+  geom_point() +
+  geom_line(aes(y = IPRED, group = ID), colour = "red")
+
 ```
 
 ```{r xpose_plot, warning=FALSE}
