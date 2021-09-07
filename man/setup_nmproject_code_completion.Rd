@@ -4,10 +4,16 @@
 \alias{setup_nmproject_code_completion}
 \title{Set up code completion for NMproject}
 \usage{
-setup_nmproject_code_completion(force = FALSE)
+setup_nmproject_code_completion(
+  force = FALSE,
+  snippet_path = find_snippet_path()
+)
 }
 \arguments{
-\item{force}{Logical.  The default is \code{FALSE} which will require user confirmation before editting \code{r.snippets}}
+\item{force}{Logical.  The default is \code{FALSE} which will require user
+confirmation before editting \code{r.snippets}.}
+
+\item{snippet_path}{Character path to the \code{r.snippets} file.}
 }
 \value{
 No return value, called for side effects.
@@ -16,5 +22,6 @@ No return value, called for side effects.
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
 Intelligent code completion is an experimental way to type NMproject code.
-This function modifies/creates \code{r.snippets}.
+This function modifies/creates \code{r.snippets}.  Needs to be run interactively.
+Will ask for user confirmation since snippets are an RStudio config setting
 }

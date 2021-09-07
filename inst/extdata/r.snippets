@@ -111,11 +111,12 @@ snippet shinymod
 	}
 
 snippet new_nm
-	new_nm(run_id = "${1:...}",
+	${1:m1} <- new_nm(run_id = "${1:m1}",
 							 based_on = "staging/`r NMproject::nm_dir("models")`/${2:`r ans <- dir(file.path("staging", NMproject::nm_dir("models")), pattern = "mod|ctl") ; if(length(ans) != 1) "..." else ans[1]`}",
 							 data_path = "`r NMproject::nm_dir("derived_data")`/${3:`r ans <- dir(NMproject::nm_dir("derived_data"), pattern = "csv") ; if(length(ans) != 1) "..." else ans[1]`}") %>%
 		fill_input() %>%
 		run_nm()
 
 snippet child
-	child(run_id = "${1:...}") %>%
+	${1:child} <- ${2:parent} %>% child(run_id = "${1}") %>%
+

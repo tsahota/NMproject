@@ -40,8 +40,6 @@ library(NMproject)
 
 # devtools::load_all()  ## to load any R functions in R/
 
-setup_nmproject_code_completion()  ## remove if not interested in code completion
-
 set.seed(1234)
 
 ```
