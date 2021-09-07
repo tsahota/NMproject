@@ -43,7 +43,7 @@
 #'
 #' @return The same nm object, `m`, with modified `results_files` field.
 #' @examples
-#' 
+#'
 #' ## requires NONMEM to be installed
 #' \dontrun{
 #' m1 %>% nm_render("Scripts/basic_gof.Rmd")
@@ -130,6 +130,12 @@ nm_render.nm_generic <- function(m,
       )
     })
   } else {
+    ## replace setup chunks with setup2 to prevent clash
+    input_contents0 <- readLines(input)
+    input_contents <- gsub("^(```\\{r setup)([, \\}])", "\\12\\2", input_contents0)
+    write(input_contents, input)
+    on.exit(write(input_contents0, input))
+
     rmarkdown::render(
       input = input,
       output_file = output_file,
@@ -137,14 +143,14 @@ nm_render.nm_generic <- function(m,
       params = args,
       envir = new.env(),
       ...
-    ) 
+    )
   }
 
   m <- m %>% result_files(output_file)
   m <- m %>% save_render_cache(input)
-  
+
   usethis::ui_info("run report saved in: {usethis::ui_path(output_path)}")
-  
+
   invisible(m)
 }
 

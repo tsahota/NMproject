@@ -24,7 +24,7 @@ date: "`r Sys.time()`"
 <!--   4. use nm_render() to run on other model objects -->
 
 
-```{r setup2, include=F}
+```{r setup, include=F}
 ## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
 library(knitr)
 library(rprojroot)
