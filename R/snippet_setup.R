@@ -17,7 +17,7 @@
 #'
 #' @export
 
-setup_nmproject_code_completion <- function(force = FALSE,
+setup_code_completion <- function(force = FALSE,
                                             snippet_path = find_snippet_path()) {
 
   if (!force) {
@@ -112,7 +112,7 @@ snippets_startup_message <- function() {
 
   snippet_exists <- file.exists(snippet_path)
 
-  msg <- "To set up NMproject code completion: 'setup_nmproject_code_completion()'"
+  msg <- "To set up NMproject code completion: 'setup_code_completion()'"
 
   if (!snippet_exists) {
     packageStartupMessage(msg)

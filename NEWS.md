@@ -1,6 +1,6 @@
 # NMproject (development version)
 
-* Added ability to use NMproject-specific code completion snippets `setup_nmproject_code_completion()`
+* Added ability to use NMproject-specific code completion snippets `setup_code_completion()`
 
 * fixed bug in Windows where R markdown templates weren't being produced
 
