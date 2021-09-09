@@ -34,17 +34,20 @@ apply_manual_edit.nm_generic <- function(m, patch_id, return_merge_conf_ctl = FA
   
   ## retrain backwards compatibility with "patch-sdlkfjs.." format patch ids.
   patch_id <- gsub("patch-", "", patch_id)
-  
-  temp_ctl_path <- file.path(nm_dir("models"), paste0("base-", patch_id))
-  mnew <- m %>%
-    ctl_path(temp_ctl_path) %>%
-    write_ctl(force = TRUE)
-  on.exit(unlink(temp_ctl_path))
-  
   patch_name <- paste0("patch-", patch_id)
   patch_path <- file.path(nm_dir("models"), "patches", patch_name)
   patch_file_exists <- file.exists(patch_path)
   if (!patch_file_exists) stop("patch file doesn't exist")
+  patch_contents <- readLines(patch_path)
+  
+  temp_ctl_path <- patch_contents[grepl("^---", patch_contents)]
+  temp_ctl_path <- gsub("\\S+\\s.{2}(.*)", "\\1", temp_ctl_path)
+  
+  #temp_ctl_path <- file.path(run_in(m), paste0("base-", patch_id))
+  mnew <- m %>%
+    simple_field(ctl_path = temp_ctl_path, ctl_name = basename(temp_ctl_path))
+  mnew %>% text() %>% writeLines(temp_ctl_path)
+  on.exit(unlink(temp_ctl_path))
   
   patch_cmd <- paste("git apply -C1", patch_path)
   
