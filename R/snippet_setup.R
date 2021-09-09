@@ -17,6 +17,7 @@
 #'
 #' @export
 
+
 setup_code_completion <- function(force = FALSE,
                                             snippet_path = find_snippet_path()) {
 
@@ -67,6 +68,7 @@ setup_code_completion <- function(force = FALSE,
   ## can now assume we have consent
 
   if (!snippet_exists) {
+    dir.create(dirname(snippet_path), showWarnings = FALSE, recursive = TRUE)
     file.copy(template_path, snippet_path)
   } else {
     ## modify the snippets file
@@ -89,6 +91,7 @@ setup_code_completion <- function(force = FALSE,
       stop("Hit an error in modifying r.snippets, aborting to be safe")
     })
 
+    dir.create(dirname(snippet_path), showWarnings = FALSE, recursive = TRUE)
     write(snippet_contents, file = snippet_path)
     usethis::ui_done("Snippet file updated: {usethis::ui_path(snippet_path)}")
 
