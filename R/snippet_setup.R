@@ -93,15 +93,15 @@ setup_code_completion <- function(force = FALSE,
 
     dir.create(dirname(snippet_path), showWarnings = FALSE, recursive = TRUE)
     write(snippet_contents, file = snippet_path)
-    usethis::ui_done("Snippet file updated: {usethis::ui_path(snippet_path)}")
-
-    if (!is.null(rstudioapi::getActiveProject())) {
-      ans <- usethis::ui_yeah("RStudio needs to restart for changes to come into effect",
-                              yes = "Restart now", no = "I'll do it later", shuffle = FALSE)
-      if (ans) rstudioapi::openProject()
-    } else {
-      usethis::ui_todo("Restart RStudio (Session -> Quit Session) for changes to take effect")
-    }
+  }
+  usethis::ui_done("Snippet file updated: {usethis::ui_path(snippet_path)}")
+  
+  if (!is.null(rstudioapi::getActiveProject())) {
+    ans <- usethis::ui_yeah("RStudio needs to restart for changes to come into effect",
+                            yes = "Restart now", no = "I'll do it later", shuffle = FALSE)
+    if (ans) rstudioapi::openProject()
+  } else {
+    usethis::ui_todo("Restart RStudio (Session -> Quit Session) for changes to take effect")
   }
 }
 
