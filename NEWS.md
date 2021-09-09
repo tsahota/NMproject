@@ -1,10 +1,11 @@
 # NMproject (development version)
 
-* Added ability to use NMproject-specific code completion snippets `setup_code_completion()`
+* Added ability to use NMproject-specific code completion snippets `setup_code_completion()`.
+  Typing `new_nm` will set up parent object, `child` will set up child object.
 
-* fixed bug in Windows where R markdown templates weren't being produced
+* fixed bug in Windows where R markdown templates weren't being produced.
 
-* fixed minor windows bug where addins were executing models
+* fixed minor windows bug where addins were executing models.
 
 # NMproject 0.6.6
 
