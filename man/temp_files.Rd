@@ -4,6 +4,7 @@
 \alias{temp_files}
 \alias{ls_tempfiles}
 \alias{clean_run}
+\alias{clean_tempfiles}
 \title{Remove temporary NONMEM files}
 \usage{
 ls_tempfiles(
@@ -16,6 +17,12 @@ ls_tempfiles(
 )
 
 clean_run(m, output_loc = c("run_dir", "base"), include_slurm_files = TRUE)
+
+clean_tempfiles(
+  object = ".",
+  output_loc = c("run_dir", "base"),
+  include_slurm_files = TRUE
+)
 }
 \arguments{
 \item{object}{Either an nm object or path to project (default = \code{"."}).  If a
@@ -49,7 +56,7 @@ space.  One strategy to remove this is to use the \code{clean} option in the PsN
 command.  However, this can automatically remove files as soon as the run
 finishes that may be useful for debugging.  \code{ls_tempfiles()} allows you to
 list the paths of all temporary files, for a single run or for all runs for
-inspection and deletion. \code{clean_run()} is a wrapper function that runs
+inspection and deletion. \code{clean_tempfiles()} is a wrapper function that runs
 \code{ls_tempfiles()} and deletes everything returned.  For safety is limited to
 only deleting files associated with \code{nm} objects though.
 }
@@ -72,7 +79,7 @@ m1 \%>\%
   unlink() ## delete all m1 temp files
 
 ## above line is equivalent to:
-clean_run(m1)
+clean_tempfiles(m1)
 
 ls_tempfiles() ## display all temp files in analysis project
 

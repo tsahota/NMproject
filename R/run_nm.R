@@ -323,7 +323,7 @@ ctl_table_files.default <- function(ctl) {
 #' command.  However, this can automatically remove files as soon as the run
 #' finishes that may be useful for debugging.  `ls_tempfiles()` allows you to
 #' list the paths of all temporary files, for a single run or for all runs for
-#' inspection and deletion. `clean_run()` is a wrapper function that runs
+#' inspection and deletion. `clean_tempfiles()` is a wrapper function that runs
 #' `ls_tempfiles()` and deletes everything returned.  For safety is limited to
 #' only deleting files associated with `nm` objects though.
 #'
@@ -360,7 +360,7 @@ ctl_table_files.default <- function(ctl) {
 #'   unlink() ## delete all m1 temp files
 #'
 #' ## above line is equivalent to:
-#' clean_run(m1)
+#' clean_tempfiles(m1)
 #' 
 #' ls_tempfiles() ## display all temp files in analysis project
 #'
@@ -526,6 +526,7 @@ ls_tempfiles.nm_list <- function(object = ".", output_loc = c("run_dir", "base")
 #'
 #' @export
 clean_run <- function(m, output_loc = c("run_dir", "base"), include_slurm_files = TRUE) {
+  .Deprecated("clean_tempfiles")
   UseMethod("clean_run")
 }
 #' @export
@@ -533,6 +534,20 @@ clean_run.nm_list <- function(m, output_loc = c("run_dir", "base"), include_slur
   ls_tempfiles(m, output_loc = output_loc) %>%
     unlink(force = TRUE)
 }
+
+#' @rdname temp_files
+#'
+#' @export
+clean_tempfiles <- function(object = ".", output_loc = c("run_dir", "base"), include_slurm_files = TRUE) {
+  UseMethod("clean_run")
+}
+#' @export
+clean_tempfiles.nm_list <- function(object = ".", output_loc = c("run_dir", "base"), include_slurm_files = TRUE) {
+  ls_tempfiles(object, output_loc = output_loc) %>%
+    unlink(force = TRUE)
+}
+
+
 
 #' Write control file to disk
 #'

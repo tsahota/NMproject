@@ -258,7 +258,7 @@ test_that("run and post", {
   expect_true(length(ls_tempfiles(m1)) == 0)
 
   ## clean up tests
-  clean_run(m1) ## remove non-temp
+  clean_tempfiles(m1) ## remove non-temp
   wipe_run(m1) ## remove all
   expect_true(!file.exists(run_dir_path(m1)))
 

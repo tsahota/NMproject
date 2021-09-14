@@ -7,6 +7,8 @@
 
 * fixed minor windows bug where addins were executing models.
 
+* `clean_tempfiles()` replaces `clean_run()`
+
 # NMproject 0.6.6
 
 * Added google verification and DocSearch
