@@ -202,11 +202,11 @@ default_trans <- function(advan) {
 #'
 #' @seealso [advan()]
 #'
-#' @examples 
-#' 
+#' @examples
+#'
 #' # create example object m1 from package demo files
 #' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
-#' m1 <- new_nm(run_id = "m1", 
+#' m1 <- new_nm(run_id = "m1",
 #'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
 #'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
@@ -222,11 +222,11 @@ default_trans <- function(advan) {
 #'     m = m1 %>% child(run_id = label) %>%
 #'       subroutine(advan = advan, trans = trans)
 #'   )
-#' 
+#'
 #' ds
-#' 
+#'
 #' ds$m %>% dollar("PK")
-#' 
+#'
 #' @export
 
 subroutine <- function(m, advan = NA, trans = 1, recursive = TRUE) {
@@ -235,6 +235,10 @@ subroutine <- function(m, advan = NA, trans = 1, recursive = TRUE) {
 
 #' @export
 subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
+
+  ode_advans <- c(6, 8, 9, 13, 14, 15, 16, 17, 18)
+  linear_advans <- c(5, 7)
+
   dps <- available_advans
   dps$trans[dps$trans %in% NA] <- 1
   dp$trans[dp$trans %in% NA] <- 1
@@ -269,7 +273,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
     stop("stopping...", call. = FALSE)
   }
 
-  if (new_advan %in% c(6, 7, 8, 9, 13)) { ## first to ADVAN5
+  if (new_advan %in% ode_advans) { ## first to ADVAN5
     m <- m %>% subroutine(advan = 5)
     old_advan <- advan(m)
     old_trans <- trans(m)
@@ -289,9 +293,9 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
     .data$trans %in% new_trans
   )
 
-  if (new_advan %in% 6) stop("not yet implemented")
+  #if (new_advan %in% 6) stop("not yet implemented")
 
-  if (new_advan %in% c(5, 6, 7, 8, 9, 13)) {
+  if (new_advan %in% c(linear_advans, ode_advans)) {
 
     ## grab all existing variables.
     tv_vars <- m %>% grab_variables("\\bTV\\w*?\\b")
@@ -300,7 +304,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
     dtrans_detect <- dp %>%
       dplyr::group_by(.data$advan, .data$trans) %>%
       dplyr::summarise(
-        match_trans = all(vars %in% .data$nm_name),
+        match_trans = all(.data$nm_name %in% vars),#all(vars %in% .data$nm_name),
         n_params = length(.data$nm_name)
       ) %>%
       dplyr::filter(.data$match_trans)
@@ -309,12 +313,15 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
       stop("can't match $PK parameters to an available advan/trans combo (available_trans)", call. = FALSE)
     }
 
-    dtrans_detect <- dtrans_detect[1, ] ## simplest
+    dtrans_detect <- dtrans_detect[
+      dtrans_detect$n_params %in% max(dtrans_detect$n_params),
+      ] ## largest no. of parameters is going to be best
+    dtrans_detect <- dtrans_detect[1, ] ## should be only 1 left
 
     old_matched_trans <- dtrans_detect$trans
     old_matched_advan <- dtrans_detect$advan
 
-    ## redefine dold
+    ## redefine dnew based on dold
     dnew <- dp %>% dplyr::filter(
       .data$advan %in% old_matched_advan,
       .data$trans %in% old_matched_trans
@@ -323,9 +330,14 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
     dnew$advan <- new_advan
     dnew$trans <- new_trans
 
-    ## add KXY definitions to $PK
+    ## dnew$nm_name will be used to rename/create new parameters
+    ##  in the case of no relation (no transform needed)
+    ##    a simple rename will be sufficient
+    ##  in case of a relation (e.g. CL)
+    ##    want to keep TVCL = ....
+    ##    but just add a K2T0 = CL/V
 
-    if (!old_advan %in% c(5, 6, 7, 8, 9, 13)) {
+    if (!old_advan %in% c(linear_advans, ode_advans)) {
       ## not needed if already KXTY type advan
       for (i in seq_len(nrow(dold))) {
         if (!is.na(dold$inv_relation[i])) {
@@ -336,22 +348,32 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
           definition_to_add <- paste0(
             gsub("R", "K", dold$base_name[i]), " = ", inv_relation, "\n"
           )
+          m <- m %>%
+            target("PK") %>%
+            text(definition_to_add, append = TRUE) %>%
+            untarget()
+
         } else {
-          definition_to_add <- paste0(
-            gsub("R", "K", dold$base_name[i]), " = ", dold$nm_name[i], "\n"
-          )
+          dnew$nm_name[i] <- gsub("R", "K", dnew$base_name[i])
         }
 
-        m <- m %>%
-          target("PK") %>%
-          text(definition_to_add, append = TRUE) %>%
-          untarget()
+
+        # else {
+        #   definition_to_add <- paste0(
+        #     gsub("R", "K", dold$base_name[i]), " = ", dold$nm_name[i], "\n"
+        #   )
+        # }
+
+        # m <- m %>%
+        #   target("PK") %>%
+        #   text(definition_to_add, append = TRUE) %>%
+        #   untarget()
       }
     }
   }
 
 
-  if (old_advan %in% c(5, 6, 7, 8, 9, 13)) {
+  if (old_advan %in% c(linear_advans, ode_advans)) {
     dold <- dnew
     dold$advan <- old_advan
     dold$trans <- old_trans
@@ -417,6 +439,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
         name = di$nm_name.x
       )
 
+      ## modify initials
       if (!inherits(new_theta, "try-error")) {
         ithetai <- init_theta(m)
         ithetai$init[ithetai$name == di$nm_name.y] <- new_theta
@@ -457,7 +480,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
 
   ##########################
 
-  if (new_advan %in% c(5, 6, 7, 8, 9, 13)) {
+  if (new_advan %in% c(linear_advans, ode_advans)) {
     R_regex <- "R([0-9]+)T([0-9]+)"
     R_names <- dnew$base_name[grepl(R_regex, dnew$base_name)]
 
@@ -470,7 +493,6 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
 
     if (any(grepl("\\s*\\$MODEL", text(m)))) {
       ## there's already a $MODEL remove it
-
       models_text <- m %>% dollar("MODEL")
       ## look for number of = signs
 
@@ -486,7 +508,17 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
       }
     } else {
       ## no $MODEL, create
+      ## add DEFDOSE and DEFOBS
+      defdose_comp <- 1
+      if (all(dnew$oral)) {
+        defobs_comp <- 2
+      } else {
+        defobs_comp <- 1
+      }
+
       models_text <- paste0("COMP = (COMP", seq_len(n_compartments), ")")
+      models_text[defdose_comp] <- gsub("\\)", ", DEFDOSE)", models_text[defdose_comp])
+      models_text[defobs_comp] <- gsub("\\)", ", DEFOBS)", models_text[defobs_comp])
       models_text <- c("$MODEL", models_text)
 
       if (!old_advan %in% c(5, 6, 7, 8, 9, 13)) {
@@ -496,7 +528,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
       }
     }
 
-    if (new_advan %in% c(6, 7, 8, 9, 13)) { ## insert $DES
+    if (new_advan %in% ode_advans) { ## insert $DES
 
       lhs <- paste0("DADT(", seq_len(n_current_compartments), ")")
 
@@ -569,11 +601,11 @@ subroutine.nm_list <- Vectorize_nm_list(subroutine.nm_generic, SIMPLIFY = FALSE)
 #'
 #' @param m An nm object.
 #' @param text Optional number/character number to set to.
-#' 
+#'
 #' @return If `text` is specified returns an nm object with modified
 #'   `ctl_contents` field.  Otherwise returns the value of the advan, trans, or
 #'   tol.
-#' 
+#'
 #' @seealso [subroutine()]
 #' @name dollar_subroutine
 #' @export
