@@ -447,6 +447,21 @@ system_nm <- function(cmd, dir = nm_dir("models"), ...) {
   getOption("system_nm")(cmd, ...)
 }
 
+#' Convenience function for system_nm 
+#' 
+#' Used for diagnostic purposes and a backend script for 
+#' 
+#' @param ... Arguments passed to `system_nm()`
+#' @param intern Arguments passed to `system_nm()`
+#' @param ignore.stderr Arguments passed to `system_nm()`
+#' @param wait Arguments passed to `system_nm()`
+#' 
+#' @export
+
+system_nm_intern <- function(..., intern = TRUE, ignore.stderr = TRUE, wait = TRUE) {
+  system_nm(..., intern = intern, ignore.stderr = ignore.stderr, wait = wait)
+}
+
 #' System/shell command wrapper
 #'
 #' @description

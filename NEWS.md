@@ -9,6 +9,8 @@
 
 * `clean_tempfiles()` replaces `clean_run()`
 
+* added `psn_check()` for better debugging.
+
 # NMproject 0.6.6
 
 * Added google verification and DocSearch

@@ -26,9 +26,10 @@ Attempts to find location of NONMEM installation directory used by PsN.  Can
 be useful for finding the location of parafiles etc.
 }
 \details{
-The function \code{find_nm_install_path()} will attempt to use a locally available PsN
-installation to get this information.  If the PsN installation is on a
-remote server, this function will not work (it will return a \code{NULL})
+The function \code{find_nm_install_path()} will attempt to use a locally
+available PsN installation to get this information.  If the PsN
+installation is on a remote server, this function will not work (it will
+return a \code{NULL})
 
 The function \code{find_nm_tran_path()} will attempt to use a locally
 available PsN installation to get this information.  If the PsN
