@@ -4,7 +4,11 @@
 \alias{psn_check}
 \title{Tests if psn is accessible}
 \usage{
-psn_check()
+psn_check(fail_if_false = TRUE)
+}
+\arguments{
+\item{fail_if_false}{Logical (default = \code{TRUE}). Should the function return
+an error message if \code{system_nm()} is not available.}
 }
 \value{
 Logical TRUE or FALSE.
@@ -16,7 +20,7 @@ NMproject needs PsN installed to function.  If PsN is not installed.
 }
 \examples{
 
-psn_available()
+psn_check(fail_if_false = FALSE)
 
 }
 \keyword{internal}

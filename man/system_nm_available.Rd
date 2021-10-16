@@ -11,7 +11,7 @@ system_nm_available(fail_if_false = FALSE)
 an error message if \code{system_nm()} is not available.}
 }
 \value{
-Logical TRUE or FALSE.
+Logical \code{TRUE} or \code{FALSE}.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
@@ -22,7 +22,7 @@ produced and is only intended for diagnostic purposes.
 }
 \examples{
 
-system_nm_available()
+system_nm_available(fail_if_false = FALSE)
 
 }
 \keyword{internal}
