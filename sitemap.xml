@@ -301,6 +301,12 @@
     <loc>https://tsahota.github.io/NMproject/reference/ppc.html</loc>
   </url>
   <url>
+    <loc>https://tsahota.github.io/NMproject/reference/psn_available.html</loc>
+  </url>
+  <url>
+    <loc>https://tsahota.github.io/NMproject/reference/psn_check.html</loc>
+  </url>
+  <url>
     <loc>https://tsahota.github.io/NMproject/reference/psn_style_scm.html</loc>
   </url>
   <url>
@@ -335,6 +341,9 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/search_raw.html</loc>
+  </url>
+  <url>
+    <loc>https://tsahota.github.io/NMproject/reference/setup_code_completion.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/setup_nm_demo.html</loc>
@@ -376,7 +385,13 @@
     <loc>https://tsahota.github.io/NMproject/reference/system_nm.html</loc>
   </url>
   <url>
+    <loc>https://tsahota.github.io/NMproject/reference/system_nm_available.html</loc>
+  </url>
+  <url>
     <loc>https://tsahota.github.io/NMproject/reference/system_nm_default.html</loc>
+  </url>
+  <url>
+    <loc>https://tsahota.github.io/NMproject/reference/system_nm_intern.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/tail_lst.html</loc>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Condition number of run — cond_num • NMproject</title>
+<title>Set up code completion for NMproject — setup_code_completion • NMproject</title>
 
 
 <!-- jquery -->
@@ -45,9 +45,11 @@
 
 
 
-<meta property="og:title" content="Condition number of run — cond_num" />
+<meta property="og:title" content="Set up code completion for NMproject — setup_code_completion" />
 <meta property="og:description" content="
-Extracts condition number from .ext file." />
+Intelligent code completion is an experimental way to type NMproject code.
+This function modifies/creates r.snippets.  Needs to be run interactively.
+Will ask for user confirmation since snippets are an RStudio config setting" />
 
 
 
@@ -127,46 +129,38 @@ Extracts condition number from .ext file." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Condition number of run</h1>
-    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/ofv.R'><code>R/ofv.R</code></a></small>
-    <div class="hidden name"><code>cond_num.Rd</code></div>
+    <h1>Set up code completion for NMproject</h1>
+    <small class="dont-index">Source: <a href='https://github.com/tsahota/NMproject/blob/master/R/snippet_setup.R'><code>R/snippet_setup.R</code></a></small>
+    <div class="hidden name"><code>setup_code_completion.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
-<p>Extracts condition number from .ext file.</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
+<p>Intelligent code completion is an experimental way to type NMproject code.
+This function modifies/creates <code>r.snippets</code>.  Needs to be run interactively.
+Will ask for user confirmation since snippets are an RStudio config setting</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cond_num</span><span class='op'>(</span><span class='va'>r</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>setup_code_completion</span><span class='op'>(</span>force <span class='op'>=</span> <span class='cn'>FALSE</span>, snippet_path <span class='op'>=</span> <span class='fu'>find_snippet_path</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>r</th>
-      <td><p>An nm object.</p></td>
+      <th>force</th>
+      <td><p>Logical.  The default is <code>FALSE</code> which will require user
+confirmation before editing <code>r.snippets</code>.</p></td>
+    </tr>
+    <tr>
+      <th>snippet_path</th>
+      <td><p>Character path to the <code>r.snippets</code> file.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The <code>numeric</code> value of the condition number.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+    <p>No return value, called for side effects.</p>
 
-    <div class='dont-index'><p><code><a href='ofv.html'>ofv()</a></code>, <code><a href='rr.html'>rr()</a></code></p></div>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='co'># create example object m1 from package demo files</span>
-<span class='va'>exdir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>, <span class='st'>"examples"</span>, <span class='st'>"theopp"</span>, package <span class='op'>=</span> <span class='st'>"NMproject"</span><span class='op'>)</span>
-<span class='va'>m1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='new_nm.html'>new_nm</a></span><span class='op'>(</span>run_id <span class='op'>=</span> <span class='st'>"m1"</span>, 
-             based_on <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>exdir</span>, <span class='st'>"Models"</span>, <span class='st'>"ADVAN2.mod"</span><span class='op'>)</span>,
-             data_path <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>exdir</span>, <span class='st'>"SourceData"</span>, <span class='st'>"THEOPP.csv"</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='fu'><a href='is_finished.html'>is_finished</a></span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span> <span class='co'>## FALSE until run is completed</span>
-</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>cond_num</span><span class='op'>(</span><span class='va'>m1</span><span class='op'>)</span> <span class='co'>## NA until m1 is finished</span>
-</div><div class='output co'>#&gt; [1] NA</div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
