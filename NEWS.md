@@ -7,9 +7,9 @@
 
 * fixed minor windows bug where addins were executing models.
 
-* `clean_tempfiles()` replaces `clean_run()`
+* `run_nm()` checks for psn installation in first use of R session
 
-* added `psn_check()` for better debugging.
+* `clean_tempfiles()` replaces `clean_run()`
 
 # NMproject 0.6.6
 
