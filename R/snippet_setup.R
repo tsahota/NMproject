@@ -9,7 +9,7 @@
 #' Will ask for user confirmation since snippets are an RStudio config setting
 #'
 #' @param force Logical.  The default is `FALSE` which will require user
-#'   confirmation before editting `r.snippets`.
+#'   confirmation before editing `r.snippets`.
 #'
 #' @param snippet_path Character path to the `r.snippets` file.
 #'
@@ -95,7 +95,7 @@ setup_code_completion <- function(force = FALSE,
     write(snippet_contents, file = snippet_path)
   }
   usethis::ui_done("Snippet file updated: {usethis::ui_path(snippet_path)}")
-  
+
   if (!is.null(rstudioapi::getActiveProject())) {
     ans <- usethis::ui_yeah("RStudio needs to restart for changes to come into effect",
                             yes = "Restart now", no = "I'll do it later", shuffle = FALSE)

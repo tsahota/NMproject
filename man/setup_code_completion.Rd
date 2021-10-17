@@ -8,7 +8,7 @@ setup_code_completion(force = FALSE, snippet_path = find_snippet_path())
 }
 \arguments{
 \item{force}{Logical.  The default is \code{FALSE} which will require user
-confirmation before editting \code{r.snippets}.}
+confirmation before editing \code{r.snippets}.}
 
 \item{snippet_path}{Character path to the \code{r.snippets} file.}
 }
