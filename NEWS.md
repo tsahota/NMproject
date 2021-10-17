@@ -1,4 +1,4 @@
-# NMproject (development version)
+# NMproject 0.6.7
 
 * Added ability to use NMproject-specific code completion snippets `setup_code_completion()`.
   Typing `new_nm` will set up parent object, `child` will set up child object.
@@ -13,7 +13,7 @@
 
 # NMproject 0.6.6
 
-* Added google verification and DocSearch
+* Added google verification and 'DocSearch'
 
 # NMproject 0.6.5
 

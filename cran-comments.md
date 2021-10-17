@@ -1,10 +1,7 @@
-* This fixes CRAN errors on macOS and solaris where tests were 
-  failing due to pandoc incompatibility
-
 ## Test environments
 
 * local windows R installation, R 4.0.3
-* local ubuntu 20.04 R installation, R 4.0.5
+* local ubuntu 20.04 R installation, R 4.1.1
 * GitHub actions windows-latest (release)
 * GitHub actions macOS-latest (release)
 * GitHub actions ubuntu-20.04 (release, devel)
