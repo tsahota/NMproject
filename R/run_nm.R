@@ -136,6 +136,22 @@ run_nm.nm_generic <- function(m,
     return(invisible(m))
   }
 
+  ## execute run
+  ## can now assume there is no skipping or cache to retrieve run
+  if (.sso_env$run_count == 0 & !force) {
+    tryCatch(psn_check(fail_if_false = TRUE), error = function(e){
+      usethis::ui_stop("This message will only appear on first attempt to run NONMEM in the active R session.
+      Failed: {usethis::ui_code('psn_check()')}.
+        This is either due to a missing or incorrectly configured PsN installation or {usethis::ui_code('system_nm()')} not being configured for your system.
+        Ensure PsN (and NONMEM) are installed and available from the command line with {usethis::ui_code('system_nm()')} and {usethis::ui_code('system_nm_intern()')}.
+        The command {usethis::ui_code('system_nm_intern(\"psn --version\")')} should return the PsN version number.
+        See {usethis::ui_path('https://uupharmacometrics.github.io/PsN/')} for instructions to install or re-install PsN.
+        If PsN is installed, you may need to configure {usethis::ui_code('system_nm()')}.  See {usethis::ui_code('?system_nm')} for config help.
+        If you want to overide this message for future R session, use {usethis::ui_code('force = TRUE')}")
+    })
+  }
+  .sso_env$run_count <- .sso_env$run_count + 1
+
   wipe_run(m) ## this will check for "ask" or "overwrite"
   kill_job(m)
 
@@ -201,9 +217,9 @@ run_nm_batch <- function(m, threads = 10, ...) {
 #' files from old runs do not get mistaken for up-to-date runs.
 #'
 #' @param r An nm object.
-#' 
+#'
 #' @return No return value, called for side effects.
-#' 
+#'
 #' @export
 wipe_run <- function(r) {
   UseMethod("wipe_run")
@@ -345,11 +361,11 @@ ctl_table_files.default <- function(ctl) {
 #'
 #' @return A `character` vector of temporary file paths
 #'
-#' @examples 
-#' 
+#' @examples
+#'
 #' # create example object m1 from package demo files
 #' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
-#' m1 <- new_nm(run_id = "m1", 
+#' m1 <- new_nm(run_id = "m1",
 #'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
 #'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
 #'
@@ -361,7 +377,7 @@ ctl_table_files.default <- function(ctl) {
 #'
 #' ## above line is equivalent to:
 #' clean_tempfiles(m1)
-#' 
+#'
 #' ls_tempfiles() ## display all temp files in analysis project
 #'
 #' ls_tempfiles() %>% unlink() ## remove all temp files in analysis project
@@ -393,7 +409,7 @@ ls_tempfiles.default <- function(object = ".", output_loc = c("run_dir", "base")
     if (length(all_run_dirs) == 0) {
       return(character())
     } else {
-      all_run_files <- dir(all_run_dirs, full.names = TRUE) 
+      all_run_files <- dir(all_run_dirs, full.names = TRUE)
     }
 
     all_outside_run_dirs <- file.path(all_run_dirs, "..")

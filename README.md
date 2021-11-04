@@ -9,7 +9,7 @@
 status](https://www.r-pkg.org/badges/version/NMproject)](https://CRAN.R-project.org/package=NMproject)
 [![R-CMD-check](https://github.com/tsahota/NMproject/workflows/R-CMD-check/badge.svg)](https://github.com/tsahota/NMproject/actions)
 [![Codecov test
-coverage](https://codecov.io/gh/tsahota/NMproject/branch/master/graph/badge.svg)](https://codecov.io/gh/tsahota/NMproject?branch=master)
+coverage](https://codecov.io/gh/tsahota/NMproject/branch/master/graph/badge.svg)](https://app.codecov.io/gh/tsahota/NMproject?branch=master)
 [![Lifecycle:
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 <!-- badges: end -->
