@@ -14,7 +14,8 @@ coverage](https://codecov.io/gh/tsahota/NMproject/branch/master/graph/badge.svg)
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 <!-- badges: end -->
 
-Script based ‘NONMEM’ model development in RStudio.
+Script based ‘NONMEM’ model development in RStudio intended for
+intermediate to advanced R users.
 
 -   NONMEM code library
 -   End-to-end script based model development workflows
