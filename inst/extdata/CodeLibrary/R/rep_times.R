@@ -1,10 +1,10 @@
-#' create dosing times
+#' Create dosing times
 #' 
-#' @param dtimes dosing times
-#' @param cycle_length length of cycle
-#' @param ncycles number of cycles
-#' @param max_time maximum time
-#' @param make_hours default=`TRUE`
+#' @param dtimes Dosing times.
+#' @param cycle_length Length of cycle.
+#' @param ncycles Number of cycles.
+#' @param max_time Maximum time.
+#' @param make_hours Default=`TRUE`.
 #' 
 #' @author Nuria Buil Bruna
 #' @examples 

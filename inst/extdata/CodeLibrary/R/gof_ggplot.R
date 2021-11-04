@@ -1,6 +1,6 @@
 #' Create pdf diagnostic report with ggplot
 #' 
-#' @param m An nm object
+#' @param m An nm object.
 #' 
 #' @export
 

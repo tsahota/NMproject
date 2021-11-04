@@ -1,36 +1,23 @@
 ;; 1. Based on: ...
-;; 2. Description: 2CMT + Oral (default)
+;; 2. Description: 1CMT (TRANS1)
 ;; 3. Author: ...
 
 $PROBLEM ...
 $INPUT ...
 $DATA ... IGNORE=@ 
-$SUB ADVAN4 TRANS4
+$SUB ADVAN1 TRANS1
 
 $PK
 
-TVCL = EXP(THETA(1))
-MU_1 = LOG(TVCL)
-CL = EXP(MU_1+ETA(1))
+TVK = EXP(THETA(1))
+MU_1 = LOG(TVK)
+K = EXP(MU_1+ETA(1))
 
-TVV2 = EXP(THETA(2))
-MU_2 = LOG(TVV2)
-V2 = EXP(MU_2+ETA(2))
+TVV = EXP(THETA(2))
+MU_2 = LOG(TVV)
+V = EXP(MU_2+ETA(2))
 
-TVV3 = EXP(THETA(3))
-MU_3 = LOG(TVV3)
-V3 = EXP(MU_3+ETA(3))
-
-TVQ = EXP(THETA(4))
-MU_4 = LOG(TVQ)
-Q = EXP(MU_4+ETA(4))
-
-TVKA = EXP(THETA(5))
-MU_5 = LOG(TVKA)
-KA = EXP(MU_5+ETA(5))
-
-S2 = V2
-S3 = V3
+S1 = V
 
 $ERROR 
 
@@ -56,20 +43,13 @@ IWRES = IRES/W
 ;   Y = PHI((LLOQ-IPRED)/W)
 ; ENDIF
 
-
 $THETA
-.....          	; CL  ; L/h ; LOG
-.....          	; V2 ; L ; LOG
-.....          	; V3 ; L ; LOG
-.....          	; Q  ; L/h ; LOG
-.....          	; KA ; h-1 ; LOG
+.....          	; K  ; h-1 ; LOG
+.....          	; V ; L ; LOG
 
 $OMEGA 
-0.1		                	; IIV_CL ; LOG
-0.1			                ; IIV_V2 ; LOG
-0.1		                	; IIV_V3 ; LOG
-0.1		                	; IIV_Q ; LOG
-0.1		                 	; IIV_KA ; LOG
+0.1		                	; IIV_K ; LOG
+0.1			                ; IIV_V ; LOG
 
 $SIGMA
 0.1           	; prop error

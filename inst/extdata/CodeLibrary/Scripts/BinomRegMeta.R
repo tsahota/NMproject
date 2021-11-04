@@ -1,4 +1,4 @@
-## Author: klgk669
+## Author: Tarj Sahota
 ## First created: 2016-11-09
 ## Description: Binomial regression meta-analysis in R
 ## Run interactively: TRUE

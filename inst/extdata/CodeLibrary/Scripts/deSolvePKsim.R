@@ -1,3 +1,4 @@
+## Author: Tarj Sahota
 ## Description: PK simulation deSolve
 ## Run interactively: TRUE
 ## Keywords: deSolve, template, script

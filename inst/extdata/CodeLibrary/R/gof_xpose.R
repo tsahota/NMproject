@@ -1,6 +1,6 @@
 #' Create pdf diagnostic report with xpose
 #' 
-#' @param m An nm object
+#' @param m An nm object.
 #' 
 #' @export
 
@@ -12,12 +12,11 @@ gof_xpose <- function(m){
   ##   $TABLE ID TIME IPRED IWRES IRES CWRES NPDE
   ##   FILE=sdtab[run.no] NOPRINT ONEHEADER FORMAT=tF13.4
 
-
   library(xpose)
 
   xpdb <- xpose_data(runno = run_id(m), dir = run_in(m))
 
-  pdf(file.path(results_dir(m1), paste0("gof_xpose_run_",run_id(m),".pdf")))
+  pdf(file.path(results_dir(m1), paste0("gof_xpose_run_", run_id(m), ".pdf")))
 
   print(dv_vs_pred(xpdb))
   print(dv_vs_ipred(xpdb))
@@ -26,5 +25,6 @@ gof_xpose <- function(m){
   
   dev.off()
 
+  
 
 }

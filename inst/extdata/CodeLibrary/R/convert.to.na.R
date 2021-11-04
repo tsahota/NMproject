@@ -1,6 +1,7 @@
-#' replace -99 with NA in dataset
+#' Replace -99 with NA in dataset.
 #' 
-#' @param d dataset
+#' @param d Dataset.
+#' @param replace Missing code to replace.  Default is -99.
 #' 
 #' @export
 

@@ -1,36 +1,34 @@
 ;; 1. Based on: ...
-;; 2. Description: 2CMT + Oral (default)
+;; 2. Description: 2CMT (TRANS1)
 ;; 3. Author: ...
 
 $PROBLEM ...
 $INPUT ...
 $DATA ... IGNORE=@ 
-$SUB ADVAN4 TRANS4
+$SUB ADVAN3 TRANS1
 
 $PK
 
-TVCL = EXP(THETA(1))
-MU_1 = LOG(TVCL)
-CL = EXP(MU_1+ETA(1))
+TVK = EXP(THETA(1))
+MU_1 = LOG(TVK)
+K = EXP(MU_1+ETA(1))
 
-TVV2 = EXP(THETA(2))
-MU_2 = LOG(TVV2)
-V2 = EXP(MU_2+ETA(2))
+TVV = EXP(THETA(2))
+MU_2 = LOG(TVV)
+V = EXP(MU_2+ETA(2))
 
-TVV3 = EXP(THETA(3))
-MU_3 = LOG(TVV3)
-V3 = EXP(MU_3+ETA(3))
+TVK12 = EXP(THETA(3))
+MU_3 = LOG(TVK12)
+K12 = EXP(MU_3+ETA(3))
 
-TVQ = EXP(THETA(4))
-MU_4 = LOG(TVQ)
-Q = EXP(MU_4+ETA(4))
+TVK21 = EXP(THETA(4))
+MU_4 = LOG(TVK21)
+K21 = EXP(MU_4+ETA(4))
 
-TVKA = EXP(THETA(5))
-MU_5 = LOG(TVKA)
-KA = EXP(MU_5+ETA(5))
+V2 = V*K12/K21
 
+S1 = V
 S2 = V2
-S3 = V3
 
 $ERROR 
 
@@ -56,42 +54,36 @@ IWRES = IRES/W
 ;   Y = PHI((LLOQ-IPRED)/W)
 ; ENDIF
 
-
 $THETA
-.....          	; CL  ; L/h ; LOG
-.....          	; V2 ; L ; LOG
-.....          	; V3 ; L ; LOG
-.....          	; Q  ; L/h ; LOG
-.....          	; KA ; h-1 ; LOG
+.....          	; K  ; h-1 ; LOG
+.....          	; V ; L ; LOG
+.....          	; K12 ; h-1 ; LOG
+.....          	; K21 ; h-1 ; LOG
 
 $OMEGA 
-0.1		                	; IIV_CL ; LOG
-0.1			                ; IIV_V2 ; LOG
-0.1		                	; IIV_V3 ; LOG
-0.1		                	; IIV_Q ; LOG
-0.1		                 	; IIV_KA ; LOG
+0.1		                	; IIV_K ; LOG
+0.1			                ; IIV_V ; LOG
+0.1		                	; IIV_K12 ; LOG
+0.1		                	; IIV_K21 ; LOG
 
 $SIGMA
 0.1           	; prop error
 .....          	; add error
 
-;; Parameter estimation - FOCE
+; Parameter estimation - FOCE
 ;$EST METHOD=1 INTER NOABORT MAXEVAL=9999 PRINT=1 NSIG=3 SIGL=9
 
-;; Parameter estimation - LAP
-;$EST METHOD=1 LAP INTER NOABORT MAXEVAL=9999 PRINT=1 NSIG=3 SIGL=9
-
-;; Parameter estimation - IMP
+; Parameter estimation - IMP
 $EST METHOD=IMP ISAMPLE=300 NITER=300 RANMETHOD=3S2 
 CTYPE=3 CITER=10 CALPHA=0.05 CINTERVAL=3
 PRINT=1 NOABORT INTERACTION
 
-;; Parameer estimation - SAEM
+; Parameer estimation - SAEM
 ;$EST METHOD=SAEM ISAMPLE=2 NBURN=1000 NITER=500 RANMETHOD=3S2
 ;CTYPE=3 CITER=10 CALPHA=0.05 CINTERVAL=10
 ;PRINT=1 NOABORT INTERACTION
 
-;; Objective function and covariance evaluation
+; Objective function and covariance evaluation
 $EST METHOD=IMP INTER EONLY= 1 MAPITER=0 ISAMPLE = 2000 NITER = 10 RANMETHOD=3S2 NOABORT PRINT=1 NSIG=3 SIGL=9
 
 $COV MATRIX=R PRINT=E UNCONDITIONAL SIGL=10
