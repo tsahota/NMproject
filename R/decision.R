@@ -15,9 +15,9 @@
 #' inputs (`values` and `files`) that you base a decision on and stop for users
 #' to remake decision if inputs change.
 #'
+#' @param auto Optional logical. logical statement for automatic decisions.
 #' @param inputs Optional non file names upon which decision depends.
 #' @param file_inputs Optional file names upon which decision depends.
-#' @param auto Optional logical. logical statement for automatic decisions.
 #' @param outcome Character. Description of the decision outcome.
 #' @param force Logical (default = `FALSE`). Force a stop in the workflow so
 #'   decision has been remade.
@@ -70,22 +70,22 @@
 #'   inputs = summary_wide(c(m1, m2, m2WT)),
 #'   file_inputs = c(
 #'     "Results/basic_gof.m1.nb.html",
-#'     "Results/basic_gof.m2.nb.html"
+#'     "Results/basic_gof.m2.nb.html"]
 #'   ),
 #'   outcome = "m1 is better"
 #' ) # next line must be end of chunk
 #'
 #' ## a decision based on an automatic TRUE/FALSE criteria
 #' ## here we're ensuring m1 has the lowest AIC
-#' decision(auto = (AIC(m1) == min(AIC(m1, m2, m3)))) 
+#' decision(AIC(m1) == min(AIC(m1, m2, m3)))
 #' 
 #' }
 #' }
 #'
 #' @export
-decision <- function(inputs = c(),
+decision <- function(auto = logical(),
+                     inputs = c(),
                      file_inputs = c(),
-                     auto = logical(),
                      outcome = character(),
                      force = FALSE) {
   if (!requireNamespace("digest")) {
@@ -99,7 +99,7 @@ decision <- function(inputs = c(),
   }
 
   if (!missing(auto)) {
-    if (!auto) {
+    if (any(!auto)) {
       stop("auto decision FAILED - ", error_msg, call. = FALSE)
     } else {
       message("auto decision PASSED")

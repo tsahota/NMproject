@@ -5,19 +5,19 @@
 \title{Make decision point}
 \usage{
 decision(
+  auto = logical(),
   inputs = c(),
   file_inputs = c(),
-  auto = logical(),
   outcome = character(),
   force = FALSE
 )
 }
 \arguments{
+\item{auto}{Optional logical. logical statement for automatic decisions.}
+
 \item{inputs}{Optional non file names upon which decision depends.}
 
 \item{file_inputs}{Optional file names upon which decision depends.}
-
-\item{auto}{Optional logical. logical statement for automatic decisions.}
 
 \item{outcome}{Character. Description of the decision outcome.}
 
@@ -88,14 +88,14 @@ decision(
   inputs = summary_wide(c(m1, m2, m2WT)),
   file_inputs = c(
     "Results/basic_gof.m1.nb.html",
-    "Results/basic_gof.m2.nb.html"
+    "Results/basic_gof.m2.nb.html"]
   ),
   outcome = "m1 is better"
 ) # next line must be end of chunk
 
 ## a decision based on an automatic TRUE/FALSE criteria
 ## here we're ensuring m1 has the lowest AIC
-decision(auto = (AIC(m1) == min(AIC(m1, m2, m3)))) 
+decision(AIC(m1) == min(AIC(m1, m2, m3)))
 
 }
 }

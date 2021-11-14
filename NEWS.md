@@ -1,3 +1,8 @@
+# NMproject (development version)
+
+* Reorders arguments for `decision` so that auto decisions can be specified without explicity
+  referring to arguments
+
 # NMproject 0.6.7
 
 * Added ability to use NMproject-specific code completion snippets `setup_code_completion()`.
