@@ -219,24 +219,6 @@ test_that("run and post", {
     tol()
   expect_true(new_tol %in% 12)
 
-  ## subroutine tests
-  m1 <- readRDS("Results/m1.RDS")
-
-  ### advan 5 conversion
-  m1a5 <- m1 %>% subroutine(advan = 5)
-  expect_true(any(grepl("K1T2", text(m1a5)[[1]])))
-
-  ### diff tests
-  expect_true(length(nm_diff(m1, m1a5)) > 0)
-  expect_true(length(nm_diff(m1, text(m1a5)[[1]])) > 0)
-
-  ### advan 13 conversion
-  m1a13 <- m1 %>% subroutine(advan = 13)
-  expect_true(any(grepl("K1T2", text(m1a13)[[1]])))
-  expect_true(any(grepl("\\$DES", text(m1a13)[[1]])))
-
-  m1reverse <- m1a13 %>% subroutine(advan = 2)
-
   ## cache tests
   m1 <- readRDS("Results/m1.RDS")
   cache_history(m1)

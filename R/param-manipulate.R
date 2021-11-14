@@ -108,7 +108,7 @@ _NEWPARAM_ = EXP(MU__MU_PARAM_+ETA(_MU_PARAM_))
 ", append = TRUE, after = after) %>%
       target("THETA") %>%
       text(paste(
-        signif(log(init), 2), "      ; TV_NEWPARAM_ ; _UNIT_PARAM_ ; ",
+        signif(log(init), 2), "      ; _NEWPARAM_ ; _UNIT_PARAM_ ; ",
         trans
       ), append = TRUE) %>%
       target("OMEGA") %>%

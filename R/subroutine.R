@@ -288,96 +288,134 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
     .data$trans %in% old_trans
   )
 
+  if ("RXTY" %in% dold$base_name) {
+    
+    tv_vars <- m %>% grab_variables("\\bTV\\w*?\\b")
+    vars <- gsub("TV", "", tv_vars)
+    
+    ## get nm_name and base_name from vars
+    dold0 <- data.frame(nm_name = vars)
+    dold0$base_name <- gsub("K([0-9]+)T?([0-9]+)", "R\\1T\\2", dold0$nm_name)
+    
+    ## create a new dold based on this
+    dold_names <- names(dold)
+    dold <- merge(
+      dold[1, names(dold)[!names(dold) %in% c("base_name","nm_name")]],
+      dold0
+    )
+    
+    dold <- dplyr::as_tibble(dold[, dold_names])
+    
+  }
+  
   dnew <- dp %>% dplyr::filter(
     .data$advan %in% new_advan,
     .data$trans %in% new_trans
   )
+  
+  ## if one of them is KXY type and other isn't, can use the other to normalize this
+  ## if both are KXY type then no parameter transformation is needed
+  
+  ## use these to modify dold to be more specific 
 
   #if (new_advan %in% 6) stop("not yet implemented")
 
   if (new_advan %in% c(linear_advans, ode_advans)) {
 
-    ## grab all existing variables.
-    tv_vars <- m %>% grab_variables("\\bTV\\w*?\\b")
-    vars <- gsub("TV", "", tv_vars)
-
-    dtrans_detect <- dp %>%
-      dplyr::group_by(.data$advan, .data$trans) %>%
-      dplyr::summarise(
-        match_trans = all(.data$nm_name %in% vars),#all(vars %in% .data$nm_name),
-        n_params = length(.data$nm_name)
-      ) %>%
-      dplyr::filter(.data$match_trans)
-
-    if (nrow(dtrans_detect) < 0) {
-      stop("can't match $PK parameters to an available advan/trans combo (available_trans)", call. = FALSE)
-    }
-
-    dtrans_detect <- dtrans_detect[
-      dtrans_detect$n_params %in% max(dtrans_detect$n_params),
-      ] ## largest no. of parameters is going to be best
-    dtrans_detect <- dtrans_detect[1, ] ## should be only 1 left
-
-    old_matched_trans <- dtrans_detect$trans
-    old_matched_advan <- dtrans_detect$advan
-
-    ## redefine dnew based on dold
-    dnew <- dp %>% dplyr::filter(
-      .data$advan %in% old_matched_advan,
-      .data$trans %in% old_matched_trans
-    )
-
+    ## replace KXYs in dnew with whatever is in dold
+    ## can assume that dold is trans 1 and compatible
+    dnew <- dold
     dnew$advan <- new_advan
-    dnew$trans <- new_trans
-
-    ## dnew$nm_name will be used to rename/create new parameters
-    ##  in the case of no relation (no transform needed)
-    ##    a simple rename will be sufficient
-    ##  in case of a relation (e.g. CL)
-    ##    want to keep TVCL = ....
-    ##    but just add a K2T0 = CL/V
-
-    if (!old_advan %in% c(linear_advans, ode_advans)) {
-      ## not needed if already KXTY type advan
-      for (i in seq_len(nrow(dold))) {
-        if (!is.na(dold$inv_relation[i])) {
-          inv_relation <- dold$inv_relation[i]
-          for (j in seq_len(nrow(dold))) {
-            inv_relation <- gsub(dold$base_name[j], dold$nm_name[j], inv_relation)
-          }
-          definition_to_add <- paste0(
-            gsub("R", "K", dold$base_name[i]), " = ", inv_relation, "\n"
-          )
-          m <- m %>%
-            target("PK") %>%
-            text(definition_to_add, append = TRUE) %>%
-            untarget()
-
-        } else {
-          dnew$nm_name[i] <- gsub("R", "K", dnew$base_name[i])
-        }
-
-
-        # else {
-        #   definition_to_add <- paste0(
-        #     gsub("R", "K", dold$base_name[i]), " = ", dold$nm_name[i], "\n"
-        #   )
-        # }
-
-        # m <- m %>%
-        #   target("PK") %>%
-        #   text(definition_to_add, append = TRUE) %>%
-        #   untarget()
-      }
-    }
+    dnew$trans <- new_trans    
+    
+    dnew$nm_name <- gsub("R", "K",dnew$base_name)
+    
+    # ## grab all existing variables.
+    # tv_vars <- m %>% grab_variables("\\bTV\\w*?\\b")
+    # vars <- gsub("TV", "", tv_vars)
+    # 
+    # ## convert K1T2 and V2 to KXY and VX to force a match in dtrans_detect step below
+    # if (all(grepl("K[0-9]+T?[0-9]+", vars) | grepl("V[0-9]+", vars))) {
+    #   vars <- c("KXY", "VX")
+    # }
+    # 
+    # dtrans_detect <- dp %>%
+    #   dplyr::group_by(.data$advan, .data$trans) %>%
+    #   dplyr::summarise(
+    #     match_trans = all(.data$nm_name %in% vars),#all(vars %in% .data$nm_name),
+    #     n_params = length(.data$nm_name)
+    #   ) %>%
+    #   dplyr::filter(.data$match_trans)
+    # 
+    # if (nrow(dtrans_detect) < 0) {
+    #   stop("can't match $PK parameters to an available advan/trans combo (available_trans)", call. = FALSE)
+    # }
+    # 
+    # dtrans_detect <- dtrans_detect[
+    #   dtrans_detect$n_params %in% max(dtrans_detect$n_params),
+    #   ] ## largest no. of parameters is going to be best
+    # dtrans_detect <- dtrans_detect[1, ] ## should be only 1 left
+    # 
+    # old_matched_trans <- dtrans_detect$trans
+    # old_matched_advan <- dtrans_detect$advan
+    # 
+    # ## redefine dnew based on dold
+    # ## select old rows and rename advan trans to new
+    # dnew <- dp %>% dplyr::filter(
+    #   .data$advan %in% old_matched_advan,
+    #   .data$trans %in% old_matched_trans
+    # )
+    # dnew$advan <- new_advan
+    # dnew$trans <- new_trans
+    # 
+    # ## dnew$nm_name will be used to rename/create new parameters
+    # ##  in the case of no relation (no transform needed)
+    # ##    a simple rename will be sufficient
+    # ##  in case of a relation (e.g. CL)
+    # ##    want to keep TVCL = ....
+    # ##    but just add a K2T0 = CL/V
+    # 
+    # if (!old_advan %in% c(linear_advans, ode_advans)) {
+    #   ## not needed if already KXTY type advan
+    #   for (i in seq_len(nrow(dold))) {
+    #     if (!is.na(dold$inv_relation[i])) {
+    #       inv_relation <- dold$inv_relation[i]
+    #       for (j in seq_len(nrow(dold))) {
+    #         inv_relation <- gsub(dold$base_name[j], dold$nm_name[j], inv_relation)
+    #       }
+    #       definition_to_add <- paste0(
+    #         gsub("R", "K", dold$base_name[i]), " = ", inv_relation, "\n"
+    #       )
+    #       m <- m %>%
+    #         target("PK") %>%
+    #         text(definition_to_add, append = TRUE) %>%
+    #         untarget()
+    # 
+    #     } else {
+    #       dnew$nm_name[i] <- gsub("R", "K", dnew$base_name[i])
+    #     }
+    # 
+    # 
+    #     # else {
+    #     #   definition_to_add <- paste0(
+    #     #     gsub("R", "K", dold$base_name[i]), " = ", dold$nm_name[i], "\n"
+    #     #   )
+    #     # }
+    # 
+    #     # m <- m %>%
+    #     #   target("PK") %>%
+    #     #   text(definition_to_add, append = TRUE) %>%
+    #     #   untarget()
+    #   }
+    # }
   }
 
 
-  if (old_advan %in% c(linear_advans, ode_advans)) {
-    dold <- dnew
-    dold$advan <- old_advan
-    dold$trans <- old_trans
-  }
+  # if (old_advan %in% c(linear_advans, ode_advans)) {
+  #   dold <- dnew
+  #   dold$advan <- old_advan
+  #   dold$trans <- old_trans
+  # }
 
   thetas <- raw_init_theta(m)
   thetas$init_trans <- thetas$init
@@ -481,7 +519,11 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
   ##########################
 
   if (new_advan %in% c(linear_advans, ode_advans)) {
+    
+    ## find no. of compartments needed.
+    
     R_regex <- "R([0-9]+)T([0-9]+)"
+    #R_names <- thetas$name[grepl(R_regex, thetas$name)]
     R_names <- dnew$base_name[grepl(R_regex, dnew$base_name)]
 
     comp_from <- gsub(R_regex, "\\1", R_names)
