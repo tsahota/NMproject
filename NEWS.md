@@ -1,5 +1,7 @@
 # NMproject (development version)
 
+* All closed form ADVAN/TRANS combinations added to the code library
+
 * Reorders arguments for `decision` so that auto decisions can be specified without explicity
   referring to arguments
 
