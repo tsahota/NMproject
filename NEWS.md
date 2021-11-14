@@ -1,6 +1,7 @@
 # NMproject (development version)
 
-* All closed form ADVAN/TRANS combinations added to the code library
+* All closed form ADVAN/TRANS combinations added to the code library.  Modified $ERROR so that 
+  log transformed DV and M3 models can be obtained by uncommenting lines.
 
 * Reorders arguments for `decision` so that auto decisions can be specified without explicity
   referring to arguments
