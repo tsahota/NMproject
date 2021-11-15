@@ -24,14 +24,16 @@ date: "`r Sys.time()`"
 <!--   4. use nm_render() to run on other model objects -->
 
 
-```{r setup2, include=F}
+```{r setup, include=F}
 ## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
 library(knitr)
 library(rprojroot)
-opts_knit$set(root.dir = find_root(has_file(".Rprofile") | 
-                                     is_rstudio_project | 
-                                     is_r_package | 
-                                     is_git_root))
+opts_knit$set(root.dir = find_root(
+  has_file(".Rprofile") | 
+    is_rstudio_project | 
+    is_r_package | 
+    is_git_root
+))
 opts_chunk$set(echo = FALSE)
 opts_chunk$set(message = FALSE)
 if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
@@ -92,7 +94,7 @@ sim$DV <- sim$DV_OUT  ## needed because output_table puts DV in DV_OUT
 
 ```{r vpc_basic}
 
-vpc(
+vpc::vpc(
   sim = sim,
   obs = obs,
   obs_cols = list(idv = "TPERIOD"),
@@ -104,7 +106,7 @@ vpc(
 
 ```{r pred_corr}
 
-vpc(
+vpc::vpc(
   sim = sim,
   obs = obs,
   obs_cols = list(idv = "TPERIOD"),
@@ -121,7 +123,7 @@ vpc(
 sim$WT_c = Hmisc::cut2(sim$WT, g = 2)
 obs$WT_c = Hmisc::cut2(obs$WT, g = 2)
 
-vpc(
+vpc::vpc(
   sim = sim,
   obs = obs,
   obs_cols = list(idv = "TPERIOD"),
