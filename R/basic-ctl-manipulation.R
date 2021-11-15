@@ -266,6 +266,6 @@ dollar <- function(m, dollar, ..., add_dollar_text = TRUE) {
   ans <- m %>%
     target(dollar) %>%
     text(..., add_dollar_text = add_dollar_text)
-  if (is_nm_list(ans)) ans <- ans %>% target(orig_target)
+  if (is_nm_list(ans) | is_nm_generic(ans)) ans <- ans %>% target(orig_target)
   ans
 }

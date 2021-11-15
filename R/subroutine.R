@@ -274,6 +274,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
   }
 
   if (new_advan %in% ode_advans) { ## first to ADVAN5
+    ## converting to advan 5 should preserve the parameterisation of the original model
     m <- m %>% subroutine(advan = 5)
     old_advan <- advan(m)
     old_trans <- trans(m)
@@ -330,92 +331,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
     
     dnew$nm_name <- gsub("R", "K",dnew$base_name)
     
-    # ## grab all existing variables.
-    # tv_vars <- m %>% grab_variables("\\bTV\\w*?\\b")
-    # vars <- gsub("TV", "", tv_vars)
-    # 
-    # ## convert K1T2 and V2 to KXY and VX to force a match in dtrans_detect step below
-    # if (all(grepl("K[0-9]+T?[0-9]+", vars) | grepl("V[0-9]+", vars))) {
-    #   vars <- c("KXY", "VX")
-    # }
-    # 
-    # dtrans_detect <- dp %>%
-    #   dplyr::group_by(.data$advan, .data$trans) %>%
-    #   dplyr::summarise(
-    #     match_trans = all(.data$nm_name %in% vars),#all(vars %in% .data$nm_name),
-    #     n_params = length(.data$nm_name)
-    #   ) %>%
-    #   dplyr::filter(.data$match_trans)
-    # 
-    # if (nrow(dtrans_detect) < 0) {
-    #   stop("can't match $PK parameters to an available advan/trans combo (available_trans)", call. = FALSE)
-    # }
-    # 
-    # dtrans_detect <- dtrans_detect[
-    #   dtrans_detect$n_params %in% max(dtrans_detect$n_params),
-    #   ] ## largest no. of parameters is going to be best
-    # dtrans_detect <- dtrans_detect[1, ] ## should be only 1 left
-    # 
-    # old_matched_trans <- dtrans_detect$trans
-    # old_matched_advan <- dtrans_detect$advan
-    # 
-    # ## redefine dnew based on dold
-    # ## select old rows and rename advan trans to new
-    # dnew <- dp %>% dplyr::filter(
-    #   .data$advan %in% old_matched_advan,
-    #   .data$trans %in% old_matched_trans
-    # )
-    # dnew$advan <- new_advan
-    # dnew$trans <- new_trans
-    # 
-    # ## dnew$nm_name will be used to rename/create new parameters
-    # ##  in the case of no relation (no transform needed)
-    # ##    a simple rename will be sufficient
-    # ##  in case of a relation (e.g. CL)
-    # ##    want to keep TVCL = ....
-    # ##    but just add a K2T0 = CL/V
-    # 
-    # if (!old_advan %in% c(linear_advans, ode_advans)) {
-    #   ## not needed if already KXTY type advan
-    #   for (i in seq_len(nrow(dold))) {
-    #     if (!is.na(dold$inv_relation[i])) {
-    #       inv_relation <- dold$inv_relation[i]
-    #       for (j in seq_len(nrow(dold))) {
-    #         inv_relation <- gsub(dold$base_name[j], dold$nm_name[j], inv_relation)
-    #       }
-    #       definition_to_add <- paste0(
-    #         gsub("R", "K", dold$base_name[i]), " = ", inv_relation, "\n"
-    #       )
-    #       m <- m %>%
-    #         target("PK") %>%
-    #         text(definition_to_add, append = TRUE) %>%
-    #         untarget()
-    # 
-    #     } else {
-    #       dnew$nm_name[i] <- gsub("R", "K", dnew$base_name[i])
-    #     }
-    # 
-    # 
-    #     # else {
-    #     #   definition_to_add <- paste0(
-    #     #     gsub("R", "K", dold$base_name[i]), " = ", dold$nm_name[i], "\n"
-    #     #   )
-    #     # }
-    # 
-    #     # m <- m %>%
-    #     #   target("PK") %>%
-    #     #   text(definition_to_add, append = TRUE) %>%
-    #     #   untarget()
-    #   }
-    # }
   }
-
-
-  # if (old_advan %in% c(linear_advans, ode_advans)) {
-  #   dold <- dnew
-  #   dold$advan <- old_advan
-  #   dold$trans <- old_trans
-  # }
 
   thetas <- raw_init_theta(m)
   thetas$init_trans <- thetas$init
@@ -429,7 +345,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
   d <- dplyr::full_join(dold, dnew, by = "base_name")
 
   ## loop through rows
-
+  
   for (i in seq_len(nrow(d))) {
     di <- d[i, ]
     strategy <- "none"
@@ -471,28 +387,41 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
       relation_expr <- parse(text = relation)
       new_theta <-
         try(with(theta_vec, eval(relation_expr)), silent = TRUE)
-
-      m <- m %>% rename_parameter_(
-        new_name = di$nm_name.y,
-        name = di$nm_name.x
-      )
-
-      ## modify initials
-      if (!inherits(new_theta, "try-error")) {
-        ithetai <- init_theta(m)
-        ithetai$init[ithetai$name == di$nm_name.y] <- new_theta
-        if (ithetai$trans[ithetai$name == di$nm_name.y] %in% "LOG") {
-          ithetai$init[ithetai$name == di$nm_name.y] <- log(new_theta)
-        }
-        if (ithetai$trans[ithetai$name == di$nm_name.y] %in% c("LOGIT")) {
-          p <- new_theta / 100
+      
+      if (new_advan %in% c(linear_advans, ode_advans) & !is.na(relation)) {
+        ## if going to DES or advan 5 type advan, assume no reparameterisation 
+        ## just add K2T0 = CL/V2 definition to bottom of $PK
+        add_to_dollar_PK <- paste(di$nm_name.y, "=", relation)
+        
+        m <- m %>% dollar("PK", add_to_dollar_PK, append = TRUE) 
+        
+      } else {
+        
+        ## if not going to $DES or advan 5 type, assume reparameterisation
+        ## just rename the parameter
+        
+        m <- m %>% rename_parameter_(
+          new_name = di$nm_name.y,
+          name = di$nm_name.x
+        )
+        
+        ## modify initials
+        if (!inherits(new_theta, "try-error")) {
+          ithetai <- init_theta(m)
+          ithetai$init[ithetai$name == di$nm_name.y] <- new_theta
+          if (ithetai$trans[ithetai$name == di$nm_name.y] %in% "LOG") {
+            ithetai$init[ithetai$name == di$nm_name.y] <- log(new_theta)
+          }
+          if (ithetai$trans[ithetai$name == di$nm_name.y] %in% c("LOGIT")) {
+            p <- new_theta / 100
+            ithetai$init[ithetai$name == di$nm_name.y] <-
+              log(p / (1 - p))
+          }
           ithetai$init[ithetai$name == di$nm_name.y] <-
-            log(p / (1 - p))
+            signif(ithetai$init[ithetai$name == di$nm_name.y], 5)
+          
+          m <- m %>% init_theta(ithetai)
         }
-        ithetai$init[ithetai$name == di$nm_name.y] <-
-          signif(ithetai$init[ithetai$name == di$nm_name.y], 5)
-
-        m <- m %>% init_theta(ithetai)
       }
     }
     if (strategy == "add_new") {
@@ -582,16 +511,17 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
 
       d_param <- data.frame(
         name = basic_param_names,
+        term = paste0(basic_param_names, "*A" ,comp_from),
         comp_from,
         comp_to
       )
 
       rhs <- sapply(seq_len(n_current_compartments), function(comp) {
         positive_terms <-
-          paste(d_param$name[d_param$comp_to %in% comp], collapse = " + ")
+          paste(d_param$term[d_param$comp_to %in% comp], collapse = " + ")
 
         negative_terms <-
-          paste(d_param$name[d_param$comp_from %in% comp], collapse = " -")
+          paste(d_param$term[d_param$comp_from %in% comp], collapse = " -")
 
         if (nchar(negative_terms) > 0) negative_terms <- paste0("-", negative_terms)
 
@@ -623,8 +553,12 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
     }
   }
 
-  ## update $DES if present
-
+  ## trim white space lines
+  
+  txt <- text(m)
+  trimmed_txt <- strsplit(gsub("\n{3,}", "\n\n", paste(txt, collapse = "\n")), "\n")[[1]]
+  m <- m %>% ctl_contents_simple(trimmed_txt)
+  
   m
 }
 #' @export

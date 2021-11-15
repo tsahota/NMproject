@@ -411,6 +411,7 @@ grab_variables0 <- function(text, pattern) {
   text_separated <- text %>%
     paste0(collapse = "\n") %>%
     stringr::str_split("(\n|\\s|\\+|\\-|\\=|\\*|\\/)") %>%
+    #stringr::str_split("(\n|\\s|\\+|\\-|\\=|\\*|\\/|\\)|\\()") %>%
     unlist()
 
   text_separated <- text_separated[grepl(pattern, text_separated)]
