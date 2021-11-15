@@ -221,6 +221,13 @@ nm_list_render <- function(m,
       )
     })
   } else {
+    
+    ## replace setup chunks with setup2 to prevent clash
+    input_contents0 <- readLines(input)
+    input_contents <- gsub("^(```\\{r setup)([, \\}])", "\\12\\2", input_contents0)
+    write(input_contents, input)
+    on.exit(write(input_contents0, input))
+    
     rmarkdown::render(
       input = input,
       output_file = output_file,
