@@ -291,8 +291,14 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
 
   if ("RXTY" %in% dold$base_name) {
 
-    tv_vars <- m %>% grab_variables("\\bTV\\w*?\\b")
-    vars <- gsub("TV", "", tv_vars)
+    ## get all variables in
+
+    txt <- text(m)
+    txt_words <- unlist(stringr::str_split(txt, stringr::boundary("word")))
+    vars <- unique(txt_words[grepl("^K([0-9]+)T?([0-9]+)$", txt_words)])
+
+    # tv_vars <- m %>% grab_variables("\\bTV\\w*?\\b")
+    # vars <- gsub("TV", "", tv_vars)
 
     ## get nm_name and base_name from vars
     dold0 <- data.frame(nm_name = vars)
