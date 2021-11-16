@@ -1,0 +1,75 @@
+#' Check NMproject installation
+#'
+#' @return Logical `TRUE` or `FALSE` indicating whether the tests have succeeded
+#'   or not.  A test failure does not necessarily mean that NMproject
+#'   incorrectly configured.  Test messages will say whether they are needed or
+#'   just recommended to pass.
+#' @export
+
+check_installation <- function() {
+  if (!requireNamespace("testthat")) stop("install testthat")
+  
+  testthat::test_that("NMproject configuration test", {
+    
+    testthat::expect(psn_check(),
+                     "PsN is unavailable.  This is required functionality for
+NMproject.  The comamnd system_nm(\"psn --version\") command should succeed.
+Ensure PsN is installed: 'https://uupharmacometrics.github.io/PsN/'.
+If PsN is installed ensure `system_nm()` is correctly configured.
+See ?system_nm for help.")
+    
+    nm_tran_cmd <- nm_tran_command()
+    nm_tran_test <- FALSE
+    if (!is.null(nm_tran_cmd)) {
+      if (length(nm_tran_cmd) > 0) {
+        if (is.character(nm_tran_cmd)) {
+          if (nchar(nm_tran_cmd) > 0) nm_tran_test <- TRUE
+        }
+      }
+    }
+    
+    testthat::expect(nm_tran_test, 
+                     "NMTRAN is not configured.  This may be because NONMEM is
+not installed.  However if NONMEM is installed it is highly recommended to
+configure NMTRAN especially if working on a cluster.
+See ?nm_tran_command for help.")
+    
+    testthat::expect(check_code_completion(),
+                     "Code completion has not been configured.
+It is recommended to configure this as it helps greatly with NMproject
+scripting.  It is not mandatory though for NMproject to work.
+See ?setup_code_completion for help.")
+  })
+  
+}
+
+
+check_code_completion <- function(snippet_path = find_snippet_path()) {
+  
+  if (!is_rstudio()) return(FALSE)
+  if (!interactive()) return(FALSE)
+  
+  template_path <- system.file("extdata", "r.snippets", package = "NMproject")
+  
+  snippet_exists <- file.exists(snippet_path)
+  if (!snippet_exists) return(FALSE)
+  ## check to see if modification is needed.
+  template_contents <- readLines(template_path)
+  snippet_contents <- readLines(snippet_path)
+  
+  last_line_blank <- snippet_contents[length(snippet_contents)]
+  last_line_blank <- grepl("^\\s*$", last_line_blank)
+  if (!last_line_blank) snippet_contents <- c(snippet_contents, "")
+  
+  last_line_blank <- template_contents[length(template_contents)]
+  last_line_blank <- grepl("^\\s*$", last_line_blank)
+  if (!last_line_blank) template_contents <- c(template_contents, "")
+  
+  matching_snippets <- sapply(c("new_nm", "child"), function(snippet_name) {
+    to_index <- snippet_index(snippet_name, snippet_contents)
+    from_index <- snippet_index(snippet_name, template_contents)
+    identical(snippet_contents[to_index], template_contents[from_index])
+  })
+  
+  all(matching_snippets)
+}

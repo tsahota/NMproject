@@ -1,6 +1,9 @@
 # NMproject (development version)
 
-* Improved `subroutine()`
+* Added `check_installation` for users to be able to verify installations
+  (fixes #18).
+
+* Improved `subroutine()`.
 
 * All closed form ADVAN/TRANS combinations added to the code library.  Modified $ERROR so that 
   log transformed DV and M3 models can be obtained by uncommenting lines.
