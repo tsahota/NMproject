@@ -40,18 +40,18 @@ dp <- dplyr::bind_rows(
   ),
   dplyr::tibble(
     advan = 3, trans = 3,
-    base_name = c("R2T0", "R2T3", "V2", "V3"),
-    relation = c("R2T0*V2", "R2T3*V2", NA, "V3+V2"),
-    inv_relation = c("R2T0/V2", "R2T3/V2", NA, "V3-V2"),
+    base_name = c("R2T0", "R2T3", "V2", "R3T2"),
+    relation = c("R2T0*V2", "R2T3*V2", NA, "V2+V2*R2T3/R3T2"),
+    inv_relation = c("R2T0/V2", "R2T3/V2", NA, "V2*R2T3/(R3T2-V2)"),
     nm_name = c("CL", "Q", "V", "VSS"),
     cmt = 2,
     oral = FALSE
   ),
   dplyr::tibble(
     advan = 3, trans = 4,
-    base_name = c("R2T0", "R2T3", "V2", "V3"),
-    relation = c("R2T0*V2", "R2T3*V2", NA, NA),
-    inv_relation = c("R2T0/V2", "R2T3/V2", NA, NA),
+    base_name = c("R2T0", "R2T3", "V2", "R3T2"),
+    relation = c("R2T0*V2", "R2T3*V2", NA, "V2*R2T3/R3T2"),
+    inv_relation = c("R2T0/V2", "R2T3/V2", NA, "V2*R2T3/R3T2"),
     nm_name = c("CL", "Q", "V1", "V2"),
     cmt = 2,
     oral = FALSE
@@ -66,18 +66,18 @@ dp <- dplyr::bind_rows(
   ),
   dplyr::tibble(
     advan = 4, trans = 3,
-    base_name = c("R1T2", "R2T0", "R2T3", "V2", "V3"),
-    relation = c(NA, "R2T0*V2", "R2T3*V2", NA, "V3+V2"),
-    inv_relation = c(NA, "R2T0/V2", "R2T3/V2", NA, "V3-V2"),
+    base_name = c("R1T2", "R2T0", "R2T3", "V2", "R3T2"),
+    relation = c(NA, "R2T0*V2", "R2T3*V2", NA, "V2+V2*R2T3/R3T2"),
+    inv_relation = c(NA, "R2T0/V2", "R2T3/V2", NA, "V2*R2T3/(R3T2-V2)"),
     nm_name = c("KA", "CL", "Q", "V", "VSS"),
     cmt = 2,
     oral = TRUE
   ),
   dplyr::tibble(
     advan = 4, trans = 4,
-    base_name = c("R1T2", "R2T0", "R2T3", "V2", "V3"),
-    relation = c(NA, "R2T0*V2", "R2T3*V2", NA, NA),
-    inv_relation = c(NA, "R2T0/V2", "R2T3/V2", NA, NA),
+    base_name = c("R1T2", "R2T0", "R2T3", "V2", "R3T2"),
+    relation = c(NA, "R2T0*V2", "R2T3*V2", NA, "V2*R2T3/R3T2"),
+    inv_relation = c(NA, "R2T0/V2", "R2T3/V2", NA, "V2*R2T3/R3T2"),
     nm_name = c("KA", "CL", "Q", "V2", "V3"),
     cmt = 2,
     oral = TRUE
@@ -92,9 +92,9 @@ dp <- dplyr::bind_rows(
   ),
   dplyr::tibble(
     advan = 11, trans = 4,
-    base_name = c("R2T0", "R2T3", "V2", "V3", "R2T4", "V4"),
-    relation = c("R2T0*V2", "R2T3*V2", NA, NA, "R2T4*V2", NA),
-    inv_relation = c("R2T0/V2", "R2T3/V2", NA, NA, "R2T4/V2", NA),
+    base_name = c("R2T0", "R2T3", "V2", "R3T2", "R2T4", "R4T2"),
+    relation = c("R2T0*V2", "R2T3*V2", NA, "V2*R2T3/R3T2", "R2T4*V2", "V2*R2T4/R4T2"),
+    inv_relation = c("R2T0/V2", "R2T3/V2", NA, "V2*R2T3/R3T2", "R2T4/V2", "V2*R2T4/R4T2"),
     nm_name = c("CL", "Q2", "V1", "V2", "Q3", "V3"),
     cmt = 3,
     oral = FALSE
@@ -109,9 +109,9 @@ dp <- dplyr::bind_rows(
   ),
   dplyr::tibble(
     advan = 12, trans = 4,
-    base_name = c("R1T2", "R2T0", "R2T3", "V2", "V3", "R2T4", "V4"),
-    relation = c(NA, "R2T0*V2", "R2T3*V2", NA, NA, "R2T4*V2", NA),
-    inv_relation = c(NA, "R2T0/V2", "R2T3/V2", NA, NA, "R2T4/V2", NA),
+    base_name = c("R1T2", "R2T0", "R2T3", "V2", "R3T2", "R2T4", "R4T2"),
+    relation = c(NA, "R2T0*V2", "R2T3*V2", NA, "V2*R2T3/R3T2", "R2T4*V2", "V2*R2T4/R4T2"),
+    inv_relation = c(NA, "R2T0/V2", "R2T3/V2", NA, "V2*R2T3/R3T2", "R2T4/V2", "V2*R2T4/R4T2"),
     nm_name = c("KA", "CL", "Q3", "V2", "V3", "Q4", "V4"),
     cmt = 3,
     oral = TRUE
