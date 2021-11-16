@@ -131,6 +131,9 @@ update_parameters.nm_generic <- function(ctl, from) {
   # message("cannot update IOV model parameters")
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "OMEGA")
   ctl_lines <- update_parameters0(ctl_lines, coef_from, type = "SIGMA")
+  
+  ctl_lines <- as.character(ctl_character(ctl_lines))
+  ctl_lines <- trimws(ctl_lines)
 
   m <- m %>% ctl_contents_simple(ctl_lines)
   m
