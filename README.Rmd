@@ -30,6 +30,12 @@ Script based 'NONMEM' model development in RStudio intended for intermediate to 
 - 100% flexibility through tracked manual edits to model files
 - Customisable to multiple infrastructure types
 
+## Prerequisites
+
+- PsN >= 4.4.8
+- NONMEM installed with valid license
+- RStudio
+
 ## Installation
 
 You can install the released version of NMproject from [CRAN](https://CRAN.R-project.org) with:
