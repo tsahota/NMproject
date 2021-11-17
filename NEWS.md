@@ -1,6 +1,6 @@
 # NMproject (development version)
 
-* Improved `subroutine()`
+* Improved `subroutine()` so that it handles ADVAN5 and ODE conversions better
 
 * All closed form ADVAN/TRANS combinations added to the code library.  Modified $ERROR so that 
   log transformed DV and M3 models can be obtained by uncommenting lines.
