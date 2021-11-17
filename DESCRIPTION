@@ -78,6 +78,7 @@ Collate:
     'boot.R'
     'nm_object.R'
     'cache.R'
+    'check_installation.R'
     'covariate-explore.R'
     'cran_note_handle.R'
     'data_filter.R'

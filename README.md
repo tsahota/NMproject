@@ -23,6 +23,12 @@ intermediate to advanced R users.
 -   100% flexibility through tracked manual edits to model files
 -   Customisable to multiple infrastructure types
 
+## Prerequisites
+
+-   PsN &gt;= 4.4.8
+-   NONMEM installed with valid license
+-   RStudio
+
 ## Installation
 
 You can install the released version of NMproject from

@@ -1,12 +1,17 @@
 # NMproject (development version)
 
-* Improved `subroutine()` so that it handles ADVAN5 and ODE conversions better
+* Added `check_installation` for users to be able to verify
+  installations (fixes #18).
 
-* All closed form ADVAN/TRANS combinations added to the code library.  Modified $ERROR so that 
-  log transformed DV and M3 models can be obtained by uncommenting lines.
+* Improved `subroutine()` so that it handles ADVAN5 and ODE
+  conversions better.
 
-* Reorders arguments for `decision` so that auto decisions can be specified without explicity
-  referring to arguments
+* All closed form ADVAN/TRANS combinations added to the code library. 
+  Modified $ERROR so that log transformed DV and M3 models can be 
+  obtained by uncommenting lines.
+
+* Reorders arguments for `decision` so that auto decisions can be 
+  specified without explicity referring to arguments
 
 * Finished coding `subroutine()` function and included package tests
 
