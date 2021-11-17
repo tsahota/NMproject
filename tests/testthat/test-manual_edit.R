@@ -40,7 +40,7 @@ test_that("manual_edit", {
 
   m1s_temp <- m1 %>% child("m1s_temp") %>%
     update_parameters(m1) %>%
-    apply_manual_edit("tarjinde-2021-08-15-16-55-38")
+    apply_manual_edit("tarjinde-2021-11-17-08-52-52")
 
   ## test that the manual edit made a $SIM
 

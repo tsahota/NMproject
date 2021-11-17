@@ -34,16 +34,6 @@ test_that("manual_edit", {
 
   m1 <- readRDS("Results/m1.RDS")
 
-  ## check all conversions work without errors
-  mt <- .available_advans %>%
-    mutate(m = m1 %>% child(run_id = .data$label) %>%
-             subroutine(advan = .data$advan,
-                        trans = .data$trans))
-
-  ## check advans and trans are the way they should be
-  expect_equal(advan(mt$m), mt$advan)
-  expect_equal(trans(mt$m), mt$trans)
-
   ### advan 5 conversion
   m1a5 <- m1 %>% subroutine(advan = 5)
   expect_true(any(grepl("K1T2", text(m1a5)[[1]])))
@@ -59,5 +49,14 @@ test_that("manual_edit", {
 
   m1reverse <- m1a13 %>% subroutine(advan = 2)
 
+  ## check all conversions work without errors
+  mt <- .available_advans %>%
+    mutate(m = m1 %>% child(run_id = .data$label) %>%
+             subroutine(advan = .data$advan,
+                        trans = .data$trans))
+  
+  ## check advans and trans are the way they should be
+  expect_equal(advan(mt$m), mt$advan)
+  expect_equal(trans(mt$m), mt$trans)
 
 })
