@@ -25,7 +25,7 @@ Interactive: true
 
 Name: run monitor
 Description: Monitor convergence and results of runs during execution
-Binding: shiny_nm
+Binding: run_monitor_app
 Interactive: true
 
 Name: nm_tran

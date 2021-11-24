@@ -3,17 +3,17 @@
 * Added `check_installation` for users to be able to verify
   installations (fixes #18).
 
-* Improved `subroutine()` so that it handles ADVAN5 and ODE
-  conversions better.
-
 * All closed form ADVAN/TRANS combinations added to the code library. 
   Modified $ERROR so that log transformed DV and M3 models can be 
   obtained by uncommenting lines.
 
+* Finished coding `subroutine()` function and included package tests
+
+* The run monitor addin now uses object highlighting - useful for when objects 
+  are not in `.GlobalEnv` (e.g. they're in a `data.frame`).
+
 * Reorders arguments for `decision` so that auto decisions can be 
   specified without explicity referring to arguments
-
-* Finished coding `subroutine()` function and included package tests
 
 # NMproject 0.6.7
 

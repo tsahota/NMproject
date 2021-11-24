@@ -57,3 +57,30 @@ show_out_app <- function() {
   m <- get_single_object_for_app()
   show_out(m)
 }
+
+run_monitor_app <- function() {
+  
+  run_with_arg <- TRUE
+  
+  m <- try(get_single_object_for_app(), silent = TRUE)
+
+  ## check m - if not good run_with_arg <- FALSE  
+  if (inherits(m, "try-error")) {
+    run_with_arg <- FALSE
+  } else {
+    if (length(m) < 1) {
+      run_with_arg <- FALSE
+    } else {
+      if (!is_nm_list(m)) {
+        run_with_arg <- FALSE
+      }
+    }
+  }
+  
+  if (run_with_arg) {
+    shiny_nm(m)  
+  } else {
+    shiny_nm()
+  }
+  
+}
