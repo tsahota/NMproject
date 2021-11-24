@@ -28,7 +28,6 @@ License: GPL (>= 3)
 Encoding: UTF-8
 Imports:
     shiny,
-    reshape2,
     dygraphs,
     DT,
     git2r (>= 0.18.0),

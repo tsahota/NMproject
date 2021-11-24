@@ -132,14 +132,7 @@ rr.nm_list <- function(m, trans = TRUE) {
   d$Estimate[d$parameter != "OBJ"] <- paste0(signif(d$FINAL[d$parameter != "OBJ"], 3), " (", signif(d$SE[d$parameter != "OBJ"], 3), d$SEunit[d$parameter != "OBJ"], ")")
   d$Estimate[d$parameter == "OBJ"] <- round(d$FINAL[d$parameter == "OBJ"], 3)
   d <- d[, names(d)[!names(d) %in% c("SE", "FINAL")]]
-  d <- reshape2::dcast(
-    data = d,
-    stats::as.formula(paste(
-      paste(names(d)[!names(d) %in% c("run_name", "Estimate")], collapse = " + "),
-      "~ run_name"
-    )),
-    value.var = "Estimate"
-  )
+  d <- tidyr::spread(d, key = "run_name", value = "Estimate")
   ## fix ordering of columns so it's same as m - dcast ruins it
   non_matches <- names(d)[!seq_along(names(d)) %in% match(unique_id(m), names(d))]
   matches <- unique_id(m[!is.na(m)])
@@ -930,12 +923,6 @@ omega_matrix <- Vectorize(omega_matrix, vectorize.args = list("r"), SIMPLIFY = F
 ext2coef <- function(extout, file_name) {
   ## raw function to generate parameter table from ext.file.
 
-  if (!requireNamespace("reshape2", quietly = TRUE)) {
-    stop("reshape2 needed for this function to work. Please install it.",
-      call. = FALSE
-    )
-  }
-
   d <- extout
   if (nrow(d) == 0) {
     return(data.frame())
@@ -959,21 +946,10 @@ ext2coef <- function(extout, file_name) {
 
   par.names <- names(d)[match("THETA1", names(d)):match("OBJ", names(d))]
 
-  d <- reshape2::melt(
-    data = d, variable.name = "parameter",
-    measure.vars = par.names
-  )
-  if (!"parameter" %in% names(d)) stop("melt has failed - could be due to reshape being loaded. reshape can interfere with reshape2")
-
-
-  d <- reshape2::dcast(
-    data = d,
-    stats::as.formula(paste(
-      paste(names(d)[!names(d) %in% c("TYPE", "value")], collapse = " + "),
-      "~ TYPE"
-    )),
-    value.var = "value"
-  )
+  d <- tidyr::gather(d, key = "parameter", value = "value", par.names)
+  d$parameter <- factor(d$parameter, levels = par.names)
+  
+  d <- tidyr::spread(d, key = "TYPE", value = "value")
 
   ## messy hard coding - consider refactoring if need more than just eigenvalues
   if (has_final_est & length(cond_num) > 0) {

@@ -1,5 +1,7 @@
 # NMproject (development version)
 
+* Removed reshape2 imports and replaced with tidyr.
+
 * Added `check_installation` for users to be able to verify
   installations (fixes #18).
 

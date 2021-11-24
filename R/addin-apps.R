@@ -67,14 +67,6 @@ run_monitor_app <- function() {
   ## check m - if not good run_with_arg <- FALSE  
   if (inherits(m, "try-error")) {
     run_with_arg <- FALSE
-  } else {
-    if (length(m) < 1) {
-      run_with_arg <- FALSE
-    } else {
-      if (!is_nm_list(m)) {
-        run_with_arg <- FALSE
-      }
-    }
   }
   
   if (run_with_arg) {

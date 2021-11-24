@@ -29,11 +29,6 @@ plot_iter_data <- function(r, trans = TRUE, skip = 0, yvar = "OBJ") {
 
 #' @export
 plot_iter_data.default <- function(r, trans = TRUE, skip = 0, yvar = "OBJ") {
-  if (!requireNamespace("reshape2", quietly = TRUE)) {
-    stop("reshape2 needed for this function to work. Please install it.",
-      call. = FALSE
-    )
-  }
 
   d <- read_ext(r = r, trans = trans)
 
@@ -73,12 +68,10 @@ plot_iter_data.default <- function(r, trans = TRUE, skip = 0, yvar = "OBJ") {
   d <- do.call(rbind, d)
 
   par.names <- c("OBJ", names(d)[names(d) %in% par.names])
-
-  dl <- reshape2::melt(
-    data = d,
-    measure.vars = par.names
-  )
-
+  
+  dl <- tidyr::gather(d, key = "variable", value = "value", par.names)
+  dl$variable <- factor(dl$variable, levels = par.names)
+  
   dl
 }
 
