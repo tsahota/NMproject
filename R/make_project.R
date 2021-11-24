@@ -73,6 +73,8 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
                                        use_renv = FALSE, readme_template_package = "NMproject",
                                        ...) {
 
+  if (!requireNamespace("devtools")) stop("install devtools")
+    
   ## need to normalize path because usethis has different
   ## home directory, so use use R normalizePath to remove abiguity
 
