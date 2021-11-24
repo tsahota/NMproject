@@ -28,7 +28,6 @@
 #' @param args List. Same as "params" arg in `rmarkdown::render()`.
 #' @param force Logical (default = `getOption("nm.force_render")`). Will force
 #'   execution.
-#' @param async Experimental option to use future package.
 #' @param ... Additional argument passed to `rmarkdown::render()`.
 #'
 #' @details `input` must refer to a properly specified Rmd document. The R
@@ -59,7 +58,6 @@ nm_render <- function(m,
                       output_file = NA,
                       args = list(),
                       force = getOption("nm.force_render"),
-                      async = FALSE,
                       ...) {
   UseMethod("nm_render")
 }
@@ -70,7 +68,6 @@ nm_render.nm_generic <- function(m,
                                  output_file = NA,
                                  args = list(),
                                  force = getOption("nm.force_render"),
-                                 async = FALSE,
                                  ...) {
   if (.Platform$OS.type == "unix") {
     if (!"cairo" %in% getOption("bitmapType")) {
@@ -114,43 +111,33 @@ nm_render.nm_generic <- function(m,
         return(invisible(m)) ## if up to date, skip
       }
     }
-    # }
   }
-
-  if (async) {
-    if (!requireNamespace("future")) stop("install future package", call. = FALSE)
-    f0 <- future::future({
-      rmarkdown::render(
-        input = input,
-        output_file = output_file,
-        output_dir = output_dir,
-        params = args,
-        envir = new.env(),
-        ...
-      )
-    })
-  } else {
-    ## replace setup chunks with setup2 to prevent clash
-    input_contents0 <- readLines(input)
-    input_contents <- gsub("^(```\\{r setup)([, \\}])", "\\12\\2", input_contents0)
-    write(input_contents, input)
-    on.exit(write(input_contents0, input))
-
-    rmarkdown::render(
-      input = input,
-      output_file = output_file,
-      output_dir = output_dir,
-      params = args,
-      envir = new.env(),
-      ...
-    )
-  }
-
+  
+  # xfun::cache_rds({
+  # }, hash = list(), 
+  # dir = here::here(".cache", ""), file = "e_sim.rds")
+  
+  ## replace setup chunks with setup2 to prevent clash
+  input_contents0 <- readLines(input)
+  input_contents <- gsub("^(```\\{r setup)([, \\}])", "\\12\\2", input_contents0)
+  write(input_contents, input)
+  on.exit(write(input_contents0, input))
+  
+  rmarkdown::render(
+    input = input,
+    output_file = output_file,
+    output_dir = output_dir,
+    params = args,
+    envir = new.env(),
+    quiet = TRUE,
+    ...
+  )
+  
   m <- m %>% result_files(output_file)
   m <- m %>% save_render_cache(input)
-
+  
   usethis::ui_info("run report saved in: {usethis::ui_path(output_path)}")
-
+  
   invisible(m)
 }
 
@@ -164,7 +151,6 @@ nm_list_render <- function(m,
                            output_file = NA,
                            args = list(),
                            force = getOption("nm.force_render"),
-                           async = FALSE,
                            ...) {
 
   # m <- m$m
@@ -208,36 +194,22 @@ nm_list_render <- function(m,
     }
     # }
   }
-
-  if (async) {
-    f0 <- future::future({
-      rmarkdown::render(
-        input = input,
-        output_file = output_file,
-        output_dir = output_dir,
-        params = args,
-        envir = new.env(),
-        ...
-      )
-    })
-  } else {
-    
-    ## replace setup chunks with setup2 to prevent clash
-    input_contents0 <- readLines(input)
-    input_contents <- gsub("^(```\\{r setup)([, \\}])", "\\12\\2", input_contents0)
-    write(input_contents, input)
-    on.exit(write(input_contents0, input))
-    
-    rmarkdown::render(
-      input = input,
-      output_file = output_file,
-      output_dir = output_dir,
-      params = args,
-      envir = new.env(),
-      ...
-    )
-  }
-
+  
+  ## replace setup chunks with setup2 to prevent clash
+  input_contents0 <- readLines(input)
+  input_contents <- gsub("^(```\\{r setup)([, \\}])", "\\12\\2", input_contents0)
+  write(input_contents, input)
+  on.exit(write(input_contents0, input))
+  
+  rmarkdown::render(
+    input = input,
+    output_file = output_file,
+    output_dir = output_dir,
+    params = args,
+    envir = new.env(),
+    ...
+  )
+  
   ## use as_nm_generic incase m is redefined in rmd
   # m <- m %>% result_files(output_file)
 

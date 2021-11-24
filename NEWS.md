@@ -9,13 +9,15 @@
   Modified $ERROR so that log transformed DV and M3 models can be 
   obtained by uncommenting lines.
 
-* Finished coding `subroutine()` function and included package tests
+* Finished coding `subroutine()` function and included package tests.
 
 * The run monitor addin now uses object highlighting - useful for when objects 
   are not in `.GlobalEnv` (e.g. they're in a `data.frame`).
 
 * Reorders arguments for `decision` so that auto decisions can be 
   specified without explicity referring to arguments
+  
+* Removed future package from suggests and `async` arguments from `nm_render*()` functions.
 
 # NMproject 0.6.7
 

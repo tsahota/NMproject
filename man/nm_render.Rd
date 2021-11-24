@@ -11,7 +11,6 @@ nm_render(
   output_file = NA,
   args = list(),
   force = getOption("nm.force_render"),
-  async = FALSE,
   ...
 )
 
@@ -21,7 +20,6 @@ nm_list_render(
   output_file = NA,
   args = list(),
   force = getOption("nm.force_render"),
-  async = FALSE,
   ...
 )
 }
@@ -36,8 +34,6 @@ nm_list_render(
 
 \item{force}{Logical (default = \code{getOption("nm.force_render")}). Will force
 execution.}
-
-\item{async}{Experimental option to use future package.}
 
 \item{...}{Additional argument passed to \code{rmarkdown::render()}.}
 }

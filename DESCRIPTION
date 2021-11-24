@@ -51,7 +51,6 @@ Suggests:
     testthat,
     knitr,
     ggplot2,
-    future,
     data.tree,
     xpose,
     lubridate,
