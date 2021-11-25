@@ -55,6 +55,15 @@ apply_manual_edit.nm_generic <- function(m, patch_id, return_merge_conf_ctl = FA
     res <- system_cmd(patch_cmd, intern = TRUE) ## win = no need to use system_nm, no file sync issues    
   )
 
+  merge_conf_msg <- "apply_manual_edit() hit an unresolvable merge conflict, 
+            this is normally due to the control file having changed significantly
+            since the manual edit was performed. Right clicking the patch text and 
+            selecting  Addins -> View patch will show the edits the patch is attempting 
+            to apply.  This can be used to create a new patch."
+  
+  resolve_merge_msg <- "You can resolve this conflict by selecting the code
+  and ensuring the apply_manual_edit() is the last pipe highlighted
+  and then selecting Addins -> Resolve manual edit conflict"
   
   if (isTRUE(attributes(res)$status > 0)) {
     ## try again with whitespace fix, needed for some versions of git
@@ -70,11 +79,7 @@ apply_manual_edit.nm_generic <- function(m, patch_id, return_merge_conf_ctl = FA
       ## get current commit for later resetting
       git_log <- git2r::commits()
       if( length(git_log) == 0) {
-        usethis::ui_stop("apply_manual_edit() hit an unresolvable merge conflict, 
-            this is normally due to the control file having changed significantly
-            since the manual edit was performed. Right clicking the patch text and 
-            selecting  Addins -> View patch will show the edits the patch is attempting 
-            to apply.  This can be used to create a new patch.")
+        usethis::ui_stop(merge_conf_msg)
       }
       orig_commit <- git_log[[1]]
       
@@ -96,11 +101,7 @@ apply_manual_edit.nm_generic <- function(m, patch_id, return_merge_conf_ctl = FA
         empty_commit_coming <- length(commit_diff) == 0
         
         if (empty_commit_coming) {
-          usethis::ui_stop("apply_manual_edit() hit an unresolvable merge conflict, 
-            this is normally due to the control file having changed significantly
-            since the manual edit was performed. Right clicking the patch text and 
-            selecting  Addins -> View patch will show the edits the patch is attempting 
-            to apply.  This can be used to create a new patch.")
+          usethis::ui_stop(merge_conf_msg)
         }
         
         commit_msg <- paste("temp commit: ", ctl_path(m))
@@ -141,9 +142,7 @@ apply_manual_edit.nm_generic <- function(m, patch_id, return_merge_conf_ctl = FA
             if (return_merge_conf_ctl) return(readLines(temp_ctl_path))
             
             usethis::ui_info(warn_msg)
-            usethis::ui_stop("You can resolve this conflict by selecting the code
-            and ensuring the apply_manual_edit() is the last pipe highlighted
-            and then selecting Addins -> Resolve manual edit conflict")
+            usethis::ui_stop(resolve_merge_msg)
             
             ## instead can we just fix the merge conflict here?
             ## reproducibility and predictability must be no. 1
@@ -174,19 +173,13 @@ apply_manual_edit.nm_generic <- function(m, patch_id, return_merge_conf_ctl = FA
               if (return_merge_conf_ctl) return(readLines(temp_ctl_path))
               
               usethis::ui_info(warn_msg)
-              usethis::ui_stop("You can resolve this conflict by highlighting the code
-          in your script up to this apply_manual_edit() statement and selecting:
-            Addins -> Resolve manual edit conflict")
+              usethis::ui_stop(resolve_merge_msg)
               
             }
           }
         }
       } else {
-        usethis::ui_stop("apply_manual_edit() hit an unresolvable merge conflict, 
-            this is normally due to the control file having changed significantly
-            since the manual edit was performed. Right clicking the patch text and 
-            selecting  Addins -> View patch will show the edits the patch is attempting 
-            to apply.  This can be used to create a new patch.") 
+        usethis::ui_stop(merge_conf_msg) 
       }
     }
   }
