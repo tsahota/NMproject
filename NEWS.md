@@ -19,6 +19,9 @@
   
 * Removed future package from suggests and `async` arguments from `nm_render*()` functions.
 
+* Added `path` argument to `write_ctl()` so control file can be written to 
+  other locations.
+
 # NMproject 0.6.7
 
 * Added ability to use NMproject-specific code completion snippets `setup_code_completion()`.

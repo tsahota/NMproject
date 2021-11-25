@@ -121,6 +121,7 @@ Collate:
     'subroutine.R'
     'system-hooks.R'
     'text.R'
+    'todo.R'
     'update_parameters.R'
     'with_temp_git_config.R'
     'zzz.R'

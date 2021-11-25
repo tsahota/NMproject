@@ -4,10 +4,12 @@
 \alias{write_ctl}
 \title{Write control file to disk}
 \usage{
-write_ctl(m, force = FALSE)
+write_ctl(m, path = NA_character_, force = FALSE)
 }
 \arguments{
 \item{m}{An nm object.}
+
+\item{path}{Optional path to save the control file.}
 
 \item{force}{Logical (default = \code{FALSE}), force write, don't ask.}
 }

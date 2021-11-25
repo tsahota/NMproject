@@ -576,22 +576,27 @@ clean_tempfiles.nm_list <- function(object = ".", output_loc = c("run_dir", "bas
 #' execution.
 #'
 #' @param m An nm object.
+#' @param path Optional path to save the control file.
 #' @param force Logical (default = `FALSE`), force write, don't ask.
 #'
 #' @return Invisibly returns `m` unmodified.
 #'
 #' @keywords internal
 #' @export
-write_ctl <- function(m, force = FALSE) {
+write_ctl <- function(m, path = NA_character_, force = FALSE) {
   UseMethod("write_ctl")
 }
 
 #' @export
-write_ctl.nm_generic <- function(m, force = FALSE) {
-  ctl_name <- ctl_path(m)
+write_ctl.nm_generic <- function(m, path = NA_character_, force = FALSE) {
   ctl_ob <- ctl_contents(m) %>% ctl_character()
-  dir_name <- run_in(m)
-
+  if (is.na(path)) {
+    ctl_name <- ctl_path(m)
+    dir_name <- run_in(m)    
+  } else {
+    ctl_name <- basename(path)
+    dir_name <- dirname(path)
+  }
   if (!file.exists(dir_name)) {
     dir.create(dir_name, showWarnings = FALSE, recursive = TRUE)
   }
