@@ -110,31 +110,6 @@ nm_default_dirs <- function(dir_list) {
   derived_data = "Directory for derived analysis-ready datasets"
 )
 
-#' Get a default directory
-#'
-#' @description
-#'
-#' `r lifecycle::badge("deprecated")`
-#'
-#' Get subdirectory (relative) paths in a configuration independent way.  The
-#' configuration can be modified with [nm_default_dirs()].  Can be useful in
-#' scripts, where you need to refer to locations of model files or output files.
-#'
-#' @param name Character. Directory type.  Should be either `"scripts"`,
-#'   `"models"` or `"results"`.
-#' @param ... Deprecated.
-#'
-#' @seealso [nm_default_dirs()]
-#'
-#' @export
-
-nm_default_dir <- function(name = c("scripts", "models", "results"), ...) {
-  .Deprecated("nm_dir")
-  if (missing(name)) stop("need argument")
-  name < match.arg(name)
-  nm_default_dirs()[[name]]
-}
-
 #' Get a directory name
 #'
 #' @description
@@ -225,9 +200,8 @@ set_default_dirs_in_rprofile <- function(path = ".Rprofile", dir_list = nm_defau
 
 nm_default_fields <- function(field_list) {
   if (missing(field_list)) {
-    return(getOption("nm_default_fields"))
-  }
-  if (!missing(field_list)) {
+    getOption("nm_default_fields")
+  } else {
     options(nm_default_fields = field_list)
   }
 }
