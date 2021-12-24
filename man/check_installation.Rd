@@ -13,5 +13,9 @@ incorrectly configured.  Test messages will say whether they are needed or
 just recommended to pass.
 }
 \description{
-Check NMproject installation
+This function uses \code{testthat} to test whether pre-requisites are met.  It
+first checks for availability of PsN via \code{system_nm()}, this is a requirement
+for NMproject.  Subsequent checks are not mandatory, but recommended for full
+functionality - these comprise a check to see if NMTRAN checks are configured
+and a check to see if code completion has been set up.
 }

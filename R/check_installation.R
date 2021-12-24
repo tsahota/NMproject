@@ -1,5 +1,11 @@
 #' Check NMproject installation
 #'
+#' This function uses `testthat` to test whether pre-requisites are met.  It
+#' first checks for availability of PsN via `system_nm()`, this is a requirement
+#' for NMproject.  Subsequent checks are not mandatory, but recommended for full
+#' functionality - these comprise a check to see if NMTRAN checks are configured
+#' and a check to see if code completion has been set up.
+#'
 #' @return Logical `TRUE` or `FALSE` indicating whether the tests have succeeded
 #'   or not.  A test failure does not necessarily mean that NMproject
 #'   incorrectly configured.  Test messages will say whether they are needed or
@@ -30,9 +36,12 @@ See ?system_nm for help.")
     
     testthat::expect(nm_tran_test, 
                      "NMTRAN is not configured.  This may be because NONMEM is
-not installed.  However if NONMEM is installed it is highly recommended to
-configure NMTRAN especially if working on a cluster.
-See ?nm_tran_command for help.")
+not installed.  If NONMEM is installed and you are working in non-grid 
+environment (e.g. laptop/desktop) then don't worry about this test failing.  
+However if working in a grid environment, it is highly recommended that this 
+check succeed as without it NMTRAN checks will not work.  NMTRAN checks provide 
+fast feedback of control file and dataset errors.  See ?nm_tran_command for 
+instructions")
     
     testthat::expect(check_code_completion(),
                      "Code completion has not been configured.
