@@ -9,7 +9,17 @@ template:
       index_name: NMproject
 
 reference:
-- title: "Directory management"
+- title: "Configuration & setup"
+- contents:
+  - check_installation
+  - setup_code_completion
+  - nm_tran_command
+  - find_nonmem
+  - NONMEM_version
+  - nm_default_fields
+  - nm_default_dirs
+  - overwrite_behaviour
+- title: "Project directory management"
 - contents:
   - nm_create_analysis_project
   - setup_nm_demo
@@ -26,7 +36,7 @@ reference:
   - stage
   - import
   - search_raw
-- title: "Pre-modelling functions"
+- title: "Data cleaning convenience functions"
 - contents:
   - read_derived_data
   - write_derived_data
@@ -133,11 +143,4 @@ reference:
 - contents:
   - make_boot_datasets
   - make_xv_datasets
-- title: "Configuration"
-- contents:
-  - nm_tran_command
-  - nm_default_fields
-  - nm_default_dirs
-  - overwrite_behaviour
-  - find_nonmem
-  - NONMEM_version
+
