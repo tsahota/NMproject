@@ -1,0 +1,40 @@
+---
+title: "Configuration & setup"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(NMproject)
+```
+
+## Prerequisites
+
+The following need to be installed and available:
+
+- PsN >= 4.4.8
+- NONMEM installed with valid license
+- RStudio
+
+The following function is recommended as a first step as it first checks for 
+availability of PsN via `system_nm()`, this is a requirement for NMproject.
+
+There are also subsequent checks which not mandatory, but recommended for full
+functionality.
+
+```{r}
+check_installation()
+```
+
+You should expect all checks to succeed apart from the code completion setup
+check.  It is highly recommended to set up code completion though as it eases
+the scripting process.  This is achieved via the following:
+
+```{r eval = FALSE}
+setup_code_completion()
+```
