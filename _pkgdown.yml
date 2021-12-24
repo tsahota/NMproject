@@ -2,6 +2,7 @@ url: https://tsahota.github.io/NMproject
 
 template:
   params:
+    bootstrap: 5
     bootswatch: flatly
     google_site_verification: Asq9eKyn87Krpkza8Y-Y_XiS5V6eNXGAreGhOYcBKd0
     docsearch:
