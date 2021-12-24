@@ -73,8 +73,8 @@ job_stats <- function(m) {
   m_time_f <- function(path) lubridate::ymd_hms(file.info(path)$mtime)
 
   d %>% dplyr::mutate(
-    starttime = purrr::map_chr(.data$xml, ~ .x$start_datetime),
-    stoptime = purrr::map_chr(.data$xml, ~ .x$stop_datetime),
+    starttime = purrr::map_chr(.data$xml, ~ .x$start_datetime[[1]]),
+    stoptime = purrr::map_chr(.data$xml, ~ .x$stop_datetime[[1]]),
     starttime = lubridate::ymd_hms(.data$starttime),
     stoptime = lubridate::ymd_hms(.data$stoptime),
     Rtime = difftime(.data$stoptime, .data$starttime, units = "mins"),
