@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://tsahota.github.io/NMproject/404.html</loc>
+  </url>
+  <url>
+    <loc>https://tsahota.github.io/NMproject/LICENSE.html</loc>
+  </url>
+  <url>
+    <loc>https://tsahota.github.io/NMproject/articles/NMproject.html</loc>
+  </url>
+  <url>
+    <loc>https://tsahota.github.io/NMproject/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://tsahota.github.io/NMproject/authors.html</loc>
+  </url>
+  <url>
     <loc>https://tsahota.github.io/NMproject/index.html</loc>
+  </url>
+  <url>
+    <loc>https://tsahota.github.io/NMproject/news/index.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/NMproject-package.html</loc>
@@ -41,6 +59,9 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/change_parent.html</loc>
+  </url>
+  <url>
+    <loc>https://tsahota.github.io/NMproject/reference/check_installation.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/child.html</loc>
@@ -139,6 +160,9 @@
     <loc>https://tsahota.github.io/NMproject/reference/import.html</loc>
   </url>
   <url>
+    <loc>https://tsahota.github.io/NMproject/reference/index.html</loc>
+  </url>
+  <url>
     <loc>https://tsahota.github.io/NMproject/reference/info_scripts.html</loc>
   </url>
   <url>
@@ -203,9 +227,6 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/nm_create_analysis_project.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/reference/nm_default_dir.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/nm_default_dirs.html</loc>
@@ -428,8 +449,5 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/write_derived_data.html</loc>
-  </url>
-  <url>
-    <loc>https://tsahota.github.io/NMproject/articles/articles/NMproject.html</loc>
   </url>
 </urlset>
