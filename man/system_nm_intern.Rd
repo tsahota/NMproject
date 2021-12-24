@@ -2,19 +2,20 @@
 % Please edit documentation in R/NMproject-options.R
 \name{system_nm_intern}
 \alias{system_nm_intern}
-\title{Convenience function for system_nm}
+\title{Diagnostic test for system_nm}
 \usage{
 system_nm_intern(..., intern = TRUE, ignore.stderr = TRUE, wait = TRUE)
 }
 \arguments{
-\item{...}{Arguments passed to \code{system_nm()}}
+\item{...}{Arguments passed to \code{system_nm()}.}
 
-\item{intern}{Arguments passed to \code{system_nm()}}
+\item{intern}{Arguments passed to \code{system_nm()}.}
 
-\item{ignore.stderr}{Arguments passed to \code{system_nm()}}
+\item{ignore.stderr}{Arguments passed to \code{system_nm()}.}
 
-\item{wait}{Arguments passed to \code{system_nm()}}
+\item{wait}{Arguments passed to \code{system_nm()}.}
 }
 \description{
-Used for diagnostic purposes and a backend script for
+Used for diagnostic purposes.  Will print shell outputs to screen.
 }
+\keyword{internal}

@@ -421,14 +421,16 @@ system_nm <- function(cmd, dir = nm_dir("models"), ...) {
   getOption("system_nm")(cmd, ...)
 }
 
-#' Convenience function for system_nm 
+#' Diagnostic test for system_nm 
 #' 
-#' Used for diagnostic purposes and a backend script for 
+#' Used for diagnostic purposes.  Will print shell outputs to screen.
 #' 
-#' @param ... Arguments passed to `system_nm()`
-#' @param intern Arguments passed to `system_nm()`
-#' @param ignore.stderr Arguments passed to `system_nm()`
-#' @param wait Arguments passed to `system_nm()`
+#' @param ... Arguments passed to `system_nm()`.
+#' @param intern Arguments passed to `system_nm()`.
+#' @param ignore.stderr Arguments passed to `system_nm()`.
+#' @param wait Arguments passed to `system_nm()`.
+#' 
+#' @keywords internal
 #' 
 #' @export
 
