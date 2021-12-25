@@ -15,7 +15,7 @@
 check_installation <- function() {
   if (!requireNamespace("testthat")) stop("install testthat")
   
-  testthat::test_that("NMproject configuration test", {
+  testthat::test_that("Required configuration", {
     
     testthat::expect(psn_check(),
                      "PsN is unavailable.  This is required functionality for
@@ -33,6 +33,9 @@ See ?system_nm for help.")
         }
       }
     }
+  })
+  
+  testthat::test_that("Recommended configuration", {
     
     testthat::expect(nm_tran_test, 
                      "NMTRAN is not configured.  This may be because NONMEM is
