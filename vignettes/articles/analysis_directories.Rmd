@@ -1,0 +1,42 @@
+---
+title: "Analysis Directories"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE}
+library(NMproject)
+```
+
+# Creating Analysis Project 
+
+It is recommended to work in structured.  Create a new analysis project via the RStudio menu items: `FILE` -> `New Project` -> `New Directory` -> `New NMproject`.  The underlying function being used to create this analysis project is `nm_create_analysis_project()`.  See documentation for detailed information including how to modify the structure to suit your preferences.
+
+Follow through the instructions, you'll be asked for a location, a name and whether you want to use `renv` to manage project library directories.  See `renv` documentation for more information.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/nAkcEFz0RLg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+Once created you'll see a clean analysis directory with empty subfolders.
+
+Default the subdirectories for model development (these can be modified - see `nm_create_analysis_project()` documentation):
+
+- SourceData : intended for unmodified source datasets entering the analysis project
+
+- DerivedData : intended for cleaned and processed NONMEM ready datasets
+
+- Scripts : intended for all R scripts
+
+- Models : intended for all NONMEM modelling
+
+- Results : intended as default location for run diagnostics, plots and tables
+
+# Creating new R markdown documents
+
+There is nothing mandating the use of R markdown in NMproject.  You can use scripts.  However R markdown documents produce nice shareable model development logs which provide a readable description of what steps were performed and in what order.
+
+It is advisable to always start from a template.  Templates can be accessed in `File` -> `New File` -> `R markdown...` -> `From Template`.  Two to get started with are `NMproject generic` which we'll use as a generic template for data processing and cleaning and `model development` for our model development notebook.
