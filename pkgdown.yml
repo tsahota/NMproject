@@ -3,7 +3,8 @@ pkgdown: 2.0.1
 pkgdown_sha: ~
 articles:
   NMproject: NMproject.html
-last_built: 2021-12-24T17:35Z
+  config: config.html
+last_built: 2021-12-25T02:09Z
 urls:
   reference: https://tsahota.github.io/NMproject/reference
   article: https://tsahota.github.io/NMproject/articles
