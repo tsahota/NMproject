@@ -39,7 +39,10 @@ stepwise covariate model development."><meta name="google-site-verification" con
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/config.html">Configuration &amp; setup</a>
+      <a href="../articles/analysis_directories.html">Analysis Directories</a>
+    </li>
+    <li>
+      <a href="../articles/config.html">Configuration &amp; Setup Options</a>
     </li>
   </ul></li>
 <li>
@@ -203,8 +206,8 @@ IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))</p></dd>
 <span class="r-in">  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>WT <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">WT</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
 <span class="r-in">  <span class="fu"><a href="write_derived_data.html">write_derived_data</a></span><span class="op">(</span><span class="va">temp_data_file</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> written: </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpjpA8RS/filefab487c4bd6.RDS</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpjpA8RS/filefab487c4bd6.csv</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpxXEtre/filed4d1055b85c.RDS</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpxXEtre/filed4d1055b85c.csv</span>
 <span class="r-in">  </span>
 <span class="r-in"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="data_path.html">data_path</a></span><span class="op">(</span><span class="va">temp_data_file</span><span class="op">)</span></span>
 <span class="r-in"> </span>
@@ -317,8 +320,8 @@ IF(COV.GT.median) PARCOV = ( 1 + THETA(2)*(COV - median))</p></dd>
 <span class="r-in">  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>WT <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">WT</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
 <span class="r-in">  <span class="fu"><a href="write_derived_data.html">write_derived_data</a></span><span class="op">(</span><span class="va">temp_data_file</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> written: </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpjpA8RS/filefab5856f3c7.RDS</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpjpA8RS/filefab5856f3c7.csv</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpxXEtre/filed4d6bbaa864.RDS</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpxXEtre/filed4d6bbaa864.csv</span>
 <span class="r-in">  </span>
 <span class="r-in"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="data_path.html">data_path</a></span><span class="op">(</span><span class="va">temp_data_file</span><span class="op">)</span></span>
 <span class="r-in"> </span>
