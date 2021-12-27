@@ -758,28 +758,30 @@ Often you'll want to know the right level of parallelisation to run your model t
 
 ```{r}
 
-dc <- tibble(cores = c(1, 3, 10, 30)) %>% 
-  mutate(m = m1 %>% ## start with parent m1 again
-           child(run_id = cores) %>%  ## use "cores" as run_id (object is now 3 models)
-           run_in("Models/m1_coretest") %>% ## run them all in m1_coretest
-           cmd("execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}") %>% ## parallelized execute
-           parafile("/opt/NONMEM/nm75/run/mpilinux8.pnm") %>%
-           cores(cores) ## and finally set the cores to the "cores" vector
-         )
+test_cores <- c(1, 3, 10, 30)  ## test these levels of parallelisation
 
-dc$m %>% cmd()
+m1c <- m1 %>% ## start with parent m1 again
+  child(run_id = test_cores) %>%  ## use "cores" as run_id (object is now length 4)
+  run_in("Models/m1_coretest") %>% ## for tidiness run them all in m1_coretest
+  cmd("execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}") %>% ## parallelized execute
+  parafile("/opt/NONMEM/nm75/run/mpilinux8.pnm") %>%
+  cores(test_cores) ## and finally set the cores of each models according to test_cores
+
+m1c %>% cmd()
 
 ```
+
+Each run is identical apart from the level of parallelisation
 
 ```{r eval = FALSE}
 
 ## run them all and wait for them to finish
-dc$m %>% run_nm() %>% wait_finish()
+m1c %>% run_nm() %>% wait_finish()
 
 ## extract job statistics and plot cores vs Rtime or Ttime to get plots of run
 ## time and total time vs number of CPUs
 
-dc$m %>%
+m1c %>%
   job_stats() %>%
   ggplot(aes(x = cores, y = Rtime)) + theme_bw() +
   geom_point()
