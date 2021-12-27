@@ -658,51 +658,55 @@ c(m1, m2)
 
 Both are nm objects with length 1 and 2, respectively.  We used the `c(m1, m2)` above when we wanted to use `nm_render()` on both runs.  We didn't need to write any loops or special code to handle this because nm objects and the functions that operate on them have been designed with parallelisation in mind.  This is because in pharmacometrics we are often dealing with multiple models, perhaps moreso than other statistical modelling disciplines.
 
-The vectorised nature of the nm object is particularly powerful when used in conjuction with `dplyr`.  To demonstrate, lets repeat the the previous initial perturbation exercise, but create 5 runs each with their own perturbed initial estimates.
+The vectorised nature of the nm object allows groups of runs to be created and run. To demonstrate, lets repeat the the previous initial perturbation exercise, but create 5 runs each with their own perturbed initial estimates.
 
-The basic idea is to construct a `tibble` (a `tibble` is a 'tidyverse' expansion of the concept of a `data.frame`), and then use a `dplyr::mutate` statement to construct a column vector of nm objects.  Below the column vector is produced by starting with the parent object `m1` and then supplying a vector rather than a scalar to the `child()` function.  Since the `rep` column is length 5, this will make the nm_object length 5.
+The basic idea is to start with the parent object `m1` and then supplying a vector rather than a scalar to the `child()` function.  Since the `rep` column is length 5, this will make the nm_object length 5.
 
 ```{r eval = FALSE}
-
-dp <- tibble(rep = 1:5)
-dp$m <- m1 %>% ## start with parent - m1 is length 1
-  child(run_id = dp$rep) %>% ## now object is length = length(dp$rep) = 5
+m1rep <- m1 %>% ## start with parent - m1 is length 1
+  child(run_id = 1:5) %>% ## now object is length = length(1:5) = 5
   init_theta(init = rnorm(init, mean = init, sd = 0.3)) %>% ## vectorised operation
-  run_nm() ## run all 5 runs
+  run_in("Models/m1rep") %>% ## for tidiness, run these in their own sub-directory
+  run_nm() ## run all 5 runs 
+```
+
+Notice how the functions `init_theta()`, `run_in()` and `run_nm()` all worked on the nm object vector without needing loops.
+
+```{r eval = TRUE, echo = FALSE}
+
+## same as above without the run_nm()
+m1rep <- m1 %>% ## start with parent - m1 is length 1
+  child(run_id = 1:5) %>% ## now object is length = length(1:5) = 5
+  init_theta(init = rnorm(init, mean = init, sd = 0.3)) %>% ## vectorised operation
+  run_in("Models/m1rep") ## for tidiness, run these in their own sub-directory
 
 ```
 
-View `dp` to see a `tibble` with two columns `rep` and `m`.  View the new `$THETA` statements with `dp$m %>% dollar("THETA")`.
-
-An alternative but equivalent way of writing the above is to use `dplyr::mutate()` statement to create the `m` column.
+To see all the $THETAS we can just run 
 
 ```{r}
-
-dp <- tibble(rep = 1:5) %>%
-  mutate(
-    m = m1 %>% ## start with parent - m1 is length 1
-      child(run_id = rep) %>% ## now object is length = length(dp$rep) = 5
-      init_theta(init = rnorm(init, mean = init, sd = 0.3))
-  )
-
-## the m column of dp is a nm object vector, display all $THETAs like this
-dp$m %>% dollar("THETA")
-
+m1rep %>% dollar("THETA")
 ```
 
+We can also use standard `dplyr` to embed nm objects in data.frames.  This is a useful way to organise groups of runs. E.g. the following would be an alternative way of running the previous lines which isn't that useful here, but will be useful in the following section.
 
 ```{r eval = FALSE}
 
-## run all runs in dp$m with the normal syntax 
-dp$m %>% run_nm()
+d1rep <- tibble(rep = 1:5) %>%
+  mutate(
+    m = m1 %>%
+      child(run_id = rep) %>%
+      init_theta(init = rnorm(init, mean = init, sd = 0.3)) %>% 
+      run_in("Models/m1rep")
+  )
+
+d1rep$m %>% run_nm()
 
 ```
 
-The reset of the code in this vignette will use the `dplyr` layout.
-
-Note that here the functions `init_theta`, `dollar` and `run_nm` were all operating in a vectorised fashion
-
 ## Automating model checking
+
+Following on from the previous section we will now 
 
 Lets expand the earlier subroutine example to build a vector of runs that test multiple different `ADVAN`s and `TRANS` at the same time.
 
