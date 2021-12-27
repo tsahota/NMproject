@@ -22,6 +22,8 @@
 * Added `path` argument to `write_ctl()` so control file can be written to 
   other locations.
 
+* Added package hex sticker.
+
 # NMproject 0.6.7
 
 * Added ability to use NMproject-specific code completion snippets `setup_code_completion()`.

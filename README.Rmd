@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# NMproject
+# NMproject <a href='https://tsahota.github.io/NMproject'><img src='man/figures/logo.svg' align="right" height="139" /></a>
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/NMproject)](https://CRAN.R-project.org/package=NMproject)
