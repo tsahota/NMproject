@@ -154,7 +154,7 @@ See the demo for how/why to create bootstrapped datasets before beginning model 
 
 It's always best to start with NONMEM template too.  Search the code library and bring into staging area of analysis project using the "code_library" RStudio 'Addin':
 
-One of the templates is `Models/ADVAN2.mod`.  Select it, `preview` it and then `stage` by clicking the buttons and then closing the app.
+One of the templates is `Models/ADVAN2.mod`.  Select it, `preview` it and then `import` by clicking the buttons and then closing the app.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/nTixZB9tfgk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
