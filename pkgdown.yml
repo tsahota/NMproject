@@ -5,7 +5,8 @@ articles:
   NMproject: NMproject.html
   a1_config: a1_config.html
   a2_analysis_directories: a2_analysis_directories.html
-last_built: 2021-12-27T23:22Z
+  a3_demo: a3_demo.html
+last_built: 2021-12-30T00:37Z
 urls:
   reference: https://tsahota.github.io/NMproject/reference
   article: https://tsahota.github.io/NMproject/articles
