@@ -1,0 +1,48 @@
+---
+title: "The Demo"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo = FALSE}
+library(NMproject)
+```
+
+The easiest way to familiarise your with NMproject is to run through the demo scripts line by line.  Here's a short YouTube video on running the demo.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/nAkcEFz0RLg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+The video shows that the first step is to create an analysis directory to play in.  If you don't know how to do this, read the [Analysis directories vignette](https://tsahota.github.io/NMproject/articles/a2_analysis_directories.html).
+
+Open your analysis directory RStudio project and run the following to bring in the files:
+
+```{r eval = FALSE}
+library(NMproject)
+setup_nm_demo()
+```
+
+This will population the `Scripts` directory with scripts, and deposit the standard theophylline dataset into the `SourceData` subdirectory.
+
+Default the subdirectories for model development:
+
+- SourceData : intended for unmodified source datasets entering the analysis project
+
+- DerivedData : intended for cleaned and processed NONMEM ready datasets
+
+- Scripts : intended for all R scripts
+
+- Models : intended for all NONMEM modelling
+
+- Results : intended as default location for run diagnostics, plots and tables
+
+After running the above commands, the Scripts directory should contain scripts numbered `s01.....Rmd`, `s02....Rmd` etc.  These are designed to be read, understood and run in order.
+
+You can run these scripts either as notebooks (`Run` -> `Run All`) or as knitted documents via the `Knit` button.  The advantage of notebooks is that code can be re-execute in chunks interactively.  Knitr produces one document but the session is run non-interactively.  For this reason it is best to start off working with interactive notebooks and then once you're happy with the script, to knit it non-interactively.
+
+To create your own markdown documents from scratch, see [here](https://tsahota.github.io/NMproject/articles/a2_analysis_directories.html#creating-new-r-markdown-documents).
+
