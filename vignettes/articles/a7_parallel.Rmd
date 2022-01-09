@@ -1,0 +1,84 @@
+---
+title: "7. Parallel processing"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include=FALSE}
+library(knitr)
+library(NMproject)
+library(dplyr)
+extdata_path <- system.file("extdata", package = "NMproject")
+
+testfilesloc <- file.path(extdata_path, "theopp")
+zip_file <- file.path(extdata_path, "theopp.zip")
+
+files_to_unzip <- unzip(zip_file, list = TRUE)
+
+unzip(zip_file)
+
+dir(all.files = TRUE)
+extracted_folders <- dir("theopp", full.names = TRUE)
+
+for(extracted_folder in extracted_folders){
+  file.copy(extracted_folder, ".", recursive = TRUE)
+}
+
+file.rename("cache", ".cache")
+dir(all.files = TRUE)
+
+copied_folders <- basename(gsub("cache", ".cache", extracted_folders))
+
+unlink("theopp", recursive = TRUE)
+
+orig_dir <- getwd()
+
+```
+
+```{r include=FALSE}
+
+m1 <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m1$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m2 <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m2$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m2WT <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m2WT$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m1orig <- m1
+
+## need to skip overwrite because new user will mean directory gets overwriten
+overwrite_behaviour("skip") 
+
+```
+
+## Running NONMEM with parallel processing
+
+Two fields `parafile` and `cores` when combined with a suitable `cmd` can enable runs to be executed in parallel using PsN.
+
+```{r eval=FALSE}
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv") %>%
+  cmd("execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}") %>%
+  parafile("/opt/NONMEM/nm750/run/mpilinux8.pnm") %>%
+  cores(4) %>%
+  run_nm()
+
+```
+
+```{r include = FALSE}
+m1 <- m1 %>%
+  cmd("execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}") %>%
+  parafile("/opt/NONMEM/nm750/run/mpilinux8.pnm") %>%
+  cores(4)
+```

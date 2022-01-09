@@ -1,0 +1,157 @@
+---
+title: "8. Post-processing & diagnostics"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include=FALSE}
+library(knitr)
+library(NMproject)
+library(dplyr)
+extdata_path <- system.file("extdata", package = "NMproject")
+
+testfilesloc <- file.path(extdata_path, "theopp")
+zip_file <- file.path(extdata_path, "theopp.zip")
+
+files_to_unzip <- unzip(zip_file, list = TRUE)
+
+unzip(zip_file)
+
+dir(all.files = TRUE)
+extracted_folders <- dir("theopp", full.names = TRUE)
+
+for(extracted_folder in extracted_folders){
+  file.copy(extracted_folder, ".", recursive = TRUE)
+}
+
+file.rename("cache", ".cache")
+dir(all.files = TRUE)
+
+copied_folders <- basename(gsub("cache", ".cache", extracted_folders))
+
+unlink("theopp", recursive = TRUE)
+
+orig_dir <- getwd()
+
+```
+
+```{r include=FALSE}
+
+m1 <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m1$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m2 <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m2$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m2WT <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m2WT$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m1orig <- m1
+
+## need to skip overwrite because new user will mean directory gets overwriten
+overwrite_behaviour("skip") 
+
+```
+
+## Diagnostics
+
+Use markdown templates to create a customised set of diagnostics to reuse on multiple models.  In the demo an example is shown in `Scripts/basic_gof.Rmd`, but ideally you'll create your own customised version with everything you need to evaluate your model. To create an R markdown diagnostic template go to `FILE` -> `New File` -> `R markdown` -> `From Template` then select from one of the following:
+
+- `model diagnostic`
+
+- `VPC diagnostic`
+
+- `PPC diagnostic`
+
+- `bootstrap results`
+
+*PLACEHOLDER: short YouTube video of opening, customising, saving and running a template.*
+
+A template will appear in the script window for you to customise.  Instructions are the at the top.  Save the file (e.g. as `Scripts/basic_gof.Rmd`) and run in your log script with:
+
+```{r eval=FALSE}
+m1 <- m1 %>% nm_render("Scripts/basic_gof.Rmd")
+```
+
+It will create the output in `Results` (or `results_dir(m1)`)
+
+Apply a fully editable goodness of fit R markdown template to both runs `m2` and `m3`:
+
+```{r eval=FALSE}
+
+c(m1, m2) %>% nm_render("Scripts/basic_gof.Rmd")
+
+```
+
+Note: `c(m1, m3)` is a vector object of 2 NONMEM runs.  We'll touch more on this later.
+
+Evaluate and compare runs on the fly with the following commands
+
+```{r}
+rr(c(m2, m2WT))
+plot_iter(m2, skip = 10) ## skip first 10 interations 
+covariance_plot(m2)
+```
+
+However these are better placed inside templates to enable rapid and consistent re-use.
+
+## Simulation based diagnostics
+
+Create simulation based diagnostics first by running a simulation using `update_parameters()` and `convert_to_simulation()`.  Then use the `ppc diagnostics` and `vpc diagnostics` R markdown templates to generate customisable VPC and PPC diagnostics reports.
+  
+```{r eval=FALSE}
+m2s <- m2 %>% child(run_id = "m2s") %>%
+              update_parameters(m2) %>%
+              convert_to_simulation(subpr = 50) %>%
+              run_nm()
+
+m2s %>% nm_render("Scripts/basic_vpc.Rmd")
+m2s %>% nm_render("Scripts/basic_ppc.Rmd")
+
+```
+
+## Bootstraps
+
+The package `rsample` can be used to create bootstrap datasets in your initial data manipulation scripts.  The following is an example bootstrap dataset being prepared with stratification on `SEX` and bodyweight `WTC` categorised in two categories  
+
+```{r eval = FALSE}
+
+d <- d %>%
+  mutate(WT_C = cut(WT, breaks = 2, labels = FALSE),
+         STRATA = paste(SEX, WT_C, sep = "_"))
+
+d_id <- d %>% distinct(ID, STRATA)
+
+set.seed(123)
+
+## create large set of resamples (to enable simulation to grow without ruining seed)
+bootsplits <- rsample::bootstraps(d_id, 100, strata = "STRATA")
+
+dir.create("DerivedData", showWarnings = FALSE)
+bootsplits %>% saveRDS("DerivedData/bootsplit_data.csv.RData")
+
+```
+
+In a model development script, the following, performs a 100 sample bootstrap of model `m1`
+
+```{r eval=FALSE}
+
+m1_boot <- m1 %>% make_boot_datasets(samples = 100, overwrite = TRUE)
+
+m1_boot$m %>% run_nm()
+
+## the following bootstrap template will wait for results to complete
+m1_boot$m %>% nm_list_render("Scripts/basic_boot.Rmd")
+
+```
+
+Results can be viewed in `Results/basic_boot.m1.html`.
+
