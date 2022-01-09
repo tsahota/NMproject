@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>a4_code_library • NMproject</title>
+<title>Code_library • NMproject</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -19,7 +19,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><!-- docsearch --><script src="../docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
 <link href="../docsearch.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="a4_code_library">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="Code_library">
 <meta property="og:description" content="NMproject">
 <meta property="og:image" content="https://tsahota.github.io/NMproject/logo.svg">
 <meta name="google-site-verification" content="Asq9eKyn87Krpkza8Y-Y_XiS5V6eNXGAreGhOYcBKd0">
@@ -72,7 +72,7 @@
       <a href="../articles/a3_demo.html">The Demo</a>
     </li>
     <li>
-      <a href="../articles/a4_code_library.html">a4_code_library</a>
+      <a href="../articles/a4_code_library.html">Code_library</a>
     </li>
   </ul>
 </li>
@@ -106,7 +106,7 @@
       </header><script src="a4_code_library_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>a4_code_library</h1>
+      <h1 data-toc-skip>Code_library</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/tsahota/NMproject/blob/HEAD/vignettes/articles/a4_code_library.Rmd" class="external-link"><code>vignettes/articles/a4_code_library.Rmd</code></a></small>
@@ -129,16 +129,29 @@
 <p>The model will be in the staging area: <code>staging/Models/ADVAN2.mod</code>, not <code>Models/ADVAN2.mod</code>. Files in the staging area are not to be modified. It’s similar to the <code>SourceData</code> directory in that sense. This is to ensure that we can make changes to <code>ADVAN2.mod</code> in the code library without breaking old analyses that depended on it.</p>
 </div>
 <div class="section level2">
-<h2 id="maintaining-your-own-code-library">Maintaining your own code library<a class="anchor" aria-label="anchor" href="#maintaining-your-own-code-library"></a>
-</h2>
-<p>The default code library comes with the NMproject package, however what if you want to maintain your own code library for the organisation or for yourself personally. NMproject caters to this.</p>
-<p>See the <a href="https://tsahota.github.io/NMproject/articles/a1_config.html#custom-code-library-location">Configuration &amp; Setup article</a> for information on how to do this.</p>
-</div>
-<div class="section level2">
 <h2 id="contributing-to-the-code-library-contained-in-nmproject">Contributing to the code library contained in NMproject<a class="anchor" aria-label="anchor" href="#contributing-to-the-code-library-contained-in-nmproject"></a>
 </h2>
 <p>Contributing to the public code library benefits all users and is very much appreciated. There code library is embedded within the NMproject at the following path of the source code: <a href="https://github.com/tsahota/NMproject/tree/master/inst/extdata/CodeLibrary" class="external-link">inst/extdata/CodeLibrary</a>. You can browse the code in the link and see what is currently in there.</p>
-<p>Do suggest a change one option is to do a pull request or submit an issue through the GitHub interface. If you don’t have a GitHub account or if you’re not familiar with pull requests, the easiest way would be to be email the proposed files to me, the <a href="mailto:t.sahota0@gmail.com">NMproject maintainer</a> (along with the reasons behind the changes).</p>
+<p>Do suggest a change one option is to do a pull request or submit an issue through the GitHub interface. If you don’t have a GitHub account or if you’re not familiar with pull requests, the easiest way would be to be email the proposed files to the NMproject maintainer <a href="mailto:t.sahota0@gmail.com">t.sahota0@gmail.com</a> (along with the reasons behind the changes).</p>
+</div>
+<div class="section level2">
+<h2 id="making-your-own-code-library">Making your own code library<a class="anchor" aria-label="anchor" href="#making-your-own-code-library"></a>
+</h2>
+<p>The default code library comes with the NMproject package, however what if you want to maintain your own code library for the organisation or for yourself personally. NMproject caters to this.</p>
+<p>See the <a href="https://tsahota.github.io/NMproject/articles/a1_config.html#custom-code-library-location">Configuration &amp; Setup article</a> for information on how to do this.</p>
+<div class="section level3">
+<h3 id="using-an-internal-github-enterpise-service-to-host-the-code-library-advanced-topic">Using an internal GitHub Enterpise service to host the code library (advanced topic)<a class="anchor" aria-label="anchor" href="#using-an-internal-github-enterpise-service-to-host-the-code-library-advanced-topic"></a>
+</h3>
+<p>If your organisation has GitHub Enterpise, you can host the code library as it’s own repository. The advantage is that your users can use GitHub’s the pull request functionality to propose changes to the repository. For large organistations it is recommend to set a <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/managing-a-branch-protection-rule" class="external-link">branch protection rule</a> on the master/main branch to avoid users being able to directly modify the code. It is also recommended to add users all users who may contributue to the code library to the respository.</p>
+<p>Users then</p>
+<ol style="list-style-type: decimal">
+<li><p>clone the respository into a local code library repository (e.g. at <code>~/code_library</code>)</p></li>
+<li><p><a href="https://tsahota.github.io/NMproject/articles/a1_config.html#custom-code-library-location">Set the path</a> in NMproject</p></li>
+</ol>
+<p>To update their local respository, they can perform a <code>git pull</code> from the local library location.</p>
+<p>To contribute to the respository, they can either use pull requests directly from modifying files on the GitHub Enterprise web interface (this is the easiest way that requests very little GitHub/git knowledge or for more advanced users by modifying their local respository in a separate branch and making a pull request from there (this is useful if lots of changes will happen).</p>
+<p>Repository ownsers are then free to define the pull request process that makes sense for the organisation (e.g. two maintainers need to approve for the change to be made)</p>
+</div>
 </div>
   </div>
 
