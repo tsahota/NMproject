@@ -1,5 +1,5 @@
 ---
-title: "a4_code_library"
+title: "Code_library"
 ---
 
 ```{r, include = FALSE}
@@ -29,15 +29,30 @@ One of the templates is `Models/ADVAN2.mod`.  Select it, `preview` it and then `
 
 The model will be in the staging area: `staging/Models/ADVAN2.mod`, not `Models/ADVAN2.mod`.  Files in the staging area are not to be modified. It's similar to the `SourceData` directory in that sense.  This is to ensure that we can make changes to `ADVAN2.mod` in the code library without breaking old analyses that depended on it.
 
-## Maintaining your own code library
+## Contributing to the code library contained in NMproject
+
+Contributing to the public code library benefits all users and is very much appreciated.  There code library is embedded within the NMproject at the following path of the source code: [inst/extdata/CodeLibrary](https://github.com/tsahota/NMproject/tree/master/inst/extdata/CodeLibrary).  You can browse the code in the link and see what is currently in there.
+
+Do suggest a change one option is to do a pull request or submit an issue through the GitHub interface.  If you don't have a GitHub account or if you're not familiar with pull requests, the easiest way would be to be email the proposed files to the NMproject maintainer [t.sahota0@gmail.com](mailto:t.sahota0@gmail.com) (along with the reasons behind the changes).
+
+## Making your own code library
 
 The default code library comes with the NMproject package, however what if you want to maintain your own code library for the organisation or for yourself personally.  NMproject caters to this.
 
 See the [Configuration & Setup article](https://tsahota.github.io/NMproject/articles/a1_config.html#custom-code-library-location) for information on how to do this.
 
-## Contributing to the code library contained in NMproject
+### Using an internal GitHub Enterpise service to host the code library (advanced topic)
 
-Contributing to the public code library benefits all users and is very much appreciated.  There code library is embedded within the NMproject at the following path of the source code: [inst/extdata/CodeLibrary](https://github.com/tsahota/NMproject/tree/master/inst/extdata/CodeLibrary).  You can browse the code in the link and see what is currently in there.
+If your organisation has GitHub Enterpise, you can host the code library as it's own repository.  The advantage is that your users can use GitHub's the pull request functionality to propose changes to the repository.  For large organistations it is recommend to set a [branch protection rule](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/managing-a-branch-protection-rule) on the master/main branch to avoid users being able to directly modify the code.  It is also recommended to add users all users who may contributue to the code library to the respository.
 
-Do suggest a change one option is to do a pull request or submit an issue through the GitHub interface.  If you don't have a GitHub account or if you're not familiar with pull requests, the easiest way would be to be email the proposed files to me, the [NMproject maintainer](mailto:t.sahota0@gmail.com) (along with the reasons behind the changes).
+Users then 
 
+1) clone the respository into a local code library repository (e.g. at `~/code_library`)
+
+2) [Set the path](https://tsahota.github.io/NMproject/articles/a1_config.html#custom-code-library-location) in NMproject
+
+To update their local respository, they can perform a `git pull` from the local library location.
+
+To contribute to the respository, they can either use pull requests directly from modifying files on the GitHub Enterprise web interface (this is the easiest way that requests very little GitHub/git knowledge or for more advanced users by modifying their local respository in a separate branch and making a pull request from there (this is useful if lots of changes will happen).
+
+Repository ownsers are then free to define the pull request process that makes sense for the organisation (e.g. two maintainers need to approve for the change to be made) 
