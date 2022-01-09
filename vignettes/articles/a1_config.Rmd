@@ -1,5 +1,5 @@
 ---
-title: "Configuration & Setup Options"
+title: "1. Configuration & Setup Options"
 ---
 
 ```{r, include = FALSE}

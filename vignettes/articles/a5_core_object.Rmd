@@ -1,5 +1,5 @@
 ---
-title: "The NM object"
+title: "5. The NM object"
 ---
 
 ```{r, include = FALSE}
