@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Demo • NMproject</title>
+<title>a4_code_library • NMproject</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -19,7 +19,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><!-- docsearch --><script src="../docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
 <link href="../docsearch.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="The Demo">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="a4_code_library">
 <meta property="og:description" content="NMproject">
 <meta property="og:image" content="https://tsahota.github.io/NMproject/logo.svg">
 <meta name="google-site-verification" content="Asq9eKyn87Krpkza8Y-Y_XiS5V6eNXGAreGhOYcBKd0">
@@ -103,44 +103,50 @@
 
       
 
-      </header><script src="a3_demo_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="a4_code_library_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>The Demo</h1>
+      <h1 data-toc-skip>a4_code_library</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/tsahota/NMproject/blob/HEAD/vignettes/articles/a3_demo.Rmd" class="external-link"><code>vignettes/articles/a3_demo.Rmd</code></a></small>
-      <div class="hidden name"><code>a3_demo.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/tsahota/NMproject/blob/HEAD/vignettes/articles/a4_code_library.Rmd" class="external-link"><code>vignettes/articles/a4_code_library.Rmd</code></a></small>
+      <div class="hidden name"><code>a4_code_library.Rmd</code></div>
 
     </div>
 
     
     
-<p>The easiest way to familiarise your with NMproject is to run through the demo scripts line by line. Here’s a short YouTube video on running the demo.</p>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/nAkcEFz0RLg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+<p>The first step in NONMEM model development is usually to borrow NONMEM code that a colleague who worked on a similar to use code from one of your previous project and then an adapt it to your problem.</p>
+<p>This is certaintly better than starting from scratch, however consider these problems: the code you borrow where the <code>$EST</code> code is fine for the problem it was originally written for, but works poorly on your problem. Or the file is stylistically different from what you are used to, you may have trouble reading it or the person QCing your work may find it an awkward slow to read/understand. Or little potential issues like prehaps the code didn’t have <code>PRINT=E</code> in the <code>$COV</code> step because it didn’t need and then you are later asked for eigenvalues, requiring you to go back and rerun the final model…</p>
+<p>These are all reasons to replace the borrowing from colleague strategy with a maintained code library - a standardised library/directory of templated code that follows best practices and has been reviewed and used by a wide range of people.</p>
+<div class="section level2">
+<h2 id="using-the-code-library">Using the code library<a class="anchor" aria-label="anchor" href="#using-the-code-library"></a>
+</h2>
+<p>Search the code library and bring into staging area of analysis project using the “code_library” RStudio ‘Addin’:</p>
+<p>One of the templates is <code>Models/ADVAN2.mod</code>. Select it, <code>preview</code> it and then <code>import</code> by clicking the buttons and then closing the app.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/nTixZB9tfgk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
-<p>The video shows that the first step is to create an analysis directory to play in. If you don’t know how to do this, read the <a href="https://tsahota.github.io/NMproject/articles/a2_analysis_directories.html">Analysis directories vignette</a>.</p>
-<p>Open your analysis directory RStudio project and run the following to bring in the files:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tsahota.github.io/NMproject/">NMproject</a></span><span class="op">)</span>
-<span class="fu"><a href="../reference/setup_nm_demo.html">setup_nm_demo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>This will population the <code>Scripts</code> directory with scripts, and deposit the standard theophylline dataset into the <code>SourceData</code> subdirectory.</p>
-<p>Default the subdirectories for model development:</p>
-<ul>
-<li><p>SourceData : intended for unmodified source datasets entering the analysis project</p></li>
-<li><p>DerivedData : intended for cleaned and processed NONMEM ready datasets</p></li>
-<li><p>Scripts : intended for all R scripts</p></li>
-<li><p>Models : intended for all NONMEM modelling</p></li>
-<li><p>Results : intended as default location for run diagnostics, plots and tables</p></li>
-</ul>
-<p>After running the above commands, the Scripts directory should contain scripts numbered <code>s01.....Rmd</code>, <code>s02....Rmd</code> etc. These are designed to be read, understood and run in order.</p>
-<p>You can run these scripts either as notebooks (<code>Run</code> -&gt; <code>Run All</code>) or as knitted documents via the <code>Knit</code> button. The advantage of notebooks is that code can be re-execute in chunks interactively. Knitr produces one document but the session is run non-interactively. For this reason it is best to start off working with interactive notebooks and then once you’re happy with the script, to knit it non-interactively.</p>
-<p>To create your own markdown documents from scratch, see <a href="https://tsahota.github.io/NMproject/articles/a2_analysis_directories.html#creating-new-r-markdown-documents">here</a>.</p>
+<p>The model will be in the staging area: <code>staging/Models/ADVAN2.mod</code>, not <code>Models/ADVAN2.mod</code>. Files in the staging area are not to be modified. It’s similar to the <code>SourceData</code> directory in that sense. This is to ensure that we can make changes to <code>ADVAN2.mod</code> in the code library without breaking old analyses that depended on it.</p>
+</div>
+<div class="section level2">
+<h2 id="maintaining-your-own-code-library">Maintaining your own code library<a class="anchor" aria-label="anchor" href="#maintaining-your-own-code-library"></a>
+</h2>
+<p>The default code library comes with the NMproject package, however what if you want to maintain your own code library for the organisation or for yourself personally. NMproject caters to this.</p>
+<p>See the <a href="https://tsahota.github.io/NMproject/articles/a1_config.html#custom-code-library-location">Configuration &amp; Setup article</a> for information on how to do this.</p>
+</div>
+<div class="section level2">
+<h2 id="contributing-to-the-code-library-contained-in-nmproject">Contributing to the code library contained in NMproject<a class="anchor" aria-label="anchor" href="#contributing-to-the-code-library-contained-in-nmproject"></a>
+</h2>
+<p>Contributing to the public code library benefits all users and is very much appreciated. There code library is embedded within the NMproject at the following path of the source code: <a href="https://github.com/tsahota/NMproject/tree/master/inst/extdata/CodeLibrary" class="external-link">inst/extdata/CodeLibrary</a>. You can browse the code in the link and see what is currently in there.</p>
+<p>Do suggest a change one option is to do a pull request or submit an issue through the GitHub interface. If you don’t have a GitHub account or if you’re not familiar with pull requests, the easiest way would be to be email the proposed files to me, the <a href="mailto:t.sahota0@gmail.com">NMproject maintainer</a> (along with the reasons behind the changes).</p>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 
