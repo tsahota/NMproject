@@ -1,0 +1,43 @@
+---
+title: "a4_code_library"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo = FALSE}
+library(NMproject)
+```
+
+The first step in NONMEM model development is usually to borrow NONMEM code that a colleague who worked on a similar to use code from one of your previous project and then an adapt it to your problem.
+
+This is certaintly better than starting from scratch, however consider these problems: the code you borrow where the `$EST` code is fine for the problem it was originally written for, but works poorly on your problem.  Or the file is stylistically different from what you are used to, you may have trouble reading it or the person QCing your work may find it an awkward slow to read/understand. Or little potential issues like prehaps the code didn't have `PRINT=E` in the `$COV` step because it didn't need and then you are later asked for eigenvalues, requiring you to go back and rerun the final model...
+
+These are all reasons to replace the borrowing from colleague strategy with a maintained code library - a standardised library/directory of templated code that follows best practices and has been reviewed and used by a wide range of people.
+
+## Using the code library
+
+Search the code library and bring into staging area of analysis project using the "code_library" RStudio 'Addin':
+
+One of the templates is `Models/ADVAN2.mod`.  Select it, `preview` it and then `import` by clicking the buttons and then closing the app.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/nTixZB9tfgk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+The model will be in the staging area: `staging/Models/ADVAN2.mod`, not `Models/ADVAN2.mod`.  Files in the staging area are not to be modified. It's similar to the `SourceData` directory in that sense.  This is to ensure that we can make changes to `ADVAN2.mod` in the code library without breaking old analyses that depended on it.
+
+## Maintaining your own code library
+
+The default code library comes with the NMproject package, however what if you want to maintain your own code library for the organisation or for yourself personally.  NMproject caters to this.
+
+See the [Configuration & Setup article](https://tsahota.github.io/NMproject/articles/a1_config.html#custom-code-library-location) for information on how to do this.
+
+## Contributing to the code library contained in NMproject
+
+Contributing to the public code library benefits all users and is very much appreciated.  There code library is embedded within the NMproject at the following path of the source code: [inst/extdata/CodeLibrary](https://github.com/tsahota/NMproject/tree/master/inst/extdata/CodeLibrary).  You can browse the code in the link and see what is currently in there.
+
+Do suggest a change one option is to do a pull request or submit an issue through the GitHub interface.  If you don't have a GitHub account or if you're not familiar with pull requests, the easiest way would be to be email the proposed files to me, the [NMproject maintainer](mailto:t.sahota0@gmail.com) (along with the reasons behind the changes).
+
