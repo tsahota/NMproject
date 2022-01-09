@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Code_library • NMproject</title>
+<title>Code Library • NMproject</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -19,7 +19,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><!-- docsearch --><script src="../docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
 <link href="../docsearch.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="Code_library">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="Code Library">
 <meta property="og:description" content="NMproject">
 <meta property="og:image" content="https://tsahota.github.io/NMproject/logo.svg">
 <meta name="google-site-verification" content="Asq9eKyn87Krpkza8Y-Y_XiS5V6eNXGAreGhOYcBKd0">
@@ -72,7 +72,10 @@
       <a href="../articles/a3_demo.html">The Demo</a>
     </li>
     <li>
-      <a href="../articles/a4_code_library.html">Code_library</a>
+      <a href="../articles/a4_code_library.html">Code Library</a>
+    </li>
+    <li>
+      <a href="../articles/a5_core_object.html">The NM object</a>
     </li>
   </ul>
 </li>
@@ -106,7 +109,7 @@
       </header><script src="a4_code_library_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Code_library</h1>
+      <h1 data-toc-skip>Code Library</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/tsahota/NMproject/blob/HEAD/vignettes/articles/a4_code_library.Rmd" class="external-link"><code>vignettes/articles/a4_code_library.Rmd</code></a></small>
@@ -116,9 +119,13 @@
 
     
     
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>The first step in NONMEM model development is usually to borrow NONMEM code that a colleague who worked on a similar to use code from one of your previous project and then an adapt it to your problem.</p>
 <p>This is certaintly better than starting from scratch, however consider these problems: the code you borrow where the <code>$EST</code> code is fine for the problem it was originally written for, but works poorly on your problem. Or the file is stylistically different from what you are used to, you may have trouble reading it or the person QCing your work may find it an awkward slow to read/understand. Or little potential issues like prehaps the code didn’t have <code>PRINT=E</code> in the <code>$COV</code> step because it didn’t need and then you are later asked for eigenvalues, requiring you to go back and rerun the final model…</p>
 <p>These are all reasons to replace the borrowing from colleague strategy with a maintained code library - a standardised library/directory of templated code that follows best practices and has been reviewed and used by a wide range of people.</p>
+</div>
 <div class="section level2">
 <h2 id="using-the-code-library">Using the code library<a class="anchor" aria-label="anchor" href="#using-the-code-library"></a>
 </h2>
