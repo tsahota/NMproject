@@ -1,0 +1,133 @@
+---
+title: "6. NONMEM execution"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include=FALSE}
+library(knitr)
+library(NMproject)
+library(dplyr)
+extdata_path <- system.file("extdata", package = "NMproject")
+
+testfilesloc <- file.path(extdata_path, "theopp")
+zip_file <- file.path(extdata_path, "theopp.zip")
+
+files_to_unzip <- unzip(zip_file, list = TRUE)
+
+unzip(zip_file)
+
+dir(all.files = TRUE)
+extracted_folders <- dir("theopp", full.names = TRUE)
+
+for(extracted_folder in extracted_folders){
+  file.copy(extracted_folder, ".", recursive = TRUE)
+}
+
+file.rename("cache", ".cache")
+dir(all.files = TRUE)
+
+copied_folders <- basename(gsub("cache", ".cache", extracted_folders))
+
+unlink("theopp", recursive = TRUE)
+
+orig_dir <- getwd()
+
+```
+
+```{r include=FALSE}
+
+m1 <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m1$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m2 <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m2$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m2WT <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m2WT$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m1orig <- m1
+
+## need to skip overwrite because new user will mean directory gets overwriten
+overwrite_behaviour("skip") 
+
+```
+
+## Fast NMTRAN checks
+
+PLACEHOLDER: YouTube video showing "nm_tran" RStudio 'Addin' in action.
+
+In a cluster environment it is especially important to be able to diagnose data and control file issues before sending jobs off to the grid.  Otherwise, you often need to wait minutes for errors that can be spotted immediately.  It's therefore highly recommended to make use of the "nm_tran" RStudio 'Addin'.  This will only run NMTRAN checks to find control file syntax errors and dataset errors.  It will not run NONMEM itself.  To use this 'Addin', highlight the above code and select the "nm_tran" RStudio 'Addin' near the top of the RStudio GUI.
+
+## Executing NONMEM
+
+Executing NONMEM simply requires the `run_nm()` function which will often form the last step of the chain and then run the command.
+
+```{r eval=FALSE}
+
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv") %>%
+  cmd("execute {ctl_name} -dir={run_dir}") %>%
+  fill_input() %>%
+  run_nm()
+
+```
+
+By default the execution will take place asynchronously.
+
+## Shiny run monitor
+
+To view all runs in the workspace and track progress:
+
+```{r eval=FALSE}
+shiny_nm()
+```
+
+PLACEHOLDER: video showing shiny run monitor
+
+## Clean up runs
+
+Directory sizes can become large with running NONMEM.  One strategy is to use the `clean` option in PsN, however if you want to retain temporary files and delete them post-hoc you can use the `ls_tempfiles()` function to list them for deletion.
+
+```{r eval=FALSE}
+
+m1 %>% ls_tempfiles() ## will list all temporary files associate with run m1
+
+## remove all temporary files associated with m1
+m1 %>% ls_tempfiles() %>% unlink()
+
+## Not specifying an argument will list temporary files of all runs
+ls_tempfiles()
+
+```
+
+## Running NONMEM with parallel processing
+
+Two fields `parafile` and `cores` when combined with a suitable `cmd` can enable runs to be executed in parallel using PsN.
+
+```{r eval=FALSE}
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv") %>%
+  cmd("execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}") %>%
+  parafile("/opt/NONMEM/nm750/run/mpilinux8.pnm") %>%
+  cores(4) %>%
+  run_nm()
+
+```
+
+```{r include = FALSE}
+m1 <- m1 %>%
+  cmd("execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}") %>%
+  parafile("/opt/NONMEM/nm750/run/mpilinux8.pnm") %>%
+  cores(4)
+```

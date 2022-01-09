@@ -1,5 +1,5 @@
 ---
-title: "5. The NM object"
+title: "5. The basics of the NM object"
 ---
 
 ```{r, include = FALSE}
@@ -128,7 +128,7 @@ m1 <- new_nm(run_id = "m1",
 
 ## Executing NONMEM
 
-Thus far, we have not executed NONMEM nor saved the control file to the file system.  To execute, we simply pipe into the `run_nm()` function which will often form the last step of the chain and then run the command.
+Thus far, we have not executed NONMEM nor saved the control file to the file system.  To execute, we simply pipe into the `run_nm()` function which will often form the last step of the chain and then run the command.  For more information about executing NONMEM, performing NMTRAN checks and monitoring convergence see the [Execution article](https://tsahota.github.io/NMproject/articles/a6_execution.html).
 
 ```{r eval=FALSE}
 
@@ -142,12 +142,6 @@ m1 <- new_nm(run_id = "m1",
   run_nm()
 
 ```
-
-## Fast NMTRAN checks
-
-PLACEHOLDER: YouTube video showing "nm_tran" RStudio 'Addin' in action.
-
-In a cluster environment it is especially important to be able to diagnose data and control file issues before sending jobs off to the grid.  Otherwise, you often need to wait minutes for errors that can be spotted immediately.  It's therefore highly recommended to make use of the "nm_tran" RStudio 'Addin'.  This will only run NMTRAN checks to find control file syntax errors and dataset errors.  It will not run NONMEM itself.  To use this 'Addin', highlight the above code and select the "nm_tran" RStudio 'Addin' near the top of the RStudio GUI.
 
 ## Manual edits
 
@@ -243,12 +237,4 @@ m1 %>% dollar("THETA")
 ```
 
 It works similarly for \$OMEGA and \$SIGMA with init_omega and init_sigma, respectively.
-
-## Shiny run monitor
-
-To view all runs in the workspace and track progress:
-
-```{r eval=FALSE}
-shiny_nm()
-```
 
