@@ -1,5 +1,5 @@
 ---
-title: "Code_library"
+title: "Code Library"
 ---
 
 ```{r, include = FALSE}
@@ -12,6 +12,8 @@ knitr::opts_chunk$set(
 ```{r setup, echo = FALSE}
 library(NMproject)
 ```
+
+## Introduction
 
 The first step in NONMEM model development is usually to borrow NONMEM code that a colleague who worked on a similar to use code from one of your previous project and then an adapt it to your problem.
 

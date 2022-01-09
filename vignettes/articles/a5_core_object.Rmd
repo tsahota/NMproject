@@ -1,0 +1,254 @@
+---
+title: "The NM object"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include=FALSE}
+library(knitr)
+library(NMproject)
+library(dplyr)
+extdata_path <- system.file("extdata", package = "NMproject")
+
+testfilesloc <- file.path(extdata_path, "theopp")
+zip_file <- file.path(extdata_path, "theopp.zip")
+
+files_to_unzip <- unzip(zip_file, list = TRUE)
+
+unzip(zip_file)
+
+dir(all.files = TRUE)
+extracted_folders <- dir("theopp", full.names = TRUE)
+
+for(extracted_folder in extracted_folders){
+  file.copy(extracted_folder, ".", recursive = TRUE)
+}
+
+file.rename("cache", ".cache")
+dir(all.files = TRUE)
+
+copied_folders <- basename(gsub("cache", ".cache", extracted_folders))
+
+unlink("theopp", recursive = TRUE)
+
+orig_dir <- getwd()
+
+```
+
+## Basics
+
+The core nm object is created via the `new_nm()`.  Subsequent child objects are created via the `child()` function. All interactions with NONMEM occur through the this object.  It contains metadata about the NONMEM run and contain the contents of what will written as the control file (also called model file).
+
+NONMEM control files are only written to the `Models` sub-directory just before running NONMEM via the `run_nm()` command
+
+Let's create our first NONMEM object with `new_nm()`.  This will be a parent run to all other runs and thus requires more set up than other runs. Subsequent child objects created with `child()` will inherits characteristics of the parent.
+
+Three arguments are required to create the parent, a run identifier, `run_id`, a control file it's based on, `based_on`, and a (relative) dataset path `data_path`:
+
+```{r include=FALSE}
+
+ls_code_library("Models/ADVAN2.mod") %>%
+  stage()
+
+```
+
+
+```{r}
+
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv")
+
+m1
+
+```
+
+Display the object by typing `m1` in the console.  Notice that the `run_in` field is point to `Models`.  This can be changed by piping the function of the same name e.g. 
+
+```{r}
+
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv") %>%
+  run_in("NONMEM/base_model")
+
+```
+
+will run all models in a subdirectory of a subdirectory `NONMEM/base_model/` instead (the $DATA (relative) path to the dataset will be automatically be updated to reflect the new location of the control file).  Any field can by modified using a similar heuristic.
+
+Piping is encouraged because it enables you to read the sequence of events in the order that they occur.  Here we just have a single pipe, but you'll see that we will frequently pipe longer chains of commands together.  Each step is applying a transformation to the core nm object.  The chain can be partially run in the console to see what each transformation is doing.  The rest of this document is full of pipes so if you are unfamiliar with pipes, please consult the `magrittr` documentation.
+
+To extract a field (rather than set a field) use the same function without additional arguments:
+
+```{r}
+
+run_in(m1)
+
+```
+
+For now though, we'll remove the last piped command and stay with the default `run_in` location.  
+
+*NOTE:* the field `ctl_name` refers to the name of the control that will be created.  This will only be created when it the model is run with the `run_nm()` function (described later).  For now, the control file contents reside inside the object.  To view these you can use "show model/ctl file" RStudio 'Addin' , or `text(m1)`.
+
+A few automatic edits from the staged control file and a compact representation of these changes can be shown by highlighting the above code and selecting the "nm_diff" RStudio 'Addin' which show what has been changed.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/mYUaKrj0-YE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+Learning how to read to diffs will be an important skill in NMproject you will pick up over time.  Notice how the `$DATA` has been updated to refer to the new location.
+
+The default `cmd()` field of the object is `execute {ctl_name} -dir={run_dir}`.  The braces are referred to as `glue` fields using the `glue` package.  These refer to field names of the object that will be substituted in.  For completeness on the next step we will explicitly set this to ensure our model development is easy to read.
+
+```{r eval=FALSE}
+
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv") %>%
+  cmd("execute {ctl_name} -dir={run_dir}")
+
+```
+
+The final steps to gets the NONMEM model ready is to fill in the remaining blanks in the template.  They are the `$INPUT` and `$THETA`, `$OMEGA`.  For this we will use the `fill_input()` and `init_theta()` and `init_omega()`.
+
+```{r eval=FALSE}
+
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv") %>%
+  cmd("execute {ctl_name} -dir={run_dir}") %>%
+  fill_input() %>%
+  init_theta(init = c(-2, 0.5, 1)) %>%
+  init_sigma(init = c(0.1, 0.1))
+
+```
+
+## Executing NONMEM
+
+Thus far, we have not executed NONMEM nor saved the control file to the file system.  To execute, we simply pipe into the `run_nm()` function which will often form the last step of the chain and then run the command.
+
+```{r eval=FALSE}
+
+m1 <- new_nm(run_id = "m1",
+             based_on = "staging/Models/ADVAN2.mod",
+             data_path = "DerivedData/data.csv") %>%
+  cmd("execute {ctl_name} -dir={run_dir}") %>%
+  fill_input() %>%
+  init_theta(init = c(-2, 0.5, 1)) %>%
+  init_sigma(init = c(0.1, 0.1)) %>%
+  run_nm()
+
+```
+
+## Fast NMTRAN checks
+
+PLACEHOLDER: YouTube video showing "nm_tran" RStudio 'Addin' in action.
+
+In a cluster environment it is especially important to be able to diagnose data and control file issues before sending jobs off to the grid.  Otherwise, you often need to wait minutes for errors that can be spotted immediately.  It's therefore highly recommended to make use of the "nm_tran" RStudio 'Addin'.  This will only run NMTRAN checks to find control file syntax errors and dataset errors.  It will not run NONMEM itself.  To use this 'Addin', highlight the above code and select the "nm_tran" RStudio 'Addin' near the top of the RStudio GUI.
+
+## Manual edits
+
+Often there will not be the functions to do the control file manipulation you want.  Although it is preferable to stick to automatic control file manipulation functions, you can do fully tracked manual edits via the "manual edit" RStudio 'Addins' menu.  Again, just highlight the code, click the 'Addin' and follow the instructions:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/HyCHeAAiwy4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+## Automatic edits
+
+NMproject contains several functions for automatic control file edits.  We have already seen `fill_input()` and `init_theta()` etc.  There are higher order functions which make multiple changes to your control stream, one of which is the `subroutine()`.  If we already have a parent run `m1` using `ADVAN2 TRANS1`, we can create a `child()` run that uses `TRANS2` using:
+
+```{r include=FALSE}
+
+m1 <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m1$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m2 <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m2$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m2WT <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m2WT$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m1orig <- m1
+
+## need to skip overwrite because new user will mean directory gets overwriten
+overwrite_behaviour("skip") 
+
+```
+
+```{r eval=FALSE}
+
+m2 <- m1 %>% child() %>%
+  subroutine(trans = 2) %>% 
+  run_nm()
+
+```
+
+View exactly what's been changed by highlighting the above code in RStudio and clicking the "nm_diff RStudio 'Addin' to see what's been changed before running.  Here, changes will be in the `$SUB`, `$PK` and `$THETA`.
+
+To add a covariate using PsN coding conventions use `add_cov()`:
+
+```{r eval=FALSE}
+
+m2WT <- m2 %>% child(run_id = "m2WT") %>%
+  add_cov(param = "CL", cov = "WT", state = "linear") %>%
+  run_nm()
+
+```
+
+## Initial estimates
+
+We saw a little at how the functions `init_theta`, `init_omega` and `init_sigma` can be used to set initial estimates earlier.  The functions actually allow manipulation of initial estimates, parameter bounds, names, units, etc.
+
+```{r}
+
+## display R representaton of $THETA
+it <- m1 %>% init_theta() %>% dplyr::first()
+it
+
+```
+
+Note that the use of `dplyr::first()` is because `init_theta` returns a list of a `data.frame` and since we want to manipulate `io`, it's easier if it's a `data.frame` or `tibble` as then we can use R extensive `data.frame` manipulation functions. We use the same init_theta with the modified `tibble` to update the nm object like so:
+
+```{r}
+## this is the slower method - only for illustration purposes
+it$init <- c(0, 1, 2)
+m1 <- m1 %>% init_theta(it) 
+m1 %>% dollar("THETA")
+
+```
+
+This is quite inconvenient though as it requires 3 lines of R code.  Knowing the columns of the 'tibble' though, we can manipulate values directly like so:
+
+```{r}
+
+## Reset in one line to what we set it to earlier
+m1 <- m1 %>% init_theta(init = c(-2, 0.5, 1)) 
+m1 %>% dollar("THETA")
+
+## This however requires knowing the order of parameters
+## here we supply a named vector in a different order
+m1 <- m1 %>% init_theta(init = c(KA = -2, V = 1))
+m1 %>% dollar("THETA")
+
+## can also manipulate other aspects (like the FIX column) similarly
+m1 <- m1 %>% init_theta(init = c(KA = -2, V = 1),
+                        FIX = c(KA = TRUE))
+m1 %>% dollar("THETA")
+
+```
+
+It works similarly for \$OMEGA and \$SIGMA with init_omega and init_sigma, respectively.
+
+## Shiny run monitor
+
+To view all runs in the workspace and track progress:
+
+```{r eval=FALSE}
+shiny_nm()
+```
+
