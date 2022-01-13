@@ -164,6 +164,19 @@ m1c %>% run_nm() %>% wait_finish()
 m1c %>%
   job_stats() %>%
   ggplot(aes(x = cores, y = Rtime)) + theme_bw() +
-  geom_point()
+  geom_point() +
+  geom_line() +
+  expand_limits(y = 0)
+  
+```
+
+```{r echo = FALSE}
+
+dplyr::tibble(cores = test_cores,
+              Rtime = c(20.3, 8.1, 3.9, 3.1)) %>%
+  ggplot2::ggplot(ggplot2::aes(x = cores, y = Rtime)) + ggplot2::theme_bw() +
+  ggplot2::geom_point() +
+  ggplot2::geom_line() + 
+  ggplot2::expand_limits(y = 0)
   
 ```
