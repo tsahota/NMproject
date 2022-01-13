@@ -9,9 +9,8 @@ articles:
   a4_code_library: a4_code_library.html
   a5_core_object: a5_core_object.html
   a6_execution: a6_execution.html
-  a7_parallel: a7_parallel.html
-  a8_post_processing: a8_post_processing.html
-last_built: 2022-01-10T18:04Z
+  a7_post_processing: a7_post_processing.html
+last_built: 2022-01-13T16:54Z
 urls:
   reference: https://tsahota.github.io/NMproject/reference
   article: https://tsahota.github.io/NMproject/articles

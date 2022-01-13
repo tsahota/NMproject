@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>6. NONMEM execution • NMproject</title>
+<title>NONMEM execution • NMproject</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -19,7 +19,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><!-- docsearch --><script src="../docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
 <link href="../docsearch.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="6. NONMEM execution">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="NONMEM execution">
 <meta property="og:description" content="NMproject">
 <meta property="og:image" content="https://tsahota.github.io/NMproject/logo.svg">
 <meta name="google-site-verification" content="Asq9eKyn87Krpkza8Y-Y_XiS5V6eNXGAreGhOYcBKd0">
@@ -63,28 +63,25 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/a1_config.html">1. Configuration &amp; Setup Options</a>
+      <a href="../articles/a1_config.html">Configuration &amp; Setup Options</a>
     </li>
     <li>
-      <a href="../articles/a2_analysis_directories.html">2. Analysis Directories</a>
+      <a href="../articles/a2_analysis_directories.html">Analysis Directories</a>
     </li>
     <li>
-      <a href="../articles/a3_demo.html">3. The Demo</a>
+      <a href="../articles/a3_demo.html">The Demo</a>
     </li>
     <li>
-      <a href="../articles/a4_code_library.html">4. Code Library</a>
+      <a href="../articles/a4_code_library.html">Code Library</a>
     </li>
     <li>
-      <a href="../articles/a5_core_object.html">5. The basics of the NM object</a>
+      <a href="../articles/a5_core_object.html">The basics of the NM object</a>
     </li>
     <li>
-      <a href="../articles/a6_execution.html">6. NONMEM execution</a>
+      <a href="../articles/a6_execution.html">NONMEM execution</a>
     </li>
     <li>
-      <a href="../articles/a7_parallel.html">7. Parallel processing</a>
-    </li>
-    <li>
-      <a href="../articles/a8_post_processing.html">8. Post-processing &amp; diagnostics</a>
+      <a href="../articles/a7_post_processing.html">Post-processing &amp; diagnostics</a>
     </li>
   </ul>
 </li>
@@ -118,7 +115,7 @@
       </header><script src="a6_execution_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>6. NONMEM execution</h1>
+      <h1 data-toc-skip>NONMEM execution</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/tsahota/NMproject/blob/HEAD/vignettes/articles/a6_execution.Rmd" class="external-link"><code>vignettes/articles/a6_execution.Rmd</code></a></small>
@@ -182,6 +179,44 @@
   <span class="fu"><a href="../reference/nm_getsetters_execution.html">parafile</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm750/run/mpilinux8.pnm"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/nm_getsetters_execution.html">cores</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="parallel-efficiency-test">Parallel efficiency test<a class="anchor" aria-label="anchor" href="#parallel-efficiency-test"></a>
+</h2>
+<p>Often you’ll want to know the right level of parallelisation to run your model to maximise speed without wasting too many resources. The following creates multiple runes with different levels of parallelisation. We’ll just test it across 1, 3, 10, and 30 cores, but this can be any vector.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="va">test_cores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">10</span>, <span class="fl">30</span><span class="op">)</span>  <span class="co">## test these levels of parallelisation</span>
+
+<span class="va">m1c</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co">## start with parent m1 again</span>
+  <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="va">test_cores</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="co">## use "cores" as run_id (object is now length 4)</span>
+  <span class="fu"><a href="../reference/nm_getsetters.html">run_in</a></span><span class="op">(</span><span class="st">"Models/m1_coretest"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co">## for tidiness run them all in m1_coretest</span>
+  <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co">## parallelized execute</span>
+  <span class="fu"><a href="../reference/nm_getsetters_execution.html">parafile</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm75/run/mpilinux8.pnm"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/nm_getsetters_execution.html">cores</a></span><span class="op">(</span><span class="va">test_cores</span><span class="op">)</span> <span class="co">## and finally set the cores of each models according to test_cores</span>
+
+<span class="va">m1c</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; [1] "execute run1.mod -parafile=/opt/NONMEM/nm75/run/mpilinux8.pnm -dir=1 -nodes=1"   </span>
+<span class="co">#&gt; [2] "execute run3.mod -parafile=/opt/NONMEM/nm75/run/mpilinux8.pnm -dir=3 -nodes=3"   </span>
+<span class="co">#&gt; [3] "execute run10.mod -parafile=/opt/NONMEM/nm75/run/mpilinux8.pnm -dir=10 -nodes=10"</span>
+<span class="co">#&gt; [4] "execute run30.mod -parafile=/opt/NONMEM/nm75/run/mpilinux8.pnm -dir=30 -nodes=30"</span></code></pre></div>
+<p>Each run is identical apart from the level of parallelisation</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="co">## run them all and wait for them to finish</span>
+<span class="va">m1c</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/wait_finish.html">wait_finish</a></span><span class="op">(</span><span class="op">)</span>
+
+<span class="co">## extract job statistics and plot cores vs Rtime or Ttime to get plots of run</span>
+<span class="co">## time and total time vs number of CPUs</span>
+
+<span class="va">m1c</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/job_stats.html">job_stats</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
+  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">cores</span>, y <span class="op">=</span> <span class="va">Rtime</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">expand_limits</span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
+  </code></pre></div>
+<p><img src="a6_execution_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
   </div>
 
