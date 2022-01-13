@@ -1,5 +1,5 @@
 ---
-title: "2. Analysis Directories"
+title: "Analysis Directories"
 ---
 
 ```{r, include = FALSE}

@@ -1,5 +1,5 @@
 ---
-title: "3. The Demo"
+title: "The Demo"
 ---
 
 ```{r, include = FALSE}

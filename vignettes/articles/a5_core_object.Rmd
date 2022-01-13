@@ -1,5 +1,5 @@
 ---
-title: "5. The basics of the NM object"
+title: "The basics of the NM object"
 ---
 
 ```{r, include = FALSE}

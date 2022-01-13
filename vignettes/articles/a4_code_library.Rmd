@@ -1,5 +1,5 @@
 ---
-title: "4. Code Library"
+title: "Code Library"
 ---
 
 ```{r, include = FALSE}

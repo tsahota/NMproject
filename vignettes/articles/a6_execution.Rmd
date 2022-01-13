@@ -1,5 +1,5 @@
 ---
-title: "6. NONMEM execution"
+title: "NONMEM execution"
 ---
 
 ```{r, include = FALSE}
@@ -130,4 +130,40 @@ m1 <- m1 %>%
   cmd("execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}") %>%
   parafile("/opt/NONMEM/nm750/run/mpilinux8.pnm") %>%
   cores(4)
+```
+
+## Parallel efficiency test
+
+Often you'll want to know the right level of parallelisation to run your model to maximise speed without wasting too many resources.  The following creates multiple runes with different levels of parallelisation. We'll just test it across 1, 3, 10, and 30 cores, but this can be any vector.
+
+```{r}
+
+test_cores <- c(1, 3, 10, 30)  ## test these levels of parallelisation
+
+m1c <- m1 %>% ## start with parent m1 again
+  child(run_id = test_cores) %>%  ## use "cores" as run_id (object is now length 4)
+  run_in("Models/m1_coretest") %>% ## for tidiness run them all in m1_coretest
+  cmd("execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}") %>% ## parallelized execute
+  parafile("/opt/NONMEM/nm75/run/mpilinux8.pnm") %>%
+  cores(test_cores) ## and finally set the cores of each models according to test_cores
+
+m1c %>% cmd()
+
+```
+
+Each run is identical apart from the level of parallelisation
+
+```{r eval = FALSE}
+
+## run them all and wait for them to finish
+m1c %>% run_nm() %>% wait_finish()
+
+## extract job statistics and plot cores vs Rtime or Ttime to get plots of run
+## time and total time vs number of CPUs
+
+m1c %>%
+  job_stats() %>%
+  ggplot(aes(x = cores, y = Rtime)) + theme_bw() +
+  geom_point()
+  
 ```
