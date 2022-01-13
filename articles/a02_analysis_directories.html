@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Demo • NMproject</title>
+<title>Analysis Directories • NMproject</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -19,7 +19,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><!-- docsearch --><script src="../docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
 <link href="../docsearch.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="The Demo">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="Analysis Directories">
 <meta property="og:description" content="NMproject">
 <meta property="og:image" content="https://tsahota.github.io/NMproject/logo.svg">
 <meta name="google-site-verification" content="Asq9eKyn87Krpkza8Y-Y_XiS5V6eNXGAreGhOYcBKd0">
@@ -63,25 +63,34 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/a1_config.html">Configuration &amp; Setup Options</a>
+      <a href="../articles/a01_config.html">Configuration &amp; Setup Options</a>
     </li>
     <li>
-      <a href="../articles/a2_analysis_directories.html">Analysis Directories</a>
+      <a href="../articles/a02_analysis_directories.html">Analysis Directories</a>
     </li>
     <li>
-      <a href="../articles/a3_demo.html">The Demo</a>
+      <a href="../articles/a03_demo.html">The Demo</a>
     </li>
     <li>
-      <a href="../articles/a4_code_library.html">Code Library</a>
+      <a href="../articles/a04_code_library.html">Code Library</a>
     </li>
     <li>
-      <a href="../articles/a5_core_object.html">The basics of the NM object</a>
+      <a href="../articles/a05_core_object.html">The basics of the NM object</a>
     </li>
     <li>
-      <a href="../articles/a6_execution.html">NONMEM execution</a>
+      <a href="../articles/a06_execution.html">NONMEM execution</a>
     </li>
     <li>
-      <a href="../articles/a7_post_processing.html">Post-processing &amp; diagnostics</a>
+      <a href="../articles/a07_post_processing.html">Post-processing &amp; diagnostics</a>
+    </li>
+    <li>
+      <a href="../articles/a08_covariate_modelling.html">Covariate Modelling</a>
+    </li>
+    <li>
+      <a href="../articles/a09_advanced_topics.html">Advanced Topics</a>
+    </li>
+    <li>
+      <a href="../articles/a10_FAQ.html">FAQ</a>
     </li>
   </ul>
 </li>
@@ -112,29 +121,28 @@
 
       
 
-      </header><script src="a3_demo_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="a02_analysis_directories_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>The Demo</h1>
+      <h1 data-toc-skip>Analysis Directories</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/tsahota/NMproject/blob/HEAD/vignettes/articles/a3_demo.Rmd" class="external-link"><code>vignettes/articles/a3_demo.Rmd</code></a></small>
-      <div class="hidden name"><code>a3_demo.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/tsahota/NMproject/blob/HEAD/vignettes/articles/a02_analysis_directories.Rmd" class="external-link"><code>vignettes/articles/a02_analysis_directories.Rmd</code></a></small>
+      <div class="hidden name"><code>a02_analysis_directories.Rmd</code></div>
 
     </div>
 
     
     
-<p>The easiest way to familiarise your with NMproject is to run through the demo scripts line by line. Here’s a short YouTube video on running the demo.</p>
+<div class="section level1">
+<h1 id="creating-analysis-project">Creating Analysis Project<a class="anchor" aria-label="anchor" href="#creating-analysis-project"></a>
+</h1>
+<p>It is recommended to work in structured. Create a new analysis project via the RStudio menu items: <code>FILE</code> -&gt; <code>New Project</code> -&gt; <code>New Directory</code> -&gt; <code>New NMproject</code>. The underlying function being used to create this analysis project is <code><a href="../reference/nm_create_analysis_project.html">nm_create_analysis_project()</a></code>. See documentation for detailed information including how to modify the structure to suit your preferences.</p>
+<p>Follow through the instructions, you’ll be asked for a location, a name and whether you want to use <code>renv</code> to manage project library directories. See <code>renv</code> documentation for more information.</p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/nAkcEFz0RLg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
-<p>The video shows that the first step is to create an analysis directory to play in. If you don’t know how to do this, read the <a href="https://tsahota.github.io/NMproject/articles/a2_analysis_directories.html">Analysis directories vignette</a>.</p>
-<p>Open your analysis directory RStudio project and run the following to bring in the files:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tsahota.github.io/NMproject/">NMproject</a></span><span class="op">)</span>
-<span class="fu"><a href="../reference/setup_nm_demo.html">setup_nm_demo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>This will population the <code>Scripts</code> directory with scripts, and deposit the standard theophylline dataset into the <code>SourceData</code> subdirectory.</p>
-<p>Default the subdirectories for model development:</p>
+<p>Once created you’ll see a clean analysis directory with empty subfolders.</p>
+<p>Default the subdirectories for model development (these can be modified - see <code><a href="../reference/nm_create_analysis_project.html">nm_create_analysis_project()</a></code> documentation):</p>
 <ul>
 <li><p>SourceData : intended for unmodified source datasets entering the analysis project</p></li>
 <li><p>DerivedData : intended for cleaned and processed NONMEM ready datasets</p></li>
@@ -142,14 +150,20 @@
 <li><p>Models : intended for all NONMEM modelling</p></li>
 <li><p>Results : intended as default location for run diagnostics, plots and tables</p></li>
 </ul>
-<p>After running the above commands, the Scripts directory should contain scripts numbered <code>s01.....Rmd</code>, <code>s02....Rmd</code> etc. These are designed to be read, understood and run in order.</p>
-<p>You can run these scripts either as notebooks (<code>Run</code> -&gt; <code>Run All</code>) or as knitted documents via the <code>Knit</code> button. The advantage of notebooks is that code can be re-execute in chunks interactively. Knitr produces one document but the session is run non-interactively. For this reason it is best to start off working with interactive notebooks and then once you’re happy with the script, to knit it non-interactively.</p>
-<p>To create your own markdown documents from scratch, see <a href="https://tsahota.github.io/NMproject/articles/a2_analysis_directories.html#creating-new-r-markdown-documents">here</a>.</p>
+</div>
+<div class="section level1">
+<h1 id="creating-new-r-markdown-documents">Creating new R markdown documents<a class="anchor" aria-label="anchor" href="#creating-new-r-markdown-documents"></a>
+</h1>
+<p>There is nothing mandating the use of R markdown in NMproject. You can use scripts. However R markdown documents produce nice shareable model development logs which provide a readable description of what steps were performed and in what order.</p>
+<p>It is advisable to always start from a template. Templates can be accessed in <code>File</code> -&gt; <code>New File</code> -&gt; <code>R markdown...</code> -&gt; <code>From Template</code>. Two to get started with are <code>NMproject generic</code> which we’ll use as a generic template for data processing and cleaning and <code>model development</code> for our model development notebook.</p>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 

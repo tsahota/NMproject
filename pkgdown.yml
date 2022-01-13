@@ -3,14 +3,17 @@ pkgdown: 2.0.1
 pkgdown_sha: ~
 articles:
   NMproject: NMproject.html
-  a1_config: a1_config.html
-  a2_analysis_directories: a2_analysis_directories.html
-  a3_demo: a3_demo.html
-  a4_code_library: a4_code_library.html
-  a5_core_object: a5_core_object.html
-  a6_execution: a6_execution.html
-  a7_post_processing: a7_post_processing.html
-last_built: 2022-01-13T16:54Z
+  a01_config: a01_config.html
+  a02_analysis_directories: a02_analysis_directories.html
+  a03_demo: a03_demo.html
+  a04_code_library: a04_code_library.html
+  a05_core_object: a05_core_object.html
+  a06_execution: a06_execution.html
+  a07_post_processing: a07_post_processing.html
+  a08_covariate_modelling: a08_covariate_modelling.html
+  a09_advanced_topics: a09_advanced_topics.html
+  a10_FAQ: a10_FAQ.html
+last_built: 2022-01-13T17:57Z
 urls:
   reference: https://tsahota.github.io/NMproject/reference
   article: https://tsahota.github.io/NMproject/articles
