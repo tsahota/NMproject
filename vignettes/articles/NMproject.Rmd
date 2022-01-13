@@ -593,7 +593,7 @@ dsm2 <- m1_f1 %>% covariate_step_tibble(
 
 ```
 
-continue for as many steps as needed
+continue for as many steps as needed.
 
 ```{r include=FALSE}
 m1 <- dir(".cache", full.names = TRUE) %>%

@@ -180,3 +180,10 @@ dplyr::tibble(cores = test_cores,
   ggplot2::expand_limits(y = 0)
   
 ```
+
+```{r include=FALSE}
+## clean up 
+getwd()
+unlink(copied_folders, recursive = TRUE)
+dir(all.files = TRUE)
+```

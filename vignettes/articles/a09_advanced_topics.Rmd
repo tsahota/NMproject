@@ -1,0 +1,222 @@
+---
+title: "Advanced Topics"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include=FALSE}
+library(knitr)
+library(NMproject)
+library(dplyr)
+extdata_path <- system.file("extdata", package = "NMproject")
+
+testfilesloc <- file.path(extdata_path, "theopp")
+zip_file <- file.path(extdata_path, "theopp.zip")
+
+files_to_unzip <- unzip(zip_file, list = TRUE)
+
+unzip(zip_file)
+
+dir(all.files = TRUE)
+extracted_folders <- dir("theopp", full.names = TRUE)
+
+for(extracted_folder in extracted_folders){
+  file.copy(extracted_folder, ".", recursive = TRUE)
+}
+
+file.rename("cache", ".cache")
+dir(all.files = TRUE)
+
+copied_folders <- basename(gsub("cache", ".cache", extracted_folders))
+
+unlink("theopp", recursive = TRUE)
+
+orig_dir <- getwd()
+
+```
+
+```{r include=FALSE}
+
+m1 <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m1$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m2 <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m2$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m2WT <- dir(".cache", full.names = TRUE) %>%
+  subset(grepl("m2WT$",.)) %>%
+  {as_nm_list(readRDS(.)$object)}
+
+m1orig <- m1
+
+## need to skip overwrite because new user will mean directory gets overwriten
+overwrite_behaviour("skip") 
+
+```
+
+## Vectorisation
+
+The basic nm object is fully vectorised.  To see this compare the following two outputs
+
+```{r}
+
+m1
+c(m1, m2)
+
+```
+
+Both are nm objects with length 1 and 2, respectively.  We used the `c(m1, m2)` above when we wanted to use `nm_render()` on both runs.  We didn't need to write any loops or special code to handle this because nm objects and the functions that operate on them have been designed with parallelisation in mind.  This is because in pharmacometrics we are often dealing with multiple models, perhaps moreso than other statistical modelling disciplines.
+
+The vectorised nature of the nm object allows groups of runs to be created and run. To demonstrate, lets repeat the the previous initial perturbation exercise, but create 5 runs each with their own perturbed initial estimates.
+
+The basic idea is to start with the parent object `m1` and then supplying a vector rather than a scalar to the `child()` function.  Since the `rep` column is length 5, this will make the nm_object length 5.
+
+```{r eval = FALSE}
+m1rep <- m1 %>% ## start with parent - m1 is length 1
+  child(run_id = 1:5) %>% ## now object is length = length(1:5) = 5
+  init_theta(init = rnorm(init, mean = init, sd = 0.3)) %>% ## vectorised operation
+  run_in("Models/m1rep") %>% ## for tidiness, run these in their own sub-directory
+  run_nm() ## run all 5 runs 
+```
+
+Notice how the functions `init_theta()`, `run_in()` and `run_nm()` all worked on the nm object vector without needing loops.
+
+```{r eval = TRUE, echo = FALSE}
+
+## same as above without the run_nm()
+m1rep <- m1 %>% ## start with parent - m1 is length 1
+  child(run_id = 1:5) %>% ## now object is length = length(1:5) = 5
+  init_theta(init = rnorm(init, mean = init, sd = 0.3)) %>% ## vectorised operation
+  run_in("Models/m1rep") ## for tidiness, run these in their own sub-directory
+
+```
+
+To see all the $THETAS we can just run 
+
+```{r}
+m1rep %>% dollar("THETA")
+```
+
+We can also use standard `dplyr` to embed nm objects in data.frames.  This is a useful way to organise groups of runs. E.g. the following would be an alternative way of running the previous lines which isn't that useful here, but will be useful in the following section.
+
+```{r eval = FALSE}
+
+d1rep <- tibble(rep = 1:5) %>%
+  mutate(
+    m = m1 %>%
+      child(run_id = rep) %>%
+      init_theta(init = rnorm(init, mean = init, sd = 0.3)) %>% 
+      run_in("Models/m1rep")
+  )
+
+d1rep$m %>% run_nm()
+
+```
+
+The parallel efficiency test in the [NONMEM Execution Article](https://tsahota.github.io/NMproject/articles/a6_execution.html#parallel-efficiency-test) is also an example of vectorized nm object use.
+
+## Automating model checking
+
+Following on from the previous section we will now 
+
+Lets expand the earlier subroutine example to build a vector of runs that test multiple different `ADVAN`s and `TRANS` at the same time.
+
+We'll use a similar structure to the previous section using `.available_advans` to list all available ADVAN/TRANS options, `filter` to isolate specific ADVAN/TRANS options, and `mutate` and `subroutine()` to perform the control file manipulation function.
+
+Then we'll display all the `$PK` subroutines to view the changes.
+
+
+```{r}
+
+.available_advans ## display available advans
+
+dt <- .available_advans %>%
+  ## filter only for oral dosing advans
+  filter(oral %in% TRUE) %>%
+  ## mutate state create a column vector m of nm objects
+  ## first step is to create children runs from the parent object m1
+  ## this is done by supplying a vector of run_ids to the child() function
+  mutate(m = m1 %>% ## start with parent m1 again
+           child(run_id = label) %>% ## create multiple children using label column
+           subroutine(advan = advan, trans = trans) ## set subroutine using advan and trans columns
+         )
+
+## view the $PK blocks of each
+dt$m %>% dollar("PK")
+
+```
+
+Let's run these, summarise the results, and generate goodness of fit diagnostics for the ones that gave somewhat reasonable outputs
+
+```{r eval = FALSE}
+
+## run them all and wait for them to finish
+dt$m %>% run_nm() %>% wait_finish()
+
+## summarise all runs in a table
+summary_wide(dt$m)
+
+## plot goodness of fits for all runs with ofv < 120
+dt$m %>% 
+  subset(ofv(.) < 120) %>%  ## subsetting is a powerful way of isolating functions to particular model objects
+  nm_render("Scripts/basic_gof.Rmd")
+
+```
+
+## Simulation re-estimation
+
+There will soon a be a simple wrapper for the code below, as with the bootstrap and step wise covariate functionality above, but for now the code below is a good example of how the flexibility of the vectorised object can be used to create complex workflows whilst still providing granular control of runs.
+
+It's good advice to start with 1 or 2 replicates and scale up only when you've confirmed your code is working (here we're just using 3 for demo purposes).  You will not waste time because `run_nm()` will skip over runs that have already completed. 
+
+```{r eval=FALSE}
+
+n_sims <- 3  ## start small, scale up later
+
+dsr <- tibble(sim = 1:n_sims) %>%
+  mutate(
+    msim = m1 %>%              ## start with single parent run, m1, an nm object of length 1
+      update_parameters() %>%  ## update inits to finals, here nm object is still length 1
+      child(run_id = sim, parent = m1) %>%  ## at this point it becomes length n_sims
+      run_in("Models/m1_simest") %>% ## this applies the run_in modification to all n_sims runs
+      convert_to_simulation(subpr = 1, seed = sim) ## converts all to simulation
+  )
+
+## run, wait, read results and then write to run_dir paths of simulations
+dsr$msim %>% run_nm() %>% 
+  wait_finish() %>%
+  output_table(only_append = "DV_OUT") %>%
+  write_derived_data(file.path(run_dir_path(dsr$msim), "simdata.csv"))
+
+## Now create mest column
+dsr <- dsr %>%
+  mutate(
+    mest = m1 %>% child(run_id = sim) %>%  ## estimations derived from m1
+      run_in("Models/m1_simest/est") %>%   ## run in a new subdirectory
+      data_path(file.path(run_dir_path(msim), "simdata.csv")) %>%    ## set new data_paths
+      ## refill $INPUT. Rename DV to be DV_OUT column. Run nm_diff() command below to see
+      ## what has changed
+      fill_input(rename = list("DV_OBS" = "DV", "DV" = "DV_OUT"))
+  )
+
+# nm_diff(dsr$mest[1])
+
+dsr$mest %>% run_nm() %>% 
+  wait_finish() %>%
+  summary_wide(parameters = "all")
+
+```
+
+```{r include=FALSE}
+## clean up 
+getwd()
+unlink(copied_folders, recursive = TRUE)
+dir(all.files = TRUE)
+```

@@ -238,3 +238,51 @@ m1 %>% dollar("THETA")
 
 It works similarly for \$OMEGA and \$SIGMA with init_omega and init_sigma, respectively.
 
+## Perturbing initial parameters
+
+To modify initial estimates, we'll use the `mutate` like behaviour of `init_*` functions.  We will modify the `init` by referencing itself.  We'll modified all our fixed effects (log transformed) by 30%
+
+```{r}
+
+m1 <- m1 %>% init_theta(init = rnorm(init, mean = init, sd = 0.3))
+m1 %>% dollar("THETA")
+
+m1 <- m1 %>% init_omega(init = runif(init, min = init/2, max = init*2))
+m1 %>% dollar("OMEGA")
+
+```
+
+
+## Working with \$OMEGA/\$SIGMA BLOCKS
+
+We can include and remove \$OMEGA blocks with the functions `block` and `unblock` (to create $OMEGA BLOCKS for correlated random effects).
+
+```{r}
+
+io <- m1 %>% init_omega()  ## note we dont need dplyr::first as block()/unblock() also work on lists of tibbles.
+io 
+
+io <- io %>% block(c(2,3))  ## make block out ETA 2 and 3
+
+## put modified io wit
+m1 <- m1 %>% init_omega(io)
+m1 %>% dollar("OMEGA")
+
+```
+
+```{r}
+
+## for demo purposes we'll reverse the process with unblock()
+io <- m1 %>% init_omega()
+io <- io %>% unblock(c(2,3))
+m1 <- m1 %>% init_omega(io)
+m1 %>% dollar("OMEGA")
+
+```
+
+```{r include=FALSE}
+## clean up 
+getwd()
+unlink(copied_folders, recursive = TRUE)
+dir(all.files = TRUE)
+```

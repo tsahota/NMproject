@@ -1,0 +1,172 @@
+---
+title: "FAQ"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo = FALSE}
+library(NMproject)
+```
+
+### + I have a pre-prepared model and dataset. What's the fastest way to make an nm object and make use of the objects functionality for scripting, post processing etc.
+
+Ensure the dataset and model file are somewhere in the project.
+
+```{r eval = FALSE}
+
+m1 <- new_nm(run_id = "m1", 
+             based_on = "path/to/control/file") %>%
+  run_nm()
+
+```
+
+### + After having closed my session how do I recreate my workspace and pick up where I left off
+
+Just re-run all the code again.  NONMEM runs that have already been run will not be run again and will instead be retrieved from the cache.
+
+### + In my organisation we have a custom "execute" command/wrapper we can't use the default `execute {ctl_name} -dir={run_dir}`, how can we change this?
+
+Two options:
+
+1) set `cmd` once for your parent object and then make all other objects child objects from the parent.
+
+2) set the default `cmd` field with `nm_default_fields()` for the analysis project for your organisation.  E.g. organisations using docker (as described in below FAQ question) require the execute command to be much longer: `"docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}"`.
+
+`nm_default_fields(list(cmd = "docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}"))`
+
+Setting this will ensure all runs produced in the R session will run using the above command.  To see how to set an option for all your R sessions see subsequent question
+
+### + How do I set a NMproject configuration option permanently so I don't have to set it for all my future R sessions?
+
+See `?.Rprofile`.  In a multiple user environment it's best practice to avoid user specific configurations as your code may run different from user to user.  There are two options, set the option for the project or site wide for all users.
+
+To set the option for anyone using the project, include the `options` command (e.g. `options(nm.cmd_default = ....)`) in `.Rprofile`.
+
+To set the option site wide include the `options` command in `$R_HOME/etc/Rprofile.site` (requires administration privileges).
+
+Also consider creating your own organisation specific option/path setting package.  The `options` statement then just needs to be in a R script in the packages `R` directory.  Loading this package will then set the option.  So be sure to load it (before or after) each time you're using `NMproject`.  The advantage of a package is you can also bundle other functions in there for them to use.
+
+### + How can I contribute to the PMX code library?
+
+The repository `tsahota/PMXcodelibrary` may be discontinued in the future.  The current location of the code library is within the NMproject package in the relative path `inst/extdata/CodeLibrary`.  To contribute, either use the pull request functionality of GitHub or send me an email with your change.  Make sure you describe the reason for the change so I can ensure it will suit everyone. 
+
+### + We already have directory of R/NONMEM scripts/templates, how can we also use these?
+
+Append your directory location to the `code_library_path` option.
+
+```{r eval=FALSE}
+options(code_library_path = c(getOption("code_library_path"),
+                              "path/to/existing/repository"))
+```
+
+You'll probably want to set this for all users so see the question above on setting options permanently
+
+### + How do I run this on SGE?
+
+There is a pre-prepared built in `sge_parallel_execute` character object that's part of NMproject.  This uses the grid functionality built into PsN and has been tested to work within the Metworx platform.  Simply type it in the console to see the contents.  Required fields are `parafile`, `cores`.  Ensure these are set for your parent object like so.
+
+```{r eval=FALSE}
+m1 <- m1 %>% 
+  cmd(sge_parallel_execute) %>%
+  parafile("/opt/NONMEM/nm75/run/mpilinux8.pnm") %>%
+  cores(8) %>%
+  run_nm()
+```
+
+Note that child object will inherit the same `cmd` structure, `cores` and `parafile`.
+
+### + How do I run this on other clusters like Slurm, LSF, Torque?
+
+The workflow is similar to above where PsN handles the grid submission. You will need to create your own analog character to `sge_parallel_execute` for your respective cluster.  It is recommended to consult PsN documentation to "gridify" your PsN command.  Once you have this, it's just a simple matter of replacing your control file name, run directory, parafile and desired number of cores with the relevant glue field (e.g. `{parafile}`) and then putting it into your parent `cmd()` command to get it running through NMproject.
+
+Feel free to contact me if you need help
+
+### + How do I run NONMEM via a PsN/NONMEM docker container
+
+This requires setting `cmd()` field of the first (parent) nm object and also setting `nm_tran_command()`.
+
+Easiest way to understand this is via an example: The following assumes the docker container has been set as shown in the fabulous `https://github.com/billdenney/Pharmacometrics-Docker` repository:
+
+Set cmd for an `execute` command like so:
+
+```{r eval=FALSE}
+m1 %>% 
+  cmd("docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}")
+```
+
+`run_nm()` will then execute NONMEM via the docker container.  All subsequent child objects will inherit the same command structure.  Note the use the gluing object fields `ctl_name` and `run_dir` so child objects can inherit the same command structure to save the command being rewritten for each run)
+
+Set up dockerised NMTRAN checking with:
+
+```{r eval=FALSE}
+nm_tran_command("docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn /bin/bash -c '/opt/NONMEM/nm_current/tr/NMTRAN.exe < {ctl_name}'")
+```
+
+### + My RStudio Server is on a different Linux server to my NONMEM cluster.  How can I set up NMproject to work with this?
+
+You need to ensure your account has passwordless ssh set up.  Then create a `system_nm` option in your `~/.Rprofile` configuration file which appends an ssh statement to the system call e.g. the following will set you up to connect to the host `clustername`:
+
+```{r eval=FALSE}
+options(system_nm=function(cmd,...) {
+        system(paste0("ssh -q clustername \"cd $(pwd); ",cmd,"\""),...)
+})
+```
+
+### + I'm working on a windows laptop but want to use my NONMEM cluster for NONMEM jobs.  How can I set up NMproject to work with this?
+
+This is not recommended as it requires R working directory being set to a networked drive.  This is very slow.  If you really want to though consider modifying the `system_nm()` option, as in the above FAQ question, to use `plink` to ssh to the server, change to the relevant working directory and submit a command.  This has not been tested however and results are likely to be disappointing.
+
+### + My organisation has a different control file convention to the 'runXX.mod' convention.  Can I change this?
+
+Set it up with `ctl_path` the field of your object, e.g. to change the convention to `nm.XX.con`
+
+```{r eval=FALSE}
+m %>% ctl_path("Models/nm.{run_id}.com")
+```
+
+### + How do I submit a generic command directly to the NONMEM server?
+
+```{r eval=FALSE}
+system_nm("command_to_run", dir="path/to/dir")
+```
+
+if dir is not specified, this will default to the `Models` directory
+
+### + There is functionality in PsN's run record, sumo or Pirana that I would like but is not available in NMproject.
+
+NMproject doesn't change PsN's default directory structure, everything in the "Models" directory is as if you launched the jobs from the command line.  Therefore you can continue to use PsN functions on the command line.  You can also continue using Pirana by pointing it towards your models directory.
+
+If it's something you think really should be part of NMproject, open a GitHub "issue" and ask for the feature.
+
+### + That's all well and good that NMproject has it's own bootstrap/vpc/... methods, but I just want to run/rerun a bootstrap/vpc/... in PsN.  Can I do this through NMproject?
+
+Yes, just change `cmd` to reflect the proper PsN command.
+
+```{r eval=FALSE}
+
+m1psnboot <- m1 %>% child(run_id = "m1psnboot") %>%
+  cmd("bootstrap {ctl_name} -samples=50 -dir={run_dir}") %>%
+  run_nm()
+
+m1psnvpc <- m1 %>% child(run_id = "m1psnvpc") %>%
+  cmd("vpc {ctl_name} -samples=50 -dir={run_dir}") %>%
+  run_nm()
+
+```
+
+### + I don't want to use NMproject on my analysis project any more, can I go back to submitting runs on the command line
+
+Yes, NMproject has been built to reduce as much as possible the barrier-to-exit to ensure all usage is a voluntary as possible.  NMproject doesn't change PsN's default directory structure, so you can go back to running PsN via command line or using Pirana etc., at any point.
+
+### + I work for a CRO. My client doesn't have NMproject or doesn't know to use NMproject, how can send the analysis to them.
+
+NMproject doesn't change PsN's default directory structure, and everything will work for them as long as their version of R (and package versions) are compatible.  Your model development log/notebook can still serve as a helpful, human readable process description of your model development steps though.  You just need to explain how `run_id`s correspond to files (e.g. `m1` corresponds to `Models/runm1.mod`) so they are able to track what is happening in the model development log to the files on the disk.
+
+If NMproject will be rerun in a different environment consider using `renv` to ensure package versions remain consistent.
+
+

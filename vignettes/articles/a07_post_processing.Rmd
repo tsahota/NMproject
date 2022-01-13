@@ -118,6 +118,68 @@ m2s %>% nm_render("Scripts/basic_ppc.Rmd")
 
 ```
 
+### VPC diagnostics
+
+The `vpc diagnostics` R markdown templates use the `vpc` package to create VPCs.
+
+### PPC diagnostics
+
+The `ppc diagnostics` R markdown templates use the `NMproject` functions to allow easy creation of VPCs.
+
+The example code contains two functions, `idEXPstat` for computing exposure statistics from raw data, and `EXPstat` for computing summaries (median and CV%) of exposure statistics.  These will be applied to both the raw data and simulated datasets to 
+
+```{r fun_def}
+
+idEXPstat <- function(d, ...){ ## example statistic function
+  ## arg = nonmem dataset data.frame
+  ## return data.frame with statistic column
+  d %>% group_by(ID, ...) %>% filter(is.na(AMT)) %>%
+    summarise(
+      AUC = AUC(time = TIME, conc = DV),
+      CMAX = max(DV, na.rm = TRUE),
+      TMAX = TIME[which.max(DV)]
+    ) %>%
+    tidyr::gather(key = "exposure", value = "statistic", AUC:TMAX) %>%
+    ungroup()
+  ## must return a dataset that summarises longitudinal dataset into one per ID, and must contain a "statistic" column
+}
+
+EXPstat <- function(d, ...){ ## example statistic function
+  ## arg = nonmem dataset data.frame
+  ## return data.frame with statistic column
+  d %>% idEXPstat(...) %>%  ## reuse idEXPstat for individual stats
+    ## summarise over study and any other variables (...)
+    group_by(exposure, ...) %>%
+    summarise(
+      median = median(statistic, na.rm = TRUE),
+      cv = 100*sd(statistic, na.rm = TRUE)/mean(statistic, na.rm = TRUE)
+    ) %>%
+    tidyr::gather(key = "type", value = "statistic", median:cv)
+  ## must return a dataset that summarises longitudinal dataset into one per "cohort", and must contain a "statistic" column
+}
+
+```
+
+```{r, eval = FALSE}
+
+ppc_data0 <- m1 %>% ppc_data(EXPstat)
+
+ppc_data0 %>%
+  filter(type %in% "median") %>%
+  ## redefine exposure to include the type of summary
+  mutate(exposure = paste(type, exposure, sep = "_")) %>%
+  ppc_histogram_plot(exposure)
+
+ppc_data0 %>%
+  filter(type %in% "cv") %>%
+  ## redefine exposure to include the type of summary
+  mutate(exposure = paste(type, exposure, sep = "_")) %>%
+  ppc_histogram_plot(exposure)
+
+```
+
+We can conclude that the model predicts median exposure and variability of exposure well. The remaining plots show stratfied versions of these.
+
 ## Bootstraps
 
 The package `rsample` can be used to create bootstrap datasets in your initial data manipulation scripts.  The following is an example bootstrap dataset being prepared with stratification on `SEX` and bodyweight `WTC` categorised in two categories  
@@ -155,3 +217,26 @@ m1_boot$m %>% nm_list_render("Scripts/basic_boot.Rmd")
 
 Results can be viewed in `Results/basic_boot.m1.html`.
 
+## Running VPCs and Bootstraps through PsN
+
+By changing `cmd` to reflect the proper PsN command, you can get PsN to handle the bootstrap or vpc.
+
+```{r eval=FALSE}
+
+m1psnboot <- m1 %>% child(run_id = "m1psnboot") %>%
+  cmd("bootstrap {ctl_name} -samples=50 -dir={run_dir}") %>%
+  run_nm()
+
+m1psnvpc <- m1 %>% child(run_id = "m1psnvpc") %>%
+  cmd("vpc {ctl_name} -samples=50 -dir={run_dir}") %>%
+  run_nm()
+
+```
+
+
+```{r include=FALSE}
+## clean up 
+getwd()
+unlink(copied_folders, recursive = TRUE)
+dir(all.files = TRUE)
+```
