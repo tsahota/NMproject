@@ -198,7 +198,10 @@
 </h3>
 <p>The <code>ppc diagnostics</code> R markdown templates use the <code>NMproject</code> functions to allow easy creation of VPCs.</p>
 <p>The example code contains two functions, <code>idEXPstat</code> for computing exposure statistics from raw data, and <code>EXPstat</code> for computing summaries (median and CV%) of exposure statistics. These will be applied to both the raw data and simulated datasets to</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<pre><code><span class="co">#&gt; written:</span>
+<span class="co">#&gt; DerivedData/data.RDS</span>
+<span class="co">#&gt; DerivedData/data.csv</span></code></pre>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">idEXPstat</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span>, <span class="va">...</span><span class="op">)</span><span class="op">{</span> <span class="co">## example statistic function</span>
   <span class="co">## arg = nonmem dataset data.frame</span>
@@ -227,19 +230,18 @@
     <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/gather.html" class="external-link">gather</a></span><span class="op">(</span>key <span class="op">=</span> <span class="st">"type"</span>, value <span class="op">=</span> <span class="st">"statistic"</span>, <span class="va">median</span><span class="op">:</span><span class="va">cv</span><span class="op">)</span>
   <span class="co">## must return a dataset that summarises longitudinal dataset into one per "cohort", and must contain a "statistic" column</span>
 <span class="op">}</span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
-<span class="va">ppc_data0</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/ppc.html">ppc_data</a></span><span class="op">(</span><span class="va">EXPstat</span><span class="op">)</span>
+<span class="co">## here msim is nm vector of simulation control files</span>
+<span class="va">ppc_data0</span> <span class="op">&lt;-</span> <span class="va">msim</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/ppc.html">ppc_data</a></span><span class="op">(</span><span class="va">EXPstat</span><span class="op">)</span>
 
 <span class="va">ppc_data0</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"median"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="co">## redefine exposure to include the type of summary</span>
   <span class="fu">mutate</span><span class="op">(</span>exposure <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">type</span>, <span class="va">exposure</span>, sep <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/ppc.html">ppc_histogram_plot</a></span><span class="op">(</span><span class="va">exposure</span><span class="op">)</span>
 
 <span class="va">ppc_data0</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">type</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"cv"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="co">## redefine exposure to include the type of summary</span>
   <span class="fu">mutate</span><span class="op">(</span>exposure <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">type</span>, <span class="va">exposure</span>, sep <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/ppc.html">ppc_histogram_plot</a></span><span class="op">(</span><span class="va">exposure</span><span class="op">)</span></code></pre></div>
 <p>We can conclude that the model predicts median exposure and variability of exposure well. The remaining plots show stratfied versions of these.</p>
@@ -249,7 +251,7 @@
 <h2 id="bootstraps">Bootstraps<a class="anchor" aria-label="anchor" href="#bootstraps"></a>
 </h2>
 <p>The package <code>rsample</code> can be used to create bootstrap datasets in your initial data manipulation scripts. The following is an example bootstrap dataset being prepared with stratification on <code>SEX</code> and bodyweight <code>WTC</code> categorised in two categories</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu">mutate</span><span class="op">(</span>WT_C <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html" class="external-link">cut</a></span><span class="op">(</span><span class="va">WT</span>, breaks <span class="op">=</span> <span class="fl">2</span>, labels <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
@@ -265,7 +267,7 @@
 <span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="st">"DerivedData"</span>, showWarnings <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="va">bootsplits</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="st">"DerivedData/bootsplit_data.csv.RData"</span><span class="op">)</span></code></pre></div>
 <p>In a model development script, the following, performs a 100 sample bootstrap of model <code>m1</code></p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">m1_boot</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/make_boot_datasets.html">make_boot_datasets</a></span><span class="op">(</span>samples <span class="op">=</span> <span class="fl">100</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
@@ -279,7 +281,7 @@
 <h2 id="running-vpcs-and-bootstraps-through-psn">Running VPCs and Bootstraps through PsN<a class="anchor" aria-label="anchor" href="#running-vpcs-and-bootstraps-through-psn"></a>
 </h2>
 <p>By changing <code>cmd</code> to reflect the proper PsN command, you can get PsN to handle the bootstrap or vpc.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">m1psnboot</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1psnboot"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"bootstrap {ctl_name} -samples=50 -dir={run_dir}"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
