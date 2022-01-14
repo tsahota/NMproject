@@ -128,7 +128,20 @@ The `ppc diagnostics` R markdown templates use the `NMproject` functions to allo
 
 The example code contains two functions, `idEXPstat` for computing exposure statistics from raw data, and `EXPstat` for computing summaries (median and CV%) of exposure statistics.  These will be applied to both the raw data and simulated datasets to 
 
-```{r fun_def}
+```{r echo = FALSE}
+
+## need the derived dataset in there for the PPC code below to work
+## this is needed for input_data(m1) etc., to work
+d <- read.csv("SourceData/THEOPP.csv", na = ".") %>%
+  group_by(ID) %>%
+  mutate(WT = na.omit(WT)) %>%
+  write_derived_data("DerivedData/data")
+
+source("R/AUC.R")
+
+```
+
+```{r eval = FALSE}
 
 idEXPstat <- function(d, ...){ ## example statistic function
   ## arg = nonmem dataset data.frame
@@ -160,19 +173,19 @@ EXPstat <- function(d, ...){ ## example statistic function
 
 ```
 
+
 ```{r, eval = FALSE}
 
-ppc_data0 <- m1 %>% ppc_data(EXPstat)
+## here msim is nm vector of simulation control files
+ppc_data0 <- msim %>% ppc_data(EXPstat)
 
 ppc_data0 %>%
   filter(type %in% "median") %>%
-  ## redefine exposure to include the type of summary
   mutate(exposure = paste(type, exposure, sep = "_")) %>%
   ppc_histogram_plot(exposure)
 
 ppc_data0 %>%
   filter(type %in% "cv") %>%
-  ## redefine exposure to include the type of summary
   mutate(exposure = paste(type, exposure, sep = "_")) %>%
   ppc_histogram_plot(exposure)
 
@@ -237,6 +250,7 @@ m1psnvpc <- m1 %>% child(run_id = "m1psnvpc") %>%
 ```{r include=FALSE}
 ## clean up 
 getwd()
-unlink(copied_folders, recursive = TRUE)
+## added Derived data in here because it was created in the middle of this script
+unlink(c(copied_folders, "DerivedData"), recursive = TRUE)
 dir(all.files = TRUE)
 ```
