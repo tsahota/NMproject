@@ -206,7 +206,9 @@ nm_default_fields <- function(field_list) {
   }
 }
 
-#' Generic execute command for SGE grids
+#' @rdname sge_parallel_execute
+#' 
+#' @title Generic execute command for SGE grids
 #'
 #' @description
 #'
@@ -239,6 +241,10 @@ nm_default_fields <- function(field_list) {
 #' sge_parallel_execute ## view the character to see how psn interfaces with SGE
 #' @export
 sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_flags='-pe orte {cores} -V' {ctl_name} -dir={run_dir} -nodes={cores}"
+
+#' @rdname sge_parallel_execute
+#' @details `sge_parallel_execute2` doubles the amount slots taken by the job (e.g. to avoid hyperthreading).
+sge_parallel_execute2 <- "execute -run_on_sge -parafile={parafile} -sge_prepend_flags='-pe orte {2*cores} -V' {ctl_name} -dir={run_dir} -nodes={cores}"
 
 #' Generic execute command for parallelised runs
 #'

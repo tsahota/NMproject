@@ -3,12 +3,17 @@
 \docType{data}
 \name{sge_parallel_execute}
 \alias{sge_parallel_execute}
+\alias{sge_parallel_execute2}
 \title{Generic execute command for SGE grids}
 \format{
+An object of class \code{character} of length 1.
+
 An object of class \code{character} of length 1.
 }
 \usage{
 sge_parallel_execute
+
+sge_parallel_execute2
 }
 \value{
 A \code{character} object.
@@ -21,6 +26,8 @@ on SGE.
 }
 \details{
 Requires \code{cores} and \code{parafile} fields to be set.
+
+\code{sge_parallel_execute2} doubles the amount slots taken by the job (e.g. to avoid hyperthreading).
 }
 \examples{
 
