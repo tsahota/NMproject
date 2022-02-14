@@ -145,6 +145,13 @@
   <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
+<h3 id="i-have-a-previously-completed-model-fit-from-psn-and-i-want-to-use-nmprojects-processing-functions-">+ I have a previously completed model fit from PsN and I want to use NMproject’s processing functions.<a class="anchor" aria-label="anchor" href="#i-have-a-previously-completed-model-fit-from-psn-and-i-want-to-use-nmprojects-processing-functions-"></a>
+</h3>
+<p>The function <code><a href="../reference/completed_nm.html">completed_nm()</a></code> was made specifically for this purpose. Use it like so:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/completed_nm.html">completed_nm</a></span><span class="op">(</span><span class="st">"path/to/control/file"</span><span class="op">)</span></code></pre></div>
+</div>
+<div class="section level3">
 <h3 id="after-having-closed-my-session-how-do-i-recreate-my-workspace-and-pick-up-where-i-left-off">+ After having closed my session how do I recreate my workspace and pick up where I left off<a class="anchor" aria-label="anchor" href="#after-having-closed-my-session-how-do-i-recreate-my-workspace-and-pick-up-where-i-left-off"></a>
 </h3>
 <p>Just re-run all the code again. NONMEM runs that have already been run will not be run again and will instead be retrieved from the cache.</p>
@@ -177,7 +184,7 @@
 <h3 id="we-already-have-directory-of-rnonmem-scriptstemplates-how-can-we-also-use-these">+ We already have directory of R/NONMEM scripts/templates, how can we also use these?<a class="anchor" aria-label="anchor" href="#we-already-have-directory-of-rnonmem-scriptstemplates-how-can-we-also-use-these"></a>
 </h3>
 <p>Append your directory location to the <code>code_library_path</code> option.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>code_library_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"code_library_path"</span><span class="op">)</span>,
                               <span class="st">"path/to/existing/repository"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>You’ll probably want to set this for all users so see the question above on setting options permanently</p>
@@ -186,7 +193,7 @@
 <h3 id="how-do-i-run-this-on-sge">+ How do I run this on SGE?<a class="anchor" aria-label="anchor" href="#how-do-i-run-this-on-sge"></a>
 </h3>
 <p>There is a pre-prepared built in <code>sge_parallel_execute</code> character object that’s part of NMproject. This uses the grid functionality built into PsN and has been tested to work within the Metworx platform. Simply type it in the console to see the contents. Required fields are <code>parafile</code>, <code>cores</code>. Ensure these are set for your parent object like so.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="va">sge_parallel_execute</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/nm_getsetters_execution.html">parafile</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm75/run/mpilinux8.pnm"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
@@ -206,19 +213,19 @@
 <p>This requires setting <code><a href="../reference/nm_getsetters.html">cmd()</a></code> field of the first (parent) nm object and also setting <code><a href="../reference/nm_tran_command.html">nm_tran_command()</a></code>.</p>
 <p>Easiest way to understand this is via an example: The following assumes the docker container has been set as shown in the fabulous <code>https://github.com/billdenney/Pharmacometrics-Docker</code> repository:</p>
 <p>Set cmd for an <code>execute</code> command like so:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn execute {ctl_name} -dir={run_dir}"</span><span class="op">)</span></code></pre></div>
 <p><code><a href="../reference/run_nm.html">run_nm()</a></code> will then execute NONMEM via the docker container. All subsequent child objects will inherit the same command structure. Note the use the gluing object fields <code>ctl_name</code> and <code>run_dir</code> so child objects can inherit the same command structure to save the command being rewritten for each run)</p>
 <p>Set up dockerised NMTRAN checking with:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/nm_tran_command.html">nm_tran_command</a></span><span class="op">(</span><span class="st">"docker run --rm --user=$(id -u):$(id -g) -v $(pwd):/data -w /data humanpredictions/psn /bin/bash -c '/opt/NONMEM/nm_current/tr/NMTRAN.exe &lt; {ctl_name}'"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="my-rstudio-server-is-on-a-different-linux-server-to-my-nonmem-cluster--how-can-i-set-up-nmproject-to-work-with-this">+ My RStudio Server is on a different Linux server to my NONMEM cluster. How can I set up NMproject to work with this?<a class="anchor" aria-label="anchor" href="#my-rstudio-server-is-on-a-different-linux-server-to-my-nonmem-cluster--how-can-i-set-up-nmproject-to-work-with-this"></a>
 </h3>
 <p>You need to ensure your account has passwordless ssh set up. Then create a <code>system_nm</code> option in your <code>~/.Rprofile</code> configuration file which appends an ssh statement to the system call e.g. the following will set you up to connect to the host <code>clustername</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>system_nm<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">cmd</span>,<span class="va">...</span><span class="op">)</span> <span class="op">{</span>
         <span class="fu"><a href="https://rdrr.io/r/base/system.html" class="external-link">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"ssh -q clustername \"cd $(pwd); "</span>,<span class="va">cmd</span>,<span class="st">"\""</span><span class="op">)</span>,<span class="va">...</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span></code></pre></div>
@@ -232,13 +239,13 @@
 <h3 id="my-organisation-has-a-different-control-file-convention-to-the-runxx-mod-convention--can-i-change-this">+ My organisation has a different control file convention to the ‘runXX.mod’ convention. Can I change this?<a class="anchor" aria-label="anchor" href="#my-organisation-has-a-different-control-file-convention-to-the-runxx-mod-convention--can-i-change-this"></a>
 </h3>
 <p>Set it up with <code>ctl_path</code> the field of your object, e.g. to change the convention to <code>nm.XX.con</code></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/ctl_path.html">ctl_path</a></span><span class="op">(</span><span class="st">"Models/nm.{run_id}.com"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="how-do-i-submit-a-generic-command-directly-to-the-nonmem-server">+ How do I submit a generic command directly to the NONMEM server?<a class="anchor" aria-label="anchor" href="#how-do-i-submit-a-generic-command-directly-to-the-nonmem-server"></a>
 </h3>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/system_nm.html">system_nm</a></span><span class="op">(</span><span class="st">"command_to_run"</span>, dir<span class="op">=</span><span class="st">"path/to/dir"</span><span class="op">)</span></code></pre></div>
 <p>if dir is not specified, this will default to the <code>Models</code> directory</p>
 </div>
@@ -252,7 +259,7 @@
 <h3 id="thats-all-well-and-good-that-nmproject-has-its-own-bootstrapvpc-methods-but-i-just-want-to-runrerun-a-bootstrapvpc-in-psn--can-i-do-this-through-nmproject">+ That’s all well and good that NMproject has it’s own bootstrap/vpc/… methods, but I just want to run/rerun a bootstrap/vpc/… in PsN. Can I do this through NMproject?<a class="anchor" aria-label="anchor" href="#thats-all-well-and-good-that-nmproject-has-its-own-bootstrapvpc-methods-but-i-just-want-to-runrerun-a-bootstrapvpc-in-psn--can-i-do-this-through-nmproject"></a>
 </h3>
 <p>Yes, just change <code>cmd</code> to reflect the proper PsN command.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">m1psnboot</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1psnboot"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"bootstrap {ctl_name} -samples=50 -dir={run_dir}"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
