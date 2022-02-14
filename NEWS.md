@@ -26,6 +26,8 @@
 
 * Added `sge_parallel_execute2` for hyperthreaded environments.
 
+* Added support for "name [unit] :trans" type parameter comments.
+
 # NMproject 0.6.7
 
 * Added ability to use NMproject-specific code completion snippets `setup_code_completion()`.
