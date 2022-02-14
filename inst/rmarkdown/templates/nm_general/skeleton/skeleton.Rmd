@@ -10,9 +10,12 @@ output:
 ---
 
 ```{r setup, include=F}
-## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
+## LOAD PACKAGES HERE
 library(knitr)
 library(rprojroot)
+library(NMproject)
+
+## DO NOT MODIFY THE REST OF THIS BLOCK (unless you know what you're doing)
 opts_knit$set(root.dir = find_root(
   has_file(".Rprofile") | 
     is_rstudio_project | 
@@ -24,12 +27,8 @@ opts_chunk$set(message = TRUE)
 ```
 
 ```{r echo=FALSE,message=FALSE}
-## LOAD PACKAGES HERE
-library(NMproject)
-
 devtools::load_all() ## for loading functions in R/
 
 set.seed(1234)
-
 ```
 

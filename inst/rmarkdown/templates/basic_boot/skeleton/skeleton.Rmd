@@ -27,7 +27,12 @@ params:
 
 
 ```{r setup, include=F}
-## DO NOT MODIFY THIS BLOCK (unless you know what you're doing)
+
+## LOAD PACKAGES HERE
+library(NMproject)
+library(dplyr)
+
+## DO NOT MODIFY THE REST OF THIS BLOCK (unless you know what you're doing)
 library(knitr)
 library(rprojroot)
 opts_knit$set(root.dir = find_root(
@@ -41,11 +46,6 @@ opts_chunk$set(message = FALSE)
 if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
   .m <- params$m  
 }
-```
-
-```{r lib_load}
-library(NMproject)
-library(dplyr)
 ```
 
 ## model object
