@@ -78,6 +78,9 @@ To modify the value of a field:
 Some fields like \code{cmd} are glue fields.  In these cases inserting
 expressions inside braces in \code{text} will evaluate the expression (see
 examples).
+
+The function \code{lst_path()} sets the expected location of the lst file
+and all output files relative to the \code{run_in} location.
 }
 \examples{
 

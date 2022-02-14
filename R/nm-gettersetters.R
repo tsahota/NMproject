@@ -348,6 +348,8 @@ executed <- function(m, text) {
 }
 
 #' @rdname nm_getsetters
+#' @details The function `lst_path()` sets the expected location of the lst file
+#'   and all output files relative to the `run_in` location.
 #' @export
 lst_path <- function(m, text) {
   if (missing(text)) custom_1d_field(m, "lst_path") else custom_1d_field(m, "lst_path", text, glue = TRUE)
