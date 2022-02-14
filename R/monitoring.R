@@ -176,6 +176,12 @@ is_finished.nm_generic <- function(r, initial_timeout = NA) {
 #' @export
 is_finished.nm_list <- Vectorize_nm_list(is_finished.nm_generic)
 
+#' @export
+is_finished.completed_nm_list <- function(r, initial_timeout = NA) rep(TRUE, length = length(r))
+
+#' @export
+is_finished.completed_nm_generic <- function(r, initial_timeout = NA) TRUE
+
 #' Test if NONMEM ran without errors
 #'
 #' @description

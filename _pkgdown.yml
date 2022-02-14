@@ -55,6 +55,7 @@ reference:
   - ctl_path
   - simple_field
   - is_nm
+  - completed_nm
   - '%f>%'
 - title: "NONMEM code manipulation"
 - contents:

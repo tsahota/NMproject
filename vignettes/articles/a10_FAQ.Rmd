@@ -25,6 +25,14 @@ m1 <- new_nm(run_id = "m1",
 
 ```
 
+### + I have a previously completed model fit from PsN and I want to use NMproject's processing functions.
+
+The function `completed_nm()` was made specifically for this purpose.  Use it like so:
+
+```{r eval = FALSE}
+m1 <- completed_nm("path/to/control/file")
+```
+
 ### + After having closed my session how do I recreate my workspace and pick up where I left off
 
 Just re-run all the code again.  NONMEM runs that have already been run will not be run again and will instead be retrieved from the cache.
