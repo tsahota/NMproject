@@ -4,12 +4,14 @@
 \alias{completed_nm}
 \title{Create an nm object from an already completed PsN run}
 \usage{
-completed_nm(mod_file, data_path = data_name(mod_file))
+completed_nm(mod_file, data_path = data_name(mod_file), force = FALSE)
 }
 \arguments{
 \item{mod_file}{Path to a model file}
 
 \item{data_path}{Optional path to the corresponding data set}
+
+\item{force}{Passed to \code{new_nm()}.}
 }
 \value{
 An nm object with class "completed_nm".
