@@ -24,16 +24,19 @@ Ensure PsN is installed: 'https://uupharmacometrics.github.io/PsN/'.
 If PsN is installed ensure `system_nm()` is correctly configured.
 See ?system_nm for help.")
     
-    nm_tran_cmd <- nm_tran_command()
-    nm_tran_test <- FALSE
-    if (!is.null(nm_tran_cmd)) {
-      if (length(nm_tran_cmd) > 0) {
-        if (is.character(nm_tran_cmd)) {
-          if (nchar(nm_tran_cmd) > 0) nm_tran_test <- TRUE
-        }
+  })
+  
+  nm_tran_cmd <- nm_tran_command()
+  nm_tran_test <- FALSE
+  if (!is.null(nm_tran_cmd)) {
+    if (length(nm_tran_cmd) > 0) {
+      if (is.character(nm_tran_cmd)) {
+        if (nchar(nm_tran_cmd) > 0) nm_tran_test <- TRUE
       }
     }
-  })
+  }
+  
+  code_completion_status <- check_code_completion()
   
   testthat::test_that("Recommended configuration", {
     
@@ -45,8 +48,7 @@ However if working in a grid environment, it is highly recommended that this
 check succeed as without it NMTRAN checks will not work.  NMTRAN checks provide 
 fast feedback of control file and dataset errors.  See ?nm_tran_command for 
 instructions")
-    
-    testthat::expect(check_code_completion(),
+    testthat::expect(code_completion_status,
                      "Code completion has not been configured.
 It is recommended to configure this as it helps greatly with NMproject
 scripting.  It is not mandatory though for NMproject to work.
