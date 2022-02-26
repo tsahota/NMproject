@@ -118,6 +118,18 @@ rr <- function(m, trans = TRUE) {
 
 #' @export
 rr.nm_list <- function(m, trans = TRUE) {
+  if (is_nm_list(trans) & is_nm_list(m)) {
+    existing_call <- match.call()
+    existing <- paste0("rr(", paste0(as.character(existing_call[2:3]), collapse = ", "), ")")
+    proposed <- paste0("rr(c(", paste0(as.character(existing_call[2:3]), collapse = ", "), "))")
+    reasonable_proposals <- all(grepl("rr", c(existing, proposed)))
+    if (!reasonable_proposals) {
+      usethis::ui_stop("Looks like you're trying to do something like {usethis::ui_code('rr(m1, m2)')}, however this function takes a single nm_list argument, e.g. {usethis::ui_code('rr(c(m1, m2))')}") 
+    } else {
+      usethis::ui_stop("This function takes a single nm_list argument, consider: {usethis::ui_code(proposed)}")
+    }
+  }
+  if (!is.logical(trans)) usethis::ui_stop("the trans argument must be TRUE or FALSE")
   d <- coef(m, trans = trans)
   d <- do.call(rbind, d)
   if (nrow(d) == 0) {
