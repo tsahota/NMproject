@@ -36,7 +36,7 @@ start_manual_edit <- function(m, combine_patch = NA_character_, replace_ctl = NA
   dir.create(dirname(patch_path), showWarnings = FALSE, recursive = TRUE)
 
   #temp_ctl_path <- file.path(run_in(m), paste0("manual_", ctl_name(m)))
-  temp_ctl_path <- file.path(nm_dir("models"), paste0("base-", patch_id))
+  temp_ctl_path <- file.path(run_in(m), paste0("base-", patch_id))
   mnew <- m %>%
     ctl_path(temp_ctl_path) %>%
     write_ctl(force = TRUE)

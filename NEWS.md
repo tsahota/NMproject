@@ -30,6 +30,8 @@
 
 * Added support for "name [unit] :trans" type parameter comments.
 
+* Fixed resolve manual edit failure when directory change was responsible for failure.
+
 # NMproject 0.6.7
 
 * Added ability to use NMproject-specific code completion snippets `setup_code_completion()`.
