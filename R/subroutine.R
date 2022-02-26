@@ -414,6 +414,7 @@ subroutine.nm_generic <- function(m, advan = NA, trans = 1, recursive = TRUE) {
         ## modify initials
         if (!inherits(new_theta, "try-error")) {
           ithetai <- init_theta(m)
+          ithetai$name <- gsub("^TV(.*)", "\\1", ithetai$name) ## remove TV notation
           ithetai$init[ithetai$name == di$nm_name.y] <- new_theta
           if (ithetai$trans[ithetai$name == di$nm_name.y] %in% "LOG") {
             ithetai$init[ithetai$name == di$nm_name.y] <- log(new_theta)
