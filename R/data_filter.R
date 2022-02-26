@@ -30,8 +30,8 @@ data_ignore_char.nm_generic <- function(r, data) {
     )
   }
 
-  ignore_present <- any(grepl(".*IGNORE\\s*=\\s*\\(", dol_data))
-  accept_present <- any(grepl(".*ACCEPT\\s*=\\s*\\(", dol_data))
+  ignore_present <- any(grepl(".*IGNORE\\s*=?\\s*\\(", dol_data))
+  accept_present <- any(grepl(".*ACCEPT\\s*=?\\s*\\(", dol_data))
 
 
   ## can now assume that only one is TRUE
