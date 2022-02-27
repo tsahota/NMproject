@@ -4,11 +4,13 @@
 \alias{nm_list_gather}
 \title{Get all nm_list objects}
 \usage{
-nm_list_gather(x = .GlobalEnv)
+nm_list_gather(x = .GlobalEnv, max_length = 1)
 }
 \arguments{
 \item{x}{An environment (default = \code{.GlobalEnv}) to search
 or \code{data.frame} with (\code{nm_list} column) or \code{nm_list}.}
+
+\item{max_length}{Exclude objects with length above this.}
 }
 \value{
 A single \code{nm_list} object with all model objects in environment \code{x}.

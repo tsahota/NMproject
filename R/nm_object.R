@@ -648,6 +648,7 @@ nm_list2list <- function(m) {
 #'
 #' @param x An environment (default = `.GlobalEnv`) to search
 #'   or `data.frame` with (`nm_list` column) or `nm_list`.
+#' @param max_length Exclude objects with length above this.
 #'
 #' @return A single `nm_list` object with all model objects in environment `x`.
 #'
@@ -669,14 +670,14 @@ nm_list2list <- function(m) {
 #' )
 #' 
 #' @export
-nm_list_gather <- function(x = .GlobalEnv) {
+nm_list_gather <- function(x = .GlobalEnv, max_length = 1) {
   UseMethod("nm_list_gather")
 }
 
 #' @export
-nm_list_gather.default <- function(x = .GlobalEnv) {
+nm_list_gather.default <- function(x = .GlobalEnv, max_length = 1) {
   m <- lapply(x, function(object) {
-    if (inherits(object, "nm_list")) object else NA
+    if (inherits(object, "nm_list") & length(object) <= max_length) object else NA
   })
 
   m <- m[!is.na(m)]
@@ -685,4 +686,4 @@ nm_list_gather.default <- function(x = .GlobalEnv) {
 }
 
 #' @export
-nm_list_gather.nm_list <- function(x = .GlobalEnv) x
+nm_list_gather.nm_list <- function(x = .GlobalEnv, max_length = 1) x
