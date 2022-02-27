@@ -693,7 +693,7 @@ tol.nm_generic <- function(m, text) {
     if (is_single_na(sub_text)) {
       return(NA_integer_)
     }
-    tol_match_text <- ".*\\bTOL([0-9]+)\\b.*"
+    tol_match_text <- ".*\\bTOL\\s*=?\\s*([0-9]+)\\b.*"
     tol_match <- grepl(tol_match_text, sub_text)
     tol <- gsub(tol_match_text, "\\1", sub_text[tol_match])
     tol <- as.integer(tol)
@@ -705,9 +705,9 @@ tol.nm_generic <- function(m, text) {
 
   if (any(grepl("TOL", text(m)))) { ## TOL already exists
     if (!is.na(text)) {
-      m <- m %>% gsub_ctl("TOL[0-9]+", paste0("TOL", text))
+      m <- m %>% gsub_ctl("(TOL\\s*=?\\s*)[0-9]+", paste0("\\1", text))
     } else {
-      m <- m %>% gsub_ctl("TOL[0-9]+", "")
+      m <- m %>% gsub_ctl("TOL=?[0-9]+", "")
     }
   } else {
     if (!is.na(text)) {
