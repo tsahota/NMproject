@@ -102,7 +102,7 @@ workspace.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nm_list_gather</span><span class="op">(</span>x <span class="op">=</span> <span class="va">.GlobalEnv</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nm_list_gather</span><span class="op">(</span>x <span class="op">=</span> <span class="va">.GlobalEnv</span>, max_length <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -110,6 +110,8 @@ workspace.</p>
     <dl><dt>x</dt>
 <dd><p>An environment (default = <code>.GlobalEnv</code>) to search
 or <code>data.frame</code> with (<code>nm_list</code> column) or <code>nm_list</code>.</p></dd>
+<dt>max_length</dt>
+<dd><p>Exclude objects with length above this.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
