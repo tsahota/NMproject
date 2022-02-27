@@ -32,6 +32,8 @@
 
 * Fixed resolve manual edit failure when directory change was responsible for failure.
 
+* RANMETHOD=3S2 changed to RANMETHOD=3S2P in code library and examples to improve parallel processing consistency of runs.
+
 # NMproject 0.6.7
 
 * Added ability to use NMproject-specific code completion snippets `setup_code_completion()`.
