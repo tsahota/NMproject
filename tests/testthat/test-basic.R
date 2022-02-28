@@ -74,9 +74,9 @@ test_that("set up", {
   expect_true(length(TVK_files) > 0)
 
   ## wait test
+  starting_time <- Sys.time()
   stime <- system.time(wait_for({
-    Sys.sleep(1)
-    TRUE
+    difftime(Sys.time(), starting_time, units = "secs") > 1
   }))
   expect_true(stime["elapsed"] >= 1)
 })
