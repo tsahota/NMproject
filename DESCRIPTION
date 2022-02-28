@@ -63,7 +63,8 @@ Suggests:
     digest,
     covr,
     devtools,
-    roxygen2
+    roxygen2,
+    xfun
 Collate: 
     'NMproject-options.R'
     'NMproject-package.R'

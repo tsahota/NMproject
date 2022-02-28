@@ -66,6 +66,8 @@ cache_current <- function(m) run_checksums(m)
 
 clear_cache <- function() unlink(".cache", recursive = TRUE)
 
+file_friendly_unique_id <- function(m) gsub(.Platform$file.sep, "--", unique_id(m))
+
 unique_render_cache_path <- function(m, input) {
   file.path(
     ".cache",

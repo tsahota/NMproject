@@ -30,9 +30,13 @@
 
 * Added support for "name [unit] :trans" type parameter comments.
 
-* Fixed resolve manual edit failure when directory change was responsible for failure.
+* Fixed resolve manual edit failure when directory change was responsible 
+  for failure.
 
-* RANMETHOD=3S2 changed to RANMETHOD=3S2P in code library and examples to improve parallel processing consistency of runs.
+* RANMETHOD=3S2 changed to RANMETHOD=3S2P in code library and examples to 
+  improve parallel processing consistency of runs.
+  
+* Replaced caching mechanism of `nm_render()` and `nm_list_render()` with xfun.
 
 # NMproject 0.6.7
 

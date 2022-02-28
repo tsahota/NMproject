@@ -90,32 +90,7 @@ nm_render.nm_generic <- function(m,
 
   output_dir <- results_dir(m)
   output_path <- file.path(output_dir, output_file)
-
-  ## if force is TRUE skip caching and run
-  if (!force) {
-    ## if output_path doesn't exist skip caching and run
-    ## if(file.exists(output_path)){
-    ## pull existing checksum info
-    render_cache_disk <- lapply(render_cache_paths(m, input), readRDS)
-    if (length(render_cache_disk) > 0) {
-      ## get current checksum
-      current_checksums <- render_checksums(m, input)
-      ## determine matches
-      matches <- sapply(render_cache_disk, function(i) {
-        identical(i$checksums, current_checksums)
-      })
-      if (any(matches)) {
-        message("nm_render cache found, skipping... use nm_render(force = TRUE) to override")
-        m <- m %>% result_files(output_file)
-        usethis::ui_info("run report saved in: {usethis::ui_path(output_path)}")
-        return(invisible(m)) ## if up to date, skip
-      }
-    }
-  }
-  
-  # xfun::cache_rds({
-  # }, hash = list(), 
-  # dir = here::here(".cache", ""), file = "e_sim.rds")
+  if (!file.exists(output_path)) force <- TRUE
   
   ## replace setup chunks with setup2 to prevent clash
   input_contents0 <- readLines(input)
@@ -123,15 +98,33 @@ nm_render.nm_generic <- function(m,
   write(input_contents, input)
   on.exit(write(input_contents0, input))
   
-  rmarkdown::render(
-    input = input,
-    output_file = output_file,
-    output_dir = output_dir,
-    params = args,
-    envir = new.env(),
-    quiet = TRUE,
-    ...
-  )
+  if (!requireNamespace("xfun")) usethis::ui_info("install xfun to enable nm_render() caching")
+  if (requireNamespace("xfun") & !force) {
+    xfun::cache_rds({
+      rmarkdown::render(
+        input = input,
+        output_file = output_file,
+        output_dir = output_dir,
+        params = args,
+        envir = new.env(),
+        quiet = TRUE,
+        ...
+      )
+    }, hash = list(input, output_file, output_dir, args),
+    dir = file.path(".cache", "rmarkdown", ""), 
+    file = paste0(basename(input), ".", file_friendly_unique_id(m)))    
+  } else {
+    rmarkdown::render(
+      input = input,
+      output_file = output_file,
+      output_dir = output_dir,
+      params = args,
+      envir = new.env(),
+      quiet = TRUE,
+      ...
+    )
+  }
+  
   
   m <- m %>% result_files(output_file)
   m <- m %>% save_render_cache(input)
@@ -170,30 +163,9 @@ nm_list_render <- function(m,
 
   output_dir <- parent_results_dir(m[1])
   output_path <- file.path(output_dir, output_file)
+  if (!file.exists(output_path)) force <- TRUE
 
   m_parent <- as_nm_generic(parent_run(m[1]))
-
-  ## if force is TRUE skip caching and run
-  if (!force) {
-    ## if output_path doesn't exist skip caching and run
-    ## if(file.exists(output_path)){
-    ## pull existing checksum info
-    render_cache_disk <- lapply(render_cache_paths(m_parent, input), readRDS)
-    if (length(render_cache_disk) > 0) {
-      ## get current checksum
-      current_checksums <- render_checksums(m_parent, input)
-      ## determine matches
-      matches <- sapply(render_cache_disk, function(i) {
-        identical(i$checksums, current_checksums)
-      })
-      if (any(matches)) {
-        message("nm_list_render cache found, skipping... use nm_list_render(force = TRUE) to override")
-        # m <- m_parent %>% result_files(output_file)
-        return(invisible(m)) ## if up to date, skip
-      }
-    }
-    # }
-  }
   
   ## replace setup chunks with setup2 to prevent clash
   input_contents0 <- readLines(input)
@@ -201,14 +173,33 @@ nm_list_render <- function(m,
   write(input_contents, input)
   on.exit(write(input_contents0, input))
   
-  rmarkdown::render(
-    input = input,
-    output_file = output_file,
-    output_dir = output_dir,
-    params = args,
-    envir = new.env(),
-    ...
-  )
+  if (!requireNamespace("xfun")) usethis::ui_info("install xfun to enable nm_render() caching")
+  
+  if (requireNamespace("xfun") & !force) {
+    xfun::cache_rds({
+      rmarkdown::render(
+        input = input,
+        output_file = output_file,
+        output_dir = output_dir,
+        params = args,
+        envir = new.env(),
+        quiet = TRUE,
+        ...
+      )
+    }, hash = list(input, output_file, output_dir, args),
+    dir = file.path(".cache", "rmarkdown", ""), 
+    file = paste0(basename(input), ".", file_friendly_unique_id(m)))    
+  } else {
+    rmarkdown::render(
+      input = input,
+      output_file = output_file,
+      output_dir = output_dir,
+      params = args,
+      envir = new.env(),
+      quiet = TRUE,
+      ...
+    )
+  }
   
   ## use as_nm_generic incase m is redefined in rmd
   # m <- m %>% result_files(output_file)
