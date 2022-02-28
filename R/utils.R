@@ -259,8 +259,7 @@ na.locf <- function(x) {
 #'
 #' @param x Boolean expression to evaluate.
 #' @param timeout Numeric. Maximum time (in seconds) to wait.
-#' @param interval Numeric. Number of seconds (default=`1`) to wait before
-#'   rechecking.
+#' @param interval Numeric. The polling interval in seconds (default=`1`).
 #'
 #' @return Invisibly returns `TRUE` indicating value of `x` after waiting for
 #'   `x` to be `TRUE`.
@@ -297,7 +296,7 @@ wait_for <- function(x, timeout = NULL, interval = 1) {
         return(invisible(FALSE))
       }
     }
-    Sys.sleep(1)
+    Sys.sleep(interval)
   }
   invisible(TRUE)
 }

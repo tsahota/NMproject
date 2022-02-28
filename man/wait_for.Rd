@@ -11,8 +11,7 @@ wait_for(x, timeout = NULL, interval = 1)
 
 \item{timeout}{Numeric. Maximum time (in seconds) to wait.}
 
-\item{interval}{Numeric. Number of seconds (default=\code{1}) to wait before
-rechecking.}
+\item{interval}{Numeric. The polling interval in seconds (default=\code{1}).}
 }
 \value{
 Invisibly returns \code{TRUE} indicating value of \code{x} after waiting for
