@@ -287,7 +287,6 @@ na.locf <- function(x) {
 wait_for <- function(x, timeout = NULL, interval = 1) {
   x <- substitute(x)
   start.time <- Sys.time()
-  diff.time <- 0
   while (!eval(x, envir = parent.frame())) {
     diff.time <- difftime(Sys.time(), start.time, units = "secs")
     if (!is.null(timeout)) {
