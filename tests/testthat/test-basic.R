@@ -78,5 +78,5 @@ test_that("set up", {
   stime <- system.time(wait_for({
     difftime(Sys.time(), starting_time, units = "secs") > 1
   }))
-  expect_true(stime["elapsed"] >= 1)
+  expect_true(stime["elapsed"] >= 0.9 & stime["elapsed"] < 3)
 })
