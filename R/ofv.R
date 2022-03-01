@@ -112,10 +112,10 @@ nobs.nm_generic <- function(object, ...) {
     d <- input_data(object, filter = TRUE)
   )
   if ("AMT" %in% names(d)) {
-    d <- d %>% dplyr::filter(is.na(.data$AMT))
+    d <- d %>% dplyr::filter(is.na(.data$AMT) | .data$AMT %in% 0)
   }
   if ("EVID" %in% names(d)) {
-    d <- d %>% dplyr::filter(.data$EVID %in% 0)
+    d <- d %>% dplyr::filter(is.na(.data$EVID) | .data$EVID %in% 0)
   }
   if ("MDV" %in% names(d)) {
     d <- d %>% dplyr::filter(!.data$MDV %in% 1)
