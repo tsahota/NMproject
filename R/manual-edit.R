@@ -212,6 +212,9 @@ Follow the above instructions and indicate if you happy to proceed?", yes = "Yes
     return(invisible())
   }
 
+  
+  apply_txt <- paste0("apply_manual_edit(\"", res$patch_id, "\")")
+  usethis::ui_info("Adding {usethis::ui_code(apply_txt)} to script...")
   ## now diff ctl_path(m) and old_file_path
 
   diff_manual_edit(m, res)
@@ -234,7 +237,8 @@ Follow the above instructions and indicate if you happy to proceed?", yes = "Yes
     id = ctx$id
   )
 
-  message("apply_manual_edit() statement added to script")
+  usethis::ui_done("Added {usethis::ui_code(apply_txt)} to script")
+  
 }
 
 modify_patch_app <- function() {
@@ -273,6 +277,8 @@ Follow the above instructions and indicate if you happy to proceed?", yes = "Yes
     return(invisible())
   }
 
+  apply_txt <- paste0("apply_manual_edit(\"", res$patch_id, "\")")
+  usethis::ui_info("Adding {usethis::ui_code(apply_txt)} to script...")
   ## now diff ctl_path(m) and old_file_path
 
   diff_manual_edit(m, res)
@@ -294,7 +300,8 @@ Follow the above instructions and indicate if you happy to proceed?", yes = "Yes
     id = ctx$id
   )
 
-  message("apply_manual_edit() statement modified in script")
+  usethis::ui_done("apply_manual_edit() statement modified to {usethis::ui_code(apply_txt)} in script")
+
 }
 
 resolve_manual_edit <- function() {
@@ -339,6 +346,8 @@ Follow the above instructions and indicate if you happy to proceed?", yes = "Yes
     return(invisible())
   }
 
+  apply_txt <- paste0("apply_manual_edit(\"", res$patch_id, "\")")
+  usethis::ui_info("Adding {usethis::ui_code(apply_txt)} to script...")
   ## now diff ctl_path(m) and old_file_path
 
   diff_manual_edit(m, res)
@@ -360,7 +369,7 @@ Follow the above instructions and indicate if you happy to proceed?", yes = "Yes
     id = ctx$id
   )
 
-  message("apply_manual_edit() statement modified in script")
+  usethis::ui_done("apply_manual_edit() statement modified to {usethis::ui_code(apply_txt)} in script")
 
 }
 
