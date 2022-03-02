@@ -353,13 +353,17 @@ stats::coef
 
 #' @export
 coef.nm_generic <- function(object, trans = TRUE, ...) {
-  if (!is_finished(object)) {
-    return(invisible(data.frame()))
-  }
+  #if (!is_finished(object)) {
+  #  return(invisible(data.frame()))
+  #}
   
   ext_file_path <- object %>% nm_output_path("ext")
   
-  d <- coef_ext0(ext_file_path)
+  d <- tryCatch({
+    coef_ext0(ext_file_path)
+  }, error = function(e){
+    return(data.frame())
+  })
   if (nrow(d) == 0) {
     return(data.frame())
   }
