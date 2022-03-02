@@ -110,7 +110,7 @@ nm_render.nm_generic <- function(m,
         quiet = TRUE,
         ...
       )
-    }, hash = list(input, output_file, output_dir, args),
+    }, hash = list(tools::md5sum(input), output_file, output_dir, args),
     dir = file.path(".cache", "rmarkdown", ""), 
     file = paste0(basename(input), ".", file_friendly_unique_id(m)))    
   } else {
@@ -186,7 +186,7 @@ nm_list_render <- function(m,
         quiet = TRUE,
         ...
       )
-    }, hash = list(input, output_file, output_dir, args),
+    }, hash = list(tools::md5sum(input), output_file, output_dir, args),
     dir = file.path(".cache", "rmarkdown", ""), 
     file = paste0(basename(input), ".", file_friendly_unique_id(m)))    
   } else {
