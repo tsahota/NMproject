@@ -50,6 +50,9 @@ read_ext.default <- function(r, trans = FALSE) {
   base_nm_run_path <- file.path(run_dir_path(r), "NM_run1")
 
   # d <- read_ext0(r$output$psn.ext)
+  
+  if (!file.exists(file.path(base_nm_run_path, "psn.ext"))) usethis::ui_stop("psn.ext file exist (yet)")
+  
   d <- read_ext0(file.path(base_nm_run_path, "psn.ext"))
 
   if (!trans) {
