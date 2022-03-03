@@ -682,6 +682,13 @@ nm_list_gather.default <- function(x = .GlobalEnv, max_length = 1) {
 
   m <- m[!is.na(m)]
   m <- do.call(c, m)
+  
+  ## get a rough order to them
+  numeric_run_ids <- as.numeric(gsub("[^0-9\\.]", "", run_id(m)))
+  if (!any(is.na(numeric_run_ids))){
+    m <- m[order(numeric_run_ids, decreasing = TRUE)]
+  }
+  
   m
 }
 
