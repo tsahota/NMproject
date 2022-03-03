@@ -791,7 +791,7 @@ raw_init_random <- function(m, replace, dollar = "OMEGA") {
     d$init <- NA
     d$upper <- NA
 
-    number_regex <- "\\(?\\-?[0-9\\.]+\\)?F?I?X?\\)?"
+    number_regex <- "\\(?\\-?[0-9\\.eE\\+\\-]+\\)?F?I?X?\\)?"
     single_number_regex <- paste0("^(", number_regex, ")$")
     lower_init_regex <- paste0("^\\((", number_regex, "),(", number_regex, ")\\)F?I?X?$")
     lower_init_upper_regex <- paste0("^\\((", number_regex, "),(", number_regex, "),(", number_regex, ")\\)F?I?X?$")
