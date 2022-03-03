@@ -369,6 +369,7 @@ coef.nm_generic <- function(object, trans = TRUE, ...) {
     return(data.frame())
   }
   
+  d$parameter <- factor(d$parameter, levels = unique(d$parameter))
   d$run_name <- gsub("execute\\.", "\\1", unique_id(object))
   if (!unique(d$is_final)) d$run_name <- paste0(d$run_name, "*")
   d$is_final <- NULL
