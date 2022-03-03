@@ -130,12 +130,13 @@ or <code>data.frame</code> with (<code>nm_list</code> column) or <code>nm_list</
 <span class="r-in"><span class="va">m2</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="child.html">child</a></span><span class="op">(</span><span class="st">"m2"</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">m_all</span> <span class="op">&lt;-</span> <span class="fu">nm_list_gather</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in UseMethod("run_id"):</span> no applicable method for 'run_id' applied to an object of class "NULL"</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span></span>
 <span class="r-in">  <span class="va">m_all</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="fu"><a href="nm_getsetters.html">run_id</a></span><span class="op">(</span><span class="va">m_all</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"m1"</span><span class="op">)</span>,</span>
 <span class="r-in">  <span class="va">m1</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in UseMethod("run_id"):</span> no applicable method for 'run_id' applied to an object of class "NULL"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in subset(., run_id(m_all) %in% "m1"):</span> object 'm_all' not found</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
