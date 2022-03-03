@@ -135,6 +135,7 @@ rr.nm_list <- function(m, trans = TRUE) {
   if (nrow(d) == 0) {
     return(data.frame())
   }
+  d$nm_name <- NULL
   d$file <- NULL
   d$unit[is.na(d$unit)] <- ""
   d$SEunit[is.na(d$SEunit)] <- ""
