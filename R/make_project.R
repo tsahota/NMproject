@@ -193,7 +193,14 @@ nm_create_analysis_project <- function(path, dirs = nm_default_dirs(),
 
   set_default_dirs_in_rprofile(file.path(folder, name, ".Rprofile"), dirs)
 
-  suppressMessages(devtools::build_readme(path = path))
+  tryCatch(
+    {
+      suppressMessages(devtools::build_readme(path = path))   
+    },
+    error = function(e) {
+      usethis::ui_info("skipping {usethis::ui_path('README.Rmd')} build")
+    }
+  )
 
   ## No R directory for simple package - advanced users needs to create this manually
   ##  This is because RStudio by default tries to save files in the R directory.
