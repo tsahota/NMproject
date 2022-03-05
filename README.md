@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# NMproject <a href='https://tsahota.github.io/NMproject'><img src='man/figures/logo.svg' align="right" height="139" /></a>
+# NMproject <a href='https://tsahota.github.io/NMproject/'><img src='man/figures/logo.svg' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
