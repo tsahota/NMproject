@@ -11,3 +11,4 @@ docs
 doc
 Meta
 tests/testthat/test_nmproject.zip
+pkgdown
