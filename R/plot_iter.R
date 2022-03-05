@@ -72,7 +72,8 @@ plot_iter_data.default <- function(r, trans = TRUE, skip = 0, yvar = "OBJ") {
 
   par.names <- c("OBJ", names(d)[names(d) %in% par.names])
   
-  d <- tidyr::gather(d, key = "variable", value = "value", par.names)
+  d <- d %>% tidyr::pivot_longer(par.names, names_to = "variable", values_to = "value")
+  #d <- tidyr::gather(d, key = "variable", value = "value", par.names)
   d$variable <- factor(d$variable, levels = par.names)
   
   if (trans) {

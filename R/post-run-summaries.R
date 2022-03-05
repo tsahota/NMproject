@@ -145,7 +145,8 @@ rr.nm_list <- function(m, trans = TRUE) {
   d$Estimate[d$parameter != "OBJ"] <- paste0(signif(d$FINAL[d$parameter != "OBJ"], 3), " (", signif(d$SE[d$parameter != "OBJ"], 3), d$SEunit[d$parameter != "OBJ"], ")")
   d$Estimate[d$parameter == "OBJ"] <- round(d$FINAL[d$parameter == "OBJ"], 3)
   d <- d[, names(d)[!names(d) %in% c("SE", "FINAL")]]
-  d <- tidyr::spread(d, key = "run_name", value = "Estimate")
+  d <- d %>% tidyr::pivot_wider(names_from = "run_name", values_from = "Estimate")
+  d <- as.data.frame(d)
   ## fix ordering of columns so it's same as m - dcast ruins it
   non_matches <- names(d)[!seq_along(names(d)) %in% match(unique_id(m), names(d))]
   matches <- unique_id(m[!is.na(m)])
@@ -335,7 +336,8 @@ coef_long <- function(m, trans = TRUE) {
   
   d <- d[grepl("THETA|OMEGA|SIGMA", d$type), ]
   
-  d <- d %>% tidyr::gather(key = "key", value = "estimate", .data$FINAL:.data$SE)
+  d <- d %>% tidyr::pivot_longer(.data$FINAL:.data$SE, names_to = "key", values_to = "estimate")
+  #d <- d %>% tidyr::gather(key = "key", value = "estimate", .data$FINAL:.data$SE)
   
   d <- d[order(paste("m", d$m_no, "p", d$par_no, d$key)), ]
   d$m_no <- NULL
@@ -838,8 +840,9 @@ covariance_plot <- function(r, trans = TRUE) {
   dc$EST.NO <- rep(1:n_ests, each = length(unique(dc$Var1)))
   dc <- dc %>% dplyr::filter(.data$EST.NO == max(.data$EST.NO))
   dc$EST.NO <- NULL
-  
-  dc <- dc %>% tidyr::gather(key = "Var2", value = "value", -.data$Var1)
+
+  dc <- dc %>% tidyr::pivot_longer(-.data$Var1, names_to = "Var2", values_to = "value")
+  #dc <- dc %>% tidyr::gather(key = "Var2", value = "value", -.data$Var1)
   
   dc$Var1 <- factor(dc$Var1)
   dc$Var2 <- factor(dc$Var2)
@@ -964,11 +967,11 @@ ext2coef <- function(extout, file_name) {
   
   par.names <- names(d)[match("THETA1", names(d)):match("OBJ", names(d))]
   
-  d <- tidyr::gather(d, key = "parameter", value = "value", par.names)
+  d <- d %>% tidyr::pivot_longer(par.names, names_to = "parameter", values_to = "value")
   d$parameter <- factor(d$parameter, levels = par.names)
   
-  d <- tidyr::spread(d, key = "TYPE", value = "value")
-  
+  d <- d %>% tidyr::pivot_wider(names_from = "TYPE", values_from = "value")
+
   ## messy hard coding - consider refactoring if need more than just eigenvalues
   if (has_final_est & length(cond_num) > 0) {
     dlast <- d[nrow(d), ]
@@ -1077,7 +1080,7 @@ rr2 <- function(m, trans = TRUE) {
     dplyr::mutate(par_no = max(.data$par_no))
   
   m_names <- unique(d$run_name)
-  d <- d %>% tidyr::spread(key = "run_name", value = "estimate")
+  d <- d %>% tidyr::pivot_wider(names_from = "run_name", values_from = "estimate")
   names1 <- names(d)[!names(d) %in% m_names]
   d <- d[, c(names1, m_names)]
   # d <- d[order(d$key, d$par_no), ]

@@ -310,7 +310,7 @@ append_nonmem_var <- function(output_table, r, var) {
 
   wide_coef <- dc %>%
     dplyr::select(.data$parameter, .data$FINAL) %>%
-    tidyr::spread(key = "parameter", value = "FINAL")
+    tidyr::pivot_wider(names_from = "parameter", values_from = "FINAL")
 
   # dos <- do[!duplicated(paste(do$ID, do[[cov]])), ]
 
@@ -375,7 +375,7 @@ param_cov_diag <- function(r, param, cov, ..., categorical = FALSE, plot_tv = TR
 
   wide_coef <- dc %>%
     dplyr::select(.data$parameter, .data$FINAL) %>%
-    tidyr::spread(key = "parameter", value = "FINAL")
+    tidyr::pivot_wider(names_from = "parameter", values_from = "FINAL")
 
   dos <- do[!duplicated(paste(do$ID, do[[cov]])), ]
 
