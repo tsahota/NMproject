@@ -94,13 +94,13 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="development version" id="nmproject-development-version">NMproject (development version)<a class="anchor" aria-label="anchor" href="#nmproject-development-version"></a></h2>
-<ul><li><p>Removed reshape2 imports and replaced with tidyr.</p></li>
+<ul><li><p>Removed reshape2 imports and replaced with tidyr v1.0.0.</p></li>
 <li><p>Added <code>check_installation</code> for users to be able to verify installations (fixes <a href="https://github.com/tsahota/NMproject/issues/18" class="external-link">#18</a>).</p></li>
 <li><p>All closed form ADVAN/TRANS combinations added to the code library. Modified $ERROR so that log transformed DV and M3 models can be obtained by uncommenting lines.</p></li>
-<li><p>Finished coding <code><a href="../reference/subroutine.html">subroutine()</a></code> function and included package tests.</p></li>
 <li><p>The run monitor addin now uses object highlighting - useful for when objects are not in <code>.GlobalEnv</code> (e.g. they’re in a <code>data.frame</code>).</p></li>
 <li><p>Reorders arguments for <code>decision</code> so that auto decisions can be specified without explicity referring to arguments</p></li>
 <li><p>Removed future package from suggests and <code>async</code> arguments from <code>nm_render*()</code> functions.</p></li>
+<li><p>Improvements to the <code><a href="../reference/subroutine.html">subroutine()</a></code> function and included package tests.</p></li>
 <li><p>Added <code>path</code> argument to <code><a href="../reference/write_ctl.html">write_ctl()</a></code> so control file can be written to other locations.</p></li>
 <li><p>Added package hex sticker.</p></li>
 <li><p>Added <code><a href="../reference/completed_nm.html">completed_nm()</a></code> for handling completed nonmem runs.</p></li>
