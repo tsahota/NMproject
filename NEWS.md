@@ -1,4 +1,4 @@
-# NMproject (development version)
+# NMproject 0.6.8
 
 * Removed reshape2 imports and replaced with tidyr v1.0.0.
 
