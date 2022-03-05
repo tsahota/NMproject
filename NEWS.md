@@ -9,8 +9,6 @@
   Modified $ERROR so that log transformed DV and M3 models can be 
   obtained by uncommenting lines.
 
-* Finished coding `subroutine()` function and included package tests.
-
 * The run monitor addin now uses object highlighting - useful for when objects 
   are not in `.GlobalEnv` (e.g. they're in a `data.frame`).
 
@@ -18,6 +16,8 @@
   specified without explicity referring to arguments
   
 * Removed future package from suggests and `async` arguments from `nm_render*()` functions.
+
+* Improvements to the `subroutine()` function and included package tests.
 
 * Added `path` argument to `write_ctl()` so control file can be written to 
   other locations.
