@@ -23,6 +23,9 @@ suppressWarnings(
 #' @export
 
 nm_read_table <- function(file, ...) {
+  if (!file.exists(file)) {
+    usethis::ui_stop("The file {usethis::ui_path(file)} could not be found")
+  }
   tmp <- suppressWarnings(utils::read.table(file, fill = T, colClasses = "dummy.numeric", ...))
   return(tmp[stats::complete.cases(tmp[, sapply(tmp, function(i) !all(is.na(i)))]), ])
 }
