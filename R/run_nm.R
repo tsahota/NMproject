@@ -108,16 +108,24 @@ run_nm.nm_generic <- function(m,
         current_checksums <- current_checksums[keep]
       }
 
-      ## ignore names
-      names(current_checksums) <- NULL
-      names(run_cache_disk$checksums) <- NULL
+      ## ignore names - why? it shouldn't make a difference, removing to see effect...
+      #names(current_checksums) <- NULL
+      #names(run_cache_disk$checksums) <- NULL
+      
+      matched <- sapply(names(current_checksums), function(i) {
+        identical(run_cache_disk$checksums[i], current_checksums[i])
+      })
+      
+      for (mis_match in names(matched)[!matched]) {
+        usethis::ui_info("{mis_match} update detected. Rerunning...")
+      }
 
-      matched <- identical(run_cache_disk$checksums, current_checksums)
-      if (matched) {
+      #matched <- identical(run_cache_disk$checksums, current_checksums)
+      if (all(matched)) {
         if (!is_finished(m)) {
           warning("run was previously executed but has is_finished() status = FALSE")
         }
-        message("rebuilding run from cache... use run_nm(force = TRUE) to override")
+        usethis::ui_info("rebuilding run from cache... use {usethis::ui_code('run_nm(force = TRUE)')} to override")
         ## update object and return
         m <- m %>% executed(TRUE)
         m <- m %>% job_info(run_cache_disk$job_info)
