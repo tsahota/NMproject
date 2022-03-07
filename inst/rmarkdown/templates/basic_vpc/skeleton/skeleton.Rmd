@@ -46,11 +46,18 @@ if(!is.null(knitr::opts_knit$get('rmarkdown.pandoc.to'))){
 }
 ```
 
+## parameters
+
+Any knitr parameters will be displayed here:
+
+```{r}
+print(params)
+```
+
 ## model object
 
 ```{r wait_for_run_finish}
 wait_finish(.m)
-.m
 ```
 
 ## VPC
