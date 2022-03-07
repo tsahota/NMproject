@@ -135,7 +135,8 @@ nm_render.nm_generic <- function(m,
 }
 
 #' @export
-nm_render.nm_list <- Vectorize_nm_list(nm_render.nm_generic, SIMPLIFY = FALSE, invisible = TRUE)
+nm_render.nm_list <- Vectorize_nm_list(nm_render.nm_generic, SIMPLIFY = FALSE, invisible = TRUE, 
+                                       vectorize.args = c("m", "input", "output_file"))
 
 #' @rdname nm_render
 #' @export
