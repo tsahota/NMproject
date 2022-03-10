@@ -123,7 +123,7 @@ run_nm.nm_generic <- function(m,
       #matched <- identical(run_cache_disk$checksums, current_checksums)
       if (all(matched)) {
         if (!is_finished(m)) {
-          warning("run was previously executed but has is_finished() status = FALSE")
+          usethis::ui_warn("run was previously executed but has {usethis::ui_code('is_finished()')} status as FALSE")
         }
         usethis::ui_info("rebuilding run from cache... use {usethis::ui_code('run_nm(force = TRUE)')} to override")
         ## update object and return
