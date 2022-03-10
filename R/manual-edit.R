@@ -180,8 +180,8 @@ view_patch <- function(patch_id) {
 
 }
 
-new_patch_app <- function() {
-  ctx <- rstudioapi::getSourceEditorContext()
+new_patch_app <- function(ctx) {
+  if (missing(ctx)) ctx <- rstudioapi::getSourceEditorContext()
   selected_text <- ctx$selection[[1]]$text
   final_pipe_present <- grepl("\\s*%>%\\s*$", selected_text)
   final_newline_present <- grepl("\\n\\s*$", selected_text)
@@ -241,8 +241,8 @@ Follow the above instructions and indicate if you happy to proceed?", yes = "Yes
   
 }
 
-modify_patch_app <- function() {
-  ctx <- rstudioapi::getSourceEditorContext()
+modify_patch_app <- function(ctx) {
+  if (missing(ctx)) ctx <- rstudioapi::getSourceEditorContext()
   selected_text <- ctx$selection[[1]]$text
   final_pipe_present <- grepl("\\s*%>%\\s*$", selected_text)
   final_newline_present <- grepl("\\n\\s*$", selected_text)
@@ -295,7 +295,7 @@ Follow the above instructions and indicate if you happy to proceed?", yes = "Yes
   apply_manual_edit(\"", res$patch_id, "\")")
   }
 
-  rstudioapi::insertText(
+  rstudioapi::insertText(ctx$selection[[1]]$range,
     text = code_to_add,
     id = ctx$id
   )
@@ -304,8 +304,8 @@ Follow the above instructions and indicate if you happy to proceed?", yes = "Yes
 
 }
 
-resolve_manual_edit <- function() {
-  ctx <- rstudioapi::getSourceEditorContext()
+resolve_manual_edit <- function(ctx) {
+  if (missing(ctx)) ctx <- rstudioapi::getSourceEditorContext()
   selected_text <- ctx$selection[[1]]$text
   final_pipe_present <- grepl("\\s*%>%\\s*$", selected_text)
   final_newline_present <- grepl("\\n\\s*$", selected_text)
@@ -364,7 +364,7 @@ Follow the above instructions and indicate if you happy to proceed?", yes = "Yes
   apply_manual_edit(\"", res$patch_id, "\")")
   }
 
-  rstudioapi::insertText(
+  rstudioapi::insertText(ctx$selection[[1]]$range,
     text = code_to_add,
     id = ctx$id
   )
@@ -374,9 +374,9 @@ Follow the above instructions and indicate if you happy to proceed?", yes = "Yes
 }
 
 make_patch_app <- function() {
-  check_git_uservalues()
 
   ctx <- rstudioapi::getSourceEditorContext()
+  check_git_uservalues()
   selected_text <- ctx$selection[[1]]$text
   selected_text <- gsub("\\s*%>%\\s*$", "", selected_text)
   ## see if last function is apply_manual_edit
@@ -397,16 +397,16 @@ make_patch_app <- function() {
   }
 
   if (last_fun_name == "apply_manual_edit") {
-    modify_patch_app()
+    modify_patch_app(ctx)
   } else {
-    new_patch_app()
+    new_patch_app(ctx)
   }
 }
 
 resolve_manual_edit_app <- function() {
-  check_git_uservalues()
-
+  
   ctx <- rstudioapi::getSourceEditorContext()
+  check_git_uservalues()
   selected_text <- ctx$selection[[1]]$text
   selected_text <- gsub("\\s*%>%\\s*$", "", selected_text)
   ## see if last function is apply_manual_edit
@@ -427,7 +427,7 @@ resolve_manual_edit_app <- function() {
   }
 
   if (last_fun_name == "apply_manual_edit") {
-    resolve_manual_edit()
+    resolve_manual_edit(ctx)
   } else {
     stop("the last function applied to selection needs to be apply_manual_edit()")
   }
