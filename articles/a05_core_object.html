@@ -311,17 +311,17 @@
 <span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"THETA"</span><span class="op">)</span>
 <span class="co">#&gt; $`execute.Models/m1`</span>
 <span class="co">#&gt;   1| $THETA</span>
-<span class="co">#&gt;   2| -1.6855 FIX   ; KA ; h-1 ; LOG</span>
-<span class="co">#&gt;   3| 0.2298   ; K ; h-1 ; LOG</span>
-<span class="co">#&gt;   4| 0.57573   ; V ; L ; LOG</span>
+<span class="co">#&gt;   2| -2.1732 FIX   ; KA ; h-1 ; LOG</span>
+<span class="co">#&gt;   3| 1.0658   ; K ; h-1 ; LOG</span>
+<span class="co">#&gt;   4| 0.95029   ; V ; L ; LOG</span>
 
 <span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/init_theta.html">init_omega</a></span><span class="op">(</span>init <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">init</span>, min <span class="op">=</span> <span class="va">init</span><span class="op">/</span><span class="fl">2</span>, max <span class="op">=</span> <span class="va">init</span><span class="op">*</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>
 <span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"OMEGA"</span><span class="op">)</span>
 <span class="co">#&gt; $`execute.Models/m1`</span>
 <span class="co">#&gt;   1| $OMEGA</span>
-<span class="co">#&gt;   2| 0.19085   ;  IIV_KA ; LOG</span>
-<span class="co">#&gt;   3| 0.16164   ;  IIV_K ; LOG</span>
-<span class="co">#&gt;   4| 0.062741   ;  IIV_V ; LOG</span></code></pre></div>
+<span class="co">#&gt;   2| 0.10335   ;  IIV_KA ; LOG</span>
+<span class="co">#&gt;   3| 0.067343   ;  IIV_K ; LOG</span>
+<span class="co">#&gt;   4| 0.12842   ;  IIV_V ; LOG</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="working-with-omegasigma-blocks">Working with $OMEGA/$SIGMA BLOCKS<a class="anchor" aria-label="anchor" href="#working-with-omegasigma-blocks"></a>
@@ -334,9 +334,9 @@
 <span class="co">#&gt; $`execute.Models/m1`</span>
 <span class="co">#&gt;     name omega1 omega2 lower     init upper block mblock   FIX unit trans line</span>
 <span class="co">#&gt; 1   &lt;NA&gt;     NA     NA    NA       NA    NA     1     NA FALSE &lt;NA&gt;  &lt;NA&gt;    1</span>
-<span class="co">#&gt; 2 IIV_KA      1      1    NA 0.190850    NA     1      1 FALSE &lt;NA&gt;   LOG    2</span>
-<span class="co">#&gt; 3  IIV_K      2      2    NA 0.161640    NA     2      1 FALSE &lt;NA&gt;   LOG    3</span>
-<span class="co">#&gt; 4  IIV_V      3      3    NA 0.062741    NA     3      1 FALSE &lt;NA&gt;   LOG    4</span>
+<span class="co">#&gt; 2 IIV_KA      1      1    NA 0.103350    NA     1      1 FALSE &lt;NA&gt;   LOG    2</span>
+<span class="co">#&gt; 3  IIV_K      2      2    NA 0.067343    NA     2      1 FALSE &lt;NA&gt;   LOG    3</span>
+<span class="co">#&gt; 4  IIV_V      3      3    NA 0.128420    NA     3      1 FALSE &lt;NA&gt;   LOG    4</span>
 <span class="co">#&gt;   pos orig_line orig_pos</span>
 <span class="co">#&gt; 1   1         1        1</span>
 <span class="co">#&gt; 2   1         2        1</span>
@@ -350,10 +350,10 @@
 <span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"OMEGA"</span><span class="op">)</span>
 <span class="co">#&gt; $`execute.Models/m1`</span>
 <span class="co">#&gt;   1| $OMEGA</span>
-<span class="co">#&gt;   2| 0.19085   ;   IIV_KA ; LOG</span>
+<span class="co">#&gt;   2| 0.10335   ;   IIV_KA ; LOG</span>
 <span class="co">#&gt;   3| $OMEGA BLOCK (2)</span>
-<span class="co">#&gt;   4| 0.16164   ;   IIV_K ; LOG</span>
-<span class="co">#&gt;   5| 0.01 0.062741   ;   IIV_V ; LOG</span></code></pre></div>
+<span class="co">#&gt;   4| 0.067343   ;   IIV_K ; LOG</span>
+<span class="co">#&gt;   5| 0.01 0.12842   ;   IIV_V ; LOG</span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="co">## for demo purposes we'll reverse the process with unblock()</span>
@@ -363,9 +363,9 @@
 <span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/dollar.html">dollar</a></span><span class="op">(</span><span class="st">"OMEGA"</span><span class="op">)</span>
 <span class="co">#&gt; $`execute.Models/m1`</span>
 <span class="co">#&gt;   1| $OMEGA</span>
-<span class="co">#&gt;   2| 0.19085   ;    IIV_KA ; LOG</span>
-<span class="co">#&gt;   3| 0.16164   ;    IIV_K ; LOG</span>
-<span class="co">#&gt;   4| 0.062741   ;    IIV_V ; LOG</span></code></pre></div>
+<span class="co">#&gt;   2| 0.10335   ;    IIV_KA ; LOG</span>
+<span class="co">#&gt;   3| 0.067343   ;    IIV_K ; LOG</span>
+<span class="co">#&gt;   4| 0.12842   ;    IIV_V ; LOG</span></code></pre></div>
 </div>
   </div>
 
