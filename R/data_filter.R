@@ -23,12 +23,9 @@ data_ignore_char.nm_generic <- function(r, data) {
   ## remove IGNORE=#
   dol_data <- gsub("IGNORE\\s*=\\s*#", "", dol_data)
 
-  if (any(grepl("IGNORE\\s*=\\s*C\\b", dol_data))) {
-    warning("NMproject currently doesn't work with IGNORE=C type runs.
-       It is recommended to modify the control file to use IGNORE=@ instead.",
-      call. = FALSE
-    )
-  }
+  C_column_ignored <- any(grepl("IGNORE\\s*=\\s*C\\b", dol_data))  ## use this at end of func
+  ## remove IGNORE=C
+  dol_data <- gsub("IGNORE\\s*=\\s*C\\b", "", dol_data)
 
   ignore_present <- any(grepl(".*IGNORE\\s*=?\\s*\\(", dol_data))
   accept_present <- any(grepl(".*ACCEPT\\s*=?\\s*\\(", dol_data))
@@ -108,6 +105,8 @@ data_ignore_char.nm_generic <- function(r, data) {
   filter_statements <- paste(filter_statements, collapse = " | ")
   if ("ACCEPT" %in% type) filter_statements <- paste0("!(", filter_statements, ")")
 
+  if (C_column_ignored) filter_statements <- paste("!is.na(C) |", filter_statements)
+  
   filter_statements
 }
 data_ignore_char.nm_list <- Vectorize_nm_list(data_ignore_char.nm_generic, SIMPLIFY = TRUE)
