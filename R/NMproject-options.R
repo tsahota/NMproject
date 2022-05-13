@@ -11,6 +11,8 @@ set_nm_opts <- function() {
   if (is.null(getOption("system_nm"))) options(system_nm = function(cmd, ...) system_nm_default(cmd, ...))
   if (is.null(getOption("quiet_run"))) options(quiet_run = TRUE)
   if (is.null(getOption("intern"))) options(intern = FALSE)
+  
+  if (is.null(getOption("job_time_spacing"))) options(job_time_spacing = 0)
 
   if (is.null(getOption("available_nm_types"))) {
     options(available_nm_types = c(
@@ -54,7 +56,7 @@ set_nm_opts <- function() {
     "nm_default_dirs", "kill_job", "nm.overwrite_behaviour",
     "nm.force_render", "nm_default_fields", "nmtran_exe_path",
     "nm_pre_commit_hook", "nm_pre_push_hook",
-    "code_library_path"
+    "code_library_path", "job_time_spacing"
   ))
 }
 
@@ -203,6 +205,33 @@ nm_default_fields <- function(field_list) {
     getOption("nm_default_fields")
   } else {
     options(nm_default_fields = field_list)
+  }
+}
+
+#' Setup default job_time_spacing option
+#'
+#' @description
+#'
+#' `r lifecycle::badge("stable")`
+#'
+#' This allows organisations/individuals with their own job time spacing, used by [run_nm()] when `threads > 1`.
+#'
+#' @param seconds Optional numeric value. Values correspond to what will be set.
+#'
+#' @return if `seconds` is missing, will return value of
+#' `getOption("job_time_spacing")` otherwise will set option `job_time_spacing`.
+#' @examples
+#'
+#' job_time_spacing()
+#' job_time_spacing(1)
+#'
+#' @export
+
+job_time_spacing <- function(seconds) {
+  if (missing(seconds)) {
+    getOption("job_time_spacing")
+  } else {
+    options(job_time_spacing = seconds)
   }
 }
 

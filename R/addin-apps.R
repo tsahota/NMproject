@@ -30,7 +30,7 @@ get_single_object_for_app <- function() {
 
   ## temporarily disable run_nm
   selected_text <- gsub("\\brun_nm\\b\\(", "as.list(", selected_text)
-  selected_text <- gsub("\\brun_nm_batch\\b\\(", "as.list(", selected_text)
+  selected_text <- gsub("\\brun_nm_single\\b\\(", "as.list(", selected_text)
 
   suppressMessages({
     m <- eval(parse(text = selected_text), envir = parent.frame(n = 3))

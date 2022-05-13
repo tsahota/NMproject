@@ -11,9 +11,11 @@
 
 * The run monitor addin now uses object highlighting - useful for when objects 
   are not in `.GlobalEnv` (e.g. they're in a `data.frame`).
+  
+* Changed `run_nm()` to have `threads` argument and make use of a `job_time_spacing` option to stagger multiple jobs and prevent overloading of a server (resolves #28).
 
 * Reorders arguments for `decision` so that auto decisions can be 
-  specified without explicity referring to arguments
+  specified without explicitly referring to arguments
   
 * Removed future package from suggests and `async` arguments from `nm_render*()` functions.
 

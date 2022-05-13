@@ -85,7 +85,6 @@ reference:
 - title: "Execution"
 - contents:
   - run_nm
-  - run_nm_batch
   - nm_tran
   - shiny_nm
   - status

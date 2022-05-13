@@ -213,11 +213,11 @@ cmd(m1_boot$m)
 ## running a vector of runs uses the same syntax as running a single run.  All
 ## runs will be launched at the same time.  In a grid system this is usually
 ## fine as jobs will queue until resources are available.  If running on a
-## non-grid system consider run_nm_batch() with the "threads" argument to avoid
+## non-grid system consider the "threads" argument to avoid
 ## eating up all your resources
 
 m1_boot$m %>% 
-  run_nm_batch(threads = 1) %>% ## run all runs
+  run_nm(threads = 1) %>% ## run all runs
   wait_finish() %>% ## wait until all are finished
   nm_list_render("Scripts/basic_boot.Rmd") ## generate run report in "Results" directory
 
@@ -236,7 +236,7 @@ m1_xv <- m1_boot %>%
 ```
 
 ```{r run_xv, eval = FALSE}
-m1_xv$m_xv %>% run_nm_batch(threads = 1) %>% wait_finish()
+m1_xv$m_xv %>% run_nm(threads = 1) %>% wait_finish()
 
 summary_wide(m1_xv$m_xv)
 

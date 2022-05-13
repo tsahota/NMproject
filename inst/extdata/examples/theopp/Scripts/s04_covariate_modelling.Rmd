@@ -94,7 +94,7 @@ dsc1 <- c1 %>% covariate_step_tibble(
   direction = "forward"
 )
 
-dsc1$m <- dsc1$m %>% run_nm_batch(threads = 1)
+dsc1$m <- dsc1$m %>% run_nm(threads = 1)
 
 wait_finish(dsc1$m)
 
@@ -126,7 +126,7 @@ dsc2 <- c1_f1 %>% covariate_step_tibble(
   direction = "forward"
 )
 
-dsc2$m <- dsc2$m %>% run_nm_batch(threads = 1)
+dsc2$m <- dsc2$m %>% run_nm(threads = 1)
 
 #dsc2$m <- dsc2$m %>% run_nm()
 
@@ -161,7 +161,7 @@ dsc3 <- c1_f2 %>% covariate_step_tibble(
   direction = "backward"
 )
 
-dsc3$m <- dsc3$m %>% run_nm_batch(threads = 1)
+dsc3$m <- dsc3$m %>% run_nm(threads = 1)
 
 wait_finish(dsc3$m)
 
