@@ -188,8 +188,7 @@ nm_list_render <- function(m,
         ...
       )
     }, hash = list(tools::md5sum(input), output_file, output_dir, args),
-    dir = file.path(".cache", "rmarkdown", ""), 
-    file = paste0(basename(input), ".", file_friendly_unique_id(m)))    
+    dir = file.path(".cache", "rmarkdown", ""))
   } else {
     rmarkdown::render(
       input = input,
