@@ -142,8 +142,11 @@ rr.nm_list <- function(m, trans = TRUE) {
   if ("trans" %in% d$trans) d$trans[is.na(d$trans)] <- "" ## optional item
   d <- d[, names(d)[!names(d) %in% c("EVALUATION", "EST.NO", "EST.NAME")]]
   d$Estimate <- NA
-  d$Estimate[d$parameter != "OBJ"] <- paste0(signif(d$FINAL[d$parameter != "OBJ"], 3), " (", signif(d$SE[d$parameter != "OBJ"], 3), d$SEunit[d$parameter != "OBJ"], ")")
-  d$Estimate[d$parameter == "OBJ"] <- round(d$FINAL[d$parameter == "OBJ"], 3)
+  d$param_flag <- grepl("THETA", d$type) | grepl("OMEGA", d$type) | grepl("SIGMA", d$type)
+  d$Estimate[d$param_flag] <- paste0(signif(d$FINAL[d$param_flag], 3), " (", signif(d$SE[d$param_flag], 3), d$SEunit[d$param_flag], ")")
+  d$Estimate[!d$param_flag] <- round(d$FINAL[!d$param_flag], 3)
+  d$param_flag <- NULL
+  d$Estimate[d$FIX %in% TRUE] <- gsub("\\(.*?\\)", "(FIX)", d$Estimate[d$FIX %in% TRUE])
   d <- d[, names(d)[!names(d) %in% c("SE", "FINAL")]]
   d <- d %>% tidyr::pivot_wider(names_from = "run_name", values_from = "Estimate")
   d <- as.data.frame(d)
@@ -382,7 +385,7 @@ coef.nm_generic <- function(object, trans = TRUE, ...) {
   p <- param_info2(object)
   
   d0 <- d[, names(d)[!names(d) %in% "unit"]]
-  d1 <- p[, c("name", "parameter", "unit", "trans")]
+  d1 <- p[, c("name", "parameter", "unit", "trans", "FIX")]
   
   d <- merge(d0, d1, all.x = TRUE, by = "parameter", sort = FALSE)
   d$name[is.na(d$name)] <- as.character(d$parameter)[is.na(d$name)]
@@ -488,6 +491,7 @@ coef.nm_generic <- function(object, trans = TRUE, ...) {
   d$nm_name <- d$parameter
   d$parameter <- d$name
   d$name <- NULL
+  d$SE[!d$FIX %in% FALSE] <- NA_real_
   d
 }
 
@@ -639,17 +643,20 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
       rri$trans <- NULL
       rri$par_no <- NULL
       rri$key <- NULL
+      rri$FIX <- NULL
       
-      if (ncol(rri) < 3) {
+      base_col_ns <- 3 # the number of columns expected in a simple rri object
+      
+      if (ncol(rri) < base_col_ns) {
         return(d)
       }
-      if (ncol(rri) == 3) {
-        names(rri)[3] <- c("m")
+      if (ncol(rri) == base_col_ns) {
+        names(rri)[base_col_ns] <- c("m")
       }
-      if (ncol(rri) == 4) {
-        names(rri)[3:4] <- c("parent", "m")
+      if (ncol(rri) == (base_col_ns + 1)) {
+        names(rri)[base_col_ns:(base_col_ns+1)] <- c("parent", "m")
       }
-      if (ncol(rri) > 4) browser() # stop("stop something wrong, debug")
+      if (ncol(rri) > (base_col_ns + 1)) browser() # stop("stop something wrong, debug")
       
       if (parameters == "new") {
         param_names <- rri$parameter[!grepl("se_", rri$parameter) &
