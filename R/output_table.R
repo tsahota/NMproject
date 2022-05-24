@@ -24,11 +24,31 @@ nm_output <- function(r, dorig, ...) {
 nm_output.nm_generic <- function(r, dorig, ...) {
   r <- as_nm_generic(r) ## because nm_list method is identical
   wait_finish(r)
+  
+  out_file_info <- r %>% dollar("TABLE") %>% paste(collapse = "\n") %>% strsplit("\\$", perl = TRUE)
+  out_file_info <- out_file_info[[1]] %>%
+    lapply(function(sub_text) {
+      sub_text <- paste(sub_text, collapse = "\n")
+      filename_exists <- grepl(".*?FILE\\s*=\\s*(\\S+)\\b.*", sub_text)
+      if (!filename_exists) return(data.frame())
+      filename <- gsub(".*?FILE\\s*=\\s*(\\S+)\\b.*", "\\1", sub_text)
+      format_exists <- grepl(".*?FORMAT\\s*=\\s*(\\S+)\\b.*", sub_text)
+      format <- gsub(".*?FORMAT\\s*=\\s*(\\S+)\\b.*", "\\1", sub_text)
+      if (!format_exists) format <- NA_character_
+      comma_sep <- grepl(",", format)
+      data.frame(filename, format, comma_sep)
+    }) %>%
+    dplyr::bind_rows()
 
-  ctl_out_files <- ctl_table_paths(as_nm_generic(r))
+  d <- lapply(seq_len(nrow(out_file_info)), function(i) {
+    
+    out_path <- file.path(run_in(r), out_file_info$filename[i])
+    if (out_file_info$comma_sep[i]) {
+      d <- nm_read_table(out_path, skip = 1, header = TRUE, sep = ",")      
+    } else {
+      d <- nm_read_table(out_path, skip = 1, header = TRUE)
+    }
 
-  d <- lapply(ctl_out_files, function(out_file) {
-    d <- nm_read_table(out_file, skip = 1, header = TRUE)
   })
 
   ## TODO: this will break if some tables have FIRSTONLY
