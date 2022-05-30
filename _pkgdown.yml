@@ -19,6 +19,7 @@ reference:
   - nm_default_fields
   - nm_default_dirs
   - overwrite_behaviour
+  - job_time_spacing
 - title: "Project directory management"
 - contents:
   - nm_create_analysis_project

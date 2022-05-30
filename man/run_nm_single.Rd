@@ -75,3 +75,4 @@ m1 <- new_nm(
 \seealso{
 \code{\link[=nm_tran]{nm_tran()}}
 }
+\keyword{internal}

@@ -48,6 +48,8 @@
 #'   run_nm()
 #' }
 #' @export
+#' @keywords internal
+#' 
 run_nm_single <- function(m,
                    ignore.stdout = TRUE, ignore.stderr = TRUE,
                    quiet = getOption("quiet_run"), intern = getOption("intern"),
