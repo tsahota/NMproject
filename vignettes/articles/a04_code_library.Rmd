@@ -17,7 +17,7 @@ library(NMproject)
 
 The first step in NONMEM model development is usually to borrow NONMEM code that a colleague who worked on a similar to use code from one of your previous project and then an adapt it to your problem.
 
-This is certaintly better than starting from scratch, however consider these problems: the code you borrow where the `$EST` code is fine for the problem it was originally written for, but works poorly on your problem.  Or the file is stylistically different from what you are used to, you may have trouble reading it or the person QCing your work may find it an awkward slow to read/understand. Or little potential issues like prehaps the code didn't have `PRINT=E` in the `$COV` step because it didn't need and then you are later asked for eigenvalues, requiring you to go back and rerun the final model...
+This is certaintly better than starting from scratch, however consider these problems: the code you borrow where the `$EST` code is fine for the problem it was originally written for, but works poorly on your problem.  Or the file is stylistically different from what you are used to, you may have trouble reading it or the person QCing your work may find it an awkward slow to read/understand. Or little potential issues like perhaps the code didn't have `PRINT=E` in the `$COV` step because it didn't need and then you are later asked for eigenvalues, requiring you to go back and rerun the final model...
 
 These are all reasons to replace the borrowing from colleague strategy with a maintained code library - a standardised library/directory of templated code that follows best practices and has been reviewed and used by a wide range of people.
 
