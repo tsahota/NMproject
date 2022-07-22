@@ -40,6 +40,8 @@
   
 * Replaced caching mechanism of `nm_render()` and `nm_list_render()` with xfun.
 
+* Fixed bug when OMEGAS have same names as THETAS.
+
 # NMproject 0.6.7
 
 * Added ability to use NMproject-specific code completion snippets `setup_code_completion()`.

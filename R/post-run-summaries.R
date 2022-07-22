@@ -148,7 +148,10 @@ rr.nm_list <- function(m, trans = TRUE) {
   d$param_flag <- NULL
   d$Estimate[d$FIX %in% TRUE] <- gsub("\\(.*?\\)", "(FIX)", d$Estimate[d$FIX %in% TRUE])
   d <- d[, names(d)[!names(d) %in% c("SE", "FINAL")]]
-  d <- d %>% tidyr::pivot_wider(names_from = "run_name", values_from = "Estimate")
+    
+  d <- d %>% tidyr::pivot_wider(names_from = "run_name", values_from = "Estimate", values_fn = list) %>%
+    tidyr::unnest(!c("parameter","type","SEunit", "unit","trans","FIX"))  ## all columns apart from estimate
+  
   d <- as.data.frame(d)
   ## fix ordering of columns so it's same as m - dcast ruins it
   non_matches <- names(d)[!seq_along(names(d)) %in% match(unique_id(m), names(d))]
@@ -389,7 +392,7 @@ coef.nm_generic <- function(object, trans = TRUE, ...) {
   
   d <- merge(d0, d1, all.x = TRUE, by = "parameter", sort = FALSE)
   d$name[is.na(d$name)] <- as.character(d$parameter)[is.na(d$name)]
-  d$name <- factor(d$name, levels = d$name)
+  d$name <- factor(d$name, levels = unique(d$name))
   d$trans_unit <- d$unit
   d$transSEunit <- d$SEunit
   ## transformations
