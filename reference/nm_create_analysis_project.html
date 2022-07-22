@@ -20,7 +20,7 @@ directory with a directory structure similar to an R package."><meta property="o
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -104,14 +104,14 @@ directory with a directory structure similar to an R package.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nm_create_analysis_project</span><span class="op">(</span>
-  <span class="va">path</span>,
-  dirs <span class="op">=</span> <span class="fu"><a href="nm_default_dirs.html">nm_default_dirs</a></span><span class="op">(</span><span class="op">)</span>,
-  style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"analysis"</span>, <span class="st">"analysis-package"</span><span class="op">)</span>,
-  use_renv <span class="op">=</span> <span class="cn">FALSE</span>,
-  readme_template_package <span class="op">=</span> <span class="st">"NMproject"</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nm_create_analysis_project</span><span class="op">(</span></span>
+<span>  <span class="va">path</span>,</span>
+<span>  dirs <span class="op">=</span> <span class="fu"><a href="nm_default_dirs.html">nm_default_dirs</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"analysis"</span>, <span class="st">"analysis-package"</span><span class="op">)</span>,</span>
+<span>  use_renv <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  readme_template_package <span class="op">=</span> <span class="st">"NMproject"</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -120,21 +120,32 @@ directory with a directory structure similar to an R package.</p>
 <dd><p>Character path (relative or absolute) to project.  If just
 specifying a name, this will create the analysis project in the current
 working directory.  See details for naming requirements.</p></dd>
+
+
 <dt>dirs</dt>
 <dd><p>Character list or vector.  Default = <code><a href="nm_default_dirs.html">nm_default_dirs()</a></code>.  Can
 also handle an ordered string which is supplied by the RStudio project
 template interface.</p></dd>
+
+
 <dt>style</dt>
 <dd><p>Character. Either <code>"analysis"</code> or <code>"analysis-package"</code> See
 details for <code>path</code> requirements and function behaviour.</p></dd>
+
+
 <dt>use_renv</dt>
 <dd><p>Logical (default = <code>FALSE</code>). Should <code>renv</code> be used or not in
 project.</p></dd>
+
+
 <dt>readme_template_package</dt>
 <dd><p>Package name from which to load the README
 template (default = <code>"NMproject"</code>)</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Deprecated.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -196,7 +207,7 @@ directories.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

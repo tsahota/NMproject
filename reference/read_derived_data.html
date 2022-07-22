@@ -19,7 +19,7 @@ input_data() does."><meta property="og:image" content="https://tsahota.github.io
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -102,23 +102,32 @@ input_data() does."><meta property="og:image" content="https://tsahota.github.io
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">read_derived_data</span><span class="op">(</span><span class="va">name</span>, na <span class="op">=</span> <span class="st">"."</span>, silent <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_derived_data</span><span class="op">(</span><span class="va">name</span>, na <span class="op">=</span> <span class="st">"."</span>, silent <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>name</dt>
 <dd><p>Name or path of file (with or without extension).</p></dd>
+
+
 <dt>na</dt>
 <dd><p>Character to be passed to <code><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">utils::read.csv()</a></code>.</p></dd>
+
+
 <dt>silent</dt>
 <dd><p>Logical (default = <code>TRUE</code>). Should messages be suppressed.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional arguments to be passed to <code><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">utils::read.csv()</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code>data.frame</code> object of the NONMEM dataset.</p>
+    
+
+<p>A <code>data.frame</code> object of the NONMEM dataset.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -127,26 +136,26 @@ input_data() does."><meta property="og:image" content="https://tsahota.github.io
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="co">## requires NMproject directory structure to operate in</span></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## read a dataset that's been copie into SourceData</span></span>
-<span class="r-in"><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"SourceData/orig_data.csv"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## modify it</span></span>
-<span class="r-in"><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span><span class="op">[</span><span class="va">d</span><span class="op">$</span><span class="va">ID</span> <span class="op">&lt;</span> <span class="fl">10</span>, <span class="op">]</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">d</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="write_derived_data.html">write_derived_data</a></span><span class="op">(</span><span class="st">"DerivedData/data.csv"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## load it again either with</span></span>
-<span class="r-in"><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">read_derived_data</span><span class="op">(</span><span class="st">"data"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## or more commonly if it is associated with run (e.g. m1),</span></span>
-<span class="r-in"><span class="co">## you can use input_data() to load it via the nm object</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="input_data.html">input_data</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## requires NMproject directory structure to operate in</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## read a dataset that's been copie into SourceData</span></span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"SourceData/orig_data.csv"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## modify it</span></span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span><span class="op">[</span><span class="va">d</span><span class="op">$</span><span class="va">ID</span> <span class="op">&lt;</span> <span class="fl">10</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="write_derived_data.html">write_derived_data</a></span><span class="op">(</span><span class="st">"DerivedData/data.csv"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## load it again either with</span></span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">read_derived_data</span><span class="op">(</span><span class="st">"data"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## or more commonly if it is associated with run (e.g. m1),</span></span></span>
+<span class="r-in"><span><span class="co">## you can use input_data() to load it via the nm object</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="input_data.html">input_data</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -161,7 +170,7 @@ input_data() does."><meta property="og:image" content="https://tsahota.github.io
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

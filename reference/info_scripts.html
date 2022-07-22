@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -98,37 +98,50 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">info_scripts</span><span class="op">(</span>
-  <span class="va">files</span>,
-  fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Description"</span><span class="op">)</span>,
-  viewer <span class="op">=</span> <span class="cn">TRUE</span>,
-  silent <span class="op">=</span> <span class="cn">FALSE</span>,
-  base_dirs <span class="op">=</span> <span class="cn">NULL</span>,
-  shorten_paths <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">info_scripts</span><span class="op">(</span></span>
+<span>  <span class="va">files</span>,</span>
+<span>  fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Description"</span><span class="op">)</span>,</span>
+<span>  viewer <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  silent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  base_dirs <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shorten_paths <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>files</dt>
 <dd><p>Vector string of file names/paths.</p></dd>
+
+
 <dt>fields</dt>
 <dd><p>Vector string of field tags to display.</p></dd>
+
+
 <dt>viewer</dt>
 <dd><p>Logical indicating if RStudio viewer should be used (default =
 <code>TRUE</code>).</p></dd>
+
+
 <dt>silent</dt>
 <dd><p>Run in quiet mode (default=<code>FALSE</code>).</p></dd>
+
+
 <dt>base_dirs</dt>
 <dd><p>Character vector. group files together that belong to these
 directory paths.</p></dd>
+
+
 <dt>shorten_paths</dt>
 <dd><p>Logical (default = <code>TRUE</code>). Long paths will be shortened
 if true in displayed output (not returned object).</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code>tibble</code> with extracted information from <code>files</code>.</p>
+    
+
+<p>A <code>tibble</code> with extracted information from <code>files</code>.</p>
     </div>
 
   </div>
@@ -143,7 +156,7 @@ if true in displayed output (not returned object).</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

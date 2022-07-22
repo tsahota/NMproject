@@ -19,7 +19,7 @@ their directory structure"><meta property="og:image" content="https://tsahota.gi
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -102,7 +102,7 @@ their directory structure</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nm_default_dirs</span><span class="op">(</span><span class="va">dir_list</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nm_default_dirs</span><span class="op">(</span><span class="va">dir_list</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -110,18 +110,21 @@ their directory structure</p>
     <dl><dt>dir_list</dt>
 <dd><p>Optional named list or vector. Names <code>"scripts"</code> and
 <code>"models"</code> must be present.  The rest can be unnamed.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>if <code>dir_list</code> is missing, will return value of
+    
+
+<p>if <code>dir_list</code> is missing, will return value of
 <code>getOption("nm_default_dirs")</code> otherwise will set option <code>nm_default_dirs</code>.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="va">orig_list</span> <span class="op">&lt;-</span> <span class="fu">nm_default_dirs</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">orig_list</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">orig_list</span> <span class="op">&lt;-</span> <span class="fu">nm_default_dirs</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">orig_list</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $scripts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Scripts"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -137,16 +140,16 @@ their directory structure</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $derived_data</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "DerivedData"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">nm_default_dirs</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span class="r-in">  models <span class="op">=</span> <span class="st">"Models"</span>,</span>
-<span class="r-in">  scripts <span class="op">=</span> <span class="st">"Scripts"</span>,</span>
-<span class="r-in">  results <span class="op">=</span> <span class="st">"Results"</span>,</span>
-<span class="r-in">  source_data <span class="op">=</span> <span class="st">"SourceData"</span>,</span>
-<span class="r-in">  derived_data <span class="op">=</span> <span class="st">"Data"</span></span>
-<span class="r-in"><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">nm_default_dirs</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">nm_default_dirs</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  models <span class="op">=</span> <span class="st">"Models"</span>,</span></span>
+<span class="r-in"><span>  scripts <span class="op">=</span> <span class="st">"Scripts"</span>,</span></span>
+<span class="r-in"><span>  results <span class="op">=</span> <span class="st">"Results"</span>,</span></span>
+<span class="r-in"><span>  source_data <span class="op">=</span> <span class="st">"SourceData"</span>,</span></span>
+<span class="r-in"><span>  derived_data <span class="op">=</span> <span class="st">"Data"</span></span></span>
+<span class="r-in"><span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">nm_default_dirs</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $models</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Models"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -162,10 +165,10 @@ their directory structure</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $derived_data</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Data"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">nm_default_dirs</span><span class="op">(</span><span class="va">orig_list</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
+<span class="r-in"><span><span class="fu">nm_default_dirs</span><span class="op">(</span><span class="va">orig_list</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -180,7 +183,7 @@ their directory structure</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

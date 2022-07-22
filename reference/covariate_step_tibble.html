@@ -33,7 +33,7 @@ for more information."><meta property="og:image" content="https://tsahota.github
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -130,35 +130,48 @@ for more information.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">covariate_step_tibble</span><span class="op">(</span>
-  <span class="va">base</span>,
-  <span class="va">run_id</span>,
-  run_in <span class="op">=</span> <span class="fu"><a href="nm_dir.html">nm_dir</a></span><span class="op">(</span><span class="st">"models"</span><span class="op">)</span>,
-  <span class="va">dtest</span>,
-  direction <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"forward"</span>, <span class="st">"backward"</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">covariate_step_tibble</span><span class="op">(</span></span>
+<span>  <span class="va">base</span>,</span>
+<span>  <span class="va">run_id</span>,</span>
+<span>  run_in <span class="op">=</span> <span class="fu"><a href="nm_dir.html">nm_dir</a></span><span class="op">(</span><span class="st">"models"</span><span class="op">)</span>,</span>
+<span>  <span class="va">dtest</span>,</span>
+<span>  direction <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"forward"</span>, <span class="st">"backward"</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>base</dt>
 <dd><p>An nm object.</p></dd>
+
+
 <dt>run_id</dt>
 <dd><p>Base run_id to construct run_ids of covariate runs.</p></dd>
+
+
 <dt>run_in</dt>
 <dd><p>Character.  See <code><a href="nm_getsetters.html">run_in()</a></code>.</p></dd>
+
+
 <dt>dtest</dt>
 <dd><p><code><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">dplyr::tibble</a></code> with testing relations (from
 <code><a href="test_relations.html">test_relations()</a></code>).</p></dd>
+
+
 <dt>direction</dt>
 <dd><p>Character. <code>"forward"</code> (default) or <code>"backward"</code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional arguments passed to <code><a href="add_remove_covs.html">add_cov()</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Will return <code>dtest</code> a <code><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">dplyr::tibble</a></code> with appended columns.</p>
+    
+
+<p>Will return <code>dtest</code> a <code><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">dplyr::tibble</a></code> with appended columns.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -167,76 +180,76 @@ for more information.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="va">dtest</span> <span class="op">&lt;-</span> <span class="fu"><a href="test_relations.html">test_relations</a></span><span class="op">(</span>param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"KA"</span>, <span class="st">"K"</span>, <span class="st">"V"</span><span class="op">)</span>,</span>
-<span class="r-in">                        cov <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"LIN1"</span>, <span class="st">"LIN2"</span>, <span class="st">"LIN3"</span>, <span class="st">"RND1"</span>, <span class="st">"RND2"</span>, <span class="st">"RND3"</span><span class="op">)</span>,</span>
-<span class="r-in">                        state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"linear"</span>, <span class="st">"power"</span><span class="op">)</span>,</span>
-<span class="r-in">                        continuous <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">         <span class="fu"><a href="test_relations.html">test_relations</a></span><span class="op">(</span>param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"KA"</span>, <span class="st">"K"</span>, <span class="st">"V"</span><span class="op">)</span>,</span>
-<span class="r-in">                        cov <span class="op">=</span> <span class="st">"BN1"</span>,</span>
-<span class="r-in">                        state <span class="op">=</span> <span class="st">"linear"</span>,</span>
-<span class="r-in">                        continuous <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in">                        </span>
-<span class="r-in"><span class="co"># create example object m1 from package demo files</span></span>
-<span class="r-in"><span class="va">exdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"examples"</span>, <span class="st">"theopp"</span>, package <span class="op">=</span> <span class="st">"NMproject"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>, </span>
-<span class="r-in">             based_on <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"Models"</span>, <span class="st">"ADVAN2.mod"</span><span class="op">)</span>,</span>
-<span class="r-in">             data_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"SourceData"</span>, <span class="st">"THEOPP.csv"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">temp_data_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">".csv"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## dataset has missing WTs so create a new one and assign this to the run</span></span>
-<span class="r-in"><span class="fu"><a href="input_data.html">input_data</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span>
-<span class="r-in">  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">ID</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>WT <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">WT</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="write_derived_data.html">write_derived_data</a></span><span class="op">(</span><span class="va">temp_data_file</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">dtest</span> <span class="op">&lt;-</span> <span class="fu"><a href="test_relations.html">test_relations</a></span><span class="op">(</span>param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"KA"</span>, <span class="st">"K"</span>, <span class="st">"V"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                        cov <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"LIN1"</span>, <span class="st">"LIN2"</span>, <span class="st">"LIN3"</span>, <span class="st">"RND1"</span>, <span class="st">"RND2"</span>, <span class="st">"RND3"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                        state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"linear"</span>, <span class="st">"power"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                        continuous <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>         <span class="fu"><a href="test_relations.html">test_relations</a></span><span class="op">(</span>param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"KA"</span>, <span class="st">"K"</span>, <span class="st">"V"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                        cov <span class="op">=</span> <span class="st">"BN1"</span>,</span></span>
+<span class="r-in"><span>                        state <span class="op">=</span> <span class="st">"linear"</span>,</span></span>
+<span class="r-in"><span>                        continuous <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                        </span></span>
+<span class="r-in"><span><span class="co"># create example object m1 from package demo files</span></span></span>
+<span class="r-in"><span><span class="va">exdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"examples"</span>, <span class="st">"theopp"</span>, package <span class="op">=</span> <span class="st">"NMproject"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>, </span></span>
+<span class="r-in"><span>             based_on <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"Models"</span>, <span class="st">"ADVAN2.mod"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>             data_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"SourceData"</span>, <span class="st">"THEOPP.csv"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">temp_data_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">".csv"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## dataset has missing WTs so create a new one and assign this to the run</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="input_data.html">input_data</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">ID</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>WT <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">WT</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="write_derived_data.html">write_derived_data</a></span><span class="op">(</span><span class="va">temp_data_file</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> written: </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmprG2vBv/file8db6fd7b020.RDS</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmprG2vBv/file8db6fd7b020.csv</span>
-<span class="r-in">  </span>
-<span class="r-in"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="data_path.html">data_path</a></span><span class="op">(</span><span class="va">temp_data_file</span><span class="op">)</span></span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="va">dtest</span> <span class="op">&lt;-</span> <span class="fu"><a href="test_relations.html">test_relations</a></span><span class="op">(</span>param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"K"</span>, <span class="st">"V"</span><span class="op">)</span>,</span>
-<span class="r-in">                        cov <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WT"</span><span class="op">)</span>,</span>
-<span class="r-in">                        state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"linear"</span>, <span class="st">"power"</span><span class="op">)</span>,</span>
-<span class="r-in">                        continuous <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## requires NONMEM to be installed</span></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co">## create tibble of covariate step with model objects as column m</span></span>
-<span class="r-in"><span class="va">dsm1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">covariate_step_tibble</span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1_f1"</span>,</span>
-<span class="r-in">                                     dtest <span class="op">=</span> <span class="va">dtest</span>,</span>
-<span class="r-in">                                     direction <span class="op">=</span> <span class="st">"forward"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## run all models greedily</span></span>
-<span class="r-in"><span class="va">dsm1</span><span class="op">$</span><span class="va">m</span> <span class="op">&lt;-</span> <span class="va">dsm1</span><span class="op">$</span><span class="va">m</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## extract results and put into tibble</span></span>
-<span class="r-in"><span class="va">dsm1</span> <span class="op">&lt;-</span> <span class="va">dsm1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="bind_covariate_results.html">bind_covariate_results</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## sort by BIC (for example) and view</span></span>
-<span class="r-in"><span class="va">dsm1</span> <span class="op">&lt;-</span> <span class="va">dsm1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">arrange</span><span class="op">(</span><span class="va">BIC</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dsm1</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## check condition number, covariance,...</span></span>
-<span class="r-in"><span class="co">## run any diagnostics here</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## when happy with selection, select run for subsequent step</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">m1_f1</span> <span class="op">&lt;-</span> <span class="va">dsm1</span><span class="op">$</span><span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="co">## select most signifcant BIC</span></span>
-<span class="r-in"><span class="co"># alternative select by relationship</span></span>
-<span class="r-in"><span class="va">m1_f1</span> <span class="op">&lt;-</span> <span class="va">dsm1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span>param <span class="op">=</span> <span class="st">"CL"</span>, cov <span class="op">=</span> <span class="st">"BWT"</span>, state <span class="op">=</span> <span class="st">"power"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span></span>
-<span class="r-in">  <span class="va">m</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## do next forward step</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">dsm2</span> <span class="op">&lt;-</span> <span class="va">m1_f1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">covariate_step_tibble</span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1_f2"</span>,</span>
-<span class="r-in">                                        dtest <span class="op">=</span> <span class="va">dtest</span>,</span>
-<span class="r-in">                                        direction <span class="op">=</span> <span class="st">"forward"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## continue ...</span></span>
-<span class="r-in"><span class="op">}</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpE0zYab/file229c31afe9d7.RDS</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpE0zYab/file229c31afe9d7.csv</span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="data_path.html">data_path</a></span><span class="op">(</span><span class="va">temp_data_file</span><span class="op">)</span></span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="va">dtest</span> <span class="op">&lt;-</span> <span class="fu"><a href="test_relations.html">test_relations</a></span><span class="op">(</span>param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"K"</span>, <span class="st">"V"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                        cov <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WT"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                        state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"linear"</span>, <span class="st">"power"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                        continuous <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## requires NONMEM to be installed</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co">## create tibble of covariate step with model objects as column m</span></span></span>
+<span class="r-in"><span><span class="va">dsm1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">covariate_step_tibble</span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1_f1"</span>,</span></span>
+<span class="r-in"><span>                                     dtest <span class="op">=</span> <span class="va">dtest</span>,</span></span>
+<span class="r-in"><span>                                     direction <span class="op">=</span> <span class="st">"forward"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## run all models greedily</span></span></span>
+<span class="r-in"><span><span class="va">dsm1</span><span class="op">$</span><span class="va">m</span> <span class="op">&lt;-</span> <span class="va">dsm1</span><span class="op">$</span><span class="va">m</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## extract results and put into tibble</span></span></span>
+<span class="r-in"><span><span class="va">dsm1</span> <span class="op">&lt;-</span> <span class="va">dsm1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="bind_covariate_results.html">bind_covariate_results</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## sort by BIC (for example) and view</span></span></span>
+<span class="r-in"><span><span class="va">dsm1</span> <span class="op">&lt;-</span> <span class="va">dsm1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">arrange</span><span class="op">(</span><span class="va">BIC</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dsm1</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## check condition number, covariance,...</span></span></span>
+<span class="r-in"><span><span class="co">## run any diagnostics here</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## when happy with selection, select run for subsequent step</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">m1_f1</span> <span class="op">&lt;-</span> <span class="va">dsm1</span><span class="op">$</span><span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="co">## select most signifcant BIC</span></span></span>
+<span class="r-in"><span><span class="co"># alternative select by relationship</span></span></span>
+<span class="r-in"><span><span class="va">m1_f1</span> <span class="op">&lt;-</span> <span class="va">dsm1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span>param <span class="op">=</span> <span class="st">"CL"</span>, cov <span class="op">=</span> <span class="st">"BWT"</span>, state <span class="op">=</span> <span class="st">"power"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span></span></span>
+<span class="r-in"><span>  <span class="va">m</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## do next forward step</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">dsm2</span> <span class="op">&lt;-</span> <span class="va">m1_f1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">covariate_step_tibble</span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1_f2"</span>,</span></span>
+<span class="r-in"><span>                                        dtest <span class="op">=</span> <span class="va">dtest</span>,</span></span>
+<span class="r-in"><span>                                        direction <span class="op">=</span> <span class="st">"forward"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## continue ...</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -251,7 +264,7 @@ for more information.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

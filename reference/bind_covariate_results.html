@@ -33,7 +33,7 @@ for more information."><meta property="og:image" content="https://tsahota.github
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -130,21 +130,28 @@ for more information.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">bind_covariate_results</span><span class="op">(</span><span class="va">dsc</span>, nm_col <span class="op">=</span> <span class="st">"m"</span>, parameters <span class="op">=</span> <span class="st">"new"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bind_covariate_results</span><span class="op">(</span><span class="va">dsc</span>, nm_col <span class="op">=</span> <span class="st">"m"</span>, parameters <span class="op">=</span> <span class="st">"new"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>dsc</dt>
 <dd><p>An output <code>tibble</code> from <code><a href="covariate_step_tibble.html">covariate_step_tibble()</a></code>.</p></dd>
+
+
 <dt>nm_col</dt>
 <dd><p>Character (default = <code>"m"</code>). Name of column to store nm objects.</p></dd>
+
+
 <dt>parameters</dt>
 <dd><p>Character (default = <code>"new"</code>).  Passed to <code><a href="nm_summary.html">summary_wide()</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An modified version of <code>dsc</code> with additional columns from
+    
+
+<p>An modified version of <code>dsc</code> with additional columns from
 <code><a href="nm_summary.html">summary_wide()</a></code> for model selection purposes.</p>
     </div>
     <div id="see-also">
@@ -155,28 +162,28 @@ reports for (subsets of) models in <code>nm_col</code>.</p></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="co">## requires NONMEM to be installed</span></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co">## create tibble of covariate step with model objects as column m</span></span>
-<span class="r-in"><span class="va">dsm1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="covariate_step_tibble.html">covariate_step_tibble</a></span><span class="op">(</span></span>
-<span class="r-in">  run_id <span class="op">=</span> <span class="st">"m1_f1"</span>,</span>
-<span class="r-in">  dtest <span class="op">=</span> <span class="va">dtest</span>,</span>
-<span class="r-in">  direction <span class="op">=</span> <span class="st">"forward"</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## run all models greedily</span></span>
-<span class="r-in"><span class="va">dsm1</span><span class="op">$</span><span class="va">m</span> <span class="op">&lt;-</span> <span class="va">dsm1</span><span class="op">$</span><span class="va">m</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="wait_finish.html">wait_finish</a></span><span class="op">(</span><span class="va">dsm1</span><span class="op">$</span><span class="va">m</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## extract results and put into tibble</span></span>
-<span class="r-in"><span class="va">dsm1</span> <span class="op">&lt;-</span> <span class="va">dsm1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">bind_covariate_results</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## plot goodness of fit diagnostics top 3 models (in terms of p-value)</span></span>
-<span class="r-in"><span class="va">dsm1</span><span class="op">$</span><span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_gof.Rmd"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## requires NONMEM to be installed</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co">## create tibble of covariate step with model objects as column m</span></span></span>
+<span class="r-in"><span><span class="va">dsm1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="covariate_step_tibble.html">covariate_step_tibble</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  run_id <span class="op">=</span> <span class="st">"m1_f1"</span>,</span></span>
+<span class="r-in"><span>  dtest <span class="op">=</span> <span class="va">dtest</span>,</span></span>
+<span class="r-in"><span>  direction <span class="op">=</span> <span class="st">"forward"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## run all models greedily</span></span></span>
+<span class="r-in"><span><span class="va">dsm1</span><span class="op">$</span><span class="va">m</span> <span class="op">&lt;-</span> <span class="va">dsm1</span><span class="op">$</span><span class="va">m</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="wait_finish.html">wait_finish</a></span><span class="op">(</span><span class="va">dsm1</span><span class="op">$</span><span class="va">m</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## extract results and put into tibble</span></span></span>
+<span class="r-in"><span><span class="va">dsm1</span> <span class="op">&lt;-</span> <span class="va">dsm1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">bind_covariate_results</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## plot goodness of fit diagnostics top 3 models (in terms of p-value)</span></span></span>
+<span class="r-in"><span><span class="va">dsm1</span><span class="op">$</span><span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_gof.Rmd"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -191,7 +198,7 @@ reports for (subsets of) models in <code>nm_col</code>.</p></div>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

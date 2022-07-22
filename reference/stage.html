@@ -23,7 +23,7 @@ way to bring code is via the &quot;code library&quot; RStudio 'Addin' shiny app.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -110,34 +110,45 @@ way to bring code is via the "code library" RStudio 'Addin' shiny app.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">stage</span><span class="op">(</span>
-  <span class="va">files</span>,
-  <span class="va">root_dir</span>,
-  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,
-  silent <span class="op">=</span> <span class="cn">FALSE</span>,
-  find_replace_dir_names <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">stage</span><span class="op">(</span></span>
+<span>  <span class="va">files</span>,</span>
+<span>  <span class="va">root_dir</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  silent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  find_replace_dir_names <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>files</dt>
 <dd><p>Character vector. path of files to stage.</p></dd>
+
+
 <dt>root_dir</dt>
 <dd><p>Character path to root directory of <code>files</code>. Staged files
 relative to <code>staging</code> directory will be same as <code>files</code> to <code>root_dir</code>. If
 this is not specified, will guess based on presence of <code>nm_default_dirs</code></p></dd>
+
+
 <dt>overwrite</dt>
 <dd><p>Logical (default = FALSE).</p></dd>
+
+
 <dt>silent</dt>
 <dd><p>Logical (default = FALSE).</p></dd>
+
+
 <dt>find_replace_dir_names</dt>
 <dd><p>Logical (default = TRUE). Will attempt to find
 replace strings in scripts to reflect <code><a href="nm_default_dirs.html">nm_default_dirs()</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code>tibble</code> with staged file information.</p>
+    
+
+<p>A <code>tibble</code> with staged file information.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -146,14 +157,14 @@ replace strings in scripts to reflect <code><a href="nm_default_dirs.html">nm_de
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="co">## requires NMproject directory structure</span></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="ls_code_library.html">ls_code_library</a></span><span class="op">(</span><span class="st">"Models/ADVAN2.mod"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">stage</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## requires NMproject directory structure</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="ls_code_library.html">ls_code_library</a></span><span class="op">(</span><span class="st">"Models/ADVAN2.mod"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">stage</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -168,7 +179,7 @@ replace strings in scripts to reflect <code><a href="nm_default_dirs.html">nm_de
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

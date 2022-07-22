@@ -18,7 +18,7 @@ Useful for exploratory plots."><meta property="og:image" content="https://tsahot
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -100,35 +100,48 @@ Useful for exploratory plots."><meta property="og:image" content="https://tsahot
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">cov_cov_plot</span><span class="op">(</span>
-  <span class="va">d</span>,
-  <span class="va">cov</span>,
-  <span class="va">continuous</span>,
-  log_transform_plot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">FALSE</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">cov</span><span class="op">)</span><span class="op">)</span>,
-  <span class="va">dcov_info</span>,
-  by <span class="op">=</span> <span class="st">"ID"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cov_cov_plot</span><span class="op">(</span></span>
+<span>  <span class="va">d</span>,</span>
+<span>  <span class="va">cov</span>,</span>
+<span>  <span class="va">continuous</span>,</span>
+<span>  log_transform_plot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">FALSE</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">cov</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="va">dcov_info</span>,</span>
+<span>  by <span class="op">=</span> <span class="st">"ID"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>d</dt>
 <dd><p>Dataset with covariates.</p></dd>
+
+
 <dt>cov</dt>
 <dd><p>Vector of length 2 for covariate names.</p></dd>
+
+
 <dt>continuous</dt>
 <dd><p>Logical vector of length 2 for whether cov is continuous or
 not.</p></dd>
+
+
 <dt>log_transform_plot</dt>
 <dd><p>Should plot be log transformed or not.</p></dd>
+
+
 <dt>dcov_info</dt>
 <dd><p>Optional <code>data.frame</code> with covariate information.</p></dd>
+
+
 <dt>by</dt>
 <dd><p>Character (default = <code>"ID"</code>) variable to split over.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>ggplot2</code> object displaying covariate-covariate correlations.</p>
+    
+
+<p><code>ggplot2</code> object displaying covariate-covariate correlations.</p>
     </div>
 
   </div>
@@ -143,7 +156,7 @@ not.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

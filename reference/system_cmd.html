@@ -21,7 +21,7 @@ RStudio server.'><meta property="og:image" content="https://tsahota.github.io/NM
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -106,29 +106,36 @@ RStudio server.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">system_cmd</span><span class="op">(</span><span class="va">cmd</span>, dir <span class="op">=</span> <span class="st">"."</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">system_cmd</span><span class="op">(</span><span class="va">cmd</span>, dir <span class="op">=</span> <span class="st">"."</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>cmd</dt>
 <dd><p>Character. Command to send to shell.</p></dd>
+
+
 <dt>dir</dt>
 <dd><p>Optional character. Directory to run command in (default = current
 working directory)</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Other arguments passed to system command.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The return value of <code>getOption("system_cmd")</code>.</p>
+    
+
+<p>The return value of <code>getOption("system_cmd")</code>.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="fu">system_cmd</span><span class="op">(</span><span class="st">"pwd"</span><span class="op">)</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">system_cmd</span><span class="op">(</span><span class="st">"pwd"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -143,7 +150,7 @@ working directory)</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

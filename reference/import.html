@@ -19,7 +19,7 @@ code into your project."><meta property="og:image" content="https://tsahota.gith
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -102,13 +102,13 @@ code into your project.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">import</span><span class="op">(</span>
-  <span class="va">copy_table</span>,
-  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,
-  silent <span class="op">=</span> <span class="cn">FALSE</span>,
-  skip <span class="op">=</span> <span class="st">"\\.mod$"</span>,
-  find_replace_dir_names <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">import</span><span class="op">(</span></span>
+<span>  <span class="va">copy_table</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  silent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  skip <span class="op">=</span> <span class="st">"\\.mod$"</span>,</span>
+<span>  find_replace_dir_names <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -116,21 +116,32 @@ code into your project.</p>
     <dl><dt>copy_table</dt>
 <dd><p>A <code>data frame</code> or character. if <code>data.frame</code> should be
 output from <code><a href="stage.html">stage()</a></code>, if character path, result will be <code><a href="stage.html">stage()</a></code>d first.</p></dd>
+
+
 <dt>overwrite</dt>
 <dd><p>Logical (default = <code>FALSE</code>).</p></dd>
+
+
 <dt>silent</dt>
 <dd><p>Logical (default = <code>FALSE</code>).</p></dd>
+
+
 <dt>skip</dt>
 <dd><p>Character (default = <code>"\\.mod$"</code>). Pattern to skip.  Model files
 will be imported directly into the project in order to avoid conflicts and
 will instead reside only in the staging area.</p></dd>
+
+
 <dt>find_replace_dir_names</dt>
 <dd><p>Logical (default = TRUE). Will attempt to find
 replace strings in scripts to reflect <code><a href="nm_default_dirs.html">nm_default_dirs()</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Invisibly returns <code>copy_table</code> argument.</p>
+    
+
+<p>Invisibly returns <code>copy_table</code> argument.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -139,20 +150,20 @@ replace strings in scripts to reflect <code><a href="nm_default_dirs.html">nm_de
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="co">## requires NMproject directory structure</span></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## both of these following operations are easier in the shiny code library</span></span>
-<span class="r-in"><span class="co">## RStudio 'Addin'.</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="ls_code_library.html">ls_code_library</a></span><span class="op">(</span><span class="st">"Models/ADVAN2.mod"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">import</span><span class="op">(</span><span class="op">)</span> <span class="co">## ends up in "staging/Models"</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="ls_code_library.html">ls_code_library</a></span><span class="op">(</span><span class="st">"Scripts/AUC.R"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">import</span><span class="op">(</span><span class="op">)</span> <span class="co">## ends up "scripts" directory</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## requires NMproject directory structure</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## both of these following operations are easier in the shiny code library</span></span></span>
+<span class="r-in"><span><span class="co">## RStudio 'Addin'.</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="ls_code_library.html">ls_code_library</a></span><span class="op">(</span><span class="st">"Models/ADVAN2.mod"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">import</span><span class="op">(</span><span class="op">)</span> <span class="co">## ends up in "staging/Models"</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="ls_code_library.html">ls_code_library</a></span><span class="op">(</span><span class="st">"Scripts/AUC.R"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">import</span><span class="op">(</span><span class="op">)</span> <span class="co">## ends up "scripts" directory</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -167,7 +178,7 @@ replace strings in scripts to reflect <code><a href="nm_default_dirs.html">nm_de
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

@@ -19,7 +19,7 @@ around.  Most package functions act on this object."><meta property="og:image" c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -102,65 +102,88 @@ around.  Most package functions act on this object.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nm</span><span class="op">(</span>
-  run_id <span class="op">=</span> <span class="cn">NA_character_</span>,
-  run_in <span class="op">=</span> <span class="fu"><a href="nm_dir.html">nm_dir</a></span><span class="op">(</span><span class="st">"models"</span><span class="op">)</span>,
-  parent_run_id <span class="op">=</span> <span class="cn">NA_character_</span>,
-  parent_run_in <span class="op">=</span> <span class="cn">NA_character_</span>,
-  parent_ctl_name <span class="op">=</span> <span class="cn">NA_character_</span>,
-  parent_results_dir <span class="op">=</span> <span class="cn">NA_character_</span>,
-  ctl_name <span class="op">=</span> <span class="st">"run{run_id}.mod"</span>,
-  type <span class="op">=</span> <span class="st">"execute"</span>,
-  run_dir <span class="op">=</span> <span class="st">"{run_id}"</span>,
-  results_dir <span class="op">=</span> <span class="fu"><a href="nm_dir.html">nm_dir</a></span><span class="op">(</span><span class="st">"results"</span><span class="op">)</span>,
-  lst_path <span class="op">=</span> <span class="st">"{run_dir}/NM_run1/psn.lst"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nm</span><span class="op">(</span></span>
+<span>  run_id <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
+<span>  run_in <span class="op">=</span> <span class="fu"><a href="nm_dir.html">nm_dir</a></span><span class="op">(</span><span class="st">"models"</span><span class="op">)</span>,</span>
+<span>  parent_run_id <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
+<span>  parent_run_in <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
+<span>  parent_ctl_name <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
+<span>  parent_results_dir <span class="op">=</span> <span class="cn">NA_character_</span>,</span>
+<span>  ctl_name <span class="op">=</span> <span class="st">"run{run_id}.mod"</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"execute"</span>,</span>
+<span>  run_dir <span class="op">=</span> <span class="st">"{run_id}"</span>,</span>
+<span>  results_dir <span class="op">=</span> <span class="fu"><a href="nm_dir.html">nm_dir</a></span><span class="op">(</span><span class="st">"results"</span><span class="op">)</span>,</span>
+<span>  lst_path <span class="op">=</span> <span class="st">"{run_dir}/NM_run1/psn.lst"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>run_id</dt>
 <dd><p>Character vector. Run identifier.</p></dd>
+
+
 <dt>run_in</dt>
 <dd><p>Character vector. The location to copy the NONMEM control file
 and run location.</p></dd>
+
+
 <dt>parent_run_id</dt>
 <dd><p>Character vector (optional). The run identifier of the
 parent run.</p></dd>
+
+
 <dt>parent_run_in</dt>
 <dd><p>Character vector (optional). The location of the parent
 run.</p></dd>
+
+
 <dt>parent_ctl_name</dt>
 <dd><p>Character vector (optional). The <code>ctl_name</code> of the
 parent run.</p></dd>
+
+
 <dt>parent_results_dir</dt>
 <dd><p>Character vector (optional). The <code>results_dir</code> of
 the parent run.</p></dd>
+
+
 <dt>ctl_name</dt>
 <dd><p>Character. Name of control file.</p></dd>
+
+
 <dt>type</dt>
 <dd><p>Character (default = <code>"execute"</code>).  Type of run to run.</p></dd>
+
+
 <dt>run_dir</dt>
 <dd><p>Character (default = <code>"{run_id}"</code>).  Subdirectory where PsN
 will run NONMEM.</p></dd>
+
+
 <dt>results_dir</dt>
 <dd><p>Character (default = <code>"Results"</code>). Directory to store
 results of this run.</p></dd>
+
+
 <dt>lst_path</dt>
 <dd><p>Character (default = <code>"{run_dir}/NM_run1/psn.lst"</code>) expected
 location of .lst file.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An object of class <code>nm_list</code>.  Object is concatenatable. Length of
+    
+
+<p>An object of class <code>nm_list</code>.  Object is concatenatable. Length of
 object corresponds to length of <code>run_id</code>.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="va">m0</span> <span class="op">&lt;-</span> <span class="fu">nm</span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m0"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">m0</span> <span class="co">## a human readable representation</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">m0</span> <span class="op">&lt;-</span> <span class="fu">nm</span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m0"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m0</span> <span class="co">## a human readable representation</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> List of 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ execute.Models/m0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ type        : chr "execute"</span>
@@ -178,17 +201,17 @@ object corresponds to length of <code>run_id</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ lst_path    : chr "m0/NM_run1/psn.lst"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..- attr(*, "class")= chr [1:3] "nm_execute" "nm_generic" "list"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "class")= chr [1:2] "nm_list" "list"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## nm objects can be put into tibbles to group runs together</span></span>
-<span class="r-in"><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m1"</span>, <span class="st">"m2"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">d</span><span class="op">$</span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu">nm</span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">run_id</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">d</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## nm objects can be put into tibbles to group runs together</span></span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"m1"</span>, <span class="st">"m2"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d</span><span class="op">$</span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu">nm</span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">run_id</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   run_id m              </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;nm_list&gt;</span>      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> m1     <span style="color: #949494;">&lt;nm_exect [23]&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> m2     <span style="color: #949494;">&lt;nm_exect [23]&gt;</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -203,7 +226,7 @@ object corresponds to length of <code>run_id</code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

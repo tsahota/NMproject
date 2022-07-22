@@ -18,7 +18,7 @@ Will block R console until an expression evaluates to be TRUE."><meta property="
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -100,21 +100,28 @@ Will block R console until an expression evaluates to be TRUE."><meta property="
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">wait_for</span><span class="op">(</span><span class="va">x</span>, timeout <span class="op">=</span> <span class="cn">NULL</span>, interval <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">wait_for</span><span class="op">(</span><span class="va">x</span>, timeout <span class="op">=</span> <span class="cn">NULL</span>, interval <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>Boolean expression to evaluate.</p></dd>
+
+
 <dt>timeout</dt>
 <dd><p>Numeric. Maximum time (in seconds) to wait.</p></dd>
+
+
 <dt>interval</dt>
 <dd><p>Numeric. The polling interval in seconds (default=<code>1</code>).</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Invisibly returns <code>TRUE</code> indicating value of <code>x</code> after waiting for
+    
+
+<p>Invisibly returns <code>TRUE</code> indicating value of <code>x</code> after waiting for
 <code>x</code> to be <code>TRUE</code>.</p>
     </div>
     <div id="see-also">
@@ -124,22 +131,22 @@ Will block R console until an expression evaluates to be TRUE."><meta property="
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="co"># create example object m1 from package demo files</span></span>
-<span class="r-in"><span class="va">exdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"examples"</span>, <span class="st">"theopp"</span>, package <span class="op">=</span> <span class="st">"NMproject"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>, </span>
-<span class="r-in">             based_on <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"Models"</span>, <span class="st">"ADVAN2.mod"</span><span class="op">)</span>,</span>
-<span class="r-in">             data_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"SourceData"</span>, <span class="st">"THEOPP.csv"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## requires NONMEM to be installed</span></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## the following are identical</span></span>
-<span class="r-in"><span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="wait_finish.html">wait_finish</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">wait_for</span><span class="op">(</span><span class="fu"><a href="is_finished.html">is_finished</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span><span class="op">)</span> <span class="co">## wait_finish is a more convenient form of this</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># create example object m1 from package demo files</span></span></span>
+<span class="r-in"><span><span class="va">exdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"examples"</span>, <span class="st">"theopp"</span>, package <span class="op">=</span> <span class="st">"NMproject"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>, </span></span>
+<span class="r-in"><span>             based_on <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"Models"</span>, <span class="st">"ADVAN2.mod"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>             data_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"SourceData"</span>, <span class="st">"THEOPP.csv"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## requires NONMEM to be installed</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## the following are identical</span></span></span>
+<span class="r-in"><span><span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="wait_finish.html">wait_finish</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">wait_for</span><span class="op">(</span><span class="fu"><a href="is_finished.html">is_finished</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span><span class="op">)</span> <span class="co">## wait_finish is a more convenient form of this</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -154,7 +161,7 @@ Will block R console until an expression evaluates to be TRUE."><meta property="
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

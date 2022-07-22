@@ -21,7 +21,7 @@ replace proceeded as intended.'><meta property="og:image" content="https://tsaho
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -106,25 +106,36 @@ replace proceeded as intended.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">gsub_ctl</span><span class="op">(</span><span class="va">m</span>, <span class="va">pattern</span>, <span class="va">replacement</span>, <span class="va">...</span>, dollar <span class="op">=</span> <span class="cn">NA_character_</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">gsub_ctl</span><span class="op">(</span><span class="va">m</span>, <span class="va">pattern</span>, <span class="va">replacement</span>, <span class="va">...</span>, dollar <span class="op">=</span> <span class="cn">NA_character_</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>m</dt>
 <dd><p>An nm object.</p></dd>
+
+
 <dt>pattern</dt>
 <dd><p>Argument passed to <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub()</a></code>.</p></dd>
+
+
 <dt>replacement</dt>
 <dd><p>Argument passed to <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub()</a></code>.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional arguments passed to <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub()</a></code>.</p></dd>
+
+
 <dt>dollar</dt>
 <dd><p>Character name of subroutine.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An nm object with modified <code>ctl_contents</code> field.</p>
+    
+
+<p>An nm object with modified <code>ctl_contents</code> field.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -133,16 +144,16 @@ replace proceeded as intended.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># create example object m1 from package demo files</span></span>
-<span class="r-in"><span class="va">exdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"examples"</span>, <span class="st">"theopp"</span>, package <span class="op">=</span> <span class="st">"NMproject"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>, </span>
-<span class="r-in">             based_on <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"Models"</span>, <span class="st">"ADVAN2.mod"</span><span class="op">)</span>,</span>
-<span class="r-in">             data_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"SourceData"</span>, <span class="st">"THEOPP.csv"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="dollar.html">dollar</a></span><span class="op">(</span><span class="st">"EST"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># create example object m1 from package demo files</span></span></span>
+<span class="r-in"><span><span class="va">exdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"examples"</span>, <span class="st">"theopp"</span>, package <span class="op">=</span> <span class="st">"NMproject"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>, </span></span>
+<span class="r-in"><span>             based_on <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"Models"</span>, <span class="st">"ADVAN2.mod"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>             data_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"SourceData"</span>, <span class="st">"THEOPP.csv"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="dollar.html">dollar</a></span><span class="op">(</span><span class="st">"EST"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`execute.Models/m1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1| ; Parameter estimation - FOCE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   2| ;$EST METHOD=1 INTER NOABORT MAXEVAL=9999 PRINT=1 NSIG=3 SIGL=9</span>
@@ -161,10 +172,10 @@ replace proceeded as intended.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  15| $EST METHOD=IMP INTER EONLY= 1 MAPITER=0 ISAMPLE = 2000 NITER = 10 RANMETHOD=3S2P NOABORT PRINT=1 NSIG=3 SIGL=9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  16| </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">gsub_ctl</span><span class="op">(</span><span class="st">"ISAMPLE=300"</span>, <span class="st">"ISAMPLE=600"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="dollar.html">dollar</a></span><span class="op">(</span><span class="st">"EST"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">gsub_ctl</span><span class="op">(</span><span class="st">"ISAMPLE=300"</span>, <span class="st">"ISAMPLE=600"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="dollar.html">dollar</a></span><span class="op">(</span><span class="st">"EST"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`execute.Models/m1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1| ; Parameter estimation - FOCE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   2| ;$EST METHOD=1 INTER NOABORT MAXEVAL=9999 PRINT=1 NSIG=3 SIGL=9</span>
@@ -183,7 +194,7 @@ replace proceeded as intended.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  15| $EST METHOD=IMP INTER EONLY= 1 MAPITER=0 ISAMPLE = 2000 NITER = 10 RANMETHOD=3S2P NOABORT PRINT=1 NSIG=3 SIGL=9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  16| </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -198,7 +209,7 @@ replace proceeded as intended.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

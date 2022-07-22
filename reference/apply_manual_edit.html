@@ -21,7 +21,7 @@ nm_dir(&quot;models&quot;).  This function applies the patch to the object."><me
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -106,23 +106,30 @@ file is created and saved in the "patches" subdirectory of
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">apply_manual_edit</span><span class="op">(</span><span class="va">m</span>, <span class="va">patch_id</span>, return_merge_conf_ctl <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">apply_manual_edit</span><span class="op">(</span><span class="va">m</span>, <span class="va">patch_id</span>, return_merge_conf_ctl <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>m</dt>
 <dd><p>An nm object.</p></dd>
+
+
 <dt>patch_id</dt>
 <dd><p>Character name of patch.  Corresponds to the file name in
 the "patches" subdirectory of <code>nm_dir("models")</code>.</p></dd>
+
+
 <dt>return_merge_conf_ctl</dt>
 <dd><p>Logical (default = <code>FALSE</code>). If there a merge
 conflict produced, should the ctl file be returned?</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An nm object with modified <code>ctl_contents</code> field.</p>
+    
+
+<p>An nm object with modified <code>ctl_contents</code> field.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -146,7 +153,7 @@ in a new manual edit.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

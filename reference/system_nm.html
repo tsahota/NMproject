@@ -20,7 +20,7 @@ sumo."><meta property="og:image" content="https://tsahota.github.io/NMproject/lo
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -104,22 +104,29 @@ sumo."><meta property="og:image" content="https://tsahota.github.io/NMproject/lo
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">system_nm</span><span class="op">(</span><span class="va">cmd</span>, dir <span class="op">=</span> <span class="fu"><a href="nm_dir.html">nm_dir</a></span><span class="op">(</span><span class="st">"models"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">system_nm</span><span class="op">(</span><span class="va">cmd</span>, dir <span class="op">=</span> <span class="fu"><a href="nm_dir.html">nm_dir</a></span><span class="op">(</span><span class="st">"models"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>cmd</dt>
 <dd><p>Character. System call to be sent to the terminal.</p></dd>
+
+
 <dt>dir</dt>
 <dd><p>Character. Directory (relative path) to run command in.  By
 default this will be the "models" directory (<code>nm_dir("models")</code>).</p></dd>
+
+
 <dt>...</dt>
-<dd><p>Additional arguments to be passed to <code><a href="https://rdrr.io/r/base/system.html" class="external-link">system()</a></code> or <code><a href="https://rdrr.io/r/base/system.html" class="external-link">shell()</a></code>.</p></dd>
+<dd><p>Additional arguments to be passed to <code><a href="https://rdrr.io/r/base/system.html" class="external-link">system()</a></code> or <code>shell()</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The return value of <code>getOption("system_nm")</code>.</p>
+    
+
+<p>The return value of <code>getOption("system_nm")</code>.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -128,16 +135,16 @@ default this will be the "models" directory (<code>nm_dir("models")</code>).</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="fu">system_nm</span><span class="op">(</span><span class="st">"hostname"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## requires NONMEM to be installed</span></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">system_nm</span><span class="op">(</span><span class="st">"psn --versions"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">system_nm</span><span class="op">(</span><span class="st">"sumo run1.mod"</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">system_nm</span><span class="op">(</span><span class="st">"hostname"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## requires NONMEM to be installed</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">system_nm</span><span class="op">(</span><span class="st">"psn --versions"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">system_nm</span><span class="op">(</span><span class="st">"sumo run1.mod"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -152,7 +159,7 @@ default this will be the "models" directory (<code>nm_dir("models")</code>).</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

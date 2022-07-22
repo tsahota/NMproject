@@ -20,7 +20,7 @@ Rscript interface."><meta property="og:image" content="https://tsahota.github.io
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -104,19 +104,22 @@ git hooks in the form of R functions and they will be executed via the
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">nm_pre_commit_hook</span><span class="op">(</span><span class="va">cmd</span><span class="op">)</span>
-
-<span class="fu">nm_pre_push_hook</span><span class="op">(</span><span class="va">cmd</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">nm_pre_commit_hook</span><span class="op">(</span><span class="va">cmd</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">nm_pre_push_hook</span><span class="op">(</span><span class="va">cmd</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>cmd</dt>
 <dd><p>Optional command for setting the git hook.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>If no <code>cmd</code> is specified this returns the return value of
+    
+
+<p>If no <code>cmd</code> is specified this returns the return value of
 <code>getOption("nm_pre_commit_hook")</code>.  Otherwise there is no return value.</p>
     </div>
     <div id="see-also">
@@ -136,7 +139,7 @@ git hooks in the form of R functions and they will be executed via the
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

@@ -232,6 +232,9 @@
     <loc>https://tsahota.github.io/NMproject/reference/job_stats.html</loc>
   </url>
   <url>
+    <loc>https://tsahota.github.io/NMproject/reference/job_time_spacing.html</loc>
+  </url>
+  <url>
     <loc>https://tsahota.github.io/NMproject/reference/kill_job.html</loc>
   </url>
   <url>
@@ -392,6 +395,9 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/run_nm.html</loc>
+  </url>
+  <url>
+    <loc>https://tsahota.github.io/NMproject/reference/run_nm_single.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/search_raw.html</loc>

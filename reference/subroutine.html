@@ -19,7 +19,7 @@ another."><meta property="og:image" content="https://tsahota.github.io/NMproject
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -102,23 +102,32 @@ another.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">subroutine</span><span class="op">(</span><span class="va">m</span>, advan <span class="op">=</span> <span class="cn">NA</span>, trans <span class="op">=</span> <span class="fl">1</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">subroutine</span><span class="op">(</span><span class="va">m</span>, advan <span class="op">=</span> <span class="cn">NA</span>, trans <span class="op">=</span> <span class="fl">1</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>m</dt>
 <dd><p>An nm object.</p></dd>
+
+
 <dt>advan</dt>
 <dd><p>Character. desired ADVAN.</p></dd>
+
+
 <dt>trans</dt>
 <dd><p>Character. desired TRANS.</p></dd>
+
+
 <dt>recursive</dt>
 <dd><p>Logical (default = TRUE). Internal argument, do not modify.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An nm object with modified <code>ctl_contents</code> field.</p>
+    
+
+<p>An nm object with modified <code>ctl_contents</code> field.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -131,29 +140,29 @@ another.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="co"># create example object m1 from package demo files</span></span>
-<span class="r-in"><span class="va">exdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"examples"</span>, <span class="st">"theopp"</span>, package <span class="op">=</span> <span class="st">"NMproject"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>,</span>
-<span class="r-in">             based_on <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"Models"</span>, <span class="st">"ADVAN2.mod"</span><span class="op">)</span>,</span>
-<span class="r-in">             data_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"SourceData"</span>, <span class="st">"THEOPP.csv"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="dollar_subroutine.html">advan</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span> <span class="co">## 2</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># create example object m1 from package demo files</span></span></span>
+<span class="r-in"><span><span class="va">exdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"examples"</span>, <span class="st">"theopp"</span>, package <span class="op">=</span> <span class="st">"NMproject"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>,</span></span>
+<span class="r-in"><span>             based_on <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"Models"</span>, <span class="st">"ADVAN2.mod"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>             data_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"SourceData"</span>, <span class="st">"THEOPP.csv"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="dollar_subroutine.html">advan</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span> <span class="co">## 2</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2</span>
-<span class="r-in"><span class="fu"><a href="dollar_subroutine.html">trans</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span> <span class="co">## 1</span></span>
+<span class="r-in"><span><span class="fu"><a href="dollar_subroutine.html">trans</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span> <span class="co">## 1</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">subroutine</span><span class="op">(</span>advan <span class="op">=</span> <span class="fl">2</span>, trans <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">ds</span> <span class="op">&lt;-</span> <span class="va">.available_advans</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">oral</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span class="r-in">    m <span class="op">=</span> <span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="va">label</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">      <span class="fu">subroutine</span><span class="op">(</span>advan <span class="op">=</span> <span class="va">advan</span>, trans <span class="op">=</span> <span class="va">trans</span><span class="op">)</span></span>
-<span class="r-in">  <span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">ds</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">subroutine</span><span class="op">(</span>advan <span class="op">=</span> <span class="fl">2</span>, trans <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">ds</span> <span class="op">&lt;-</span> <span class="va">.available_advans</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">oral</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    m <span class="op">=</span> <span class="va">m1</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="va">label</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>      <span class="fu">subroutine</span><span class="op">(</span>advan <span class="op">=</span> <span class="va">advan</span>, trans <span class="op">=</span> <span class="va">trans</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">ds</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 7</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   advan trans   cmt oral  params                  label m              </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;nm_list&gt;</span>      </span>
@@ -164,8 +173,8 @@ another.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     4     4     2 TRUE  KA,CL,Q,V2,V3           a4t4  <span style="color: #949494;">&lt;nm_exect [23]&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>    12     1     3 TRUE  KA,K,K23,K32,K24,K42,V2 a12t1 <span style="color: #949494;">&lt;nm_exect [23]&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>    12     4     3 TRUE  KA,CL,Q3,V2,V3,Q4,V4    a12t4 <span style="color: #949494;">&lt;nm_exect [23]&gt;</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">ds</span><span class="op">$</span><span class="va">m</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="dollar.html">dollar</a></span><span class="op">(</span><span class="st">"PK"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">ds</span><span class="op">$</span><span class="va">m</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="dollar.html">dollar</a></span><span class="op">(</span><span class="st">"PK"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`execute.Models/a2t1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1| $PK</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   2| </span>
@@ -348,7 +357,7 @@ another.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  29| MU_7=LOG(TVV4)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  30| V4 = EXP(MU_7+ETA(7))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -363,7 +372,7 @@ another.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

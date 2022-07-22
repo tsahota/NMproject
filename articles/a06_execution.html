@@ -43,7 +43,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -145,13 +145,13 @@
 </h2>
 <p>Executing NONMEM simply requires the <code><a href="../reference/run_nm.html">run_nm()</a></code> function which will often form the last step of the chain and then run the command.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>,
-             based_on <span class="op">=</span> <span class="st">"staging/Models/ADVAN2.mod"</span>,
-             data_path <span class="op">=</span> <span class="st">"DerivedData/data.csv"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"execute {ctl_name} -dir={run_dir}"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/fill_input.html">fill_input</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>,</span>
+<span>             based_on <span class="op">=</span> <span class="st">"staging/Models/ADVAN2.mod"</span>,</span>
+<span>             data_path <span class="op">=</span> <span class="st">"DerivedData/data.csv"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"execute {ctl_name} -dir={run_dir}"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/fill_input.html">fill_input</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>By default the execution will take place asynchronously.</p>
 </div>
 <div class="section level2">
@@ -159,7 +159,7 @@
 </h2>
 <p>To view all runs in the workspace and track progress:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/shiny_nm.html">shiny_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/shiny_nm.html">shiny_nm</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>PLACEHOLDER: video showing shiny run monitor</p>
 </div>
 <div class="section level2">
@@ -167,64 +167,64 @@
 </h2>
 <p>Directory sizes can become large with running NONMEM. One strategy is to use the <code>clean</code> option in PsN, however if you want to retain temporary files and delete them post-hoc you can use the <code><a href="../reference/temp_files.html">ls_tempfiles()</a></code> function to list them for deletion.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/temp_files.html">ls_tempfiles</a></span><span class="op">(</span><span class="op">)</span> <span class="co">## will list all temporary files associate with run m1</span>
-
-<span class="co">## remove all temporary files associated with m1</span>
-<span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/temp_files.html">ls_tempfiles</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co">## Not specifying an argument will list temporary files of all runs</span>
-<span class="fu"><a href="../reference/temp_files.html">ls_tempfiles</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/temp_files.html">ls_tempfiles</a></span><span class="op">(</span><span class="op">)</span> <span class="co">## will list all temporary files associate with run m1</span></span>
+<span></span>
+<span><span class="co">## remove all temporary files associated with m1</span></span>
+<span><span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/temp_files.html">ls_tempfiles</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## Not specifying an argument will list temporary files of all runs</span></span>
+<span><span class="fu"><a href="../reference/temp_files.html">ls_tempfiles</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="running-nonmem-with-parallel-processing">Running NONMEM with parallel processing<a class="anchor" aria-label="anchor" href="#running-nonmem-with-parallel-processing"></a>
 </h2>
 <p>Two fields <code>parafile</code> and <code>cores</code> when combined with a suitable <code>cmd</code> can enable runs to be executed in parallel using PsN.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>,
-             based_on <span class="op">=</span> <span class="st">"staging/Models/ADVAN2.mod"</span>,
-             data_path <span class="op">=</span> <span class="st">"DerivedData/data.csv"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/nm_getsetters_execution.html">parafile</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm750/run/mpilinux8.pnm"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/nm_getsetters_execution.html">cores</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>,</span>
+<span>             based_on <span class="op">=</span> <span class="st">"staging/Models/ADVAN2.mod"</span>,</span>
+<span>             data_path <span class="op">=</span> <span class="st">"DerivedData/data.csv"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/nm_getsetters_execution.html">parafile</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm750/run/mpilinux8.pnm"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/nm_getsetters_execution.html">cores</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="parallel-efficiency-test">Parallel efficiency test<a class="anchor" aria-label="anchor" href="#parallel-efficiency-test"></a>
 </h2>
 <p>Often you’ll want to know the right level of parallelisation to run your model to maximise speed without wasting too many resources. The following creates multiple runes with different levels of parallelisation. We’ll just test it across 1, 3, 10, and 30 cores, but this can be any vector.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">test_cores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">10</span>, <span class="fl">30</span><span class="op">)</span>  <span class="co">## test these levels of parallelisation</span>
-
-<span class="va">m1c</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co">## start with parent m1 again</span>
-  <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="va">test_cores</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="co">## use "cores" as run_id (object is now length 4)</span>
-  <span class="fu"><a href="../reference/nm_getsetters.html">run_in</a></span><span class="op">(</span><span class="st">"Models/m1_coretest"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co">## for tidiness run them all in m1_coretest</span>
-  <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co">## parallelized execute</span>
-  <span class="fu"><a href="../reference/nm_getsetters_execution.html">parafile</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm75/run/mpilinux8.pnm"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/nm_getsetters_execution.html">cores</a></span><span class="op">(</span><span class="va">test_cores</span><span class="op">)</span> <span class="co">## and finally set the cores of each models according to test_cores</span>
-
-<span class="va">m1c</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; [1] "execute run1.mod -parafile=/opt/NONMEM/nm75/run/mpilinux8.pnm -dir=1 -nodes=1"   </span>
-<span class="co">#&gt; [2] "execute run3.mod -parafile=/opt/NONMEM/nm75/run/mpilinux8.pnm -dir=3 -nodes=3"   </span>
-<span class="co">#&gt; [3] "execute run10.mod -parafile=/opt/NONMEM/nm75/run/mpilinux8.pnm -dir=10 -nodes=10"</span>
-<span class="co">#&gt; [4] "execute run30.mod -parafile=/opt/NONMEM/nm75/run/mpilinux8.pnm -dir=30 -nodes=30"</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="va">test_cores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">10</span>, <span class="fl">30</span><span class="op">)</span>  <span class="co">## test these levels of parallelisation</span></span>
+<span></span>
+<span><span class="va">m1c</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co">## start with parent m1 again</span></span>
+<span>  <span class="fu"><a href="../reference/child.html">child</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="va">test_cores</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>  <span class="co">## use "cores" as run_id (object is now length 4)</span></span>
+<span>  <span class="fu"><a href="../reference/nm_getsetters.html">run_in</a></span><span class="op">(</span><span class="st">"Models/m1_coretest"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co">## for tidiness run them all in m1_coretest</span></span>
+<span>  <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="st">"execute {ctl_name} -parafile={parafile} -dir={run_dir} -nodes={cores}"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co">## parallelized execute</span></span>
+<span>  <span class="fu"><a href="../reference/nm_getsetters_execution.html">parafile</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm75/run/mpilinux8.pnm"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/nm_getsetters_execution.html">cores</a></span><span class="op">(</span><span class="va">test_cores</span><span class="op">)</span> <span class="co">## and finally set the cores of each models according to test_cores</span></span>
+<span></span>
+<span><span class="va">m1c</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/nm_getsetters.html">cmd</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "execute run1.mod -parafile=/opt/NONMEM/nm75/run/mpilinux8.pnm -dir=1 -nodes=1"   </span></span>
+<span><span class="co">#&gt; [2] "execute run3.mod -parafile=/opt/NONMEM/nm75/run/mpilinux8.pnm -dir=3 -nodes=3"   </span></span>
+<span><span class="co">#&gt; [3] "execute run10.mod -parafile=/opt/NONMEM/nm75/run/mpilinux8.pnm -dir=10 -nodes=10"</span></span>
+<span><span class="co">#&gt; [4] "execute run30.mod -parafile=/opt/NONMEM/nm75/run/mpilinux8.pnm -dir=30 -nodes=30"</span></span></code></pre></div>
 <p>Each run is identical apart from the level of parallelisation</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="co">## run them all and wait for them to finish</span>
-<span class="va">m1c</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/wait_finish.html">wait_finish</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co">## extract job statistics and plot cores vs Rtime or Ttime to get plots of run</span>
-<span class="co">## time and total time vs number of CPUs</span>
-
-<span class="va">m1c</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu"><a href="../reference/job_stats.html">job_stats</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">cores</span>, y <span class="op">=</span> <span class="va">Rtime</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">expand_limits</span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
-  </code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co">## run them all and wait for them to finish</span></span>
+<span><span class="va">m1c</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/wait_finish.html">wait_finish</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## extract job statistics and plot cores vs Rtime or Ttime to get plots of run</span></span>
+<span><span class="co">## time and total time vs number of CPUs</span></span>
+<span></span>
+<span><span class="va">m1c</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/job_stats.html">job_stats</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">cores</span>, y <span class="op">=</span> <span class="va">Rtime</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">expand_limits</span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>  </span></code></pre></div>
 <p><img src="a06_execution_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
   </div>
@@ -246,7 +246,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

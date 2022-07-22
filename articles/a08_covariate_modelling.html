@@ -43,7 +43,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -141,35 +141,35 @@
 <p>The functions <code><a href="../reference/test_relations.html">test_relations()</a></code>, <code><a href="../reference/covariate_step_tibble.html">covariate_step_tibble()</a></code>, <code><a href="../reference/bind_covariate_results.html">bind_covariate_results()</a></code> together comprise NMproject stepwise covariate method with manual decision. The goal is to be part way between PsN’s SCM and completely manual process at each forward and backward elimination step. The syntax of how covariates are included is the same as PsN’s SCM routine - See <a href="https://uupharmacometrics.github.io/PsN/docs.html" class="external-link">PsN documentation</a> for more information.</p>
 <p>Relationships to tests are defined using the <code><a href="../reference/test_relations.html">test_relations()</a></code> function. Below we test <code>BWT</code> and <code>AGE</code> on all parameters in both <code>linear</code> and <code>power</code> fashion and all parameters are test with the categorical covariate <code>SEX</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">dtest</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/test_relations.html">test_relations</a></span><span class="op">(</span>param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"KA"</span>, <span class="st">"K"</span>, <span class="st">"V"</span><span class="op">)</span>,
-                        cov <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BWT"</span>, <span class="st">"AGE"</span><span class="op">)</span>,
-                        state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"linear"</span>, <span class="st">"power"</span><span class="op">)</span>,
-                        continuous <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">dtest</span> <span class="op">&lt;-</span> <span class="va">dtest</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/test_relations.html">test_relations</a></span><span class="op">(</span>param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"KA"</span>, <span class="st">"K"</span>, <span class="st">"V"</span><span class="op">)</span>,
-                                  cov <span class="op">=</span> <span class="st">"SEX"</span>,
-                                  state <span class="op">=</span> <span class="st">"linear"</span>,
-                                  continuous <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="va">dtest</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 15 × 4</span></span>
-<span class="co">#&gt;    param cov   state  continuous</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> KA    BWT   linear TRUE      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> K     BWT   linear TRUE      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> V     BWT   linear TRUE      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> KA    AGE   linear TRUE      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> K     AGE   linear TRUE      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> V     AGE   linear TRUE      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> KA    BWT   power  TRUE      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> K     BWT   power  TRUE      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> V     BWT   power  TRUE      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> KA    AGE   power  TRUE      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">11</span> K     AGE   power  TRUE      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">12</span> V     AGE   power  TRUE      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">13</span> KA    SEX   linear FALSE     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">14</span> K     SEX   linear FALSE     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">15</span> V     SEX   linear FALSE</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="va">dtest</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/test_relations.html">test_relations</a></span><span class="op">(</span>param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"KA"</span>, <span class="st">"K"</span>, <span class="st">"V"</span><span class="op">)</span>,</span>
+<span>                        cov <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BWT"</span>, <span class="st">"AGE"</span><span class="op">)</span>,</span>
+<span>                        state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"linear"</span>, <span class="st">"power"</span><span class="op">)</span>,</span>
+<span>                        continuous <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">dtest</span> <span class="op">&lt;-</span> <span class="va">dtest</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/test_relations.html">test_relations</a></span><span class="op">(</span>param <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"KA"</span>, <span class="st">"K"</span>, <span class="st">"V"</span><span class="op">)</span>,</span>
+<span>                                  cov <span class="op">=</span> <span class="st">"SEX"</span>,</span>
+<span>                                  state <span class="op">=</span> <span class="st">"linear"</span>,</span>
+<span>                                  continuous <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dtest</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 15 × 4</span></span></span>
+<span><span class="co">#&gt;    param cov   state  continuous</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> KA    BWT   linear TRUE      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> K     BWT   linear TRUE      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> V     BWT   linear TRUE      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> KA    AGE   linear TRUE      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> K     AGE   linear TRUE      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> V     AGE   linear TRUE      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> KA    BWT   power  TRUE      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> K     BWT   power  TRUE      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> V     BWT   power  TRUE      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> KA    AGE   power  TRUE      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> K     AGE   power  TRUE      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> V     AGE   power  TRUE      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> KA    SEX   linear FALSE     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> K     SEX   linear FALSE     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> V     SEX   linear FALSE</span></span></code></pre></div>
 <p>The workflow for forward (and backward) steps then becomes</p>
 <ol style="list-style-type: decimal">
 <li>create a <code>tibble</code> of runs for the next step with <code><a href="../reference/covariate_step_tibble.html">covariate_step_tibble()</a></code>
@@ -183,43 +183,43 @@
 </ol>
 <p>Here are steps 1-3 in action:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="co">## create tibble of covariate step with model objects as column m</span>
-<span class="va">dsm1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/covariate_step_tibble.html">covariate_step_tibble</a></span><span class="op">(</span>
-  run_id <span class="op">=</span> <span class="st">"m1_f1"</span>,
-  dtest <span class="op">=</span> <span class="va">dtest</span>,
-  direction <span class="op">=</span> <span class="st">"forward"</span>
-<span class="op">)</span>
-
-<span class="co">## run all models greedily and wait for them to finish</span>
-<span class="va">dsm1</span><span class="op">$</span><span class="va">m</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/wait_finish.html">wait_finish</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co">## extract results and put into tibble</span>
-<span class="va">dsm1</span> <span class="op">&lt;-</span> <span class="va">dsm1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/bind_covariate_results.html">bind_covariate_results</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co">## create tibble of covariate step with model objects as column m</span></span>
+<span><span class="va">dsm1</span> <span class="op">&lt;-</span> <span class="va">m1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/covariate_step_tibble.html">covariate_step_tibble</a></span><span class="op">(</span></span>
+<span>  run_id <span class="op">=</span> <span class="st">"m1_f1"</span>,</span>
+<span>  dtest <span class="op">=</span> <span class="va">dtest</span>,</span>
+<span>  direction <span class="op">=</span> <span class="st">"forward"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## run all models greedily and wait for them to finish</span></span>
+<span><span class="va">dsm1</span><span class="op">$</span><span class="va">m</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/run_nm.html">run_nm</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/wait_finish.html">wait_finish</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## extract results and put into tibble</span></span>
+<span><span class="va">dsm1</span> <span class="op">&lt;-</span> <span class="va">dsm1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/bind_covariate_results.html">bind_covariate_results</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Here are steps 4-5: evaluate and select</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="co">## sort by BIC (for example) and view</span>
-<span class="va">dsm1</span> <span class="op">&lt;-</span> <span class="va">dsm1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">arrange</span><span class="op">(</span><span class="va">BIC</span><span class="op">)</span>
-
-<span class="co">## check condition number, covariance,...</span>
-
-<span class="co">## run diagnostic reports on the top three</span>
-<span class="va">dsm1</span><span class="op">$</span><span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_gof.Rmd"</span><span class="op">)</span>
-<span class="co">## diagnostic reports will not be in "Results" like other runs</span>
-<span class="co">## to see the location, look at the "results_dir" field of the object</span>
-<span class="fu"><a href="../reference/nm_getsetters.html">results_dir</a></span><span class="op">(</span><span class="va">dsm1</span><span class="op">$</span><span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span>
-
-<span class="co">## In this case we selec the first: dsm1$m[1]</span>
-<span class="va">m1_f1</span> <span class="op">&lt;-</span> <span class="va">dsm1</span><span class="op">$</span><span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>   <span class="co">## select most significant BIC</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co">## sort by BIC (for example) and view</span></span>
+<span><span class="va">dsm1</span> <span class="op">&lt;-</span> <span class="va">dsm1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">arrange</span><span class="op">(</span><span class="va">BIC</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## check condition number, covariance,...</span></span>
+<span></span>
+<span><span class="co">## run diagnostic reports on the top three</span></span>
+<span><span class="va">dsm1</span><span class="op">$</span><span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/nm_render.html">nm_render</a></span><span class="op">(</span><span class="st">"Scripts/basic_gof.Rmd"</span><span class="op">)</span></span>
+<span><span class="co">## diagnostic reports will not be in "Results" like other runs</span></span>
+<span><span class="co">## to see the location, look at the "results_dir" field of the object</span></span>
+<span><span class="fu"><a href="../reference/nm_getsetters.html">results_dir</a></span><span class="op">(</span><span class="va">dsm1</span><span class="op">$</span><span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## In this case we selec the first: dsm1$m[1]</span></span>
+<span><span class="va">m1_f1</span> <span class="op">&lt;-</span> <span class="va">dsm1</span><span class="op">$</span><span class="va">m</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>   <span class="co">## select most significant BIC</span></span></code></pre></div>
 <p>Do next forward step</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">dsm2</span> <span class="op">&lt;-</span> <span class="va">m1_f1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/covariate_step_tibble.html">covariate_step_tibble</a></span><span class="op">(</span>
-  run_id <span class="op">=</span> <span class="st">"m1_f2"</span>,
-  dtest <span class="op">=</span> <span class="va">dtest</span>,
-  direction <span class="op">=</span> <span class="st">"forward"</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="va">dsm2</span> <span class="op">&lt;-</span> <span class="va">m1_f1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="../reference/covariate_step_tibble.html">covariate_step_tibble</a></span><span class="op">(</span></span>
+<span>  run_id <span class="op">=</span> <span class="st">"m1_f2"</span>,</span>
+<span>  dtest <span class="op">=</span> <span class="va">dtest</span>,</span>
+<span>  direction <span class="op">=</span> <span class="st">"forward"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>continue for as many steps as needed.</p>
 </div>
 <div class="section level2">
@@ -246,7 +246,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

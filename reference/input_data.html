@@ -18,7 +18,7 @@ Uses data_path field of object to locate data and read in."><meta property="og:i
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -100,36 +100,43 @@ Uses data_path field of object to locate data and read in."><meta property="og:i
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">input_data</span><span class="op">(</span><span class="va">m</span>, filter <span class="op">=</span> <span class="cn">FALSE</span>, na <span class="op">=</span> <span class="st">"."</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">input_data</span><span class="op">(</span><span class="va">m</span>, filter <span class="op">=</span> <span class="cn">FALSE</span>, na <span class="op">=</span> <span class="st">"."</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>m</dt>
 <dd><p>An nm object.</p></dd>
+
+
 <dt>filter</dt>
 <dd><p>Logical (default = <code>FALSE</code>). Applies NONMEM ignore statement to
 filter dataset.</p></dd>
+
+
 <dt>na</dt>
 <dd><p>Character. Passed to <code><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">utils::read.csv()</a></code></p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional arguments passed to either <code><a href="read_derived_data.html">read_derived_data()</a></code> (if
 <code><a href="write_derived_data.html">write_derived_data()</a></code> was used to create derived dataset) or
 <code><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">utils::read.csv()</a></code></p></dd>
+
 </dl></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="co"># create example object m1 from package demo files</span></span>
-<span class="r-in"><span class="va">exdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"examples"</span>, <span class="st">"theopp"</span>, package <span class="op">=</span> <span class="st">"NMproject"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>, </span>
-<span class="r-in">             based_on <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"Models"</span>, <span class="st">"ADVAN2.mod"</span><span class="op">)</span>,</span>
-<span class="r-in">             data_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"SourceData"</span>, <span class="st">"THEOPP.csv"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">input_data</span><span class="op">(</span><span class="va">m1</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># create example object m1 from package demo files</span></span></span>
+<span class="r-in"><span><span class="va">exdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"examples"</span>, <span class="st">"theopp"</span>, package <span class="op">=</span> <span class="st">"NMproject"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>, </span></span>
+<span class="r-in"><span>             based_on <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"Models"</span>, <span class="st">"ADVAN2.mod"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>             data_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"SourceData"</span>, <span class="st">"THEOPP.csv"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu">input_data</span><span class="op">(</span><span class="va">m1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ID  AMT TIME    DV   WT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  1 4.02 0.00    NA 79.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  1   NA 0.00  0.74   NA</span>
@@ -137,10 +144,10 @@ filter dataset.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  1   NA 0.57  6.57   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5  1   NA 1.12 10.50   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6  1   NA 2.02  9.66   NA</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## only non-ignored rows</span></span>
-<span class="r-in"><span class="va">d_nonignore</span> <span class="op">&lt;-</span> <span class="fu">input_data</span><span class="op">(</span><span class="va">m1</span>, filter <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## only non-ignored rows</span></span></span>
+<span class="r-in"><span><span class="va">d_nonignore</span> <span class="op">&lt;-</span> <span class="fu">input_data</span><span class="op">(</span><span class="va">m1</span>, filter <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -155,7 +162,7 @@ filter dataset.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

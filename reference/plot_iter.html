@@ -20,7 +20,7 @@ diagnostic reports."><meta property="og:image" content="https://tsahota.github.i
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -104,27 +104,36 @@ diagnostic reports.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plot_iter</span><span class="op">(</span><span class="va">r</span>, trans <span class="op">=</span> <span class="cn">TRUE</span>, skip <span class="op">=</span> <span class="fl">0</span>, yvar <span class="op">=</span> <span class="st">"OBJ"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plot_iter</span><span class="op">(</span><span class="va">r</span>, trans <span class="op">=</span> <span class="cn">TRUE</span>, skip <span class="op">=</span> <span class="fl">0</span>, yvar <span class="op">=</span> <span class="st">"OBJ"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>r</dt>
 <dd><p>An nm object.</p></dd>
+
+
 <dt>trans</dt>
 <dd><p>Logical (default = <code>TRUE</code>). Should parameter transformations be
 performed in accordance with $THETA/$OMEGA/$SIGMA comments</p></dd>
+
+
 <dt>skip</dt>
 <dd><p>Numeric (default = 0). The number of iterations to skip when
 plotting.  For observing stationarity it is often useful to remove the
 beginning iterations where the OFV and parameters may move a lot.</p></dd>
+
+
 <dt>yvar</dt>
 <dd><p>Character (default = <code>"OBJ"</code>). Name of variable/parameter to
 display.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code>ggplot2</code> object.</p>
+    
+
+<p>A <code>ggplot2</code> object.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -143,7 +152,7 @@ display.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

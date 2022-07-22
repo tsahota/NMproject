@@ -18,7 +18,7 @@ Comment out lines of code with that are matched by a patter string."><meta prope
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -100,21 +100,26 @@ Comment out lines of code with that are matched by a patter string."><meta prope
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">comment_out</span><span class="op">(</span><span class="va">m</span>, pattern <span class="op">=</span> <span class="st">".*"</span><span class="op">)</span>
-
-<span class="fu">uncomment</span><span class="op">(</span><span class="va">m</span>, pattern <span class="op">=</span> <span class="st">".*"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">comment_out</span><span class="op">(</span><span class="va">m</span>, pattern <span class="op">=</span> <span class="st">".*"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">uncomment</span><span class="op">(</span><span class="va">m</span>, pattern <span class="op">=</span> <span class="st">".*"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>m</dt>
 <dd><p>An nm object.</p></dd>
+
+
 <dt>pattern</dt>
 <dd><p>Character regex. Passed to <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub()</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An nm object with modified <code>ctl_contents</code> field.</p>
+    
+
+<p>An nm object with modified <code>ctl_contents</code> field.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -133,7 +138,7 @@ Comment out lines of code with that are matched by a patter string."><meta prope
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

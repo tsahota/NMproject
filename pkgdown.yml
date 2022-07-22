@@ -1,5 +1,5 @@
 pandoc: 2.7.3
-pkgdown: 2.0.2
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   NMproject: NMproject.html
@@ -13,7 +13,7 @@ articles:
   a08_covariate_modelling: a08_covariate_modelling.html
   a09_advanced_topics: a09_advanced_topics.html
   a10_FAQ: a10_FAQ.html
-last_built: 2022-03-28T12:25Z
+last_built: 2022-07-22T12:16Z
 urls:
   reference: https://tsahota.github.io/NMproject/reference
   article: https://tsahota.github.io/NMproject/articles

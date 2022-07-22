@@ -22,7 +22,7 @@ descriptions for more details."><meta property="og:image" content="https://tsaho
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -108,7 +108,7 @@ descriptions for more details.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">exclude_rows</span><span class="op">(</span><span class="va">d</span>, <span class="va">dexcl</span>, exclude_col <span class="op">=</span> <span class="st">"EXCL"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">exclude_rows</span><span class="op">(</span><span class="va">d</span>, <span class="va">dexcl</span>, exclude_col <span class="op">=</span> <span class="st">"EXCL"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -117,17 +117,24 @@ descriptions for more details.</p>
 <dd><p>A <code>data.frame</code> for containing the full NONMEM dataset.  Should
 contain a column for identifying excluded rows named with the <code>exclude_col</code>
 argument.</p></dd>
+
+
 <dt>dexcl</dt>
 <dd><p>A smaller <code>data.frame</code> consisting of rows to be ignored.  Need
 not contain all columns of <code>d</code> but each column should be present in <code>d</code>.</p></dd>
+
+
 <dt>exclude_col</dt>
 <dd><p>Character (default = <code>"EXCL"</code>). Name of a binary exclude
 column in <code>d</code>. This should be accompanied with a <code>IGNORE=(EXCL.GT.0)</code>
 statement in $DATA.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A modified version of <code>d</code> with <code>exclude_col</code> set to <code>1</code> for rows
+    
+
+<p>A modified version of <code>d</code> with <code>exclude_col</code> set to <code>1</code> for rows
 coinciding with <code>dexcl</code>.</p>
     </div>
     <div id="see-also">
@@ -137,21 +144,21 @@ coinciding with <code>dexcl</code>.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="co"># create example object m1 from package demo files</span></span>
-<span class="r-in"><span class="va">exdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"examples"</span>, <span class="st">"theopp"</span>, package <span class="op">=</span> <span class="st">"NMproject"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>, </span>
-<span class="r-in">             based_on <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"Models"</span>, <span class="st">"ADVAN2.mod"</span><span class="op">)</span>,</span>
-<span class="r-in">             data_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"SourceData"</span>, <span class="st">"THEOPP.csv"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in">             </span>
-<span class="r-in"><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="input_data.html">input_data</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">d</span><span class="op">$</span><span class="va">EXCL</span> <span class="op">&lt;-</span> <span class="fl">0</span>  <span class="co">## start with no rows excluded</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## use with dplyr</span></span>
-<span class="r-in"><span class="va">dexcl</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ID</span> <span class="op">==</span> <span class="fl">6</span>, <span class="va">TIME</span> <span class="op">&gt;</span> <span class="fl">3</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">ID</span>, <span class="va">TIME</span>, <span class="va">DV</span>, <span class="va">EXCL</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dexcl</span> <span class="co">## view rows to be excluded</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># create example object m1 from package demo files</span></span></span>
+<span class="r-in"><span><span class="va">exdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"examples"</span>, <span class="st">"theopp"</span>, package <span class="op">=</span> <span class="st">"NMproject"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="new_nm.html">new_nm</a></span><span class="op">(</span>run_id <span class="op">=</span> <span class="st">"m1"</span>, </span></span>
+<span class="r-in"><span>             based_on <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"Models"</span>, <span class="st">"ADVAN2.mod"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>             data_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">exdir</span>, <span class="st">"SourceData"</span>, <span class="st">"THEOPP.csv"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>             </span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="input_data.html">input_data</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">d</span><span class="op">$</span><span class="va">EXCL</span> <span class="op">&lt;-</span> <span class="fl">0</span>  <span class="co">## start with no rows excluded</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## use with dplyr</span></span></span>
+<span class="r-in"><span><span class="va">dexcl</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ID</span> <span class="op">==</span> <span class="fl">6</span>, <span class="va">TIME</span> <span class="op">&gt;</span> <span class="fl">3</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">ID</span>, <span class="va">TIME</span>, <span class="va">DV</span>, <span class="va">EXCL</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dexcl</span> <span class="co">## view rows to be excluded</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ID  TIME   DV EXCL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  6  3.57 5.53    0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  6  5.00 4.94    0</span>
@@ -159,9 +166,9 @@ coinciding with <code>dexcl</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  6  9.22 3.46    0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5  6 12.10 2.78    0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6  6 23.85 0.92    0</span>
-<span class="r-in"><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">exclude_rows</span><span class="op">(</span><span class="va">dexcl</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">d</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fl">6</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">exclude_rows</span><span class="op">(</span><span class="va">dexcl</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fl">6</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    ID AMT  TIME   DV WT EXCL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   6   4  0.00   NA 80    0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   6  NA  0.00 0.00 NA    0</span>
@@ -189,7 +196,7 @@ coinciding with <code>dexcl</code>.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

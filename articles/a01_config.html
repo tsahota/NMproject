@@ -43,7 +43,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -152,7 +152,7 @@
 </h3>
 <p>It is highly recommended to set up code completion though as it eases the scripting process.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/setup_code_completion.html">setup_code_completion</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/setup_code_completion.html">setup_code_completion</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>This will ask for user consent as it will add entries to the user level snippets file.</p>
 </div>
 <div class="section level3">
@@ -160,8 +160,8 @@
 </h3>
 <p>The following function checks for availability of PsN via <code><a href="../reference/system_nm.html">system_nm()</a></code>, this is a requirement for NMproject. There are also subsequent checks which not mandatory, but recommended for full functionality.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/check_installation.html">check_installation</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🎉</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/check_installation.html">check_installation</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🌈</span></span></code></pre>
 <p>Users working on a standalone machines (e.g. laptops and desktops) should expect these tests to pass and for NMproject to work out of the box (provided the pre-requisites are met).</p>
 </div>
 </div>
@@ -175,18 +175,18 @@
 <p>If working in a grid environment, it is highly recommended to perform NMTRAN checks prior to sending jobs off the grid. NMTRAN check provides immediate feedback of control file and dataset errors allowing you to address problems quickly just like if you were on a laptop/desktop environment. Without this, having to wait for a job to reach the grid and fail is a much slower (and more annoying) process.</p>
 <p>NMproject tries to guess the location to the NMTRAN file in the NONMEM installation directory however if this fails and <code><a href="../reference/check_installation.html">check_installation()</a></code> cannot detect it, you will need to specify the NMTRAN command/file with the <code><a href="../reference/nm_tran_command.html">nm_tran_command()</a></code> function. See the following for instructions and examples at the bottom of the help file:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/nm_tran_command.html">nm_tran_command</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm75/tr/NMTRAN.exe"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/nm_tran_command.html">nm_tran_command</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm75/tr/NMTRAN.exe"</span><span class="op">)</span></span></code></pre></div>
 <p>To see more examples see <code><a href="../reference/nm_tran_command.html">?nm_tran_command</a></code>.</p>
 <p>This setting will reset upon R session restart, if you want to make it permanent see <a href="#permanent">Making configuration changes permanent</a>.</p>
 </div>
 <div class="section level3">
 <h3 id="the-system_nm-command">The <code>system_nm()</code> command<a class="anchor" aria-label="anchor" href="#the-system_nm-command"></a>
 </h3>
-<p>Under the hood, all calls to PsN proceed through the <code><a href="../reference/system_nm.html">system_nm()</a></code> command. This is a user configurable function. By default it’s the same as <code><a href="https://rdrr.io/r/base/system.html" class="external-link">system()</a></code> on unix systems and <code><a href="https://rdrr.io/r/base/system.html" class="external-link">shell()</a></code> on windows. However if the NONMEM server is remote and requires connection (e.g. via SSH), users may want to modify the behaviour of <code><a href="../reference/system_nm.html">system_nm()</a></code>. This is possible through setting the <code><a href="https://rdrr.io/r/base/options.html" class="external-link">option()</a></code> also named <code>system_nm</code>, e.g. the following allows runs the <code><a href="https://rdrr.io/r/base/system.html" class="external-link">system()</a></code> command on a remote machine named <code>clustername</code>:</p>
+<p>Under the hood, all calls to PsN proceed through the <code><a href="../reference/system_nm.html">system_nm()</a></code> command. This is a user configurable function. By default it’s the same as <code><a href="https://rdrr.io/r/base/system.html" class="external-link">system()</a></code> on unix systems and <code>shell()</code> on windows. However if the NONMEM server is remote and requires connection (e.g. via SSH), users may want to modify the behaviour of <code><a href="../reference/system_nm.html">system_nm()</a></code>. This is possible through setting the <code>option()</code> also named <code>system_nm</code>, e.g. the following allows runs the <code><a href="https://rdrr.io/r/base/system.html" class="external-link">system()</a></code> command on a remote machine named <code>clustername</code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>system_nm<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">cmd</span>,<span class="va">...</span><span class="op">)</span> <span class="op">{</span>
-        <span class="fu"><a href="https://rdrr.io/r/base/system.html" class="external-link">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"ssh -q clustername \"cd $(pwd); "</span>, <span class="va">cmd</span>, <span class="st">"\""</span><span class="op">)</span>,<span class="va">...</span><span class="op">)</span>
-<span class="op">}</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>system_nm<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">cmd</span>,<span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/system.html" class="external-link">system</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"ssh -q clustername \"cd $(pwd); "</span>, <span class="va">cmd</span>, <span class="st">"\""</span><span class="op">)</span>,<span class="va">...</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <p>This setting will reset upon R session restart, if you want to make it permanent see <a href="#permanent">Making configuration changes permanent</a>.</p>
 </div>
 <div class="section level3">
@@ -194,7 +194,7 @@
 </h3>
 <p>NMproject ships with a code library that can be used without configuration. If however you want to have a custom code library, the option <code>code_library_path</code> can be used to set this. For example:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>code_library_path <span class="op">=</span> <span class="st">"/projects/myorganisation/code_library"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>code_library_path <span class="op">=</span> <span class="st">"/projects/myorganisation/code_library"</span><span class="op">)</span></span></code></pre></div>
 <p>To see more information see <code><a href="../reference/code_library.html">?code_library</a></code>.</p>
 <p>This setting will reset upon R session restart, if you want to make it permanent see <a href="#permanent">Making configuration changes permanent</a>.</p>
 </div>
@@ -203,13 +203,13 @@
 </h3>
 <p>If your organisation prefers a project directory sub-structure which is different from the standard this can be configured with the function <code><a href="../reference/nm_default_dirs.html">nm_default_dirs()</a></code>. For example if your organisation performs NONMEM modelling in a directory called “NONMEM” and has a set structure for other sub-directories, you may have something like:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/nm_default_dirs.html">nm_default_dirs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
-  models <span class="op">=</span> <span class="st">"NONMEM"</span>,
-  scripts <span class="op">=</span> <span class="st">"RSCRIPTS"</span>,
-  results <span class="op">=</span> <span class="st">"OUTPUTS"</span>,
-  source_data <span class="op">=</span> <span class="st">"DATA/SOURCE"</span>,
-  derived_data <span class="op">=</span> <span class="st">"DATA/DERIVED"</span>
-<span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/nm_default_dirs.html">nm_default_dirs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  models <span class="op">=</span> <span class="st">"NONMEM"</span>,</span>
+<span>  scripts <span class="op">=</span> <span class="st">"RSCRIPTS"</span>,</span>
+<span>  results <span class="op">=</span> <span class="st">"OUTPUTS"</span>,</span>
+<span>  source_data <span class="op">=</span> <span class="st">"DATA/SOURCE"</span>,</span>
+<span>  derived_data <span class="op">=</span> <span class="st">"DATA/DERIVED"</span></span>
+<span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>To see more examples see <code><a href="../reference/nm_default_dirs.html">?nm_default_dirs</a></code>.</p>
 <p>This setting will reset upon R session restart, if you want to make it permanent see <a href="#permanent">Making configuration changes permanent</a>.</p>
 </div>
@@ -234,7 +234,7 @@
 <p>Whether it be a custom NMTRAN path, <code>system_nm</code> option or a different default directory structure, to make the above changes permanent, they need to be executed every R session.</p>
 <p>R has a few mechanisms for achieving this. See <code><a href="https://rdrr.io/r/base/Startup.html" class="external-link">?.Rprofile</a></code> for details. The following will open your config file:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/edit.html" class="external-link">edit_r_profile</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/edit.html" class="external-link">edit_r_profile</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Then insert the configuration code into this file and restart R. For example a custom NMTRAN path can be set permanently to <code>"/opt/NONMEM/nm75/tr/NMTRAN.exe"</code> by including <code>nm_tran_command("/opt/NONMEM/nm75/tr/NMTRAN.exe")</code> into the file.</p>
 <p>To set the option site wide you can use the file <code>$R_HOME/etc/Rprofile.site</code> (requires administration privileges).</p>
 </div>
@@ -243,15 +243,15 @@
 </h3>
 <p>If you already have a package you maintain to deliver functions to users, this package can be used to configure set up options via the <code>.onLoad</code> hook. For example, the following will configure custom NMTRAN and code library settings on package load</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">.onLoad</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">libname</span>, <span class="va">pkgname</span><span class="op">)</span><span class="op">{</span>
-  <span class="co">## custom NMTRAN location  </span>
-  <span class="fu">NMproject</span><span class="fu">::</span><span class="fu"><a href="../reference/nm_tran_command.html">nm_tran_command</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm75/tr/NMTRAN.exe"</span><span class="op">)</span>
-  <span class="co">## custom code library location</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>code_library_path <span class="op">=</span> <span class="st">"/projects/myorganisation/code_library"</span><span class="op">)</span>
-  <span class="co">## message to users in interactive sessions</span>
-  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/ui.html" class="external-link">ui_done</a></span><span class="op">(</span><span class="st">"NMproject configured"</span><span class="op">)</span>
-  
-<span class="op">}</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">.onLoad</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">libname</span>, <span class="va">pkgname</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="co">## custom NMTRAN location  </span></span>
+<span>  <span class="fu">NMproject</span><span class="fu">::</span><span class="fu"><a href="../reference/nm_tran_command.html">nm_tran_command</a></span><span class="op">(</span><span class="st">"/opt/NONMEM/nm75/tr/NMTRAN.exe"</span><span class="op">)</span></span>
+<span>  <span class="co">## custom code library location</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>code_library_path <span class="op">=</span> <span class="st">"/projects/myorganisation/code_library"</span><span class="op">)</span></span>
+<span>  <span class="co">## message to users in interactive sessions</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/ui.html" class="external-link">ui_done</a></span><span class="op">(</span><span class="st">"NMproject configured"</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span></code></pre></div>
 <p>The advantage of a package is you can also bundle other functions in there for users to use.</p>
 </div>
 </div>
@@ -274,7 +274,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

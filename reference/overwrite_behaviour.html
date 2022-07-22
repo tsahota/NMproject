@@ -19,7 +19,7 @@ strategy for how to handle overwriting of previously executed control files."><m
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -102,17 +102,23 @@ strategy for how to handle overwriting of previously executed control files.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">overwrite_behaviour</span><span class="op">(</span>txt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ask"</span>, <span class="st">"overwrite"</span>, <span class="st">"stop"</span>, <span class="st">"skip"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">overwrite_behaviour</span><span class="op">(</span>txt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ask"</span>, <span class="st">"overwrite"</span>, <span class="st">"stop"</span>, <span class="st">"skip"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>txt</dt>
 <dd><p>Character either <code>"run"</code>, <code>"stop"</code>, or <code>"skip"</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>if <code>txt</code> is missing returns <code>getOption(\"nm.overwrite_behaviour\")</code>otherwise returns no value and is called for side effects (setting the
+    
+
+<p>if <code>txt</code> is missing returns <code>getOption(\"nm.overwrite_behaviour\")</code></p>
+
+
+<p>otherwise returns no value and is called for side effects (setting the
 <code>nm.overwrite_behaviour</code> option).</p>
     </div>
 
@@ -128,7 +134,7 @@ strategy for how to handle overwriting of previously executed control files.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

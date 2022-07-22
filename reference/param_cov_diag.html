@@ -18,7 +18,7 @@ Plots posthoc parameter-covariate relationships from NONMEM run."><meta property
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -100,27 +100,40 @@ Plots posthoc parameter-covariate relationships from NONMEM run."><meta property
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">param_cov_diag</span><span class="op">(</span><span class="va">r</span>, <span class="va">param</span>, <span class="va">cov</span>, <span class="va">...</span>, categorical <span class="op">=</span> <span class="cn">FALSE</span>, plot_tv <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">param_cov_diag</span><span class="op">(</span><span class="va">r</span>, <span class="va">param</span>, <span class="va">cov</span>, <span class="va">...</span>, categorical <span class="op">=</span> <span class="cn">FALSE</span>, plot_tv <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>r</dt>
 <dd><p>An nm object.</p></dd>
+
+
 <dt>param</dt>
 <dd><p>Character. Name of parameter.</p></dd>
+
+
 <dt>cov</dt>
 <dd><p>Character. Name of covariate.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional arguments passed to <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate()</a></code>.</p></dd>
+
+
 <dt>categorical</dt>
 <dd><p>Logical (default = <code>FALSE</code>).</p></dd>
+
+
 <dt>plot_tv</dt>
 <dd><p>Logical.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code>ggplot2</code> plot object.</p>
+    
+
+<p>A <code>ggplot2</code> plot object.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -140,7 +153,7 @@ $TABLE.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

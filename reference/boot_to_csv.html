@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -98,37 +98,52 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">boot_to_csv</span><span class="op">(</span>
-  <span class="va">d</span>,
-  <span class="va">rsplit</span>,
-  <span class="va">data_name</span>,
-  data_folder <span class="op">=</span> <span class="st">"DerivedData/bootstrap_datasets"</span>,
-  id_var <span class="op">=</span> <span class="st">"ID"</span>,
-  oob <span class="op">=</span> <span class="cn">FALSE</span>,
-  overwrite <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">boot_to_csv</span><span class="op">(</span></span>
+<span>  <span class="va">d</span>,</span>
+<span>  <span class="va">rsplit</span>,</span>
+<span>  <span class="va">data_name</span>,</span>
+<span>  data_folder <span class="op">=</span> <span class="st">"DerivedData/bootstrap_datasets"</span>,</span>
+<span>  id_var <span class="op">=</span> <span class="st">"ID"</span>,</span>
+<span>  oob <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>d</dt>
 <dd><p>Dataset to merge.</p></dd>
+
+
 <dt>rsplit</dt>
 <dd><p>An object from <code><a href="https://rsample.tidymodels.org/reference/bootstraps.html" class="external-link">rsample::bootstraps()</a></code>.</p></dd>
+
+
 <dt>data_name</dt>
 <dd><p>Name of dataset.</p></dd>
+
+
 <dt>data_folder</dt>
 <dd><p>Path to bootstrap datasets.</p></dd>
+
+
 <dt>id_var</dt>
 <dd><p>Character (default = <code>"ID"</code>). Name of ID column.</p></dd>
+
+
 <dt>oob</dt>
 <dd><p>Logical.  Should out of bag dataset be written (default = <code>FALSE</code>).</p></dd>
+
+
 <dt>overwrite</dt>
 <dd><p>Should datasets be overwritten.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>path to csv file storing resampled ID for use by
+    
+
+<p>path to csv file storing resampled ID for use by
 <code><a href="make_boot_datasets.html">make_boot_datasets()</a></code>.  Normally the return object is not needed by users.</p>
     </div>
     <div id="see-also">
@@ -148,7 +163,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

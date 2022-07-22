@@ -21,7 +21,7 @@ and long format is available via two different functions."><meta property="og:im
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">NMproject</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.6.8</span>
       </span>
     </div>
 
@@ -106,22 +106,30 @@ and long format is available via two different functions.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">coef_wide</span><span class="op">(</span><span class="va">m</span>, trans <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="fu">coef_long</span><span class="op">(</span><span class="va">m</span>, trans <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">coef_wide</span><span class="op">(</span><span class="va">m</span>, trans <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">coef_long</span><span class="op">(</span><span class="va">m</span>, trans <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>m</dt>
 <dd><p>An nm object.</p></dd>
+
+
 <dt>trans</dt>
 <dd><p>Logical (default = <code>TRUE</code>). Transform parameters using comments
 in $THETA/$OMEGA/$SIGMA.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>data.frame</code> of extracted model parameter values. <code>coef_wide()</code>returns a <code>data.frame</code> in wide format. Vector valued objects <code>m</code>, will be
+    
+
+<p><code>data.frame</code> of extracted model parameter values. <code>coef_wide()</code></p>
+
+
+<p>returns a <code>data.frame</code> in wide format. Vector valued objects <code>m</code>, will be
 stacked vertically with one row per run.  <code>coef_long()</code> returns a
 <code>data.frame</code> in long format. Vector valued objects <code>m</code>, will be stacked
 horizontally.</p>
@@ -228,7 +236,7 @@ standard deviations.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>
