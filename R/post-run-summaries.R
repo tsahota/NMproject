@@ -382,14 +382,18 @@ coef.nm_generic <- function(object, trans = TRUE, ...) {
   d$run_name <- gsub("execute\\.", "\\1", unique_id(object))
   if (!unique(d$is_final)) d$run_name <- paste0(d$run_name, "*")
   d$is_final <- NULL
-  if (!trans) {
-    return(d)
-  }
   
   p <- param_info2(object)
   
   d0 <- d[, names(d)[!names(d) %in% "unit"]]
   d1 <- p[, c("name", "parameter", "unit", "trans", "FIX")]
+  
+  if (!trans) {
+    ## add FIX column and return
+    d <- merge(d, d1[, c("parameter", "FIX")] , sort = FALSE)
+    d <- dplyr::as_tibble(d)
+    return(d)
+  }
   
   d <- merge(d0, d1, all.x = TRUE, by = "parameter", sort = FALSE)
   d$name[is.na(d$name)] <- as.character(d$parameter)[is.na(d$name)]
