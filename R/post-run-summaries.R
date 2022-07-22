@@ -149,8 +149,9 @@ rr.nm_list <- function(m, trans = TRUE) {
   d$Estimate[d$FIX %in% TRUE] <- gsub("\\(.*?\\)", "(FIX)", d$Estimate[d$FIX %in% TRUE])
   d <- d[, names(d)[!names(d) %in% c("SE", "FINAL")]]
     
+  run_names <- unique(d$run_name)
   d <- d %>% tidyr::pivot_wider(names_from = "run_name", values_from = "Estimate", values_fn = list) %>%
-    tidyr::unnest(!c("parameter","type","SEunit", "unit","trans","FIX"))  ## all columns apart from estimate
+    tidyr::unnest(run_names)  ## all columns apart from estimate
   
   d <- as.data.frame(d)
   ## fix ordering of columns so it's same as m - dcast ruins it
