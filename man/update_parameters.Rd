@@ -10,7 +10,7 @@ update_parameters(ctl, from)
 \item{ctl}{An nm object.}
 
 \item{from}{Optional nm object. The completed object from which to extract
-results.  If not specified, \code{from} will be taken to be \code{ctl}.}
+results.  If not specified, \code{from} will be taken to be the parent run.}
 }
 \value{
 An nm object with modified \code{ctl_contents} field.

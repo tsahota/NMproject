@@ -183,7 +183,9 @@ view_patch <- function(patch_id) {
 new_patch_app <- function(ctx) {
   if (missing(ctx)) ctx <- rstudioapi::getSourceEditorContext()
   selected_text <- ctx$selection[[1]]$text
-  final_pipe_present <- grepl("\\s*%>%\\s*$", selected_text)
+  final_pipe_present <- grepl("(\\s*%>%\\s*(?:#[^\\n]*)?)$", selected_text)
+  final_pipe_string <- ""
+  if (final_pipe_present) final_pipe_string <- gsub(".*?(\\s*%>%\\s*(?:#[^\\n]*)?)$", "\\1", selected_text)
   final_newline_present <- grepl("\\n\\s*$", selected_text)
 
   m <- get_single_object_for_app()
@@ -221,10 +223,10 @@ Follow the above instructions and indicate if you happy to proceed?", yes = "Yes
 
   if (final_pipe_present) {
     if (final_newline_present) {
-      code_to_add <- paste0("  apply_manual_edit(\"", res$patch_id, "\") %>%")
+      code_to_add <- paste0("  apply_manual_edit(\"", res$patch_id, "\")", final_pipe_string)
     } else {
       code_to_add <- paste0("
-  apply_manual_edit(\"", res$patch_id, "\") %>%")
+  apply_manual_edit(\"", res$patch_id, "\")", final_pipe_string)
     }
   } else {
     code_to_add <- paste0(" %>%
@@ -244,8 +246,9 @@ Follow the above instructions and indicate if you happy to proceed?", yes = "Yes
 modify_patch_app <- function(ctx) {
   if (missing(ctx)) ctx <- rstudioapi::getSourceEditorContext()
   selected_text <- ctx$selection[[1]]$text
-  final_pipe_present <- grepl("\\s*%>%\\s*$", selected_text)
-  final_newline_present <- grepl("\\n\\s*$", selected_text)
+  final_pipe_present <- grepl("(\\s*%>%\\s*(?:#[^\\n]*)?)$", selected_text)
+  final_pipe_string <- ""
+  if (final_pipe_present) final_pipe_string <- gsub(".*?(\\s*%>%\\s*(?:#[^\\n]*)?)$", "\\1", selected_text)
 
   before_edit <- gsub("(.*)%>%.*apply_manual_edit.*", "\\1", selected_text)
 
@@ -285,10 +288,10 @@ Follow the above instructions and indicate if you happy to proceed?", yes = "Yes
 
   if (final_pipe_present) {
     if (final_newline_present) {
-      code_to_add <- paste0(trimws(before_edit), "  apply_manual_edit(\"", res$patch_id, "\") %>%")
+      code_to_add <- paste0(trimws(before_edit), "  apply_manual_edit(\"", res$patch_id, "\")", final_pipe_string)
     } else {
       code_to_add <- paste0(trimws(before_edit), " %>%
-  apply_manual_edit(\"", res$patch_id, "\") %>%")
+  apply_manual_edit(\"", res$patch_id, "\")", final_pipe_string)
     }
   } else {
     code_to_add <- paste0(trimws(before_edit), " %>%
@@ -378,7 +381,7 @@ make_patch_app <- function() {
   ctx <- rstudioapi::getSourceEditorContext()
   check_git_uservalues()
   selected_text <- ctx$selection[[1]]$text
-  selected_text <- gsub("\\s*%>%\\s*$", "", selected_text)
+  selected_text <- gsub("\\s*%>%\\s*(#[^\\n]*)?$", "", selected_text)
   ## see if last function is apply_manual_edit
 
   ## get last function used in piping

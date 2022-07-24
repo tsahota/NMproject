@@ -90,7 +90,7 @@ update_parameters0 <- function(ctl, coef_from, type = c("THETA", "OMEGA", "SIGMA
 #'
 #' @param ctl An nm object.
 #' @param from Optional nm object. The completed object from which to extract
-#'   results.  If not specified, `from` will be taken to be `ctl`.
+#'   results.  If not specified, `from` will be taken to be the parent run.
 #'
 #' @return An nm object with modified `ctl_contents` field.
 #'
@@ -122,7 +122,7 @@ update_parameters <- function(ctl, from) {
 update_parameters.nm_generic <- function(ctl, from) {
   m <- ctl
   ctl <- m %>% ctl_contents()
-  if (missing(from)) from <- m
+  if (missing(from)) from <- parent_run(m)  ## this is recursive and breaks the chain of custody
   wait_finish(from)
   ctl_lines <- ctl
 
