@@ -19,6 +19,8 @@
   
 * Removed future package from suggests and `async` arguments from `nm_render*()` functions.
 
+* Manual edits can now be performed on vector nm objects
+
 * Improvements to the `subroutine()` function and included package tests.
 
 * Added `path` argument to `write_ctl()` so control file can be written to 

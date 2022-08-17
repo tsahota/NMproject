@@ -24,6 +24,8 @@ start_manual_edit <- function(m, combine_patch = NA_character_, replace_ctl = NA
   #   stop("patching functionality only implemented for linux/unix systems\n consider manual_edit() instead",
   #        call. = FALSE)
 
+  m_orig <- m
+  m <- m[1]
   usethis::ui_info("Starting manual edit...")
   if (is_nm_list(m) & length(m) > 1) {
     stop("m cannot refer to multiple runs", call. = FALSE)
