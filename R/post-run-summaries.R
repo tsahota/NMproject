@@ -390,7 +390,7 @@ coef.nm_generic <- function(object, trans = TRUE, ...) {
   
   if (!trans) {
     ## add FIX column and return
-    d <- merge(d, d1[, c("parameter", "FIX")] , sort = FALSE)
+    d <- merge(d, d1[, c("parameter", "FIX")] , sort = FALSE, all.x = TRUE)
     d <- dplyr::as_tibble(d)
     return(d)
   }
