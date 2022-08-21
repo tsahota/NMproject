@@ -171,6 +171,7 @@ test_that("run and post", {
   unlink(file.path(run_dir_path(m1), "NMout.RDS"))
 
   m1 <- readRDS("Results/m1.RDS")
+  
   expect_true(is_successful(m1))
 
   ## omega matrix test
@@ -194,6 +195,10 @@ test_that("run and post", {
   expect_true(is.numeric(AIC(m1)))
   expect_true(is.numeric(BIC(m1)))
   expect_true(is.numeric(cond_num(m1)))
+  
+  cov_mat <- covariance_matrix(m1)[[1]]
+  expect_true(is.matrix(cov_mat))
+  expect_equal(ncol(cov_mat), nrow(cov_mat))
 
   ## ctl manipulation tests
   m1 <- readRDS("Results/m1.RDS")

@@ -115,10 +115,11 @@ reference:
   - output_table
   - nm_read_table
   - nm_tree
-  - covariance_plot
   - ofv
   - cond_num
   - omega_matrix
+  - covariance_matrix
+  - covariance_plot
   - nmsave_plot
   - nmsave_table
   - param_cov_diag

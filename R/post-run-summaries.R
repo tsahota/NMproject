@@ -816,6 +816,46 @@ summary_long <- function(..., parameters = c("none", "new", "all")) {
   d
 }
 
+#' Get covariance matrix
+#' 
+#' Extracts covariance matrix
+#' 
+#' @description 
+#' 
+#' `r lifecycle::badge("experimental")`
+#' 
+#' @param m An nm object.
+#' 
+#' @return A `matrix` with parameter correlations.
+#' 
+#' @examples 
+#' 
+#' ## requires NONMEM to be installed
+#' \dontrun{
+#' 
+#' covariance_matrix(m)
+#' 
+#' }
+#' @export
+
+covariance_matrix <- function(m) {
+  UseMethod("covariance_matrix")
+}
+
+#' @export
+covariance_matrix.nm_generic <- function(m) {
+  dc <- m %>% nm_output_path(extn = "cor") %>%
+    nm_read_table(header = TRUE, skip = 1)
+  dc <- dc[(nrow(dc) - ncol(dc) + 2):nrow(dc), (2:ncol(dc))]
+  stopifnot(nrow(dc) == ncol(dc))
+  rownames(dc) <- colnames(dc)
+  as.matrix(dc)
+}
+
+#' @export
+covariance_matrix.nm_list <- Vectorize_nm_list(covariance_matrix.nm_generic, SIMPLIFY = FALSE)
+
+
 #' Plot $COV matrix
 #'
 #' Plots the correlation plot from the $COV NONMEM output.

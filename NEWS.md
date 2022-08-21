@@ -28,6 +28,8 @@
 
 * Added package hex sticker.
 
+* Added `covariance_matrix()` for extracting covariance matrices.
+
 * Added `completed_nm()` for handling completed nonmem runs.
 
 * Added `sge_parallel_execute2` for hyperthreaded environments.
