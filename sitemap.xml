@@ -124,6 +124,9 @@
     <loc>https://tsahota.github.io/NMproject/reference/cov_forest_plot.html</loc>
   </url>
   <url>
+    <loc>https://tsahota.github.io/NMproject/reference/covariance_matrix.html</loc>
+  </url>
+  <url>
     <loc>https://tsahota.github.io/NMproject/reference/covariance_plot.html</loc>
   </url>
   <url>
@@ -254,6 +257,9 @@
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/make_xv_datasets.html</loc>
+  </url>
+  <url>
+    <loc>https://tsahota.github.io/NMproject/reference/map_nm.html</loc>
   </url>
   <url>
     <loc>https://tsahota.github.io/NMproject/reference/new_nm.html</loc>
