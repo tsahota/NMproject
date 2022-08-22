@@ -21,6 +21,8 @@
 
 * Manual edits can now be performed on vector nm objects
 
+* Included `map_nm()` as an expansion of the `purrr::map_*()` functions.
+
 * Improvements to the `subroutine()` function and included package tests.
 
 * Added `path` argument to `write_ctl()` so control file can be written to 

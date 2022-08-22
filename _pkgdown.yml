@@ -55,6 +55,7 @@ reference:
   - run_dir_path
   - ctl_path
   - simple_field
+  - map_nm
   - is_nm
   - completed_nm
   - '%f>%'

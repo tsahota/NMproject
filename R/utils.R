@@ -99,6 +99,43 @@ rlang::.data
   as_nm_list(lapply(seq_along(lhs), function(i) rhs[[i]](lhs[[i]])))
 }
 
+#' A purrr-like looping function over nm objects
+#' 
+#' @description
+#'
+#' `r lifecycle::badge("experimental")`
+#' 
+#' Loop over an nm object when a vectorized operation is not available.
+#' 
+#' @param .x An nm object.
+#' @inheritParams purrr::map
+#' 
+#' @return A modified nm object.
+#' 
+#' @examples 
+#' 
+#' # create example object m1 from package demo files
+#' exdir <- system.file("extdata", "examples", "theopp", package = "NMproject")
+#' m1 <- new_nm(run_id = "m1", 
+#'              based_on = file.path(exdir, "Models", "ADVAN2.mod"),
+#'              data_path = file.path(exdir, "SourceData", "THEOPP.csv"))
+#'                                        
+#' ## vectorized run
+#' m1 %>% child(1:3) %>% run_id(paste0(run_id(.), "modified"))
+#'   
+#' m1 %>% child(1:3) %>% 
+#'   map_nm(~ .x %>% run_id(paste0(run_id(.), "modified")))
+#'   
+#' 
+#' 
+#' @export
+
+map_nm <- function(.x, .f, ...) {
+  if (!requireNamespace("purrr")) stop("install purrr")
+  res <- purrr::map(.x, .f, ...)
+  as_nm_list(res)
+}
+
 #' Compute path relative to reference
 #'
 #' @param path Path of desired directory or file.

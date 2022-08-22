@@ -90,6 +90,15 @@ test_that("run and post", {
   m1 <- m1 %>% simple_field(test_field = 3)
   expect_true(simple_field(m1, test_field) == 3)
 
+  ## simple operations test
+
+  m1_modified_vec <- m1 %>% child(1:2) %>% 
+    run_id(paste0(run_id(.), "modified"))
+  m1_modified_map <- m1 %>% child(1:2) %>% 
+    map_nm(~ .x %>% run_id(paste0(run_id(.), "modified")))
+  
+  expect_identical(m1_modified_vec, m1_modified_map)
+  
   ## input data test
   dataset <- data_name(ctl_path(m1))
   expect_true(file.exists(file.path(run_in(m1), dataset)))
