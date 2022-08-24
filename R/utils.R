@@ -99,7 +99,9 @@ rlang::.data
   as_nm_list(lapply(seq_along(lhs), function(i) rhs[[i]](lhs[[i]])))
 }
 
-#' A purrr-like looping function over nm objects
+#' @name map_nm
+#' @rdname map_nm
+#' @title A purrr-like looping function over nm objects
 #' 
 #' @description
 #'
@@ -108,7 +110,9 @@ rlang::.data
 #' Loop over an nm object when a vectorized operation is not available.
 #' 
 #' @param .x An nm object.
-#' @inheritParams purrr::map
+#' @param .y An optional nm object.
+#' @inheritParams purrr::map2
+#' @inheritParams purrr::pmap
 #' 
 #' @return A modified nm object.
 #' 
@@ -133,6 +137,30 @@ rlang::.data
 map_nm <- function(.x, .f, ...) {
   if (!requireNamespace("purrr")) stop("install purrr")
   res <- purrr::map(.x, .f, ...)
+  as_nm_list(res)
+}
+
+#' @rdname map_nm
+#' @export
+map2_nm <- function(.x, .y, .f, ...) {
+  if (!requireNamespace("purrr")) stop("install purrr")
+  res <- purrr::map2(.x, .y, .f, ...)
+  as_nm_list(res)
+}
+
+#' @rdname map_nm
+#' @export
+imap_nm <- function(.x, .f, ...) {
+  if (!requireNamespace("purrr")) stop("install purrr")
+  res <- purrr::imap(.x, .f, ...)
+  as_nm_list(res)
+}
+
+#' @rdname map_nm
+#' @export
+pmap_nm <- function(.l, .f, ...) {
+  if (!requireNamespace("purrr")) stop("install purrr")
+  res <- purrr::pmap(.l, .f, ...)
   as_nm_list(res)
 }
 

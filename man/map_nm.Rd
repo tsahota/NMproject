@@ -2,9 +2,18 @@
 % Please edit documentation in R/utils.R
 \name{map_nm}
 \alias{map_nm}
+\alias{map2_nm}
+\alias{imap_nm}
+\alias{pmap_nm}
 \title{A purrr-like looping function over nm objects}
 \usage{
 map_nm(.x, .f, ...)
+
+map2_nm(.x, .y, .f, ...)
+
+imap_nm(.x, .f, ...)
+
+pmap_nm(.l, .f, ...)
 }
 \arguments{
 \item{.x}{An nm object.}
@@ -30,6 +39,12 @@ by position and name at different levels. If a component is not
 present, the value of \code{.default} will be returned.}
 
 \item{...}{Additional arguments passed on to the mapped function.}
+
+\item{.y}{An optional nm object.}
+
+\item{.l}{A list of vectors, such as a data frame. The length of \code{.l}
+determines the number of arguments that \code{.f} will be called with. List
+names will be used if present.}
 }
 \value{
 A modified nm object.

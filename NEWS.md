@@ -21,7 +21,7 @@
 
 * Manual edits can now be performed on vector nm objects
 
-* Included `map_nm()` as an expansion of the `purrr::map_*()` functions.
+* Included `*map*_nm()` functions as equivalents to `purrr::*map*_*()` functions.  These return `nm_list` objects.
 
 * Improvements to the `subroutine()` function and included package tests.
 
