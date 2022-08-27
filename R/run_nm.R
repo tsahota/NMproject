@@ -256,7 +256,7 @@ run_nm <- function(m, threads = Inf, ignore.stdout = TRUE, ignore.stderr = TRUE,
     runs_remaining <- setdiff(runs_remaining, runs_to_run)
     if (length(runs_remaining) > 0) wait_finish(m_sub)
   }
-  m
+  invisible(m)
 }
 
 #' Wipe previous run files
