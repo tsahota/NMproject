@@ -158,7 +158,7 @@ ppc_data <- function(r, FUN, ..., pre_proc = identity, max_mod_no = NA, DV = "DV
   dorig2[[DV]] <- NULL
 
   dorig2$ORD <- 1:nrow(dorig2)
-  dsims$ORD <- 1:nrow(dorig2)
+  dsims$ORD <- rep(1:nrow(dorig2), length = nrow(dsims))
 
   nrow(dsims)
   dsims <- dplyr::right_join(dorig2, dsims)

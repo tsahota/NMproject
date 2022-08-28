@@ -202,7 +202,7 @@ output_table.default <- function(r, only_append = c(), ...) {
   if (length(only_append) > 0) {
     do <- do[, c(names(input_data(r)), only_append)]
   }
-  return(do)
+  return(dplyr::as_tibble(do))
 }
 
 #' @export
