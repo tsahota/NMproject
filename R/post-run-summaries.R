@@ -566,10 +566,10 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
     .data$parent_run_in,
     .data$data_path
   )
-  cat("reading outputs...")
+  #cat("reading outputs...")
   d$coef_obs <- coef(d$m) ## slowest step - crashes
-  cat("done\n", append = TRUE)
-  cat("summarising...")
+  #cat("done\n", append = TRUE)
+  #cat("summarising...")
   d$status <- status(d$m)
   
   n_parameters_fun <- function(coef) {
