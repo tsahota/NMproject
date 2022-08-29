@@ -631,18 +631,6 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
     ds <- split(d, seq_len(nrow(d)))
 
     ds <- lapply(ds, function(d) {
-      # rri <- rr(c(d$parent,d$m), ...)
-      # rri <- rri[grepl("THETA|OMEGA|SIGMA", rri$type), ]
-      #
-      # index <- !rri$unit %in% "" & !is.na(rri$unit)
-      # rri$parameter[index] <-
-      #   paste0(rri$parameter[index], " (", rri$unit[index], ")")
-      #
-      # if("trans" %in% names(rri)){
-      #   index <- !rri$trans %in% "" & !is.na(rri$trans)
-      #   rri$parameter[index] <-
-      #     paste0(rri$parameter[index], " (", rri$trans[index],")")
-      # }
 
       rri <- rr2(c(d$parent, d$m), ...)
       rri$type <- NULL
@@ -1135,6 +1123,7 @@ rr2 <- function(m, trans = TRUE) {
     dplyr::mutate(par_no = max(.data$par_no))
   
   m_names <- unique(d$run_name)
+  d$FIX <- NULL ## don't want FIX to split rows that should match
   d <- d %>% tidyr::pivot_wider(names_from = "run_name", values_from = "estimate")
   names1 <- names(d)[!names(d) %in% m_names]
   d <- d[, c(names1, m_names)]
