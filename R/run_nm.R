@@ -240,6 +240,7 @@ run_nm <- function(m, threads = Inf, ignore.stdout = TRUE, ignore.stderr = TRUE,
                    quiet = getOption("quiet_run"), intern = getOption("intern"),
                    force = FALSE,
                    cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE) {
+  if (any(duplicated(ctl_path(m)))) usethis::ui_stop("Detecting multiple runs with same run_id and run_in locations")
   runs_remaining <- seq_along(m)
   while (length(runs_remaining) > 0) {
     n_to_take <- min(threads, length(runs_remaining))
