@@ -225,13 +225,15 @@ run_in.nm_generic <- function(m, text) {
 run_in.nm_list <- Vectorize_nm_list(run_in.nm_generic, pre_glue = TRUE)
 
 #' @rdname nm_getsetters
+#' @param update_ctl Should NONMEM code be updated to reflect the new run_id.
+#'   Assumes `text` is not missing.  Default = FALSE.
 #' @export
-run_id <- function(m, text) {
+run_id <- function(m, text, update_ctl = FALSE) {
   UseMethod("run_id")
 }
 
 #' @export
-run_id.nm_generic <- function(m, text) {
+run_id.nm_generic <- function(m, text, update_ctl = FALSE) {
   if (missing(text)) {
     # if(is_single_na(m)) return(NA_character_)
     if (length(m[["run_id"]]) > 0) {
@@ -251,7 +253,9 @@ run_id.nm_generic <- function(m, text) {
   }
 
   ## why was this here?
-  # if("ctl_contents" %in% names(m)) m <- m %>% ctl_contents(m[["ctl_contents"]]) ## update ctl_contents object
+  if (update_ctl) {
+    if ("ctl_contents" %in% names(m)) m <- m %>% ctl_contents(m[["ctl_contents"]]) ## update ctl_contents object
+  }
   m
 }
 #' @export
