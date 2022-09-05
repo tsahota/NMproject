@@ -212,8 +212,6 @@ run_nm_single.nm_list <- Vectorize_nm_list(run_nm_single.nm_generic, SIMPLIFY = 
 #' @inheritParams run_nm_single
 #' @param threads Numeric.  Number of jobs to run concurrently (default =
 #'   `Inf`).  Will block the console until all jobs are submitted.
-#' @param single_batch_job Logical. Should all runs be submitted as a single
-#'   system command?
 #'
 #' @details In grid environment it is recommended to run [nm_tran()] via the
 #'   RStudio 'Addin' prior to executing this code.

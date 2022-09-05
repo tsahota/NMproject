@@ -39,9 +39,6 @@ contents with cache?}
 
 \item{cache_ignore_data}{Logical (default = \code{FALSE}). Should check dataset with
 cache?}
-
-\item{single_batch_job}{Logical. Should all runs be submitted as a single
-system command?}
 }
 \value{
 \code{m} with \code{job_info} fields populated.
