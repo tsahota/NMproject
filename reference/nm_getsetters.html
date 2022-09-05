@@ -124,7 +124,7 @@ a corresponding function of the same name to access and modify it's value.</p>
 <span></span>
 <span><span class="fu">run_in</span><span class="op">(</span><span class="va">m</span>, <span class="va">text</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">run_id</span><span class="op">(</span><span class="va">m</span>, <span class="va">text</span><span class="op">)</span></span>
+<span><span class="fu">run_id</span><span class="op">(</span><span class="va">m</span>, <span class="va">text</span>, update_ctl <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">result_files</span><span class="op">(</span><span class="va">m</span>, <span class="va">text</span><span class="op">)</span></span>
 <span></span>
@@ -141,6 +141,11 @@ a corresponding function of the same name to access and modify it's value.</p>
 <dd><p>Optional character for replacing field. If present function will
 modify field (of same name as function) otherwise will return value of
 field (of same name as function).</p></dd>
+
+
+<dt>update_ctl</dt>
+<dd><p>Should NONMEM code be updated to reflect the new run_id.
+Assumes <code>text</code> is not missing.  Default = FALSE.</p></dd>
 
 </dl></div>
     <div id="value">

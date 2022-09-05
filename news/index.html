@@ -102,13 +102,13 @@
 <li><p>Reorders arguments for <code>decision</code> so that auto decisions can be specified without explicitly referring to arguments</p></li>
 <li><p>Removed future package from suggests and <code>async</code> arguments from <code>nm_render*()</code> functions.</p></li>
 <li><p>Manual edits can now be performed on vector nm objects</p></li>
-<li><p>Included <code><a href="../reference/map_nm.html">map_nm()</a></code> as an expansion of the <code>purrr::map_*()</code> functions.</p></li>
+<li><p>Included <code>*map*_nm()</code> functions as equivalents to <code>purrr::*map*_*()</code> functions. These return <code>nm_list</code> objects.</p></li>
 <li><p>Improvements to the <code><a href="../reference/subroutine.html">subroutine()</a></code> function and included package tests.</p></li>
 <li><p>Added <code>path</code> argument to <code><a href="../reference/write_ctl.html">write_ctl()</a></code> so control file can be written to other locations.</p></li>
 <li><p>Added package hex sticker.</p></li>
 <li><p>Added <code><a href="../reference/covariance_matrix.html">covariance_matrix()</a></code> for extracting covariance matrices.</p></li>
 <li><p>Added <code><a href="../reference/completed_nm.html">completed_nm()</a></code> for handling completed nonmem runs.</p></li>
-<li><p>Added <code>sge_parallel_execute2</code> for hyperthreaded environments.</p></li>
+<li><p>Added <code>sge_parallel_execute_batch</code> for SGE cluster environments.</p></li>
 <li><p>Added support for “name [unit] :trans” type parameter comments.</p></li>
 <li><p>Fixed resolve manual edit failure when directory change was responsible for failure.</p></li>
 <li><p>RANMETHOD=3S2 changed to RANMETHOD=3S2P in code library and examples to improve parallel processing consistency of runs.</p></li>

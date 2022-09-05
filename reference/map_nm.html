@@ -100,7 +100,13 @@ Loop over an nm object when a vectorized operation is not available."><meta prop
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">map_nm</span><span class="op">(</span><span class="va">.x</span>, <span class="va">.f</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">map_nm</span><span class="op">(</span><span class="va">.x</span>, <span class="va">.f</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">map2_nm</span><span class="op">(</span><span class="va">.x</span>, <span class="va">.y</span>, <span class="va">.f</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">imap_nm</span><span class="op">(</span><span class="va">.x</span>, <span class="va">.f</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">pmap_nm</span><span class="op">(</span><span class="va">.l</span>, <span class="va">.f</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -126,6 +132,16 @@ present, the value of <code>.default</code> will be returned.</p></dd>
 
 <dt>...</dt>
 <dd><p>Additional arguments passed on to the mapped function.</p></dd>
+
+
+<dt>.y</dt>
+<dd><p>An optional nm object.</p></dd>
+
+
+<dt>.l</dt>
+<dd><p>A list of vectors, such as a data frame. The length of <code>.l</code>
+determines the number of arguments that <code>.f</code> will be called with. List
+names will be used if present.</p></dd>
 
 </dl></div>
     <div id="value">

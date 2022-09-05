@@ -102,14 +102,15 @@ Run nm objects.  Uses system_nm() to submit the cmd() value of object."><meta pr
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">run_nm_single</span><span class="op">(</span></span>
 <span>  <span class="va">m</span>,</span>
-<span>  ignore.stdout <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  ignore.stderr <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ignore.stdout <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  ignore.stderr <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"quiet_run"</span><span class="op">)</span>,</span>
 <span>  intern <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"intern"</span><span class="op">)</span>,</span>
 <span>  force <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  cache_ignore_cmd <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  cache_ignore_ctl <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  cache_ignore_data <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  cache_ignore_data <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  return_cmd_only <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -153,6 +154,12 @@ contents with cache?</p></dd>
 <dt>cache_ignore_data</dt>
 <dd><p>Logical (default = <code>FALSE</code>). Should check dataset with
 cache?</p></dd>
+
+
+<dt>return_cmd_only</dt>
+<dd><p>Logical. Instead of running <code>cmd</code>, return the command
+information in the form of a <code>tibble</code>.  This is intended for use in
+<code><a href="run_nm.html">run_nm()</a></code> batch submission.</p></dd>
 
 </dl></div>
     <div id="value">
