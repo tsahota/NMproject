@@ -19,6 +19,9 @@
 #'   contents with cache?
 #' @param cache_ignore_data Logical (default = `FALSE`). Should check dataset with
 #'   cache?
+#' @param return_cmd_only Logical. Instead of running `cmd`, return the command
+#'   information in the form of a `tibble`.  This is intended for use in
+#'   `run_nm()` batch submission.
 #'
 #' @details In grid environment it is recommended to run [nm_tran()] via the
 #'   RStudio 'Addin' prior to executing this code.
@@ -51,19 +54,22 @@
 #' @keywords internal
 #' 
 run_nm_single <- function(m,
-                   ignore.stdout = TRUE, ignore.stderr = TRUE,
+                   ignore.stdout = FALSE, ignore.stderr = FALSE,
                    quiet = getOption("quiet_run"), intern = getOption("intern"),
                    force = FALSE,
-                   cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE) {
+                   cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE,
+                   return_cmd_only = FALSE) {
   UseMethod("run_nm_single")
 }
 
 #' @export
 run_nm_single.nm_generic <- function(m,
-                              ignore.stdout = TRUE, ignore.stderr = TRUE,
+                              ignore.stdout = FALSE, ignore.stderr = FALSE,
                               quiet = getOption("quiet_run"), intern = getOption("intern"),
                               force = FALSE,
-                              cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE) {
+                              cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE,
+                              return_cmd_only = FALSE) {
+
   if (is.na(m)) {
     return(m)
   }
@@ -162,10 +168,17 @@ run_nm_single.nm_generic <- function(m,
   wipe_run(m) ## this will check for "ask" or "overwrite"
   kill_job(m)
 
+  if (return_cmd_only) {
+    return(dplyr::tibble(
+      cmd = cmd(m),
+      run_in = run_in(m)
+    ))
+  }
+  
   message(paste0("Running: ", type(m), ":", ctl_path(m)))
   stdout0 <- system_nm(
     cmd = cmd(m), dir = run_in(m), wait = FALSE,
-    ignore.stdout = FALSE, ignore.stderr = FALSE,
+    ignore.stdout = ignore.stdout, ignore.stderr = ignore.stderr,
     intern = intern
   )
 
@@ -199,6 +212,8 @@ run_nm_single.nm_list <- Vectorize_nm_list(run_nm_single.nm_generic, SIMPLIFY = 
 #' @inheritParams run_nm_single
 #' @param threads Numeric.  Number of jobs to run concurrently (default =
 #'   `Inf`).  Will block the console until all jobs are submitted.
+#' @param single_batch_job Logical. Should all runs be submitted as a single
+#'   system command?
 #'
 #' @details In grid environment it is recommended to run [nm_tran()] via the
 #'   RStudio 'Addin' prior to executing this code.
@@ -236,7 +251,7 @@ run_nm_single.nm_list <- Vectorize_nm_list(run_nm_single.nm_generic, SIMPLIFY = 
 #' }
 #' @export
 
-run_nm <- function(m, threads = Inf, ignore.stdout = TRUE, ignore.stderr = TRUE,
+run_nm <- function(m, threads = Inf, ignore.stdout = FALSE,
                    quiet = getOption("quiet_run"), intern = getOption("intern"),
                    force = FALSE,
                    cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE) {
@@ -246,19 +261,20 @@ run_nm <- function(m, threads = Inf, ignore.stdout = TRUE, ignore.stderr = TRUE,
     n_to_take <- min(threads, length(runs_remaining))
     runs_to_run <- runs_remaining[seq_len(n_to_take)]
     m_sub <- m[runs_to_run]
-    run_nm_single(m_sub, 
-                  ignore.stdout = ignore.stdout, ignore.stderr = ignore.stderr,
-                  quiet = quiet, intern = intern,
-                  force = force,
-                  cache_ignore_cmd = cache_ignore_cmd, cache_ignore_ctl = cache_ignore_ctl, cache_ignore_data = cache_ignore_data)
+    res <- run_nm_single(m_sub, 
+                         ignore.stdout = ignore.stdout, ignore.stderr = ignore.stdout,
+                         quiet = quiet, intern = intern,
+                         force = force,
+                         cache_ignore_cmd = cache_ignore_cmd, cache_ignore_ctl = cache_ignore_ctl, cache_ignore_data = cache_ignore_data)
     job_time_spacing <- getOption("job_time_spacing")
     if (is.null(job_time_spacing)) job_time_spacing <- 0
-    Sys.sleep(job_time_spacing)
+    Sys.sleep(job_time_spacing) 
     runs_remaining <- setdiff(runs_remaining, runs_to_run)
     if (length(runs_remaining) > 0) wait_finish(m_sub)
   }
   invisible(m)
 }
+
 
 #' Wipe previous run files
 #'

@@ -7,8 +7,7 @@
 run_nm(
   m,
   threads = Inf,
-  ignore.stdout = TRUE,
-  ignore.stderr = TRUE,
+  ignore.stdout = FALSE,
   quiet = getOption("quiet_run"),
   intern = getOption("intern"),
   force = FALSE,
@@ -25,8 +24,6 @@ run_nm(
 
 \item{ignore.stdout}{Logical (default=\code{TRUE}). Parameter passed to \code{system_nm()}.}
 
-\item{ignore.stderr}{Logical (default=\code{TRUE}). Parameter passed to \code{system_nm()}.}
-
 \item{quiet}{Logical (default=\code{FALSE}). Should \code{system_nm()} output be piped to
 screen?}
 
@@ -42,6 +39,9 @@ contents with cache?}
 
 \item{cache_ignore_data}{Logical (default = \code{FALSE}). Should check dataset with
 cache?}
+
+\item{single_batch_job}{Logical. Should all runs be submitted as a single
+system command?}
 }
 \value{
 \code{m} with \code{job_info} fields populated.

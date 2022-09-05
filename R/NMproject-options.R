@@ -272,8 +272,16 @@ job_time_spacing <- function(seconds) {
 sge_parallel_execute <- "execute -run_on_sge -parafile={parafile} -sge_prepend_flags='-pe orte {cores} -V' {ctl_name} -dir={run_dir} -nodes={cores}"
 
 #' @rdname sge_parallel_execute
-#' @details `sge_parallel_execute2` doubles the amount slots taken by the job (e.g. to avoid hyperthreading).
+#' @details `sge_parallel_execute2` doubles the amount slots taken by the job
+#'   (e.g. to avoid hyperthreading).
 sge_parallel_execute2 <- "execute -run_on_sge -parafile={parafile} -sge_prepend_flags='-pe orte {2*cores} -V' {ctl_name} -dir={run_dir} -nodes={cores}"
+
+#' @rdname sge_parallel_execute
+#' @details `sge_parallel_execute_batch` eliminates pre-processing on master.
+#'   Job submitted from compute node.  This job will occupy one slot for the
+#'   duration of the NONMEM run.
+#'   node.  Job pre-processed and submitted from a compute node
+sge_parallel_execute_batch <- "echo \"execute -run_on_sge -parafile={parafile} -sge_prepend_flags='-pe orte {cores} -V' {ctl_name} -dir={run_dir} -nodes={cores}\" | qsub -cwd -V"
 
 #' Generic execute command for parallelised runs
 #'

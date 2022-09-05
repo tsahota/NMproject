@@ -6,14 +6,15 @@
 \usage{
 run_nm_single(
   m,
-  ignore.stdout = TRUE,
-  ignore.stderr = TRUE,
+  ignore.stdout = FALSE,
+  ignore.stderr = FALSE,
   quiet = getOption("quiet_run"),
   intern = getOption("intern"),
   force = FALSE,
   cache_ignore_cmd = FALSE,
   cache_ignore_ctl = FALSE,
-  cache_ignore_data = FALSE
+  cache_ignore_data = FALSE,
+  return_cmd_only = FALSE
 )
 }
 \arguments{
@@ -38,6 +39,10 @@ contents with cache?}
 
 \item{cache_ignore_data}{Logical (default = \code{FALSE}). Should check dataset with
 cache?}
+
+\item{return_cmd_only}{Logical. Instead of running \code{cmd}, return the command
+information in the form of a \code{tibble}.  This is intended for use in
+\code{run_nm()} batch submission.}
 }
 \value{
 \code{m} with \code{job_info} fields populated.

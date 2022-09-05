@@ -34,7 +34,7 @@
 
 * Added `completed_nm()` for handling completed nonmem runs.
 
-* Added `sge_parallel_execute2` for hyperthreaded environments.
+* Added `sge_parallel_execute_batch` for SGE cluster environments.
 
 * Added support for "name [unit] :trans" type parameter comments.
 
