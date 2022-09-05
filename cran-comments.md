@@ -1,7 +1,6 @@
 ## Test environments
 
-* local windows R installation, R 4.0.3
-* local ubuntu 20.04 R installation, R 4.1.1
+* local windows R installation, R 4.0.4
 * GitHub actions windows-latest (release)
 * GitHub actions macOS-latest (release)
 * GitHub actions ubuntu-20.04 (release, devel)

@@ -191,7 +191,7 @@ ppc_data0 %>%
 
 ```
 
-We can conclude that the model predicts median exposure and variability of exposure well. The remaining plots show stratfied versions of these.
+We can conclude that the model predicts median exposure and variability of exposure well. The remaining plots show stratified versions of these.
 
 ## Bootstraps
 
