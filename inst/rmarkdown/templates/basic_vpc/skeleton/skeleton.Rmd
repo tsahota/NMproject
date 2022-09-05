@@ -88,8 +88,8 @@ sim <- .m %>%
 
 sim <- sim[!is.na(sim$DV), ]
 
-sim$DPERIOD <- obs$DPERIOD
-sim$TPERIOD <- obs$TPERIOD
+sim$DPERIOD <- rep(obs$DPERIOD, length = nrow(sim))
+sim$TPERIOD <- rep(obs$TPERIOD, length = nrow(sim))
 sim$DV <- sim$DV_OUT  ## needed because output_table puts DV in DV_OUT
 
 
