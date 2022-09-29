@@ -1,4 +1,4 @@
-* Removed test which was causing CRAN test failure 
+* Removed non critical timing test
 
 ## Test environments
 
