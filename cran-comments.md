@@ -1,3 +1,5 @@
+* Removed test which was causing CRAN test failure 
+
 ## Test environments
 
 * local windows R installation, R 4.0.4
