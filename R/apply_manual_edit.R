@@ -43,6 +43,9 @@ apply_manual_edit.nm_generic <- function(m, patch_id, return_merge_conf_ctl = FA
   temp_ctl_path <- patch_contents[grepl("^---", patch_contents)]
   temp_ctl_path <- gsub("\\S+\\s.{2}(.*)", "\\1", temp_ctl_path)
   
+  #temp_ctl_path <- file.path(run_in(m), basename(temp_ctl_path))
+  dir.create(dirname(temp_ctl_path), showWarnings = FALSE, recursive = TRUE)
+  
   #temp_ctl_path <- file.path(run_in(m), paste0("base-", patch_id))
   mnew <- m %>%
     simple_field(ctl_path = temp_ctl_path, ctl_name = basename(temp_ctl_path))

@@ -49,7 +49,8 @@ start_manual_edit <- function(m, combine_patch = NA_character_, replace_ctl = NA
   if (!user_values_exist()) stop("git user.name and/or user.email not set")
 
   system("git reset", intern = TRUE) ## for some reason git2r::reset() doesn't reset
-  git2r::add(path = ctl_path(mnew))
+  system(paste0("git add -f ", ctl_path(mnew)), intern = TRUE)
+  #git2r::add(path = ctl_path(mnew), force = TRUE)
   git2r::commit(message = paste("pre-manual edit: ", patch_id))
 
   if (!is.na(combine_patch)) {
