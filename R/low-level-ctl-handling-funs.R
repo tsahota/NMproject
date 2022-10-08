@@ -127,19 +127,13 @@ setup_dollar <- function(x, type, add_dollar_text = TRUE) {
 #'
 #' Convert a variety of objects into a `ctl_character` class
 #'
-#' @param r Either class `nmexecute`, `character`, `ctl_list`, `ctl_character`.
+#' @param r Either class `character`, `ctl_list`, `ctl_character`.
 #' @return Object of class `ctl_character`.
 #' @keywords internal
 
 ctl_character <- function(r) {
   if (inherits(r, "ctl_character")) {
     return(r)
-  }
-  if (inherits(r, "nmexecute")) {
-    ctl <- readLines(r$ctl)
-    class(ctl) <- c("ctl_character", "character")
-    attr(ctl, "file_name") <- r$ctl
-    return(ctl)
   }
   if (inherits(r, "ctl_list")) {
     file_name <- attributes(r)$file_name
@@ -164,7 +158,7 @@ ctl_character <- function(r) {
 
 #' Constructor/converter to ctl_list
 #'
-#' @param r Either class `nmexecute`, `character`, `ctl_list`, `ctl_character`.
+#' @param r Either class `character`, `ctl_list`, `ctl_character`.
 #' @return Object of class `ctl_list`.
 #' @keywords internal
 

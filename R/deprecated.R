@@ -14,14 +14,6 @@ if (0) {
     options(code_library_path = unique(c(path, getOption("code_library_path"))))
   }
 
-  ctl_list.nmexecute <- function(r) {
-    ctl <- ctl_character(r)
-    file_name <- attributes(ctl)$file_name
-    ctl <- ctl_nm2r(ctl)
-    attr(ctl, "file_name") <- file_name
-    return(ctl)
-  }
-
   update_sizes <- function(ctl, sizes_char) {
     ctl <- ctl_character(ctl)
     if ("SIZES" %in% names(ctl_list(ctl))) {

@@ -7,7 +7,7 @@
 ctl_character(r)
 }
 \arguments{
-\item{r}{Either class \code{nmexecute}, \code{character}, \code{ctl_list}, \code{ctl_character}.}
+\item{r}{Either class \code{character}, \code{ctl_list}, \code{ctl_character}.}
 }
 \value{
 Object of class \code{ctl_character}.
