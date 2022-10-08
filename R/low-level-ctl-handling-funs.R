@@ -199,11 +199,18 @@ ctl_nm2r <- function(ctl) {
 
   ## get type info for each dol
 
-  dol.type <- function(ctl) {
+  dol.type0 <- function(ctl) {
     sc <- paste(ctl, collapse = " ")
     type <- gsub("^[^\\$]*\\$([\\S]+).*$", "\\1", sc, perl = TRUE)
     type <- getOption("available_nm_types")[grep(substr(type, 1, 3), getOption("available_nm_types"))]
     if (length(type) == 0) type <- NA
+    type
+  }
+  
+  dol.type <- function(ctl) {
+    type <- dol.type0(rem_comment(ctl))
+    if (length(type) > 1) type <- dol.type0(ctl)  ## happens when chunk has commented out subroutine
+    if (is.na(type)) type <- dol.type0(ctl)
     type
   }
 
