@@ -2,21 +2,23 @@
 % Please edit documentation in R/post-run-summaries.R
 \name{covariance_matrix}
 \alias{covariance_matrix}
-\title{Get covariance matrix}
+\alias{correlation_matrix}
+\title{Get covariance & correlation matrices}
 \usage{
 covariance_matrix(m)
+
+correlation_matrix(m)
 }
 \arguments{
 \item{m}{An nm object.}
 }
 \value{
-A \code{matrix} with parameter correlations.
+A \code{matrix} object.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-}
-\details{
-Extracts covariance matrix
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Extracts covariance & correlation matrices from \code{nm} object.
 }
 \examples{
 
@@ -24,6 +26,7 @@ Extracts covariance matrix
 \dontrun{
 
 covariance_matrix(m)
+correlation_matrix(m)
 
 }
 }

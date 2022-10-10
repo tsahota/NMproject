@@ -804,17 +804,18 @@ summary_long <- function(..., parameters = c("none", "new", "all")) {
   d
 }
 
-#' Get covariance matrix
-#' 
-#' Extracts covariance matrix
+#' @rdname covariance_matrix
+#' @title Get covariance & correlation matrices
 #' 
 #' @description 
 #' 
-#' `r lifecycle::badge("experimental")`
+#' `r lifecycle::badge("stable")`
+#' 
+#' Extracts covariance & correlation matrices from `nm` object.
 #' 
 #' @param m An nm object.
 #' 
-#' @return A `matrix` with parameter correlations.
+#' @return A `matrix` object.
 #' 
 #' @examples 
 #' 
@@ -822,6 +823,7 @@ summary_long <- function(..., parameters = c("none", "new", "all")) {
 #' \dontrun{
 #' 
 #' covariance_matrix(m)
+#' correlation_matrix(m)
 #' 
 #' }
 #' @export
@@ -832,7 +834,28 @@ covariance_matrix <- function(m) {
 
 #' @export
 covariance_matrix.nm_generic <- function(m) {
-  dc <- m %>% nm_output_path(extn = "cor") %>%
+  extract_matrix(m, extn = "cov")
+}
+
+#' @export
+covariance_matrix.nm_list <- Vectorize_nm_list(covariance_matrix.nm_generic, SIMPLIFY = FALSE)
+
+
+#' @rdname covariance_matrix
+correlation_matrix <- function(m) {
+  UseMethod("correlation_matrix")
+}
+
+#' @export
+correlation_matrix.nm_generic <- function(m) {
+  extract_matrix(m, extn = "cor")
+}
+
+#' @export
+correlation_matrix.nm_list <- Vectorize_nm_list(correlation_matrix.nm_generic, SIMPLIFY = FALSE)
+
+extract_matrix <- function(m, extn) {
+  dc <- m %>% nm_output_path(extn) %>%
     nm_read_table(header = TRUE, skip = 1)
   dc <- dc[(nrow(dc) - ncol(dc) + 2):nrow(dc), (2:ncol(dc))]
   stopifnot(nrow(dc) == ncol(dc))
@@ -840,8 +863,6 @@ covariance_matrix.nm_generic <- function(m) {
   as.matrix(dc)
 }
 
-#' @export
-covariance_matrix.nm_list <- Vectorize_nm_list(covariance_matrix.nm_generic, SIMPLIFY = FALSE)
 
 
 #' Plot $COV matrix
