@@ -260,6 +260,10 @@ insert_dollar.nm_list <- Vectorize_nm_list(insert_dollar.nm_generic, SIMPLIFY = 
 #'
 #' c(m1, m1) %>% dollar("THETA") # display $THETAs for multiple NONMEM runs
 #'
+#' # append code to dollar PK with append argument.
+#' m1 <- m1 %>% dollar("PK", "IF(DOSE.EQ.0) F1 = 0", append = TRUE)
+#' m1 %>% dollar("PK")
+#'
 #' @export
 dollar <- function(m, dollar, ..., add_dollar_text = TRUE) {
   orig_target <- m %>% target()

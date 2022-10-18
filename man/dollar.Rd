@@ -43,6 +43,10 @@ m1 \%>\% dollar("THETA")
 
 c(m1, m1) \%>\% dollar("THETA") # display $THETAs for multiple NONMEM runs
 
+# append code to dollar PK with append argument.
+m1 <- m1 \%>\% dollar("PK", "IF(DOSE.EQ.0) F1 = 0", append = TRUE)
+m1 \%>\% dollar("PK")
+
 }
 \seealso{
 \code{\link[=insert_dollar]{insert_dollar()}}, \code{\link[=delete_dollar]{delete_dollar()}}
