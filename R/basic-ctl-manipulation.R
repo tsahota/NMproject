@@ -111,6 +111,7 @@ fill_input <- function(m, ...) {
 }
 #' @export
 fill_input.nm_generic <- function(m, ...) {
+  if (!file.exists(data_path(m))) return(m)
   ctl <- ctl_contents(m)
   d <- suppressMessages(input_data(m))
   replace_with <- c("$INPUT", suppressMessages(dollar_input(d, ...)))
