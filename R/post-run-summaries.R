@@ -576,7 +576,7 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
     if (!"type" %in% names(coef)) {
       return(NA)
     }
-    coef <- coef[grepl("THETA|OMEGA|SIGMA", coef$type), ]
+    coef <- coef[grepl("THETA|OMEGA|SIGMA", coef$type) & coef$FIX %in% FALSE, ]
     nrow(coef)
   }
   

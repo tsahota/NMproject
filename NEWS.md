@@ -1,5 +1,7 @@
 # NMproject (development version)
 
+* Bug fix df calculation in summaries with FIXed parameters (resolves #30)
+
 # NMproject 0.6.9
 
 * Removed timing test
