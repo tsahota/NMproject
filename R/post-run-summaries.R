@@ -557,7 +557,7 @@ nm_output_path.nm_generic <- function(m, extn, file_name) {
 nm_output_path.nm_list <- Vectorize_nm_list(nm_output_path.nm_generic, SIMPLIFY = TRUE)
 
 #' @export
-summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new", "all"), keep_m = FALSE, ...) {
+summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new", "all"), keep_m = FALSE, flip_parent_child = FALSE, ...) {
   d <- rr_row(object)
   d <- d %>% dplyr::select(
     .data$run_id,
@@ -577,7 +577,12 @@ summary.nm_list <- function(object, ref_model = NA, parameters = c("none", "new"
       return(NA)
     }
     coef <- coef[grepl("THETA|OMEGA|SIGMA", coef$type) & coef$FIX %in% FALSE, ]
-    nrow(coef)
+    if (flip_parent_child) {
+      -nrow(coef)
+    } else {
+      nrow(coef)
+    }
+
   }
   
   # browser()
@@ -761,6 +766,9 @@ rr_row <- function(m) {
 #' @param trans Logical (default = `TRUE`). Should parameters be transformed in
 #'   accordance with $THETA/$OMEGA/$SIGMA comments.  This is only valid if
 #'   `parameters` is `"new"` or `"all`.
+#' @param flip_parent_child Logical (default = `FALSE`).  Should parent child
+#'   ordering be flipped for df calculation, e.g. if reduced model is a child of
+#'   the parent.
 #' @return A wide format `tibble` with run results.
 #'   
 #' @examples 
@@ -775,9 +783,9 @@ rr_row <- function(m) {
 #' }
 #'   
 #' @export
-summary_wide <- function(..., include_fields = character(), parameters = c("none", "new", "all"), m = TRUE, trans = TRUE) {
+summary_wide <- function(..., include_fields = character(), parameters = c("none", "new", "all"), m = TRUE, trans = TRUE, flip_parent_child = FALSE) {
   parameters <- match.arg(parameters)
-  d <- summary(..., parameters = parameters, trans = trans)
+  d <- summary(..., parameters = parameters, trans = trans, flip_parent_child = flip_parent_child)
   m_obj <- c(...)
   if (m) d$m <- m_obj
   for (field in include_fields) {
@@ -789,9 +797,9 @@ summary_wide <- function(..., include_fields = character(), parameters = c("none
 #' @rdname nm_summary
 #' @return A long format `tibble` with run results coerced to `character` form.
 #' @export
-summary_long <- function(..., parameters = c("none", "new", "all")) {
+summary_long <- function(..., parameters = c("none", "new", "all"), flip_parent_child = FASE) {
   parameters <- match.arg(parameters)
-  ds <- summary(..., parameters = parameters, keep_m = TRUE)
+  ds <- summary(..., parameters = parameters, keep_m = TRUE, flip_parent_child = flip_parent_child)
   m <- ds$m
   ds$m <- NULL
   d <- t(ds)

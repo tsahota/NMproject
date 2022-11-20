@@ -46,7 +46,7 @@ Imports:
     magrittr,
     usethis,
     lifecycle (>= 1.0.0)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 Suggests:
     testthat,
     knitr,

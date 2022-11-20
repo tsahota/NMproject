@@ -11,10 +11,15 @@ summary_wide(
   include_fields = character(),
   parameters = c("none", "new", "all"),
   m = TRUE,
-  trans = TRUE
+  trans = TRUE,
+  flip_parent_child = FALSE
 )
 
-summary_long(..., parameters = c("none", "new", "all"))
+summary_long(
+  ...,
+  parameters = c("none", "new", "all"),
+  flip_parent_child = FASE
+)
 }
 \arguments{
 \item{...}{Arguments passed to \code{\link[=summary]{summary()}}, usually a vector of nm object +
@@ -36,6 +41,10 @@ covariate analysis).}
 \item{trans}{Logical (default = \code{TRUE}). Should parameters be transformed in
 accordance with $THETA/$OMEGA/$SIGMA comments.  This is only valid if
 \code{parameters} is \code{"new"} or \verb{"all}.}
+
+\item{flip_parent_child}{Logical (default = \code{FALSE}).  Should parent child
+ordering be flipped for df calculation, e.g. if reduced model is a child of
+the parent.}
 }
 \value{
 A wide format \code{tibble} with run results.

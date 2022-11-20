@@ -18,9 +18,9 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{magrittr}{\code{\link[magrittr:exposition]{\%$\%}}, \code{\link[magrittr:compound]{\%<>\%}}, \code{\link[magrittr:tee]{\%T>\%}}}
+  \item{magrittr}{\code{\link[magrittr:compound]{\%<>\%}}, \code{\link[magrittr:exposition]{\%$\%}}, \code{\link[magrittr:tee]{\%T>\%}}}
 
-  \item{rlang}{\code{\link[rlang:tidyeval-data]{.data}}}
+  \item{rlang}{\code{\link[rlang:dot-data]{.data}}}
 
   \item{stats}{\code{\link[stats]{AIC}}, \code{\link[stats:AIC]{BIC}}, \code{\link[stats]{coef}}, \code{\link[stats]{nobs}}}
 }}
