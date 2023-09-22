@@ -13,7 +13,9 @@ run_nm(
   force = FALSE,
   cache_ignore_cmd = FALSE,
   cache_ignore_ctl = FALSE,
-  cache_ignore_data = FALSE
+  cache_ignore_data = FALSE,
+  qsub_from_compute = NA_character_,
+  pre_submit_actions = NULL
 )
 }
 \arguments{
@@ -39,6 +41,13 @@ contents with cache?}
 
 \item{cache_ignore_data}{Logical (default = \code{FALSE}). Should check dataset with
 cache?}
+
+\item{qsub_from_compute}{Optional qsub glue command that runs the script given
+by \code{"{ctl}"} which launches all jobs as a script script from a compute
+server.  E.g. \code{"qsub {cmd} -cwd -V -pe smp 4"}.}
+
+\item{pre_submit_actions}{If \code{qsub_from_compute} is used, \code{pre_submit_actions}
+will launch the specified bash commands line prior to job submissions}
 }
 \value{
 \code{m} with \code{job_info} fields populated.

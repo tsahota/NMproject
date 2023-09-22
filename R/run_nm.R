@@ -212,6 +212,11 @@ run_nm_single.nm_list <- Vectorize_nm_list(run_nm_single.nm_generic, SIMPLIFY = 
 #' @inheritParams run_nm_single
 #' @param threads Numeric.  Number of jobs to run concurrently (default =
 #'   `Inf`).  Will block the console until all jobs are submitted.
+#' @param qsub_from_compute Optional qsub glue command that runs the script given
+#'   by `"{ctl}"` which launches all jobs as a script script from a compute
+#'   server.  E.g. `"qsub {cmd} -cwd -V -pe smp 4"`.
+#' @param pre_submit_actions If `qsub_from_compute` is used, `pre_submit_actions`
+#'   will launch the specified bash commands line prior to job submissions
 #'
 #' @details In grid environment it is recommended to run [nm_tran()] via the
 #'   RStudio 'Addin' prior to executing this code.
@@ -252,21 +257,51 @@ run_nm_single.nm_list <- Vectorize_nm_list(run_nm_single.nm_generic, SIMPLIFY = 
 run_nm <- function(m, threads = Inf, ignore.stdout = FALSE,
                    quiet = getOption("quiet_run"), intern = getOption("intern"),
                    force = FALSE,
-                   cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE) {
+                   cache_ignore_cmd = FALSE, cache_ignore_ctl = FALSE, cache_ignore_data = FALSE,
+                   qsub_from_compute = NA_character_, pre_submit_actions = NULL) {
   if (any(duplicated(ctl_path(m)))) usethis::ui_stop("Detecting multiple runs with same run_id and run_in locations")
   runs_remaining <- seq_along(m)
   while (length(runs_remaining) > 0) {
+    ## run a single batch
     n_to_take <- min(threads, length(runs_remaining))
     runs_to_run <- runs_remaining[seq_len(n_to_take)]
     m_sub <- m[runs_to_run]
-    res <- run_nm_single(m_sub, 
-                         ignore.stdout = ignore.stdout, ignore.stderr = ignore.stdout,
-                         quiet = quiet, intern = intern,
-                         force = force,
-                         cache_ignore_cmd = cache_ignore_cmd, cache_ignore_ctl = cache_ignore_ctl, cache_ignore_data = cache_ignore_data)
-    job_time_spacing <- getOption("job_time_spacing")
-    if (is.null(job_time_spacing)) job_time_spacing <- 0
-    Sys.sleep(job_time_spacing) 
+    if (!is.na(qsub_from_compute)) {
+      if (length(unique(run_in(m_sub))) > 1) usethis::ui_stop("With {usethis::ui_code('single_job = TRUE')}, all runs must be in the same directory, i.e. have the same {usethis::ui_code('run_in')} field")
+      res <- run_nm_single(m_sub, 
+                           ignore.stdout = ignore.stdout, ignore.stderr = ignore.stdout,
+                           quiet = quiet, intern = intern,
+                           force = force,
+                           cache_ignore_cmd = cache_ignore_cmd, cache_ignore_ctl = cache_ignore_ctl, cache_ignore_data = cache_ignore_data,
+                           return_cmd_only = TRUE)
+      ## pull out tibbles - these are cmds to be run
+      res <- res[sapply(res, inherits, what = "data.frame")]
+      if (length(res) > 0) {
+        ## make a bash script job that launches cmds to be run on compute server
+        ## qsub command runs sends this script to sge
+        run_in_dir <- run_in(m_sub[1])
+        cmds <- sapply(res, function(i) i$cmd)
+        names(cmds) <- NULL
+        cmds[seq_len(length(cmds)- 1)] <- paste(cmds[seq_len(length(cmds)- 1)], "&")
+        tmpfile <- file.path(run_in_dir, "temprun.sh")
+        writeLines(c("#!/bin/bash", pre_submit_actions, cmds), tmpfile)
+        Sys.chmod(tmpfile, mode = "755")
+        cmd <- "temprun.sh"
+        full_cmd <- stringr::str_glue(qsub_from_compute, .envir = list(cmd = cmd), .na = NULL)
+        system_nm(full_cmd, dir = run_in_dir)
+      }
+    } else {
+      res <- run_nm_single(m_sub, 
+                           ignore.stdout = ignore.stdout, ignore.stderr = ignore.stdout,
+                           quiet = quiet, intern = intern,
+                           force = force,
+                           cache_ignore_cmd = cache_ignore_cmd, cache_ignore_ctl = cache_ignore_ctl, cache_ignore_data = cache_ignore_data,
+                           return_cmd_only = FALSE)      
+      job_time_spacing <- getOption("job_time_spacing")
+      if (is.null(job_time_spacing)) job_time_spacing <- 0
+      Sys.sleep(job_time_spacing)
+    }
+    
     runs_remaining <- setdiff(runs_remaining, runs_to_run)
     if (length(runs_remaining) > 0) wait_finish(m_sub)
   }
