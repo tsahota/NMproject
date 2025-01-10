@@ -68,7 +68,7 @@ Vectorize_nm_list <- function(FUN, vectorize.args = arg.names, SIMPLIFY = FALSE,
         m <- args[dovec][[1]][[i]] ## nm_generic
         if (is.character(replace_arg_value)) {
           args[dovec][[replace_arg]][i] <- stringr::str_glue(replace_arg_value,
-            .envir = m
+            .envir = as.environment(m)
           )
         }
       }
