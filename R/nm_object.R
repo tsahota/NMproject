@@ -552,6 +552,10 @@ glue_text_nm.nm_generic <- function(m, text) {
   stringr::str_glue(text, .envir = m, .na = NULL)
 }
 
+glue_text_nm.environment <- function(m, text) {
+  stringr::str_glue(text, .envir = m, .na = NULL)
+}
+
 glue_text_nm.nm_list <- Vectorize_nm_list(glue_text_nm.nm_generic, SIMPLIFY = TRUE)
 
 replace_tag <- function(m, field) {
