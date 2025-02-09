@@ -554,7 +554,7 @@ replace_tag <- function(m, field) {
   ## only proceed if "raw" field exists
   if (!is.na(m$glue_fields[[field]])) {
     ## start by resetting to raw
-    m[[field]] <- glue_text_nm(list2env(m), m$glue_fields[[field]])
+    m[[field]] <- glue_text_nm(m, m$glue_fields[[field]])
     # m[[field]] <- stringr::str_glue(m$glue_fields[[field]], .envir = m)
     m[[field]] <- as.character(m[[field]])
   }
