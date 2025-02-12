@@ -66,7 +66,7 @@ nm_tran.default <- function(x) {
   message("running NMTRAN on ", x)
 
   nm_tran_command <- nm_tran_command()
-  cmd <- stringr::str_glue(nm_tran_command, .envir = list(ctl_name = basename(x)), .na = NULL)
+  cmd <- stringr::str_glue(nm_tran_command, .envir = list2env(list(ctl_name = basename(x))), .na = NULL)
   ## if non-glue - append the control file name
   if (cmd == nm_tran_command) cmd <- paste(cmd, "<", basename(x))
 

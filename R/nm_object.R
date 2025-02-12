@@ -544,18 +544,24 @@ parent_run.nm_list <- Vectorize_nm_list(parent_run.nm_generic, SIMPLIFY = FALSE)
 glue_text_nm <- function(m, text) {
   UseMethod("glue_text_nm")
 }
+
 glue_text_nm.nm_generic <- function(m, text) {
+  if (!inherits(m, "environment")) {
+    m <- list2env(as.list(m))  # Convert list to environment safely
+  }
   stringr::str_glue(text, .envir = m, .na = NULL)
 }
+
+glue_text_nm.environment <- function(m, text) {
+  stringr::str_glue(text, .envir = m, .na = NULL)
+}
+
 glue_text_nm.nm_list <- Vectorize_nm_list(glue_text_nm.nm_generic, SIMPLIFY = TRUE)
 
 replace_tag <- function(m, field) {
-  ## this function is rate limiting - use it as little as possible.
-  ## only proceed if "raw" field exists
   if (!is.na(m$glue_fields[[field]])) {
-    ## start by resetting to raw
-    m[[field]] <- glue_text_nm(m, m$glue_fields[[field]])
-    # m[[field]] <- stringr::str_glue(m$glue_fields[[field]], .envir = m)
+    m_env <- list2env(as.list(m))  # Convert once
+    m[[field]] <- stringr::str_glue(m$glue_fields[[field]], .envir = m_env, .na = NULL)
     m[[field]] <- as.character(m[[field]])
   }
   m

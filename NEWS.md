@@ -1,3 +1,7 @@
+# NMproject 0.6.10
+
+* Fixed compatibility bug in glue version `1.8.0`
+
 # NMproject 0.6.9
 
 * Removed timing test
